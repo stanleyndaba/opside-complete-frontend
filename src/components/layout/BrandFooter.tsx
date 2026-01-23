@@ -10,25 +10,17 @@ type Props = {
 const SOCIAL_LINKS = [
   {
     label: 'LinkedIn', href: 'https://www.linkedin.com/company/margin-ai', icon: () => (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
-        <rect width="24" height="24" rx="4" fill="#0A66C2" />
-        <path
-          d="M9.5 9.5h2.4v1.4c.34-.68 1.22-1.47 2.64-1.47 2.82 0 3.46 1.53 3.46 3.86v4.7h-2.5v-4.16c0-1.24-.02-2.83-1.73-2.83-1.73 0-1.99 1.35-1.99 2.74v4.25H9.5V9.5Z"
-          fill="white"
-        />
-        <path d="M6.43 8.06c.83 0 1.5-.67 1.5-1.49a1.5 1.5 0 0 0-3 0c0 .82.67 1.5 1.5 1.5Z" fill="white" />
-        <path d="M5.2 9.5h2.5v8.5H5.2V9.5Z" fill="white" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-[18px] w-[18px]">
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect x="2" y="9" width="4" height="12" />
+        <circle cx="4" cy="4" r="2" />
       </svg>
     )
   },
   {
     label: 'X (Formerly Twitter)', href: 'https://x.com/MarginAI', icon: () => (
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
-        <rect width="24" height="24" rx="4" fill="black" />
-        <path
-          d="M14.79 6.75h2.31l-5.06 5.62L17.5 17.5h-2.83l-3.18-3.8-3.64 3.8H5.54l5.39-5.64L6.5 6.75h2.92l2.9 3.48 3.47-3.48Z"
-          fill="white"
-        />
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-[18px] w-[18px]">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.451-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
       </svg>
     )
   }
@@ -54,8 +46,10 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={social.label}
-                    className="inline-flex h-10 w-10 items-center justify-center transition hover:scale-105">
-                    <Icon />
+                    className="inline-flex h-10 w-10 items-center justify-center border border-gray-100 rounded-lg text-gray-500 transition-all hover:border-gray-900 hover:bg-gray-50 hover:text-gray-900 group">
+                    <div className="transition-transform duration-300 group-hover:scale-110">
+                      <Icon />
+                    </div>
                   </a>
                 );
               })}
