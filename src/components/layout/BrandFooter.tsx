@@ -10,10 +10,9 @@ type Props = {
 const SOCIAL_LINKS = [
   {
     label: 'LinkedIn', href: 'https://www.linkedin.com/company/margin-ai', icon: () => (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-[18px] w-[18px]">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-        <rect x="2" y="9" width="4" height="12" />
-        <circle cx="4" cy="4" r="2" />
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-[18px] w-[18px]">
+        <circle cx="4.983" cy="5.009" r="2.188" />
+        <path d="M9.237 8.855v12.139h3.769v-6.003c0-1.584.298-3.118 2.262-3.118 1.937 0 1.961 1.811 1.961 3.218v5.904H21v-6.657c0-3.27-.704-5.783-4.526-5.783-1.835 0-3.065 1.007-3.568 1.96h-.051v-1.66H9.237zm-6.142 0H6.87v12.139H3.095z" />
       </svg>
     )
   },
@@ -46,7 +45,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={social.label}
-                    className="inline-flex h-10 w-10 items-center justify-center border border-gray-100 rounded-lg text-gray-500 transition-all hover:border-gray-900 hover:bg-gray-50 hover:text-gray-900 group">
+                    className="inline-flex h-10 w-10 items-center justify-center border border-gray-100 rounded-full text-gray-500 transition-all hover:border-gray-900 hover:bg-gray-50 hover:text-gray-900 group">
                     <div className="transition-transform duration-300 group-hover:scale-110">
                       <Icon />
                     </div>
