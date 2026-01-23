@@ -207,7 +207,7 @@ export function Sidebar({
         )}
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-gray-900" : "text-gray-400 group-hover:text-gray-900")} />
         <span className={cn(
-          "text-[14px] transition-colors",
+          "text-xs transition-colors",
           isActive ? "font-bold" : "font-medium"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
@@ -317,7 +317,7 @@ export function Sidebar({
             onClick={() => setSignOutOpen(true)}
             className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-gray-50 transition-all group text-gray-900">
             <LogOut className="h-4 w-4 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
-            <span className="text-[14px] font-bold">Sign Out</span>
+            <span className="text-xs font-bold">Sign Out</span>
           </button>
         </div>
       )}
