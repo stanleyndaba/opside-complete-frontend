@@ -10,6 +10,7 @@ import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { TenantProvider } from '@/contexts/TenantContext';
+import { PublicChatNode } from "@/components/chat/PublicChatNode";
 
 // Route-level code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -189,6 +190,7 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <DemoOverlay />
+                <PublicChatNode />
               </Suspense>
             </NotificationsProvider>
           </TenantProvider>

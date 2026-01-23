@@ -17,7 +17,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { InteractiveDemo } from '@/components/landing/InteractiveDemo';
-import { ChatNode } from '@/components/chat/ChatNode';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 
 const heroImage = '/FRONTIMAGE.png';
@@ -932,8 +931,6 @@ const Index = () => {
           </main>
         </div>
 
-        {/* Institutional Chatbot Node */}
-        <ChatNode />
       </div>
     </SmoothScrollProvider>
   );
