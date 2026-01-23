@@ -234,7 +234,7 @@ export default function Contact() {
                                 to="/sales"
                                 className="flex items-center gap-4 p-5 rounded-2xl bg-black border border-black hover:bg-gray-900 transition-all group shadow-lg">
                                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/10 transition-all">
-                                    <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                                    <ShieldCheck className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-white uppercase tracking-tight">Enterprise Sales</p>
