@@ -582,51 +582,55 @@ const Index = () => {
       <div className="relative z-10" style={{ background: 'white' }}>
         <main className="flex-1 relative z-10" style={{ background: 'white' }}>
           <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
-            {/* Gradient mesh background */}
-            <div className="absolute inset-0 -z-10 overflow-hidden">
-              <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-gradient-to-br from-emerald-100/60 via-teal-50/40 to-sky-100/50 rounded-full blur-3xl" />
-              <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-50/40 via-white to-teal-50/30 rounded-full blur-3xl" />
+            {/* Premium Dual-Layer Background */}
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              {/* Layer 1: Radial Mesh Gradients */}
+              <div className="absolute -top-[20%] -right-[10%] w-[1000px] h-[1000px] bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.08),transparent_70%)] blur-[120px]" />
+              <div className="absolute top-[10%] -left-[5%] w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)] blur-[100px]" />
+              <div className="absolute -bottom-[20%] right-[15%] w-[900px] h-[900px] bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.05),transparent_70%)] blur-[110px]" />
+
+              {/* Layer 2: Technical Noise Grain */}
+              <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
             </div>
             <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
 
               {/* Text content - now centered */}
               <div className="flex flex-col items-center space-y-6">
 
-                {/* Trust chip */}
-                <div className="relative inline-flex items-center gap-2 md:gap-4 rounded-[20px] md:rounded-[25px] border border-emerald-100 bg-white/85 px-3 py-1.5 md:px-5 md:py-2 shadow-[0_12px_45px_rgba(16,185,129,0.25)] backdrop-blur supports-[backdrop-filter]:bg-white/70 overflow-hidden">
-                  <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] bg-gradient-to-r from-emerald-200/40 via-white/10 to-sky-200/40 blur-xl" aria-hidden="true" />
-                  <span className="pointer-events-none absolute inset-0 rounded-[20px] md:rounded-[25px] border border-white/40" aria-hidden="true" />
-                  <span className="relative flex items-center gap-1 md:gap-2">
-                    <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-800">
+                {/* Institutional Trust Badge */}
+                <div className="relative inline-flex items-center gap-3 md:gap-5 rounded-[22px] md:rounded-[30px] border border-white/40 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 md:px-6 md:py-2.5 shadow-[0_20px_50px_rgba(31,64,55,0.08),0_1px_2px_rgba(255,255,255,0.4)_inset] overflow-hidden group transition-all duration-500 hover:bg-white/40 hover:shadow-[0_25px_60px_rgba(31,64,55,0.12)]">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-blue-100/10 to-emerald-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <span className="relative flex items-center gap-1.5 md:gap-2">
+                    <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-600">
                       <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                     </span>
                   </span>
-                  <div className="relative flex items-center gap-1.5 md:gap-3 text-xs md:text-sm font-bold text-gray-700">
-                    <span>Links seamlessly with</span>
-                    <span className="inline-flex items-center gap-1.5 md:gap-3">
-                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                        <img src="/gmailicon.png" alt="Gmail" width={28} height={28} className="h-5 w-5 md:h-7 md:w-7 object-contain" />
-                      </span>
-                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                        <img src="/outlookicon.webp" alt="Outlook" width={28} height={28} className="h-5 w-5 md:h-7 md:w-7 object-contain" />
-                      </span>
-                      <span className="text-emerald-500 font-bold text-sm md:text-lg">+</span>
-                      <span className="relative inline-flex h-5 w-5 md:h-7 md:w-7 items-center justify-center rounded-full bg-transparent">
-                        <img src="/gd.png" alt="Google Drive" width={28} height={28} className="h-5 w-5 md:h-7 md:w-7 object-contain" />
-                      </span>
+                  <div className="relative flex items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-gray-800 tracking-tight">
+                    <span className="opacity-60 uppercase tracking-widest font-mono">Links seamlessly with</span>
+                    <span className="inline-flex items-center gap-2 md:gap-4">
+                      {[
+                        { src: '/gmailicon.png', alt: 'Gmail' },
+                        { src: '/outlookicon.webp', alt: 'Outlook' }
+                      ].map((icon, i) => (
+                        <div key={i} className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/40 border border-white/60 shadow-sm flex items-center justify-center">
+                          <img src={icon.src} alt={icon.alt} className="h-full w-full object-contain" />
+                        </div>
+                      ))}
+                      <span className="text-emerald-500 font-bold text-sm md:text-base">+</span>
+                      <div className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/40 border border-white/60 shadow-sm flex items-center justify-center">
+                        <img src="/gd.png" alt="Google Drive" className="h-full w-full object-contain" />
+                      </div>
                     </span>
                   </div>
                 </div>
 
-                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]">
-                  FBA Reimbursements on
-                  <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent ml-2">
-                    Autopilot
-                  </span>
+                <h1 className="font-merriweather text-4xl md:text-6xl lg:text-8xl font-black tracking-tight text-gray-900 leading-[1.05] selection:bg-emerald-100">
+                  FBA Reimbursements <br className="hidden lg:block" />
+                  on <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">Autopilot</span>
                 </h1>
 
-                <p className="font-montserrat text-base md:text-lg text-gray-600 font-normal max-w-xl leading-relaxed">
-                  Margin provides the infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro transaction, recover lost inventory, and automate reimbursements—turning messy data into immediate capital.
+                <p className="font-montserrat text-base md:text-xl text-gray-600 font-medium max-w-2xl leading-[1.6] opacity-80">
+                  Margin provides the sovereign infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro-transaction and automate reimbursements—turning messy data into immediate capital.
                 </p>
 
                 {/* Buttons - centered */}
