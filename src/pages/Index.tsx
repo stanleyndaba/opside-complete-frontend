@@ -920,7 +920,7 @@ const Index = () => {
               </h2>
 
               <div className="flex flex-col items-center gap-6 pt-4">
-                <AmazonConnect className="min-w-[280px] h-16 text-xl rounded-full shadow-2xl hover:shadow-blue-200/50 transition-all duration-500 font-normal scale-105 active:scale-100" />
+                <AmazonConnect className="min-w-[280px] h-16 text-xl transition-all duration-500 font-normal scale-105 active:scale-100" />
                 <div className="flex flex-col items-center gap-2">
                   <p className="text-[11px] font-bold text-gray-400 font-mono tracking-[0.2em] uppercase">
                     Verification Phase // Phase 01

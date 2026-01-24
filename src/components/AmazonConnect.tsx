@@ -257,10 +257,9 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-black border-none text-white font-medium focus:ring-0 transition-all px-4",
+              "w-full bg-black border-none text-white font-medium focus:ring-0 transition-all px-4 rounded-none",
               heightClass
-            )}
-            style={{ borderRadius: '0px' }}>
+            )}>
             <SelectValue placeholder="Amazon Marketplace" />
           </SelectTrigger>
           <SelectContent className="bg-black border-none shadow-2xl rounded-none text-white">
@@ -279,11 +278,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         style={{ backgroundColor: 'transparent', color: '#000000' }}
         className={cn(
           "w-full sm:w-auto flex-1 sm:flex-none",
-          "justify-center font-bold transition-all active:scale-95 px-6 shrink-0 border-none hover:bg-black/5 items-center gap-1.5",
+          "justify-center font-bold transition-all active:scale-95 px-6 shrink-0 border-none hover:bg-black/5 items-center gap-1.5 rounded-none",
           heightClass,
-          buttonClassName?.includes('rounded-full') ? 'rounded-full' : 'rounded-lg',
           connecting && 'opacity-80',
-          buttonClassName
+          buttonClassName?.replace('rounded-full', '')
         )}>
         {connecting ? (
           <>
