@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { RefreshCw, Sparkles } from 'lucide-react';
 import { api } from '@/lib/api';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 
 // ... (keep all the existing interfaces and constants)
@@ -16,6 +16,7 @@ import { useToast } from '@/components/ui/use-toast';
 export default function IntegrationsHub() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
@@ -248,7 +249,11 @@ export default function IntegrationsHub() {
 
       // Auto-redirect to sync page after 2-3 seconds to show the live dialogue logs
       setTimeout(() => {
-        navigate('/sync');
+        if (tenantSlug) {
+          navigate(`/app/${tenantSlug}/sync`);
+        } else {
+          navigate('/sync');
+        }
       }, 2500);
       return; // Exit early to avoid processing other providers
     }
@@ -444,7 +449,7 @@ export default function IntegrationsHub() {
                   <p className="text-xs text-gray-500 mt-0.5">Email and cloud for auto-ingestion</p>
                 </div>
                 <div className="p-6 space-y-4">
-                  {evidenceSources.length> 0 && (
+                  {evidenceSources.length > 0 && (
                     <div className="mb-4 p-3 bg-gray-50 border border-gray-200">
                       <p className="text-xs text-gray-500 font-medium mb-2">Connected Sources</p>
                       <div className="flex flex-wrap gap-1.5">
@@ -1119,7 +1124,7 @@ export default function IntegrationsHub() {
                         }}
                         disabled={ingestingGmail || ingestingAll || (() => {
                           const connectedSources = evidenceSources.filter(s => s.status === 'connected');
-                          if (connectedSources.length> 0) return false;
+                          if (connectedSources.length > 0) return false;
                           if (status?.providerIngest) {
                             return !Object.values(status.providerIngest).some((p: any) => p?.connected === true);
                           }
@@ -1135,7 +1140,7 @@ export default function IntegrationsHub() {
                         )}
                       </Button>
                       <p className="text-xs text-gray-500 text-center">
-                        {evidenceSources.filter(s => s.status === 'connected').length> 0 ||
+                        {evidenceSources.filter(s => s.status === 'connected').length > 0 ||
                           (status?.providerIngest && Object.values(status.providerIngest).some((p: any) => p?.connected === true))
                           ? 'Uses unified orchestrator – processes all connected sources simultaneously in parallel.'
                           : 'Connect at least one evidence source to begin ingestion.'}
@@ -1182,7 +1187,7 @@ export default function IntegrationsHub() {
                                 </div>
                               </div>
                             )}
-                            {ingestionResult.errors && ingestionResult.errors.length> 0 && (
+                            {ingestionResult.errors && ingestionResult.errors.length > 0 && (
                               <div className="mt-3 pt-3 border-t border-gray-300">
                                 <p className="text-xs font-semibold text-gray-600 mb-2">Errors</p>
                                 <ul className="text-xs text-gray-700 space-y-1">
@@ -1271,7 +1276,7 @@ export default function IntegrationsHub() {
                     const totalDocs = ingestionResult?.totalDocumentsIngested || ingestionResult?.documentsIngested || 0;
                     const parts = [];
 
-                    if (connectedProviders.length> 0) {
+                    if (connectedProviders.length > 0) {
                       parts.push(`Connected: ${connectedProviders.join(', ')}`);
                     }
 
@@ -1287,7 +1292,7 @@ export default function IntegrationsHub() {
                       parts.push('Amazon SP-API synced');
                     }
 
-                    return parts.length> 0 ? parts.join(' • ') : 'No activity yet';
+                    return parts.length > 0 ? parts.join(' • ') : 'No activity yet';
                   })()}
                 </p>
               </div>
