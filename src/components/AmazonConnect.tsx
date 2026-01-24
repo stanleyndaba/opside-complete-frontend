@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronDown } from 'lucide-react';
+import { Loader2, ChevronDown, ChevronRight } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -257,13 +257,13 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-black border-none text-white font-medium focus:ring-0 transition-all",
-              heightClass,
-              buttonClassName?.includes('rounded-full') ? 'rounded-full px-6' : 'rounded-lg'
-            )}>
+              "w-full bg-black border-none text-white font-medium focus:ring-0 transition-all px-4",
+              heightClass
+            )}
+            style={{ borderRadius: '0px' }}>
             <SelectValue placeholder="Amazon Marketplace" />
           </SelectTrigger>
-          <SelectContent className="bg-black border-none shadow-2xl rounded-xl text-white">
+          <SelectContent className="bg-black border-none shadow-2xl rounded-none text-white">
             {marketplaces.map((mp) => (
               <SelectItem key={mp.id} value={mp.id} className="text-sm font-medium py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
                 {mp.name}
@@ -279,7 +279,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         style={{ backgroundColor: 'transparent', color: '#000000' }}
         className={cn(
           "w-full sm:w-auto flex-1 sm:flex-none",
-          "justify-center font-bold transition-all active:scale-95 px-6 shrink-0 border-none hover:bg-black/5",
+          "justify-center font-bold transition-all active:scale-95 px-6 shrink-0 border-none hover:bg-black/5 items-center gap-1.5",
           heightClass,
           buttonClassName?.includes('rounded-full') ? 'rounded-full' : 'rounded-lg',
           connecting && 'opacity-80',
@@ -291,7 +291,9 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             Connecting...
           </>
         ) : (
-          'Connect Account'
+          <>
+            Connect Account <ChevronRight className="h-4 w-4" />
+          </>
         )}
       </Button>
     </div>
