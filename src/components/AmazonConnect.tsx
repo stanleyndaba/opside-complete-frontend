@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronDown } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface AmazonConnectProps {
   onConnectionStart?: () => void;
@@ -15,7 +16,7 @@ interface AmazonConnectProps {
 export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
-  const [selectedMarketplace, setSelectedMarketplace] = useState('ATVPDKIKX0DER'); // Default to US
+  const [selectedMarketplace, setSelectedMarketplace] = useState<string>(''); // No default to show placeholder
   const { toast } = useToast();
 
   const marketplaces = [
@@ -38,6 +39,16 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         setUsingExisting(false);
       }
       onConnectionStart?.();
+
+      if (!selectedMarketplace) {
+        toast({
+          title: 'Marketplace Required',
+          description: 'Please select an Amazon Marketplace to continue.',
+          variant: 'destructive'
+        });
+        setConnecting(false);
+        return;
+      }
 
       // ✅ CORRECT: Start OAuth flow with selected marketplace
       const response = await api.connectAmazon(selectedMarketplace);
@@ -237,24 +248,20 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const isFullWidth = className?.includes('w-full');
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-muted-foreground mr-auto">
-          Amazon Marketplace
-        </label>
-        <select
-          value={selectedMarketplace}
-          onChange={(e) => setSelectedMarketplace(e.target.value)}
-          disabled={connecting}
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ borderRadius: '0px' }}
-        >
-          {marketplaces.map((mp) => (
-            <option key={mp.id} value={mp.id}>
-              {mp.name}
-            </option>
-          ))}
-        </select>
+    <div className="flex flex-col sm:flex-row items-end gap-3 w-full sm:w-auto">
+      <div className="flex flex-col gap-2 w-full sm:w-[220px]">
+        <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
+          <SelectTrigger className="w-full h-11 bg-white border-gray-200 text-gray-700 font-medium focus:ring-4 focus:ring-gray-100 transition-all" style={{ borderRadius: '8px' }}>
+            <SelectValue placeholder="Amazon Marketplace" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border-gray-100 shadow-2xl rounded-xl">
+            {marketplaces.map((mp) => (
+              <SelectItem key={mp.id} value={mp.id} className="text-sm font-medium py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                {mp.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <Button
@@ -262,19 +269,18 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         disabled={connecting}
         className={cn(
           isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center font-medium shadow-lg transition-colors px-8',
+          'justify-center font-bold shadow-xl transition-all h-11 px-8 active:scale-95',
           connecting && 'opacity-80',
           className
         )}
         style={{
           backgroundColor: '#000000',
-          borderRadius: '0px',
+          borderRadius: '8px',
           color: '#ffffff'
-        }}
-        size="lg">
+        }}>
         {connecting ? (
           <>
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Connecting...
           </>
         ) : (

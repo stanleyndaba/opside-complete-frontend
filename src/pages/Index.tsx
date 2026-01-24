@@ -456,6 +456,12 @@ const Index = () => {
                 style={{ borderRadius: '0px' }}>
                 Enterprise
               </Link>
+              <Link
+                to="/contact"
+                className="h-9 px-5 text-sm font-medium text-gray-700 bg-transparent border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-colors inline-flex items-center"
+                style={{ borderRadius: '0px' }}>
+                Talk to Sales
+              </Link>
             </nav>
             <button
               type="button"
@@ -642,11 +648,6 @@ const Index = () => {
                 {/* Buttons - centered */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <AmazonConnect className="w-full sm:w-auto min-w-[200px]" />
-                  <Link
-                    to="/contact"
-                    className="w-full sm:w-auto min-w-[160px] h-11 rounded-lg bg-transparent text-gray-700 font-medium inline-flex items-center justify-center gap-2 hover:text-gray-900 transition-colors">
-                    Talk to Sales <span aria-hidden="true">→</span>
-                  </Link>
                 </div>
               </div>
             </motion.div>
