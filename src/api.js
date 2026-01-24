@@ -1,14 +1,15 @@
 // src/api.js
 // Use environment variable or default to production backend
-const API_BASE_URL = 
+const API_BASE_URL =
   (typeof import !== 'undefined' && import.meta?.env?.VITE_INTEGRATIONS_URL) ||
-  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://opside-node-api-woco.onrender.com');
+    (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://opside-node-api-woco.onrender.com');
 
 const api = {
-  login: async () => {
+  login: async (marketplaceId) => {
     try {
-      console.log('Starting login process...');
-      const response = await fetch(`${API_BASE_URL}/api/v1/integrations/amazon/auth/start`, {
+      console.log('Starting login process...', { marketplaceId });
+      const queryParams = marketplaceId ? `?marketplaceId=${marketplaceId}` : '';
+      const response = await fetch(`${API_BASE_URL}/api/v1/integrations/amazon/auth/start${queryParams}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -33,11 +34,12 @@ const api = {
       console.error('Login failed:', error);
     }
   },
-  
-  connectAmazon: async () => {
+
+  connectAmazon: async (marketplaceId) => {
     try {
-      console.log('Starting Amazon connection...');
-      const response = await fetch(`${API_BASE_URL}/api/v1/integrations/amazon/auth/start`, {
+      console.log('Starting Amazon connection...', { marketplaceId });
+      const queryParams = marketplaceId ? `?marketplaceId=${marketplaceId}` : '';
+      const response = await fetch(`${API_BASE_URL}/api/v1/integrations/amazon/auth/start${queryParams}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -62,15 +64,15 @@ const api = {
       console.error('Connect Amazon failed:', error);
     }
   },
-  
+
   getMetrics: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/metrics`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Get metrics failed:', error);

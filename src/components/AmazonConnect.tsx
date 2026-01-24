@@ -15,7 +15,21 @@ interface AmazonConnectProps {
 export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
+  const [selectedMarketplace, setSelectedMarketplace] = useState('ATVPDKIKX0DER'); // Default to US
   const { toast } = useToast();
+
+  const marketplaces = [
+    { id: 'ATVPDKIKX0DER', name: 'United States (US)', region: 'North America' },
+    { id: 'A2EUQ1WTGCTBG2', name: 'Canada (CA)', region: 'North America' },
+    { id: 'A1AM78C64UM0Y8', name: 'Mexico (MX)', region: 'North America' },
+    { id: 'A1PA6795UKMFR9', name: 'Germany (DE)', region: 'Europe' },
+    { id: 'A1F8U5RK5QF0S', name: 'United Kingdom (UK)', region: 'Europe' },
+    { id: 'APJ6JRA9NG5V4', name: 'Italy (IT)', region: 'Europe' },
+    { id: 'A13V1IB3VIYZZH', name: 'France (FR)', region: 'Europe' },
+    { id: 'ARE699S9C6Y0F', name: 'South Africa (ZA)', region: 'Europe' },
+    { id: 'A1VC38T7YXB528', name: 'Japan (JP)', region: 'Far East' },
+    { id: 'A19970868YG99F', name: 'Australia (AU)', region: 'Far East' },
+  ];
 
   const handleConnect = async () => {
     try {
@@ -25,9 +39,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       }
       onConnectionStart?.();
 
-      // ✅ CORRECT: Start OAuth flow
-      // Step 1: Call /auth/start to get OAuth URL
-      const response = await api.connectAmazon();
+      // ✅ CORRECT: Start OAuth flow with selected marketplace
+      const response = await api.connectAmazon(selectedMarketplace);
 
       if (!response.ok) {
         console.error('[AmazonConnect] Failed to get OAuth URL:', response.error);
@@ -224,7 +237,26 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const isFullWidth = className?.includes('w-full');
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-muted-foreground mr-auto">
+          Amazon Marketplace
+        </label>
+        <select
+          value={selectedMarketplace}
+          onChange={(e) => setSelectedMarketplace(e.target.value)}
+          disabled={connecting}
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ borderRadius: '0px' }}
+        >
+          {marketplaces.map((mp) => (
+            <option key={mp.id} value={mp.id}>
+              {mp.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <Button
         onClick={handleConnect}
         disabled={connecting}
@@ -246,7 +278,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             Connecting...
           </>
         ) : (
-          'Start Recovery'
+          'Connect Amazon Account'
         )}
       </Button>
     </div>
