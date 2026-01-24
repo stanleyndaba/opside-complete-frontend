@@ -342,20 +342,22 @@ export const api = {
   postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
-  connectAmazon: async (bypassOAuth = false) => {
+  connectAmazon: async (marketplaceId?: string, bypassOAuth = false) => {
     // Step 1: Call /auth/start to get OAuth URL
     // Get current frontend URL and pass it to backend for OAuth redirect configuration
     // Backend needs this to know where to redirect after OAuth completes
     // This handles Vercel preview deployments where the URL changes each deploy
     const frontendUrl = getFrontendUrl();
     const bypassParam = bypassOAuth ? '&bypass=true' : '';
+    const marketplaceParam = marketplaceId && typeof marketplaceId === 'string' ? `&marketplaceId=${marketplaceId}` : '';
+
     const response = await requestJson<{
       auth_url?: string;
       authUrl?: string;
       state?: string;
       success?: boolean;
       message?: string;
-    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}${bypassParam}`);
+    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}${bypassParam}${marketplaceParam}`);
 
     if (response.ok && response.data) {
       const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
@@ -364,6 +366,7 @@ export const api = {
         response.data = {
           ...response.data,
           auth_url: normalizedAuthUrl,
+          authUrl: normalizedAuthUrl,
         };
       }
     }
@@ -375,9 +378,11 @@ export const api = {
   },
 
   // Use existing Amazon connection (bypass OAuth if refresh token exists)
-  useExistingAmazonConnection: async () => {
+  useExistingAmazonConnection: async (marketplaceId?: string) => {
     // Call the OAuth start endpoint with bypass=true to use existing refresh token
     const frontendUrl = getFrontendUrl();
+    const marketplaceParam = marketplaceId && typeof marketplaceId === 'string' ? `&marketplaceId=${marketplaceId}` : '';
+
     const response = await requestJson<{
       auth_url?: string;
       authUrl?: string;
@@ -386,7 +391,7 @@ export const api = {
       message?: string;
       bypassed?: boolean;
       redirectUrl?: string;
-    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}&bypass=true`);
+    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}&bypass=true${marketplaceParam}`);
 
     // If bypass worked, backend returns JSON with bypassed: true and redirectUrl
     // If not, we'll get the OAuth URL as fallback
@@ -402,6 +407,7 @@ export const api = {
         response.data = {
           ...response.data,
           auth_url: normalizedAuthUrl,
+          authUrl: normalizedAuthUrl,
         };
       }
     }
