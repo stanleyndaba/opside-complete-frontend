@@ -458,9 +458,9 @@ const Index = () => {
               </Link>
               <Link
                 to="/contact"
-                className="h-9 px-5 text-sm font-medium text-gray-700 bg-transparent border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-colors inline-flex items-center"
+                className="h-9 px-4 text-sm font-medium text-gray-700 bg-transparent hover:text-gray-900 transition-colors inline-flex items-center gap-1.5"
                 style={{ borderRadius: '0px' }}>
-                Talk to Sales
+                Talk to Sales <span aria-hidden="true">→</span>
               </Link>
             </nav>
             <button

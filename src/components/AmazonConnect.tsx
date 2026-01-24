@@ -253,19 +253,19 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-      <div className="w-full sm:w-[240px]">
+      <div className="w-full sm:w-[200px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-white border-gray-200 text-gray-700 font-medium focus:ring-4 focus:ring-gray-100 transition-all",
+              "w-full bg-black border-none text-white font-medium focus:ring-0 transition-all",
               heightClass,
               buttonClassName?.includes('rounded-full') ? 'rounded-full px-6' : 'rounded-lg'
             )}>
             <SelectValue placeholder="Amazon Marketplace" />
           </SelectTrigger>
-          <SelectContent className="bg-white border-gray-100 shadow-2xl rounded-xl">
+          <SelectContent className="bg-black border-none shadow-2xl rounded-xl text-white">
             {marketplaces.map((mp) => (
-              <SelectItem key={mp.id} value={mp.id} className="text-sm font-medium py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+              <SelectItem key={mp.id} value={mp.id} className="text-sm font-medium py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
                 {mp.name}
               </SelectItem>
             ))}
@@ -276,10 +276,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       <Button
         onClick={handleConnect}
         disabled={connecting}
-        style={{ backgroundColor: '#000000', color: '#ffffff' }}
+        style={{ backgroundColor: 'transparent', color: '#000000' }}
         className={cn(
           "w-full sm:w-auto flex-1 sm:flex-none",
-          "justify-center font-bold shadow-xl transition-all active:scale-95 px-10 shrink-0",
+          "justify-center font-bold transition-all active:scale-95 px-6 shrink-0 border-none hover:bg-black/5",
           heightClass,
           buttonClassName?.includes('rounded-full') ? 'rounded-full' : 'rounded-lg',
           connecting && 'opacity-80',
@@ -291,7 +291,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             Connecting...
           </>
         ) : (
-          'Connect Amazon Account'
+          'Connect Account'
         )}
       </Button>
     </div>
