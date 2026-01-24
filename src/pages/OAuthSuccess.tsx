@@ -44,11 +44,13 @@ export default function OAuthSuccess() {
   const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const status = params.get('status') || 'ok';
   const provider = params.get('provider') || 'amazon';
+  const tenant_slug = params.get('tenant_slug') || params.get('tenant') || '';
+  const marketplaceId = params.get('marketplaceId') || '';
   const scopesParam = params.get('scopes') || '';
   const scopes = useMemo(() => scopesParam.split(',').map(s => s.trim()).filter(Boolean), [scopesParam]);
 
   useEffect(() => {
-    api.trackEvent && (api as any).trackEvent('oauth_success_view', { provider, status });
+    api.trackEvent && (api as any).trackEvent('oauth_success_view', { provider, status, tenant_slug });
     (async () => {
       // Allow cookie persistence before auth-required calls
       await new Promise(r => setTimeout(r, 800));
@@ -57,20 +59,25 @@ export default function OAuthSuccess() {
       // Always prompt evidence connections regardless of Amazon status
       setTimeout(() => setConnectEvidenceOpen(true), 600);
     })();
-  }, [provider, status]);
+  }, [provider, status, tenant_slug]);
 
   const handleStartSync = async () => {
     setLoading(true);
     try {
-      (api as any).trackEvent && (api as any).trackEvent('first_sync_clicked', { provider });
-    } catch {}
-    // Navigate to the live sync/status page
-    navigate('/smart-inventory-sync');
+      (api as any).trackEvent && (api as any).trackEvent('first_sync_clicked', { provider, tenant_slug });
+    } catch { }
+
+    // Navigate to the tenant-scoped sync page as requested
+    if (tenant_slug) {
+      navigate(`/app/${tenant_slug}/sync`);
+    } else {
+      navigate('/sync');
+    }
   };
 
   const handleReconnect = async () => {
     setLoading(true);
-    api.trackEvent('oauth_reconnect_clicked', { provider });
+    api.trackEvent('oauth_reconnect_clicked', { provider, tenant_slug });
     const res = await api.connectAmazon();
     setLoading(false);
     if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
@@ -78,7 +85,7 @@ export default function OAuthSuccess() {
 
   const handleDisconnect = async (purge: boolean) => {
     setLoading(true);
-    api.trackEvent('disconnect_clicked', { provider, purge });
+    api.trackEvent('disconnect_clicked', { provider, purge, tenant_slug });
     await api.disconnectIntegration(provider, purge);
     const s = await api.getIntegrationsStatus();
     if (s.ok) setStatusData(s.data);
@@ -86,47 +93,57 @@ export default function OAuthSuccess() {
     setDisconnectOpen(false);
   };
 
-  const grantedScopes = scopes.length> 0 ? scopes : (statusData?.providers ? Object.keys(statusData.providers) : []);
+  const grantedScopes = scopes.length > 0 ? scopes : (statusData?.providers ? Object.keys(statusData.providers) : []);
 
   return (
-    <PageLayout title="Connection Complete">
+    <PageLayout title="Authorised Successfully">
       <div className="max-w-3xl mx-auto space-y-6">
-        <Card>
+        <Card className="border-emerald-500/20 shadow-lg shadow-emerald-500/5">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
               {status === 'ok' ? (
-                <CheckCircle className="h-6 w-6 text-green-600" />
+                <CheckCircle className="h-8 w-8 text-emerald-500" />
               ) : (
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+                <AlertTriangle className="h-8 w-8 text-red-600" />
               )}
               <div>
-                <CardTitle className="text-xl">
-                  {status === 'ok' ? 'Connected — We are starting your scan' : 'We could not complete the connection'}
+                <CardTitle className="text-2xl font-bold tracking-tight">
+                  {status === 'ok' ? 'Authorised Successfully' : 'Connection Interrupted'}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-base mt-1">
                   {status === 'ok'
-                    ? 'You will see your estimate and first findings in about 60–120 seconds.'
+                    ? `Your ${provider === 'amazon' ? 'Amazon Store' : provider} is now securely linked to your dashboard.`
                     : 'Please retry with the required permissions, or contact support if the problem persists.'}
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-5">
+          <CardContent className="space-y-6">
+            {status === 'ok' && (
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
+                <p className="text-sm font-medium text-emerald-800">
+                  Authentication complete. We are now preparing your first scan to find recoveries.
+                </p>
+              </div>
+            )}
+
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">Access we request — and why</p>
-              <div className="grid sm:grid-cols-2 gap-2">
-                {grantedScopes.length> 0 ? (
+              <p className="text-sm font-medium text-muted-foreground mb-3">Permissions granted</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {grantedScopes.length > 0 ? (
                   grantedScopes.map((scope, idx) => (
-                    <div key={`${scope}-${idx}`} className="flex items-start gap-2 p-2 rounded-md border">
-                      <Shield className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                    <div key={`${scope}-${idx}`} className="flex items-start gap-2 p-3 rounded-lg border bg-gray-50/50">
+                      <Shield className="h-4 w-4 mt-0.5 text-emerald-600" />
                       <div>
-                        <div className="text-sm font-medium">{SCOPE_COPY[scope]?.label || scope}</div>
-                        <div className="text-xs text-muted-foreground">{SCOPE_COPY[scope]?.why || 'Used to improve recovery detection and reconciliation.'}</div>
+                        <div className="text-sm font-semibold">{SCOPE_COPY[scope]?.label || scope}</div>
+                        <div className="text-xs text-muted-foreground leading-relaxed">{SCOPE_COPY[scope]?.why || 'Used to improve recovery detection and reconciliation.'}</div>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-sm text-muted-foreground">Scopes will appear once the connection is finalized.</div>
+                  <div className="text-sm text-muted-foreground italic p-4 text-center border rounded-lg border-dashed">
+                    Finalizing connection details...
+                  </div>
                 )}
               </div>
             </div>
@@ -134,17 +151,17 @@ export default function OAuthSuccess() {
             {status !== 'ok' ? (
               <div className="flex gap-3">
                 <Button onClick={handleReconnect} disabled={loading} className="gap-2">
-                  <RefreshCw className="h-4 w-4" /> Reconnect with correct permissions
+                  <RefreshCw className="h-4 w-4" /> Reconnect
                 </Button>
                 <Button variant="outline" onClick={() => navigate('/help')}>Get Help</Button>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-3">
-                <Button onClick={handleStartSync} disabled={loading} className="gap-2">
-                  <ArrowRight className="h-4 w-4" /> See what we found
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button onClick={handleStartSync} disabled={loading} className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02]">
+                  See Findings <ArrowRight className="h-5 w-5" />
                 </Button>
-                <Button variant="outline" onClick={() => setDisconnectOpen(true)} className="gap-2">
-                  <Power className="h-4 w-4" /> Disconnect & purge
+                <Button variant="ghost" onClick={() => setDisconnectOpen(true)} className="gap-2 text-muted-foreground hover:text-red-600">
+                  <Power className="h-4 w-4" /> Disconnect
                 </Button>
               </div>
             )}
@@ -187,10 +204,10 @@ export default function OAuthSuccess() {
       {/* Evidence Connections Prompt */}
       <Dialog open={connectEvidenceOpen} onOpenChange={setConnectEvidenceOpen}>
         <DialogContent className="max-w-lg bg-[#0B1220]/80 backdrop-blur-2xl border border-white/10 text-gray-100 shadow-[0_20px_80px_rgba(0,0,0,0.6)] rounded-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-lg text-gray-100">
-                Connect Evidence Sources
-              </DialogTitle>
+          <DialogHeader>
+            <DialogTitle className="text-lg text-gray-100">
+              Connect Evidence Sources
+            </DialogTitle>
             <DialogDescription className="text-gray-300">
               Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
               <span className="block mt-2 text-sm text-gray-400">
