@@ -253,7 +253,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-      <div className="flex-1 sm:flex-initial w-full sm:w-[240px]">
+      <div className="w-full sm:w-[240px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
@@ -278,8 +278,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         disabled={connecting}
         style={{ backgroundColor: '#000000', color: '#ffffff' }}
         className={cn(
-          isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center font-bold shadow-xl transition-all active:scale-95 px-8 shrink-0',
+          "w-full sm:w-auto flex-1 sm:flex-none",
+          "justify-center font-bold shadow-xl transition-all active:scale-95 px-10 shrink-0",
           heightClass,
           buttonClassName?.includes('rounded-full') ? 'rounded-full' : 'rounded-lg',
           connecting && 'opacity-80',
@@ -294,6 +294,6 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           'Connect Amazon Account'
         )}
       </Button>
-    </div >
+    </div>
   );
 }
