@@ -246,12 +246,21 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   // Check if className includes w-full to make buttons full width
   const isFullWidth = className?.includes('w-full');
+  // Check if className includes h- for height, otherwise default to h-11
+  const heightClass = className?.split(' ').find(c => c.startsWith('h-')) || 'h-11';
+  // Remove height from button className since we handle it explicitly on the container/trigger
+  const buttonClassName = className?.split(' ').filter(c => !c.startsWith('h-')).join(' ');
 
   return (
-    <div className="flex flex-col sm:flex-row items-end gap-3 w-full sm:w-auto">
-      <div className="flex flex-col gap-2 w-full sm:w-[220px]">
+    <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+      <div className="flex-1 sm:flex-initial w-full sm:w-[240px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
-          <SelectTrigger className="w-full h-11 bg-white border-gray-200 text-gray-700 font-medium focus:ring-4 focus:ring-gray-100 transition-all" style={{ borderRadius: '8px' }}>
+          <SelectTrigger
+            className={cn(
+              "w-full bg-white border-gray-200 text-gray-700 font-medium focus:ring-4 focus:ring-gray-100 transition-all",
+              heightClass,
+              buttonClassName?.includes('rounded-full') ? 'rounded-full px-6' : 'rounded-lg'
+            )}>
             <SelectValue placeholder="Amazon Marketplace" />
           </SelectTrigger>
           <SelectContent className="bg-white border-gray-100 shadow-2xl rounded-xl">
@@ -267,17 +276,15 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       <Button
         onClick={handleConnect}
         disabled={connecting}
+        style={{ backgroundColor: '#000000', color: '#ffffff' }}
         className={cn(
           isFullWidth ? 'w-full' : 'w-auto',
-          'justify-center font-bold shadow-xl transition-all h-11 px-8 active:scale-95',
+          'justify-center font-bold shadow-xl transition-all active:scale-95 px-8 shrink-0',
+          heightClass,
+          buttonClassName?.includes('rounded-full') ? 'rounded-full' : 'rounded-lg',
           connecting && 'opacity-80',
-          className
-        )}
-        style={{
-          backgroundColor: '#000000',
-          borderRadius: '8px',
-          color: '#ffffff'
-        }}>
+          buttonClassName
+        )}>
         {connecting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -287,6 +294,6 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           'Connect Amazon Account'
         )}
       </Button>
-    </div>
+    </div >
   );
 }
