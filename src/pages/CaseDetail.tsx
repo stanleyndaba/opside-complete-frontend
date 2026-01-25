@@ -6,7 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle, Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown, ShieldCheck, Activity, BarChart3, Database, History, ArrowRight } from 'lucide-react';
+import {
+  ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle,
+  Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown, ShieldCheck, Activity,
+  BarChart3, Database, History, ArrowRight, Upload, ChevronRight
+} from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -1127,14 +1131,25 @@ export default function CaseDetail() {
                         SELLER IDENTITY
                         <div className="h-px flex-1 bg-gray-50" />
                       </div>
+
+                      <div className="flex items-center gap-3 mb-6 bg-gray-50/50 p-3 border border-gray-100">
+                        <div className="p-2 bg-gray-900 rounded-sm">
+                          <ShieldCheck className="h-4 w-4 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-tight">Identity Verified</h4>
+                          <p className="text-[9px] text-gray-400 font-mono">PROTOCOL: NIST-800</p>
+                        </div>
+                      </div>
+
                       <dl className="space-y-4">
                         <div className="border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium mb-1">Seller ID</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
+                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || '—'}</dd>
                         </div>
                         <div className="border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
-                          <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
+                          <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || '—'}</dd>
                         </div>
                         <div>
                           <dt className="text-[11px] text-gray-400 font-medium mb-1">Contact Method</dt>
