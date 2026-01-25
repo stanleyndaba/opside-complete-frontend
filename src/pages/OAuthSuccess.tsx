@@ -41,25 +41,45 @@ export default function OAuthSuccess() {
   const [loading, setLoading] = useState(false);
   const [statusData, setStatusData] = useState<any>(null);
 
-  const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const params = useMemo(() => {
+    const p = new URLSearchParams(location.search);
+    console.log('[OAuthSuccess] Landing Parameters:', Object.fromEntries(p.entries()));
+    return p;
+  }, [location.search]);
+
   const status = params.get('status') || 'ok';
   const provider = params.get('provider') || 'amazon';
   const tenant_slug = params.get('tenant_slug') || params.get('tenant') || '';
-  const marketplaceId = params.get('marketplaceId') || '';
-  const scopesParam = params.get('scopes') || '';
-  const scopes = useMemo(() => scopesParam.split(',').map(s => s.trim()).filter(Boolean), [scopesParam]);
+  const authBridge = params.get('auth_bridge') === 'true';
 
   useEffect(() => {
+    console.log('[OAuthSuccess] Component mounted', { status, provider, tenant_slug, authBridge });
+
     api.trackEvent && (api as any).trackEvent('oauth_success_view', { provider, status, tenant_slug });
+
     (async () => {
-      // Allow cookie persistence before auth-required calls
-      await new Promise(r => setTimeout(r, 800));
-      const res = await api.getIntegrationsStatus();
-      if (res.ok) setStatusData(res.data);
+      // If we have an auth bridge, wait longer for session to settle
+      const waitTime = authBridge ? 1200 : 800;
+      console.log(`[OAuthSuccess] Waiting ${waitTime}ms for session...`);
+      await new Promise(r => setTimeout(r, waitTime));
+
+      try {
+        console.log('[OAuthSuccess] Fetching integrations status...');
+        const res = await api.getIntegrationsStatus();
+        if (res.ok) {
+          console.log('[OAuthSuccess] Status loaded:', res.data);
+          setStatusData(res.data);
+        } else {
+          console.warn('[OAuthSuccess] Status fetch failed (likely expected if anonymous):', res.status);
+        }
+      } catch (err) {
+        console.error('[OAuthSuccess] Status fetch error:', err);
+      }
+
       // Always prompt evidence connections regardless of Amazon status
       setTimeout(() => setConnectEvidenceOpen(true), 600);
     })();
-  }, [provider, status, tenant_slug]);
+  }, [provider, status, tenant_slug, authBridge]);
 
   const handleStartSync = async () => {
     setLoading(true);
