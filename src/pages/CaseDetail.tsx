@@ -722,20 +722,26 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "px-8 py-4 text-xs font-bold transition-all relative",
+                  "px-8 py-4 text-[10px] uppercase font-bold tracking-[0.2em] transition-all duration-300 relative",
                   activeTab === 'RECORD' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
                 CASE RECORD
-                {activeTab === 'RECORD' && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900" />}
+                <div className={cn(
+                  "absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 transition-all duration-300 transform origin-left",
+                  activeTab === 'RECORD' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+                )} />
               </button>
               <button
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "px-8 py-4 text-xs font-bold transition-all relative",
+                  "px-8 py-4 text-[10px] uppercase font-bold tracking-[0.2em] transition-all duration-300 relative",
                   activeTab === 'PROTOCOL' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
                 RESOLUTION PROTOCOL
-                {activeTab === 'PROTOCOL' && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900" />}
+                <div className={cn(
+                  "absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 transition-all duration-300 transform origin-left",
+                  activeTab === 'PROTOCOL' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+                )} />
               </button>
             </div>
 
@@ -748,7 +754,7 @@ export default function CaseDetail() {
                     <h3 className="text-xs font-bold text-gray-900">Audit Narrative & Logistics</h3>
                   </div>
                   <div className="space-y-8">
-                    <p className="text-sm text-gray-700 leading-relaxed font-light">
+                    <p className="text-[15px] text-gray-700 leading-relaxed font-normal tracking-tight">
                       {generateNarrative(effectiveCase)}
                     </p>
 
@@ -757,26 +763,30 @@ export default function CaseDetail() {
                       <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-4">
                           <div>
-                            <p className="text-xs text-gray-400 mb-1">Product Identity</p>
-                            <p className="text-xs font-medium text-gray-900 leading-snug truncate" title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
+                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">Product Identity</p>
+                            <p className="text-sm font-semibold text-gray-900 leading-snug truncate" title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
                               {effectiveCase.productName || effectiveCase.title || 'Unknown Product'}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs text-gray-400 mb-1">ASIN / SKU</p>
-                            <p className="text-xs font-mono font-bold text-gray-900">{effectiveCase.asin || '—'} / {effectiveCase.sku || '—'}</p>
+                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">ASIN / SKU</p>
+                            <p className="text-sm font-mono font-bold text-gray-900">
+                              {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-gray-300">PENDING</span>}
+                              <span className="mx-2 text-gray-200">/</span>
+                              {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-gray-300">PENDING</span>}
+                            </p>
                           </div>
                         </div>
                         <div className="space-y-4">
                           <div>
-                            <p className="text-xs text-gray-400 mb-1">Facility Protocol</p>
+                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">Facility Protocol</p>
                             <div className="flex items-center gap-2">
-                              <MapPin className="h-3 w-3 text-gray-400" />
-                              <p className="text-xs font-bold text-gray-900">{effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—'}</p>
+                              <MapPin className="h-3.5 w-3.5 text-gray-400" />
+                              <p className="text-sm font-bold text-gray-900">{effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility : <span className="text-gray-300">LOCATING FC...</span>}</p>
                             </div>
                           </div>
                           <div>
-                            <p className="text-xs text-gray-400 mb-1">Reference IDs</p>
+                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">Reference IDs</p>
                             <div className="space-y-1">
                               {effectiveCase.amazonCaseId ? (
                                 <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
@@ -821,8 +831,8 @@ export default function CaseDetail() {
                   <div className="space-y-8">
                     {/* Forensic Metrics */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-xs font-bold text-gray-900 border-b border-gray-100 pb-2">
-                        <div className="h-1 w-3 bg-emerald-500" /> Forensic Metrics
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                        <div className="h-1 w-2 bg-emerald-500 rounded-full" /> Forensic Metrics
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
                         <div>
@@ -858,8 +868,8 @@ export default function CaseDetail() {
 
                     {/* Timeline Accuracy */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-xs font-bold text-gray-900 border-b border-gray-100 pb-2">
-                        <div className="h-1 w-3 bg-blue-500" /> Timeline Accuracy
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                        <div className="h-1 w-2 bg-blue-500 rounded-full" /> Timeline Accuracy
                       </h4>
                       <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
                         <div>
@@ -883,8 +893,8 @@ export default function CaseDetail() {
 
                     {/* Logistical Trace */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-xs font-bold text-gray-900 border-b border-gray-100 pb-2">
-                        <div className="h-1 w-3 bg-gray-400" /> Logistical Trace
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                        <div className="h-1 w-2 bg-gray-400 rounded-full" /> Logistical Trace
                       </h4>
                       <dl className="space-y-3">
                         <div className="flex justify-between items-baseline">
@@ -912,8 +922,8 @@ export default function CaseDetail() {
 
                     {/* System Metadata */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-xs font-bold text-gray-900 border-b border-gray-100 pb-2">
-                        <div className="h-1 w-3 bg-indigo-500" /> System Metadata
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                        <div className="h-1 w-2 bg-indigo-500 rounded-full" /> System Metadata
                       </h4>
                       <dl className="space-y-3">
                         <div className="flex justify-between items-baseline">
@@ -948,8 +958,8 @@ export default function CaseDetail() {
 
                   <div className="space-y-8">
                     <div>
-                      <div className="text-xs text-gray-400 font-bold mb-2">Guaranteed Amount</div>
-                      <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">
+                      <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Guaranteed Amount</div>
+                      <div className="text-3xl font-light text-gray-900 font-mono tracking-tighter">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
 
@@ -974,10 +984,10 @@ export default function CaseDetail() {
                       )}
                     </div>
 
-                    <div className="border border-gray-100 bg-white">
-                      <div className="px-3 pt-3">
+                    <div className="border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all duration-300">
+                      <div className="px-3 pt-3 border-b border-gray-100/50">
                         <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-xs font-bold text-gray-400 focus:ring-0 shadow-none">
+                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] uppercase font-bold text-gray-400 focus:ring-0 shadow-none tracking-widest">
                             <SelectValue placeholder="Metric View" />
                           </SelectTrigger>
                           <SelectContent className="rounded-none border-gray-100 shadow-none">
