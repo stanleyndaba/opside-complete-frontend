@@ -1048,6 +1048,11 @@ export default function CaseDetail() {
                       </div>
                     </div>
 
+                    {/* Visual Audit Timeline Component */}
+                    <div className="bg-white border border-gray-100 p-6">
+                      <Timeline claimId={effectiveCase.id} />
+                    </div>
+
                     {/* Horizontal Scrollable Events or Multi-column Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 overflow-x-auto pb-4 custom-scrollbar">
                       {(effectiveCase.events || []).slice(0, 4).map((event: any, index: number) => (
