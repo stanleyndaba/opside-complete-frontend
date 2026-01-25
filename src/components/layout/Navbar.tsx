@@ -315,7 +315,7 @@ export function Navbar({
                     aria-label="Notes">
                     <NotebookPen className="h-4 w-4" />
                     {notes.length > 0 && (
-                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-amber-500 rounded-full" />
+                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-gray-300 rounded-full" />
                     )}
                   </button>
 
