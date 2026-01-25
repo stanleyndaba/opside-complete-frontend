@@ -257,7 +257,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-black border-none text-white font-medium focus:ring-0 transition-all px-4 rounded-none",
+              "w-full bg-black border-none text-white font-normal focus:ring-0 transition-all px-4 rounded-none",
               heightClass,
               buttonClassName // Inherit font-size and other text mods
             )}>
@@ -265,7 +265,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           </SelectTrigger>
           <SelectContent className="bg-black border-none shadow-2xl rounded-none text-white">
             {marketplaces.map((mp) => (
-              <SelectItem key={mp.id} value={mp.id} className="text-sm font-medium py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
+              <SelectItem key={mp.id} value={mp.id} className="text-sm font-normal py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
                 {mp.name}
               </SelectItem>
             ))}
