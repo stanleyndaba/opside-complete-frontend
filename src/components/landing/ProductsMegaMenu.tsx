@@ -27,9 +27,9 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex w-[820px] bg-blue-50/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-blue-100/50">
+                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[700px] lg:w-[820px] bg-blue-50/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-blue-100/50 max-h-[85vh] overflow-y-auto">
                             {/* Left Side: Features */}
-                            <div className="flex-1 p-8 grid gap-8">
+                            <div className="flex-1 p-6 lg:p-8 grid gap-8">
 
                                 {/* Section 1: The "Big Three" Core Products */}
                                 <div className="space-y-5">
@@ -129,7 +129,7 @@ export function ProductsMegaMenu() {
                             </div>
 
                             {/* Right Side: Impact Panel */}
-                            <div className="w-[280px] bg-gray-50/30 border-l border-gray-200/80 p-8 flex flex-col justify-between">
+                            <div className="w-full lg:w-[280px] bg-gray-50/30 border-t lg:border-t-0 lg:border-l border-gray-200/80 p-6 lg:p-8 flex flex-col justify-between shrink-0">
                                 <div>
                                     <h4 className="flex items-center gap-2 text-[11px] font-semibold text-gray-900 uppercase tracking-widest mb-6">
                                         <TrendingUp className="h-3.5 w-3.5" />

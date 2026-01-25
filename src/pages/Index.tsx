@@ -511,7 +511,7 @@ const Index = () => {
                               <ShieldAlert className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Live Fee Guard</div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Variance Monitor</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Audit Inbound Placement & Defect fees in real-time.</p>
                             </div>
                           </a>
@@ -536,7 +536,7 @@ const Index = () => {
                               <Search className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Forensic Log Auditor</div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
                             </div>
                           </a>
