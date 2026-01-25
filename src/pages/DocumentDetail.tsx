@@ -321,7 +321,7 @@ export default function DocumentDetail() {
               {/* Order IDs & ASINs Row */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Order IDs */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                     <h4 className="text-xs font-semibold text-gray-700">Order IDs</h4>
                   </div>
@@ -341,7 +341,7 @@ export default function DocumentDetail() {
                 </div>
 
                 {/* ASINs / SKUs */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                     <h4 className="text-xs font-semibold text-gray-700">ASINs / SKUs</h4>
                   </div>
@@ -369,7 +369,7 @@ export default function DocumentDetail() {
               {/* Tracking & Amounts Row */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Tracking Numbers */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                     <h4 className="text-xs font-semibold text-gray-700">Tracking Numbers</h4>
                   </div>
@@ -389,7 +389,7 @@ export default function DocumentDetail() {
                 </div>
 
                 {/* Amounts */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                     <h4 className="text-xs font-semibold text-gray-700">Financial Amounts</h4>
                   </div>
@@ -412,7 +412,7 @@ export default function DocumentDetail() {
               {/* Invoice & Dates Row */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Invoice Numbers */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                     <h4 className="text-xs font-semibold text-gray-700">Invoice Numbers</h4>
                   </div>
@@ -432,7 +432,7 @@ export default function DocumentDetail() {
                 </div>
 
                 {/* Dates */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
                     <h4 className="text-xs font-semibold text-gray-700">Dates Found</h4>
                   </div>

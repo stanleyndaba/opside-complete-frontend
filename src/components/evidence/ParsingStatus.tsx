@@ -153,7 +153,6 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
       {/* Status Overview - Institutional Redesign */}
       <div className="bg-gray-50/50 border-b border-gray-100 py-4 px-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Activity className="w-3.5 h-3.5 text-gray-400 fill-gray-100" />
           <h4 className="text-xs font-semibold text-gray-400">
             Processing Status Overview
           </h4>
