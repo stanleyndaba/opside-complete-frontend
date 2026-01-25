@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 
 interface NotificationBellProps {
   label?: string;
@@ -79,7 +79,7 @@ export function NotificationBell({
     try {
       const date = new Date(n.created_at);
       if (!isNaN(date.getTime())) {
-        timeAgo = formatDistanceToNow(date, { addSuffix: true });
+        timeAgo = format(date, 'MMM d');
       }
     } catch (e) {
       console.error('Invalid date for notification:', n.created_at);
@@ -215,13 +215,7 @@ export function NotificationBell({
 
                   <div className="flex items-center justify-between gap-3 mb-0.5">
                     <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                      <div className={cn(
-                        "h-1.5 w-1.5 rounded-full shrink-0 transition-colors",
-                        notification.type === 'claim_detected' || notification.type === 'case_filed' ? 'bg-blue-500' :
-                          notification.type === 'refund_approved' || notification.type === 'funds_deposited' ? 'bg-emerald-500' :
-                            notification.type === 'amazon_challenge' || notification.type === 'user_action_required' ? 'bg-amber-500' :
-                              notification.type === 'evidence_found' ? 'bg-purple-500' : 'bg-gray-300'
-                      )} />
+                      <div className="h-1 w-1 rounded-full shrink-0 bg-gray-300 mt-1" />
                       <p className={cn(
                         'text-xs truncate flex items-center gap-2',
                         !notification.read ? 'font-bold text-gray-900' : 'font-medium text-gray-600 group-hover:text-gray-900'
@@ -238,7 +232,7 @@ export function NotificationBell({
                       </p>
                     </div>
                     <span className="text-xs text-gray-300 font-mono text-right shrink-0 pt-0.5 whitespace-nowrap">
-                      {notification.timestamp.replace('about ', '').replace(' ago', '').replace('minutes', 'm').replace('minute', 'm').replace('hours', 'h').replace('hour', 'h').replace('days', 'd').replace('day', 'd')}
+                      {notification.timestamp}
                     </span>
                   </div>
 
@@ -293,7 +287,7 @@ export function NotificationBell({
         <div className="px-4 py-3 border-t border-gray-100 flex-shrink-0 bg-gray-50/20">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
             <button className="w-full text-center text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors">
-              Archive // All Records
+              ARCHIVE
             </button>
           </Link>
         </div>
