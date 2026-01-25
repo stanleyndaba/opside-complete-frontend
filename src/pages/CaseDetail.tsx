@@ -746,9 +746,9 @@ export default function CaseDetail() {
             </div>
 
             {activeTab === 'RECORD' && (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-0 border border-gray-100 divide-x divide-gray-100 italic-divider">
+              <div className="flex flex-col gap-0 border border-gray-100 divide-y divide-gray-100 italic-divider">
                 {/* Tile 1: Audit Narrative & Logistics */}
-                <div className="lg:col-span-2 p-8 bg-gray-50/30">
+                <div className="p-8 bg-gray-50/30">
                   <div className="flex items-center gap-2 mb-6">
                     <FileText className="h-3.5 w-3.5 text-gray-400" />
                     <h3 className="text-xs font-bold text-gray-900">Audit Narrative & Logistics</h3>
@@ -759,44 +759,43 @@ export default function CaseDetail() {
                     </p>
 
                     <div className="pt-6 border-t border-gray-100">
-                      <div className="text-xs text-gray-400 font-bold mb-4">Product Trace & Protocols</div>
-                      <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">Product Identity</p>
-                            <p className="text-sm font-semibold text-gray-900 leading-snug truncate" title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
-                              {effectiveCase.productName || effectiveCase.title || 'Unknown Product'}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">ASIN / SKU</p>
-                            <p className="text-sm font-mono font-bold text-gray-900">
-                              {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-gray-300">PENDING</span>}
-                              <span className="mx-2 text-gray-200">/</span>
-                              {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-gray-300">PENDING</span>}
-                            </p>
+                      <div className="text-xs text-gray-400 font-bold mb-6 flex items-center gap-2">
+                        PRODUCT TRACE & PROTOCOLS
+                        <div className="h-px flex-1 bg-gray-100" />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">Product Identity</p>
+                          <p className="text-sm font-semibold text-gray-900 leading-tight truncate" title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
+                            {effectiveCase.productName || effectiveCase.title || 'Unknown Product'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">ASIN / SKU</p>
+                          <p className="text-sm font-mono font-bold text-gray-900">
+                            {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-gray-300">PENDING</span>}
+                            <span className="mx-2 text-gray-200">/</span>
+                            {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-gray-300">PENDING</span>}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">Facility Protocol</p>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-3.5 w-3.5 text-gray-400" />
+                            <p className="text-sm font-bold text-gray-900">{effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility : <span className="text-gray-300">LOCATING FC...</span>}</p>
                           </div>
                         </div>
-                        <div className="space-y-4">
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">Facility Protocol</p>
-                            <div className="flex items-center gap-2">
-                              <MapPin className="h-3.5 w-3.5 text-gray-400" />
-                              <p className="text-sm font-bold text-gray-900">{effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility : <span className="text-gray-300">LOCATING FC...</span>}</p>
-                            </div>
-                          </div>
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-gray-400 mb-1.5 tracking-wider">Reference IDs</p>
-                            <div className="space-y-1">
-                              {effectiveCase.amazonCaseId ? (
-                                <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
-                                  {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
-                                </a>
-                              ) : <span className="text-xs text-gray-400 italic">No Case ID</span>}
-                              {effectiveCase.prior_case_id && (
-                                <div className="text-xs text-gray-500 font-mono">Prior: {effectiveCase.prior_case_id}</div>
-                              )}
-                            </div>
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">Reference IDs</p>
+                          <div className="flex flex-col gap-1">
+                            {effectiveCase.amazonCaseId ? (
+                              <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
+                                {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
+                              </a>
+                            ) : <span className="text-xs text-gray-400 italic">No Case ID</span>}
+                            {effectiveCase.prior_case_id && (
+                              <div className="text-xs text-gray-500 font-mono">Prior: {effectiveCase.prior_case_id}</div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -822,39 +821,33 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Tile 2: Transaction Forensics */}
-                <div className="lg:col-span-1 p-8 bg-gray-50/30">
+                <div className="p-8 bg-white">
                   <div className="flex items-center gap-2 mb-6">
                     <Activity className="h-3.5 w-3.5 text-gray-400" />
                     <h3 className="text-xs font-bold text-gray-900">Transaction Forensics</h3>
                   </div>
 
-                  <div className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                     {/* Forensic Metrics */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-emerald-500 rounded-full" /> Forensic Metrics
                       </h4>
-                      <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
-                        <div>
-                          <dt className="text-xs text-gray-400 mb-1">Units Affected</dt>
-                          <dd className="text-xs font-mono font-medium text-gray-900">
+                      <dl className="space-y-4">
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Units Affected</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
                             {effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1}
                           </dd>
                         </div>
-                        <div>
-                          <dt className="text-xs text-gray-400 mb-1">Value Per Unit</dt>
-                          <dd className="text-xs font-mono font-medium text-gray-900">
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Value Per Unit</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
                             ${((effectiveCase.guaranteedAmount || effectiveCase.amount || 0) / (effectiveCase.unitsLost || effectiveCase.quantity || 1)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </dd>
                         </div>
-                        <div>
-                          <dt className="text-xs text-gray-400 mb-1">Total Claimed</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">
-                            ${Number(effectiveCase.guaranteedAmount || effectiveCase.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-xs text-gray-400 mb-1">Confidence Score</dt>
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Confidence Score</dt>
                           <dd className="text-xs font-mono font-bold text-emerald-600">
                             {(() => {
                               const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
@@ -868,24 +861,24 @@ export default function CaseDetail() {
 
                     {/* Timeline Accuracy */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-blue-500 rounded-full" /> Timeline Accuracy
                       </h4>
-                      <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
-                        <div>
-                          <dt className="text-xs text-gray-400 mb-1">Issue Identified</dt>
-                          <dd className="text-xs font-mono text-gray-900">
+                      <dl className="space-y-4">
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Issue Identified</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
                             {new Date(effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </dd>
                         </div>
-                        <div>
-                          <dt className="text-xs text-gray-400 mb-1">Audit Period</dt>
-                          <dd className="text-xs font-mono text-gray-900">
-                            {Math.floor((Date.now() - new Date(effectiveCase.created_at || effectiveCase.createdDate).getTime()) / (1000 * 60 * 60 * 24))} days
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Audit Period</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
+                            {Math.floor((Date.now() - new Date(effectiveCase.created_at || effectiveCase.createdDate).getTime()) / (1000 * 60 * 60 * 24))} DAYS
                           </dd>
                         </div>
-                        <div className="col-span-2">
-                          <dt className="text-xs text-gray-400 mb-1">Policy Compliance</dt>
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Policy Compliance</dt>
                           <dd className="text-xs font-mono font-bold text-emerald-600">COMPLIANT</dd>
                         </div>
                       </dl>
@@ -893,56 +886,46 @@ export default function CaseDetail() {
 
                     {/* Logistical Trace */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-gray-400 rounded-full" /> Logistical Trace
                       </h4>
                       <dl className="space-y-3">
-                        <div className="flex justify-between items-baseline">
-                          <dt className="text-xs text-gray-400">ASIN / SKU</dt>
-                          <dd className="text-xs font-mono text-gray-900 text-right truncate pl-4">
-                            {effectiveCase.asin || 'N/A'} / {effectiveCase.sku || 'N/A'}
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Fulfillment Center</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
+                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'UNKNOWN'}
                           </dd>
                         </div>
-                        <div className="flex justify-between items-baseline">
-                          <dt className="text-xs text-gray-400">Fulfillment Center</dt>
-                          <dd className="text-xs font-mono text-gray-900 text-right">
-                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'FTW1 - Fort Worth, TX'}
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Asin/Sku Match</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">VERIFIED</dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Ref Trans.</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900 underline underline-offset-2">
+                            {effectiveCase.order_id || 'N/A'}
                           </dd>
                         </div>
-                        {(effectiveCase.order_id || effectiveCase.matched_fields?.[0]?.split(':')[1]) && (
-                          <div className="flex justify-between items-baseline">
-                            <dt className="text-xs text-gray-400">Reference Trans.</dt>
-                            <dd className="text-xs font-mono text-gray-900 text-right underline underline-offset-2">
-                              {effectiveCase.order_id || effectiveCase.matched_fields?.[0]?.split(':')[1]}
-                            </dd>
-                          </div>
-                        )}
                       </dl>
                     </div>
 
                     {/* System Metadata */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-2 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-indigo-500 rounded-full" /> System Metadata
                       </h4>
                       <dl className="space-y-3">
-                        <div className="flex justify-between items-baseline">
-                          <dt className="text-xs text-gray-400">Claim Category</dt>
-                          <dd className="text-xs font-mono text-gray-900 text-right capitalize">
-                            Discrepancy
-                          </dd>
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Claim Category</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900 capitalize">DISCREPANCY</dd>
                         </div>
-                        <div className="flex justify-between items-baseline">
-                          <dt className="text-xs text-gray-400">Engine Match</dt>
-                          <dd className="text-xs font-mono text-gray-900 text-right capitalize">
-                            {(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}
-                          </dd>
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Engine Match</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900 capitalize">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
                         </div>
-                        <div className="flex justify-between items-baseline">
-                          <dt className="text-xs text-gray-400">Audit Method</dt>
-                          <dd className="text-xs font-bold text-gray-700 text-right">
-                            AUTONOMOUS ENGINE
-                          </dd>
+                        <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium">Audit Method</dt>
+                          <dd className="text-xs font-bold text-gray-700">AUTONOMOUS</dd>
                         </div>
                       </dl>
                     </div>
@@ -950,73 +933,69 @@ export default function CaseDetail() {
                 </div>
 
                 {/* Tile 3: Vital Instrumentation */}
-                <div className="lg:col-span-1 p-8 bg-gray-50/50">
-                  <div className="flex items-center gap-2 mb-6">
+                <div className="p-8 bg-gray-50/30">
+                  <div className="flex items-center gap-2 mb-8">
                     <BarChart3 className="h-3.5 w-3.5 text-gray-400" />
                     <h3 className="text-xs font-bold text-gray-900">Financial Vitals</h3>
                   </div>
 
-                  <div className="space-y-8">
-                    <div>
-                      <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Guaranteed Amount</div>
-                      <div className="text-3xl font-light text-gray-900 font-mono tracking-tighter">
+                  <div className="flex flex-col md:flex-row gap-12 items-start">
+                    <div className="min-w-[240px]">
+                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3">Guaranteed Amount</div>
+                      <div className="text-4xl font-light text-gray-900 font-mono tracking-tighter">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
 
                       {effectiveCase.actual_payout_amount && (
-                        <div className="mt-4 p-3 bg-white border border-gray-100">
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-xs text-gray-400 font-bold">Actual Payout</span>
+                        <div className="mt-6 p-4 bg-white border border-gray-100 shadow-sm inline-block min-w-[200px]">
+                          <div className="flex justify-between items-center mb-1.5">
+                            <span className="text-[11px] text-gray-400 font-bold uppercase">Actual Payout</span>
                             <span className="text-xs font-mono font-bold text-blue-600">${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                           </div>
                           {effectiveCase.recovery_status === 'reconciled' && (
-                            <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-bold">
-                              <CheckCircle className="h-2.5 w-2.5" /> RECONCILED BY AUDIT ENGINE
+                            <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold uppercase tracking-tight">
+                              <CheckCircle className="h-3 w-3" /> Reconciled
                             </div>
                           )}
                         </div>
                       )}
-
-                      {effectiveCase.recovery_status === 'discrepancy' && effectiveCase.actual_payout_amount && (
-                        <div className="mt-2 text-xs text-red-600 font-bold flex items-center gap-1">
-                          <AlertCircle className="h-3 w-3" /> DISCREPANCY: ${Math.abs(effectiveCase.guaranteedAmount - effectiveCase.actual_payout_amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </div>
-                      )}
                     </div>
 
-                    <div className="border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-sm transition-all duration-300">
-                      <div className="px-3 pt-3 border-b border-gray-100/50">
-                        <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                          <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] uppercase font-bold text-gray-400 focus:ring-0 shadow-none tracking-widest">
-                            <SelectValue placeholder="Metric View" />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-none border-gray-100 shadow-none">
-                            <SelectItem value="payout" className="text-xs">Expected Payout</SelectItem>
-                            <SelectItem value="confidence" className="text-xs">Confidence Score</SelectItem>
-                            <SelectItem value="units" className="text-xs">Units Affected</SelectItem>
-                            <SelectItem value="cost" className="text-xs">Cost Per Unit</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="p-3">
-                        <div className="text-lg font-bold text-gray-900 tabular-nums font-mono tracking-tighter">
-                          {selectedMetric === 'payout' && (
-                            effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
-                              month: 'short', day: 'numeric', year: 'numeric'
-                            }).toUpperCase() : '—'
-                          )}
-                          {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
-                          {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} UNITS`}
-                          {selectedMetric === 'cost' && (
-                            typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
-                          )}
+                    <div className="flex-1 max-w-sm">
+                      <div className="border border-gray-100 bg-white hover:shadow-md transition-all duration-300">
+                        <div className="px-4 pt-4 border-b border-gray-50">
+                          <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+                            <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] uppercase font-bold text-gray-400 focus:ring-0 shadow-none tracking-widest">
+                              <SelectValue placeholder="Metric View" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-none border-gray-100 shadow-none">
+                              <SelectItem value="payout" className="text-xs">Expected Payout</SelectItem>
+                              <SelectItem value="confidence" className="text-xs">Confidence Score</SelectItem>
+                              <SelectItem value="units" className="text-xs">Units Affected</SelectItem>
+                              <SelectItem value="cost" className="text-xs">Cost Per Unit</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                        <div className="text-xs text-gray-400 mt-1 font-bold">
-                          {selectedMetric === 'payout' && 'Scheduled Settlement'}
-                          {selectedMetric === 'confidence' && 'AI Analysis Precision'}
-                          {selectedMetric === 'units' && 'Inventory Discrepancy'}
-                          {selectedMetric === 'cost' && 'Verified Cost Basis'}
+
+                        <div className="p-6">
+                          <div className="text-2xl font-bold text-gray-900 tabular-nums font-mono tracking-tighter">
+                            {selectedMetric === 'payout' && (
+                              effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
+                                month: 'short', day: 'numeric', year: 'numeric'
+                              }).toUpperCase() : 'PENDING'
+                            )}
+                            {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
+                            {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} UNITS`}
+                            {selectedMetric === 'cost' && (
+                              typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
+                            )}
+                          </div>
+                          <div className="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-wider">
+                            {selectedMetric === 'payout' && 'Scheduled Settlement'}
+                            {selectedMetric === 'confidence' && 'AI Analysis Precision'}
+                            {selectedMetric === 'units' && 'Inventory Discrepancy'}
+                            {selectedMetric === 'cost' && 'Verified Cost Basis'}
+                          </div>
                         </div>
                       </div>
                     </div>
