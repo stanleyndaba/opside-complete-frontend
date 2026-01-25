@@ -62,7 +62,7 @@ export function ProductsMegaMenu() {
                                                     <ShieldAlert className="h-5 w-5" />
                                                 </div>
                                                 <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Live Fee Guard</span>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Variance Monitor</span>
                                                     <p className="text-[11px] text-gray-400 mt-1 leading-snug">
                                                         Audit Inbound Placement & Defect fees in real-time.
                                                     </p>
@@ -103,7 +103,7 @@ export function ProductsMegaMenu() {
                                                     <Search className="h-5 w-5" />
                                                 </div>
                                                 <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Forensic Log Auditor</span>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</span>
                                                     <p className="text-[11px] text-gray-400 mt-1 leading-snug">
                                                         Transparent, line-by-line proof for every claim filed.
                                                     </p>
