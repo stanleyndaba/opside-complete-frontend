@@ -23,7 +23,7 @@ export function ProductsMegaMenu() {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-gray-100/50 text-gray-600 hover:text-gray-900 data-[state=open]:bg-gray-100/50 h-auto py-2 px-3 text-sm font-medium">
+                    <NavigationMenuTrigger className="bg-transparent hover:bg-gray-100/50 text-gray-600 hover:text-gray-900 data-[state=open]:!bg-gray-100/50 data-[state=open]:!text-gray-900 h-auto py-2 px-3 text-sm font-medium">
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
