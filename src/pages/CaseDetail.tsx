@@ -1129,16 +1129,16 @@ export default function CaseDetail() {
                       </div>
                       <dl className="space-y-4">
                         <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
-                          <dd className="text-xs font-bold text-gray-900">{effectiveCase.store_name || effectiveCase.seller_name || 'AMAZON_MARKETPLACE'}</dd>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Seller ID</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
                         </div>
                         <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Identity Status</dt>
-                          <dd className="text-xs font-bold text-emerald-600">VERIFIED_NIST_800</dd>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
+                          <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
                         </div>
                         <div>
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Audit Permission</dt>
-                          <dd className="text-xs font-bold text-gray-900">ACTIVE_DELEGATION</dd>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Contact Method</dt>
+                          <dd className="text-xs font-bold text-gray-900">Seller Central Case Mgr</dd>
                         </div>
                       </dl>
                     </div>
@@ -1150,16 +1150,20 @@ export default function CaseDetail() {
                       </div>
                       <dl className="space-y-4">
                         <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Internal Reference</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.id?.slice(0, 12).toUpperCase()}</dd>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Case ID</dt>
+                          <dd className="text-xs font-mono font-bold text-blue-600">
+                            {effectiveCase.amazonCaseId || <span className="text-gray-400 font-normal italic">Not filed</span>}
+                          </dd>
                         </div>
                         <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Amazon Case ID</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.amazonCaseId || 'NOT_FILED'}</dd>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Prior Case</dt>
+                          <dd className="text-xs font-bold text-gray-900">{effectiveCase.prior_case_id || 'None'}</dd>
                         </div>
                         <div>
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Protocol Version</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900 text-[10px]">V2.4. forensic-engine</dd>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Claim Ref</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">
+                            {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12).toUpperCase()}
+                          </dd>
                         </div>
                       </dl>
                     </div>
