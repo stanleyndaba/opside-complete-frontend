@@ -655,7 +655,7 @@ const Index = () => {
 
                 {/* Buttons - centered */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <AmazonConnect className="w-full sm:w-auto min-w-[200px]" />
+                  <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" />
                 </div>
               </div>
             </motion.div>
@@ -920,7 +920,7 @@ const Index = () => {
               </h2>
 
               <div className="flex flex-col items-center gap-6 pt-4">
-                <AmazonConnect className="min-w-[280px] h-16 text-xl transition-all duration-500 font-normal scale-105 active:scale-100" />
+                <AmazonConnect className="min-w-[220px] h-11 text-sm transition-all duration-500 font-medium active:scale-95" />
                 <div className="flex flex-col items-center gap-2">
                   <p className="text-[11px] font-bold text-gray-400 font-mono tracking-[0.2em] uppercase">
                     Verification Phase // Phase 01
