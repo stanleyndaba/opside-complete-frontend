@@ -686,7 +686,7 @@ export default function CaseDetail() {
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     <span className="text-xs font-bold text-gray-900 font-mono">{normalizeStatus(effectiveCase.status).toUpperCase()}</span>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1 font-mono">INTERNAL CASE RECORD // SECURE FACILITY: {effectiveCase.facility?.split(' - ')[0] || 'FTW1'}</p>
+                  <p className="text-xs text-gray-400 mt-1 font-mono uppercase tracking-tight">CASE AUDIT // {effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility.split(' - ')[0] : 'LOCATING FC...'}</p>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
@@ -1102,7 +1102,7 @@ export default function CaseDetail() {
                               <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-blue-200 hover:bg-white transition-all group flex flex-col gap-3">
                                 <div className="flex items-start justify-between">
                                   <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-blue-500" />
-                                  <Badge variant="outline" className="text-[9px] h-4 px-1.5 border-emerald-100 text-emerald-700 bg-emerald-50">
+                                  <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-100 text-emerald-700 bg-emerald-50">
                                     {confidencePct}%
                                   </Badge>
                                 </div>
@@ -1143,7 +1143,7 @@ export default function CaseDetail() {
                         </div>
                         <div>
                           <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-tight">Identity Verified</h4>
-                          <p className="text-[9px] text-gray-400 font-mono">PROTOCOL: NIST-800</p>
+                          <p className="text-[10px] text-gray-400 font-mono">PROTOCOL: NIST-800</p>
                         </div>
                       </div>
 
