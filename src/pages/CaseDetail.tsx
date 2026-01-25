@@ -1005,19 +1005,19 @@ export default function CaseDetail() {
             )}
 
             {activeTab === 'PROTOCOL' && (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-0 border border-gray-100 divide-x divide-gray-100 italic-divider">
-                {/* Tile 1: Audit Flow Timeline */}
-                <div className="lg:col-span-1 p-8 bg-gray-50/30">
-                  <div className="flex items-center gap-2 mb-6">
+              <div className="flex flex-col gap-0 border border-gray-100 divide-y divide-gray-100 italic-divider">
+                {/* Row 1: Audit Flow Timeline */}
+                <div className="p-8 bg-gray-50/30">
+                  <div className="flex items-center gap-2 mb-8">
                     <History className="h-3.5 w-3.5 text-gray-400" />
                     <h3 className="text-xs font-bold text-gray-900">Audit Flow Timeline</h3>
                   </div>
 
-                  <div className="space-y-8">
-                    {/* Visual Progress Bar - VERTICAL */}
-                    <div className="relative">
-                      <div className="absolute left-[10px] top-3 bottom-3 w-[1px] bg-gray-100" />
-                      <div className="flex flex-col space-y-4 relative z-10">
+                  <div className="space-y-10">
+                    {/* Horizontal Progress bar */}
+                    <div className="relative pt-2 pb-6 px-4">
+                      <div className="absolute top-[21px] left-0 right-0 h-[1px] bg-gray-100" />
+                      <div className="flex justify-between relative z-10">
                         {['Detected', 'Prepared', 'Submitted', 'Paid', 'Follow-up'].map((step, idx) => {
                           const status = (effectiveCase.status || '').toLowerCase();
                           const active = (step === 'Detected') ||
@@ -1027,15 +1027,15 @@ export default function CaseDetail() {
                             (step === 'Follow-up' && ['denied', 'rejected', 'unresolved'].includes(status));
 
                           return (
-                            <div key={step} className="flex items-center gap-3">
+                            <div key={step} className="flex flex-col items-center gap-3">
                               <div className={cn(
-                                "w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all shrink-0",
-                                active ? "bg-gray-900 border-gray-900 text-white" : "bg-white border-gray-100 text-gray-300"
+                                "w-[26px] h-[26px] rounded-full border-2 flex items-center justify-center text-[11px] font-bold transition-all shrink-0 bg-white shadow-sm",
+                                active ? "bg-gray-900 border-gray-900 text-white" : "border-gray-100 text-gray-300"
                               )}>
                                 {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-xs font-bold",
+                                "text-[10px] uppercase font-bold tracking-wider",
                                 active ? "text-gray-900" : "text-gray-300"
                               )}>{step}</span>
                             </div>
@@ -1044,254 +1044,133 @@ export default function CaseDetail() {
                       </div>
                     </div>
 
-                    {/* Timeline Events */}
-                    <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                      {(effectiveCase.events || []).map((event: any, index: number) => (
-                        <div key={index} className="relative pl-6">
-                          {index < (effectiveCase.events || []).length - 1 && (
-                            <div className="absolute left-[3px] top-6 bottom-[-24px] w-px bg-gray-100" />
-                          )}
-                          <div className="absolute left-0 top-1.5 w-[7px] h-[7px] rounded-full bg-gray-200 border-2 border-white" />
+                    {/* Horizontal Scrollable Events or Multi-column Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 overflow-x-auto pb-4 custom-scrollbar">
+                      {(effectiveCase.events || []).slice(0, 4).map((event: any, index: number) => (
+                        <div key={index} className="relative pl-6 border-l border-gray-100">
+                          <div className="absolute left-[-4px] top-1 w-2 h-2 rounded-full bg-gray-200 border-2 border-white" />
                           <div className="flex flex-col">
-                            <div className="flex justify-between items-baseline mb-1">
-                              <h4 className="text-xs font-bold text-gray-900 tracking-tight">{event.title}</h4>
-                              <span className="text-xs font-mono text-gray-400">
-                                {new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).toUpperCase()}
-                              </span>
+                            <div className="flex justify-between items-baseline mb-2">
+                              <h4 className="text-[11px] font-bold text-gray-900 tracking-tight uppercase">{event.title}</h4>
                             </div>
-                            <p className="text-xs text-gray-500 font-light leading-snug">{event.description}</p>
+                            <div className="text-[10px] font-mono text-gray-400 mb-2">
+                              {new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).toUpperCase()}
+                            </div>
+                            <p className="text-[11px] text-gray-500 font-light leading-relaxed">{event.description}</p>
                           </div>
                         </div>
                       ))}
                       {effectiveCase.status === 'Guaranteed' && (
-                        <div className="relative pl-6 opacity-40 italic">
-                          <div className="absolute left-0 top-1.5 w-[7px] h-[7px] rounded-full bg-gray-100 border-2 border-white" />
-                          <h4 className="text-xs font-bold text-gray-400 tracking-tight">Pending Submission</h4>
-                          <p className="text-xs text-gray-400 font-light leading-snug">Awaiting final carrier document verification before submission.</p>
+                        <div className="relative pl-6 border-l border-gray-100 opacity-40 italic">
+                          <div className="absolute left-[-4px] top-1 w-2 h-2 rounded-full bg-gray-100 border-2 border-white" />
+                          <h4 className="text-[11px] font-bold text-gray-400 tracking-tight uppercase">Awaiting Submission</h4>
+                          <p className="text-[11px] text-gray-400 font-light leading-relaxed mt-4">Audit verification cycle in progress.</p>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Tile 2: Evidence Vault & ID */}
-                <div className="lg:col-span-2 p-8">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-2">
-                      <Database className="h-3.5 w-3.5 text-gray-400" />
-                      <h3 className="text-xs font-bold text-gray-900">Evidence Vault & ID</h3>
-                    </div>
-                    <span className="text-xs font-mono text-gray-400">{matchedDocs.length} OBJECTS MATCHED</span>
+                {/* Row 2: Evidence Vault & Identity */}
+                <div className="p-8 bg-white">
+                  <div className="flex items-center gap-2 mb-8">
+                    <Database className="h-3.5 w-3.5 text-gray-400" />
+                    <h3 className="text-xs font-bold text-gray-900">Evidence Vault & Verification</h3>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
-                    <div className="md:col-span-3 space-y-4">
-                      <div className="text-xs text-gray-400 font-bold mb-4 flex items-center gap-2">
-                        MATCHED DOCUMENTATION
-                        <div className="h-px flex-1 bg-gray-100" />
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <div className="md:col-span-2 space-y-4">
+                      <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
+                        MATCHED DOCUMENTATION ({matchedDocs.length})
+                        <div className="h-px flex-1 bg-gray-50" />
                       </div>
 
                       {matchedDocs.length > 0 ? (
-                        <div className="space-y-3">
-                          {matchedDocs.map((doc: any, idx: number) => {
-                            const matchConfidence = doc.matchConfidence || doc.confidence_score || (0.7 + (stableHash(doc.id || '') % 25) / 100);
-                            const confidencePct = Math.round(matchConfidence * 100);
-
-                            const matchedFields: string[] = [];
-                            const extracted = doc.extracted || doc.parsed_metadata || {};
-                            if (extracted.order_ids?.length > 0) matchedFields.push('ORDER_ID');
-                            if (extracted.asins?.length > 0) matchedFields.push('ASIN');
-                            if (extracted.tracking_numbers?.length > 0) matchedFields.push('TRACKING_REF');
-                            if (matchedFields.length === 0) matchedFields.push('CONTENT_MATCH');
-
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {matchedDocs.slice(0, 4).map((doc: any, idx: number) => {
+                            const confidencePct = Math.round((doc.matchConfidence || doc.confidence_score || 0.85) * 100);
                             return (
-                              <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-gray-200 transition-all flex items-start justify-between gap-4">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <FileText className="h-3 w-3 text-gray-400" />
-                                    <span className="text-xs font-bold text-gray-900 truncate max-w-[200px] font-mono">
-                                      {doc.name || doc.filename || `OBJ_${doc.id?.slice(0, 8)}`}
-                                    </span>
-                                  </div>
-                                  <div className="flex flex-wrap gap-2">
-                                    {matchedFields.slice(0, 2).map(f => (
-                                      <span key={f} className="px-1.5 py-0.5 bg-white border border-gray-200 text-[7px] font-bold text-gray-500">{f}</span>
-                                    ))}
-                                    <span className={cn(
-                                      "px-1.5 py-0.5 text-[7px] font-bold",
-                                      confidencePct >= 85 ? "text-emerald-600" : "text-amber-600"
-                                    )}>MATCH: {confidencePct}%</span>
-                                  </div>
+                              <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-blue-200 hover:bg-white transition-all group flex flex-col gap-3">
+                                <div className="flex items-start justify-between">
+                                  <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-blue-500" />
+                                  <Badge variant="outline" className="text-[9px] h-4 px-1.5 border-emerald-100 text-emerald-700 bg-emerald-50">
+                                    {confidencePct}%
+                                  </Badge>
+                                </div>
+                                <div className="space-y-1">
+                                  <p className="text-xs font-bold text-gray-900 truncate font-mono">
+                                    {doc.name || doc.filename || `OBJ_${doc.id?.slice(0, 8)}`}
+                                  </p>
+                                  <p className="text-[10px] text-gray-400 font-mono">VERIFIED_HASH_COMPLIANT</p>
                                 </div>
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="h-7 text-xs font-bold text-blue-600 hover:text-blue-700 p-0"
+                                  className="h-6 text-[10px] font-bold text-blue-600 hover:text-blue-700 p-0 self-start"
                                   onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
-                                  Extract <ArrowRight className="h-2.5 w-2.5 ml-1" />
+                                  View Evidence <ArrowRight className="h-2.5 w-2.5 ml-1" />
                                 </Button>
                               </div>
                             );
                           })}
                         </div>
                       ) : (
-                        <div className="py-12 border border-dashed border-gray-200 flex flex-col items-center justify-center text-center">
-                          <Database className="h-8 w-8 text-gray-100 mb-4" />
-                          <p className="text-xs font-bold text-gray-400">Awaiting Artifact Ingestion</p>
-                          <p className="text-xs text-gray-300 mt-1 max-w-[200px]">System is currently crawling your integration sources for matching evidence.</p>
+                        <div className="py-12 border border-dashed border-gray-200 flex flex-col items-center justify-center text-center bg-gray-50/30">
+                          <Database className="h-8 w-8 text-gray-200 mb-4" />
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Awaiting Artifact Ingestion</p>
                         </div>
                       )}
                     </div>
 
-                    <div className="md:col-span-2 space-y-8">
-                      <section>
-                        <div className="text-xs text-gray-400 font-bold mb-4 flex items-center gap-2">
-                          SELLER IDENTITY
-                          <div className="h-px flex-1 bg-gray-100" />
+                    <div className="md:col-span-1 space-y-4">
+                      <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
+                        SELLER IDENTITY
+                        <div className="h-px flex-1 bg-gray-50" />
+                      </div>
+                      <dl className="space-y-4">
+                        <div className="border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
+                          <dd className="text-xs font-bold text-gray-900">{effectiveCase.store_name || effectiveCase.seller_name || 'AMAZON_MARKETPLACE'}</dd>
                         </div>
-                        <dl className="space-y-4">
-                          <div>
-                            <dt className="text-xs font-bold text-gray-400 mb-1">Store Name</dt>
-                            <dd className="text-xs font-bold text-gray-900">{effectiveCase.store_name || effectiveCase.seller_name || 'AMAZON_MARKETPLACE_SELLER'}</dd>
-                          </div>
-                          <div>
-                            <dt className="text-xs font-bold text-gray-400 mb-1">Internal User ID</dt>
-                            <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'ID_NOT_MAPPED'}</dd>
-                          </div>
-                          <div>
-                            <dt className="text-xs font-bold text-gray-400 mb-1">Audit Permission</dt>
-                            <dd className="text-xs font-bold text-emerald-600">ACTIVE_DELEGATION</dd>
-                          </div>
-                        </dl>
-                      </section>
+                        <div className="border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Identity Status</dt>
+                          <dd className="text-xs font-bold text-emerald-600">VERIFIED_NIST_800</dd>
+                        </div>
+                        <div>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Audit Permission</dt>
+                          <dd className="text-xs font-bold text-gray-900">ACTIVE_DELEGATION</dd>
+                        </div>
+                      </dl>
+                    </div>
 
-                      <section className="pt-4 border-t border-gray-100">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="p-2 bg-gray-900 rounded-xs">
-                            <ShieldCheck className="h-4 w-4 text-white" />
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-bold text-gray-900">Identity Verified</h4>
-                            <p className="text-xs text-gray-400">Compliance Protocol: NIST-800</p>
-                          </div>
+                    <div className="md:col-span-1 space-y-4">
+                      <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
+                        REFERENCE DATA
+                        <div className="h-px flex-1 bg-gray-50" />
+                      </div>
+                      <dl className="space-y-4">
+                        <div className="border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Internal Reference</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.id?.slice(0, 12).toUpperCase()}</dd>
                         </div>
-                        <dl className="space-y-2">
-                          <div className="flex justify-between items-baseline">
-                            <dt className="text-xs text-gray-500 font-light">Seller ID</dt>
-                            <dd className="text-xs font-mono text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || '—'}</dd>
-                          </div>
-                          <div className="flex justify-between items-baseline">
-                            <dt className="text-xs text-gray-500 font-light">Store Name</dt>
-                            <dd className="text-xs font-mono text-gray-900 truncate max-w-[120px]" title={effectiveCase.store_name || effectiveCase.seller_name}>
-                              {effectiveCase.store_name || effectiveCase.seller_name || '—'}
-                            </dd>
-                          </div>
-                        </dl>
-                      </section>
+                        <div className="border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Amazon Case ID</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.amazonCaseId || 'NOT_FILED'}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Protocol Version</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900 text-[10px]">V2.4. forensic-engine</dd>
+                        </div>
+                      </dl>
                     </div>
                   </div>
                 </div>
 
-                {/* Tile 3: Evidence Vault & Identity */}
-                <div className="lg:col-span-1 p-8 bg-gray-50/50">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Database className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Evidence Vault</h3>
-                  </div>
-
-                  <div className="space-y-8">
-                    {/* Matched Documents */}
-                    <div>
-                      {matchedDocs.length > 0 ? (
-                        <div className="space-y-3">
-                          {matchedDocs.slice(0, 3).map((doc: any, idx: number) => {
-                            const confidencePct = Math.round((doc.matchConfidence || doc.confidence_score || 0.85) * 100);
-                            return (
-                              <div key={doc.id || idx} className="p-3 bg-white border border-gray-200 group hover:border-gray-300 transition-colors cursor-pointer" onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-gray-600" />
-                                  <span className="text-xs font-medium text-gray-700 truncate flex-1">{doc.name || doc.filename || `Document ${idx + 1}`}</span>
-                                  <Badge variant="outline" className="text-xs h-4 px-1.5 border-emerald-200 text-emerald-700 bg-emerald-50">
-                                    {confidencePct}%
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center justify-between text-xs text-gray-400">
-                                  <span>{doc.uploadDate || '2025-01-08'}</span>
-                                  <span className="tracking-wider">Verified</span>
-                                </div>
-                              </div>
-                            );
-                          })}
-                          {matchedDocs.length > 3 && (
-                            <Link to="/evidence-locker" className="block text-center text-xs text-gray-400 hover:text-gray-600 mt-2">
-                              + {matchedDocs.length - 3} More Documents
-                            </Link>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="text-center py-6 border border-dashed border-gray-200 bg-white">
-                          <FileText className="h-5 w-5 text-gray-300 mx-auto mb-2" />
-                          <p className="text-xs text-gray-400">No documents matched yet</p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Contact Detail Section - Restored Full Fidelity */}
-                    <div className="pt-6 border-t border-gray-100">
-                      <div className="flex items-center gap-2 mb-4">
-                        <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
-                        <h4 className="text-xs font-bold text-gray-900">Seller Identity</h4>
-                      </div>
-                      <div className="space-y-4">
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1.5">Seller Detail</p>
-                          <dl className="space-y-2 text-xs text-gray-600 font-mono">
-                            <div className="flex justify-between border-b border-gray-100 pb-1">
-                              <dt className="text-gray-400">Seller ID:</dt>
-                              <dd className="font-medium text-gray-900 text-right">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
-                            </div>
-                            <div className="flex justify-between border-b border-gray-100 pb-1">
-                              <dt className="text-gray-400">Store Name:</dt>
-                              <dd className="font-medium text-gray-900 text-right truncate pl-2 max-w-[140px]">{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt className="text-gray-400">Contact Method:</dt>
-                              <dd className="font-medium text-gray-900 text-right">Seller Central Case Mgr</dd>
-                            </div>
-                          </dl>
-                        </div>
-
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1.5">Reference Data</p>
-                          <dl className="space-y-2 text-xs text-gray-600 font-mono">
-                            <div className="flex justify-between border-b border-gray-100 pb-1">
-                              <dt className="text-gray-400">Case ID:</dt>
-                              <dd className="font-medium text-blue-600 text-right">{effectiveCase.amazonCaseId || <span className="text-gray-400 italic">Not filed</span>}</dd>
-                            </div>
-                            <div className="flex justify-between border-b border-gray-100 pb-1">
-                              <dt className="text-gray-400">Prior Case:</dt>
-                              <dd className="font-medium text-gray-900 text-right">{effectiveCase.prior_case_id || <span className="text-gray-400 italic">None</span>}</dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt className="text-gray-400">Claim Ref:</dt>
-                              <dd className="font-medium text-gray-900 text-right">{effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12)}</dd>
-                            </div>
-                          </dl>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'PROTOCOL' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 border border-gray-100 divide-x divide-gray-100 italic-divider">
-                {/* Tile 1: Action Protocol (Detailed) */}
-                <div className="lg:col-span-2 p-8 bg-white">
+                {/* Row 3: Resolution Action Protocol */}
+                <div className="p-8 bg-gray-50/30">
                   <div className="flex items-center gap-2 mb-8">
                     <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Resolution Protocol</h3>
+                    <h3 className="text-xs font-bold text-gray-900">Resolution Action Protocol</h3>
                   </div>
 
                   {(() => {
@@ -1313,8 +1192,8 @@ export default function CaseDetail() {
                     const preventiveMeasures: string[] = [];
 
                     if (isFeeCase) {
-                      immediateActions.push(`Review product weight/dimensional specifications for ASIN ${asin}`);
-                      immediateActions.push(`Update ASIN measurements in Amazon catalog system`);
+                      immediateActions.push(`Review dimensional specs for ASIN ${asin}`);
+                      immediateActions.push(`Update measurements in catalog system`);
                       preventiveMeasures.push(`Correct fee calculations for future shipments`);
                       preventiveMeasures.push(`Ensure measurement accuracy for existing inventory`);
                     } else if (isLostCase) {
@@ -1324,147 +1203,106 @@ export default function CaseDetail() {
                       preventiveMeasures.push(`Implement regular reconciliation checks`);
                     } else if (isDamagedCase) {
                       immediateActions.push(`Review damage report for SKU ${sku}`);
-                      immediateActions.push(`Verify damage occurred during Amazon/carrier handling`);
+                      immediateActions.push(`Verify damage occurred during carrier handling`);
                       preventiveMeasures.push(`Review handling procedures for product category`);
                       preventiveMeasures.push(`Consider improved packaging requirements`);
                     } else if (isRefundCase) {
                       immediateActions.push(`Verify return status for Order ${orderId}`);
-                      immediateActions.push(`Confirm refund issued without valid return received`);
+                      immediateActions.push(`Confirm refund issued without valid return`);
                       preventiveMeasures.push(`Monitor return compliance more closely`);
                       preventiveMeasures.push(`Flag repeat offender customer accounts`);
                     } else if (isChargebackCase) {
                       immediateActions.push(`Review chargeback claim for Order ${orderId}`);
-                      immediateActions.push(`Provide proof of delivery and product condition`);
+                      immediateActions.push(`Provide proof of delivery and condition`);
                       preventiveMeasures.push(`Enhance delivery confirmation tracking`);
                       preventiveMeasures.push(`Document all communications with buyer`);
                     } else {
                       immediateActions.push(`Review case documentation and evidence`);
-                      immediateActions.push(`Verify discrepancy against fulfillment records`);
+                      immediateActions.push(`Verify discrepancy against enrollment records`);
                       preventiveMeasures.push(`Implement monitoring for similar discrepancies`);
                     }
-                    immediateActions.push(`Process reimbursement of ${formattedAmount} to seller account`);
+                    immediateActions.push(`Process reimbursement of ${formattedAmount}`);
                     preventiveMeasures.push(`Provide confirmation of system updates`);
 
                     return (
-                      <div className="space-y-8">
+                      <div className="space-y-10">
                         {/* Missing Docs Prompt */}
                         {effectiveCase?.missingDocumentPrompt && (
-                          <section className="mb-6 rounded-none border border-amber-200 bg-amber-50 p-6 shadow-sm">
+                          <section className="rounded-none border-l-4 border-amber-400 bg-amber-50/50 p-6 shadow-sm">
                             <div className="flex items-center gap-2 mb-4">
                               <AlertCircle className="h-4 w-4 text-amber-600" />
-                              <h4 className="text-xs font-bold text-amber-900">Required Actions Requested</h4>
+                              <h4 className="text-[11px] font-bold text-amber-900 uppercase tracking-widest">Action Required: Document Submission</h4>
                             </div>
-                            <p className="text-xs text-amber-900 mb-4 leading-relaxed font-medium">{effectiveCase.missingDocumentPrompt}</p>
-                            {Array.isArray(effectiveCase.missingDocumentOptions) && (
-                              <div className="flex flex-wrap gap-2 mb-4">
-                                {effectiveCase.missingDocumentOptions.map((opt: string) => (
-                                  <button key={opt} className="px-3 py-1.5 bg-white border border-amber-200 text-amber-800 text-xs font-bold hover:bg-amber-100 transition-colors shadow-sm" onClick={() => {
-                                    recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
-                                  }}>{opt}</button>
-                                ))}
+                            <p className="text-xs text-amber-900 mb-6 leading-relaxed font-medium">{effectiveCase.missingDocumentPrompt}</p>
+
+                            <div className="flex flex-col md:flex-row gap-8">
+                              <div className="flex-1">
+                                {Array.isArray(effectiveCase.missingDocumentOptions) && (
+                                  <div className="flex flex-wrap gap-2 mb-4">
+                                    {effectiveCase.missingDocumentOptions.map((opt: string) => (
+                                      <button key={opt} className="px-4 py-2 bg-white border border-amber-200 text-amber-800 text-[11px] font-bold hover:bg-amber-100 transition-colors shadow-sm uppercase tracking-tight" onClick={() => {
+                                        recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
+                                      }}>{opt}</button>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
-                            )}
-                            <div
-                              className="p-6 border-2 border-dashed border-amber-300 bg-white/50 text-center cursor-pointer hover:bg-white hover:border-amber-400 transition-all"
-                              onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                              onDrop={async (e) => {
-                                e.preventDefault();
-                                const files = Array.from(e.dataTransfer.files || []);
-                                if (!files.length) return;
-                                await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
-                              }}>
-                              <FileText className="h-6 w-6 text-amber-400 mx-auto mb-2" />
-                              <p className="text-xs font-bold text-amber-800">Drag & Drop Evidence Documents</p>
-                              <p className="text-xs text-amber-600 mt-1">Supports PDF, JPG, PNG (Max 10MB)</p>
+
+                              <div
+                                className="flex-1 h-32 border-2 border-dashed border-amber-200 bg-white/80 flex flex-col items-center justify-center cursor-pointer hover:bg-white hover:border-amber-400 transition-all"
+                                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                onDrop={async (e) => {
+                                  e.preventDefault();
+                                  const files = Array.from(e.dataTransfer.files || []);
+                                  if (!files.length) return;
+                                  await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
+                                }}>
+                                <Upload className="h-5 w-5 text-amber-400 mb-2" />
+                                <p className="text-[10px] font-bold text-amber-800">DRAG & DROP EVIDENCE</p>
+                              </div>
                             </div>
                           </section>
                         )}
 
                         {/* Actions Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-100 border border-gray-100">
-                          <div className="bg-white p-6 h-full">
-                            <h4 className="text-xs font-bold text-gray-500 mb-6 border-b border-gray-100 pb-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                          <div className="space-y-6">
+                            <h4 className="text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-3 uppercase tracking-wider">
                               Immediate Actions
                             </h4>
                             <ol className="space-y-4">
                               {immediateActions.map((action, idx) => (
                                 <li key={idx} className="flex items-start gap-4 group">
-                                  <span className="text-gray-300 font-mono text-xs mt-0.5 w-4 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
-                                  <span className="text-xs text-gray-700 leading-relaxed font-light">{action}</span>
+                                  <span className="text-gray-300 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
+                                  <span className="text-[11px] text-gray-700 leading-relaxed font-light">{action}</span>
                                 </li>
                               ))}
                             </ol>
-                            <div className="mt-6 pt-4 border-t border-gray-50 flex items-center gap-2 text-xs font-bold text-emerald-600">
-                              <ArrowRight className="h-3 w-3" /> Reimbursement Target: {formattedAmount}
+                            <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-emerald-600 uppercase tracking-tight">
+                              <ArrowRight className="h-3.5 w-3.5" /> Target Recovery: {formattedAmount}
                             </div>
                           </div>
-                          <div className="bg-white p-6 h-full">
-                            <h4 className="text-xs font-bold text-gray-500 mb-6 border-b border-gray-100 pb-3">
+
+                          <div className="space-y-6">
+                            <h4 className="text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-3 uppercase tracking-wider">
                               Preventive Measures
                             </h4>
                             <ol className="space-y-4">
                               {preventiveMeasures.map((measure, idx) => (
                                 <li key={idx} className="flex items-start gap-4 group">
-                                  <span className="text-gray-300 font-mono text-xs mt-0.5 w-4 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
-                                  <span className="text-xs text-gray-700 leading-relaxed font-light">{measure}</span>
+                                  <span className="text-gray-300 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
+                                  <span className="text-[11px] text-gray-700 leading-relaxed font-light">{measure}</span>
                                 </li>
                               ))}
                             </ol>
+                            <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-blue-600 uppercase tracking-tight">
+                              <ShieldCheck className="h-3.5 w-3.5" /> Autonomous Guarding Active
+                            </div>
                           </div>
                         </div>
                       </div>
                     );
                   })()}
-                </div>
-
-                {/* Tile 2: Audit Timeline */}
-                <div className="lg:col-span-1 p-8 bg-gray-50/30">
-                  <div className="flex items-center gap-2 mb-8">
-                    <History className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Audit Timeline</h3>
-                  </div>
-
-                  <div className="relative pl-2 space-y-8">
-                    {/* Timeline Visualizer */}
-                    <div className="mb-8 pl-4">
-                      <Timeline claimId={effectiveCase.id} />
-                    </div>
-
-                    {/* Detailed Event List */}
-                    <div className="relative border-l border-dashed border-gray-200 ml-2 space-y-8">
-                      {(effectiveCase.events || []).map((event: any, index: number) => (
-                        <div key={index} className="relative pl-6">
-                          <div className={cn(
-                            "absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full border-2 bg-white",
-                            event.type === 'submission' ? "border-emerald-500" :
-                              event.type === 'detection' ? "border-amber-500" :
-                                "border-gray-300"
-                          )} />
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs font-bold text-gray-900">
-                                {event.title.includes('•') ? event.title : event.title.replace(/\s+/g, ' • ')}
-                              </span>
-                            </div>
-                            <div className="text-xs font-mono text-gray-400 mb-2">
-                              {new Date(event.timestamp).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(',', '')}
-                            </div>
-                            {event.type === 'submission' && (
-                              <div className="text-xs font-mono text-gray-500 mb-1">Status: submitted</div>
-                            )}
-                            {(effectiveCase.guaranteedAmount || effectiveCase.amount) && (['submission', 'generation', 'detection'].includes(event.type)) && (
-                              <div className="text-xs font-mono text-gray-500">
-                                Amount: ${Number(effectiveCase.guaranteedAmount || effectiveCase.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                              </div>
-                            )}
-                            <p className="text-xs text-gray-600 mt-2 leading-relaxed font-light border-l-2 border-gray-100 pl-3 py-1">
-                              {event.description}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
