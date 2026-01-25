@@ -51,6 +51,10 @@ export default function OAuthSuccess() {
   const provider = params.get('provider') || 'amazon';
   const tenant_slug = params.get('tenant_slug') || params.get('tenant') || '';
   const authBridge = params.get('auth_bridge') === 'true';
+  const errorCode = params.get('error') || '';
+  const marketplaceId = params.get('marketplaceId') || '';
+  const scopesParam = params.get('scopes') || '';
+  const scopes = useMemo(() => scopesParam.split(',').map(s => s.trim()).filter(Boolean), [scopesParam]);
 
   useEffect(() => {
     console.log('[OAuthSuccess] Component mounted', { status, provider, tenant_slug, authBridge });
@@ -133,7 +137,7 @@ export default function OAuthSuccess() {
                 <CardDescription className="text-base mt-1">
                   {status === 'ok'
                     ? `Your ${provider === 'amazon' ? 'Amazon Store' : provider} is now securely linked to your dashboard.`
-                    : 'Please retry with the required permissions, or contact support if the problem persists.'}
+                    : errorCode ? `Connection failed: ${errorCode.replace(/_/g, ' ')}. Please retry or contact support.` : 'Please retry with the required permissions, or contact support if the problem persists.'}
                 </CardDescription>
               </div>
             </div>
