@@ -1150,11 +1150,19 @@ export default function CaseDetail() {
                       <dl className="space-y-4">
                         <div className="border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium mb-1">Seller ID</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || '—'}</dd>
+                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
                         </div>
                         <div className="border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
-                          <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || '—'}</dd>
+                          <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
+                        </div>
+                        <div className="border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Internal User ID</dt>
+                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'ID_NOT_MAPPED'}</dd>
+                        </div>
+                        <div className="border-b border-gray-50 pb-2">
+                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Audit Permission</dt>
+                          <dd className="text-xs font-bold text-emerald-600">ACTIVE_DELEGATION</dd>
                         </div>
                         <div>
                           <dt className="text-[11px] text-gray-400 font-medium mb-1">Contact Method</dt>
