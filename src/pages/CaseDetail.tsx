@@ -753,9 +753,8 @@ export default function CaseDetail() {
               <div className="flex flex-col gap-0 border border-gray-100 divide-y divide-gray-100 italic-divider">
                 {/* Tile 1: Audit Narrative & Logistics */}
                 <div className="p-8 bg-gray-50/30">
-                  <div className="flex items-center gap-2 mb-6">
-                    <FileText className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Audit Narrative & Logistics</h3>
+                  <div className="mb-6">
+                    <h3 className="text-sm font-bold text-gray-900">Audit Narrative & Logistics</h3>
                   </div>
                   <div className="space-y-8">
                     <p className="text-[15px] text-gray-700 leading-relaxed font-normal tracking-tight">
@@ -826,9 +825,8 @@ export default function CaseDetail() {
 
                 {/* Tile 2: Transaction Forensics */}
                 <div className="p-8 bg-white">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Activity className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Transaction Forensics</h3>
+                  <div className="mb-6">
+                    <h3 className="text-sm font-bold text-gray-900">Transaction Forensics</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -938,9 +936,8 @@ export default function CaseDetail() {
 
                 {/* Tile 3: Vital Instrumentation */}
                 <div className="p-8 bg-gray-50/30">
-                  <div className="flex items-center gap-2 mb-8">
-                    <BarChart3 className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Financial Vitals</h3>
+                  <div className="mb-8">
+                    <h3 className="text-sm font-bold text-gray-900">Financial Vitals</h3>
                   </div>
 
                   <div className="flex flex-col md:flex-row gap-12 items-start">
@@ -1012,9 +1009,8 @@ export default function CaseDetail() {
               <div className="flex flex-col gap-0 border border-gray-100 divide-y divide-gray-100 italic-divider">
                 {/* Row 1: Audit Flow Timeline */}
                 <div className="p-8 bg-gray-50/30">
-                  <div className="flex items-center gap-2 mb-8">
-                    <History className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Audit Flow Timeline</h3>
+                  <div className="mb-8">
+                    <h3 className="text-sm font-bold text-gray-900">Audit Flow Timeline</h3>
                   </div>
 
                   <div className="space-y-10">
@@ -1082,9 +1078,8 @@ export default function CaseDetail() {
 
                 {/* Row 2: Evidence Vault & Identity */}
                 <div className="p-8 bg-white">
-                  <div className="flex items-center gap-2 mb-8">
-                    <Database className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Evidence Vault & Verification</h3>
+                  <div className="mb-8">
+                    <h3 className="text-sm font-bold text-gray-900">Evidence Vault & Verification</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -1200,9 +1195,8 @@ export default function CaseDetail() {
 
                 {/* Row 3: Resolution Action Protocol */}
                 <div className="p-8 bg-gray-50/30">
-                  <div className="flex items-center gap-2 mb-8">
-                    <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
-                    <h3 className="text-xs font-bold text-gray-900">Resolution Action Protocol</h3>
+                  <div className="mb-8">
+                    <h3 className="text-sm font-bold text-gray-900">Resolution Action Protocol</h3>
                   </div>
 
                   {(() => {
