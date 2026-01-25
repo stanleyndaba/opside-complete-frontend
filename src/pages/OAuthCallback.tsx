@@ -95,7 +95,7 @@ export default function OAuthCallback() {
                 const recoveryRes = await api.getAmazonRecoveries();
                 if (recoveryRes.ok && recoveryRes.data?.totalAmount) {
                   // Redirect with recovery data for the "shock and awe" reveal
-                  navigate(`/integrations-hub?amazon_connected=true&recovery_amount=${recoveryRes.data.totalAmount}&currency=${recoveryRes.data.currency || 'USD'}&claim_count=${recoveryRes.data.claimCount || 0}`);
+                  navigate(`/auth/success?status=ok&provider=amazon&amazon_connected=true&recovery_amount=${recoveryRes.data.totalAmount}&currency=${recoveryRes.data.currency || 'USD'}&claim_count=${recoveryRes.data.claimCount || 0}`);
                   return;
                 }
               } catch (err) {
@@ -108,7 +108,7 @@ export default function OAuthCallback() {
         await new Promise(r => setTimeout(r, 600));
       }
       if (!cancelled) {
-        setTimeout(() => navigate('/integrations-hub?amazon_connected=true'), 600);
+        setTimeout(() => navigate('/auth/success?status=ok&provider=amazon&amazon_connected=true'), 600);
       }
     })();
     return () => { cancelled = true };

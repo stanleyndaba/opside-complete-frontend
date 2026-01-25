@@ -13,13 +13,13 @@ export default function OAuthCallbackRedirect() {
   useEffect(() => {
     // Extract query parameters from current URL
     const searchParams = new URLSearchParams(location.search);
-    
-    // Build redirect URL to integrations-hub
-    const redirectPath = '/integrations-hub';
-    
+
+    // Build redirect URL to auth success page instead of integrations-hub
+    const redirectPath = '/auth/success';
+
     // Preserve all query parameters
     const queryString = searchParams.toString();
-    const redirectUrl = queryString 
+    const redirectUrl = queryString
       ? `${redirectPath}?${queryString}`
       : redirectPath;
 
@@ -28,11 +28,11 @@ export default function OAuthCallbackRedirect() {
   }, [navigate, location.search]);
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
       minHeight: '100vh',
       backgroundColor: '#0B1220',
       color: '#e5e7eb'

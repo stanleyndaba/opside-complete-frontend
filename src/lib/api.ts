@@ -415,7 +415,11 @@ export const api = {
   },
   completeAmazonSandboxAuth: (state: string) => {
     console.log('[API] completeAmazonSandboxAuth called with state:', state);
-    const body = JSON.stringify({ state });
+    const body = JSON.stringify({
+      state,
+      code: 'mock_auth_code', // Explicitly provide mock code for sandbox flow
+      spapi_oauth_code: 'mock_auth_code' // Backwards compatibility
+    });
     console.log('[API] Request body:', body);
     return requestJson<{ ok: boolean; connected: boolean }>(
       '/api/v1/integrations/amazon/sandbox/callback',
