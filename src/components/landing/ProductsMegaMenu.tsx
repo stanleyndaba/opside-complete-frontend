@@ -15,7 +15,7 @@ import {
     Briefcase,
     TrendingUp,
     ArrowRight,
-    Ruler,
+    BoxSelect,
     BadgePercent
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -75,7 +75,7 @@ export function ProductsMegaMenu() {
                                         <a href="#dimension-auditor" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
-                                                    <Ruler className="h-5 w-5" />
+                                                    <BoxSelect className="h-5 w-5" />
                                                 </div>
                                                 <div>
                                                     <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Dimension & Weight Auditor</span>
@@ -165,28 +165,28 @@ export function ProductsMegaMenu() {
                                         <TrendingUp className="h-3.5 w-3.5" />
                                         Live Impact
                                     </h4>
-                                    <div className="space-y-5">
-                                        <div className="p-5 bg-white/60 rounded-xl border border-blue-100 shadow-[0_4px_12px_rgba(59,130,246,0.05)]">
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                                    <div className="space-y-4">
+                                        <div className="p-4 bg-white/40 rounded-xl border border-blue-100/50 shadow-sm backdrop-blur-sm">
+                                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-[0.1em]">
                                                 Recovered this week
                                             </p>
-                                            <p className="text-3xl font-bold text-gray-900 mt-1.5 tracking-tight">
+                                            <p className="text-xl font-bold text-gray-900 mt-1 tracking-tight">
                                                 R4.2M
                                             </p>
-                                            <p className="text-[10px] text-gray-500 font-semibold mt-2 flex items-center gap-1.5">
-                                                <span className="text-emerald-500">↑</span> 12.5% vs last week
+                                            <p className="text-[9px] text-gray-500 font-semibold mt-1.5 flex items-center gap-1">
+                                                <span className="text-emerald-500 font-bold">↑</span> 12.5% vs last week
                                             </p>
                                         </div>
 
-                                        <div className="flex items-center gap-4 p-4 bg-gray-200/20 rounded-xl border border-gray-200/30">
-                                            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm shrink-0">
-                                                <span className="text-xs font-bold text-gray-900">67k</span>
+                                        <div className="flex items-center gap-3 p-3.5 bg-gray-50/50 rounded-xl border border-gray-200/50">
+                                            <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm shrink-0">
+                                                <span className="text-[11px] font-bold text-gray-900">67k</span>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide leading-tight">
+                                                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide leading-tight">
                                                     Trusted by
                                                 </p>
-                                                <p className="text-xs font-bold text-gray-900 leading-tight">
+                                                <p className="text-[11px] font-bold text-gray-900 leading-tight">
                                                     67k+ Sellers
                                                 </p>
                                             </div>
