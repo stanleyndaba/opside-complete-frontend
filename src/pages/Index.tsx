@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase } from 'lucide-react';
+import { ArrowRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase, Ruler, BadgePercent } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -524,6 +524,15 @@ const Index = () => {
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Zero-touch Gmail integration for evidence matching.</p>
                             </div>
                           </a>
+                          <a href="#dimension-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                              <Ruler className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Dimension & Weight Auditor</div>
+                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Auto-detect storage tier overcharges and trigger re-measurements.</p>
+                            </div>
+                          </a>
                         </div>
                       </div>
 
@@ -547,6 +556,15 @@ const Index = () => {
                             <div>
                               <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
+                            </div>
+                          </a>
+                          <a href="#commission-governance" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                              <BadgePercent className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</div>
+                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Detect category misclassifications and referral fee overcharges.</p>
                             </div>
                           </a>
                         </div>

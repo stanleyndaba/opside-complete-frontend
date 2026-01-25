@@ -14,7 +14,9 @@ import {
     Search,
     Briefcase,
     TrendingUp,
-    ArrowRight
+    ArrowRight,
+    Ruler,
+    BadgePercent
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -70,7 +72,21 @@ export function ProductsMegaMenu() {
                                             </div>
                                         </a>
 
-                                        <a href="#invoice-sync" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300 col-span-2">
+                                        <a href="#dimension-auditor" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
+                                            <div className="flex items-start gap-4">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                    <Ruler className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Dimension & Weight Auditor</span>
+                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
+                                                        Auto-detect storage tier overcharges and trigger re-measurements.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <a href="#invoice-sync" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
                                                     <FileText className="h-5 w-5" />
@@ -120,6 +136,20 @@ export function ProductsMegaMenu() {
                                                     <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</span>
                                                     <p className="text-[11px] text-gray-400 mt-1 leading-snug">
                                                         Multi-account reconciliation for high-volume agencies.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <a href="#commission-governance" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
+                                            <div className="flex items-start gap-4">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                    <BadgePercent className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</span>
+                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
+                                                        Detect category misclassifications and referral fee overcharges.
                                                     </p>
                                                 </div>
                                             </div>
