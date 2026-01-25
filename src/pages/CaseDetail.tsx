@@ -711,13 +711,10 @@ export default function CaseDetail() {
               </div>
             </div>
 
-            {/* Auto-Filing Banner - Institutional Style */}
-            <div className="flex items-center justify-between px-4 py-2 bg-gray-900 text-white mb-8">
-              <p className="text-xs font-mono">
-                <span className="text-gray-400">PROTOCOL:</span> MARGIN AUTO-FILES CASES ≥85% CONFIDENCE
-              </p>
-              <p className="text-xs font-mono">
-                AUTONOMOUS STATUS: <span className="text-emerald-400">ACTIVE</span>
+            {/* Auto-Filing Banner - Refined Style */}
+            <div className="flex items-center py-2 bg-white mb-8">
+              <p className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">
+                PROTOCOL: MARGIN AUTO-FILES CASES ≥85% CONFIDENCE
               </p>
             </div>
 
