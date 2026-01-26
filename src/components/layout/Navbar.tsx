@@ -295,7 +295,7 @@ export function Navbar({
 
 
               {/* Functional Icons Group - Compact Horizontal */}
-              <div className="flex items-center gap-x-1 border-l border-gray-200/60 pl-4 ml-3">
+              <div className="flex items-center gap-x-4 border-l border-gray-200/60 pl-4 ml-3">
                 {/* Notifications */}
                 <NotificationBell
                   label="Notifications"
@@ -380,7 +380,7 @@ export function Navbar({
               <div className="flex items-center border-l border-gray-200/60 pl-4 ml-1">
                 <button
                   onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-1.5 h-8 px-3 text-xs text-gray-900 hover:bg-gray-100 rounded-md transition-all font-medium border border-gray-200/60">
+                  className="flex items-center gap-1.5 text-xs text-gray-900 hover:text-gray-600 transition-all font-medium">
                   <Link2 className="h-3.5 w-3.5 text-gray-900" />
                   <span className="hidden sm:inline">Connect</span>
                 </button>
