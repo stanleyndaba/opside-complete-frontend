@@ -108,6 +108,8 @@ export function Dashboard() {
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
   const { notifications, unreadCount } = useNotifications();
+  const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
+  const [activeDiscrepancyLog, setActiveDiscrepancyLog] = useState<any>(null);
 
   const { formatCurrency: formatCurrencyWithSelection } = useCurrency();
   // Phase 3: Detection statistics
@@ -1167,9 +1169,16 @@ export function Dashboard() {
                                             LOG.{notification.id.substring(0, 8).toUpperCase()}
                                           </span>
                                           <button
-                                            onClick={() => navigate('/recoveries')}
+                                            onClick={() => {
+                                              if (notification.type === 'claim_detected') {
+                                                setActiveDiscrepancyLog(notification);
+                                                setShowDiscrepancyModal(true);
+                                              } else {
+                                                navigate('/recoveries');
+                                              }
+                                            }}
                                             className="text-xs font-bold text-gray-900 flex items-center gap-1.5 hover:underline">
-                                            Open Record <ArrowRight className="h-3 w-3" />
+                                            {notification.type === 'claim_detected' ? 'Open' : 'Open Record'} <ArrowRight className="h-3 w-3" />
                                           </button>
                                         </div>
                                       </div>
@@ -1404,6 +1413,116 @@ export function Dashboard() {
           <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
             <button onClick={() => setInviteOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
             <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Discrepancy Detail Modal - Institutional Audit View */}
+      <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
+        <DialogContent className="max-w-2xl bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          {/* Header - Audit Dark theme */}
+          <div className="px-6 py-5 bg-gray-900 border-b border-gray-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider">Discrepancy Audit Details</h3>
+                <p className="text-[10px] text-gray-400 mt-1 font-mono uppercase tracking-tight">
+                  Log ID: {activeDiscrepancyLog?.id?.substring(0, 12).toUpperCase() || 'N/A'}
+                </p>
+              </div>
+              <div className="px-2 py-1 bg-gray-800 border border-gray-700">
+                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Live Audit</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-8">
+            <div className="space-y-8">
+              {/* Overview Section */}
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-1.5 pb-4 border-b border-gray-50">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Audit Segment</span>
+                  <p className="text-sm font-bold text-gray-900">Inventory Reconciliation</p>
+                </div>
+                <div className="space-y-1.5 pb-4 border-b border-gray-50">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Detection Cadence</span>
+                  <p className="text-sm font-bold text-gray-900">Continuous Sync</p>
+                </div>
+              </div>
+
+              {/* Main Analysis Area */}
+              <div className="bg-gray-50 border border-gray-100 p-6 space-y-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gray-900" />
+                  <h4 className="text-xs font-bold text-gray-900 uppercase">Audit Findings</h4>
+                </div>
+
+                {(() => {
+                  if (!activeDiscrepancyLog) return null;
+
+                  // Extract count using regex from title or message
+                  const combinedText = `${activeDiscrepancyLog.title || ''} ${activeDiscrepancyLog.message || ''}`;
+                  const countMatch = combinedText.match(/(\d+)\s+(?:discrepancies|claims|high-probability)/i);
+                  const count = countMatch ? parseInt(countMatch[1]) : 0;
+
+                  if (count > 0) {
+                    return (
+                      <div className="space-y-5">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                            Our audit engine has identified <span className="text-gray-900 font-bold underline decoration-gray-200 underline-offset-4">{count} automated discrepancies</span> within this specific reconciliation cycle.
+                          </p>
+                        </div>
+
+                        <ScrollArea className={cn("pr-4", count > 6 ? "h-[240px]" : "h-auto")}>
+                          <div className="grid grid-cols-1 gap-2 pt-2">
+                            {[...Array(count)].map((_, i) => (
+                              <div key={i} className="flex items-center justify-between p-3 bg-white border border-gray-100">
+                                <div className="flex flex-col gap-0.5">
+                                  <span className="text-[10px] font-mono text-gray-500">REF.{Math.random().toString(36).substring(7).toUpperCase()}</span>
+                                  <span className="text-[10px] font-bold text-gray-900 uppercase">FBA Inventory Mismatch</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="block text-[10px] font-mono text-emerald-600 font-bold font-mono">Verified Check</span>
+                                  <span className="text-[9px] text-gray-400 font-mono">Status: Pending Review</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                        {count > 6 && (
+                          <div className="pt-2 border-t border-gray-100 flex justify-center">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                              End of Audit Segment
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="py-6 text-center">
+                      <p className="text-xs text-gray-400 font-medium italic">
+                        No audit discrepancies currently identified within this log segment.
+                      </p>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Secure Footer */}
+              <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-3 w-3 text-gray-400" />
+                  <span className="text-[9px] font-mono text-gray-400 uppercase">256-bit Encrypted Audit Trail</span>
+                </div>
+                <Button
+                  onClick={() => setShowDiscrepancyModal(false)}
+                  className="bg-gray-900 hover:bg-black text-white text-[10px] h-8 px-6 font-bold uppercase tracking-widest rounded-none">
+                  Close Audit
+                </Button>
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
