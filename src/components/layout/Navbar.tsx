@@ -392,40 +392,40 @@ export function Navbar({
           <div className="flex items-center border-l border-gray-100 pl-6 ml-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 h-8 px-3 text-xs text-gray-900 bg-gray-100/60 hover:bg-gray-100 rounded-md transition-colors group/account">
+                <button className="flex items-center gap-2 text-xs text-gray-900 hover:text-gray-600 transition-colors group/account">
                   <User className="h-3.5 w-3.5 text-gray-900" />
                   <span className="hidden sm:inline font-medium">Account</span>
                   <ChevronDown className="h-3 w-3 text-gray-900" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg rounded-sm p-1">
+              <DropdownMenuContent align="end" className="w-64 bg-white border border-gray-200 shadow-xl rounded-none p-2">
                 <DropdownMenuItem
                   onClick={() => navigate('/settings')}
-                  className="flex items-center gap-2.5 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-sm">
+                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
                   <User className="h-3.5 w-3.5 text-gray-400" />
                   <span>Seller Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate('/settings?tab=billing')}
-                  className="flex items-center gap-2.5 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-sm">
+                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
                   <CreditCard className="h-3.5 w-3.5 text-gray-400" />
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-2.5 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-sm">
+                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
                   <Plug className="h-3.5 w-3.5 text-gray-400" />
                   <span>Integrations</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate('/settings?tab=notifications')}
-                  className="flex items-center gap-2.5 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-sm">
+                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
                   <Bell className="h-3.5 w-3.5 text-gray-400" />
                   <span>Notifications</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate('/settings?tab=security')}
-                  className="flex items-center gap-2.5 px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-sm">
+                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
                   <Shield className="h-3.5 w-3.5 text-gray-400" />
                   <span>Security</span>
                 </DropdownMenuItem>
