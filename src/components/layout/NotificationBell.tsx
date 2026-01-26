@@ -157,7 +157,7 @@ export function NotificationBell({
           {shouldShowLabel && <span className="text-xs font-bold">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
-              "absolute flex items-center justify-center bg-blue-600 text-white text-[10px] font-semibold leading-none rounded-full min-w-[15px] h-[15px] px-0.5",
+              "absolute flex items-center justify-center bg-[#1F2937] text-white text-[10px] font-semibold leading-none rounded-full min-w-[15px] h-[15px] px-0.5",
               isSidebarStyle ? "top-0 right-1" : "-top-1 -right-1"
             )}>
               {unreadCount > 9 ? '9+' : unreadCount}
