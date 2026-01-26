@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from './NotificationBell';
@@ -738,42 +738,34 @@ export function Navbar({
 
       {/* Sign Out Confirmation Modal */}
       <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
-        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          <div className="p-8 text-center">
-            {/* Icon */}
-            <div className="w-12 h-12 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-              <LogOut className="h-5 w-5 text-gray-500" />
-            </div>
-
-            {/* Title */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              Leaving already?
-            </h3>
-
-            {/* Body */}
-            <p className="text-sm text-gray-500 leading-relaxed mb-8">
-              Your account is still being monitored for new recovery opportunities.
-              You can sign back in anytime to see updates.
-            </p>
-
-            {/* Actions */}
-            <div className="flex flex-col gap-3">
-              <Button
-                onClick={async () => {
-                  setShowSignOutModal(false);
-                  try { await api.logout(); } catch (_) { }
-                  window.location.href = '/';
-                }}
-                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-medium rounded-sm transition-all">
-                Sign Out
-              </Button>
-              <button
-                onClick={() => setShowSignOutModal(false)}
-                className="w-full text-xs text-gray-500 hover:text-gray-700 font-medium py-2 transition-colors">
-                Stay signed in
-              </button>
-            </div>
-          </div>
+        <DialogContent className="sm:max-w-[400px] bg-white border-gray-200 p-0 gap-0 rounded-none">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
+            <DialogTitle className="text-base font-semibold text-gray-900">
+              Signing out already?
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 mt-2 leading-relaxed">
+              Margin continues to monitor your margins and recover funds around the clock. Log back in anytime to review the latest recoveries.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="px-6 py-4 bg-gray-50/50 flex gap-3 sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setShowSignOutModal(false)}
+              className="border-gray-200 text-gray-700 hover:bg-gray-100 rounded-none font-medium"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                setShowSignOutModal(false);
+                try { await api.logout(); } catch (_) { }
+                window.location.href = '/';
+              }}
+              className="bg-gray-900 hover:bg-gray-800 text-white rounded-none font-medium"
+            >
+              Sign Out
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
