@@ -399,21 +399,21 @@ export function Navbar({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-                {/* Connection Status Header - Light Theme */}
-                <div className="px-6 py-5 bg-white border-b border-gray-100">
+                {/* Connection Status Header - Compact Light */}
+                <div className="px-5 py-4 bg-white border-b border-gray-100">
                   <h3 className="text-sm font-bold text-gray-900 tracking-tight">Amazon Seller Profile</h3>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <div className="relative flex h-2 w-2">
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                     </div>
                     <p className="text-xs text-gray-400 font-medium">Connected, secured</p>
                   </div>
                 </div>
 
-                <div className="p-8 space-y-7">
-                  {/* Data Grid */}
-                  <div className="space-y-6">
+                <div className="p-5 space-y-5">
+                  {/* Compact Data Grid */}
+                  <div className="grid grid-cols-1 gap-y-3.5">
                     {[
                       { label: 'Seller Id', value: 'Not available' },
                       { label: 'Store Name', value: 'Amazon Seller Account' },
@@ -421,12 +421,12 @@ export function Navbar({
                       { label: 'Audit Permission', value: 'Active Delegation' },
                       { label: 'Contact Method', value: 'Seller Central Case Mgr' }
                     ].map((item, idx) => (
-                      <div key={idx} className="flex flex-col gap-1.5 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
-                        <span className="text-xs font-bold text-gray-400 tracking-tight">
+                      <div key={idx} className="flex items-baseline justify-between gap-4">
+                        <span className="text-[11px] font-bold text-gray-400 tracking-tight shrink-0">
                           {item.label}
                         </span>
                         <span className={cn(
-                          "text-sm font-medium text-gray-900",
+                          "text-xs font-medium text-gray-900 border-b border-gray-50 pb-0.5",
                           item.value.includes('_') || item.value === 'Not available' ? "font-mono text-gray-500" : ""
                         )}>
                           {item.value}
@@ -435,13 +435,13 @@ export function Navbar({
                     ))}
                   </div>
 
-                  {/* Sign Out Action */}
-                  <div className="pt-2 border-t border-gray-100 mt-2">
+                  {/* Sign Out Action - Compact */}
+                  <div className="pt-3 border-t border-gray-100 mt-1">
                     <button
                       onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between text-sm font-bold text-gray-400 hover:text-red-600 transition-colors tracking-tight group/logout">
+                      className="w-full flex items-center justify-between text-xs font-bold text-gray-400 hover:text-red-600 transition-colors tracking-tight group/logout">
                       <span>Sign Out</span>
-                      <LogOut className="h-3.5 w-3.5 group-hover/logout:translate-x-1 transition-transform" />
+                      <LogOut className="h-3 w-3 group-hover/logout:translate-x-1 transition-transform opacity-60" />
                     </button>
                   </div>
                 </div>
