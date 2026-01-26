@@ -402,30 +402,15 @@ export function Navbar({
                 {/* Connection Status Header */}
                 <div className="px-5 py-4 bg-gray-900 border-b border-gray-800">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-[11px] font-bold text-white uppercase tracking-wider">Amazon Connected</h3>
+                    <h3 className="text-[11px] font-bold text-white tracking-wider">Amazon Connected</h3>
                     <div className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </div>
                   </div>
-                  <p className="text-[10px] text-gray-400 mt-1 font-mono uppercase">Operational • 256-bit Secure</p>
                 </div>
 
                 <div className="p-6 space-y-7">
-                  {/* Identity & Protocol */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-l-2 border-gray-900 pl-3">
-                      <div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Seller Identity</span>
-                        <p className="text-xs font-bold text-gray-900 uppercase mt-0.5">Identity Verified</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Protocol</span>
-                        <p className="text-xs font-bold text-gray-900 font-mono mt-0.5">NIST-800</p>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Technical Data Grid */}
                   <div className="space-y-4">
                     {[
@@ -436,7 +421,9 @@ export function Navbar({
                       { label: 'Contact Method', value: 'Seller Central Case Mgr' }
                     ].map((item, idx) => (
                       <div key={idx} className="flex flex-col gap-1 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{item.label}</span>
+                        <span className="text-[9px] font-bold text-gray-400 tracking-wider">
+                          {item.label}
+                        </span>
                         <span className={cn(
                           "text-[11px] font-medium text-gray-900",
                           item.value.includes('_') || item.value === 'Not available' ? "font-mono text-gray-500" : ""
@@ -451,8 +438,8 @@ export function Navbar({
                   <div className="pt-2 border-t border-gray-100 mt-2">
                     <button
                       onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between text-[11px] font-bold text-gray-400 hover:text-red-600 transition-colors uppercase tracking-widest group/logout">
-                      <span>Terminate Session</span>
+                      className="w-full flex items-center justify-between text-[11px] font-bold text-gray-400 hover:text-red-600 transition-colors tracking-widest group/logout">
+                      <span>Sign Out</span>
                       <LogOut className="h-3 w-3 group-hover/logout:translate-x-1 transition-transform" />
                     </button>
                   </div>
