@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2 } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -1418,41 +1418,33 @@ export function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Discrepancy Detail Modal - Institutional Audit View */}
+      {/* Discrepancy Detail Modal - Minimalist View */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
         <DialogContent className="max-w-2xl bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          {/* Header - Audit Dark theme - Compact */}
-          <div className="px-6 py-3.5 bg-gray-900 border-b border-gray-800">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider">Discrepancy Audit Details</h3>
-                <p className="text-[10px] text-gray-400 mt-1 font-mono uppercase tracking-tight">
-                  Log ID: {activeDiscrepancyLog?.id?.substring(0, 12).toUpperCase() || 'N/A'}
-                </p>
-              </div>
-              <div className="px-2 py-1 bg-gray-800 border border-gray-700">
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Live Audit</span>
-              </div>
-            </div>
-          </div>
+          {/* Close button - Top Right */}
+          <button
+            onClick={() => setShowDiscrepancyModal(false)}
+            className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-900 transition-colors z-10">
+            <X className="h-4 w-4" />
+          </button>
 
-          <div className="p-5">
-            <div className="space-y-5">
-              {/* Overview Section - Compact */}
-              <div className="grid grid-cols-2 gap-8">
-                <div className="space-y-1 pb-2 border-b border-gray-50">
+          <div className="p-8 pt-12">
+            <div className="space-y-6">
+              {/* Overview Section - Minimalist */}
+              <div className="grid grid-cols-2 gap-8 border-b border-gray-100 pb-6">
+                <div className="space-y-1">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Audit Segment</span>
                   <p className="text-sm font-bold text-gray-900">Inventory Reconciliation</p>
                 </div>
-                <div className="space-y-1 pb-2 border-b border-gray-50">
+                <div className="space-y-1">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Detection Cadence</span>
                   <p className="text-sm font-bold text-gray-900">Continuous Sync</p>
                 </div>
               </div>
 
               {/* Main Analysis Area - Maintained Findings Section */}
-              <div className="bg-gray-50 border border-gray-100 p-5 space-y-3">
-                <div className="flex items-center gap-3 mb-1">
+              <div className="bg-white space-y-4">
+                <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-gray-900" />
                   <h4 className="text-xs font-bold text-gray-900 uppercase">Audit Findings</h4>
                 </div>
@@ -1468,30 +1460,28 @@ export function Dashboard() {
                   if (count > 0) {
                     return (
                       <div className="space-y-5">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                            Our audit engine has identified <span className="text-gray-900 font-bold underline decoration-gray-200 underline-offset-4">{count} automated discrepancies</span> within this specific reconciliation cycle.
-                          </p>
-                        </div>
+                        <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                          Our audit engine has identified <span className="text-gray-900 font-bold underline decoration-gray-200 underline-offset-4">{count} automated discrepancies</span> within this specific reconciliation cycle.
+                        </p>
 
-                        <ScrollArea className={cn("pr-4", count > 6 ? "h-[240px]" : "h-auto")}>
+                        <ScrollArea className={cn("pr-4", count > 6 ? "h-[300px]" : "h-auto")}>
                           <div className="grid grid-cols-1 gap-2 pt-2">
                             {[...Array(count)].map((_, i) => (
-                              <div key={i} className="flex items-center justify-between p-3 bg-white border border-gray-100">
+                              <div key={i} className="flex items-center justify-between p-4 bg-gray-50/50 border border-gray-100 hover:bg-gray-50 transition-colors">
                                 <div className="flex flex-col gap-0.5">
-                                  <span className="text-[10px] font-mono text-gray-500">REF.{Math.random().toString(36).substring(7).toUpperCase()}</span>
-                                  <span className="text-[10px] font-bold text-gray-900 uppercase">FBA Inventory Mismatch</span>
+                                  <span className="text-[10px] font-mono text-gray-400">REF.{Math.random().toString(36).substring(7).toUpperCase()}</span>
+                                  <span className="text-[11px] font-bold text-gray-900 uppercase tracking-tight">FBA Inventory Mismatch</span>
                                 </div>
                                 <div className="text-right">
-                                  <span className="block text-[10px] font-mono text-emerald-600 font-bold font-mono">Verified Check</span>
-                                  <span className="text-[9px] text-gray-400 font-mono">Status: Pending Review</span>
+                                  <span className="block text-[10px] font-bold text-emerald-600 uppercase tracking-wide">Verified Check</span>
+                                  <span className="text-[9px] text-gray-400 font-medium">Pending Review</span>
                                 </div>
                               </div>
                             ))}
                           </div>
                         </ScrollArea>
                         {count > 6 && (
-                          <div className="pt-2 border-t border-gray-100 flex justify-center">
+                          <div className="pt-4 flex justify-center border-t border-gray-50 mt-2">
                             <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
                               End of Audit Segment
                             </p>
@@ -1502,26 +1492,13 @@ export function Dashboard() {
                   }
 
                   return (
-                    <div className="py-6 text-center">
+                    <div className="py-12 text-center bg-gray-50 border border-dashed border-gray-200">
                       <p className="text-xs text-gray-400 font-medium italic">
                         No audit discrepancies currently identified within this log segment.
                       </p>
                     </div>
                   );
                 })()}
-              </div>
-
-              {/* Secure Footer - Compact */}
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-3 w-3 text-gray-400" />
-                  <span className="text-[9px] font-mono text-gray-400 uppercase">256-bit Encrypted Audit Trail</span>
-                </div>
-                <Button
-                  onClick={() => setShowDiscrepancyModal(false)}
-                  className="bg-gray-900 hover:bg-black text-white text-[10px] h-8 px-6 font-bold uppercase tracking-widest rounded-none">
-                  Close Audit
-                </Button>
               </div>
             </div>
           </div>
