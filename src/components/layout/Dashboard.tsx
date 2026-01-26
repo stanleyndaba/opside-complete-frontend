@@ -1418,32 +1418,25 @@ export function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Discrepancy Detail Modal - Minimalist View */}
+      {/* Discrepancy Detail Modal - Ultra-Minimalist View */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="max-w-2xl bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          {/* Close button - Top Right */}
-          <button
-            onClick={() => setShowDiscrepancyModal(false)}
-            className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-900 transition-colors z-10">
-            <X className="h-4 w-4" />
-          </button>
-
-          <div className="p-8 pt-12">
-            <div className="space-y-6">
+        <DialogContent className="max-w-lg bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          <div className="p-6 pt-10">
+            <div className="space-y-4">
               {/* Overview Section - Minimalist */}
-              <div className="grid grid-cols-2 gap-8 border-b border-gray-100 pb-6">
-                <div className="space-y-1">
+              <div className="grid grid-cols-2 gap-4 border-b border-gray-100 pb-4">
+                <div className="space-y-0.5">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Audit Segment</span>
                   <p className="text-sm font-bold text-gray-900">Inventory Reconciliation</p>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Detection Cadence</span>
                   <p className="text-sm font-bold text-gray-900">Continuous Sync</p>
                 </div>
               </div>
 
               {/* Main Analysis Area - Maintained Findings Section */}
-              <div className="bg-white space-y-4">
+              <div className="bg-white space-y-3">
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-gray-900" />
                   <h4 className="text-xs font-bold text-gray-900 uppercase">Audit Findings</h4>
@@ -1459,12 +1452,12 @@ export function Dashboard() {
 
                   if (count > 0) {
                     return (
-                      <div className="space-y-5">
+                      <div className="space-y-4">
                         <p className="text-sm text-gray-600 leading-relaxed font-medium">
                           Our audit engine has identified <span className="text-gray-900 font-bold underline decoration-gray-200 underline-offset-4">{count} automated discrepancies</span> within this specific reconciliation cycle.
                         </p>
 
-                        <ScrollArea className={cn("pr-4", count > 6 ? "h-[300px]" : "h-auto")}>
+                        <ScrollArea className={cn("pr-4", count > 6 ? "h-[260px]" : "h-auto")}>
                           <div className="grid grid-cols-1 gap-2 pt-2">
                             {[...Array(count)].map((_, i) => (
                               <div key={i} className="flex items-center justify-between p-4 bg-gray-50/50 border border-gray-100 hover:bg-gray-50 transition-colors">
