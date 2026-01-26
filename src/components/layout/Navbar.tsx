@@ -298,7 +298,7 @@ export function Navbar({
               <div className="flex items-center gap-x-1 border-l border-gray-200/60 pl-4 ml-3">
                 {/* Notifications */}
                 <NotificationBell
-                  label="Margin Notifications"
+                  label="Notifications"
                   showLabel={false}
                   className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all"
                   iconClassName="h-4 w-4"
@@ -323,7 +323,7 @@ export function Navbar({
                   {isNoteHovered && notes.length > 0 && (
                     <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-none shadow-xl z-50 overflow-hidden">
                       <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                        <span className="text-xs font-bold text-gray-900">External Records</span>
+                        <span className="text-xs font-bold text-gray-900">External REC</span>
                         <span className="text-xs text-gray-400 font-mono">{notes.length} REC</span>
                       </div>
                       <div className="max-h-64 overflow-y-auto divide-y divide-gray-50">
@@ -364,7 +364,7 @@ export function Navbar({
                         </div>
                         <span className="text-xs font-bold text-emerald-600">Limited Offer</span>
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">6 Month Referral Program</h4>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">Referral</h4>
                       <p className="text-xs text-gray-600 leading-relaxed">
                         Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
                       </p>
@@ -441,7 +441,7 @@ export function Navbar({
           {/* Header - Institutional Dark */}
           <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
             <h3 className="text-xs font-bold text-white">
-              Referral Protocol
+              Referral
             </h3>
             <p className="text-xs text-gray-400 mt-1 font-mono">
               COMMISSION-FREE NETWORK EXPANSION
@@ -569,10 +569,10 @@ export function Navbar({
         <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden flex flex-col max-h-[90vh]">
           <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
             <h3 className="text-xs font-bold text-white">
-              Note Ingestion Engine
+              Note Ingestion
             </h3>
             <p className="text-xs text-gray-400 mt-1 font-mono">
-              INTERNAL DOCUMENTATION // AUDIT LOGS
+              Internal Logs
             </p>
           </div>
 
@@ -618,7 +618,7 @@ export function Navbar({
             {notes.length > 0 && (
               <div className="border-t border-gray-100 pt-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold text-gray-400">Stored Records</span>
+                  <span className="text-xs font-bold text-gray-400">Stored REC</span>
                   <span className="text-xs font-mono text-gray-400">VOL.{notes.length}</span>
                 </div>
                 <div className="space-y-3 max-h-60 overflow-y-auto pr-2 scrollbar-hide">

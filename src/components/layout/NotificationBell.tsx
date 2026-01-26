@@ -40,7 +40,7 @@ const stripEmojis = (text: any) => {
 };
 
 export function NotificationBell({
-  label = 'Margin Notifications',
+  label = 'Notifications',
   className,
   forceCountStyle = 'default',
   iconOverride,
@@ -287,7 +287,7 @@ export function NotificationBell({
         <div className="px-4 py-3 border-t border-gray-100 flex-shrink-0 bg-gray-50/20">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
             <button className="w-full text-center text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors">
-              ARCHIVE
+              Archives
             </button>
           </Link>
         </div>

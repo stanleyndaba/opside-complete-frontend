@@ -245,10 +245,6 @@ export function Sidebar({
               <span className="text-sm font-semibold text-gray-900 leading-tight">
                 Margin
               </span>
-              <div className="flex items-center gap-1">
-                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="text-[10px] text-gray-400">Secured</span>
-              </div>
             </div>
           )}
         </div>

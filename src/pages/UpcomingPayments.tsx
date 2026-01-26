@@ -248,7 +248,7 @@ export default function UpcomingPayments() {
             {/* Header */}
             <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
               <div>
-                <h1 className="text-xl font-light text-gray-900 tracking-tight">Payment Recoveries</h1>
+                <h1 className="text-xl font-light text-gray-900 tracking-tight">Recoveries</h1>
                 <p className="text-xs text-gray-400 mt-1 font-mono">PROJECTED PAYOUTS</p>
               </div>
             </div>
@@ -419,7 +419,7 @@ export default function UpcomingPayments() {
                     )}
                     {!loading && upcomingGroups.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-sm font-mono text-gray-500 p-8 text-center">Zero (0) Records Detected for Projection</TableCell>
+                        <TableCell colSpan={7} className="text-sm font-mono text-gray-500 p-8 text-center">Zero (0) REC Detected for Projection</TableCell>
                       </TableRow>
                     )}
                     {!loading && upcomingGroups.map((g) => (
@@ -440,7 +440,7 @@ export default function UpcomingPayments() {
                               ))}
                               {g.claims.length > 2 && (
                                 <span className="text-xs text-gray-400 font-mono ml-3.5">
-                                  + {g.claims.length - 2} ADDTL RECORDS
+                                  + {g.claims.length - 2} ADDTL REC
                                 </span>
                               )}
                             </div>
