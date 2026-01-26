@@ -95,7 +95,6 @@ export function Navbar({
   const [isNoteHovered, setIsNoteHovered] = useState(false);
   const [isSavingNote, setIsSavingNote] = useState(false);
   const noteIconRef = useRef<HTMLButtonElement>(null);
-  const [showSellerProfileModal, setShowSellerProfileModal] = useState(false);
 
   // Fetch notes from backend on load
   useEffect(() => {
@@ -399,37 +398,65 @@ export function Navbar({
                   <ChevronDown className="h-3 w-3 text-gray-900" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 bg-white border border-gray-200 shadow-xl rounded-none p-2">
-                <DropdownMenuItem
-                  onClick={() => setShowSellerProfileModal(true)}
-                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
-                  <User className="h-3.5 w-3.5 text-gray-400" />
-                  <span>Seller Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => navigate('/settings?tab=billing')}
-                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
-                  <CreditCard className="h-3.5 w-3.5 text-gray-400" />
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
-                  <Plug className="h-3.5 w-3.5 text-gray-400" />
-                  <span>Integrations</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => navigate('/settings?tab=notifications')}
-                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
-                  <Bell className="h-3.5 w-3.5 text-gray-400" />
-                  <span>Notifications</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => navigate('/settings?tab=security')}
-                  className="flex items-center gap-2.5 px-3 py-3 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer rounded-none">
-                  <Shield className="h-3.5 w-3.5 text-gray-400" />
-                  <span>Security</span>
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+                {/* Connection Status Header */}
+                <div className="px-5 py-4 bg-gray-900 border-b border-gray-800">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-[11px] font-bold text-white uppercase tracking-wider">Amazon Connected</h3>
+                    <div className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-gray-400 mt-1 font-mono uppercase">Operational • 256-bit Secure</p>
+                </div>
+
+                <div className="p-6 space-y-7">
+                  {/* Identity & Protocol */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-l-2 border-gray-900 pl-3">
+                      <div>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Seller Identity</span>
+                        <p className="text-xs font-bold text-gray-900 uppercase mt-0.5">Identity Verified</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Protocol</span>
+                        <p className="text-xs font-bold text-gray-900 font-mono mt-0.5">NIST-800</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Technical Data Grid */}
+                  <div className="space-y-4">
+                    {[
+                      { label: 'Seller ID', value: 'Not available' },
+                      { label: 'Store Name', value: 'Amazon Seller Account' },
+                      { label: 'Internal User ID', value: 'ID_NOT_MAPPED' },
+                      { label: 'Audit Permission', value: 'ACTIVE_DELEGATION' },
+                      { label: 'Contact Method', value: 'Seller Central Case Mgr' }
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex flex-col gap-1 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{item.label}</span>
+                        <span className={cn(
+                          "text-[11px] font-medium text-gray-900",
+                          item.value.includes('_') || item.value === 'Not available' ? "font-mono text-gray-500" : ""
+                        )}>
+                          {item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Sign Out Action */}
+                  <div className="pt-2 border-t border-gray-100 mt-2">
+                    <button
+                      onClick={() => setShowSignOutModal(true)}
+                      className="w-full flex items-center justify-between text-[11px] font-bold text-gray-400 hover:text-red-600 transition-colors uppercase tracking-widest group/logout">
+                      <span>Terminate Session</span>
+                      <LogOut className="h-3 w-3 group-hover/logout:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -758,69 +785,6 @@ export function Navbar({
                 className="w-full text-xs text-gray-500 hover:text-gray-700 font-medium py-2 transition-colors">
                 Stay signed in
               </button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-      {/* Seller Profile Modal - Institutional Style */}
-      <Dialog open={showSellerProfileModal} onOpenChange={setShowSellerProfileModal}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          {/* Header - Institutional Dark */}
-          <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
-            <h3 className="text-xs font-bold text-white">
-              Connected: Amazon SP API
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 font-mono">
-              CREDENTIAL VERIFICATION STATUS
-            </p>
-          </div>
-
-          <div className="p-8">
-            <div className="space-y-8">
-              {/* Identity Section */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Seller Identity</span>
-                  <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-50 border border-emerald-100">
-                    <Check className="h-2.5 w-2.5 text-emerald-600" />
-                    <span className="text-[10px] font-bold text-emerald-600 uppercase">Identity Verified</span>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-gray-50 border border-gray-100 flex items-center justify-between">
-                  <span className="text-xs text-gray-500 font-medium">PROTOCOL:</span>
-                  <span className="text-xs font-bold text-gray-900 font-mono">NIST-800</span>
-                </div>
-              </div>
-
-              {/* Technical Details Grid */}
-              <div className="grid grid-cols-1 gap-6">
-                {[
-                  { label: 'Seller ID', value: 'Not available' },
-                  { label: 'Store Name', value: 'Amazon Seller Account' },
-                  { label: 'Internal User ID', value: 'ID_NOT_MAPPED' },
-                  { label: 'Audit Permission', value: 'ACTIVE_DELEGATION' },
-                  { label: 'Contact Method', value: 'Seller Central Case Mgr' }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex flex-col gap-1.5 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">{item.label}</span>
-                    <span className={cn(
-                      "text-xs font-medium text-gray-900",
-                      item.value.includes('_') || item.value === 'Not available' ? "font-mono text-gray-500" : ""
-                    )}>
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Security Footer Note */}
-              <div className="pt-4 border-t border-gray-100 flex items-center gap-2">
-                <Shield className="h-3 w-3 text-gray-400" />
-                <p className="text-[10px] text-gray-400 font-mono uppercase">
-                  Encrypted Session • Session ID: {Math.random().toString(36).substring(7).toUpperCase()}
-                </p>
-              </div>
             </div>
           </div>
         </DialogContent>
