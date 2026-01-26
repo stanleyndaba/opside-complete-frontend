@@ -492,6 +492,40 @@ const Index = () => {
                       Products
                     </AccordionTrigger>
                     <AccordionContent className="pt-2 pb-4 px-4 space-y-5">
+                      {/* Trust & Scale Section */}
+                      <div className="space-y-4">
+                        <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Trust & Scale</h5>
+                        <div className="grid gap-2">
+                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                              <Search className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</div>
+                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
+                            </div>
+                          </a>
+                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                              <Briefcase className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</div>
+                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
+                            </div>
+                          </a>
+                          <a href="#commission-governance" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
+                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                              <BadgePercent className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</div>
+                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Detect category misclassifications and referral fee overcharges.</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+
                       {/* Core Platform Section */}
                       <div className="space-y-4">
                         <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Core Platform</h5>
@@ -531,40 +565,6 @@ const Index = () => {
                             <div>
                               <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Dimension & Weight Auditor</div>
                               <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Auto-detect storage tier overcharges and trigger re-measurements.</p>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
-
-                      {/* Trust & Scale Section */}
-                      <div className="space-y-4">
-                        <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Trust & Scale</h5>
-                        <div className="grid gap-2">
-                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
-                              <Search className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
-                            </div>
-                          </a>
-                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
-                              <Briefcase className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
-                            </div>
-                          </a>
-                          <a href="#commission-governance" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
-                              <BadgePercent className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Detect category misclassifications and referral fee overcharges.</p>
                             </div>
                           </a>
                         </div>

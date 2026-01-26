@@ -33,7 +33,59 @@ export function ProductsMegaMenu() {
                             {/* Left Side: Features */}
                             <div className="flex-1 p-6 lg:p-8 grid gap-8">
 
-                                {/* Section 1: The "Big Three" Core Products */}
+                                {/* Section 1: Trust & Scale */}
+                                <div className="space-y-5">
+                                    <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.15em] px-2">
+                                        Trust & Scale
+                                    </h4>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <a href="#forensic-auditor" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
+                                            <div className="flex items-start gap-4">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                    <Search className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</span>
+                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
+                                                        Transparent, line-by-line proof for every claim filed.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <a href="#portfolio-manager" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
+                                            <div className="flex items-start gap-4">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                    <Briefcase className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</span>
+                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
+                                                        Multi-account reconciliation for high-volume agencies.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <a href="#commission-governance" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
+                                            <div className="flex items-start gap-4">
+                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
+                                                    <BadgePercent className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</span>
+                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
+                                                        Detect category misclassifications and referral fee overcharges.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent w-full" />
+
+                                {/* Section 2: The "Big Three" Core Products */}
                                 <div className="space-y-5">
                                     <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.15em] px-2">
                                         Core Platform
@@ -99,58 +151,6 @@ export function ProductsMegaMenu() {
                                                     <span className="inline-flex items-center gap-1 mt-2 text-[10px] font-medium text-gray-500 group-hover:text-gray-900 transition-colors">
                                                         No VAs needed <ArrowRight className="h-2.5 w-2.5 ml-0.5" />
                                                     </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent w-full" />
-
-                                {/* Section 2: Trust & Scale */}
-                                <div className="space-y-5">
-                                    <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-[0.15em] px-2">
-                                        Trust & Scale
-                                    </h4>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <a href="#forensic-auditor" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
-                                            <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
-                                                    <Search className="h-5 w-5" />
-                                                </div>
-                                                <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</span>
-                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
-                                                        Transparent, line-by-line proof for every claim filed.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <a href="#portfolio-manager" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
-                                            <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
-                                                    <Briefcase className="h-5 w-5" />
-                                                </div>
-                                                <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</span>
-                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
-                                                        Multi-account reconciliation for high-volume agencies.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </a>
-
-                                        <a href="#commission-governance" className="group block p-4 rounded-xl hover:bg-white/60 transition-all duration-300">
-                                            <div className="flex items-start gap-4">
-                                                <div className="p-2.5 bg-blue-100/30 rounded-lg text-gray-600 border border-blue-100/50 group-hover:border-blue-200 group-hover:bg-white group-hover:shadow-sm transition-all">
-                                                    <BadgePercent className="h-5 w-5" />
-                                                </div>
-                                                <div>
-                                                    <span className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</span>
-                                                    <p className="text-[11px] text-gray-400 mt-1 leading-snug">
-                                                        Detect category misclassifications and referral fee overcharges.
-                                                    </p>
                                                 </div>
                                             </div>
                                         </a>
