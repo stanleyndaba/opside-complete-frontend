@@ -1421,8 +1421,8 @@ export function Dashboard() {
       {/* Discrepancy Detail Modal - Institutional Audit View */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
         <DialogContent className="max-w-2xl bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          {/* Header - Audit Dark theme */}
-          <div className="px-6 py-5 bg-gray-900 border-b border-gray-800">
+          {/* Header - Audit Dark theme - Compact */}
+          <div className="px-6 py-3.5 bg-gray-900 border-b border-gray-800">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider">Discrepancy Audit Details</h3>
@@ -1436,23 +1436,23 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="p-8">
-            <div className="space-y-8">
-              {/* Overview Section */}
+          <div className="p-5">
+            <div className="space-y-5">
+              {/* Overview Section - Compact */}
               <div className="grid grid-cols-2 gap-8">
-                <div className="space-y-1.5 pb-4 border-b border-gray-50">
+                <div className="space-y-1 pb-2 border-b border-gray-50">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Audit Segment</span>
                   <p className="text-sm font-bold text-gray-900">Inventory Reconciliation</p>
                 </div>
-                <div className="space-y-1.5 pb-4 border-b border-gray-50">
+                <div className="space-y-1 pb-2 border-b border-gray-50">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Detection Cadence</span>
                   <p className="text-sm font-bold text-gray-900">Continuous Sync</p>
                 </div>
               </div>
 
-              {/* Main Analysis Area */}
-              <div className="bg-gray-50 border border-gray-100 p-6 space-y-4">
-                <div className="flex items-center gap-3 mb-2">
+              {/* Main Analysis Area - Maintained Findings Section */}
+              <div className="bg-gray-50 border border-gray-100 p-5 space-y-3">
+                <div className="flex items-center gap-3 mb-1">
                   <div className="w-1.5 h-1.5 rounded-full bg-gray-900" />
                   <h4 className="text-xs font-bold text-gray-900 uppercase">Audit Findings</h4>
                 </div>
@@ -1511,8 +1511,8 @@ export function Dashboard() {
                 })()}
               </div>
 
-              {/* Secure Footer */}
-              <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
+              {/* Secure Footer - Compact */}
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Shield className="h-3 w-3 text-gray-400" />
                   <span className="text-[9px] font-mono text-gray-400 uppercase">256-bit Encrypted Audit Trail</span>
