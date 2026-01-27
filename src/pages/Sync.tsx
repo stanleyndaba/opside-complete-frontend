@@ -1800,7 +1800,7 @@ export default function Sync() {
                           });
                         }
                       }}
-                      className="bg-gray-50/80 text-gray-700 hover:bg-gray-100 font-medium px-8 py-6 rounded-xl border-none shadow-none text-base">
+                      className="bg-gray-50/80 text-gray-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-xl border-none shadow-none text-[15px]">
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Probe Data Again
                     </Button>
