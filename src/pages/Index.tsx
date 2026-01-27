@@ -946,7 +946,7 @@ const Index = () => {
                   </div>
                   <h2 className="text-4xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
                     Technical Research for <br className="hidden sm:block" />
-                    High-Velocity Supply Chains
+                    High-Velocity Portfolios
                   </h2>
                 </div>
                 <div className="md:text-right">
