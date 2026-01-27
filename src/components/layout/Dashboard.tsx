@@ -1035,18 +1035,19 @@ export function Dashboard() {
                   <div className="bg-gray-50/80 border border-gray-200 rounded-none h-full flex flex-col">
                     <button
                       onClick={() => setIsActivityExpanded(!isActivityExpanded)}
-                      className="px-5 py-4 border-b border-gray-100 bg-white flex items-center justify-between w-full hover:bg-gray-50/50 transition-colors">
+                      className="px-5 py-4 border-b border-slate-100 bg-[#fefefe] flex items-center justify-between w-full hover:bg-slate-50 transition-all font-montserrat">
                       <div className="flex items-center gap-3">
-                        <h3 className="text-xs font-semibold text-gray-900">Reimbursement Activity</h3>
+                        <div className="w-[3px] h-3 bg-slate-900 rounded-full" />
+                        <h3 className="text-[13px] font-bold text-slate-900 tracking-tight">Reimbursement Activity</h3>
                         {unreadCount > 0 && (
-                          <div className="flex items-center justify-center bg-white border border-gray-200/60 px-1.5 py-0.5 rounded-none">
-                            <span className="text-[10px] font-medium text-gray-600 tabular-nums">
+                          <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">
+                            <span className="text-[10px] font-bold text-emerald-600 tabular-nums">
                               {unreadCount > 50 ? '50+' : unreadCount}
                             </span>
                           </div>
                         )}
                       </div>
-                      <ChevronDown className={cn("h-4 w-4 text-gray-400 transition-transform duration-200", isActivityExpanded ? "" : "-rotate-180")} />
+                      <ChevronDown className={cn("h-3.5 w-3.5 text-slate-400 transition-transform duration-300", isActivityExpanded ? "" : "-rotate-180")} />
                     </button>
 
                     {isActivityExpanded && (
@@ -1091,35 +1092,32 @@ export function Dashboard() {
                                         )}
                                         onClick={() => navigate('/recoveries')}>
 
-                                        {/* Hover Accent Bar */}
-                                        <div className="absolute left-[-2px] top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        {/* Hover Accent Bar (Glowing Emerald) */}
+                                        <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500 rounded-full opacity-0 group-hover:opacity-100 shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-300" />
 
                                         {/* Stacked Ledger Layout - Two Rows */}
-                                        <div className="flex flex-col gap-1">
-                                          {/* Top Row: Status Dot + Full Label + Amount */}
-                                          <div className="flex items-center justify-between gap-2">
-                                            <div className="flex items-center gap-2 min-w-0">
-                                              <div className={cn("h-1 w-1 rounded-full shrink-0 transition-colors", statusColor)} />
-                                              <p className={cn(
-                                                "text-xs",
-                                                isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-600 group-hover:text-gray-900"
-                                              )}>
-                                                {(() => {
-                                                  const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
-                                                  return label || enrichNotificationTitle(notification.title);
-                                                })()}
-                                              </p>
-                                            </div>
-                                            {/* Amount - right-aligned, green for deposits */}
+                                        <div className="flex flex-col gap-0.5 font-montserrat">
+                                          {/* Top Row: Label + Amount */}
+                                          <div className="flex items-center justify-between gap-3">
+                                            <p className={cn(
+                                              "text-[12px] tracking-tight truncate",
+                                              isUnread ? "font-bold text-slate-900" : "font-medium text-slate-600 group-hover:text-slate-900 transition-colors"
+                                            )}>
+                                              {(() => {
+                                                const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
+                                                return label || enrichNotificationTitle(notification.title);
+                                              })()}
+                                            </p>
+
                                             {(() => {
                                               const { amount } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
                                               if (amount) {
                                                 return (
                                                   <span className={cn(
-                                                    "text-xs font-medium tabular-nums shrink-0",
+                                                    "text-[13px] font-bold tabular-nums shrink-0",
                                                     notification.type === 'funds_deposited' || notification.type === 'refund_approved'
                                                       ? "text-emerald-600"
-                                                      : "text-gray-700"
+                                                      : "text-slate-900"
                                                   )}>
                                                     + {amount}
                                                   </span>
@@ -1129,9 +1127,12 @@ export function Dashboard() {
                                             })()}
                                           </div>
 
-                                          {/* Bottom Row: Date (right-aligned) */}
-                                          <div className="flex justify-end pl-3.5">
-                                            <span className="text-[10px] text-gray-400 font-mono">
+                                          {/* Bottom Row: Date + Type */}
+                                          <div className="flex items-center justify-between">
+                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                              {statusText || 'LOG'}
+                                            </span>
+                                            <span className="text-[10px] text-slate-400 font-medium lowercase">
                                               {formatLedgerDate(notification.created_at)}
                                             </span>
                                           </div>

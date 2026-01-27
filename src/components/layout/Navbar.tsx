@@ -413,7 +413,7 @@ export function Navbar({
 
                 <div className="p-5 space-y-5">
                   {/* Compact Data Grid */}
-                  <div className="grid grid-cols-1 gap-y-4">
+                  <div className="grid grid-cols-1 gap-y-3.5">
                     {[
                       { label: 'Seller Id', value: 'Not available' },
                       { label: 'Store Name', value: 'Amazon Seller Account' },
@@ -421,12 +421,12 @@ export function Navbar({
                       { label: 'Audit Permission', value: 'Active Delegation' },
                       { label: 'Contact Method', value: 'Seller Central Case Mgr' }
                     ].map((item, idx) => (
-                      <div key={idx} className="flex flex-col gap-1">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em]">
+                      <div key={idx} className="flex items-center justify-between gap-4">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] shrink-0">
                           {item.label}
                         </span>
                         <span className={cn(
-                          "text-[13px] font-bold text-slate-900 tracking-tight",
+                          "text-[13px] font-bold text-slate-900 tracking-tight text-right",
                           item.value.includes('_') || item.value === 'Not available' ? "font-mono text-slate-300 text-[11px]" : ""
                         )}>
                           {item.value}
