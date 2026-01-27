@@ -1115,8 +1115,6 @@ const Index = () => {
               </div>
             </div>
           </section>
-            </div>
-          </section>
 
           <section className="bg-[#050505] pt-24 pb-24 md:pt-32 md:pb-32 flex flex-col items-center text-center px-6 relative overflow-hidden">
             {/* Background Mesh Accent */}
