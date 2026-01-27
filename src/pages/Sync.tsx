@@ -1802,7 +1802,7 @@ export default function Sync() {
                       }}
                       className="bg-gray-50/80 text-gray-700 hover:bg-gray-100 font-medium px-8 py-6 rounded-xl border-none shadow-none text-base">
                       <RefreshCw className="h-4 w-4 mr-2" />
-                      Run Again
+                      Probe Data Again
                     </Button>
                   )}
                 </div>
@@ -1867,7 +1867,7 @@ export default function Sync() {
                             onClick={handleRetry}
                             className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm">
                             <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
-                            Retry Sync
+                            Probe Again
                           </button>
                         )}
                       </>
