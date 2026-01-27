@@ -929,6 +929,98 @@ const Index = () => {
             </section>
           </div>
 
+          {/* Market Intelligence / Forensic Briefs Section */}
+          <section className="bg-[#050505] py-24 md:py-32 relative overflow-hidden">
+            {/* Subtle background glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-emerald-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
+
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
+              {/* Technical Header */}
+              <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="h-[1px] w-8 bg-emerald-500/50" />
+                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">
+                      Forensic Briefs // Market Intelligence
+                    </span>
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
+                    Technical Research <br className="hidden sm:block" />
+                    for $10M+ Portfolios
+                  </h2>
+                </div>
+                <div className="md:text-right">
+                  <p className="text-white/30 text-sm font-montserrat max-w-xs md:ml-auto leading-relaxed">
+                    Sovereign-grade analysis on logistics drift, recovery ROI, and detection protocols.
+                  </p>
+                </div>
+              </div>
+
+              {/* Research Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                {/* Brief 01 */}
+                <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                      Intel_Report_V4
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                      The Invisible Tax: Why FBA Inventory Drift Exceeds 3% at Scale
+                    </h3>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                      A technical breakdown of why Amazon loses inventory. This isn&apos;t a mistake; it&apos;s a systemic logistics inefficiency rooted in statistical error rates across 100+ warehouses.
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-white/5">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
+                      ACCESS_FULL_BRIEF <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Brief 02 */}
+                <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                      Forensic_Case_019
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                      Case File 019: Recovering $14,200 in &ldquo;Warehouse Damaged&rdquo; Assets
+                    </h3>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                      A step-by-step walkthrough of a $1M+ portfolio audit. We expose the raw forensic table and the settlement report parsing that triggered a five-figure deposit with zero manual input.
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-white/5">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
+                      REVIEW_CASE_DATA <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Brief 03 */}
+                <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                      Tech_Spec_Algo26
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                      Beyond Reimbursement: The Algo-26 Detection Protocol
+                    </h3>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                      Inside the engineering stack. How we leverage Redis-backed verification and cross-reference Shipment IDs against real-time ledger updates to outperform standard virtual assistant audits.
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-white/5">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
+                      VIEW_PROTOCOL_STACK <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section className="bg-[#050505] pt-24 pb-24 md:pt-32 md:pb-32 flex flex-col items-center text-center px-6 relative overflow-hidden">
             {/* Background Mesh Accent */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
