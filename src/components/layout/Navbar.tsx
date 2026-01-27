@@ -206,10 +206,10 @@ export function Navbar({
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-30 transition-all duration-200",
+        "sticky top-0 z-30 transition-all duration-300 font-montserrat",
         sidebarCollapsed ? "ml-16" : "ml-60",
-        isGreyBgPage ? "bg-white border-b border-gray-200" :
-          isTransparent ? "bg-transparent border-transparent" : "bg-white border-b border-gray-200",
+        isGreyBgPage ? "bg-[#fefefe]/90 border-b border-slate-200/50 backdrop-blur-xl" :
+          isTransparent ? "bg-transparent border-transparent" : "bg-[#fefefe]/80 border-b border-slate-200/50 backdrop-blur-xl",
         className
       )}>
         <div className="flex items-center justify-between h-14 px-6">
@@ -226,7 +226,7 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-10 pr-10 h-9 text-xs bg-gray-100/50 border-transparent rounded-full focus:bg-white focus:border-gray-200 focus:ring-4 focus:ring-gray-100/30 transition-all placeholder:text-gray-400"
+                  className="pl-10 pr-10 h-9 text-[13px] bg-slate-100/50 border-slate-200/30 rounded-lg focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100/30 transition-all placeholder:text-slate-400 font-medium"
                 />
                 {/* Clear button */}
                 {searchQuery && (
@@ -300,7 +300,7 @@ export function Navbar({
                 <NotificationBell
                   label="Notifications"
                   showLabel={false}
-                  className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all"
+                  className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all"
                   iconClassName="h-4 w-4"
                 />
 
@@ -311,7 +311,7 @@ export function Navbar({
                     onClick={() => setShowNotesModal(true)}
                     onMouseEnter={() => setIsNoteHovered(true)}
                     onMouseLeave={() => setIsNoteHovered(false)}
-                    className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all relative"
+                    className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all relative"
                     aria-label="Notes">
                     <NotebookPen className="h-4 w-4" />
                     {notes.length > 0 && (
@@ -347,7 +347,7 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => setShowReferralPopup(true)}
-                      className="h-8 w-8 flex items-center justify-center text-gray-900 hover:bg-gray-100 rounded-md transition-all relative"
+                      className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all relative"
                       aria-label="Referral program">
                       <Gift className="h-4 w-4" />
                       <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
@@ -377,11 +377,11 @@ export function Navbar({
               </div>
 
               {/* Connect Button */}
-              <div className="flex items-center border-l border-gray-200/60 pl-4 ml-1">
+              <div className="flex items-center border-l border-slate-200/50 pl-4 ml-1">
                 <button
                   onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-1.5 text-xs text-gray-900 hover:text-gray-600 transition-all font-medium">
-                  <Link2 className="h-3.5 w-3.5 text-gray-900" />
+                  className="flex items-center gap-1.5 text-[13px] text-slate-900 hover:text-slate-600 transition-all font-bold tracking-tight">
+                  <Link2 className="h-3.5 w-3.5 text-slate-900" />
                   <span className="hidden sm:inline">Connect</span>
                 </button>
               </div>
@@ -389,19 +389,19 @@ export function Navbar({
           </div>
 
           {/* Right Group - Account Dropdown */}
-          <div className="flex items-center border-l border-gray-100 pl-6 ml-6">
+          <div className="flex items-center border-l border-slate-200/50 pl-6 ml-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 text-xs text-gray-900 hover:text-gray-600 transition-colors group/account">
-                  <User className="h-3.5 w-3.5 text-gray-900" />
-                  <span className="hidden sm:inline font-medium">Account</span>
-                  <ChevronDown className="h-3 w-3 text-gray-900" />
+                <button className="flex items-center gap-2 text-[13px] text-slate-900 hover:text-slate-600 transition-colors group/account">
+                  <User className="h-3.5 w-3.5 text-slate-900" />
+                  <span className="hidden sm:inline font-bold tracking-tight">Account</span>
+                  <ChevronDown className="h-3 w-3 text-slate-900" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80 bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+              <DropdownMenuContent align="end" className="w-80 bg-white border border-slate-200 shadow-2xl rounded-xl p-0 overflow-hidden mt-2 font-montserrat">
                 {/* Connection Status Header - Compact Light */}
-                <div className="px-5 py-4 bg-white border-b border-gray-100">
-                  <h3 className="text-sm font-bold text-gray-900 tracking-tight">Amazon Seller Profile</h3>
+                <div className="px-5 py-4 bg-white border-b border-slate-100">
+                  <h3 className="text-sm font-bold text-slate-900 tracking-tight">Amazon Seller Profile</h3>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
