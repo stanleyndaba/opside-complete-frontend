@@ -748,42 +748,38 @@ export function Dashboard() {
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-        <main className={'flex-1 transition-all duration-300 overflow-y-auto ' + mainClass}>
-          <div className="relative pt-12">
-            <div className="relative w-full max-w-full mx-auto px-8 py-8 text-gray-900">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <div>
+        <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+          <div className="relative pt-8">
+            <div className="relative w-full max-w-full mx-auto px-8 pb-8 text-slate-900">
+              {/* Command Center Header */}
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Forensic Command Center</span>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-[15px] font-bold text-gray-900">Reimbursement Overview</h1>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Reimbursement Overview</h1>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1 font-mono">Dashboard</p>
                 </div>
 
-                <div className="flex items-end">
-
-                  <div className="flex flex-col items-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowSyncModal(true)}
-                      className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100">
-                      <RefreshCw className="w-3 h-3 mr-1.5" />
-                      Scan
-                    </Button>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      <span className="relative flex h-1.5 w-1.5">
+                <div className="flex items-start gap-6">
+                  <div className="flex flex-col items-end gap-1.5 pt-1">
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
                       </span>
-                      <p className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                        {(() => {
+                      <p className="text-[11px] text-slate-500 font-bold uppercase tracking-wider whitespace-nowrap">
+                        SYSTEMS HEALTHY • {(() => {
                           const timeStr = formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true });
-                          if (timeStr === 'less than a minute ago') return 'Updated just now';
-                          return `Updated ${timeStr.replace('about ', '')}`;
-                        })()} • systems healthy
+                          return timeStr === 'less than a minute ago' ? 'LIVE' : timeStr.toUpperCase().replace('ABOUT ', '');
+                        })()}
                       </p>
                     </div>
+                    <button
+                      onClick={() => setShowSyncModal(true)}
+                      className="flex items-center gap-2 px-3 py-1 bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-50 transition-all rounded-md group">
+                      <RefreshCw className="w-3 h-3 text-slate-400 group-hover:text-slate-900 group-hover:rotate-180 transition-all duration-500" />
+                      <span className="text-[10px] font-bold text-slate-500 group-hover:text-slate-900 uppercase tracking-widest">Trigger Manual Scan</span>
+                    </button>
                   </div>
                 </div>
               </div>
