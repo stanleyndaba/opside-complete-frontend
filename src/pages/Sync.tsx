@@ -1399,15 +1399,15 @@ export default function Sync() {
                 <div className="pt-8">
                   <div className="flex items-center gap-2">
                     {sseStatus === 'connected' ? (
-                      <span className="flex items-center gap-1.5 text-[13px] font-normal text-gray-400">
+                      <span className="flex items-center gap-1.5 text-[13px] font-medium text-emerald-500/80">
                         <span className="relative flex h-1.5 w-1.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                         </span>
-                        Live
+                        SYNC_ACTIVE
                       </span>
                     ) : (
-                      <span className="text-[13px] font-normal text-gray-400">Polling</span>
+                      <span className="text-[13px] font-medium text-white/40 font-mono">POLLING_STATE</span>
                     )}
                   </div>
                 </div>
@@ -1428,15 +1428,15 @@ export default function Sync() {
             <div className="space-y-4">
               {/* Detecting Phase - OpenAI minimal style */}
               {status === 'detecting' && (
-                <div className="py-6 border-b border-gray-100 mb-4">
+                <div className="py-6 border-b border-white/5 mb-4">
                   <div className="flex items-center gap-4">
                     <div className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neutral-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-neutral-900"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </div>
                     <div>
-                      <p className="text-[15px] font-normal text-gray-900">Scanning for discrepancies</p>
-                      <p className="text-[13px] text-gray-400 mt-1 font-normal">AI agents are auditing every transaction in real-time</p>
+                      <p className="text-[15px] font-bold text-white tracking-tight">Scanning for discrepancies</p>
+                      <p className="text-[13px] text-white/40 mt-1 font-normal font-montserrat">Our AI agents are auditing every transaction in real-time.</p>
                     </div>
                   </div>
                 </div>
@@ -1481,23 +1481,23 @@ export default function Sync() {
               <div className="space-y-6">
                 <div className="flex items-center gap-20">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[15px] font-medium text-gray-900">Activity Log</h4>
+                    <h4 className="text-[15px] font-bold text-white uppercase tracking-[0.2em] font-mono">Activity Log</h4>
                     <TooltipProvider>
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger asChild>
-                          <Info className="h-3.5 w-3.5 text-gray-400 hover:text-gray-600 transition-colors cursor-help" />
+                          <Info className="h-3.5 w-3.5 text-white/20 hover:text-white transition-colors cursor-help" />
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="bg-[#1A1A1A] border-neutral-800 text-neutral-200 p-4 max-w-[320px] shadow-xl ml-2">
+                        <TooltipContent side="right" className="bg-[#0A0A0A] border-white/10 text-neutral-200 p-4 max-w-[320px] shadow-2xl ml-2">
                           <div className="space-y-3">
                             <div className="space-y-1">
-                              <p className="font-medium text-white text-xs tracking-tight">Agent Activity</p>
-                              <p className="text-sm leading-relaxed text-neutral-400 font-normal">
-                                This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.
+                              <p className="font-bold text-white text-xs tracking-tight uppercase font-mono">Agent Activity</p>
+                              <p className="text-sm leading-relaxed text-white/40 font-normal font-montserrat">
+                                This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models.
                               </p>
                             </div>
-                            <div className="pt-2 border-t border-neutral-800/50">
-                              <p className="text-xs text-neutral-500 italic">
-                                Activity updates as new SP-API data is synced.
+                            <div className="pt-2 border-t border-white/5">
+                              <p className="text-xs text-white/20 italic font-mono">
+                                Updates real-time via SP-API
                               </p>
                             </div>
                           </div>
@@ -1505,38 +1505,38 @@ export default function Sync() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <span className="text-[13px] text-gray-400 font-normal">{filteredLogs.length} entries</span>
+                  <span className="text-[13px] text-white/20 font-mono uppercase tracking-widest">{filteredLogs.length} entries</span>
                 </div>
 
                 {/* Filter Toggles & Export */}
-                <div className="flex items-center justify-between border-b border-gray-100 pb-1">
-                  <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between border-b border-white/5 pb-1">
+                  <div className="flex items-center gap-10">
                     <button
                       onClick={() => setLogFilter('all')}
-                      className={`pb-3 text-[13px] font-medium transition-all relative ${logFilter === 'all'
-                        ? 'text-gray-900'
-                        : 'text-gray-400 hover:text-gray-600'
+                      className={`pb-3 text-[11px] font-bold uppercase font-mono tracking-widest transition-all relative ${logFilter === 'all'
+                        ? 'text-white'
+                        : 'text-white/20 hover:text-white/40'
                         }`}>
-                      All
-                      {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-gray-900" />}
+                      All_Events
+                      {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('money')}
-                      className={`pb-3 text-[13px] font-medium transition-all relative ${logFilter === 'money'
-                        ? 'text-gray-900'
-                        : 'text-gray-400 hover:text-gray-600'
+                      className={`pb-3 text-[11px] font-bold uppercase font-mono tracking-widest transition-all relative ${logFilter === 'money'
+                        ? 'text-white'
+                        : 'text-white/20 hover:text-white/40'
                         }`}>
                       Recoveries
-                      {logFilter === 'money' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-gray-900" />}
+                      {logFilter === 'money' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('issues')}
-                      className={`pb-3 text-[13px] font-medium transition-all relative ${logFilter === 'issues'
-                        ? 'text-gray-900'
-                        : 'text-gray-400 hover:text-gray-600'
+                      className={`pb-3 text-[11px] font-bold uppercase font-mono tracking-widest transition-all relative ${logFilter === 'issues'
+                        ? 'text-white'
+                        : 'text-white/20 hover:text-white/40'
                         }`}>
-                      Issues
-                      {logFilter === 'issues' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-gray-900" />}
+                      Anomalies
+                      {logFilter === 'issues' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                   </div>
 
@@ -1544,524 +1544,532 @@ export default function Sync() {
                   {logs.length > 0 && (
                     <button
                       onClick={exportLogs}
-                      className="pb-3 flex items-center gap-2 text-[13px] font-medium text-gray-400 hover:text-gray-900 transition-all">
+                      className="pb-3 flex items-center gap-2 text-[11px] font-bold text-white/20 hover:text-white transition-all uppercase font-mono tracking-widest">
                       <Download className="h-3.5 w-3.5" />
                       Export
                     </button>
                   )}
                 </div>
 
-                {/* Search Bar - Clean minimal design */}
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-300" />
-                  <Input
-                    type="text"
-                    placeholder="Search sync history (e.g. 'Inventory', 'Errors')..."
-                    value={logSearch}
-                    onChange={(e) => setLogSearch(e.target.value)}
-                    className="pl-11 h-11 text-[13px] bg-gray-50/50 border-gray-100 focus:bg-white focus:border-gray-200 rounded-xl placeholder:text-gray-400/70 border-none shadow-none"
-                  />
-                </div>
-
-                {/* Log Container - Institutional Dark Theme */}
-                <div className="relative group">
-                  {/* Header bar - OpenAI minimal terminal */}
-                  <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] rounded-t-lg border-b border-neutral-900 flex items-center px-5 z-10">
-                    <span className="text-xs font-normal text-neutral-600">Activity Feed</span>
-                  </div>
-
-
-                  <div
-                    ref={logContainerRef}
-                    className="bg-[#0D0D0D] rounded-lg pt-12 pb-6 px-5 font-normal text-[13px] h-96 overflow-y-auto scroll-smooth border border-neutral-900 shadow-sm relative leading-relaxed tracking-tight text-neutral-400">
-                    {/* Simplified subtle gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none rounded-lg"></div>
-
-                    {filteredLogs.length === 0 ? (
-                      <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
-                        {logFilter === 'issues' ? (
-                          <>
-                            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mb-3">
-                              <span className="text-2xl">✓</span>
-                            </div>
-                            <span className="text-sm font-medium text-emerald-400 mb-1">All systems running smoothly</span>
-                            <span className="text-xs text-gray-500">No errors or warnings detected during this sync</span>
-                          </>
-                        ) : logFilter === 'money' ? (
-                          <>
-                            <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
-                            <span className="text-xs opacity-40">NO RECOVERY EVENTS YET...</span>
-                            <span className="text-xs text-gray-500 mt-1">Claims and reimbursements will appear here</span>
-                          </>
-                        ) : (
-                          <>
-                            <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
-                            <span className="text-xs opacity-40">WAITING FOR SIGNAL...</span>
-                          </>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="space-y-2 relative z-10">
-                        {logStories.map((story) => {
-                          // Default to OPEN - users can close if they want
-                          // expandedStories now tracks COLLAPSED stories (inverted logic)
-                          const isExpanded = !expandedStories.has(story.id);
-                          const isRunning = !story.isCompleted && (status === 'running' || status === 'detecting');
-
-                          // Highlight function for log content - OpenAI monochrome style
-                          const highlightContent = (text: string) => {
-                            const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b|\[.*?\])/g);
-                            return parts.map((part, i) => {
-                              if (part.match(/^\$[\d,]+\.?\d*$/)) {
-                                return <span key={i} className="text-white font-medium">{part}</span>;
-                              }
-                              if (part.match(/^\d+$/)) {
-                                return <span key={i} className="text-neutral-300">{part}</span>;
-                              }
-                              if (part.match(/^\[.*?\]$/)) {
-                                return (
-                                  <span key={i} className="text-neutral-400 text-sm border border-neutral-800 px-1 rounded-sm tracking-tighter">
-                                    {part.replace(/[\[\]]/g, '')}
-                                  </span>
-                                );
-                              }
-                              return part;
-                            });
-                          };
-
-                          return (
-                            <div key={story.id} className="animate-in fade-in slide-in-from-bottom-1 duration-300">
-                              {/* Story Header - Clickable */}
-                              <button
-                                onClick={() => toggleStory(story.id)}
-                                className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded hover:bg-neutral-900 transition-colors group">
-                                {/* Expand/Collapse Icon */}
-                                <span className="text-neutral-500 group-hover:text-neutral-300 transition-colors">
-                                  {isExpanded ? (
-                                    <ChevronDown className="h-3.5 w-3.5" />
-                                  ) : (
-                                    <ChevronRight className="h-3.5 w-3.5" />
-                                  )}
-                                </span>
-
-                                {/* Status Icon - minimal */}
-                                {isRunning ? (
-                                  <Loader2 className="h-3 w-3 text-neutral-500 animate-spin" />
-                                ) : story.isCompleted ? (
-                                  <CheckCircle2 className="h-3 w-3 text-neutral-500" />
-                                ) : (
-                                  <div className="h-1 w-1 rounded-full bg-neutral-700" />
-                                )}
-
-                                {/* Title & Summary */}
-                                <span className="font-normal text-neutral-200 text-[13px]">{story.title}</span>
-                                <span className="text-neutral-600 text-[13px] font-normal">— {story.summary}</span>
-                              </button>
-
-                              {/* Expanded Log Details */}
-                              {isExpanded && (
-                                <div className="ml-5 pl-4 border-l border-neutral-900 mt-1 space-y-0.5">
-                                  {story.logs.map((log, index) => {
-                                    // First, humanize any error/warning messages
-                                    const humanized = humanizeErrorMessage(log.message, log.type);
-                                    // Then apply money/action enrichment
-                                    const enriched = enrichLogMessage(humanized.text, story);
-
-                                    return (
-                                      <React.Fragment key={log.id}>
-                                        <div
-                                          className={`flex items-start gap-3 py-1.5 text-[13px] ${log.type === 'thinking' ? 'opacity-30 italic' : ''} ${humanized.isHumanized ? 'bg-white/5 -mx-2 px-2 py-2 rounded' : ''}`}>
-                                          {/* Timestamp - very subtle */}
-                                          <span
-                                            className="hidden sm:inline text-neutral-700 shrink-0 text-sm font-normal"
-                                            title={formatTimestamp(log.timestamp).full}>
-                                            {formatTimestamp(log.timestamp).short}
-                                          </span>
-
-                                          {/* Message */}
-                                          <span className={`${humanized.isHumanized ? 'text-neutral-300' : getLogColor(log.type)} break-all flex-1`}>
-                                            {highlightContent(enriched.text)}
-                                            {index === story.logs.length - 1 && isRunning && (
-                                              <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
-                                            )}
-                                          </span>
-
-                                          {/* Enrichment Hint Badge */}
-                                          {enriched.hint && (
-                                            <span className={`shrink-0 px-1.5 py-0.5 rounded text-xs font-medium whitespace-nowrap ${enriched.hint.includes('$')
-                                              ? 'bg-emerald-50 text-emerald-700'
-                                              : 'bg-gray-100 text-gray-600'
-                                              }`}>
-                                              {enriched.hint}
-                                            </span>
-                                          )}
-                                        </div>
-                                        {/* Render context.details if present */}
-                                        {log.context?.details && log.context.details.length > 0 && (
-                                          <div className="ml-12 mt-1 mb-2 space-y-0.5 text-sm text-gray-300">
-                                            {log.context.details.map((detail, i) => (
-                                              <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
-                                                {detail}
-                                              </div>
-                                            ))}
-                                          </div>
-                                        )}
-                                      </React.Fragment>
-                                    );
-                                  })}
-
-                                  {/* Link to Claims - show when there's money potential or anomalies */}
-                                  {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0) > 0 || (story.potentialValue || 0) > 0) && (
-                                    <div className="mt-2">
-                                      <button
-                                        onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
-                                        className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
-                                        View potential claims <ExternalLink className="h-3 w-3" />
-                                      </button>
-                                      <span className="text-xs text-gray-500 mt-1 block">
-                                        Next: review and approve for filing
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                              )
-                              }
-                            </div>
-                          );
-                        })}
-
-                        {/* Scroll anchor */}
-                        <div className="h-4" />
-                      </div>
-                    )}
-                  </div>
-                </div>
+                {/* Export Button */}
+                {logs.length > 0 && (
+                  <button
+                    onClick={exportLogs}
+                    className="pb-3 flex items-center gap-2 text-[13px] font-medium text-gray-400 hover:text-gray-900 transition-all">
+                    <Download className="h-3.5 w-3.5" />
+                    Export
+                  </button>
+                )}
               </div>
-            </div>
 
-            {/* Redesigned Bottom Section - Screenshot match */}
-            <div className="pt-16 pb-12">
-              <div className="flex flex-col gap-8">
-                {/* Syncing Indicator - Top Right of bottom section */}
-                <div className="flex justify-end pr-4">
-                  {status === 'running' ? (
-                    <div className="flex items-center gap-3 px-6 py-4 bg-gray-50/50 rounded-xl">
-                      <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
-                      <span className="text-[15px] font-medium text-gray-300">Syncing...</span>
+              {/* Search Bar - Clean minimal design */}
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-white/20" />
+                <Input
+                  type="text"
+                  placeholder="QUERY_ACTIVITY_FEED..."
+                  value={logSearch}
+                  onChange={(e) => setLogSearch(e.target.value)}
+                  className="pl-11 h-12 text-[12px] font-mono bg-white/[0.02] border-white/5 focus:bg-white/[0.04] focus:border-white/10 rounded-none placeholder:text-white/10 text-white shadow-none transition-all uppercase tracking-widest"
+                />
+              </div>
+
+              {/* Log Container - Institutional Dark Theme */}
+              <div className="relative group">
+                {/* Header bar - OpenAI minimal terminal */}
+                <div className="absolute top-0 left-0 right-0 h-10 bg-[#0A0A0A] rounded-t-none border-b border-white/5 flex items-center px-5 z-10">
+                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] font-mono">Stream: Activity_Feed</span>
+                </div>
+
+
+                <div
+                  ref={logContainerRef}
+                  className="bg-[#050505] rounded-none pt-14 pb-6 px-5 font-normal text-[13px] h-96 overflow-y-auto scroll-smooth border border-white/5 shadow-2xl relative leading-relaxed tracking-tight text-white/40">
+                  {/* Simplified subtle gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none rounded-lg"></div>
+
+                  {filteredLogs.length === 0 ? (
+                    <div className="text-gray-400 flex flex-col items-center justify-center h-full relative z-10">
+                      {logFilter === 'issues' ? (
+                        <>
+                          <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mb-3">
+                            <span className="text-2xl">✓</span>
+                          </div>
+                          <span className="text-sm font-medium text-emerald-400 mb-1">All systems running smoothly</span>
+                          <span className="text-xs text-gray-500">No errors or warnings detected during this sync</span>
+                        </>
+                      ) : logFilter === 'money' ? (
+                        <>
+                          <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
+                          <span className="text-xs opacity-40">NO RECOVERY EVENTS YET...</span>
+                          <span className="text-xs text-gray-500 mt-1">Claims and reimbursements will appear here</span>
+                        </>
+                      ) : (
+                        <>
+                          <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
+                          <span className="text-xs opacity-40">WAITING FOR SIGNAL...</span>
+                        </>
+                      )}
                     </div>
                   ) : (
-                    <Button
-                      onClick={async () => {
-                        try {
-                          // Clear logs and reset state successfully
-                          setLogs([]);
-                          setLogsFinished(false);
-                          logsFinishedRef.current = false;
-                          completionLogsAddedRef.current = false;
-                          setStatus('idle');
-                          setSyncId(undefined);
-                          setError(null);
-                          previousDataRef.current = {
-                            orders: { syncing: false, completed: false, count: 0 },
-                            inventory: { syncing: false, completed: false, count: 0 },
-                            shipments: { syncing: false, completed: false, count: 0 },
-                            returns: { syncing: false, completed: false, count: 0 },
-                            settlements: { syncing: false, completed: false, count: 0 },
-                            fees: { syncing: false, completed: false, count: 0 },
-                            claims: { syncing: false, completed: false, count: 0 },
-                          };
+                    <div className="space-y-2 relative z-10">
+                      {logStories.map((story) => {
+                        // Default to OPEN - users can close if they want
+                        // expandedStories now tracks COLLAPSED stories (inverted logic)
+                        const isExpanded = !expandedStories.has(story.id);
+                        const isRunning = !story.isCompleted && (status === 'running' || status === 'detecting');
 
-                          addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
-
-                          const start = await startSync();
-                          const newSyncId = start.syncId;
-                          setSyncId(newSyncId);
-                          setStatus('running');
-                          setMessage(start.message || 'Sync started successfully');
-                          previousStatusRef.current = 'running';
-                          toastShownRef.current = { started: true };
-
-                          toast({
-                            title: 'Sync Started',
-                            description: 'Your Amazon data sync has started. This may take a few minutes.',
-                            duration: 4000,
+                        // Highlight function for log content - OpenAI monochrome style
+                        const highlightContent = (text: string) => {
+                          const parts = text.split(/(\$[\d,]+\.?\d*|\b\d+\b|\[.*?\])/g);
+                          return parts.map((part, i) => {
+                            if (part.match(/^\$[\d,]+\.?\d*$/)) {
+                              return <span key={i} className="text-white font-medium">{part}</span>;
+                            }
+                            if (part.match(/^\d+$/)) {
+                              return <span key={i} className="text-neutral-300">{part}</span>;
+                            }
+                            if (part.match(/^\[.*?\]$/)) {
+                              return (
+                                <span key={i} className="text-neutral-400 text-sm border border-neutral-800 px-1 rounded-sm tracking-tighter">
+                                  {part.replace(/[\[\]]/g, '')}
+                                </span>
+                              );
+                            }
+                            return part;
                           });
+                        };
 
-                          navigate(`/sync?id=${newSyncId}`, { replace: true });
-                        } catch (e: any) {
-                          setStatus('failed');
-                          setMessage(e?.message || 'Failed to start sync');
-                          setError(e?.message || 'Failed to start sync');
-                          toast({
-                            title: 'Sync Failed',
-                            description: e?.message || 'Failed to start sync. Please try again.',
-                            variant: 'destructive',
-                            duration: 5000,
-                          });
-                        }
-                      }}
-                      className="bg-gray-50/80 text-gray-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-xl border-none shadow-none text-[15px]">
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Probe Data Again
-                    </Button>
-                  )}
-                </div>
+                        return (
+                          <div key={story.id} className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+                            {/* Story Header - Clickable */}
+                            <button
+                              onClick={() => toggleStory(story.id)}
+                              className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded-none hover:bg-white/[0.02] transition-colors group">
+                              {/* Expand/Collapse Icon */}
+                              <span className="text-white/20 group-hover:text-white transition-colors">
+                                {isExpanded ? (
+                                  <ChevronDown className="h-3.5 w-3.5" />
+                                ) : (
+                                  <ChevronRight className="h-3.5 w-3.5" />
+                                )}
+                              </span>
 
-                <div className="space-y-6">
-                  {/* Error Message - Sophisticated Minimal Style */}
-                  {error && (
-                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 mb-6">
-                      <div className="bg-neutral-50/50 border border-neutral-100 rounded-2xl p-6 flex items-start gap-4">
-                        <div className="h-2 w-2 rounded-full bg-neutral-900 mt-2 shrink-0" />
-                        <div className="space-y-1">
-                          <p className="text-[13px] font-medium text-neutral-900 uppercase tracking-wider">System Interruption</p>
-                          <p className="text-[15px] text-neutral-500 font-normal leading-relaxed">{error}</p>
-                        </div>
-                      </div>
+                              {/* Status Icon - minimal */}
+                              {isRunning ? (
+                                <Loader2 className="h-3 w-3 text-emerald-500 animate-spin" />
+                              ) : story.isCompleted ? (
+                                <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                              ) : (
+                                <div className="h-1 w-1 rounded-full bg-white/20" />
+                              )}
+
+                              {/* Title & Summary */}
+                              <span className="font-bold text-white text-[10px] uppercase tracking-widest font-mono">{story.title}</span>
+                              <span className="text-white/20 text-[10px] font-mono uppercase tracking-widest">— {story.summary}</span>
+                            </button>
+
+                            {/* Expanded Log Details */}
+                            {isExpanded && (
+                              <div className="ml-5 pl-4 border-l border-neutral-900 mt-1 space-y-0.5">
+                                {story.logs.map((log, index) => {
+                                  // First, humanize any error/warning messages
+                                  const humanized = humanizeErrorMessage(log.message, log.type);
+                                  // Then apply money/action enrichment
+                                  const enriched = enrichLogMessage(humanized.text, story);
+
+                                  return (
+                                    <React.Fragment key={log.id}>
+                                      <div
+                                        className={`flex items-start gap-4 py-2 px-3 text-[12px] font-mono border-b border-white/[0.02] last:border-0 ${log.type === 'thinking' ? 'opacity-20 italic' : ''} ${humanized.isHumanized ? 'bg-white/[0.02] border-white/5 rounded-none' : ''}`}>
+                                        {/* Timestamp - very subtle */}
+                                        <span
+                                          className="hidden sm:inline text-white/10 shrink-0 text-[10px] font-bold tracking-tighter"
+                                          title={formatTimestamp(log.timestamp).full}>
+                                          {formatTimestamp(log.timestamp).short}
+                                        </span>
+
+                                        {/* Message */}
+                                        <span className={`${humanized.isHumanized ? 'text-neutral-300' : getLogColor(log.type)} break-all flex-1`}>
+                                          {highlightContent(enriched.text)}
+                                          {index === story.logs.length - 1 && isRunning && (
+                                            <span className="inline-block w-1.5 h-3 bg-blue-500 ml-1 animate-pulse align-middle"></span>
+                                          )}
+                                        </span>
+
+                                        {/* Enrichment Hint Badge */}
+                                        {enriched.hint && (
+                                          <span className={`shrink-0 px-2 py-0.5 rounded-none text-[9px] font-bold uppercase tracking-widest font-mono whitespace-nowrap ${enriched.hint.includes('$')
+                                            ? 'bg-emerald-500/10 text-emerald-500'
+                                            : 'bg-white/5 text-white/40'
+                                            }`}>
+                                            {enriched.hint}
+                                          </span>
+                                        )}
+                                      </div>
+                                      {/* Render context.details if present */}
+                                      {log.context?.details && log.context.details.length > 0 && (
+                                        <div className="ml-12 mt-1 mb-2 space-y-0.5 text-sm text-gray-300">
+                                          {log.context.details.map((detail, i) => (
+                                            <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
+                                              {detail}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </React.Fragment>
+                                  );
+                                })}
+
+                                {/* Link to Claims - show when there's money potential or anomalies */}
+                                {story.linkTo && story.isCompleted && ((story.anomaliesFound || 0) > 0 || (story.potentialValue || 0) > 0) && (
+                                  <div className="mt-2">
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); navigate(story.linkTo!); }}
+                                      className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                                      View potential claims <ExternalLink className="h-3 w-3" />
+                                    </button>
+                                    <span className="text-xs text-gray-500 mt-1 block">
+                                      Next: review and approve for filing
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                            }
+                          </div>
+                        );
+                      })}
+
+                      {/* Scroll anchor */}
+                      <div className="h-4" />
                     </div>
                   )}
-
-                  {/* Unified Timestamps */}
-                  <div className="flex flex-wrap items-center gap-2 text-[13px] text-gray-400 font-normal">
-                    {syncData?.startedAt && (
-                      <span>Started: {formatDateTime(syncData.startedAt)}</span>
-                    )}
-                    {syncData?.startedAt && syncData?.completedAt && (
-                      <span className="mx-1 text-gray-300">•</span>
-                    )}
-                    {syncData?.completedAt && (
-                      <span>Completed: {formatDateTime(syncData.completedAt)}</span>
-                    )}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-3">
-                    {status === 'running' ? (
-                      <button
-                        onClick={handleCancelSync}
-                        disabled={isCancelling}
-                        className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm disabled:opacity-50">
-                        {isCancelling ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <XCircle className="h-[18px] w-[18px] text-gray-500" />
-                        )}
-                        Cancel Sync
-                      </button>
-                    ) : (status === 'failed' || status === 'cancelled') ? (
-                      <>
-                        {isSyncBlocked ? (
-                          <button
-                            onClick={handleForceClear}
-                            disabled={isClearing}
-                            className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm disabled:opacity-50">
-                            {isClearing ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
-                            )}
-                            Clear & Retry
-                          </button>
-                        ) : (
-                          <button
-                            onClick={handleRetry}
-                            className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm">
-                            <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
-                            Probe Again
-                          </button>
-                        )}
-                      </>
-                    ) : null}
-
-                    {/* Dashboard Button */}
-                    <button
-                      onClick={() => status === 'completed' && navigate(`/app/${currentTenantSlug}/dashboard`)}
-                      disabled={status !== 'completed'}
-                      className={`px-6 py-3 text-[15px] font-medium rounded-xl transition-all ${status === 'completed'
-                        ? 'bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] border border-gray-100/50 shadow-sm'
-                        : 'text-gray-200 cursor-not-allowed bg-transparent'
-                        }`}>
-                      Dashboard
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
-
-            {/* Audit Complete Modal */}
-            <Dialog
-              open={showSourcesModal}
-              onOpenChange={(open) => {
-                if (!open) {
-                  // User dismissed the modal (clicked X or outside)
-                  modalDismissedRef.current = true;
-                }
-                setShowSourcesModal(open);
-              }}>
-              <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl bg-white">
-                <DialogHeader className="px-6 py-5 bg-[#111827] border-b border-[#111827]">
-                  <DialogTitle className="text-xs font-semibold text-white">
-                    Connect Document Sources
-                  </DialogTitle>
-                  <DialogDescription className="text-xs text-gray-400 mt-1 font-medium">
-                    AUTHORIZED ACCESS FOR DOCUMENT INGESTION
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="p-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('gmail');
-                          const r = await api.connectDocs('gmail');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Gmail connection.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'gmail'}
-                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                      {providerLoading === 'gmail' ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                      ) : (
-                        <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                      )}
-                      <span className="text-xs font-bold text-gray-900 group-hover:text-black">Gmail</span>
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('outlook');
-                          const r = await api.connectDocs('outlook');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Outlook connection.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'outlook'}
-                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                      {providerLoading === 'outlook' ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                      ) : (
-                        <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                      )}
-                      <span className="text-xs font-bold text-gray-900 group-hover:text-black">Outlook</span>
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('gdrive');
-                          const r = await api.connectDocs('gdrive');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Google Drive connection.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'gdrive'}
-                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                      {providerLoading === 'gdrive' ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                      ) : (
-                        <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                      )}
-                      <span className="text-xs font-bold text-gray-900 group-hover:text-black">Drive</span>
-                    </button>
-
-                    <button
-                      onClick={async () => {
-                        try {
-                          setProviderLoading('dropbox');
-                          const r = await api.connectDocs('dropbox');
-                          if (r.ok && r.data?.auth_url) {
-                            window.location.href = r.data.auth_url;
-                          } else {
-                            toast({
-                              title: 'Connection Failed',
-                              description: r.error || 'Failed to initiate Dropbox connection.',
-                              variant: 'destructive',
-                            });
-                            setProviderLoading(null);
-                          }
-                        } catch (error) {
-                          toast({
-                            title: 'Connection Failed',
-                            description: 'An error occurred. Please try again.',
-                            variant: 'destructive',
-                          });
-                          setProviderLoading(null);
-                        }
-                      }}
-                      disabled={providerLoading === 'dropbox'}
-                      className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                      {providerLoading === 'dropbox' ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                      ) : (
-                        <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                      )}
-                      <span className="text-xs font-bold text-gray-900 group-hover:text-black">Dropbox</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowSourcesModal(false)}
-                    className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium">
-                    Skip for Now
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
           </div>
+
+          {/* Redesigned Bottom Section - Screenshot match */}
+          <div className="pt-16 pb-12">
+            <div className="flex flex-col gap-8">
+              {/* Syncing Indicator - Top Right of bottom section */}
+              <div className="flex justify-end pr-4">
+                {status === 'running' ? (
+                  <div className="flex items-center gap-3 px-6 py-4 bg-white/[0.02] border border-white/5 rounded-none">
+                    <Loader2 className="h-4 w-4 text-emerald-500 animate-spin" />
+                    <span className="text-[12px] font-bold text-white uppercase tracking-[0.2em] font-mono">Sync_Active</span>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={async () => {
+                      try {
+                        // Clear logs and reset state successfully
+                        setLogs([]);
+                        setLogsFinished(false);
+                        logsFinishedRef.current = false;
+                        completionLogsAddedRef.current = false;
+                        setStatus('idle');
+                        setSyncId(undefined);
+                        setError(null);
+                        previousDataRef.current = {
+                          orders: { syncing: false, completed: false, count: 0 },
+                          inventory: { syncing: false, completed: false, count: 0 },
+                          shipments: { syncing: false, completed: false, count: 0 },
+                          returns: { syncing: false, completed: false, count: 0 },
+                          settlements: { syncing: false, completed: false, count: 0 },
+                          fees: { syncing: false, completed: false, count: 0 },
+                          claims: { syncing: false, completed: false, count: 0 },
+                        };
+
+                        addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
+
+                        const start = await startSync();
+                        const newSyncId = start.syncId;
+                        setSyncId(newSyncId);
+                        setStatus('running');
+                        setMessage(start.message || 'Sync started successfully');
+                        previousStatusRef.current = 'running';
+                        toastShownRef.current = { started: true };
+
+                        toast({
+                          title: 'Sync Started',
+                          description: 'Your Amazon data sync has started. This may take a few minutes.',
+                          duration: 4000,
+                        });
+
+                        navigate(`/sync?id=${newSyncId}`, { replace: true });
+                      } catch (e: any) {
+                        setStatus('failed');
+                        setMessage(e?.message || 'Failed to start sync');
+                        setError(e?.message || 'Failed to start sync');
+                        toast({
+                          title: 'Sync Failed',
+                          description: e?.message || 'Failed to start sync. Please try again.',
+                          variant: 'destructive',
+                          duration: 5000,
+                        });
+                      }
+                    }}
+                    className="bg-white hover:bg-white/90 text-black font-bold px-8 py-4 rounded-none h-12 text-[10px] uppercase font-mono tracking-widest shadow-2xl transition-all">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    PROBE_DATA_AGAIN
+                  </Button>
+                )}
+              </div>
+
+              <div className="space-y-6">
+                {/* Error Message - Sophisticated Minimal Style */}
+                {error && (
+                  <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 mb-6">
+                    <div className="bg-neutral-50/50 border border-neutral-100 rounded-2xl p-6 flex items-start gap-4">
+                      <div className="h-2 w-2 rounded-full bg-neutral-900 mt-2 shrink-0" />
+                      <div className="space-y-1">
+                        <p className="text-[13px] font-medium text-neutral-900 uppercase tracking-wider">System Interruption</p>
+                        <p className="text-[15px] text-neutral-500 font-normal leading-relaxed">{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Unified Timestamps */}
+                <div className="flex flex-wrap items-center gap-4 text-[10px] text-white/20 font-bold uppercase font-mono tracking-widest">
+                  {syncData?.startedAt && (
+                    <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> Started: {formatDateTime(syncData.startedAt)}</span>
+                  )}
+                  {syncData?.completedAt && (
+                    <span className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-emerald-500/50" /> Completed: {formatDateTime(syncData.completedAt)}</span>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-4">
+                  {status === 'running' ? (
+                    <button
+                      onClick={handleCancelSync}
+                      disabled={isCancelling}
+                      className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all border border-white/5 shadow-2xl disabled:opacity-50">
+                      {isCancelling ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <XCircle className="h-[18px] w-[18px] text-white/40" />
+                      )}
+                      ABORT_SYNC
+                    </button>
+                  ) : (status === 'failed' || status === 'cancelled') ? (
+                    <>
+                      {isSyncBlocked ? (
+                        <button
+                          onClick={handleForceClear}
+                          disabled={isClearing}
+                          className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all border border-white/5 shadow-2xl disabled:opacity-50">
+                          {isClearing ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <RefreshCw className="h-[18px] w-[18px] text-white/40" />
+                          )}
+                          FORCE_RETRY
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleRetry}
+                          className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all border border-white/5 shadow-2xl">
+                          <RefreshCw className="h-[18px] w-[18px] text-white/40" />
+                          REINITIALIZE
+                        </button>
+                      )}
+                    </>
+                  ) : null}
+
+                  {/* Dashboard Button */}
+                  <button
+                    onClick={() => status === 'completed' && navigate(`/app/${currentTenantSlug}/dashboard`)}
+                    disabled={status !== 'completed'}
+                    className={`px-8 py-3 text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all ${status === 'completed'
+                      ? 'bg-white/5 hover:bg-white/10 text-white border border-white/5 shadow-2xl'
+                      : 'text-white/10 cursor-not-allowed bg-transparent'
+                      }`}>
+                    DASHBOARD_GO
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Audit Complete Modal */}
+          <Dialog
+            open={showSourcesModal}
+            onOpenChange={(open) => {
+              if (!open) {
+                // User dismissed the modal (clicked X or outside)
+                modalDismissedRef.current = true;
+              }
+              setShowSourcesModal(open);
+            }}>
+            <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-white/5 rounded-none shadow-2xl bg-[#050505]">
+              <DialogHeader className="px-6 py-8 bg-[#0A0A0A] border-b border-white/5">
+                <DialogTitle className="text-[10px] font-bold text-white uppercase tracking-[0.3em] font-mono">
+                  ACTION_REQUIRED: CONNECT_DOCUMENT_SOURCES
+                </DialogTitle>
+                <DialogDescription className="text-[12px] text-white/40 mt-2 font-medium font-montserrat leading-relaxed">
+                  Authorized access required for deep forensic document ingestion.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="p-8">
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('gmail');
+                        const r = await api.connectDocs('gmail');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Gmail connection.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'gmail'}
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    {providerLoading === 'gmail' ? (
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
+                    ) : (
+                      <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
+                    )}
+                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Gmail</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('outlook');
+                        const r = await api.connectDocs('outlook');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Outlook connection.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'outlook'}
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    {providerLoading === 'outlook' ? (
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
+                    ) : (
+                      <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
+                    )}
+                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Outlook</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('gdrive');
+                        const r = await api.connectDocs('gdrive');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Google Drive connection.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'gdrive'}
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    {providerLoading === 'gdrive' ? (
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
+                    ) : (
+                      <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
+                    )}
+                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Drive</span>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        setProviderLoading('dropbox');
+                        const r = await api.connectDocs('dropbox');
+                        if (r.ok && r.data?.auth_url) {
+                          window.location.href = r.data.auth_url;
+                        } else {
+                          toast({
+                            title: 'Connection Failed',
+                            description: r.error || 'Failed to initiate Dropbox connection.',
+                            variant: 'destructive',
+                          });
+                          setProviderLoading(null);
+                        }
+                      } catch (error) {
+                        toast({
+                          title: 'Connection Failed',
+                          description: 'An error occurred. Please try again.',
+                          variant: 'destructive',
+                        });
+                        setProviderLoading(null);
+                      }
+                    }}
+                    disabled={providerLoading === 'dropbox'}
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    {providerLoading === 'dropbox' ? (
+                      <Loader2 className="h-6 w-6 animate-spin text-white" />
+                    ) : (
+                      <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
+                    )}
+                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Dropbox</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="px-8 py-6 border-t border-white/5 bg-[#0A0A0A] flex justify-end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowSourcesModal(false)}
+                  className="text-[10px] text-white/20 hover:text-white hover:bg-transparent font-bold uppercase tracking-widest font-mono transition-colors">
+                  SKIP_FOR_NOW
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
+    </div>
     </PageLayout >
   );
 }
