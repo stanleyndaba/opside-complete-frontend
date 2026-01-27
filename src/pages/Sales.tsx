@@ -86,10 +86,6 @@ export default function Sales() {
                         <span className="text-sm font-bold tracking-widest uppercase font-mono text-gray-900">Enterprise Node</span>
                     </Link>
                     <div className="flex items-center gap-8">
-                        <div className="hidden md:flex items-center gap-6">
-                            <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[0.3em] uppercase">Security: Active</span>
-                            <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                        </div>
                         <Link to="/contact">
                             <Button variant="outline" className="h-9 rounded-none border-gray-200 bg-white text-gray-900 hover:bg-black hover:text-white font-mono text-[10px] uppercase tracking-widest transition-all">
                                 General Support
@@ -115,14 +111,14 @@ export default function Sales() {
                         </div>
 
                         <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight text-gray-900">
-                            Institutional <br />
-                            Inventory Arbitrage
+                            Scale Autonomously <br />
+                            with Margin Enterprise
                         </h1>
 
                         <p className="max-w-2xl text-lg md:text-xl text-gray-600 font-montserrat leading-relaxed">
-                            Engineered for high-velocity FBA portfolios managing &gt;$10M+ annual GMV.
-                            Beyond simple reimbursement—we map inventory drift at the SKU level to
-                            recover hidden supply chain liquidity.
+                            For High-Velocity Accounts processing $1M+ in monthly GMV.
+                            Secure priority infrastructure, dedicated forensic auditors,
+                            and custom API integrations.
                         </p>
                     </motion.div>
                 </section>
@@ -219,16 +215,6 @@ export default function Sales() {
                                     — Founder & CEO, Margin
                                 </p>
                             </div>
-
-                            <div className="p-8 bg-blue-50/50 border border-blue-100 space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <ShieldCheck className="h-5 w-5 text-blue-600" />
-                                    <span className="text-xs font-bold uppercase tracking-widest font-mono">Secure Transmission</span>
-                                </div>
-                                <p className="text-xs text-gray-500 font-montserrat leading-relaxed">
-                                    Your institutional data is protected by AES-256 encryption. Our auditors are bonded and adhere to strict SOX-compliant data protocols.
-                                </p>
-                            </div>
                         </div>
 
                         {/* Redesigned Inquiry Form */}
@@ -314,9 +300,11 @@ export default function Sales() {
                                                         <SelectValue placeholder="SELECT RANGE" />
                                                     </SelectTrigger>
                                                     <SelectContent className="font-mono text-xs">
-                                                        <SelectItem value="$10M - $50M">$10M - $50M</SelectItem>
-                                                        <SelectItem value="$50M - $250M">$50M - $250M</SelectItem>
-                                                        <SelectItem value="$250M+">$250M+</SelectItem>
+                                                        <SelectItem value="$1M - $5M">$1M - $5M</SelectItem>
+                                                        <SelectItem value="$5M - $10M">$5M - $10M</SelectItem>
+                                                        <SelectItem value="$10M - $25M">$10M - $25M</SelectItem>
+                                                        <SelectItem value="$25M - $50M">$25M - $50M</SelectItem>
+                                                        <SelectItem value="$50M+">$50M+</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </div>
