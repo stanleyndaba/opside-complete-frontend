@@ -1808,6 +1808,19 @@ export default function Sync() {
                 </div>
 
                 <div className="space-y-6">
+                  {/* Error Message - Sophisticated Minimal Style */}
+                  {error && (
+                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 mb-6">
+                      <div className="bg-neutral-50/50 border border-neutral-100 rounded-2xl p-6 flex items-start gap-4">
+                        <div className="h-2 w-2 rounded-full bg-neutral-900 mt-2 shrink-0" />
+                        <div className="space-y-1">
+                          <p className="text-[13px] font-medium text-neutral-900 uppercase tracking-wider">System Interruption</p>
+                          <p className="text-[15px] text-neutral-500 font-normal leading-relaxed">{error}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Unified Timestamps */}
                   <div className="flex flex-wrap items-center gap-2 text-[13px] text-gray-400 font-normal">
                     {syncData?.startedAt && (
@@ -1836,12 +1849,28 @@ export default function Sync() {
                         Cancel Sync
                       </button>
                     ) : (status === 'failed' || status === 'cancelled') ? (
-                      <button
-                        onClick={handleRetry}
-                        className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm">
-                        <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
-                        Retry Sync
-                      </button>
+                      <>
+                        {isSyncBlocked ? (
+                          <button
+                            onClick={handleForceClear}
+                            disabled={isClearing}
+                            className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm disabled:opacity-50">
+                            {isClearing ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
+                            )}
+                            Clear & Retry
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleRetry}
+                            className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm">
+                            <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
+                            Retry Sync
+                          </button>
+                        )}
+                      </>
                     ) : null}
 
                     {/* Dashboard Button */}
