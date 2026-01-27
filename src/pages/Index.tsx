@@ -414,7 +414,6 @@ const Index = () => {
                 <span className="text-[13px] font-montserrat text-emerald-700" style={{ fontWeight: 600 }}>Ultra Beta</span>
                 <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
               </Link>
-              <span className="hidden md:inline text-gray-300">|</span>
               <div className="hidden md:block">
                 <ProductsMegaMenu />
               </div>
