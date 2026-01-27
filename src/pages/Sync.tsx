@@ -1374,40 +1374,41 @@ export default function Sync() {
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-8 py-8 text-gray-900">
-          {/* Page Header - OpenAI minimal style */}
-          <div className="mb-10 flex items-center justify-between">
-            <div>
-              <h1 className="text-[17px] font-normal text-gray-900">Financial Audit Engine</h1>
-              <p className="text-[13px] text-gray-400 mt-0.5 font-normal">Powered by Amazon SP-API</p>
-            </div>
+          {/* Page Header - Screenshot Redesign */}
+          <div className="mb-12">
+            <div className="flex items-start justify-between">
+              <div className="space-y-6">
+                {/* Two-bar Icon */}
+                <div className="flex flex-col gap-1">
+                  <div className="h-1.5 w-6 bg-gray-900 rounded-full" />
+                  <div className="h-1.5 w-8 bg-gray-900 rounded-full ml-2" />
+                </div>
 
-            {/* SSE Connection Status Indicator - minimal */}
-            {status === 'running' && (
-              <div className="flex items-center gap-2">
-                {sseStatus === 'connected' ? (
-                  <span className="flex items-center gap-1.5 text-sm font-normal text-gray-500">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                    </span>
-                    Live
-                  </span>
-                ) : sseStatus === 'connecting' ? (
-                  <span className="flex items-center gap-1.5 text-sm font-normal text-gray-400">
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                    Connecting
-                  </span>
-                ) : sseStatus === 'error' ? (
-                  <span className="flex items-center gap-1.5 text-sm font-normal text-gray-400">
-                    Polling
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-sm font-normal text-gray-400">
-                    Offline
-                  </span>
-                )}
+                <div>
+                  <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Financial Audit Engine</h1>
+                  <p className="text-[13px] text-gray-400 mt-1 font-normal">Powered by Amazon SP-API</p>
+                </div>
               </div>
-            )}
+
+              {/* Polling Status - Top Right */}
+              {status === 'running' && (
+                <div className="pt-8">
+                  <div className="flex items-center gap-2">
+                    {sseStatus === 'connected' ? (
+                      <span className="flex items-center gap-1.5 text-[13px] font-normal text-gray-400">
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        </span>
+                        Live
+                      </span>
+                    ) : (
+                      <span className="text-[13px] font-normal text-gray-400">Polling</span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
@@ -1473,11 +1474,10 @@ export default function Sync() {
                 </div>
               )}
 
-              {/* Real-time Logs Section */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
+              <div className="space-y-6">
+                <div className="flex items-center gap-20">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[15px] font-normal text-gray-900">Activity Log</h4>
+                    <h4 className="text-[15px] font-medium text-gray-900">Activity Log</h4>
                     <TooltipProvider>
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger asChild>
@@ -1504,32 +1504,35 @@ export default function Sync() {
                   <span className="text-[13px] text-gray-400 font-normal">{filteredLogs.length} entries</span>
                 </div>
 
-                {/* Filter Toggles - OpenAI minimal style */}
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
+                {/* Filter Toggles & Export */}
+                <div className="flex items-center justify-between border-b border-gray-100 pb-1">
+                  <div className="flex items-center gap-6">
                     <button
                       onClick={() => setLogFilter('all')}
-                      className={`px-3 py-1.5 text-[13px] font-normal transition-all ${logFilter === 'all'
-                        ? 'text-gray-900 border-b-2 border-gray-900'
-                        : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
+                      className={`pb-3 text-[13px] font-medium transition-all relative ${logFilter === 'all'
+                        ? 'text-gray-900'
+                        : 'text-gray-400 hover:text-gray-600'
                         }`}>
                       All
+                      {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-gray-900" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('money')}
-                      className={`px-3 py-1.5 text-[13px] font-normal transition-all ${logFilter === 'money'
-                        ? 'text-gray-900 border-b-2 border-gray-900'
-                        : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
+                      className={`pb-3 text-[13px] font-medium transition-all relative ${logFilter === 'money'
+                        ? 'text-gray-900'
+                        : 'text-gray-400 hover:text-gray-600'
                         }`}>
                       Recoveries
+                      {logFilter === 'money' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-gray-900" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('issues')}
-                      className={`px-3 py-1.5 text-[13px] font-normal transition-all ${logFilter === 'issues'
-                        ? 'text-gray-900 border-b-2 border-gray-900'
-                        : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
+                      className={`pb-3 text-[13px] font-medium transition-all relative ${logFilter === 'issues'
+                        ? 'text-gray-900'
+                        : 'text-gray-400 hover:text-gray-600'
                         }`}>
                       Issues
+                      {logFilter === 'issues' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-gray-900" />}
                     </button>
                   </div>
 
@@ -1537,8 +1540,7 @@ export default function Sync() {
                   {logs.length > 0 && (
                     <button
                       onClick={exportLogs}
-                      className="ml-auto flex items-center gap-1.5 text-[13px] font-normal text-gray-400 hover:text-gray-600 transition-all"
-                      title="Export logs for support">
+                      className="pb-3 flex items-center gap-2 text-[13px] font-medium text-gray-400 hover:text-gray-900 transition-all">
                       <Download className="h-3.5 w-3.5" />
                       Export
                     </button>
@@ -1547,13 +1549,13 @@ export default function Sync() {
 
                 {/* Search Bar - Clean minimal design */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-300" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-300" />
                   <Input
                     type="text"
                     placeholder="Search sync history (e.g. 'Inventory', 'Errors')..."
                     value={logSearch}
                     onChange={(e) => setLogSearch(e.target.value)}
-                    className="pl-10 h-9 text-sm bg-gray-50/50 border-gray-100 focus:bg-white focus:border-gray-200 rounded-lg placeholder:text-gray-300"
+                    className="pl-11 h-11 text-[13px] bg-gray-50/50 border-gray-100 focus:bg-white focus:border-gray-200 rounded-xl placeholder:text-gray-400/70 border-none shadow-none"
                   />
                 </div>
 
