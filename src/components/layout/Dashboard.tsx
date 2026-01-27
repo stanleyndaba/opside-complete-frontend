@@ -754,7 +754,7 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Forensic Command Center</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Dashboard</span>
                   <div className="flex items-center gap-3">
                     <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Reimbursement Overview</h1>
                   </div>
