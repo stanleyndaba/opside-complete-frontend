@@ -1384,8 +1384,8 @@ export default function Sync() {
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-8 py-8 text-gray-900">
-          {/* Page Header - Screenshot Redesign */}
-          <div className="mb-12">
+          {/* Page Header - Screenshot Redesign - Aligned with Activity Log */}
+          <div className="mb-12 max-w-4xl mx-auto">
             <div className="flex items-start justify-between">
               <div className="space-y-6">
                 <div>
