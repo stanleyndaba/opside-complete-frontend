@@ -1381,7 +1381,7 @@ export default function Sync() {
   };
 
   return (
-    <PageLayout title="Sync Statistics" hideNavbar hideSidebar midnight logoFontFamily='"Nunito Sans", sans-serif'>
+    <PageLayout title="Sync Statistics" hideNavbar hideSidebar midnight hideLogo logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="relative min-h-[90vh] overflow-hidden">
         {/* Background Mesh Accent */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -1393,8 +1393,8 @@ export default function Sync() {
             <div className="flex items-start justify-between">
               <div className="space-y-6">
                 <div>
-                  <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Financial Audit Engine</h1>
-                  <p className="text-[13px] text-gray-400 mt-1 font-normal">Powered by Amazon SP-API</p>
+                  <h1 className="text-2xl font-bold text-white tracking-tight uppercase font-mono">Financial Audit Engine</h1>
+                  <p className="text-[13px] text-white/40 mt-1 font-normal uppercase tracking-widest font-mono">Powered by Amazon SP-API</p>
                 </div>
               </div>
 
@@ -1483,7 +1483,7 @@ export default function Sync() {
               )}
 
               <div className="space-y-6">
-                <div className="flex items-center gap-20">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <h4 className="text-[15px] font-bold text-white uppercase tracking-[0.2em] font-mono">Activity Log</h4>
                     <TooltipProvider>
@@ -1491,7 +1491,7 @@ export default function Sync() {
                         <TooltipTrigger asChild>
                           <Info className="h-3.5 w-3.5 text-white/20 hover:text-white transition-colors cursor-help" />
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="bg-[#0A0A0A] border-white/10 text-neutral-200 p-4 max-w-[320px] shadow-2xl ml-2">
+                        <TooltipContent side="right" className="bg-[#0A0A0A] border-white/10 text-neutral-200 p-4 max-w-[320px] shadow-2xl ml-2 rounded-none">
                           <div className="space-y-3">
                             <div className="space-y-1">
                               <p className="font-bold text-white text-xs tracking-tight uppercase font-mono">Agent Activity</p>
@@ -1509,7 +1509,7 @@ export default function Sync() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <span className="text-[13px] text-white/20 font-mono uppercase tracking-widest">{filteredLogs.length} entries</span>
+                  <span className="text-[11px] text-white/20 font-mono uppercase tracking-[0.2em] font-bold">{filteredLogs.length} ENTRIES</span>
                 </div>
 
                 {/* Filter Toggles & Export */}
@@ -1555,15 +1555,6 @@ export default function Sync() {
                   )}
                 </div>
 
-                {/* Export Button */}
-                {logs.length > 0 && (
-                  <button
-                    onClick={exportLogs}
-                    className="pb-3 flex items-center gap-2 text-[13px] font-medium text-gray-400 hover:text-gray-900 transition-all">
-                    <Download className="h-3.5 w-3.5" />
-                    Export
-                  </button>
-                )}
               </div>
 
               {/* Search Bar - Clean minimal design */}
