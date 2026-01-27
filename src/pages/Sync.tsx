@@ -1371,6 +1371,15 @@ export default function Sync() {
 
   const durationSeconds = calculateDuration();
 
+  // Helper for screenshot-style date formatting: YYYY/MM/DD, HH:MM:SS
+  const formatDateTime = (dateStr: string | Date) => {
+    const d = new Date(dateStr);
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const date = `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())}`;
+    const time = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    return `${date}, ${time}`;
+  };
+
   return (
     <PageLayout title="" hideNavbar hideSidebar plainBackground logoFontFamily='"Nunito Sans", sans-serif'>
       <div className="bg-white min-h-screen">
@@ -1736,162 +1745,124 @@ export default function Sync() {
               </div>
             </div>
 
-            {/* Run Button - Below Real-Time Log */}
-            <div className="pt-4 flex justify-end">
-              <Button
-                onClick={async () => {
-                  try {
-                    // Clear logs and reset state for new sync
-                    setLogs([]);
-                    setLogsFinished(false);
-                    logsFinishedRef.current = false;
-                    completionLogsAddedRef.current = false;
-                    setStatus('idle');
-                    setSyncId(undefined);
-                    setError(null);
-                    previousDataRef.current = {
-                      orders: { syncing: false, completed: false, count: 0 },
-                      inventory: { syncing: false, completed: false, count: 0 },
-                      shipments: { syncing: false, completed: false, count: 0 },
-                      returns: { syncing: false, completed: false, count: 0 },
-                      settlements: { syncing: false, completed: false, count: 0 },
-                      fees: { syncing: false, completed: false, count: 0 },
-                      claims: { syncing: false, completed: false, count: 0 },
-                    };
-
-                    addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
-
-                    const start = await startSync();
-                    const newSyncId = start.syncId;
-                    setSyncId(newSyncId);
-                    setStatus('running');
-                    setMessage(start.message || 'Sync started successfully');
-                    previousStatusRef.current = 'running';
-                    toastShownRef.current = { started: true };
-
-                    toast({
-                      title: 'Sync Started',
-                      description: 'Your Amazon data sync has started. This may take a few minutes.',
-                      duration: 4000,
-                    });
-
-                    navigate(`/sync?id=${newSyncId}`, { replace: true });
-                  } catch (e: any) {
-                    setStatus('failed');
-                    setMessage(e?.message || 'Failed to start sync');
-                    setError(e?.message || 'Failed to start sync');
-                    toast({
-                      title: 'Sync Failed',
-                      description: e?.message || 'Failed to start sync. Please try again.',
-                      variant: 'destructive',
-                      duration: 5000,
-                    });
-                  }
-                }}
-                disabled={status === 'running'}
-                className="bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-800 font-normal disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed">
-                {status === 'running' ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Syncing...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Run Again
-                  </>
-                )}
-              </Button>
-            </div>
-
-            {error && (
-              <div className="p-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-800">
-                <strong>Error:</strong> {error}
-              </div>
-            )}
-
-            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-2">
-              {syncData?.startedAt && (
-                <span>Started: {new Date(syncData.startedAt).toLocaleString()}</span>
-              )}
-              {syncData?.completedAt && (
-                <>
-                  <span>•</span>
-                  <span>Completed: {new Date(syncData.completedAt).toLocaleString()}</span>
-                </>
-              )}
-            </div>
-
-
-
-            <div className="flex flex-wrap items-center gap-2 pt-4">
-              {status === 'running' && (
-                <Button
-                  variant="outline"
-                  onClick={handleCancelSync}
-                  disabled={isCancelling}
-                  className="bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-800 font-normal">
-                  {isCancelling ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Cancelling...
-                    </>
-                  ) : (
-                    <>
-                      <XCircle className="h-4 w-4 mr-2" />
-                      Cancel Sync
-                    </>
-                  )}
-                </Button>
-              )}
-
-              {(status === 'failed' || status === 'cancelled') && (
-                <>
-                  {isSyncBlocked ? (
-                    <Button
-                      variant="outline"
-                      onClick={handleForceClear}
-                      disabled={isClearing}
-                      className="border-amber-300 text-amber-700 hover:bg-amber-50 bg-amber-50">
-                      {isClearing ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Clearing...
-                        </>
-                      ) : (
-                        <>
-                          <RefreshCw className="h-4 w-4 mr-2" />
-                          Clear & Retry
-                        </>
-                      )}
-                    </Button>
+            {/* Redesigned Bottom Section - Screenshot match */}
+            <div className="pt-16 pb-12">
+              <div className="flex flex-col gap-8">
+                {/* Syncing Indicator - Top Right of bottom section */}
+                <div className="flex justify-end pr-4">
+                  {status === 'running' ? (
+                    <div className="flex items-center gap-3 px-6 py-4 bg-gray-50/50 rounded-xl">
+                      <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
+                      <span className="text-[15px] font-medium text-gray-300">Syncing...</span>
+                    </div>
                   ) : (
                     <Button
-                      variant="outline"
-                      onClick={handleRetry}
-                      className="border-gray-200 text-gray-700 hover:bg-gray-50">
+                      onClick={async () => {
+                        try {
+                          // Clear logs and reset state successfully
+                          setLogs([]);
+                          setLogsFinished(false);
+                          logsFinishedRef.current = false;
+                          completionLogsAddedRef.current = false;
+                          setStatus('idle');
+                          setSyncId(undefined);
+                          setError(null);
+                          previousDataRef.current = {
+                            orders: { syncing: false, completed: false, count: 0 },
+                            inventory: { syncing: false, completed: false, count: 0 },
+                            shipments: { syncing: false, completed: false, count: 0 },
+                            returns: { syncing: false, completed: false, count: 0 },
+                            settlements: { syncing: false, completed: false, count: 0 },
+                            fees: { syncing: false, completed: false, count: 0 },
+                            claims: { syncing: false, completed: false, count: 0 },
+                          };
+
+                          addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
+
+                          const start = await startSync();
+                          const newSyncId = start.syncId;
+                          setSyncId(newSyncId);
+                          setStatus('running');
+                          setMessage(start.message || 'Sync started successfully');
+                          previousStatusRef.current = 'running';
+                          toastShownRef.current = { started: true };
+
+                          toast({
+                            title: 'Sync Started',
+                            description: 'Your Amazon data sync has started. This may take a few minutes.',
+                            duration: 4000,
+                          });
+
+                          navigate(`/sync?id=${newSyncId}`, { replace: true });
+                        } catch (e: any) {
+                          setStatus('failed');
+                          setMessage(e?.message || 'Failed to start sync');
+                          setError(e?.message || 'Failed to start sync');
+                          toast({
+                            title: 'Sync Failed',
+                            description: e?.message || 'Failed to start sync. Please try again.',
+                            variant: 'destructive',
+                            duration: 5000,
+                          });
+                        }
+                      }}
+                      className="bg-gray-50/80 text-gray-700 hover:bg-gray-100 font-medium px-8 py-6 rounded-xl border-none shadow-none text-base">
                       <RefreshCw className="h-4 w-4 mr-2" />
-                      Retry Sync
+                      Run Again
                     </Button>
                   )}
-                </>
-              )}
+                </div>
 
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (status === 'completed') {
-                    navigate(`/app/${currentTenantSlug}/dashboard`);
-                  }
-                }}
-                disabled={status !== 'completed'}
-                className={
-                  status === 'completed'
-                    ? 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 hover:text-gray-800 font-normal'
-                    : 'bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed font-normal'
-                }>
-                Dashboard
-              </Button>
+                <div className="space-y-6">
+                  {/* Unified Timestamps */}
+                  <div className="flex flex-wrap items-center gap-2 text-[13px] text-gray-400 font-normal">
+                    {syncData?.startedAt && (
+                      <span>Started: {formatDateTime(syncData.startedAt)}</span>
+                    )}
+                    {syncData?.startedAt && syncData?.completedAt && (
+                      <span className="mx-1 text-gray-300">•</span>
+                    )}
+                    {syncData?.completedAt && (
+                      <span>Completed: {formatDateTime(syncData.completedAt)}</span>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-3">
+                    {status === 'running' ? (
+                      <button
+                        onClick={handleCancelSync}
+                        disabled={isCancelling}
+                        className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm disabled:opacity-50">
+                        {isCancelling ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <XCircle className="h-[18px] w-[18px] text-gray-500" />
+                        )}
+                        Cancel Sync
+                      </button>
+                    ) : (status === 'failed' || status === 'cancelled') ? (
+                      <button
+                        onClick={handleRetry}
+                        className="flex items-center gap-2.5 px-6 py-3 bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] text-[15px] font-medium rounded-xl transition-all border border-gray-100/50 shadow-sm">
+                        <RefreshCw className="h-[18px] w-[18px] text-gray-500" />
+                        Retry Sync
+                      </button>
+                    ) : null}
+
+                    {/* Dashboard Button */}
+                    <button
+                      onClick={() => status === 'completed' && navigate(`/app/${currentTenantSlug}/dashboard`)}
+                      disabled={status !== 'completed'}
+                      className={`px-6 py-3 text-[15px] font-medium rounded-xl transition-all ${status === 'completed'
+                          ? 'bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] border border-gray-100/50 shadow-sm'
+                          : 'text-gray-200 cursor-not-allowed bg-transparent'
+                        }`}>
+                      Dashboard
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Audit Complete Modal */}
