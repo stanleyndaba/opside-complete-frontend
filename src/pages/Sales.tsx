@@ -68,26 +68,26 @@ export default function Sales() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-gray-900 selection:bg-blue-500/10 selection:text-blue-700">
-            {/* Technical Background Overlay - Subtle Light Mode Noise */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.015] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+        <div className="min-h-screen bg-[#050505] text-white selection:bg-emerald-500/30 selection:text-white">
+            {/* Technical Background Overlay */}
+            <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
             {/* Background Gradients */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.03),transparent_70%)]" />
-                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(16,185,129,0.02),transparent_70%)]" />
+                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.05),transparent_70%)]" />
+                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(59,130,246,0.03),transparent_70%)]" />
             </div>
 
             {/* Persistent Technical Navbar */}
-            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${scrolled ? 'bg-white/80 backdrop-blur-md border-gray-100 py-4 shadow-sm' : 'bg-transparent border-transparent py-6'}`}>
+            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${scrolled ? 'bg-[#050505]/80 backdrop-blur-md border-white/10 py-4' : 'bg-transparent border-transparent py-6'}`}>
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-3 group">
-                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto" />
-                        <span className="text-sm font-bold tracking-widest uppercase font-mono text-gray-900">Enterprise Node</span>
+                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
+                        <span className="text-sm font-bold tracking-widest uppercase font-mono text-white/90">Enterprise Node</span>
                     </Link>
                     <div className="flex items-center gap-8">
                         <Link to="/contact">
-                            <Button variant="outline" className="h-9 rounded-none border-gray-200 bg-white text-gray-900 hover:bg-black hover:text-white font-mono text-[10px] uppercase tracking-widest transition-all">
+                            <Button variant="outline" className="h-9 rounded-none border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-mono text-[10px] uppercase tracking-widest transition-all">
                                 General Support
                             </Button>
                         </Link>
@@ -104,18 +104,18 @@ export default function Sales() {
                         transition={{ duration: 0.8 }}
                         className="space-y-8"
                     >
-                        <div className="inline-flex items-center gap-4 px-3 py-1 bg-gray-50 border border-gray-100 rounded-sm">
-                            <span className="text-[10px] font-bold text-blue-600 font-mono tracking-widest uppercase">Institutional Access</span>
-                            <div className="h-3 w-[1px] bg-gray-200" />
-                            <span className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase">High Volume Gateway</span>
+                        <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-sm">
+                            <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-widest uppercase">Institutional Access</span>
+                            <div className="h-3 w-[1px] bg-white/10" />
+                            <span className="text-[10px] font-bold text-white/40 font-mono tracking-widest uppercase">High Volume Gateway</span>
                         </div>
 
-                        <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight text-gray-900">
+                        <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight text-white">
                             Scale Autonomously <br />
                             with Margin Enterprise
                         </h1>
 
-                        <p className="max-w-2xl text-lg md:text-xl text-gray-600 font-montserrat leading-relaxed">
+                        <p className="max-w-2xl text-lg md:text-xl text-white/60 font-montserrat leading-relaxed">
                             For High-Velocity Accounts processing $1M+ in monthly GMV.
                             Secure priority infrastructure, dedicated forensic auditors,
                             and custom API integrations.
@@ -124,16 +124,16 @@ export default function Sales() {
                 </section>
 
                 {/* The Qualifier Section */}
-                <section className="bg-gray-50/50 border-y border-gray-100 py-32 mb-32">
+                <section className="bg-white/[0.02] border-y border-white/5 py-32 mb-32">
                     <div className="container mx-auto px-6 max-w-5xl">
                         <div className="grid md:grid-cols-2 gap-24 font-montserrat">
                             <div>
-                                <h2 className="text-[11px] font-bold text-gray-400 font-mono tracking-[0.3em] uppercase mb-12">System Requirement</h2>
-                                <h3 className="text-3xl font-merriweather font-bold mb-8 text-gray-900">
+                                <h2 className="text-[11px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase mb-12">System Requirement</h2>
+                                <h3 className="text-3xl font-merriweather font-bold mb-8 text-white">
                                     Is Your Infrastructure <br />
                                     Ready for Scale?
                                 </h3>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-white/60 leading-relaxed">
                                     To ensure dedicated forensic validation and priority API rate limits,
                                     Enterprise access is strictly optimized for high-complexity operations.
                                     Standard private label accounts are recommended for the Core Plan's autonomous speed.
@@ -155,11 +155,11 @@ export default function Sales() {
                                         desc: "Managing multi-marketplace inventory splits (US, UK, EU, JP)."
                                     }
                                 ].map((item, i) => (
-                                    <div key={i} className="flex gap-6 pb-8 border-b border-gray-100 last:border-0">
-                                        <div className="text-[10px] font-mono text-gray-300 mt-1">{`0${i + 1}`}</div>
+                                    <div key={i} className="flex gap-6 pb-8 border-b border-white/5 last:border-0">
+                                        <div className="text-[10px] font-mono text-white/20 mt-1">{`0${i + 1}`}</div>
                                         <div className="space-y-2">
-                                            <div className="font-bold text-gray-900 uppercase tracking-tighter text-sm">{item.title}</div>
-                                            <div className="text-sm text-gray-500">{item.desc}</div>
+                                            <div className="font-bold text-white/90 uppercase tracking-tighter text-sm">{item.title}</div>
+                                            <div className="text-sm text-white/40">{item.desc}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -189,12 +189,12 @@ export default function Sales() {
                             }
                         ].map((feature, i) => (
                             <div key={i} className="space-y-6">
-                                <div className="h-[1px] w-12 bg-blue-600/50" />
+                                <div className="h-[1px] w-12 bg-emerald-500/50" />
                                 <div className="space-y-2">
-                                    <div className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase">{feature.label}</div>
-                                    <h4 className="text-xl font-bold tracking-tight text-gray-900">{feature.title}</h4>
+                                    <div className="text-[10px] font-bold text-white/40 font-mono tracking-widest uppercase">{feature.label}</div>
+                                    <h4 className="text-xl font-bold tracking-tight text-white">{feature.title}</h4>
                                 </div>
-                                <p className="text-sm text-gray-500 leading-loose">
+                                <p className="text-sm text-white/50 leading-loose">
                                     {feature.desc}
                                 </p>
                             </div>
@@ -206,50 +206,50 @@ export default function Sales() {
                 <section className="container mx-auto px-6 max-w-5xl" id="application">
                     <div className="grid lg:grid-cols-12 gap-16 items-start">
                         {/* Note on manual validation */}
-                        <div className="lg:col-span-5 space-y-10 order-2 lg:order-1">
-                            <div className="pt-10 border-t border-gray-100">
-                                <p className="text-xl font-merriweather text-gray-900 leading-relaxed mb-6 italic">
+                        <div className="lg:col-span-12 space-y-10 mb-12">
+                            <div className="pt-10 border-t border-white/10 text-center max-w-2xl mx-auto">
+                                <p className="text-2xl font-merriweather text-white leading-relaxed mb-6 italic">
                                     "We personally review every institutional inquiry. If you're managing serious scale, our team will build a dedicated audit engine for your SKU architecture."
                                 </p>
-                                <p className="text-sm font-bold text-gray-900 uppercase tracking-widest font-mono">
+                                <p className="text-sm font-bold text-white/40 uppercase tracking-widest font-mono">
                                     — Founder & CEO, Margin
                                 </p>
                             </div>
                         </div>
 
-                        {/* Redesigned Inquiry Form */}
-                        <div className="lg:col-span-7 order-1 lg:order-2">
-                            <div className="p-8 md:p-12 bg-white border border-gray-200 shadow-2xl shadow-gray-200/50 relative">
+                        {/* Inquiry Form */}
+                        <div className="lg:col-start-3 lg:col-span-8">
+                            <div className="p-8 md:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm">
                                 {isSubmitted ? (
                                     <div className="text-center py-20">
-                                        <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-8">
+                                        <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-8">
                                             <CheckCircle2 className="h-10 w-10 text-emerald-500" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-gray-900 font-merriweather mb-3">
+                                        <h2 className="text-2xl font-bold text-white font-merriweather mb-3">
                                             Application Prepared
                                         </h2>
-                                        <p className="text-gray-500 font-montserrat mb-10 max-w-xs mx-auto text-sm leading-relaxed">
+                                        <p className="text-white/40 font-montserrat mb-10 max-w-xs mx-auto text-sm leading-relaxed">
                                             Your enterprise profile has been formatted for priority review. Finalize transmission via your secure email client.
                                         </p>
                                         <Button
                                             onClick={() => setIsSubmitted(false)}
                                             variant="outline"
-                                            className="font-bold text-xs uppercase tracking-widest border-gray-200 rounded-none h-12">
+                                            className="font-bold text-xs uppercase tracking-widest border-white/10 bg-transparent text-white rounded-none h-12 hover:bg-white hover:text-black">
                                             New Transmission
                                         </Button>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-[10px] font-bold text-blue-600 font-mono tracking-[0.2em] uppercase">
+                                            <h3 className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
                                                 Institutional Briefing Request // V.02
                                             </h3>
-                                            <p className="text-xs text-gray-400 font-mono">Priority Node Allocation: 3/Week</p>
+                                            <p className="text-xs text-white/40 font-mono">Priority Node Allocation: 3/Week</p>
                                         </div>
 
                                         <div className="grid md:grid-cols-2 gap-10">
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase block">
+                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase block">
                                                     Lead Strategist
                                                 </label>
                                                 <Input
@@ -257,12 +257,12 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="FULL NAME"
-                                                    className="h-14 border-0 border-b border-gray-200 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-gray-900 transition-all rounded-none px-0"
+                                                    className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                     required
                                                 />
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase block">
+                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase block">
                                                     Corporate Email
                                                 </label>
                                                 <Input
@@ -270,14 +270,14 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="PARTNER@DOMAIN.COM"
-                                                    className="h-14 border-0 border-b border-gray-200 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-gray-900 transition-all rounded-none px-0"
+                                                    className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                     required
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase block">
+                                            <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase block">
                                                 Institutional Entity
                                             </label>
                                             <Input
@@ -285,21 +285,21 @@ export default function Sales() {
                                                 value={form.company}
                                                 onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                 placeholder="LEGAL ENTITY NAME"
-                                                className="h-14 border-0 border-b border-gray-200 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-gray-900 transition-all rounded-none px-0"
+                                                className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                 required
                                             />
                                         </div>
 
                                         <div className="grid md:grid-cols-2 gap-10">
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase block">
+                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase block">
                                                     Annual Portfolio GMV
                                                 </label>
                                                 <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
-                                                    <SelectTrigger className="h-14 border-0 border-b border-gray-200 text-sm font-mono tracking-tight bg-transparent rounded-none px-0 focus:ring-0">
+                                                    <SelectTrigger className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent rounded-none px-0 focus:ring-0 text-white">
                                                         <SelectValue placeholder="SELECT RANGE" />
                                                     </SelectTrigger>
-                                                    <SelectContent className="font-mono text-xs">
+                                                    <SelectContent className="font-mono text-xs bg-[#050505] border-white/10 text-white">
                                                         <SelectItem value="$1M - $5M">$1M - $5M</SelectItem>
                                                         <SelectItem value="$5M - $10M">$5M - $10M</SelectItem>
                                                         <SelectItem value="$10M - $25M">$10M - $25M</SelectItem>
@@ -309,7 +309,7 @@ export default function Sales() {
                                                 </Select>
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase block">
+                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase block">
                                                     Seller Hash Identifier
                                                 </label>
                                                 <Input
@@ -317,27 +317,27 @@ export default function Sales() {
                                                     value={form.sellerId}
                                                     onChange={(e) => setForm({ ...form, sellerId: e.target.value })}
                                                     placeholder="AMAZON SELLER ID (OPTIONAL)"
-                                                    className="h-14 border-0 border-b border-gray-200 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-gray-900 transition-all rounded-none px-0"
+                                                    className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-bold text-gray-400 font-mono tracking-widest uppercase block">
+                                            <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase block">
                                                 Technical Requirements
                                             </label>
                                             <Textarea
                                                 value={form.message}
                                                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                                                 placeholder="DESCRIBE DATA ARCHITECTURE AND SPECIFIC DRIFT CHALLENGES..."
-                                                className="min-h-[120px] border-0 border-b border-gray-200 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-gray-900 transition-all rounded-none resize-none px-0 py-4"
+                                                className="min-h-[120px] border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none resize-none px-0 py-4 text-white placeholder:text-white/10"
                                             />
                                         </div>
 
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="w-full h-16 bg-black hover:bg-gray-800 text-white text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all">
+                                            className="w-full h-16 bg-white hover:bg-white/90 text-black text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all">
                                             {isSubmitting ? (
                                                 <>Encrypting Application...</>
                                             ) : (
