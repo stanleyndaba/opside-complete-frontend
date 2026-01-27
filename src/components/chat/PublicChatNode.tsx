@@ -16,8 +16,9 @@ export function PublicChatNode() {
 
     // We also might want to hide it on specific auth pages if they feel too crowded
     const isAuthSandbox = location.pathname.includes('sandbox');
+    const isAuthSuccess = location.pathname === '/auth/success';
 
-    if (isPlatformPage || isAuthSandbox) {
+    if (isPlatformPage || isAuthSandbox || isAuthSuccess) {
         return null;
     }
 
