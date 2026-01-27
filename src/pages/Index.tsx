@@ -957,7 +957,7 @@ const Index = () => {
               </div>
 
               {/* Research Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {/* Brief 01 */}
                 <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                   <div className="flex-1">
@@ -1014,6 +1014,78 @@ const Index = () => {
                   <div className="mt-10 pt-6 border-t border-white/5">
                     <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
                       VIEW_PROTOCOL_STACK <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Brief 04 */}
+                <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                        Valuation_Strategy
+                      </span>
+                      {/* Sublte bar chart icon */}
+                      <div className="flex items-end gap-[1px]">
+                        <div className="w-[2px] h-2 bg-white/10" />
+                        <div className="w-[2px] h-3 bg-white/20" />
+                        <div className="w-[2px] h-5 bg-emerald-500/40" />
+                      </div>
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                      The Valuation Delta: How Unclaimed Margin Erodes 12-Month Rolling EBITDA
+                    </h3>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                      For aggregators and high-volume sellers, every $1 of recovered margin adds $4 to valuation (at a 4x multiple). Protect your final exit price by repairing your P&L before due diligence.
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-white/5">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
+                      CALCULATE_MULTIPLIER <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Brief 05 */}
+                <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                        Temporal_Expiry_Alert
+                      </span>
+                      {/* Subtle timeline graphic */}
+                      <div className="w-10 h-[1px] bg-gradient-to-r from-emerald-500/40 via-white/10 to-transparent" />
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                      Temporal Decay: The 18-Month Audit Cliff & Liquidity Forfeiture
+                    </h3>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                      Amazon data expires. If you don&apos;t audit the shipment from 19 months ago today, that capital is legally forfeited. We identify and arrest the decay of your claimable assets in real-time.
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-white/5">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
+                      STOP_THE_BLEEDING <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Brief 06 */}
+                <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                      Logistics_Recon_01
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                      Inbound Reconciliation: Mapping the &ldquo;Black Hole&rdquo; Between 3PL and FC Transfer
+                    </h3>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                      We don&apos;t accept &ldquo;Received in Full&rdquo; as a status. Our engine validates against the Bill of Lading and Carrier Weight to find units that vanish in the void between shipment and arrival.
+                    </p>
+                  </div>
+                  <div className="mt-10 pt-6 border-t border-white/5">
+                    <button className="flex items-center gap-2 text-[10px] font-bold text-white/20 group-hover:text-white uppercase font-mono tracking-widest transition-all">
+                      MAP_THE_BLACK_HOLE <ArrowRight className="h-3 w-3 translate-x-0 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </div>
                 </div>
