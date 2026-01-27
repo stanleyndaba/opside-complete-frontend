@@ -29,7 +29,7 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[700px] lg:w-[820px] bg-[#050505]/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-black/80 border border-white/10 max-h-[85vh] overflow-y-auto">
+                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[700px] lg:w-[820px] bg-[#050505]/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-black/80 max-h-[85vh] overflow-y-auto scrollbar-hide">
                             {/* Left Side: Features */}
                             <div className="flex-1 p-6 lg:p-8 grid gap-8">
 
@@ -159,7 +159,7 @@ export function ProductsMegaMenu() {
                             </div>
 
                             {/* Right Side: Impact Panel */}
-                            <div className="w-full lg:w-[280px] bg-[#0a0a0a] border-t lg:border-t-0 lg:border-l border-white/10 p-6 lg:p-8 flex flex-col justify-between shrink-0">
+                            <div className="w-full lg:w-[280px] bg-[#0a0a0a] border-t lg:border-t-0 p-6 lg:p-8 flex flex-col justify-between shrink-0">
                                 <div>
                                     <h4 className="flex items-center gap-2 text-[11px] font-semibold text-white uppercase tracking-widest mb-6">
                                         <TrendingUp className="h-3.5 w-3.5" />
