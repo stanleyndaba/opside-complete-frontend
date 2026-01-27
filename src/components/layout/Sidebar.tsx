@@ -169,14 +169,14 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-none",
+                  "relative flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-lg",
                   isActive
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-900 hover:bg-gray-50"
+                    ? "bg-white/10 text-white"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
-                  <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
+                  <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 )}
                 <item.icon className="h-4 w-4" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
@@ -193,25 +193,28 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-center gap-3 w-full px-4 py-2.5 transition-all duration-200 group rounded-none",
+          "relative flex items-center gap-3 w-full px-4 py-2.5 transition-all duration-300 group rounded-lg mb-1",
           isActive
-            ? "bg-gray-50 text-gray-900"
-            : "text-gray-900 hover:bg-gray-50/50"
+            ? "bg-white/[0.08] text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+            : "text-gray-400 hover:bg-white/5 hover:text-white"
         )}
-        style={{ willChange: 'background-color' }}>
+        style={{ willChange: 'background-color, transform' }}>
         {isActive && (
-          <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
+          <span className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-20 transition-opacity" />
+          <span className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-gray-900" : "text-gray-400 group-hover:text-gray-900")} />
+        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-white" : "text-gray-500 group-hover:text-white")} />
         <span className={cn(
-          "text-[13px] transition-colors",
+          "text-[13px] font-montserrat transition-colors tracking-wide",
           isActive ? "font-bold" : "font-medium"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
-          <span className="ml-auto text-[13px] text-gray-400 font-mono tabular-nums">
+          <span className={cn(
+            "ml-auto text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
+            isActive ? "text-emerald-400 bg-emerald-500/10" : "text-gray-500 bg-white/5"
+          )}>
             {claimCount}
           </span>
         )}
@@ -221,28 +224,28 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated",
+        "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-montserrat",
         isCollapsed ? "w-16" : "w-60",
-        "text-gray-700 border-r border-gray-100",
-        "bg-white",
+        "text-white border-r border-white/10",
+        "bg-[#050505]",
         className
       )}
       style={{ willChange: 'width' }}>
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-gray-100 flex items-center h-14",
+          "border-b border-white/10 flex items-center h-14",
           isCollapsed ? "justify-center px-2" : "justify-between px-4"
         )}>
         <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-2.5")}>
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-4" : "h-4", "w-auto object-contain")}
+            className={cn(isCollapsed ? "h-4" : "h-4", "w-auto object-contain invert brightness-200")}
           />
           {!isCollapsed && (
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-900 leading-tight">
+              <span className="text-sm font-semibold text-white leading-tight">
                 Margin
               </span>
             </div>
@@ -262,7 +265,7 @@ export function Sidebar({
                 <NavItemComponent key={item.title} item={item} />
               ))}
             </div>
-            {!isCollapsed && <div className="h-px bg-gray-200 w-full" />}
+            {!isCollapsed && <div className="h-px bg-white/10 w-full mx-4" />}
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
               {secondaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
@@ -287,7 +290,7 @@ export function Sidebar({
 
       {/* Logout Only */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-gray-100 py-4 flex flex-col items-center justify-center">
+        <div className="mt-auto border-t border-white/10 py-4 flex flex-col items-center justify-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -308,12 +311,12 @@ export function Sidebar({
           </TooltipProvider>
         </div>
       ) : (
-        <div className="mt-auto border-t border-gray-100 py-2">
+        <div className="mt-auto border-t border-white/10 py-2">
           <button
             onClick={() => setSignOutOpen(true)}
-            className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-gray-50 transition-all group text-gray-900">
-            <LogOut className="h-4 w-4 text-gray-400 group-hover:text-gray-900" strokeWidth={1.5} />
-            <span className="text-[13px] font-bold">Sign Out</span>
+            className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-white/5 transition-all group text-white">
+            <LogOut className="h-4 w-4 text-gray-500 group-hover:text-white" strokeWidth={1.5} />
+            <span className="text-[13px] font-bold tracking-wide">Sign Out</span>
           </button>
         </div>
       )}
@@ -352,7 +355,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-2.5 z-50 h-6 w-6 rounded-full border border-gray-300 bg-white backdrop-blur-sm flex items-center justify-center text-[#36454F] hover:bg-gray-200 shadow-sm',
+          'absolute top-14 -right-2.5 z-50 h-5 w-5 rounded-full border border-white/20 bg-[#050505] backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]',
         )}>
         {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </button>
