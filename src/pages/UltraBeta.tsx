@@ -40,10 +40,6 @@ const UltraBeta = () => {
                         <span className="text-sm font-bold tracking-widest uppercase font-mono text-white/90">Ultra Node</span>
                     </Link>
                     <div className="flex items-center gap-8">
-                        <div className="hidden md:flex items-center gap-6">
-                            <span className="text-[10px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase">Status: Operational</span>
-                            <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                        </div>
                         <Link to="/contact">
                             <Button variant="outline" className="h-9 rounded-none border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-mono text-[10px] uppercase tracking-widest transition-all">
                                 Request Briefing
@@ -78,7 +74,10 @@ const UltraBeta = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center gap-6 pt-8">
-                            <Button className="w-full sm:w-auto h-14 px-10 bg-white text-black hover:bg-white/90 rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all">
+                            <Button
+                                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeXmAX8v7qLQD-e0N-5nPpfbnoPvK5L0RIxZvnAMABKanFI6A/viewform', '_blank')}
+                                className="w-full sm:w-auto h-14 px-10 bg-white text-black hover:bg-white/90 rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all"
+                            >
                                 Request Access to Beta
                             </Button>
                             <span className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase">
@@ -174,7 +173,10 @@ const UltraBeta = () => {
                             Secure your node in the Ultra Beta.
                         </h2>
                         <div className="flex flex-col items-center gap-6">
-                            <Button className="h-16 px-12 bg-emerald-600 hover:bg-emerald-500 text-white rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-2xl shadow-emerald-500/10">
+                            <Button
+                                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeXmAX8v7qLQD-e0N-5nPpfbnoPvK5L0RIxZvnAMABKanFI6A/viewform', '_blank')}
+                                className="h-16 px-12 bg-emerald-600 hover:bg-emerald-500 text-white rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-2xl shadow-emerald-500/10"
+                            >
                                 Request Access to Beta
                             </Button>
                             <div className="text-[10px] font-bold text-white/20 font-mono tracking-widest uppercase flex items-center gap-4">
