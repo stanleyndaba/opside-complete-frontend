@@ -276,10 +276,10 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       <Button
         onClick={handleConnect}
         disabled={connecting}
-        style={{ backgroundColor: 'transparent', color: '#000000' }}
         className={cn(
           "w-full sm:w-auto flex-1 sm:flex-none",
-          "justify-center font-semibold transition-all active:scale-95 px-6 shrink-0 border-none hover:bg-black/5 items-center gap-1.5 rounded-none",
+          "justify-center font-semibold transition-all active:scale-95 px-6 shrink-0 border-none items-center gap-1.5 rounded-none",
+          "bg-white text-black hover:bg-white/90",
           heightClass,
           connecting && 'opacity-80',
           buttonClassName?.replace('rounded-full', '')

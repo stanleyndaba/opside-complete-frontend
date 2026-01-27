@@ -60,15 +60,15 @@ export function CookieConsent() {
                 "fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-in-out transform",
                 isVisible ? "translate-y-0" : "translate-y-full"
             )}>
-            <div className="bg-white border-t border-gray-200 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+            <div className="bg-[#050505]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
 
                 {/* Banner View */}
                 {view === 'banner' && (
                     <div className="container mx-auto px-6 py-8">
                         <div className="flex flex-col md:flex-row gap-8 md:items-center">
                             <div className="flex-1 space-y-3">
-                                <h3 className="font-semibold text-lg text-gray-900">Cookie Preferences</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">
+                                <h3 className="font-semibold text-lg text-white">Cookie Preferences</h3>
+                                <p className="text-sm text-white/40 leading-relaxed max-w-2xl">
                                     This website uses cookies that provide necessary site functionality and improve your online experience. By continuing to use this website, you agree to the use of cookies. Our Privacy Policy provides more information about what cookies we use and how you can change them.
                                 </p>
                             </div>
@@ -76,12 +76,12 @@ export function CookieConsent() {
                                 <Button
                                     onClick={() => setView('settings')}
                                     variant="outline"
-                                    className="bg-white text-black border-gray-200 hover:bg-gray-50 font-medium h-11">
+                                    className="bg-transparent text-white/60 border-white/10 hover:bg-white/5 font-medium h-11">
                                     Manage Settings
                                 </Button>
                                 <Button
                                     onClick={handleAgreeAll}
-                                    className="bg-black text-white hover:bg-gray-900 font-medium h-11">
+                                    className="bg-white text-black hover:bg-white/90 font-medium h-11">
                                     Agree
                                 </Button>
                             </div>
@@ -93,10 +93,10 @@ export function CookieConsent() {
                 {view === 'settings' && (
                     <div className="container mx-auto px-6 py-8 animate-in slide-in-from-bottom duration-300">
                         <div className="flex items-center justify-between mb-8">
-                            <h3 className="font-semibold text-xl text-gray-900">Cookie Settings</h3>
+                            <h3 className="font-semibold text-xl text-white">Cookie Settings</h3>
                             <button
                                 onClick={() => setView('banner')}
-                                className="text-gray-500 hover:text-gray-900 transition-colors"
+                                className="text-white/40 hover:text-white transition-colors"
                                 aria-label="Back">
                                 <X className="h-5 w-5" />
                             </button>
@@ -104,23 +104,23 @@ export function CookieConsent() {
 
                         <div className="space-y-6 max-w-3xl">
                             {/* Box 1: Necessary */}
-                            <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100">
+                            <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-bold text-gray-900 text-sm">Necessary cookies</span>
-                                        <Badge variant="secondary" className="bg-gray-200 text-gray-700 hover:bg-gray-200 text-[10px] uppercase font-bold tracking-wider">Always on</Badge>
+                                        <span className="font-bold text-white text-sm">Necessary cookies</span>
+                                        <Badge variant="secondary" className="bg-white/10 text-white/60 hover:bg-white/10 text-[10px] uppercase font-bold tracking-wider">Always on</Badge>
                                     </div>
-                                    <p className="text-xs text-gray-500 leading-relaxed max-w-lg">
+                                    <p className="text-xs text-white/30 leading-relaxed max-w-lg">
                                         These keep things running smoothly (like helping you stay logged in). You can't turn these off.
                                     </p>
                                 </div>
                             </div>
 
                             {/* Box 2: Analytics */}
-                            <div className="flex items-center justify-between gap-4 p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
+                            <div className="flex items-center justify-between gap-4 p-4 rounded-lg border border-white/5 hover:border-white/10 transition-colors">
                                 <div className="space-y-1">
-                                    <span className="font-medium text-gray-900 text-sm">Analytics cookies</span>
-                                    <p className="text-xs text-gray-500 leading-relaxed max-w-lg">
+                                    <span className="font-medium text-white text-sm">Analytics cookies</span>
+                                    <p className="text-xs text-white/30 leading-relaxed max-w-lg">
                                         These help us understand how people use the site so we can make improvements. You can turn these off if you'd rather not share that info.
                                     </p>
                                 </div>
@@ -131,10 +131,10 @@ export function CookieConsent() {
                             </div>
 
                             {/* Box 3: Marketing */}
-                            <div className="flex items-center justify-between gap-4 p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
+                            <div className="flex items-center justify-between gap-4 p-4 rounded-lg border border-white/5 hover:border-white/10 transition-colors">
                                 <div className="space-y-1">
-                                    <span className="font-medium text-gray-900 text-sm">Marketing cookies</span>
-                                    <p className="text-xs text-gray-500 leading-relaxed max-w-lg">
+                                    <span className="font-medium text-white text-sm">Marketing cookies</span>
+                                    <p className="text-xs text-white/30 leading-relaxed max-w-lg">
                                         These help us (and our trusted partners) show you more relevant content and ads based on how you use the site.
                                     </p>
                                 </div>
@@ -145,17 +145,17 @@ export function CookieConsent() {
                             </div>
 
                             {/* Footer Actions */}
-                            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-gray-100">
+                            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-white/5">
                                 <Button
                                     onClick={handleTurnOnOptional}
                                     variant="outline"
-                                    className="w-full sm:w-auto text-black border-gray-200 hover:bg-gray-50 font-medium h-11">
+                                    className="w-full sm:w-auto bg-transparent text-white/60 border-white/10 hover:bg-white/5 font-medium h-11">
                                     Turn on optional cookies
                                 </Button>
                                 <div className="flex-1" />
                                 <Button
                                     onClick={handleSaveSettings}
-                                    className="w-full sm:w-auto bg-black text-white hover:bg-gray-900 font-medium h-11 min-w-[160px]">
+                                    className="bg-white text-black hover:bg-white/90 font-medium h-11 min-w-[160px]">
                                     Save and Accept
                                 </Button>
                             </div>

@@ -196,8 +196,8 @@ const Index = () => {
     if (typeof document === 'undefined') return;
     const previousBodyBg = document.body.style.backgroundColor;
     const previousHtmlBg = document.documentElement.style.backgroundColor;
-    document.body.style.backgroundColor = '#ffffff';
-    document.documentElement.style.backgroundColor = '#ffffff';
+    document.body.style.backgroundColor = '#050505';
+    document.documentElement.style.backgroundColor = '#050505';
     return () => {
       document.body.style.backgroundColor = previousBodyBg;
       document.documentElement.style.backgroundColor = previousHtmlBg;
@@ -392,27 +392,27 @@ const Index = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col text-gray-900 relative overflow-x-hidden w-full"
+      className="min-h-screen flex flex-col text-white relative overflow-x-hidden w-full bg-[#050505] selection:bg-emerald-500/30 selection:text-white"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       {/* Fixed navbar - stays at top while content scrolls underneath */}
       <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
         <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/40 bg-white/25 supports-[backdrop-filter]:bg-white/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(15,23,42,0.12)] transition-colors">
+          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/10 bg-[#050505]/20 supports-[backdrop-filter]:bg-[#050505]/20 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(0,0,0,0.4)] transition-colors">
             <div className="flex items-center gap-3">
-              <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-gray-100">
+              <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5">
                 <img
                   src="/logoimagetwo.png"
                   alt="Margin"
-                  className="h-5 w-auto object-contain"
+                  className="h-5 w-auto object-contain invert brightness-0"
                 />
-                <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
+                <span className="font-montserrat text-white" style={{ fontWeight: 600 }}>Margin</span>
               </Link>
               <span className="hidden md:inline text-gray-300">|</span>
               <Link
                 to="/ultra-beta"
-                className="hidden md:flex items-center gap-2 group px-3 py-1.5 rounded-[16px] transition-colors hover:bg-emerald-50/50 border border-transparent hover:border-emerald-100/50">
-                <span className="text-[13px] font-montserrat text-emerald-700" style={{ fontWeight: 600 }}>Ultra Beta</span>
-                <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
+                className="hidden md:flex items-center gap-2 group px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
+                <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Ultra Beta</span>
+                <span className="px-1.5 py-0.5 bg-white text-[9px] font-bold text-black rounded-full leading-none">NEW</span>
               </Link>
               <div className="hidden md:block">
                 <ProductsMegaMenu />
@@ -451,51 +451,51 @@ const Index = () => {
                 <Link
                   key={link.label}
                   to={link.href}
-                  className="px-3 py-1.5 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">
+                  className="px-3 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition-colors text-white/70">
                   {link.label}
                 </Link>
               ))}
 
               <Link
                 to="/sales"
-                className="h-9 px-5 text-sm font-medium text-white bg-black hover:bg-gray-900 transition-colors inline-flex items-center"
+                className="h-9 px-5 text-sm font-medium text-black bg-white hover:bg-white/90 transition-colors inline-flex items-center"
                 style={{ borderRadius: '0px' }}>
                 Enterprise
               </Link>
               <Link
                 to="/contact"
-                className="h-9 px-4 text-sm font-medium text-gray-700 bg-transparent hover:text-gray-900 transition-colors inline-flex items-center gap-1.5"
+                className="h-9 px-4 text-sm font-medium text-white/70 bg-transparent hover:text-white transition-colors inline-flex items-center gap-1.5"
                 style={{ borderRadius: '0px' }}>
                 Talk to Sales <span aria-hidden="true">→</span>
               </Link>
             </nav>
             <button
               type="button"
-              className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/40 bg-white/40 px-3 py-2 transition-colors hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/10 bg-white/5 px-3 py-2 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((prev) => !prev)}>
-              <span className="block h-[1px] w-6 bg-gray-900 rounded-full" />
-              <span className="block h-[1px] w-5 bg-gray-900 rounded-full" />
-              <span className="block h-[1px] w-4 bg-gray-900 rounded-full" />
+              <span className="block h-[1px] w-6 bg-white rounded-full" />
+              <span className="block h-[1px] w-5 bg-white rounded-full" />
+              <span className="block h-[1px] w-4 bg-white rounded-full" />
             </button>
           </div>
           {mobileMenuOpen && (
             <div className="mt-4 md:hidden relative z-50">
-              <div className="flex flex-col gap-2 rounded-[20px] border border-blue-100/50 bg-blue-50/90 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
-                <div className="rounded-[18px] border-gray-200 bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm">
+              <div className="flex flex-col gap-2 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
+                <div className="rounded-[18px] border-white/5 bg-white/[0.02] px-3 py-2 text-sm font-semibold text-white shadow-sm">
                   <div className="flex items-center gap-2">
-                    <Gift className="h-4 w-4" aria-hidden="true" />
+                    <Gift className="h-4 w-4 text-emerald-500" aria-hidden="true" />
                     <span>No commission on referrals</span>
                   </div>
-                  <p className="mt-1 text-xs font-normal text-gray-700/80">
+                  <p className="mt-1 text-xs font-normal text-white/40">
                     Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                   </p>
                 </div>
                 <Link
                   to="/ultra-beta"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-emerald-700 bg-emerald-50/50 border border-emerald-100/50 hover:bg-emerald-50 transition-colors flex items-center justify-between">
+                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span>Ultra Beta</span>
                     <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
@@ -503,39 +503,39 @@ const Index = () => {
                 </Link>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="products" className="border-none">
-                    <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors hover:no-underline">
+                    <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                       Products
                     </AccordionTrigger>
                     <AccordionContent className="pt-2 pb-4 px-4 space-y-5">
                       {/* Trust & Scale Section */}
                       <div className="space-y-4">
-                        <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Trust & Scale</h5>
+                        <h5 className="text-[10px] font-semibold text-white/30 uppercase tracking-[0.15em] pl-1">Trust & Scale</h5>
                         <div className="grid gap-2">
-                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#forensic-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <Search className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Fee Governance</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">Inbound Fee Governance</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
                             </div>
                           </a>
-                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#portfolio-manager" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <Briefcase className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Agency Portfolio Manager</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">Agency Portfolio Manager</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
                             </div>
                           </a>
-                          <a href="#commission-governance" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#commission-governance" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <BadgePercent className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Commission Rate Governance</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Detect category misclassifications and referral fee overcharges.</p>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">Commission Rate Governance</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Detect category misclassifications and referral fee overcharges.</p>
                             </div>
                           </a>
                         </div>
@@ -543,43 +543,43 @@ const Index = () => {
 
                       {/* Core Platform Section */}
                       <div className="space-y-4">
-                        <h5 className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.15em] pl-1">Core Platform</h5>
+                        <h5 className="text-[10px] font-semibold text-white/30 uppercase tracking-[0.15em] pl-1">Core Platform</h5>
                         <div className="grid gap-2">
-                          <a href="#reimbursements" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#reimbursements" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <CircleDollarSign className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">FBA Reimbursements</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Automated recovery for lost & damaged inventory.</p>
-                              <div className="mt-1.5 inline-block text-[9px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded uppercase tracking-wider">18-month lookback</div>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">FBA Reimbursements</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Automated recovery for lost & damaged inventory.</p>
+                              <div className="mt-1.5 inline-block text-[9px] font-bold text-white/40 bg-white/5 px-1.5 py-0.5 rounded uppercase tracking-wider border border-white/10">18-month lookback</div>
                             </div>
                           </a>
-                          <a href="#fee-guard" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#fee-guard" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <ShieldAlert className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Inbound Variance Monitor</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Audit Inbound Placement & Defect fees in real-time.</p>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">Inbound Variance Monitor</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Audit Inbound Placement & Defect fees in real-time.</p>
                             </div>
                           </a>
-                          <a href="#invoice-sync" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#invoice-sync" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <FileText className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Auto-Invoice Sync</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Zero-touch Gmail integration for evidence matching.</p>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">Auto-Invoice Sync</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Zero-touch Gmail integration for evidence matching.</p>
                             </div>
                           </a>
-                          <a href="#dimension-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/60 transition-colors border border-transparent hover:border-blue-200/50">
-                            <div className="p-2 bg-white/40 rounded-lg text-gray-600 border border-white/40">
+                          <a href="#dimension-auditor" onClick={() => setMobileMenuOpen(false)} className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
                               <BoxSelect className="h-4 w-4" />
                             </div>
                             <div>
-                              <div className="text-[13px] font-semibold text-gray-900 tracking-tight">Dimension & Weight Auditor</div>
-                              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 font-medium">Auto-detect storage tier overcharges and trigger re-measurements.</p>
+                              <div className="text-[13px] font-semibold text-white tracking-tight">Dimension & Weight Auditor</div>
+                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Auto-detect storage tier overcharges and trigger re-measurements.</p>
                             </div>
                           </a>
                         </div>
@@ -592,7 +592,7 @@ const Index = () => {
                     key={link.label}
                     to={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors">
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors">
                     {link.label}
                   </Link>
                 ))}
@@ -600,17 +600,17 @@ const Index = () => {
                 <Link
                   to="/contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors flex items-center justify-between">
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-between">
                   <span>Talk to Sales</span>
-                  <ArrowRight className="h-4 w-4 text-gray-400" />
+                  <ArrowRight className="h-4 w-4 text-white/20" />
                 </Link>
 
                 <Link
                   to="/sales"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors flex items-center justify-between">
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-between">
                   <span>Margin Enterprise</span>
-                  <span className="text-xs bg-black text-white px-2 py-0.5 rounded-full">VIP</span>
+                  <span className="text-xs bg-white text-black px-2 py-0.5 rounded-full font-bold">VIP</span>
                 </Link>
 
                 <Button
@@ -620,7 +620,7 @@ const Index = () => {
                   }}
                   disabled={signingIn}
                   variant="outline"
-                  className="mt-1 w-full justify-center h-9 rounded-full border border-gray-200 bg-gray-100/80 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors">
+                  className="mt-1 w-full justify-center h-9 rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white hover:bg-white/10 transition-colors">
                   {signingIn ? 'Connecting...' : 'Sign in'}
                 </Button>
               </div>
@@ -628,8 +628,8 @@ const Index = () => {
           )}
         </div>
       </header>
-      <div className="relative z-10" style={{ background: 'white' }}>
-        <main className="flex-1 relative z-10" style={{ background: 'white' }}>
+      <div className="relative z-10" style={{ background: '#050505' }}>
+        <main className="flex-1 relative z-10" style={{ background: '#050505' }}>
           <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
             {/* Premium Dual-Layer Background */}
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -651,38 +651,38 @@ const Index = () => {
               <div className="flex flex-col items-center space-y-6">
 
                 {/* Institutional Trust Badge */}
-                <div className="relative inline-flex items-center gap-3 md:gap-5 rounded-[22px] md:rounded-[30px] border border-white/40 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 md:px-6 md:py-2.5 shadow-[0_20px_50px_rgba(31,64,55,0.08),0_1px_2px_rgba(255,255,255,0.4)_inset] overflow-hidden group transition-all duration-500 hover:bg-white/40 hover:shadow-[0_25px_60px_rgba(31,64,55,0.12)]">
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-blue-100/10 to-emerald-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="relative inline-flex items-center gap-3 md:gap-5 rounded-[22px] md:rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 md:px-6 md:py-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.4),0_1px_2px_rgba(255,255,255,0.05)_inset] overflow-hidden group transition-all duration-500 hover:bg-white/10">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   <span className="relative flex items-center gap-1.5 md:gap-2">
-                    <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-600">
+                    <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-500">
                       <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
                     </span>
                   </span>
-                  <div className="relative flex items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-gray-800 tracking-tight">
-                    <span className="opacity-60 uppercase tracking-widest font-mono">Links seamlessly with</span>
+                  <div className="relative flex items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-white tracking-tight">
+                    <span className="opacity-40 uppercase tracking-widest font-mono">Links seamlessly with</span>
                     <span className="inline-flex items-center gap-2 md:gap-4">
                       {[
                         { src: '/gmailicon.png', alt: 'Gmail' },
                         { src: '/outlookicon.webp', alt: 'Outlook' }
                       ].map((icon, i) => (
-                        <div key={i} className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/40 border border-white/60 shadow-sm flex items-center justify-center">
+                        <div key={i} className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/10 border border-white/10 shadow-sm flex items-center justify-center overflow-hidden">
                           <img src={icon.src} alt={icon.alt} className="h-full w-full object-contain" />
                         </div>
                       ))}
                       <span className="text-emerald-500 font-bold text-sm md:text-base">+</span>
-                      <div className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/40 border border-white/60 shadow-sm flex items-center justify-center">
+                      <div className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/10 border border-white/10 shadow-sm flex items-center justify-center overflow-hidden">
                         <img src="/gd.png" alt="Google Drive" className="h-full w-full object-contain" />
                       </div>
                     </span>
                   </div>
                 </div>
 
-                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 leading-[1.05] selection:bg-emerald-100">
+                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.05] selection:bg-emerald-500/30">
                   FBA Reimbursements <br className="hidden lg:block" />
-                  on <span className="bg-gradient-to-r from-[#1f4037] to-[#10B981] bg-clip-text text-transparent">Autopilot</span>
+                  on <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Autopilot</span>
                 </h1>
 
-                <p className="font-montserrat text-base md:text-lg text-gray-600 font-medium max-w-xl leading-[1.6] opacity-80">
+                <p className="font-montserrat text-base md:text-lg text-white/40 font-medium max-w-xl leading-[1.6]">
                   Margin provides the sovereign infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro-transaction and automate reimbursements—turning messy data into immediate capital.
                 </p>
 
@@ -711,11 +711,11 @@ const Index = () => {
                   </span>
                   <div className="h-[1px] w-8 bg-gray-200" />
                 </div>
-                <h2 className="text-3xl md:text-5xl font-merriweather font-bold tracking-tight text-gray-900 leading-tight">
+                <h2 className="text-3xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
                   Detect 18+ Hidden <br className="hidden sm:block" />
                   Discrepancies in &lt; 30s
                 </h2>
-                <p className="text-base md:text-lg text-gray-600 font-montserrat leading-relaxed max-w-xl mx-auto">
+                <p className="text-base md:text-lg text-white/50 font-montserrat leading-relaxed max-w-xl mx-auto">
                   Watch our real-time audit engine scan a $1M+ seller portfolio for missed capital and logistical errors.
                 </p>
               </div>
@@ -785,10 +785,10 @@ const Index = () => {
             </motion.div>
           </section>
 
-          <div className="relative z-10 w-full" style={{ background: 'white' }}>
+          <div className="relative z-10 w-full" style={{ background: '#050505' }}>
 
 
-            <section className="bg-white pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
+            <section className="bg-[#050505] pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
               <div className="container mx-auto px-6 max-w-4xl">
                 <div className="text-center mb-16 sm:mb-24 space-y-6">
                   <div className="flex items-center justify-center gap-3 mb-4">
@@ -798,7 +798,7 @@ const Index = () => {
                     </span>
                     <div className="h-[1px] w-8 bg-gray-200" />
                   </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold tracking-tight text-gray-900 leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold tracking-tight text-white leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
                     Institutional Support <br className="hidden md:block" />
                     & Fundamental Inquiry
                   </h2>
@@ -822,11 +822,11 @@ const Index = () => {
                 </AccordionItem>
                 */}
 
-                    <AccordionItem value="data" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                    <AccordionItem value="data" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         What data do you access? Do you look at my customer info or sales?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
                           We never look at your customer&apos;s personal information (PII). Our access is limited strictly to the data required for reimbursements: inventory reports, shipment details, and transaction history.
                         </p>
@@ -836,22 +836,22 @@ const Index = () => {
                       </AccordionContent>
                     </AccordionItem>
 
-                    <AccordionItem value="cost" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                    <AccordionItem value="cost" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         How much does Margin cost?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
                           It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
 
-                    <AccordionItem value="comparison" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                    <AccordionItem value="comparison" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         How is this different from GETIDA, Sellerise, or Helium 10?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
                           Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
                         </p>
@@ -863,11 +863,11 @@ const Index = () => {
 
                     {showMoreFAQs && (
                       <>
-                        <AccordionItem value="roi" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        <AccordionItem value="roi" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             How much money will I actually get back?
                           </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
                               On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
                             </p>
@@ -876,13 +876,13 @@ const Index = () => {
                             </p>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="onboarding" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        <AccordionItem value="onboarding" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             What do I have to do to get started?
                           </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>It takes about two minutes:</p>
-                            <ul className="list-disc space-y-2 pl-5 text-gray-600">
+                            <ul className="list-disc space-y-2 pl-5 text-white/40">
                               <li>Sign up for a Margin account.</li>
                               <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
                               <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
@@ -890,21 +890,21 @@ const Index = () => {
                             <p>That&apos;s it. Margin begins auditing immediately.</p>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="coexist" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        <AccordionItem value="coexist" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             What if I already use another reimbursement service?
                           </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
                               No problem. Run Margin alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
                             </p>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="cancel" className="border border-blue-100/30 rounded-2xl bg-blue-50/20 backdrop-blur-md px-6 py-1 transition-all hover:bg-blue-50/40 hover:border-blue-200/50 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-gray-900 hover:no-underline py-6 tracking-tight">
+                        <AccordionItem value="cancel" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             What if I want to cancel?
                           </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
+                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
                               You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
                             </p>
@@ -918,7 +918,7 @@ const Index = () => {
                     <div className="flex justify-center pt-8">
                       <button
                         onClick={() => setShowMoreFAQs(true)}
-                        className="group flex items-center gap-3 text-[11px] font-bold text-gray-400 font-mono tracking-[.25em] hover:text-gray-900 transition-all uppercase">
+                        className="group flex items-center gap-3 text-[11px] font-bold text-white/30 font-mono tracking-[.25em] hover:text-white transition-all uppercase">
                         <Search className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
                         <span>Query Extended Database</span>
                       </button>
@@ -929,9 +929,9 @@ const Index = () => {
             </section>
           </div>
 
-          <section className="bg-white pt-24 pb-24 md:pt-32 md:pb-32 flex flex-col items-center text-center px-6 relative overflow-hidden">
+          <section className="bg-[#050505] pt-24 pb-24 md:pt-32 md:pb-32 flex flex-col items-center text-center px-6 relative overflow-hidden">
             {/* Background Mesh Accent */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -940,14 +940,14 @@ const Index = () => {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="relative z-10 space-y-8 max-w-4xl mx-auto">
               <div className="flex items-center justify-center gap-3 mb-2">
-                <div className="h-[1px] w-8 bg-gray-200" />
-                <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[0.3em] uppercase">
+                <div className="h-[1px] w-8 bg-white/10" />
+                <span className="text-[10px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase">
                   RECOVERY_INIT
                 </span>
-                <div className="h-[1px] w-8 bg-gray-200" />
+                <div className="h-[1px] w-8 bg-white/10" />
               </div>
 
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-gray-900 leading-[1.1]">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-white leading-[1.1]">
                 Ready to secure <br className="hidden md:block" />
                 your recovery?
               </h2>
@@ -955,10 +955,10 @@ const Index = () => {
               <div className="flex flex-col items-center gap-6 pt-4">
                 <AmazonConnect className="min-w-[220px] h-11 text-sm transition-all duration-500 font-medium active:scale-95" />
                 <div className="flex flex-col items-center gap-2">
-                  <p className="text-[11px] font-bold text-gray-400 font-mono tracking-[0.2em] uppercase">
+                  <p className="text-[11px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
                     Verification Phase // Phase 01
                   </p>
-                  <p className="text-sm text-gray-500 font-medium">
+                  <p className="text-sm text-white/40 font-medium">
                     Audit your last 18 months for free. No credit card required.
                   </p>
                 </div>
@@ -969,9 +969,9 @@ const Index = () => {
           <BrandFooter />
           <CookieConsent />
         </main>
-      </div>
+      </div >
 
-    </div>
+    </div >
   );
 };
 

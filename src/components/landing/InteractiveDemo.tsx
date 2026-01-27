@@ -122,25 +122,25 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
     return (
         <div className={cn("relative w-full mx-auto", className)}>
-            <div className="rounded-xl overflow-hidden bg-white shadow-2xl flex flex-col relative h-full">
+            <div className="rounded-xl overflow-hidden bg-[#0a0a0a] shadow-2xl flex flex-col relative h-full border border-white/10">
 
                 {/* WINDOW HEADER */}
-                <div className="bg-gray-50 border-b border-gray-100 px-6 py-3 flex items-center justify-between shrink-0">
+                <div className="bg-[#050505] border-b border-white/5 px-6 py-3 flex items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
                         <div className="flex gap-1.5">
-                            <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-amber-500/50" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/50" />
                         </div>
-                        <div className="h-4 w-px bg-gray-200 mx-2" />
-                        <div className="px-3 py-1 bg-white border border-gray-200 rounded-md text-[10px] font-mono text-gray-500 flex items-center gap-2 shadow-sm">
+                        <div className="h-4 w-px bg-white/10 mx-2" />
+                        <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[10px] font-mono text-white/40 flex items-center gap-2 shadow-sm">
                             Scenario: High-Volume Seller ($1M+/yr)
                         </div>
                     </div>
                 </div>
 
                 {/* MAIN BODY */}
-                <div className="flex-1 p-2 flex flex-col gap-2 overflow-hidden bg-white">
+                <div className="flex-1 p-2 flex flex-col gap-2 overflow-hidden bg-[#0a0a0a]">
                     {/* TERMINAL (Full Width) */}
                     <div className="flex-1 bg-[#0D0D0D] rounded-lg border border-neutral-900 overflow-hidden relative shadow-sm flex flex-col">
                         <div className="absolute top-0 left-0 right-0 h-10 bg-[#0D0D0D] border-b border-neutral-900 rounded-t-lg flex items-center px-5 z-10">
@@ -234,33 +234,33 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                 </div>
 
                 {/* FOOTER */}
-                <div className="p-3 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center shrink-0 relative z-30">
-                    <Button onClick={handleReset} variant="ghost" size="sm" className="text-gray-400 hover:bg-white hover:text-gray-900 transition-all font-bold uppercase tracking-tighter text-[10px]">
+                <div className="p-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center shrink-0 relative z-30">
+                    <Button onClick={handleReset} variant="ghost" size="sm" className="text-white/30 hover:bg-white/5 hover:text-white transition-all font-bold uppercase tracking-tighter text-[10px]">
                         <RotateCw className="w-4 h-4 mr-2" /> Reset Session
                     </Button>
                     <div className="flex gap-3">
                         {status === 'idle' && (
-                            <Button onClick={handleStart} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm px-6 h-9 transition-all">
+                            <Button onClick={handleStart} size="sm" className="bg-white hover:bg-white/90 text-black font-normal shadow-sm px-6 h-9 transition-all">
                                 Recover
                             </Button>
                         )}
                         {status === 'results' && (
-                            <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
+                            <Button onClick={() => setStatus('connecting_source')} size="sm" className="bg-white hover:bg-white/90 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                 Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
                         {status === 'matched' && (
-                            <Button onClick={() => setStatus('filing')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
+                            <Button onClick={() => setStatus('filing')} size="sm" className="bg-white hover:bg-white/90 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                 <FileCheck className="w-4 h-4 mr-2" /> Submit 14 Claims
                             </Button>
                         )}
                         {status === 'disputes' && (
-                            <Button onClick={() => setStatus('notifications')} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
+                            <Button onClick={() => setStatus('notifications')} size="sm" className="bg-white hover:bg-white/90 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                 View Account Logs <Bell className="w-4 h-4 ml-2" />
                             </Button>
                         )}
                         {status === 'notifications' && (
-                            <Button onClick={() => window.location.href = '/auth/signup'} size="sm" className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-8 transition-all">
+                            <Button onClick={() => window.location.href = '/auth/signup'} size="sm" className="bg-white hover:bg-white/90 text-black font-normal shadow-sm h-10 px-8 transition-all">
                                 Start Live Audit <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
                         )}
@@ -269,7 +269,7 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
                 {/* OVERLAY LAYERS */}
                 <div className={cn(
-                    "absolute inset-0 bg-white z-20 transition-all duration-700 flex flex-col",
+                    "absolute inset-0 bg-[#0a0a0a] z-20 transition-all duration-700 flex flex-col",
                     (status === 'results' || status === 'connecting_source' || status === 'searching_docs' || status === 'matched' || status === 'filing' || status === 'disputes' || status === 'notifications')
                         ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
                 )}>
@@ -277,22 +277,22 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                     {(status === 'connecting_source' || status === 'searching_docs' || status === 'filing') && (
                         <div className="flex-1 flex flex-col items-center justify-center p-12 space-y-12 animate-in fade-in zoom-in-95 duration-500">
                             <div className="relative">
-                                <div className="w-24 h-24 bg-blue-50/50 rounded-full flex items-center justify-center animate-pulse relative shadow-inner border border-blue-100">
-                                    {status === 'connecting_source' && <Mail className="w-12 h-12 text-blue-500" />}
-                                    {status === 'searching_docs' && <Search className="w-12 h-12 text-blue-500" />}
-                                    {status === 'filing' && <Briefcase className="w-12 h-12 text-blue-500" />}
-                                    <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2.5 shadow-2xl border border-gray-100">
-                                        <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+                                <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center animate-pulse relative shadow-inner border border-white/10">
+                                    {status === 'connecting_source' && <Mail className="w-12 h-12 text-white/50" />}
+                                    {status === 'searching_docs' && <Search className="w-12 h-12 text-white/50" />}
+                                    {status === 'filing' && <Briefcase className="w-12 h-12 text-white/50" />}
+                                    <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2.5 shadow-2xl border border-white/10">
+                                        <Loader2 className="w-6 h-6 text-black animate-spin" />
                                     </div>
                                 </div>
                             </div>
                             <div className="text-center space-y-4">
-                                <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+                                <h3 className="text-2xl font-bold text-white tracking-tight">
                                     {status === 'connecting_source' ? 'Connecting to Source...' :
                                         status === 'searching_docs' ? 'Analyzing Documents...' :
                                             'Submitting Case Files...'}
                                 </h3>
-                                <p className="text-sm text-gray-500 font-medium max-w-sm mx-auto leading-relaxed">
+                                <p className="text-sm text-white/40 font-medium max-w-sm mx-auto leading-relaxed">
                                     {status === 'connecting_source' && 'Authenticating with Google OAuth 2.0 to access evidence documents.'}
                                     {status === 'searching_docs' && 'Performing OCR and metadata extraction on found invoice PDFs.'}
                                     {status === 'filing' && 'Transmitting encrypted evidence packets to Amazon SP-API endpoints.'}
@@ -330,26 +330,26 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
                     {/* B. DETECTED CLAIMS / EVIDENCE MATCHED TABLE */}
                     {(status === 'results' || status === 'matched') && (
-                        <div className="flex-1 flex flex-col bg-white overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700">
-                            <div className="p-10 border-b border-gray-100 bg-gray-50/30 flex items-center justify-between shadow-sm relative z-10">
+                        <div className="flex-1 flex flex-col bg-[#0a0a0a] overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-700">
+                            <div className="p-10 border-b border-white/5 bg-white/[0.02] flex items-center justify-between shadow-sm relative z-10">
                                 <div className="flex items-center gap-5">
                                     <div className={cn(
                                         "p-4 rounded-2xl shadow-inner border transition-colors duration-500",
-                                        status === 'results' ? "bg-amber-100/50 border-amber-200/30" : "bg-emerald-100/50 border-emerald-200/30"
+                                        status === 'results' ? "bg-amber-500/10 border-amber-500/20" : "bg-emerald-500/10 border-emerald-500/20"
                                     )}>
-                                        {status === 'results' ? <Search className="w-8 h-8 text-amber-600" /> : <CheckCircle2 className="w-8 h-8 text-emerald-600" />}
+                                        {status === 'results' ? <Search className="w-8 h-8 text-amber-500" /> : <CheckCircle2 className="w-8 h-8 text-emerald-500" />}
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">
+                                        <h3 className="text-2xl font-bold text-white tracking-tight leading-tight">
                                             {status === 'results' ? '14 Potential Claims Detected' : 'Evidence Verified'}
                                         </h3>
-                                        <p className="text-[11px] text-gray-400 uppercase tracking-[0.3em] font-bold mt-1">
+                                        <p className="text-[11px] text-white/30 uppercase tracking-[0.3em] font-bold mt-1">
                                             {status === 'results' ? 'Awaiting Evidence Matching' : '14 Claims Matched with Documentation'}
                                         </p>
                                     </div>
                                 </div>
                                 {status === 'results' && (
-                                    <Button onClick={() => setStatus('connecting_source')} className="bg-gray-200 hover:bg-gray-300 text-black font-normal shadow-sm h-10 px-6 transition-all">
+                                    <Button onClick={() => setStatus('connecting_source')} className="bg-white hover:bg-white/90 text-black font-normal shadow-sm h-10 px-6 transition-all">
                                         Auto-Match Evidence <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
                                 )}
@@ -358,22 +358,23 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                     )}
 
                     {/* B. MATCHED / RESULTS - Card Style matching Recoveries.tsx */}
+                    {/* B. MATCHED / RESULTS - Card Style matching Recoveries.tsx */}
                     {status === 'matched' && (
-                        <div className="flex-1 overflow-auto bg-white animate-in fade-in duration-500">
+                        <div className="flex-1 overflow-auto bg-[#0a0a0a] animate-in fade-in duration-500">
                             {/* Batch Header */}
-                            <div className="flex items-center px-6 py-3 bg-gray-50/50 border-b border-gray-100">
-                                <div className="w-3.5 h-3.5 border border-gray-300 rounded-sm mr-4" />
-                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.15em]">Batch Operation Queue</span>
+                            <div className="flex items-center px-6 py-3 bg-white/[0.02] border-b border-white/5">
+                                <div className="w-3.5 h-3.5 border border-white/10 rounded-sm mr-4" />
+                                <span className="text-[10px] font-semibold text-white/30 uppercase tracking-[0.15em]">Batch Operation Queue</span>
                             </div>
 
                             {/* Month Group Header */}
-                            <div className="sticky top-0 z-10 bg-gray-50/80 backdrop-blur-sm px-6 py-2.5 border-y border-gray-100 flex items-center justify-between">
-                                <span className="text-[11px] font-bold text-gray-900 uppercase tracking-[0.2em]">January 2026</span>
-                                <span className="text-[9px] font-medium text-gray-400 uppercase tracking-widest">14 AUDIT ENTRIES</span>
+                            <div className="sticky top-0 z-10 bg-[#0a0a0a]/80 backdrop-blur-sm px-6 py-2.5 border-y border-white/5 flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">January 2026</span>
+                                <span className="text-[9px] font-medium text-white/20 uppercase tracking-widest">14 AUDIT ENTRIES</span>
                             </div>
 
                             {/* Claims List */}
-                            <div className="divide-y divide-gray-100">
+                            <div className="divide-y divide-white/5">
                                 {[
                                     { id: 'LI-2601-29472-ec8d', details: 'lost_inventory detected with 92% confidence', status: 'PENDING', amount: 1500.00 },
                                     { id: 'TEST-MATCH-001', details: 'missing_inbound_shipment detected with 85% confidence', status: 'DISPUTED', amount: 150.00 },
@@ -381,15 +382,15 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                     { id: 'FBA-DMG-3391', details: 'warehouse_damage detected with 88% confidence', status: 'PENDING', amount: 225.50 },
                                     { id: 'FEE-ERR-7721', details: 'weight_dimension_fee_error detected with 95% confidence', status: 'PENDING', amount: 45.20 },
                                 ].map((claim, i) => (
-                                    <div key={i} className="group relative bg-white hover:bg-gray-50/40 transition-all duration-200">
+                                    <div key={i} className="group relative bg-[#0a0a0a] hover:bg-white/[0.02] transition-all duration-200">
                                         {/* Left Accent on Hover */}
-                                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 origin-center scale-y-0 group-hover:scale-y-100 transition-all duration-200" />
+                                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white origin-center scale-y-0 group-hover:scale-y-100 transition-all duration-200" />
 
                                         <div className="flex items-center px-6 py-4">
                                             {/* Checkbox */}
-                                            <div className="w-3.5 h-3.5 border border-gray-300 rounded-sm mr-4 shrink-0" />
+                                            <div className="w-3.5 h-3.5 border border-white/10 rounded-sm mr-4 shrink-0" />
                                             {/* Hexagon Icon */}
-                                            <div className="text-gray-200 group-hover:text-gray-900 transition-colors mr-4 shrink-0">
+                                            <div className="text-white/10 group-hover:text-white transition-colors mr-4 shrink-0">
                                                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                                     <path d="M12 2l8 4.5v9L12 20l-8-4.5v-9L12 2z" />
                                                 </svg>
@@ -398,38 +399,35 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
                                             <div className="flex flex-col min-w-0 flex-1">
                                                 {/* Claim ID + Date */}
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-[13px] font-mono font-medium text-gray-900 hover:underline cursor-pointer">{claim.id}</span>
-                                                    <span className="text-[10px] text-gray-400 font-mono">11 Jan 20:49</span>
+                                                    <span className="text-[13px] font-mono font-medium text-white hover:underline cursor-pointer">{claim.id}</span>
+                                                    <span className="text-[10px] text-white/20 font-mono">11 Jan 20:49</span>
                                                 </div>
                                                 {/* Details + SKU */}
-                                                <div className="text-[11px] text-gray-600 mt-1 flex items-center gap-2">
+                                                <div className="text-[11px] text-white/40 mt-1 flex items-center gap-2">
                                                     <span>{claim.details}</span>
-                                                    <span className="text-gray-300">|</span>
-                                                    <span className="font-mono text-[10px] text-gray-400">SKU: N/A</span>
+                                                    <span className="text-white/10">|</span>
+                                                    <span className="font-mono text-[10px] text-white/20">SKU: N/A</span>
                                                 </div>
                                                 {/* Status Row */}
                                                 <div className="flex items-center gap-2 mt-2 text-[10px] font-medium tracking-wider uppercase">
                                                     <span className={cn(
                                                         "px-2 py-0.5 border font-semibold",
-                                                        claim.status === 'PENDING' ? "bg-gray-100 text-gray-700 border-gray-200" : "bg-blue-50 text-blue-700 border-blue-200"
+                                                        claim.status === 'PENDING' ? "bg-white/5 text-white/70 border-white/10" : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                                                     )}>{claim.status}</span>
-                                                    <span className="text-gray-200">|</span>
-                                                    <span className="text-gray-400">DUP:</span>
-                                                    <span className="text-gray-500">NONE</span>
-                                                    <span className="text-gray-200">|</span>
-                                                    <span className="text-gray-500 font-mono">EXPIRY N/A</span>
-                                                    <span className="text-gray-200">|</span>
-                                                    <span className="flex items-center gap-1">
-                                                        <Info className="w-3 h-3 text-gray-400" />
-                                                    </span>
-                                                    <span className="text-gray-900 font-mono font-bold">${claim.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                                                    <span className="text-white/5">|</span>
+                                                    <span className="text-white/20">DUP:</span>
+                                                    <span className="text-white/40">NONE</span>
+                                                    <span className="text-white/5">|</span>
+                                                    <span className="text-white/40 font-mono">EXPIRY N/A</span>
+                                                    <span className="text-white/5">|</span>
+                                                    <span className="text-white/60 font-mono font-bold">${claim.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                                                 </div>
                                             </div>
 
                                             {/* Right Actions */}
                                             <div className="flex items-center gap-4 ml-4">
-                                                <span className="text-gray-400 hover:text-gray-900 cursor-pointer">•••</span>
-                                                <span className="flex items-center gap-1 text-[10px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-[0.15em] cursor-pointer group/link">
+                                                <span className="text-white/20 hover:text-white cursor-pointer">•••</span>
+                                                <span className="flex items-center gap-1 text-[10px] font-bold text-white/40 hover:text-white uppercase tracking-[0.15em] cursor-pointer group/link">
                                                     AUDIT
                                                     <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
                                                 </span>
@@ -443,65 +441,65 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
                     {/* C. DISPUTE CASES OVERLAY */}
                     {status === 'disputes' && (
-                        <div className="flex-1 p-12 flex flex-col bg-gray-50/50 overflow-auto animate-in fade-in slide-in-from-bottom-10 duration-700">
+                        <div className="flex-1 p-12 flex flex-col bg-[#050505] overflow-auto animate-in fade-in slide-in-from-bottom-10 duration-700">
                             <div className="flex items-center justify-between mb-10">
-                                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-4 tracking-tight">
-                                    <Briefcase className="w-7 h-7 text-emerald-600" /> Resolution Tracking
+                                <h3 className="text-2xl font-bold text-white flex items-center gap-4 tracking-tight">
+                                    <Briefcase className="w-7 h-7 text-emerald-500" /> Resolution Tracking
                                 </h3>
-                                <Badge variant="secondary" className="bg-white border-gray-200 px-4 py-1 text-xs font-bold shadow-sm">14 Live Cases</Badge>
+                                <Badge variant="secondary" className="bg-white/5 text-white border-white/10 px-4 py-1 text-xs font-bold shadow-sm">14 Live Cases</Badge>
                             </div>
-                            <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-2xl">
-                                <div className="p-10 border-b border-gray-100 flex justify-between items-start bg-gradient-to-r from-gray-50/50 via-white to-gray-50/50">
+                            <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+                                <div className="p-10 border-b border-white/5 flex justify-between items-start bg-gradient-to-r from-white/[0.02] via-transparent to-white/[0.02]">
                                     <div>
                                         <div className="flex items-center gap-4 mb-3">
-                                            <span className="text-[11px] font-bold text-gray-500 font-mono tracking-widest uppercase bg-gray-100 px-3 py-1 rounded-lg">AMZ_CASE_114-552311</span>
-                                            <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs font-black tracking-tight">SUBMITTED</Badge>
+                                            <span className="text-[11px] font-bold text-white/40 font-mono tracking-widest uppercase bg-white/5 px-3 py-1 rounded-lg">AMZ_CASE_114-552311</span>
+                                            <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-xs font-black tracking-tight">SUBMITTED</Badge>
                                         </div>
-                                        <h4 className="text-xl font-bold text-gray-900 tracking-tight">Lost Inbound Shipment - Transaction FBA15X</h4>
+                                        <h4 className="text-xl font-bold text-white tracking-tight">Lost Inbound Shipment - Transaction FBA15X</h4>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-3xl font-mono font-bold text-gray-900 tracking-tighter">$850.00</div>
-                                        <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-2">Recovery Estimate</p>
+                                        <div className="text-3xl font-mono font-bold text-white tracking-tighter">$850.00</div>
+                                        <p className="text-[11px] text-white/30 font-bold uppercase tracking-widest mt-2">Recovery Estimate</p>
                                     </div>
                                 </div>
-                                <div className="p-16 bg-white relative">
+                                <div className="p-16 bg-[#0a0a0a] relative">
                                     <div className="relative flex items-center justify-between max-w-4xl mx-auto">
-                                        <div className="absolute left-0 top-4 w-full h-1 bg-gray-100 rounded-full" />
-                                        <div className="absolute left-0 top-4 w-[66%] h-1 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-1500 ease-out" />
+                                        <div className="absolute left-0 top-4 w-full h-0.5 bg-white/5 rounded-full" />
+                                        <div className="absolute left-0 top-4 w-[66%] h-0.5 bg-emerald-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-1500 ease-out" />
                                         {['Detected', 'Prepared', 'Submitted', 'Paid', 'Finalized'].map((step, i) => (
-                                            <div key={i} className="relative z-10 flex flex-col items-center gap-5 bg-white px-6">
+                                            <div key={i} className="relative z-10 flex flex-col items-center gap-5 bg-[#0a0a0a] px-6">
                                                 <div className={cn(
-                                                    "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-700",
-                                                    i <= 2 ? "bg-emerald-500 border-emerald-500 text-white shadow-xl shadow-emerald-500/20 scale-110" : "bg-white border-gray-200 text-gray-300"
+                                                    "w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-700",
+                                                    i <= 2 ? "bg-emerald-500 border-emerald-500 text-white shadow-xl shadow-emerald-500/20 scale-110" : "bg-[#0a0a0a] border-white/10 text-white/20"
                                                 )}>
                                                     {i <= 2 ? <CheckCheck className="w-5 h-5" /> : (i === 3 ? <DollarSign className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />)}
                                                 </div>
-                                                <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", i <= 2 ? "text-emerald-700" : "text-gray-400")}>{step}</span>
+                                                <span className={cn("text-[10px] font-black uppercase tracking-[0.2em]", i <= 2 ? "text-emerald-500" : "text-white/20")}>{step}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             </div>
                             <div className="mt-8 grid grid-cols-2 gap-6">
-                                <div className="bg-white border border-gray-100 p-6 rounded-2xl flex items-center justify-between opacity-50 hover:opacity-100 transition-opacity">
+                                <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-2xl flex items-center justify-between opacity-50 hover:opacity-100 transition-opacity">
                                     <div className="flex items-center gap-5">
-                                        <div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
+                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.6)]" />
                                         <div>
-                                            <p className="text-[10px] font-mono text-gray-400 mb-0.5 tracking-tight">#CASE-SKU-9982</p>
-                                            <span className="text-base font-bold text-gray-900 tracking-tight">Warehouse Damage</span>
+                                            <p className="text-[10px] font-mono text-white/20 mb-0.5 tracking-tight">#CASE-SKU-9982</p>
+                                            <span className="text-base font-bold text-white tracking-tight">Warehouse Damage</span>
                                         </div>
                                     </div>
-                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-gray-50 border-gray-200">Processing</Badge>
+                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-white/40">Processing</Badge>
                                 </div>
-                                <div className="bg-white border border-gray-100 p-6 rounded-2xl flex items-center justify-between opacity-50">
+                                <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-2xl flex items-center justify-between opacity-50">
                                     <div className="flex items-center gap-5">
-                                        <div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
+                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.6)]" />
                                         <div>
-                                            <p className="text-[10px] font-mono text-gray-400 mb-0.5 tracking-tight">#CASE-ORD-3329</p>
-                                            <span className="text-base font-bold text-gray-900 tracking-tight">Unpaid Refund</span>
+                                            <p className="text-[10px] font-mono text-white/20 mb-0.5 tracking-tight">#CASE-ORD-3329</p>
+                                            <span className="text-base font-bold text-white tracking-tight">Unpaid Refund</span>
                                         </div>
                                     </div>
-                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-gray-50 border-gray-200">Processing</Badge>
+                                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-white/40">Processing</Badge>
                                 </div>
                             </div>
                         </div>
@@ -509,39 +507,39 @@ export const InteractiveDemo = ({ className, currentStep }: { className?: string
 
                     {/* D. NOTIFICATION LOG OVERLAY */}
                     {status === 'notifications' && (
-                        <div className="flex-1 p-12 flex flex-col bg-white overflow-hidden animate-in fade-in duration-700">
+                        <div className="flex-1 p-12 flex flex-col bg-[#050505] overflow-hidden animate-in fade-in duration-700">
                             <div className="flex items-center justify-between mb-10">
-                                <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-4 tracking-tight">
-                                    <Bell className="w-7 h-7 text-emerald-600" /> Account Activity History
+                                <h3 className="text-2xl font-bold text-white flex items-center gap-4 tracking-tight">
+                                    <Bell className="w-7 h-7 text-emerald-500" /> Account Activity History
                                 </h3>
-                                <Button variant="outline" size="sm" className="h-10 text-[10px] font-black uppercase tracking-[0.2em] bg-gray-50 border-gray-100 hover:bg-gray-100 shadow-sm">
+                                <Button variant="outline" size="sm" className="h-10 text-[10px] font-black uppercase tracking-[0.2em] bg-white/5 border-white/10 text-white/60 hover:bg-white/10 shadow-sm">
                                     <CheckCheck className="w-4 h-4 mr-3" /> Mark All Read
                                 </Button>
                             </div>
                             <div className="flex-1 overflow-auto pr-6 space-y-5 custom-scrollbar">
                                 {NOTIFICATIONS_DATA.map((n, i) => {
                                     return (
-                                        <div key={i} className="p-7 border border-gray-50 rounded-[2.5rem] bg-gray-50/40 flex gap-7 items-start hover:bg-white hover:border-gray-200 hover:shadow-2xl transition-all duration-400 group">
+                                        <div key={i} className="p-7 border border-white/5 rounded-[2.5rem] bg-white/[0.02] flex gap-7 items-start hover:bg-white/[0.04] hover:border-white/10 hover:shadow-2xl transition-all duration-400 group">
                                             <div className="mt-1 shrink-0 transition-all duration-400 group-hover:scale-110 group-hover:rotate-6">
                                                 {n.type === 'alert' ? (
-                                                    <div className="w-14 h-14 rounded-3xl bg-amber-50 flex items-center justify-center border border-amber-100 shadow-inner">
+                                                    <div className="w-14 h-14 rounded-3xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 shadow-inner">
                                                         <Search className="w-7 h-7 text-amber-500" />
                                                     </div>
                                                 ) : (
-                                                    <div className="w-14 h-14 rounded-3xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shadow-inner">
+                                                    <div className="w-14 h-14 rounded-3xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-inner">
                                                         <CheckCircle2 className="w-7 h-7 text-emerald-500" />
                                                     </div>
                                                 )}
                                             </div>
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-4 mb-2">
-                                                    <span className="text-[10px] font-black font-mono uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">{n.type === 'alert' ? 'Audit Alert' : 'Fund Deposit'}</span>
-                                                    <span className="text-[10px] text-gray-400 font-bold font-mono uppercase tracking-tight opacity-50">{n.time}</span>
+                                                    <span className="text-[10px] font-black font-mono uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">{n.type === 'alert' ? 'Audit Alert' : 'Fund Deposit'}</span>
+                                                    <span className="text-[10px] text-white/20 font-bold font-mono uppercase tracking-tight opacity-50">{n.time}</span>
                                                 </div>
-                                                <p className="text-[15px] text-gray-800 font-medium leading-[1.6] group-hover:text-gray-900 transition-colors">{n.message}</p>
+                                                <p className="text-[15px] text-white/70 font-medium leading-[1.6] group-hover:text-white transition-colors">{n.message}</p>
                                                 <div className="mt-4 flex gap-2">
-                                                    <div className="h-1 w-8 bg-gray-200 rounded-full" />
-                                                    <div className="h-1 w-4 bg-gray-100 rounded-full" />
+                                                    <div className="h-0.5 w-8 bg-white/10 rounded-full" />
+                                                    <div className="h-0.5 w-4 bg-white/5 rounded-full" />
                                                 </div>
                                             </div>
                                         </div>
