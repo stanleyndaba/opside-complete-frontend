@@ -1129,25 +1129,35 @@ const Index = () => {
               <div className="flex items-center justify-center gap-3 mb-2">
                 <div className="h-[1px] w-8 bg-white/10" />
                 <span className="text-[10px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase">
-                  RECOVERY_INIT
+                  PROTOCOL_26_DEPLOYED
                 </span>
                 <div className="h-[1px] w-8 bg-white/10" />
               </div>
 
               <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-white leading-[1.1]">
-                Ready to secure <br className="hidden md:block" />
-                your recovery?
+                Bring Your Ledger <br className="hidden md:block" />
+                to 100% Accuracy.
               </h2>
 
-              <div className="flex flex-col items-center gap-6 pt-4">
-                <AmazonConnect className="min-w-[220px] h-11 text-sm transition-all duration-500 font-medium active:scale-95" />
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-[11px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
-                    Verification Phase // Phase 01
+              <div className="flex flex-col items-center gap-8 pt-4">
+                <div className="max-w-xl mx-auto">
+                  <p className="text-base text-white/40 font-medium leading-relaxed font-montserrat">
+                    Eliminate supply chain uncertainty. Our 26-point forensic protocol <br className="hidden md:block" />
+                    is ready to reconcile your inbound shipments.
                   </p>
-                  <p className="text-sm text-white/40 font-medium">
-                    Audit your last 18 months for free. No credit card required.
-                  </p>
+                </div>
+
+                <div className="flex flex-col items-center gap-4">
+                  <AmazonConnect
+                    label="VERIFY MY INVENTORY"
+                    className="min-w-[280px] h-12 text-[13px] transition-all duration-500 font-bold active:scale-95 px-8"
+                  />
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <p className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                      Operational Ready // Phase_01_Init
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>

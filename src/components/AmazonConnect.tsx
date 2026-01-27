@@ -11,9 +11,10 @@ interface AmazonConnectProps {
   onConnectionComplete?: (data: any) => void;
   className?: string;
   showUseExisting?: boolean;
+  label?: string;
 }
 
-export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true }: AmazonConnectProps) {
+export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true, label = "Connect Account" }: AmazonConnectProps) {
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
   const [selectedMarketplace, setSelectedMarketplace] = useState<string>(''); // No default to show placeholder
@@ -291,7 +292,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           </>
         ) : (
           <>
-            Connect Account <ChevronRight className="h-4 w-4" />
+            {label} <ChevronRight className="h-4 w-4" />
           </>
         )}
       </Button>
