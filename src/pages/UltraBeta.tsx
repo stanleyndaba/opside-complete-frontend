@@ -74,9 +74,7 @@ const UltraBeta = () => {
                         </h1>
 
                         <p className="max-w-2xl text-lg md:text-xl text-white/60 font-montserrat leading-relaxed">
-                            Engineered for high-velocity FBA portfolios managing &gt;2,000 transactions/month.
-                            Beyond simple reimbursement—we map inventory drift at the SKU level to secure
-                            sovereignty over your supply chain capital.
+                            High-frequency auditing for &gt;2,000 tx/mo portfolios. We convert SKU-level inventory drift into liquidity.
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center gap-6 pt-8">
