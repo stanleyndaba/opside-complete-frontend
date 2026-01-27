@@ -1388,12 +1388,6 @@ export default function Sync() {
           <div className="mb-12">
             <div className="flex items-start justify-between">
               <div className="space-y-6">
-                {/* Two-bar Icon */}
-                <div className="flex flex-col gap-1">
-                  <div className="h-1.5 w-6 bg-gray-900 rounded-full" />
-                  <div className="h-1.5 w-8 bg-gray-900 rounded-full ml-2" />
-                </div>
-
                 <div>
                   <h1 className="text-xl font-semibold text-gray-900 tracking-tight">Financial Audit Engine</h1>
                   <p className="text-[13px] text-gray-400 mt-1 font-normal">Powered by Amazon SP-API</p>
@@ -1855,8 +1849,8 @@ export default function Sync() {
                       onClick={() => status === 'completed' && navigate(`/app/${currentTenantSlug}/dashboard`)}
                       disabled={status !== 'completed'}
                       className={`px-6 py-3 text-[15px] font-medium rounded-xl transition-all ${status === 'completed'
-                          ? 'bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] border border-gray-100/50 shadow-sm'
-                          : 'text-gray-200 cursor-not-allowed bg-transparent'
+                        ? 'bg-gray-50/80 hover:bg-gray-100 text-[#4B5563] border border-gray-100/50 shadow-sm'
+                        : 'text-gray-200 cursor-not-allowed bg-transparent'
                         }`}>
                       Dashboard
                     </button>
