@@ -408,6 +408,13 @@ const Index = () => {
                 <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
               </Link>
               <span className="hidden md:inline text-gray-300">|</span>
+              <Link
+                to="/ultra-beta"
+                className="flex items-center gap-2 group px-3 py-1.5 rounded-[16px] transition-colors hover:bg-emerald-50/50 border border-transparent hover:border-emerald-100/50">
+                <span className="text-[13px] font-montserrat text-emerald-700" style={{ fontWeight: 600 }}>Ultra Beta</span>
+                <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
+              </Link>
+              <span className="hidden md:inline text-gray-300">|</span>
               <div className="hidden md:block">
                 <ProductsMegaMenu />
               </div>
@@ -486,6 +493,16 @@ const Index = () => {
                     Sellers who bring new sellers to Margin keep 100% value of their recovered funds
                   </p>
                 </div>
+                <Link
+                  to="/ultra-beta"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-emerald-700 bg-emerald-50/50 border border-emerald-100/50 hover:bg-emerald-50 transition-colors flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span>Ultra Beta</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
+                  </div>
+                  <Sparkles className="h-4 w-4 text-emerald-500" />
+                </Link>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="products" className="border-none">
                     <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white/70 hover:text-gray-900 transition-colors hover:no-underline">

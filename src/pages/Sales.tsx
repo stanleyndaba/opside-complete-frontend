@@ -93,7 +93,7 @@ export default function Sales() {
                         Scale Autonomously with Margin Enterprise
                     </h1>
                     <p className="text-base sm:text-lg md:text-xl text-gray-600 font-montserrat max-w-2xl leading-relaxed">
-                        For institutional sellers processing $1M+ in monthly GMV. Secure priority infrastructure, dedicated forensic auditors, and custom API integrations.
+                        For High-Velocity Accounts processing $1M+ in monthly GMV. Secure priority infrastructure, dedicated forensic auditors, and custom API integrations.
                     </p>
                 </div>
 
