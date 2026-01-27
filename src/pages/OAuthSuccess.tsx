@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
-import { CheckCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 
 export default function OAuthSuccess() {
@@ -37,9 +36,11 @@ export default function OAuthSuccess() {
         {/* Main Success Container - Clean White / Glassmorphism */}
         <div className="w-full max-w-lg bg-white/95 backdrop-blur-md border border-white/20 shadow-2xl rounded-sm p-12 text-center space-y-8 animate-in fade-in zoom-in duration-500">
           <div className="flex justify-center">
-            <div className="h-16 w-16 bg-emerald-50 rounded-full flex items-center justify-center">
-              <CheckCircle className="h-10 w-10 text-emerald-500" />
-            </div>
+            <img
+              src="/logoimagetwo.png"
+              alt="Margin"
+              className="h-6 w-auto object-contain"
+            />
           </div>
 
           <div className="space-y-3">
