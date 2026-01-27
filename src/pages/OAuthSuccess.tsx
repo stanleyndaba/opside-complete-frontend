@@ -32,43 +32,54 @@ export default function OAuthSuccess() {
 
   return (
     <PageLayout title="Authorised Successfully" hideNavbar hideSidebar midnight>
-      <div className="min-h-[80vh] flex flex-col items-center justify-center">
-        {/* Main Success Container - Clean White / Glassmorphism */}
-        <div className="w-full max-w-lg bg-white/95 backdrop-blur-md border border-white/20 shadow-2xl rounded-sm p-12 text-center space-y-8 animate-in fade-in zoom-in duration-500">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Background Mesh Accent */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+        {/* Main Success Container - Premium Obsidian / Glassmorphism */}
+        <div className="relative z-10 w-full max-w-lg bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-none p-12 text-center space-y-8 animate-in fade-in zoom-in duration-700">
           <div className="flex justify-center">
             <img
               src="/logoimagetwo.png"
               alt="Margin"
-              className="h-6 w-auto object-contain"
+              className="h-6 w-auto object-contain invert brightness-0"
             />
           </div>
 
-          <div className="space-y-3">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-              Store Connected Successfully
+          <div className="space-y-4">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="h-[1px] w-8 bg-emerald-500/20" />
+              <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">
+                HANDSHAKE_OK
+              </span>
+              <div className="h-[1px] w-8 bg-emerald-500/20" />
+            </div>
+
+            <h1 className="text-3xl font-merriweather font-bold tracking-tight text-white leading-tight">
+              Store Connected <br />Successfully
             </h1>
-            <p className="text-gray-500 leading-relaxed">
-              Your {provider === 'amazon' ? 'Amazon Store' : provider} is now securely linked to your dashboard.
+            <p className="text-white/40 font-montserrat leading-relaxed text-sm">
+              Your {provider === 'amazon' ? 'Amazon Store' : provider} is now securely linked <br className="hidden sm:block" /> to your institutional dashboard.
             </p>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-6">
             <Button
               onClick={handleStartSync}
               disabled={loading}
-              className="bg-[#0B1220] hover:bg-[#1a2536] text-white px-10 py-6 rounded-sm text-sm font-semibold transition-all duration-200 active:scale-95"
+              className="bg-white hover:bg-white/90 text-black px-12 h-14 rounded-none text-xs font-bold font-mono tracking-widest uppercase transition-all duration-300 shadow-2xl active:scale-95"
             >
-              See findings
+              {loading ? "Initializing..." : "See Findings"}
             </Button>
           </div>
         </div>
 
         {/* Legal Footer - Minimalist */}
-        <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-3 px-6 text-center">
-          <Link to="/privacy" className="text-xs font-medium text-gray-500 hover:text-white transition-colors">Privacy Policy</Link>
-          <Link to="/terms" className="text-xs font-medium text-gray-500 hover:text-white transition-colors">Terms of Service</Link>
-          <Link to="/docs" className="text-xs font-medium text-gray-500 hover:text-white transition-colors">Acceptable Use Policy</Link>
-          <Link to="/refund-policy" className="text-xs font-medium text-gray-500 hover:text-white transition-colors">Refund Policy</Link>
+        <div className="relative z-10 mt-16 flex flex-wrap justify-center gap-x-10 gap-y-3 px-6 text-center">
+          <Link to="/privacy" className="text-[10px] font-bold text-white/20 hover:text-white transition-all uppercase tracking-widest font-mono">Privacy Policy</Link>
+          <Link to="/terms" className="text-[10px] font-bold text-white/20 hover:text-white transition-all uppercase tracking-widest font-mono">Terms of Service</Link>
+          <Link to="/docs" className="text-[10px] font-bold text-white/20 hover:text-white transition-all uppercase tracking-widest font-mono">Acceptable Use</Link>
+          <Link to="/refund-policy" className="text-[10px] font-bold text-white/20 hover:text-white transition-all uppercase tracking-widest font-mono">Refund Policy</Link>
         </div>
       </div>
     </PageLayout>
