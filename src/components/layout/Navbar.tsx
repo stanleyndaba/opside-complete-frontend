@@ -380,7 +380,7 @@ export function Navbar({
               <div className="flex items-center border-l border-slate-200/50 pl-4 ml-1">
                 <button
                   onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-1.5 text-[13px] text-slate-900 hover:text-slate-600 transition-all font-bold tracking-tight">
+                  className="flex items-center gap-1.5 text-[13px] text-slate-900 hover:text-slate-600 transition-all font-normal tracking-tight">
                   <Link2 className="h-3.5 w-3.5 text-slate-900" />
                   <span className="hidden sm:inline">Connect</span>
                 </button>
@@ -394,7 +394,7 @@ export function Navbar({
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 text-[13px] text-slate-900 hover:text-slate-600 transition-colors group/account">
                   <User className="h-3.5 w-3.5 text-slate-900" />
-                  <span className="hidden sm:inline font-bold tracking-tight">Account</span>
+                  <span className="hidden sm:inline font-normal tracking-tight">Account</span>
                   <ChevronDown className="h-3 w-3 text-slate-900" />
                 </button>
               </DropdownMenuTrigger>
