@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -754,12 +754,36 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Dashboard</span>
+                  <span className="text-[10px] font-bold text-slate-400 tracking-[0.2em]">Dashboard</span>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Reimbursement Overview</h1>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-nowrap">Reimbursement Overview</h1>
                   </div>
                 </div>
 
+                {/* Performance Analytics Badges */}
+                <div className="hidden xl:flex items-center gap-8 pl-12">
+                  {[
+                    { label: 'Today', value: 1242.00, growth: 12.5, trend: 'up' },
+                    { label: 'Last 7 Days', value: 8432.50, growth: 8.2, trend: 'up' },
+                    { label: 'This Month', value: 34210.00, growth: 15.4, trend: 'up' }
+                  ].map((metric, idx) => (
+                    <div key={idx} className="flex flex-col gap-1.5 border-l border-slate-100 pl-8 first:border-0 first:pl-0">
+                      <span className="text-[10px] font-bold text-slate-400 tracking-wider line-clamp-1">{metric.label}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg font-bold text-slate-900 tracking-tight font-mono">
+                          ${metric.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                        <div className={cn(
+                          "flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm text-[10px] font-bold",
+                          metric.trend === 'up' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                        )}>
+                          {metric.trend === 'up' ? <ArrowUp className="h-2.5 w-2.5" /> : <ArrowDown className="h-2.5 w-2.5" />}
+                          {metric.growth}%
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
