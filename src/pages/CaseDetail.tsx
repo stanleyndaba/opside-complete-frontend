@@ -684,9 +684,9 @@ export default function CaseDetail() {
                   <div className="flex items-center gap-3">
                     <h1 className="text-xl font-light text-gray-900 tracking-tight font-mono">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-gray-900 font-mono">{normalizeStatus(effectiveCase.status).toUpperCase()}</span>
+                    <span className="text-xs font-bold text-gray-900 font-mono">{normalizeStatus(effectiveCase.status)}</span>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1 font-mono uppercase tracking-tight">CASE AUDIT // {effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility.split(' - ')[0] : 'LOCATING FC...'}</p>
+                  <p className="text-xs text-gray-400 mt-1 font-mono tracking-tight">Case Audit</p>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
@@ -697,24 +697,24 @@ export default function CaseDetail() {
                   onClick={() => ClaimPdfService.generate(effectiveCase)}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
-                  GET PDF
+                  Get PDF
                 </Button>
                 <div className="text-right">
                   <div className="text-xs text-gray-400 font-bold">Confidence Engine</div>
-                  <div className="text-xs font-mono font-bold text-emerald-600 mt-0.5">{derivedConfidencePct}% VERIFIED</div>
+                  <div className="text-xs font-mono font-bold text-emerald-600 mt-0.5">{derivedConfidencePct}% verified</div>
                 </div>
                 <div className="h-8 w-[1px] bg-gray-100" />
                 <div className="text-right">
                   <div className="text-xs text-gray-400 font-bold">Audit Progress</div>
-                  <div className="text-xs font-mono font-bold text-gray-900 mt-0.5">{typeof effectiveCase.progress === 'number' ? Math.round(effectiveCase.progress) : 85}% COMPLETED</div>
+                  <div className="text-xs font-mono font-bold text-gray-900 mt-0.5">{typeof effectiveCase.progress === 'number' ? Math.round(effectiveCase.progress) : 85}% completed</div>
                 </div>
               </div>
             </div>
 
             {/* Auto-Filing Banner - Refined Style */}
             <div className="flex items-center py-2 bg-white mb-8">
-              <p className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">
-                PROTOCOL: MARGIN AUTO-FILES CASES ≥85% CONFIDENCE
+              <p className="text-[11px] font-mono text-gray-400 tracking-wider">
+                Protocol: Margin auto-files cases ≥85% confidence
               </p>
             </div>
 
@@ -823,14 +823,14 @@ export default function CaseDetail() {
                 {/* Tile 2: Transaction Forensics */}
                 <div className="p-8 bg-white">
                   <div className="mb-6">
-                    <h3 className="text-sm font-bold text-gray-900">Transaction Forensics</h3>
+                    <h3 className="text-sm font-bold text-gray-900">Transaction Details</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                     {/* Forensic Metrics */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
-                        <div className="h-1 w-2 bg-emerald-500 rounded-full" /> Forensic Metrics
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
+                        <div className="h-1 w-2 bg-emerald-500 rounded-full" /> Transaction Details
                       </h4>
                       <dl className="space-y-4">
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
