@@ -760,28 +760,6 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-6">
-                  <div className="flex flex-col items-end gap-1.5 pt-1">
-                    <div className="flex items-center gap-2">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                      </span>
-                      <p className="text-[11px] text-slate-500 font-bold uppercase tracking-wider whitespace-nowrap">
-                        SYSTEMS HEALTHY • {(() => {
-                          const timeStr = formatDistanceToNow(lastSyncTime || new Date(), { addSuffix: true });
-                          return timeStr === 'less than a minute ago' ? 'LIVE' : timeStr.toUpperCase().replace('ABOUT ', '');
-                        })()}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setShowSyncModal(true)}
-                      className="flex items-center gap-2 px-3 py-1 bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-50 transition-all rounded-md group">
-                      <RefreshCw className="w-3 h-3 text-slate-400 group-hover:text-slate-900 group-hover:rotate-180 transition-all duration-500" />
-                      <span className="text-[10px] font-bold text-slate-500 group-hover:text-slate-900 uppercase tracking-widest">Trigger Manual Scan</span>
-                    </button>
-                  </div>
-                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
