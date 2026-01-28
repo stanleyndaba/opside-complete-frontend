@@ -376,20 +376,17 @@ export function Navbar({
                 </HoverCard>
               </div>
 
-              {/* Connect Button */}
-              <div className="flex items-center border-l border-slate-200/50 pl-4 ml-1">
-                <button
-                  onClick={() => navigate('/integrations-hub')}
-                  className="flex items-center gap-1.5 text-[13px] text-slate-900 hover:text-slate-600 transition-all font-normal tracking-tight">
-                  <Link2 className="h-3.5 w-3.5 text-slate-900" />
-                  <span className="hidden sm:inline">Connect</span>
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* Right Group - Account Dropdown */}
-          <div className="flex items-center border-l border-slate-200/50 pl-6 ml-6">
+          {/* Right Group - Connect & Account */}
+          <div className="flex items-center gap-x-6 border-l border-slate-200/50 pl-6 ml-6">
+            <button
+              onClick={() => navigate('/integrations-hub')}
+              className="flex items-center gap-1.5 text-[13px] text-slate-900 hover:text-slate-600 transition-all font-normal tracking-tight">
+              <Link2 className="h-3.5 w-3.5 text-slate-900" />
+              <span className="hidden sm:inline">Connect</span>
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 text-[13px] text-slate-900 hover:text-slate-600 transition-colors group/account">
