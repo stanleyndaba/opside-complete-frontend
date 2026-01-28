@@ -752,11 +752,11 @@ export function Dashboard() {
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-8 text-slate-900">
               {/* Command Center Header */}
-              <div className="flex items-center justify-between mb-10">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-bold text-slate-400 tracking-[0.2em]">Dashboard</span>
+              <div className="flex items-center justify-end mb-10">
+                <div className="flex flex-col gap-1 invisible">
+                  <span className="text-[10px] font-medium text-slate-500 tracking-tight">Dashboard</span>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-nowrap">Reimbursement Overview</h1>
+                    <h1 className="text-2xl font-semibold text-slate-900 tracking-tight text-nowrap">Reimbursement Overview</h1>
                   </div>
                 </div>
 
