@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
@@ -66,6 +66,7 @@ export function Sidebar({
   className
 }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant } = useTenant();
@@ -121,11 +122,7 @@ export function Sidebar({
     { title: 'Integrations', icon: Box, href: `/app/${currentTenantSlug}/integrations-hub` }
   ];
 
-  const secondaryItems: NavItem[] = [
-    { title: 'Settings', icon: Settings2, href: `/app/${currentTenantSlug}/settings` },
-    { title: 'Resolution Center', icon: LifeBuoy, href: `/app/${currentTenantSlug}/help` },
-    // { title: "What's New", icon: Sparkles, href: `/app/${currentTenantSlug}/whats-new` } // Hidden for now
-  ];
+  const secondaryItems: NavItem[] = []; // Moved to "More" menu
   const NavItemComponent = React.memo(({
     item
   }: {
@@ -281,38 +278,53 @@ export function Sidebar({
         </span>
       </div>
 
-      {/* Logout Only */}
-      {isCollapsed ? (
-        <div className="mt-auto border-t border-slate-200 py-4 flex flex-col items-center justify-center">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setSignOutOpen(true)}
-                  aria-label="Sign Out"
-                  className={cn(
-                    "relative flex items-center justify-center w-8 h-8 transition-colors rounded-none",
-                    "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
-                  )}>
-                  <LogOut className="h-4 w-4" strokeWidth={1.5} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-slate-900 text-white text-xs rounded-none">
-                Sign Out
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      ) : (
-        <div className="mt-auto border-t border-slate-200 py-2">
-          <button
-            onClick={() => setSignOutOpen(true)}
-            className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-slate-50 transition-all group text-slate-900">
-            <LogOut className="h-4 w-4 text-slate-400 group-hover:text-slate-900" strokeWidth={1.5} />
-            <span className="text-[13px] font-semibold tracking-wide">Sign Out</span>
-          </button>
-        </div>
-      )}
+      {/* More Menu / Logout */}
+      <div className={cn(
+        "mt-auto border-t border-slate-200 py-2",
+        isCollapsed ? "px-2 flex justify-center" : ""
+      )}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={cn(
+                "w-full flex items-center transition-all group",
+                isCollapsed
+                  ? "justify-center p-2 rounded-lg hover:bg-slate-50"
+                  : "gap-2.5 px-6 py-3 text-left hover:bg-slate-50 text-slate-800"
+              )}>
+              <Menu className={cn("h-4 w-4 text-slate-600 group-hover:text-slate-900", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              {!isCollapsed && <span className="text-[12px] font-semibold tracking-wide">More</span>}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1 bg-white border-slate-200 rounded-lg shadow-xl mb-2 ml-2">
+            <DropdownMenuItem
+              onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
+              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
+              <LifeBuoy className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <span>Report a problem</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
+              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
+              <Sparkles className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <span>What's New</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/app/${currentTenantSlug}/settings`)}
+              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
+              <Settings2 className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-slate-100 my-1" />
+            <DropdownMenuItem
+              onClick={() => setSignOutOpen(true)}
+              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-rose-600 hover:bg-rose-50 cursor-pointer rounded-md">
+              <LogOut className="h-4 w-4 text-rose-500" strokeWidth={1.5} />
+              <span className="font-medium">Sign Out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       {/* Sign Out Confirmation Dialog */}
       <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
