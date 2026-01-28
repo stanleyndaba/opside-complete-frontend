@@ -1036,7 +1036,7 @@ export function Dashboard() {
                       className="px-5 py-4 border-b border-slate-100 bg-[#fefefe] flex items-center justify-between w-full hover:bg-slate-50 transition-all font-montserrat">
                       <div className="flex items-center gap-3">
                         <div className="w-[3px] h-3 bg-slate-900 rounded-full" />
-                        <h3 className="text-[13px] font-bold text-slate-900 tracking-tight">Reimbursement Activity</h3>
+                        <h3 className="text-[13px] font-bold text-slate-900 tracking-tight">Activity</h3>
                         {unreadCount > 0 && (
                           <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">
                             <span className="text-[10px] font-bold text-emerald-600 tabular-nums">
