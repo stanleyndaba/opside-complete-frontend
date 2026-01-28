@@ -1028,7 +1028,7 @@ export default function CaseDetail() {
                                 {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-[10px] font-bold tracking-wider",
+                                "text-[12px] font-bold tracking-wider",
                                 active ? "text-gray-900" : "text-gray-300"
                               )}>{step}</span>
                             </div>
