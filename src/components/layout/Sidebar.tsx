@@ -193,17 +193,17 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-center gap-3 w-full px-4 py-2.5 transition-all duration-300 group rounded-lg mb-1",
+          "relative flex items-center gap-3 w-full px-4 py-1.5 transition-all duration-300 group rounded-lg mb-0.5",
           isActive
             ? "bg-white/[0.08] text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
             : "text-gray-400 hover:bg-white/5 hover:text-white"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
-          <span className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-emerald-500 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-emerald-500/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-white" : "text-gray-500 group-hover:text-white")} />
         <span className={cn(
