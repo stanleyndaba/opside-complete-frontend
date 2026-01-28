@@ -249,7 +249,7 @@ export default function UpcomingPayments() {
             <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
               <div>
                 <h1 className="text-xl font-light text-gray-900 tracking-tight">Recoveries</h1>
-                <p className="text-xs text-gray-400 mt-1 font-mono">PROJECTED PAYOUTS</p>
+                <p className="text-xs text-gray-400 mt-1 font-mono">Projected Payouts</p>
               </div>
             </div>
 
