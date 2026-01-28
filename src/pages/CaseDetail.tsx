@@ -721,7 +721,7 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "px-8 py-4 text-[13px] font-bold tracking-[0.1em] transition-all duration-300 relative",
+                  "px-8 py-4 text-[15px] font-bold transition-all duration-300 relative",
                   activeTab === 'RECORD' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
                 Case Record
@@ -733,7 +733,7 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "px-8 py-4 text-[13px] font-bold tracking-[0.1em] transition-all duration-300 relative",
+                  "px-8 py-4 text-[15px] font-bold transition-all duration-300 relative",
                   activeTab === 'PROTOCOL' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
                 Resolution Protocol
