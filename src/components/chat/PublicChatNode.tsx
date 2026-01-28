@@ -10,15 +10,11 @@ import { ChatNode } from './ChatNode';
 export function PublicChatNode() {
     const location = useLocation();
 
-    // Define paths where the chatbot should BE HIDDEN
-    // Specifically, we don't want it over the main dashboard/platform UI
-    const isPlatformPage = location.pathname.startsWith('/app');
-
-    // We also might want to hide it on specific auth pages if they feel too crowded
+    // We might want to hide it on specific auth pages if they feel too crowded
     const isAuthSandbox = location.pathname.includes('sandbox');
     const isAuthSuccess = location.pathname === '/auth/success';
 
-    if (isPlatformPage || isAuthSandbox || isAuthSuccess) {
+    if (isAuthSandbox || isAuthSuccess) {
         return null;
     }
 
