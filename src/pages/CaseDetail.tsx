@@ -711,7 +711,7 @@ export default function CaseDetail() {
 
             {/* Auto-Filing Banner - Refined Style */}
             <div className="flex items-center py-2 bg-white mb-8">
-              <p className="text-[22px] font-mono text-gray-400 tracking-wider">
+              <p className="text-[14px] font-mono text-gray-400 tracking-wider">
                 Protocol: Margin auto-files cases ≥85% confidence
               </p>
             </div>
@@ -1028,7 +1028,7 @@ export default function CaseDetail() {
                                 {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-[16px] font-normal tracking-wider",
+                                "text-[13px] font-normal tracking-wider",
                                 active ? "text-gray-900" : "text-gray-300"
                               )}>{step}</span>
                             </div>
