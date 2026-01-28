@@ -208,7 +208,7 @@ export function Sidebar({
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-white" : "text-gray-500 group-hover:text-white")} />
         <span className={cn(
           "text-[13px] font-montserrat transition-colors tracking-wide",
-          isActive ? "font-bold" : "font-medium"
+          isActive ? "font-semibold" : "font-normal"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
@@ -245,7 +245,7 @@ export function Sidebar({
           />
           {!isCollapsed && (
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-white leading-tight">
+              <span className="text-sm font-medium text-white leading-tight">
                 Margin
               </span>
             </div>
@@ -316,7 +316,7 @@ export function Sidebar({
             onClick={() => setSignOutOpen(true)}
             className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-white/5 transition-all group text-white">
             <LogOut className="h-4 w-4 text-gray-500 group-hover:text-white" strokeWidth={1.5} />
-            <span className="text-[13px] font-bold tracking-wide">Sign Out</span>
+            <span className="text-[13px] font-semibold tracking-wide">Sign Out</span>
           </button>
         </div>
       )}
