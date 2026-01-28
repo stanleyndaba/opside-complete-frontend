@@ -683,8 +683,6 @@ export default function CaseDetail() {
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-xl font-light text-gray-900 tracking-tight font-mono">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-gray-900 font-mono">{normalizeStatus(effectiveCase.status)}</span>
                   </div>
                   <p className="text-xs text-gray-400 mt-1 font-mono tracking-tight">Case Audit</p>
                 </div>
@@ -713,7 +711,7 @@ export default function CaseDetail() {
 
             {/* Auto-Filing Banner - Refined Style */}
             <div className="flex items-center py-2 bg-white mb-8">
-              <p className="text-[11px] font-mono text-gray-400 tracking-wider">
+              <p className="text-[12px] font-mono text-gray-400 tracking-wider">
                 Protocol: Margin auto-files cases ≥85% confidence
               </p>
             </div>
@@ -723,7 +721,7 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "px-8 py-4 text-[11px] font-bold tracking-[0.1em] transition-all duration-300 relative",
+                  "px-8 py-4 text-[13px] font-bold tracking-[0.1em] transition-all duration-300 relative",
                   activeTab === 'RECORD' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
                 Case Record
@@ -735,7 +733,7 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "px-8 py-4 text-[11px] font-bold tracking-[0.1em] transition-all duration-300 relative",
+                  "px-8 py-4 text-[13px] font-bold tracking-[0.1em] transition-all duration-300 relative",
                   activeTab === 'PROTOCOL' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
                 Resolution Protocol
