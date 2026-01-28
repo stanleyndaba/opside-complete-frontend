@@ -171,12 +171,12 @@ export function Sidebar({
                 className={cn(
                   "relative flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-lg",
                   isActive
-                    ? "bg-white/10 text-white"
-                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                    ? "bg-slate-100 text-slate-900"
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
-                  <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                  <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B] rounded-full shadow-[0_0_8px_rgba(6,78,59,0.3)]" />
                 )}
                 <item.icon className="h-4 w-4" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
@@ -195,17 +195,17 @@ export function Sidebar({
         className={cn(
           "relative flex items-center gap-3 w-full px-4 py-1.5 transition-all duration-300 group rounded-lg mb-0.5",
           isActive
-            ? "bg-white/[0.08] text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
-            : "text-gray-400 hover:bg-white/5 hover:text-white"
+            ? "bg-slate-100/80 text-slate-900"
+            : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
-          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B] rounded-full shadow-[0_0_8px_rgba(6,78,59,0.5)]" />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B] rounded-full shadow-[0_0_8px_rgba(6,78,59,0.2)]" />
         )}
         {!isActive && (
           <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B]/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-white" : "text-gray-500 group-hover:text-white")} />
+        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-[#064E3B]" : "text-slate-400 group-hover:text-slate-900")} />
         <span className={cn(
           "text-[13px] font-montserrat transition-colors tracking-wide",
           isActive ? "font-semibold" : "font-normal"
@@ -226,30 +226,23 @@ export function Sidebar({
       className={cn(
         "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-montserrat",
         isCollapsed ? "w-16" : "w-60",
-        "text-white border-r border-white/10",
-        "bg-[#050505]",
+        "text-slate-900 border-r border-slate-200",
+        "bg-white",
         className
       )}
       style={{ willChange: 'width' }}>
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-white/10 flex items-center h-14",
+          "border-b border-slate-200 flex items-center h-14",
           isCollapsed ? "justify-center px-2" : "justify-between px-4"
         )}>
         <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-2.5")}>
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-4" : "h-4", "w-auto object-contain invert brightness-200")}
+            className={cn(isCollapsed ? "h-4" : "h-4", "w-auto object-contain")}
           />
-          {!isCollapsed && (
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-white leading-tight">
-                Margin
-              </span>
-            </div>
-          )}
         </div>
       </div>
 
@@ -265,7 +258,7 @@ export function Sidebar({
                 <NavItemComponent key={item.title} item={item} />
               ))}
             </div>
-            {!isCollapsed && <div className="h-px bg-white/10 w-full mx-4" />}
+            {!isCollapsed && <div className="h-px bg-slate-100 w-full mx-4" />}
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
               {secondaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
@@ -290,7 +283,7 @@ export function Sidebar({
 
       {/* Logout Only */}
       {isCollapsed ? (
-        <div className="mt-auto border-t border-white/10 py-4 flex flex-col items-center justify-center">
+        <div className="mt-auto border-t border-slate-200 py-4 flex flex-col items-center justify-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -299,23 +292,23 @@ export function Sidebar({
                   aria-label="Sign Out"
                   className={cn(
                     "relative flex items-center justify-center w-8 h-8 transition-colors rounded-none",
-                    "text-gray-400 hover:bg-gray-50 hover:text-gray-900"
+                    "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
                   )}>
                   <LogOut className="h-4 w-4" strokeWidth={1.5} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className="bg-gray-900 text-white text-xs rounded-none">
+              <TooltipContent side="right" className="bg-slate-900 text-white text-xs rounded-none">
                 Sign Out
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
       ) : (
-        <div className="mt-auto border-t border-white/10 py-2">
+        <div className="mt-auto border-t border-slate-200 py-2">
           <button
             onClick={() => setSignOutOpen(true)}
-            className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-white/5 transition-all group text-white">
-            <LogOut className="h-4 w-4 text-gray-500 group-hover:text-white" strokeWidth={1.5} />
+            className="w-full flex items-center gap-2.5 px-6 py-3 text-left hover:bg-slate-50 transition-all group text-slate-900">
+            <LogOut className="h-4 w-4 text-slate-400 group-hover:text-slate-900" strokeWidth={1.5} />
             <span className="text-[13px] font-semibold tracking-wide">Sign Out</span>
           </button>
         </div>
@@ -355,7 +348,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-2.5 z-50 h-5 w-5 rounded-full border border-white/20 bg-[#050505] backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]',
+          'absolute top-14 -right-2.5 z-50 h-5 w-5 rounded-full border border-slate-200 bg-white backdrop-blur-sm flex items-center justify-center text-slate-400 hover:text-slate-900 shadow-sm',
         )}>
         {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </button>
