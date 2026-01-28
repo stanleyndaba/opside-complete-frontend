@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -116,7 +116,7 @@ export function Sidebar({
     { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
     { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
     { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
-    // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
+    { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
     { title: 'Refund Recoveries', icon: Plug, href: `/app/${currentTenantSlug}/upcoming-payments` },
     { title: 'Transaction History', icon: BarChart3, href: `/app/${currentTenantSlug}/transaction-history` },
     { title: 'Integrations', icon: Box, href: `/app/${currentTenantSlug}/integrations-hub` }
@@ -300,13 +300,13 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
               className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <LifeBuoy className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <Headset className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
               className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <Sparkles className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <Zap className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
               <span>What's New</span>
             </DropdownMenuItem>
             <DropdownMenuItem
