@@ -723,10 +723,10 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "px-8 py-4 text-[10px] uppercase font-bold tracking-[0.2em] transition-all duration-300 relative",
+                  "px-8 py-4 text-[11px] font-bold tracking-[0.1em] transition-all duration-300 relative",
                   activeTab === 'RECORD' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
-                CASE RECORD
+                Case Record
                 <div className={cn(
                   "absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 transition-all duration-300 transform origin-left",
                   activeTab === 'RECORD' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
@@ -735,10 +735,10 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "px-8 py-4 text-[10px] uppercase font-bold tracking-[0.2em] transition-all duration-300 relative",
+                  "px-8 py-4 text-[11px] font-bold tracking-[0.1em] transition-all duration-300 relative",
                   activeTab === 'PROTOCOL' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
-                RESOLUTION PROTOCOL
+                Resolution Protocol
                 <div className={cn(
                   "absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 transition-all duration-300 transform origin-left",
                   activeTab === 'PROTOCOL' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
@@ -760,18 +760,18 @@ export default function CaseDetail() {
 
                     <div className="pt-6 border-t border-gray-100">
                       <div className="text-xs text-gray-400 font-bold mb-6 flex items-center gap-2">
-                        PRODUCT TRACE & PROTOCOLS
+                        Product Trace & Protocols
                         <div className="h-px flex-1 bg-gray-100" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                         <div>
-                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">Product Identity</p>
+                          <p className="text-[10px] font-bold text-gray-400 mb-2 tracking-wider">Product Identity</p>
                           <p className="text-sm font-semibold text-gray-900 leading-tight truncate" title={effectiveCase.productName || effectiveCase.title || 'Unknown Product'}>
                             {effectiveCase.productName || effectiveCase.title || 'Unknown Product'}
                           </p>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">ASIN / SKU</p>
+                          <p className="text-[10px] font-bold text-gray-400 mb-2 tracking-wider">ASIN / SKU</p>
                           <p className="text-sm font-mono font-bold text-gray-900">
                             {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-gray-300">PENDING</span>}
                             <span className="mx-2 text-gray-200">/</span>
@@ -779,14 +779,14 @@ export default function CaseDetail() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">Facility Protocol</p>
+                          <p className="text-[10px] font-bold text-gray-400 mb-2 tracking-wider">Facility Protocol</p>
                           <div className="flex items-center gap-2">
                             <MapPin className="h-3.5 w-3.5 text-gray-400" />
                             <p className="text-sm font-bold text-gray-900">{effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility : <span className="text-gray-300">LOCATING FC...</span>}</p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-wider">Reference IDs</p>
+                          <p className="text-[10px] font-bold text-gray-400 mb-2 tracking-wider">Reference IDs</p>
                           <div className="flex flex-col gap-1">
                             {effectiveCase.amazonCaseId ? (
                               <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-mono font-bold text-blue-600 hover:underline flex items-center gap-1">
@@ -860,7 +860,7 @@ export default function CaseDetail() {
 
                     {/* Timeline Accuracy */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-blue-500 rounded-full" /> Timeline Accuracy
                       </h4>
                       <dl className="space-y-4">
@@ -878,14 +878,14 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium">Policy Compliance</dt>
-                          <dd className="text-xs font-mono font-bold text-emerald-600">COMPLIANT</dd>
+                          <dd className="text-xs font-mono font-bold text-emerald-600">Compliant</dd>
                         </div>
                       </dl>
                     </div>
 
                     {/* Logistical Trace */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-gray-400 rounded-full" /> Logistical Trace
                       </h4>
                       <dl className="space-y-3">
@@ -897,7 +897,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium">Asin/Sku Match</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">VERIFIED</dd>
+                          <dd className="text-xs font-mono font-bold text-gray-900">Verified</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium">Ref Trans.</dt>
@@ -910,13 +910,13 @@ export default function CaseDetail() {
 
                     {/* System Metadata */}
                     <div className="space-y-4">
-                      <h4 className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
                         <div className="h-1 w-2 bg-indigo-500 rounded-full" /> System Metadata
                       </h4>
                       <dl className="space-y-3">
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium">Claim Category</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900 capitalize">DISCREPANCY</dd>
+                          <dd className="text-xs font-mono font-bold text-gray-900 capitalize">Discrepancy</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium">Engine Match</dt>
@@ -924,7 +924,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
                           <dt className="text-[11px] text-gray-400 font-medium">Audit Method</dt>
-                          <dd className="text-xs font-bold text-gray-700">AUTONOMOUS</dd>
+                          <dd className="text-xs font-bold text-gray-700">Autonomous</dd>
                         </div>
                       </dl>
                     </div>
@@ -939,7 +939,7 @@ export default function CaseDetail() {
 
                   <div className="flex flex-col md:flex-row gap-12 items-start">
                     <div className="min-w-[240px]">
-                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3">Guaranteed Amount</div>
+                      <div className="text-[10px] text-gray-400 font-bold mb-3">Guaranteed Amount</div>
                       <div className="text-4xl font-light text-gray-900 font-mono tracking-tighter">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
@@ -950,11 +950,9 @@ export default function CaseDetail() {
                             <span className="text-[11px] text-gray-400 font-bold uppercase">Actual Payout</span>
                             <span className="text-xs font-mono font-bold text-blue-600">${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                           </div>
-                          {effectiveCase.recovery_status === 'reconciled' && (
-                            <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold uppercase tracking-tight">
-                              <CheckCircle className="h-3 w-3" /> Reconciled
-                            </div>
-                          )}
+                          <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-bold tracking-tight">
+                            <CheckCircle className="h-3 w-3" /> Reconciled
+                          </div>
                         </div>
                       )}
                     </div>
@@ -963,7 +961,7 @@ export default function CaseDetail() {
                       <div className="border border-gray-100 bg-white hover:shadow-md transition-all duration-300">
                         <div className="px-4 pt-4 border-b border-gray-50">
                           <Select value={selectedMetric} onValueChange={setSelectedMetric}>
-                            <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] uppercase font-bold text-gray-400 focus:ring-0 shadow-none tracking-widest">
+                            <SelectTrigger className="h-7 w-full border-0 bg-transparent p-0 text-[10px] font-bold text-gray-400 focus:ring-0 shadow-none tracking-widest">
                               <SelectValue placeholder="Metric View" />
                             </SelectTrigger>
                             <SelectContent className="rounded-none border-gray-100 shadow-none">
@@ -980,15 +978,15 @@ export default function CaseDetail() {
                             {selectedMetric === 'payout' && (
                               effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric'
-                              }).toUpperCase() : 'PENDING'
+                              }) : 'Pending'
                             )}
                             {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
-                            {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} UNITS`}
+                            {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} units`}
                             {selectedMetric === 'cost' && (
                               typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
                             )}
                           </div>
-                          <div className="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-wider">
+                          <div className="text-[10px] text-gray-400 mt-2 font-bold tracking-wider">
                             {selectedMetric === 'payout' && 'Scheduled Settlement'}
                             {selectedMetric === 'confidence' && 'AI Analysis Precision'}
                             {selectedMetric === 'units' && 'Inventory Discrepancy'}
@@ -1032,7 +1030,7 @@ export default function CaseDetail() {
                                 {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-[10px] uppercase font-bold tracking-wider",
+                                "text-[10px] font-bold tracking-wider",
                                 active ? "text-gray-900" : "text-gray-300"
                               )}>{step}</span>
                             </div>
@@ -1053,10 +1051,10 @@ export default function CaseDetail() {
                           <div className="absolute left-[-4px] top-1 w-2 h-2 rounded-full bg-gray-200 border-2 border-white" />
                           <div className="flex flex-col">
                             <div className="flex justify-between items-baseline mb-2">
-                              <h4 className="text-[11px] font-bold text-gray-900 tracking-tight uppercase">{event.title}</h4>
+                              <h4 className="text-[11px] font-bold text-gray-900 tracking-tight">{event.title}</h4>
                             </div>
                             <div className="text-[10px] font-mono text-gray-400 mb-2">
-                              {new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).toUpperCase()}
+                              {new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                             </div>
                             <p className="text-[11px] text-gray-500 font-light leading-relaxed">{event.description}</p>
                           </div>
@@ -1065,7 +1063,7 @@ export default function CaseDetail() {
                       {effectiveCase.status === 'Guaranteed' && (
                         <div className="relative pl-6 border-l border-gray-100 opacity-40 italic">
                           <div className="absolute left-[-4px] top-1 w-2 h-2 rounded-full bg-gray-100 border-2 border-white" />
-                          <h4 className="text-[11px] font-bold text-gray-400 tracking-tight uppercase">Awaiting Submission</h4>
+                          <h4 className="text-[11px] font-bold text-gray-400 tracking-tight">Awaiting submission</h4>
                           <p className="text-[11px] text-gray-400 font-light leading-relaxed mt-4">Audit verification cycle in progress.</p>
                         </div>
                       )}
@@ -1081,257 +1079,256 @@ export default function CaseDetail() {
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
                     <div className="md:col-span-2 space-y-4">
-                      <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
-                        MATCHED DOCUMENTATION ({matchedDocs.length})
-                        <div className="h-px flex-1 bg-gray-50" />
-                      </div>
+                      Matched documentation ({matchedCount})
+                      <div className="h-px flex-1 bg-gray-50" />
+                    </div>
 
-                      {matchedDocs.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {matchedDocs.slice(0, 4).map((doc: any, idx: number) => {
-                            const confidencePct = Math.round((doc.matchConfidence || doc.confidence_score || 0.85) * 100);
-                            return (
-                              <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-blue-200 hover:bg-white transition-all group flex flex-col gap-3">
-                                <div className="flex items-start justify-between">
-                                  <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-blue-500" />
-                                  <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-100 text-emerald-700 bg-emerald-50">
-                                    {confidencePct}%
-                                  </Badge>
-                                </div>
-                                <div className="space-y-1">
-                                  <p className="text-xs font-bold text-gray-900 truncate font-mono">
-                                    {doc.name || doc.filename || `OBJ_${doc.id?.slice(0, 8)}`}
-                                  </p>
-                                  <p className="text-[10px] text-gray-400 font-mono">VERIFIED_HASH_COMPLIANT</p>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 text-[10px] font-bold text-blue-600 hover:text-blue-700 p-0 self-start"
-                                  onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
-                                  View Evidence <ArrowRight className="h-2.5 w-2.5 ml-1" />
-                                </Button>
+                    {matchedDocs.length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {matchedDocs.slice(0, 4).map((doc: any, idx: number) => {
+                          const confidencePct = Math.round((doc.matchConfidence || doc.confidence_score || 0.85) * 100);
+                          return (
+                            <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-blue-200 hover:bg-white transition-all group flex flex-col gap-3">
+                              <div className="flex items-start justify-between">
+                                <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-blue-500" />
+                                <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-100 text-emerald-700 bg-emerald-50">
+                                  {confidencePct}%
+                                </Badge>
                               </div>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <div className="py-12 border border-dashed border-gray-200 flex flex-col items-center justify-center text-center bg-gray-50/30">
-                          <Database className="h-8 w-8 text-gray-200 mb-4" />
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Awaiting Artifact Ingestion</p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="md:col-span-1 space-y-4">
-                      <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
-                        SELLER IDENTITY
-                        <div className="h-px flex-1 bg-gray-50" />
+                              <div className="space-y-1">
+                                <p className="text-xs font-bold text-gray-900 truncate font-mono">
+                                  {doc.name || doc.filename || `OBJ_${doc.id?.slice(0, 8)}`}
+                                </p>
+                                <p className="text-[10px] text-gray-400 font-mono">Verified hash compliant</p>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 text-[10px] font-bold text-blue-600 hover:text-blue-700 p-0 self-start"
+                                onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
+                                View Evidence <ArrowRight className="h-2.5 w-2.5 ml-1" />
+                              </Button>
+                            </div>
+                          );
+                        })}
                       </div>
-
-                      <div className="flex items-center gap-3 mb-6 bg-gray-50/50 p-3 border border-gray-100">
-                        <div className="p-2 bg-gray-900 rounded-sm">
-                          <ShieldCheck className="h-4 w-4 text-white" />
-                        </div>
-                        <div>
-                          <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-tight">Identity Verified</h4>
-                          <p className="text-[10px] text-gray-400 font-mono">PROTOCOL: NIST-800</p>
-                        </div>
+                    ) : (
+                      <div className="py-12 border border-dashed border-gray-200 flex flex-col items-center justify-center text-center bg-gray-50/30">
+                        <Database className="h-8 w-8 text-gray-200 mb-4" />
+                        <p className="text-[10px] font-bold text-gray-400 tracking-widest">Awaiting Artifact Ingestion</p>
                       </div>
-
-                      <dl className="space-y-4">
-                        <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Seller ID</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
-                        </div>
-                        <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
-                          <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
-                        </div>
-                        <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Internal User ID</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'ID_NOT_MAPPED'}</dd>
-                        </div>
-                        <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Audit Permission</dt>
-                          <dd className="text-xs font-bold text-emerald-600">ACTIVE_DELEGATION</dd>
-                        </div>
-                        <div>
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Contact Method</dt>
-                          <dd className="text-xs font-bold text-gray-900">Seller Central Case Mgr</dd>
-                        </div>
-                      </dl>
-                    </div>
-
-                    <div className="md:col-span-1 space-y-4">
-                      <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
-                        REFERENCE DATA
-                        <div className="h-px flex-1 bg-gray-50" />
-                      </div>
-                      <dl className="space-y-4">
-                        <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Case ID</dt>
-                          <dd className="text-xs font-mono font-bold text-blue-600">
-                            {effectiveCase.amazonCaseId || <span className="text-gray-400 font-normal italic">Not filed</span>}
-                          </dd>
-                        </div>
-                        <div className="border-b border-gray-50 pb-2">
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Prior Case</dt>
-                          <dd className="text-xs font-bold text-gray-900">{effectiveCase.prior_case_id || 'None'}</dd>
-                        </div>
-                        <div>
-                          <dt className="text-[11px] text-gray-400 font-medium mb-1">Claim Ref</dt>
-                          <dd className="text-xs font-mono font-bold text-gray-900">
-                            {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12).toUpperCase()}
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Row 3: Resolution Action Protocol */}
-                <div className="p-8 bg-gray-50/30">
-                  <div className="mb-8">
-                    <h3 className="text-sm font-bold text-gray-900">Resolution Action Protocol</h3>
+                    )}
                   </div>
 
-                  {(() => {
-                    const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
-                    const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
-                    const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
-                    const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
-                    const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
-                    const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
-                    const asin = effectiveCase.asin || effectiveCase.evidence?.asin || '—';
-                    const sku = effectiveCase.sku || effectiveCase.evidence?.sku || '—';
-                    const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—';
-                    const units = effectiveCase.unitsLost || effectiveCase.quantity || effectiveCase.units || '—';
-                    const amount = (effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0);
-                    const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || '—';
-                    const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                  <div className="md:col-span-1 space-y-4">
+                    <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
+                      Seller identity
+                      <div className="h-px flex-1 bg-gray-50" />
+                    </div>
 
-                    const immediateActions: string[] = [];
-                    const preventiveMeasures: string[] = [];
-
-                    if (isFeeCase) {
-                      immediateActions.push(`Review dimensional specs for ASIN ${asin}`);
-                      immediateActions.push(`Update measurements in catalog system`);
-                      preventiveMeasures.push(`Correct fee calculations for future shipments`);
-                      preventiveMeasures.push(`Ensure measurement accuracy for existing inventory`);
-                    } else if (isLostCase) {
-                      immediateActions.push(`Investigate inventory discrepancy at FC ${facility}`);
-                      immediateActions.push(`Confirm count discrepancy for ${units} units of SKU ${sku}`);
-                      preventiveMeasures.push(`Improve inventory tracking at fulfillment centers`);
-                      preventiveMeasures.push(`Implement regular reconciliation checks`);
-                    } else if (isDamagedCase) {
-                      immediateActions.push(`Review damage report for SKU ${sku}`);
-                      immediateActions.push(`Verify damage occurred during carrier handling`);
-                      preventiveMeasures.push(`Review handling procedures for product category`);
-                      preventiveMeasures.push(`Consider improved packaging requirements`);
-                    } else if (isRefundCase) {
-                      immediateActions.push(`Verify return status for Order ${orderId}`);
-                      immediateActions.push(`Confirm refund issued without valid return`);
-                      preventiveMeasures.push(`Monitor return compliance more closely`);
-                      preventiveMeasures.push(`Flag repeat offender customer accounts`);
-                    } else if (isChargebackCase) {
-                      immediateActions.push(`Review chargeback claim for Order ${orderId}`);
-                      immediateActions.push(`Provide proof of delivery and condition`);
-                      preventiveMeasures.push(`Enhance delivery confirmation tracking`);
-                      preventiveMeasures.push(`Document all communications with buyer`);
-                    } else {
-                      immediateActions.push(`Review case documentation and evidence`);
-                      immediateActions.push(`Verify discrepancy against enrollment records`);
-                      preventiveMeasures.push(`Implement monitoring for similar discrepancies`);
-                    }
-                    immediateActions.push(`Process reimbursement of ${formattedAmount}`);
-                    preventiveMeasures.push(`Provide confirmation of system updates`);
-
-                    return (
-                      <div className="space-y-10">
-                        {/* Missing Docs Prompt */}
-                        {effectiveCase?.missingDocumentPrompt && (
-                          <section className="rounded-none border-l-4 border-amber-400 bg-amber-50/50 p-6 shadow-sm">
-                            <div className="flex items-center gap-2 mb-4">
-                              <AlertCircle className="h-4 w-4 text-amber-600" />
-                              <h4 className="text-[11px] font-bold text-amber-900 uppercase tracking-widest">Action Required: Document Submission</h4>
-                            </div>
-                            <p className="text-xs text-amber-900 mb-6 leading-relaxed font-medium">{effectiveCase.missingDocumentPrompt}</p>
-
-                            <div className="flex flex-col md:flex-row gap-8">
-                              <div className="flex-1">
-                                {Array.isArray(effectiveCase.missingDocumentOptions) && (
-                                  <div className="flex flex-wrap gap-2 mb-4">
-                                    {effectiveCase.missingDocumentOptions.map((opt: string) => (
-                                      <button key={opt} className="px-4 py-2 bg-white border border-amber-200 text-amber-800 text-[11px] font-bold hover:bg-amber-100 transition-colors shadow-sm uppercase tracking-tight" onClick={() => {
-                                        recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
-                                      }}>{opt}</button>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-
-                              <div
-                                className="flex-1 h-32 border-2 border-dashed border-amber-200 bg-white/80 flex flex-col items-center justify-center cursor-pointer hover:bg-white hover:border-amber-400 transition-all"
-                                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                onDrop={async (e) => {
-                                  e.preventDefault();
-                                  const files = Array.from(e.dataTransfer.files || []);
-                                  if (!files.length) return;
-                                  await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
-                                }}>
-                                <Upload className="h-5 w-5 text-amber-400 mb-2" />
-                                <p className="text-[10px] font-bold text-amber-800">DRAG & DROP EVIDENCE</p>
-                              </div>
-                            </div>
-                          </section>
-                        )}
-
-                        {/* Actions Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                          <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-3 uppercase tracking-wider">
-                              Immediate Actions
-                            </h4>
-                            <ol className="space-y-4">
-                              {immediateActions.map((action, idx) => (
-                                <li key={idx} className="flex items-start gap-4 group">
-                                  <span className="text-gray-300 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
-                                  <span className="text-[11px] text-gray-700 leading-relaxed font-light">{action}</span>
-                                </li>
-                              ))}
-                            </ol>
-                            <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-emerald-600 uppercase tracking-tight">
-                              <ArrowRight className="h-3.5 w-3.5" /> Target Recovery: {formattedAmount}
-                            </div>
-                          </div>
-
-                          <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-3 uppercase tracking-wider">
-                              Preventive Measures
-                            </h4>
-                            <ol className="space-y-4">
-                              {preventiveMeasures.map((measure, idx) => (
-                                <li key={idx} className="flex items-start gap-4 group">
-                                  <span className="text-gray-300 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
-                                  <span className="text-[11px] text-gray-700 leading-relaxed font-light">{measure}</span>
-                                </li>
-                              ))}
-                            </ol>
-                            <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-blue-600 uppercase tracking-tight">
-                              <ShieldCheck className="h-3.5 w-3.5" /> Autonomous Guarding Active
-                            </div>
-                          </div>
-                        </div>
+                    <div className="flex items-center gap-3 mb-6 bg-gray-50/50 p-3 border border-gray-100">
+                      <div className="p-2 bg-gray-900 rounded-sm">
+                        <ShieldCheck className="h-4 w-4 text-white" />
                       </div>
-                    );
-                  })()}
+                      <div>
+                        <h4 className="text-[11px] font-bold text-gray-900 tracking-tight">Identity verified</h4>
+                        <p className="text-[10px] text-gray-400 font-mono">Protocol: NIST-800</p>
+                      </div>
+                    </div>
+
+                    <dl className="space-y-4">
+                      <div className="border-b border-gray-50 pb-2">
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Seller ID</dt>
+                        <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
+                      </div>
+                      <div className="border-b border-gray-50 pb-2">
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Store Name</dt>
+                        <dd className="text-xs font-bold text-gray-900 truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
+                      </div>
+                      <div className="border-b border-gray-50 pb-2">
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Internal User ID</dt>
+                        <dd className="text-xs font-mono font-bold text-gray-900">{effectiveCase.seller_id || effectiveCase.user_id || 'ID_NOT_MAPPED'}</dd>
+                      </div>
+                      <div className="border-b border-gray-50 pb-2">
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Audit Permission</dt>
+                        <dd className="text-xs font-bold text-emerald-600">Active delegation</dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Contact Method</dt>
+                        <dd className="text-xs font-bold text-gray-900">Seller Central Case Mgr</dd>
+                      </div>
+                    </dl>
+                  </div>
+
+                  <div className="md:col-span-1 space-y-4">
+                    <div className="text-[10px] text-gray-400 font-bold mb-4 flex items-center gap-2 tracking-wider">
+                      Reference data
+                      <div className="h-px flex-1 bg-gray-50" />
+                    </div>
+                    <dl className="space-y-4">
+                      <div className="border-b border-gray-50 pb-2">
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Case ID</dt>
+                        <dd className="text-xs font-mono font-bold text-blue-600">
+                          {effectiveCase.amazonCaseId || <span className="text-gray-400 font-normal italic">Not filed</span>}
+                        </dd>
+                      </div>
+                      <div className="border-b border-gray-50 pb-2">
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Prior Case</dt>
+                        <dd className="text-xs font-bold text-gray-900">{effectiveCase.prior_case_id || 'None'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-[11px] text-gray-400 font-medium mb-1">Claim Ref</dt>
+                        <dd className="text-xs font-mono font-bold text-gray-900">
+                          {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12)}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
                 </div>
               </div>
-            )}
+
+        {/* Row 3: Resolution Action Protocol */}
+            <div className="p-8 bg-gray-50/30">
+              <div className="mb-8">
+                <h3 className="text-sm font-bold text-gray-900">Resolution Action Protocol</h3>
+              </div>
+
+              {(() => {
+                const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
+                const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
+                const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
+                const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
+                const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
+                const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
+                const asin = effectiveCase.asin || effectiveCase.evidence?.asin || '—';
+                const sku = effectiveCase.sku || effectiveCase.evidence?.sku || '—';
+                const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—';
+                const units = effectiveCase.unitsLost || effectiveCase.quantity || effectiveCase.units || '—';
+                const amount = (effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0);
+                const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || '—';
+                const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                const immediateActions: string[] = [];
+                const preventiveMeasures: string[] = [];
+
+                if (isFeeCase) {
+                  immediateActions.push(`Review dimensional specs for ASIN ${asin}`);
+                  immediateActions.push(`Update measurements in catalog system`);
+                  preventiveMeasures.push(`Correct fee calculations for future shipments`);
+                  preventiveMeasures.push(`Ensure measurement accuracy for existing inventory`);
+                } else if (isLostCase) {
+                  immediateActions.push(`Investigate inventory discrepancy at FC ${facility}`);
+                  immediateActions.push(`Confirm count discrepancy for ${units} units of SKU ${sku}`);
+                  preventiveMeasures.push(`Improve inventory tracking at fulfillment centers`);
+                  preventiveMeasures.push(`Implement regular reconciliation checks`);
+                } else if (isDamagedCase) {
+                  immediateActions.push(`Review damage report for SKU ${sku}`);
+                  immediateActions.push(`Verify damage occurred during carrier handling`);
+                  preventiveMeasures.push(`Review handling procedures for product category`);
+                  preventiveMeasures.push(`Consider improved packaging requirements`);
+                } else if (isRefundCase) {
+                  immediateActions.push(`Verify return status for Order ${orderId}`);
+                  immediateActions.push(`Confirm refund issued without valid return`);
+                  preventiveMeasures.push(`Monitor return compliance more closely`);
+                  preventiveMeasures.push(`Flag repeat offender customer accounts`);
+                } else if (isChargebackCase) {
+                  immediateActions.push(`Review chargeback claim for Order ${orderId}`);
+                  immediateActions.push(`Provide proof of delivery and condition`);
+                  preventiveMeasures.push(`Enhance delivery confirmation tracking`);
+                  preventiveMeasures.push(`Document all communications with buyer`);
+                } else {
+                  immediateActions.push(`Review case documentation and evidence`);
+                  immediateActions.push(`Verify discrepancy against enrollment records`);
+                  preventiveMeasures.push(`Implement monitoring for similar discrepancies`);
+                }
+                immediateActions.push(`Process reimbursement of ${formattedAmount}`);
+                preventiveMeasures.push(`Provide confirmation of system updates`);
+
+                return (
+                  <div className="space-y-10">
+                    {/* Missing Docs Prompt */}
+                    {effectiveCase?.missingDocumentPrompt && (
+                      <section className="rounded-none border-l-4 border-amber-400 bg-amber-50/50 p-6 shadow-sm">
+                        <div className="flex items-center gap-2 mb-4">
+                          <AlertCircle className="h-4 w-4 text-amber-600" />
+                          <h4 className="text-[11px] font-bold text-amber-900 tracking-widest">Action Required: Document Submission</h4>
+                        </div>
+                        <p className="text-xs text-amber-900 mb-6 leading-relaxed font-medium">{effectiveCase.missingDocumentPrompt}</p>
+
+                        <div className="flex flex-col md:flex-row gap-8">
+                          <div className="flex-1">
+                            {Array.isArray(effectiveCase.missingDocumentOptions) && (
+                              <div className="flex flex-wrap gap-2 mb-4">
+                                {effectiveCase.missingDocumentOptions.map((opt: string) => (
+                                  <button key={opt} className="px-4 py-2 bg-white border border-amber-200 text-amber-800 text-[11px] font-bold hover:bg-amber-100 transition-colors shadow-sm tracking-tight" onClick={() => {
+                                    recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
+                                  }}>{opt}</button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          <div
+                            className="flex-1 h-32 border-2 border-dashed border-amber-200 bg-white/80 flex flex-col items-center justify-center cursor-pointer hover:bg-white hover:border-amber-400 transition-all"
+                            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                            onDrop={async (e) => {
+                              e.preventDefault();
+                              const files = Array.from(e.dataTransfer.files || []);
+                              if (!files.length) return;
+                              await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
+                            }}>
+                            <Upload className="h-5 w-5 text-amber-400 mb-2" />
+                            <p className="text-[10px] font-bold text-amber-800">Drag & Drop Evidence</p>
+                          </div>
+                        </div>
+                      </section>
+                    )}
+
+                    {/* Actions Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                      <div className="space-y-6">
+                        <h4 className="text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-3 tracking-wider">
+                          Immediate Actions
+                        </h4>
+                        <ol className="space-y-4">
+                          {immediateActions.map((action, idx) => (
+                            <li key={idx} className="flex items-start gap-4 group">
+                              <span className="text-gray-300 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
+                              <span className="text-[11px] text-gray-700 leading-relaxed font-light">{action}</span>
+                            </li>
+                          ))}
+                        </ol>
+                        <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-emerald-600 tracking-tight">
+                          <ArrowRight className="h-3.5 w-3.5" /> Target Recovery: {formattedAmount}
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <h4 className="text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-3 tracking-wider">
+                          Preventive Measures
+                        </h4>
+                        <ol className="space-y-4">
+                          {preventiveMeasures.map((measure, idx) => (
+                            <li key={idx} className="flex items-start gap-4 group">
+                              <span className="text-gray-300 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-gray-500 transition-colors">0{idx + 1}.</span>
+                              <span className="text-[11px] text-gray-700 leading-relaxed font-light">{measure}</span>
+                            </li>
+                          ))}
+                        </ol>
+                        <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-blue-600 tracking-tight">
+                          <ShieldCheck className="h-3.5 w-3.5" /> Autonomous Guarding Active
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
           </div>
+            )}
         </div>
-      </div>
-    </PageLayout>
+      </div >
+    </div >
+    </PageLayout >
   );
 }
