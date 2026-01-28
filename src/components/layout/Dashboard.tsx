@@ -796,7 +796,7 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-[3px] h-3 bg-gray-900" />
                         <div>
-                          <h2 className="text-lg font-bold text-gray-900">Audit Performance</h2>
+                          <h2 className="text-lg font-bold text-gray-900 font-montserrat">Audit Performance</h2>
                           <p className="text-xs text-gray-400 font-mono mt-1">Audit-verified reimbursements secured.</p>
                         </div>
                       </div>
