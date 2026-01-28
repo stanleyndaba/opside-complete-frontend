@@ -1091,7 +1091,7 @@ export default function CaseDetail() {
                             <div key={doc.id || idx} className="p-4 bg-gray-50/50 border border-gray-100 hover:border-blue-200 hover:bg-white transition-all group flex flex-col gap-3">
                               <div className="flex items-start justify-between">
                                 <FileText className="h-3.5 w-3.5 text-gray-400 group-hover:text-blue-500" />
-                                <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-100 text-emerald-700 bg-emerald-50">
+                                <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-[#d1e9e4] text-[#064E3B] bg-[#e6f4f1]">
                                   {confidencePct}%
                                 </Badge>
                               </div>

@@ -66,8 +66,8 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Action Color: Neon Green/Teal (emerald-400) */
-    --success: 142 72% 52%;
+    /* Action Color: Executive Emerald (Deep institutional green) */
+    --success: 162 82% 12%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
@@ -485,6 +485,7 @@ h1.font-merriweather,
 .landing h1.font-merriweather {
   font-family: 'Merriweather', serif !important;
 }
+
 /* Lenis Smooth Scroll */
 html.lenis,
 html.lenis body {

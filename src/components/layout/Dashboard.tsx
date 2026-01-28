@@ -774,8 +774,8 @@ export function Dashboard() {
                           ${metric.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                         <div className={cn(
-                          "flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm text-[10px] font-bold",
-                          metric.trend === 'up' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                          "flex items-center gap-0.5 px-2.5 py-1 rounded-sm text-[10px] font-bold transition-all duration-300",
+                          metric.trend === 'up' ? "bg-[#e6f4f1] text-[#064E3B] border border-[#d1e9e4]" : "bg-rose-50 text-rose-600 border border-rose-100"
                         )}>
                           {metric.trend === 'up' ? <ArrowUp className="h-2.5 w-2.5" /> : <ArrowDown className="h-2.5 w-2.5" />}
                           {metric.growth}%

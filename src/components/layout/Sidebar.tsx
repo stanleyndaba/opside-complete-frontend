@@ -200,10 +200,10 @@ export function Sidebar({
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
-          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-emerald-500 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B] rounded-full shadow-[0_0_8px_rgba(6,78,59,0.5)]" />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-emerald-500/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B]/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-white" : "text-gray-500 group-hover:text-white")} />
         <span className={cn(
@@ -213,7 +213,7 @@ export function Sidebar({
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
             "ml-auto text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
-            isActive ? "text-emerald-400 bg-emerald-500/10" : "text-gray-500 bg-white/5"
+            isActive ? "text-[#064E3B] bg-[#064E3B]/10" : "text-gray-500 bg-white/5"
           )}>
             {claimCount}
           </span>
