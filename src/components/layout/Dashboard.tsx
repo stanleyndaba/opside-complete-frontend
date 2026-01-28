@@ -1099,7 +1099,7 @@ export function Dashboard() {
                                           <div className="flex items-center justify-between gap-3">
                                             <p className={cn(
                                               "text-[12px] tracking-tight truncate",
-                                              isUnread ? "font-bold text-slate-900" : "font-medium text-slate-600 group-hover:text-slate-900 transition-colors"
+                                              isUnread ? "font-medium text-slate-900" : "font-medium text-slate-600 group-hover:text-slate-900 transition-colors"
                                             )}>
                                               {(() => {
                                                 const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));

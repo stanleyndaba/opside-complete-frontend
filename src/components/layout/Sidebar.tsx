@@ -196,7 +196,7 @@ export function Sidebar({
           "relative flex items-center gap-3 w-full px-4 py-1.5 transition-all duration-300 group rounded-lg mb-0.5",
           isActive
             ? "bg-slate-100/80 text-slate-900"
-            : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+            : "text-slate-800 hover:bg-slate-50 hover:text-slate-900"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
@@ -205,9 +205,9 @@ export function Sidebar({
         {!isActive && (
           <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B]/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-[#064E3B]" : "text-slate-400 group-hover:text-slate-900")} />
+        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-[#064E3B]" : "text-slate-600 group-hover:text-slate-900")} />
         <span className={cn(
-          "text-[13px] font-montserrat transition-colors tracking-wide",
+          "text-[12px] font-montserrat transition-colors tracking-wide",
           isActive ? "font-semibold" : "font-normal"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
