@@ -407,7 +407,7 @@ export function Navbar({
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                     </div>
-                    <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Connected</p>
+                    <p className="text-[11px] text-gray-400 font-medium">Connected</p>
                   </div>
                 </div>
 
@@ -422,12 +422,12 @@ export function Navbar({
                       { label: 'Contact Method', value: 'Seller Central Case Mgr' }
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-4">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] shrink-0">
+                        <span className="text-xs font-medium text-slate-500 shrink-0">
                           {item.label}
                         </span>
                         <span className={cn(
-                          "text-[13px] font-bold text-slate-900 tracking-tight text-right",
-                          item.value.includes('_') || item.value === 'Not available' ? "font-mono text-slate-300 text-[11px]" : ""
+                          "text-xs font-medium text-slate-900 text-right",
+                          item.value.includes('_') || item.value === 'Not available' ? "font-mono text-slate-300 text-[10px]" : ""
                         )}>
                           {item.value}
                         </span>
@@ -439,9 +439,9 @@ export function Navbar({
                   <div className="pt-4 border-t border-slate-100 mt-2">
                     <button
                       onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between text-[11px] font-bold text-slate-400 hover:text-red-500 transition-all uppercase tracking-widest group/logout">
+                      className="w-full flex items-center justify-between text-[12px] font-medium text-slate-400 hover:text-red-500 transition-all group/logout">
                       <span>Sign Out</span>
-                      <LogOut className="h-3.5 w-3.5 group-hover/logout:translate-x-1 transition-transform opacity-40 group-hover/logout:opacity-100" />
+                      <LogOut className="h-4 w-4 group-hover/logout:translate-x-1 transition-transform opacity-40 group-hover/logout:opacity-100" />
                     </button>
                   </div>
                 </div>
