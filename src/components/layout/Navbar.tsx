@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Gift, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -370,6 +370,39 @@ export function Navbar({
                       </p>
                       <div className="mt-4 pt-3 border-t border-gray-100">
                         <span className="text-xs text-gray-400">Click to learn more</span>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+
+                {/* Store Connection */}
+                <HoverCard openDelay={100} closeDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <button
+                      onClick={() => navigate('/integrations-hub')}
+                      className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all relative"
+                      aria-label="Store connections">
+                      <Store className="h-4 w-4" />
+                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-slate-300 rounded-full" />
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent
+                    side="bottom"
+                    align="center"
+                    className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden">
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center">
+                          <Store className="h-4 w-4 text-slate-600" />
+                        </div>
+                        <span className="text-xs font-bold text-slate-900">Store Management</span>
+                      </div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">Connect Your Stores</h4>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        Seamlessly link your Amazon, Shopify, or Walmart marketplaces to consolidate audits and maximize recoveries.
+                      </p>
+                      <div className="mt-4 pt-3 border-t border-gray-100">
+                        <span className="text-xs text-gray-400">Manage connections</span>
                       </div>
                     </div>
                   </HoverCardContent>
