@@ -38,6 +38,7 @@ export function DisputeCasesTable() {
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
+  const [downloadingBrief, setDownloadingBrief] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const fetchCases = async (status?: string) => {
@@ -187,6 +188,48 @@ export function DisputeCasesTable() {
       });
     } finally {
       setFilingInProgress(prev => {
+        const next = new Set(prev);
+        next.delete(caseId);
+        return next;
+      });
+    }
+  };
+
+  const handleDownloadBrief = async (caseId: string) => {
+    setDownloadingBrief(prev => new Set(prev).add(caseId));
+    try {
+      const downloadUrl = api.getDisputeBrief(caseId);
+
+      const response = await fetch(downloadUrl, {
+        headers: {
+          'x-user-id': localStorage.getItem('user_id') || 'demo-user'
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to download brief');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `forensic-brief-${caseId.substring(0, 8)}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "BRIEF DOWNLOADED",
+        description: "The forensic dispute brief has been saved.",
+      });
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "DOWNLOAD FAILED",
+        description: err.message || "Unable to download brief",
+      });
+    } finally {
+      setDownloadingBrief(prev => {
         const next = new Set(prev);
         next.delete(caseId);
         return next;
@@ -548,13 +591,30 @@ export function DisputeCasesTable() {
                   {renderFilingActions(caseItem)}
 
                   {caseItem.claim_id && (
-                    <Link
-                      to={`/recoveries/${caseItem.claim_id}`}
-                      className="flex items-center gap-2.5 text-xs font-bold text-gray-400 hover:text-gray-900 transition-all duration-200 group/link"
-                    >
-                      VIEW RECOVERY
-                      <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
-                    </Link>
+                    <div className="flex items-center gap-4">
+                      <Button
+                        onClick={() => handleDownloadBrief(caseItem.id)}
+                        disabled={downloadingBrief.has(caseItem.id)}
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-3 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-none text-[11px] font-bold group/pdf"
+                      >
+                        {downloadingBrief.has(caseItem.id) ? (
+                          <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+                        ) : (
+                          <DollarSign className="w-3 h-3 mr-1.5 group-hover/pdf:scale-110 transition-transform" />
+                        )}
+                        GET PDF
+                      </Button>
+
+                      <Link
+                        to={`/recoveries/${caseItem.claim_id}`}
+                        className="flex items-center gap-2.5 text-xs font-bold text-gray-400 hover:text-gray-900 transition-all duration-200 group/link"
+                      >
+                        VIEW RECOVERY
+                        <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>

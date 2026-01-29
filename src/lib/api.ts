@@ -664,6 +664,15 @@ export const api = {
     return response;
   },
 
+  // Disputes
+  getDisputeCases: (options?: { status?: string; limit?: number }) => {
+    const params = new URLSearchParams();
+    if (options?.status) params.append('status', options.status);
+    if (options?.limit) params.append('limit', options.limit.toString());
+    return requestJson<{ success: boolean; cases: any[]; total: number }>(`/api/disputes?${params.toString()}`);
+  },
+  getDisputeBrief: (id: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief`),
+
   // Auth-adjacent helpers for flows
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
     // Use the /auth endpoint for OAuth initiation
