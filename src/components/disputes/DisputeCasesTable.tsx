@@ -202,11 +202,16 @@ export function DisputeCasesTable() {
 
       const response = await fetch(downloadUrl, {
         headers: {
-          'x-user-id': localStorage.getItem('user_id') || 'demo-user'
+          'x-user-id': localStorage.getItem('user_id') || 'demo-user',
+          'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
+          'X-Requested-With': 'XMLHttpRequest'
         }
       });
 
-      if (!response.ok) throw new Error('Failed to download brief');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to download brief');
+      }
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
