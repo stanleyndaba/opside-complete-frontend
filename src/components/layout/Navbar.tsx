@@ -11,6 +11,7 @@ import { NotificationBell } from './NotificationBell';
 import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api } from '@/lib/api';
+import { StoreSelector } from './StoreSelector';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -264,6 +265,7 @@ export function Navbar({
                 )}
               </div>
 
+              <StoreSelector />
 
               {/* Functional Icons Group - Compact Horizontal */}
               <div className="flex items-center gap-x-4 border-l border-gray-200/60 pl-4 ml-3">

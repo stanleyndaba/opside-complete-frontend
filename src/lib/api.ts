@@ -109,6 +109,8 @@ async function requestJsonWithRetry<T>(
         // Get user ID from localStorage (set by SessionContext) or fallback to demo-user
         // This allows API calls to work with the actual authenticated user
         'x-user-id': localStorage.getItem('user_id') || 'demo-user',
+        // Support multi-store isolation via X-Store-Id header
+        'x-store-id': localStorage.getItem('active_store_id') || '',
         ...options?.headers,
       },
       ...options,
@@ -1918,4 +1920,13 @@ export const detectionApi = {
     token?: string;
     message: string;
   }>(`/api/admin/users/${encodeURIComponent(userId)}/impersonate`, { method: 'POST' }),
+  // Store Management
+  getStores: () => requestJson<{ success: boolean; stores: any[] }>('/api/v1/stores'),
+  createStore: (data: { name: string; marketplace: string; seller_id?: string }) =>
+    requestJson<{ success: boolean; store: any }>('/api/v1/stores', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  deleteStore: (id: string) => requestJson<{ success: boolean }>('/api/v1/stores/' + id, { method: 'DELETE' }),
+  getStore: (id: string) => requestJson<{ success: boolean; store: any }>('/api/v1/stores/' + id),
 };
