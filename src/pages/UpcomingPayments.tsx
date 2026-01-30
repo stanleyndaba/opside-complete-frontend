@@ -1,14 +1,27 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { PageLayout } from '@/components/layout/PageLayout';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Gift, NotebookPen } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { Navbar } from '@/components/layout/Navbar';
+import { Sidebar } from '@/components/layout/Sidebar';
+import {
+  BarChart3,
+  FileText,
+  ArrowUpRight,
+  Shield,
+  Activity,
+  Lock,
+  Cpu,
+  TrendingUp,
+  Download,
+  AlertCircle,
+  Clock,
+  ChevronRight,
+  RefreshCw
+} from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 interface RecoveryClaim {
   id: string;
@@ -32,35 +45,22 @@ function formatCurrency(amount: number, currency: string = 'USD') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
-function getFilingStatusMarker(status?: string) {
-  if (!status) return <span className="text-gray-300 text-xs font-mono">—</span>;
-
-  const config: Record<string, { dot: string; label: string }> = {
-    filed: { dot: 'bg-blue-500', label: 'FILED' },
-    filing: { dot: 'bg-amber-500', label: 'FILING' },
-    retrying: { dot: 'bg-purple-500', label: 'RETRYING' },
-    failed: { dot: 'bg-red-500', label: 'FAILED' },
-    pending: { dot: 'bg-gray-400', label: 'PENDING' }
-  };
-
-  const { dot, label } = config[status.toLowerCase()] || config.pending;
-
-  return (
-    <div className="flex items-center gap-2">
-      <div className={cn("h-1.5 w-1.5 rounded-full", dot)} />
-      <span className="text-xs font-bold text-gray-900 font-mono">{label}</span>
-    </div>
-  );
-}
 
 export default function UpcomingPayments() {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [claims, setClaims] = useState<RecoveryClaim[]>([]);
   const [disputeCases, setDisputeCases] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currency, setCurrency] = useState<string>('USD');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -240,228 +240,266 @@ export default function UpcomingPayments() {
   };
 
   return (
-    <PageLayout title="Payment Recoveries">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
+    <div className="flex min-h-screen bg-[#070707] text-white selection:bg-emerald-500/30">
+      <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
 
-            {/* Header */}
-            <div className="mb-10 flex items-end justify-between border-b border-gray-100 pb-8">
-              <div>
-                <h1 className="text-xl font-light text-gray-900 tracking-tight">Recoveries</h1>
-                <p className="text-xs text-gray-400 mt-1 font-mono">Projected Payouts</p>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <Navbar
+          title="RECOVERY_PAYOUTS_CONTROLLER"
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
+
+        <main className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="p-8 max-w-[1600px] mx-auto space-y-8">
+
+            {/* Analysis Header */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                  <Activity className="h-5 w-5 text-emerald-500" />
+                </div>
+                <h1 className="text-2xl font-serif font-medium tracking-tight text-white uppercase">Execution_Summary</h1>
+              </div>
+              <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.3em] ml-12">
+                Operational_Liquidity // Settlement_Projection_v4.2
+              </p>
+            </div>
+
+            {/* Execution Panels (Summary Cards) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="group relative bg-[#0c0c0c] border border-white/5 rounded-xl p-6 transition-all hover:border-emerald-500/30 overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Clock className="h-12 w-12 text-emerald-500" />
+                </div>
+                <div className="relative z-10 space-y-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">NEXT_EXPECTED_PAYOUT</span>
+                    <span className="text-xs font-mono text-white/40 uppercase tracking-tighter">
+                      {nextPayout ? nextPayout.label.toUpperCase() : 'NO_PENDING_SETTLEMENT'}
+                    </span>
+                  </div>
+                  <div className="text-3xl font-mono font-bold tracking-tighter text-white">
+                    {nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}
+                  </div>
+                  <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] w-[65%]" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="group relative bg-[#0c0c0c] border border-white/5 rounded-xl p-6 transition-all hover:border-emerald-500/30 overflow-hidden text-white">
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <TrendingUp className="h-12 w-12 text-emerald-500" />
+                </div>
+                <div className="relative z-10 space-y-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">MONTH_PROJECTION</span>
+                    <span className="text-xs font-mono text-white/40 uppercase tracking-tighter">
+                      CURRENT_BILLING_CYCLE
+                    </span>
+                  </div>
+                  <div className="text-3xl font-mono font-bold tracking-tighter text-white">
+                    {formatCurrency(monthTotals.gross, currency)}
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-mono text-white/40 uppercase tracking-wider">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    VOL.{monthTotals.count}_CLAIMS_SAMPLED
+                  </div>
+                </div>
+              </div>
+
+              <div className="group relative bg-[#0c0c0c] border border-white/5 rounded-xl p-6 transition-all hover:border-emerald-500/40 overflow-hidden bg-gradient-to-br from-emerald-500/10 to-transparent">
+                <div className="absolute top-0 right-0 p-4 opacity-20">
+                  <Shield className="h-12 w-12 text-emerald-500" />
+                </div>
+                <div className="relative z-10 space-y-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">NET_RECOVERY_LIQUIDITY</span>
+                    <span className="text-xs font-mono text-white/40 uppercase tracking-tighter">
+                      AFTER_SERVICE_FEE_OPTIMIZATION
+                    </span>
+                  </div>
+                  <div className="text-3xl font-mono font-bold tracking-tighter text-emerald-500">
+                    {formatCurrency(monthTotals.net, currency)}
+                  </div>
+                  <div className="text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest bg-emerald-500/5 border border-emerald-500/10 px-2 py-1 rounded inline-block">
+                    PROJECTION_STABLE_80%_RETENTION
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Payment Recoveries Card */}
-            <div className="bg-white border border-gray-200 rounded-sm mb-8">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900">Recovery Overview</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Projected recoveries based on claim status</p>
-              </div>
-              <div className="p-6">
-                {errorMessage && (
-                  <div className="mb-4 border border-amber-200 bg-amber-50 text-amber-800 text-xs p-3 flex flex-wrap items-center gap-3">
-                    <span className="flex-1">{errorMessage}</span>
+            {/* Capital Flow Control (Pipeline Summary) */}
+            <div className="relative bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl">
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+
+              <div className="p-8 space-y-8">
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.3em]">PIPELINE_LIQUIDITY_MAP</span>
+                    <h2 className="text-lg font-serif font-medium text-white uppercase tracking-wider italic">Capital_Flow_Velocity</h2>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <div className="text-[10px] font-mono text-white/20 uppercase tracking-widest">TOTAL_IN_PIPELINE</div>
+                      <div className="text-2xl font-mono font-bold text-white tracking-tighter italic">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                    </div>
+                    <div className="h-10 w-[1px] bg-white/5" />
                     <button
-                      className="px-3 py-1.5 text-xs text-amber-800 border border-amber-300 bg-white hover:bg-amber-50 transition-colors"
+                      onClick={exportCsv}
+                      className="p-3 bg-white/[0.03] border border-white/5 rounded-xl hover:border-emerald-500/30 transition-all text-white/40 hover:text-emerald-500"
+                    >
+                      <Download className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-5 border border-white/5 rounded-xl overflow-hidden">
+                  {[
+                    { label: 'DETECTED', stage: pipelineStages.detected, icon: Cpu },
+                    { label: 'READY', stage: pipelineStages.ready, icon: Lock },
+                    { label: 'PENDING', stage: pipelineStages.pending, icon: Activity },
+                    { label: 'APPROVED', stage: pipelineStages.approved, icon: ArrowUpRight },
+                    { label: 'PAID', stage: pipelineStages.paid, icon: Shield, highlight: true },
+                  ].map((item, idx) => (
+                    <div
+                      key={item.label}
+                      className={cn(
+                        "p-6 flex flex-col gap-3 group transition-all",
+                        idx !== 4 && "border-r border-white/5",
+                        item.highlight ? "bg-emerald-500/[0.03]" : "hover:bg-white/[0.02]"
+                      )}
+                    >
+                      <div className="flex items-center justify-between">
+                        <item.icon className={cn("h-4 w-4", item.highlight ? "text-emerald-500" : "text-white/20 group-hover:text-white/40")} />
+                        <span className="text-[9px] font-mono text-white/10 uppercase font-bold tracking-widest">STEP_0{idx + 1}</span>
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">{item.label}</span>
+                        <div className={cn("text-lg font-mono font-bold tracking-tighter", item.highlight ? "text-emerald-500" : "text-white")}>
+                          {formatCurrency(item.stage.amount, currency)}
+                        </div>
+                      </div>
+                      <div className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">
+                        {item.stage.count}_ENTITY_NODES
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {errorMessage && (
+                  <div className="flex items-center justify-between bg-rose-500/10 border border-rose-500/20 rounded-lg p-4">
+                    <div className="flex items-center gap-3">
+                      <AlertCircle className="h-4 w-4 text-rose-500" />
+                      <span className="text-xs font-mono text-rose-200 uppercase tracking-tighter">
+                        FAULT_DETECTED: {errorMessage}
+                      </span>
+                    </div>
+                    <button
                       onClick={() => setReloadToken((token) => token + 1)}
-                      disabled={loading}>
-                      Retry
+                      className="px-3 py-1 bg-rose-500/20 border border-rose-500/30 rounded text-[10px] font-mono font-bold uppercase tracking-widest text-white hover:bg-rose-500/40 transition-all"
+                    >
+                      REBOOT_FEED
                     </button>
                   </div>
                 )}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-gray-100 italic-divider">
-                  <div className="p-6 bg-gray-50/50">
-                    <div className="text-xs text-gray-400 font-bold mb-2">Next Expected Payout</div>
-                    <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">{nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}</div>
-                    <div className="text-xs text-gray-500 mt-2 font-mono">{nextPayout ? nextPayout.label : '—'}</div>
-                  </div>
-                  <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                    <div className="text-xs text-gray-400 font-bold mb-2">This Month (Projected)</div>
-                    <div className="text-2xl font-light text-gray-900 font-mono tracking-tight">{formatCurrency(monthTotals.gross, currency)}</div>
-                    <div className="text-xs text-gray-500 mt-2 font-mono">VOL.{monthTotals.count} CLAIMS</div>
-                  </div>
-                  <div className="p-6 border-l border-gray-100 bg-gray-50/50">
-                    <div className="text-xs text-gray-400 font-bold mb-2">Net To You (Projected)</div>
-                    <div className="text-2xl font-light text-emerald-600 font-mono tracking-tight">{formatCurrency(monthTotals.net, currency)}</div>
-                    <div className="text-xs text-gray-500 mt-2 font-mono">AFTR 20% COMM.</div>
-                  </div>
-                </div>
-
-                {/* Pipeline Summary */}
-                {pipelineStages.totalInPipeline > 0 && (
-                  <div className="mt-8 p-6 bg-gray-900 text-white relative overflow-hidden">
-                    <div className="absolute right-[-20px] top-[-20px] opacity-10">
-                      <BarChart3 className="h-32 w-32" />
-                    </div>
-                    <div className="relative z-10">
-                      <div className="text-xs text-gray-400 font-bold mb-1">Total Pipeline Liquidity</div>
-                      <div className="text-3xl font-light text-white font-mono tracking-tight">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
-                      <div className="text-xs text-gray-500 mt-2 font-mono">
-                        AGGREGATE: {pipelineStages.detected.count + pipelineStages.ready.count + pipelineStages.pending.count + pipelineStages.approved.count} ENTITIES IN PROCESS
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Pipeline Stage Cards */}
-                <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-0 border border-gray-100">
-                  <div className="p-4 border-r border-gray-100">
-                    <div className="text-xs text-gray-400 font-bold mb-1">Detected</div>
-                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.detected.amount, currency)}</div>
-                    <div className="text-xs text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.detected.count} REC</div>
-                  </div>
-                  <div className="p-4 border-r border-gray-100">
-                    <div className="text-xs text-gray-400 font-bold mb-1">Ready</div>
-                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.ready.amount, currency)}</div>
-                    <div className="text-xs text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.ready.count} REC</div>
-                  </div>
-                  <div className="p-4 border-r border-gray-100">
-                    <div className="text-xs text-gray-400 font-bold mb-1">Pending</div>
-                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.pending.amount, currency)}</div>
-                    <div className="text-xs text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.pending.count} REC</div>
-                  </div>
-                  <div className="p-4 border-r border-gray-100">
-                    <div className="text-xs text-gray-400 font-bold mb-1">Approved</div>
-                    <div className="text-[13px] font-bold text-gray-900 font-mono">{formatCurrency(pipelineStages.approved.amount, currency)}</div>
-                    <div className="text-xs text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.approved.count} REC</div>
-                  </div>
-                  <div className="p-4 bg-gray-50/50">
-                    <div className="text-xs text-gray-400 font-bold mb-1">Paid</div>
-                    <div className="text-[13px] font-bold text-emerald-600 font-mono">{formatCurrency(pipelineStages.paid.amount, currency)}</div>
-                    <div className="text-xs text-gray-400 mt-1 font-mono tracking-tighter">{pipelineStages.paid.count} REC</div>
-                  </div>
-                </div>
-
-                {/* Professional Text Timeline */}
-                <div className="mt-6 border-t border-gray-200 pt-6">
-                  <div className="text-sm font-medium text-gray-700 mb-4">Pipeline Status</div>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 text-xs">Detected</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="text-gray-700">
-                        {pipelineStages.detected.count > 0
-                          ? `${pipelineStages.detected.count} claims (${formatCurrency(pipelineStages.detected.amount, currency)}) awaiting evidence`
-                          : 'No claims at this stage'}
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 text-xs">Ready</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="text-gray-700">
-                        {pipelineStages.ready.count > 0
-                          ? `${pipelineStages.ready.count} claims (${formatCurrency(pipelineStages.ready.amount, currency)}) ready for submission`
-                          : 'No claims at this stage'}
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 text-xs">Pending</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="text-gray-700">
-                        {pipelineStages.pending.count > 0
-                          ? `${pipelineStages.pending.count} claims (${formatCurrency(pipelineStages.pending.amount, currency)}) awaiting Amazon`
-                          : 'No claims at this stage'}
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 text-xs">Approved</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="text-gray-700">
-                        {pipelineStages.approved.count > 0
-                          ? `${pipelineStages.approved.count} claims (${formatCurrency(pipelineStages.approved.amount, currency)}) processing`
-                          : 'No claims at this stage'}
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="w-24 text-gray-500 flex-shrink-0 text-xs">Paid</span>
-                      <span className="text-gray-400">→</span>
-                      <span className="text-gray-700">
-                        {pipelineStages.paid.count > 0
-                          ? `${pipelineStages.paid.count} claims (${formatCurrency(pipelineStages.paid.amount, currency)}) recovered`
-                          : 'No payments received yet'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center gap-3">
-                  <button className="px-4 py-2 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors" onClick={exportCsv}>Export CSV</button>
-                </div>
               </div>
             </div>
 
-            {/* Schedule Card */}
-            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900">Payment Schedule</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Daily rollup of expected payouts</p>
+            {/* Settlement Ledger (Table) */}
+            <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+              <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em]">SETTLEMENT_LEDGER</span>
+                  <h3 className="text-sm font-serif font-medium text-white tracking-wide uppercase">Audit_Registry</h3>
+                </div>
               </div>
-              <div className="p-0">
+              <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-gray-900 hover:bg-gray-900 border-none">
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6">Payout Date</TableHead>
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6 text-center">Claims</TableHead>
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6">Gross</TableHead>
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6">Commission</TableHead>
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6">Net</TableHead>
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6">Status</TableHead>
-                      <TableHead className="text-xs font-bold text-gray-400 py-4 px-6 text-right">Actions</TableHead>
+                    <TableRow className="border-b border-white/5 hover:bg-transparent">
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">PAYOUT_DATE</TableHead>
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest text-center">CLAIM_COUNT</TableHead>
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">GROSS_VALUE</TableHead>
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">SERVICE_FEE</TableHead>
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">NET_CREDIT</TableHead>
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">NODE_STATUS</TableHead>
+                      <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">ACTION_OVERRIDE</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {loading && (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-sm font-mono text-gray-500 p-8 text-center">Initialising Secure Data Feed...</TableCell>
-                      </TableRow>
-                    )}
-                    {!loading && upcomingGroups.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-sm font-mono text-gray-500 p-8 text-center">Zero (0) REC Detected for Projection</TableCell>
-                      </TableRow>
-                    )}
-                    {!loading && upcomingGroups.map((g) => (
-                      <TableRow key={g.key} className="hover:bg-gray-50/50 border-b border-gray-100 group relative transition-colors">
-                        <TableCell className="whitespace-nowrap font-bold text-sm text-gray-900 py-4 px-6 font-mono tracking-tighter relative">
-                          <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
-                          {g.label.toUpperCase()}
+                    {loading ? (
+                      <TableRow className="hover:bg-transparent border-0">
+                        <TableCell colSpan={7} className="h-32 text-center">
+                          <div className="flex flex-col items-center gap-2">
+                            <RefreshCw className="h-5 w-5 animate-spin text-emerald-500/30" />
+                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">SYNCHRONIZING_FED_REGISTRY...</span>
+                          </div>
                         </TableCell>
-                        <TableCell className="text-sm text-center text-gray-600 py-4 px-6 font-mono font-bold">{g.count}</TableCell>
-                        <TableCell className="text-sm font-bold text-gray-900 py-4 px-6 font-mono">{formatCurrency(g.gross, currency)}</TableCell>
-                        <TableCell className="text-sm text-gray-500 py-4 px-6 font-mono">{formatCurrency(g.commission, currency)}</TableCell>
-                        <TableCell className="text-sm text-emerald-600 font-bold py-4 px-6 font-mono">{formatCurrency(g.net, currency)}</TableCell>
-                        <TableCell className="py-4 px-6">
-                          {g.claims.length > 0 && (
-                            <div className="flex flex-col gap-2">
-                              {g.claims.slice(0, 2).map((claim: RecoveryClaim) => (
-                                <div key={claim.id}>{getFilingStatusMarker(claim.filing_status)}</div>
+                      </TableRow>
+                    ) : upcomingGroups.length === 0 ? (
+                      <TableRow className="hover:bg-transparent border-0">
+                        <TableCell colSpan={7} className="h-32 text-center font-mono text-[11px] text-white/20 uppercase tracking-widest">
+                          ZERO_SETTLEMENT_NODES_IDENTIFIED_IN_LOCAL_BUFFER
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      upcomingGroups.map((g) => (
+                        <TableRow key={g.key} className="border-b border-white/5 hover:bg-white/[0.01] transition-colors group">
+                          <TableCell className="py-4 px-6 font-mono text-[11px] font-bold text-white uppercase tracking-tighter">
+                            {g.label}
+                          </TableCell>
+                          <TableCell className="py-4 px-6 text-center font-mono text-[11px] text-white/60">
+                            {g.count.toString().padStart(2, '0')}
+                          </TableCell>
+                          <TableCell className="py-4 px-6 font-mono text-[11px] font-bold text-white">
+                            {formatCurrency(g.gross, currency)}
+                          </TableCell>
+                          <TableCell className="py-4 px-6 font-mono text-[11px] text-white/40">
+                            {formatCurrency(g.commission, currency)}
+                          </TableCell>
+                          <TableCell className="py-4 px-6 font-mono text-[11px] font-bold text-emerald-500">
+                            {formatCurrency(g.net, currency)}
+                          </TableCell>
+                          <TableCell className="py-4 px-6">
+                            <div className="flex flex-col gap-1.5">
+                              {g.claims.slice(0, 1).map((claim: RecoveryClaim) => (
+                                <div key={claim.id} className="flex items-center gap-2">
+                                  <div className={cn(
+                                    "h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]",
+                                    claim.filing_status === 'filed' ? "bg-emerald-500 shadow-emerald-500/50" : "bg-amber-500 shadow-amber-500/30"
+                                  )} />
+                                  <span className="text-[9px] font-mono text-white/60 uppercase tracking-widest">
+                                    {(claim.filing_status || claim.status || 'UNKNOWN').toUpperCase()}
+                                  </span>
+                                </div>
                               ))}
-                              {g.claims.length > 2 && (
-                                <span className="text-xs text-gray-400 font-mono ml-3.5">
-                                  + {g.claims.length - 2} ADDTL REC
+                              {g.claims.length > 1 && (
+                                <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest ml-3.5">
+                                  + {g.claims.length - 1} ADDITIONAL_NODES
                                 </span>
                               )}
                             </div>
-                          )}
-                        </TableCell>
-                        <TableCell className="py-4 px-6 text-right">
-                          {g.claims.length > 0 && g.claims[0].case_id && (
-                            <Button asChild variant="ghost" className="h-8 rounded-none border border-gray-200 text-xs font-bold hover:bg-gray-900 hover:text-white transition-all">
-                              <Link to={`/recoveries?tab=cases`}>View Cases</Link>
+                          </TableCell>
+                          <TableCell className="py-4 px-6 text-right">
+                            <Button
+                              asChild
+                              variant="ghost"
+                              className="h-8 px-4 border border-white/5 bg-white/[0.02] text-[10px] font-mono font-bold uppercase tracking-widest hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all"
+                            >
+                              <Link to="/recoveries?tab=cases">DISPUTE_CONSOLE</Link>
                             </Button>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
-    </PageLayout>
+    </div>
   );
 }
