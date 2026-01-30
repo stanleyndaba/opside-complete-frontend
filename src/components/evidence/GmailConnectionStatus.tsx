@@ -140,7 +140,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-emerald-500/30 transition-colors">
-            <Mail className="h-4 w-4 text-emerald-500/50" />
+            <img src="/G.png" alt="Gmail" className="h-4 w-4" />
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">DATASOURCE_01</span>
