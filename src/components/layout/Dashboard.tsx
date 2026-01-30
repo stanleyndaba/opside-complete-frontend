@@ -110,7 +110,7 @@ export function Dashboard() {
   const { toast } = useToast();
   const { notifications, unreadCount } = useNotifications();
   const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
-  const [activeDiscrepancyLog, setActiveDiscrepancyLog] = useState<any>(null);
+  const [activeDiscrepancy, setActiveDiscrepancy] = useState<any>(null);
 
   const { formatCurrency: formatCurrencyWithSelection } = useCurrency();
   // Phase 3: Detection statistics
@@ -1208,7 +1208,7 @@ export function Dashboard() {
                                           <button
                                             onClick={() => {
                                               if (notification.type === 'claim_detected') {
-                                                setActiveDiscrepancyLog(notification);
+                                                setActiveDiscrepancy(notification);
                                                 setShowDiscrepancyModal(true);
                                               } else {
                                                 navigate('/recoveries');
