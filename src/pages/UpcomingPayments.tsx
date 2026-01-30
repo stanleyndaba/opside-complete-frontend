@@ -240,16 +240,18 @@ export default function UpcomingPayments() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#070707] text-white selection:bg-emerald-500/30">
+    <div className="flex min-h-screen bg-[#070707] text-white selection:bg-emerald-500/30 overflow-hidden">
       <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         <Navbar
-          title="RECOVERY_PAYOUTS_CONTROLLER"
-          isSidebarCollapsed={isSidebarCollapsed}
+          sidebarCollapsed={isSidebarCollapsed}
         />
 
-        <main className="flex-1 overflow-y-auto custom-scrollbar">
+        <main className={cn(
+          "flex-1 overflow-y-auto custom-scrollbar transition-all duration-500 ease-in-out",
+          isSidebarCollapsed ? "ml-20" : "ml-64"
+        )}>
           <div className="p-8 max-w-[1600px] mx-auto space-y-8">
 
             {/* Analysis Header */}
