@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset } from 'lucide-react';
+import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,6 +11,7 @@ import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 
 // Lightweight prefetch using dynamic import hints matching route chunks
 const prefetchRoute = (path: string) => {
@@ -73,6 +74,31 @@ export function Sidebar({
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
   const [signOutOpen, setSignOutOpen] = useState(false);
+
+  // States for referral functionality
+  const [showReferralPopup, setShowReferralPopup] = useState(false);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  // Referral link helpers
+  const referralLink = typeof window !== 'undefined'
+    ? `${window.location.origin}/signup?ref=demo-user`
+    : '/signup?ref=demo-user';
+
+  const getShortLink = (link: string) => {
+    try {
+      const url = new URL(link);
+      const domain = url.hostname.replace('www.', '');
+      const path = url.pathname + url.search;
+      if (domain.length > 20) return `...${domain.slice(-15)}${path}`;
+      return `${domain}${path}`;
+    } catch {
+      return link.length > 30 ? `...${link.slice(-25)}` : link;
+    }
+  };
+
+  const shortLink = getShortLink(referralLink);
 
   const handleSignOut = async () => {
     try { await api.logout(); } catch (_) { }
@@ -300,14 +326,54 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
               className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <Headset className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <LifeBuoy className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
               className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <Zap className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
+              <Sparkles className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
               <span>What's New</span>
+            </DropdownMenuItem>
+
+            {/* Limited Offer / Referral */}
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                setShowReferralPopup(true);
+              }}
+              className="p-0">
+              <HoverCard openDelay={100} closeDelay={200}>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center justify-between w-full px-3 py-2 text-[12px] text-emerald-600 hover:bg-emerald-50 cursor-pointer rounded-md transition-all">
+                    <div className="flex items-center gap-2.5">
+                      <Gift className="h-4 w-4 text-emerald-500" strokeWidth={1.5} />
+                      <span className="font-semibold">Limited Offer</span>
+                    </div>
+                    <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent
+                  side="right"
+                  align="start"
+                  className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden z-[100]">
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
+                        <Gift className="h-4 w-4 text-emerald-600" />
+                      </div>
+                      <span className="text-xs font-bold text-emerald-600">Limited Offer</span>
+                    </div>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Referral</h4>
+                    <p className="text-xs text-gray-600 leading-relaxed font-montserrat">
+                      Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-gray-100">
+                      <span className="text-xs text-gray-400">Click to learn more</span>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/settings`)}
@@ -352,6 +418,135 @@ export function Sidebar({
               Sign Out
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Referral Popup - Institutional Style */}
+      <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
+        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          {/* Header - Institutional Dark */}
+          <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
+            <h3 className="text-xs font-bold text-white">
+              Referral
+            </h3>
+            <p className="text-xs text-gray-400 mt-1 font-mono">
+              COMMISSION-FREE NETWORK EXPANSION
+            </p>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <p className="text-sm text-gray-500 leading-relaxed font-medium">
+                  PROVISION: Bring new sellers to Margin and secure 100% of their recovered funds without commission deductions.
+                </p>
+
+                {/* Value Proposition */}
+                <div className="p-4 bg-gray-50/50 border border-gray-100 relative group">
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
+                  <p className="text-xs text-gray-400 font-mono mb-1">NETWORK BENEFIT</p>
+                  <p className="text-[13px] font-bold text-gray-900 tracking-tight">100% OF RECOVERED FUNDS</p>
+                </div>
+              </div>
+
+              {/* Action */}
+              <Button
+                onClick={() => {
+                  setShowReferralPopup(false);
+                  setShowInviteForm(true);
+                }}
+                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all">
+                Initiate Invitation
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite Form Popup - Institutional style */}
+      <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
+        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+          <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
+            <h3 className="text-xs font-bold text-gray-900">Transmit Invitation</h3>
+            <p className="text-xs text-gray-400 mt-1 font-mono">Target: External Seller Alliance</p>
+          </div>
+
+          <div className="p-6 space-y-5">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 mb-1 block">Recipient Email</label>
+              <Input
+                type="email"
+                placeholder="SELLER@ENTITY.COM"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                className="w-full border-gray-100 h-10 text-sm font-mono rounded-none bg-gray-50/50 focus:bg-white focus:border-gray-900 transition-all"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 mb-1 block">Authentication Link</label>
+              <div className="flex items-center gap-0 p-3 bg-gray-50/50 border border-gray-100 rounded-none group hover:border-gray-200 transition-all">
+                <span className="flex-1 text-xs text-gray-500 font-mono break-all truncate overflow-hidden">{shortLink}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(referralLink);
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 2000);
+                  }}
+                  className="flex items-center gap-2 px-3 py-1 text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors shrink-0">
+                  {linkCopied ? (
+                    <>
+                      <Check className="h-3 w-3 text-emerald-600" />
+                      <span className="text-emerald-600">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      <span>Copy</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <Button
+              onClick={async () => {
+                if (!inviteEmail || !inviteEmail.includes('@')) {
+                  alert('Verification Failure: Invalid Email Address');
+                  return;
+                }
+
+                try {
+                  const response = await fetch(`${window.location.origin.includes('localhost') ? 'http://localhost:3001' : 'https://opside-node-api-woco.onrender.com'}/api/invites/send`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'x-user-id': 'demo-user'
+                    },
+                    body: JSON.stringify({
+                      email: inviteEmail,
+                      message: `You've been invited to join Margin! Use this link to get started: ${referralLink}`
+                    })
+                  });
+
+                  const result = await response.json();
+
+                  if (result.success) {
+                    alert(`Transmission Successful: Invite dispatched to ${inviteEmail}`);
+                    setShowInviteForm(false);
+                    setInviteEmail('');
+                  } else {
+                    alert(`Transmission Failure: ${result.error || 'Unknown Error State'}`);
+                  }
+                } catch (error: any) {
+                  console.error('Transmission processing error:', error);
+                  alert('Internal Connection Failure');
+                }
+              }}
+              className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all">
+              Execute Transmission
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
       {/* Edge toggle handle */}
