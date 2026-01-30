@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Share2, Shield, Lock, Zap, FileText, Database, Globe, CheckCircle2, AlertCircle, Plus, Trash2, ExternalLink } from 'lucide-react';
+import { Share2, Shield, Lock, Zap, FileText, Database, Globe, CheckCircle2, AlertCircle, Plus, Trash2, ExternalLink, RefreshCw, Sparkles, Search as SearchIcon, Info, DollarSign, Package, Calculator, Truck, Mail, Cloud, Settings, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Dialog,
@@ -17,7 +17,7 @@ import {
   DialogFooter
 } from "@/components/ui/dialog";
 
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 
@@ -36,6 +36,12 @@ export default function IntegrationsHub() {
   const [newStoreData, setNewStoreData] = useState({ name: '', marketplace: 'ATVPDKIKX0DER', seller_id: '' });
   const [addingStore, setAddingStore] = useState(false);
   const [deletingStore, setDeletingStore] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+
+  // NEW: Shock and Awe state
+  const [showRecoveryReveal, setShowRecoveryReveal] = useState(false);
+  const [recoveryData, setRecoveryData] = useState<{ totalAmount: number; currency: string; claimCount: number } | null>(null);
+  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
 
   // Check if we're in sandbox mode
   const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
@@ -139,6 +145,34 @@ export default function IntegrationsHub() {
     };
     message?: string;
   } | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Check if we just connected Amazon and should show the reveal
+  useEffect(() => {
+    const amazonConnected = searchParams.get('amazon_connected');
+
+    if (amazonConnected === 'true' && !showRecoveryReveal) {
+      // Fetch the actual recovery data
+      api.getAmazonRecoveries().then(response => {
+        if (response.ok && response.data) {
+          setRecoveryData(response.data);
+          setShowRecoveryReveal(true);
+
+          // Auto-show evidence modal after 3 seconds
+          setTimeout(() => {
+            setShowEvidenceModal(true);
+          }, 3000);
+        }
+      });
+    }
+  }, [searchParams, showRecoveryReveal]);
+
+  const formatCurrency = (amount: number, currency: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency || 'USD'
+    }).format(amount);
+  };
   const [evidenceSources, setEvidenceSources] = useState<Array<{
     id: string;
     provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
@@ -459,39 +493,180 @@ export default function IntegrationsHub() {
   };
 
   return (
-    <PageLayout title="Integrations" midnight hideNavbar hideSidebar>
+    <PageLayout title="Integrations" midnight>
       <div className="min-h-screen bg-[#050505] relative overflow-hidden">
         {/* Aesthetic Background Elements */}
         <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
-        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url(\"data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E\")` }} />
+        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+
+        {/* SHOCK AND AWE: Recovery Reveal Modal */}
+        <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
+          <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-serif">
+                <Zap className="h-8 w-8 animate-pulse" />
+                Potential Recoveries Found!
+              </DialogTitle>
+            </DialogHeader>
+            <div className="text-center space-y-6 py-4">
+              {recoveryData && (
+                <>
+                  <div className="space-y-2">
+                    <div className="text-6xl font-serif text-white tracking-tighter">
+                      {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
+                    </div>
+                    <div className="text-sm font-mono text-emerald-500/60 uppercase tracking-[0.3em]">
+                      in Potential Amazon Recoveries Identified
+                    </div>
+                    <div className="mt-4">
+                      <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/40 text-emerald-400 font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+                        {recoveryData.claimCount} Distinct Harvesting Opportunities
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mt-8">
+                    <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
+                      <FileText className="h-6 w-6 mx-auto mb-2 text-blue-400" />
+                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-1">Lost Inventory</div>
+                      <div className="text-sm font-medium text-white">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
+                    </div>
+                    <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
+                      <Calculator className="h-6 w-6 mx-auto mb-2 text-orange-400" />
+                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-1">Fee Errors</div>
+                      <div className="text-sm font-medium text-white">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
+                    </div>
+                    <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
+                      <Package className="h-6 w-6 mx-auto mb-2 text-purple-400" />
+                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-1">Shipments</div>
+                      <div className="text-sm font-medium text-white">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-gray-400 italic font-serif">
+                    "Our discovery agents identified these anomalies by triangulating your FBA structural data."
+                  </p>
+                </>
+              )}
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-mono uppercase tracking-widest text-xs hover:bg-emerald-500 transition-colors">
+                Continue to Command Center
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* SECOND WOW: Evidence Connect Modal */}
+        <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
+          <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-serif">
+                <Shield className="h-8 w-8 text-emerald-500" />
+                Fortify Claim Integrity
+              </DialogTitle>
+              <DialogDescription className="text-center text-gray-400 italic">
+                Connect secondary harvesting nodes to bridge evidence gaps and automate document matching.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-6 py-4">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-emerald-500/30 transition-all group">
+                  <Mail className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                  <h3 className="font-serif text-lg mb-2">Connect Email</h3>
+                  <p className="text-xs text-gray-500 mb-6 font-mono leading-relaxed">
+                    AUTOMATICALLY SCAN REPOSITORIES FOR INVOICES, POs, AND SHIPMENT CONFIRMATIONS.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    onClick={() => {
+                      setShowEvidenceModal(false);
+                    }}
+                  >
+                    Link Repository
+                  </Button>
+                </div>
+
+                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-emerald-500/30 transition-all group">
+                  <Cloud className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                  <h3 className="font-serif text-lg mb-2">Cloud Storage</h3>
+                  <p className="text-xs text-gray-500 mb-6 font-mono leading-relaxed">
+                    INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL DISTRIBUTED EVIDENCE ARTIFACTS.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    onClick={() => {
+                      setShowEvidenceModal(false);
+                    }}
+                  >
+                    Link Storage
+                  </Button>
+                </div>
+              </div>
+
+              <div className="text-center space-y-4">
+                <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest">
+                  <Info className="h-3 w-3" />
+                  <span>Evidence increases claim approval rates by 300%</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowEvidenceModal(false)}
+                  className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-white"
+                >
+                  I'll upload manual artifacts later
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div className="relative z-10 container max-w-7xl mx-auto px-6 py-12">
           {/* Header section */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+            className="flex flex-col mb-12"
           >
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-px w-8 bg-emerald-500/50" />
-                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Central Command</span>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-px w-8 bg-emerald-500/50" />
+                  <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Central Command</span>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight">
+                  Integrations <span className="text-emerald-500/20 px-2 tracking-tighter">/</span> Hub
+                </h1>
+                <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
+                  Management of all primary harvesting nodes and terminal connections. Data is isolated per store and synchronized across our institutional matrix.
+                </p>
               </div>
-              <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight">
-                Integrations <span className="text-emerald-500/20 px-2 tracking-tighter">/</span> Hub
-              </h1>
-              <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
-                Management of all primary harvesting nodes and terminal connections. Data is isolated per store and synchronized across our institutional matrix.
-              </p>
+
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Global Sync Status</span>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-sm font-medium text-white tracking-tight">Systems Operational</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col items-end">
-                <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Global Sync Status</span>
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-sm font-medium text-white tracking-tight">Systems Operational</span>
-                </div>
+            {/* Restored Unified Search */}
+            <div className="max-w-2xl mt-4 relative group">
+              <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-lg group-hover:bg-emerald-500/10 transition-all duration-500" />
+              <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-emerald-500/50 transition-all duration-300">
+                <SearchIcon className="h-4 w-4 text-gray-500 ml-4 group-hover:text-emerald-500 transition-colors" />
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Query Infrastructure (Amazon, Gmail, Financial Repositories...)"
+                  className="bg-transparent border-none text-white font-mono text-xs h-12 placeholder:text-gray-600 focus-visible:ring-0"
+                />
               </div>
             </div>
           </motion.div>
@@ -651,6 +826,87 @@ export default function IntegrationsHub() {
                 </div>
               </div>
             </motion.div>
+
+            {/* INTEGRATION REQUEST: Can't find what you need? */}
+            <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12 mt-6">
+              <div className="bg-white/[0.01] border border-dashed border-white/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-emerald-500/20 transition-all duration-500">
+                <div className="flex items-center gap-6 text-center md:text-left">
+                  <div className="h-14 w-14 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500">
+                    <Plus className="h-6 w-6 text-gray-400 group-hover:text-emerald-500 transition-colors" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-serif text-white tracking-tight mb-1">Can't find a specific integration?</h3>
+                    <p className="text-sm text-gray-500 font-mono uppercase tracking-widest">Our Engineering Team can build custom harvesting protocols.</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => setShowRequestForm(true)}
+                  variant="ghost"
+                  className="h-12 border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-gray-300 hover:text-emerald-500 font-mono uppercase tracking-[0.2em] text-[10px] px-10 transition-all duration-300"
+                >
+                  Request Integration Node
+                </Button>
+              </div>
+            </motion.div>
+
+            {/* Waitlist / Request Dialog */}
+            <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
+              <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-serif">Request Integration Protocol</DialogTitle>
+                  <DialogDescription className="text-gray-400">
+                    Specify the platform or repository you wish to integrate into the matrix.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-6 py-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Platform Name</label>
+                      <Input
+                        placeholder="e.g., Shopify, Walmart, NetSuite..."
+                        value={requestFormData.platform}
+                        onChange={e => setRequestFormData({ ...requestFormData, platform: e.target.value })}
+                        className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Harvesting Context</label>
+                      <textarea
+                        placeholder="What data nodes should we extract?"
+                        value={requestFormData.description}
+                        onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
+                        className="w-full h-32 px-3 py-2 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-serif resize-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
+                    <Info className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-emerald-500/80 font-mono leading-relaxed uppercase tracking-wider">
+                      Requesting a node adds it to our development queue. You will be notified via encrypted channel once the protocol is stabilized.
+                    </p>
+                  </div>
+                </div>
+                <DialogFooter className="gap-2">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowRequestForm(false)}
+                    className="bg-transparent text-gray-400 hover:text-white font-mono uppercase text-[10px] py-1 tracking-widest"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      toast({ title: "Request Cached", description: "Our engineering matrix has received your integration request." });
+                      setShowRequestForm(false);
+                      setRequestFormData({ platform: '', description: '' });
+                    }}
+                    className="bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase text-[10px] h-12 px-8 tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                  >
+                    Submit Request
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
             {/* Harvesting Nodes Title */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-8 mb-4">

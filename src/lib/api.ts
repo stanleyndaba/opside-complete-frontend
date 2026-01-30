@@ -666,13 +666,7 @@ export const api = {
     return response;
   },
 
-  // Disputes
-  getDisputeCases: (options?: { status?: string; limit?: number }) => {
-    const params = new URLSearchParams();
-    if (options?.status) params.append('status', options.status);
-    if (options?.limit) params.append('limit', options.limit.toString());
-    return requestJson<{ success: boolean; cases: any[]; total: number }>(`/api/disputes?${params.toString()}`);
-  },
+  // Disputes (Consolidated version at 1284)
   getDisputeBrief: (id: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief`),
 
   // Auth-adjacent helpers for flows
@@ -1126,9 +1120,6 @@ export const api = {
       message?: string;
     }>(`/api/v1/integrations/amazon/orders${query ? `?${query}` : ''}`);
   },
-  setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
-  setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
-  setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
   // Legacy endpoint - now uses unified orchestrator
   startEvidenceIngest: () => requestJson<any>('/api/evidence/ingest/all', { method: 'POST', body: JSON.stringify({ maxResults: 50, autoParse: true }) }),
   disconnectIntegration: (provider: string, purge = false) =>
@@ -1388,7 +1379,7 @@ export const api = {
     const queryParams = new URLSearchParams();
     if (userId) queryParams.append('userId', userId);
     const query = queryParams.toString();
-    const url = `${apiUrl}/api/billing/invoices/${encodeURIComponent(invoiceId)}/pdf${query ? `?${query}` : ''}`;
+    const url = buildApiUrl(`/api/billing/invoices/${encodeURIComponent(invoiceId)}/pdf${query ? `?${query}` : ''}`);
 
     const response = await fetch(url, {
       method: 'GET',
@@ -1694,6 +1685,38 @@ export const api = {
     token?: string;
     message: string;
   }>(`/api/admin/users/${encodeURIComponent(userId)}/impersonate`, { method: 'POST' }),
+
+  // Evidence Configuration
+  setEvidenceFilters: (filters: any) =>
+    requestJson<{ success: boolean; message: string }>('/api/evidence/filters', {
+      method: 'POST',
+      body: JSON.stringify({ filters }),
+    }),
+  setEvidenceSchedule: (schedule: string) =>
+    requestJson<{ success: boolean; message: string }>('/api/evidence/schedule', {
+      method: 'POST',
+      body: JSON.stringify({ schedule }),
+    }),
+  setEvidenceAutoCollect: (enabled: boolean) =>
+    requestJson<{ success: boolean; message: string }>('/api/evidence/auto-collect', {
+      method: 'POST',
+      body: JSON.stringify({ enabled }),
+    }),
+
+  // Store Management
+  getStores: () =>
+    requestJson<{ success: boolean; stores: any[] }>('/api/v1/stores'),
+  createStore: (data: { name: string; marketplace: string; seller_id?: string }) =>
+    requestJson<{ success: boolean; store: any }>('/api/v1/stores', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  deleteStore: (id: string) =>
+    requestJson<{ success: boolean }>(`/api/v1/stores/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    }),
+
+  // Recovery Data (Consolidated robust version at 437)
 };
 
 // Phase 3: Detection/Claims API methods
@@ -1815,7 +1838,7 @@ export const detectionApi = {
     });
   },
 
-  // Get timeline events for a claim
+  // Timeline
   getClaimTimeline: async (claimId: string, table: 'detection_results' | 'claims' = 'detection_results') => {
     return requestJson<{
       success: boolean;
@@ -1832,101 +1855,7 @@ export const detectionApi = {
     }>(`/api/claims/${encodeURIComponent(claimId)}/timeline?table=${table}`);
   },
 
-  // Get claims approaching deadline
-  getClaimsApproachingDeadline: async (params?: { userId?: string; days?: number }) => {
-    const queryParams = new URLSearchParams();
-    if (params?.userId) queryParams.append('userId', params.userId);
-    if (params?.days) queryParams.append('days', params.days.toString());
-    else queryParams.append('days', '7'); // Default to 7 days
-    const query = queryParams.toString();
-    return requestJson<{
-      success: boolean;
-      claims: Array<{
-        id: string;
-        anomaly_type: string;
-        estimated_value: number;
-        days_remaining: number;
-        deadline_date: string;
-        severity: string;
-        confidence_score: number;
-      }>;
-      count: number;
-      threshold_days: number;
-    }>(`/api/detections/deadlines${query ? `?${query}` : ''}`);
-  },
-
-  // Notifications
-  getNotifications: (params?: { unread_only?: boolean; limit?: number; offset?: number }) => {
-    const query = new URLSearchParams();
-    if (params?.unread_only) query.append('unread_only', 'true');
-    if (params?.limit) query.append('limit', params.limit.toString());
-    if (params?.offset) query.append('offset', params.offset.toString());
-    return requestJson<{ success: boolean; data: any[]; meta: any }>(`/api/notifications?${query.toString()}`);
-  },
-  markNotificationsRead: (notificationIds: string[]) =>
-    requestJson<{ success: boolean; data: any[] }>('/api/notifications/mark-read', {
-      method: 'POST',
-      body: JSON.stringify({ notificationIds })
-    }),
-
-  // Admin: Evidence collection settings
-  getEvidenceSummary: () => requestJson<{
-    success: boolean;
-    autoCollect: boolean;
-    schedule: string;
-    lastRun?: string;
-    totalDocuments?: number;
-  }>('/api/admin/evidence/settings'),
-
-  setEvidenceAutoCollect: (enabled: boolean) => requestJson<{
-    success: boolean;
-    message: string;
-  }>('/api/admin/evidence/auto-collect', {
-    method: 'POST',
-    body: JSON.stringify({ enabled })
-  }),
-
-  setEvidenceSchedule: (schedule: string) => requestJson<{
-    success: boolean;
-    message: string;
-  }>('/api/admin/evidence/schedule', {
-    method: 'POST',
-    body: JSON.stringify({ schedule })
-  }),
-
-  // Admin: Users management
-  getAdminUsers: () => requestJson<{
-    success: boolean;
-    users: Array<{
-      id: string;
-      email: string;
-      role: 'user' | 'admin';
-      status: 'active' | 'locked';
-      created_at: string;
-      last_login?: string;
-    }>;
-  }>('/api/admin/users'),
-
-  updateAdminUser: (userId: string, updates: { role?: string; status?: string }) => requestJson<{
-    success: boolean;
-    message: string;
-  }>(`/api/admin/users/${encodeURIComponent(userId)}`, {
-    method: 'PATCH',
-    body: JSON.stringify(updates)
-  }),
-
-  impersonateUser: (userId: string) => requestJson<{
-    success: boolean;
-    token?: string;
-    message: string;
-  }>(`/api/admin/users/${encodeURIComponent(userId)}/impersonate`, { method: 'POST' }),
-  // Store Management
-  getStores: () => requestJson<{ success: boolean; stores: any[] }>('/api/v1/stores'),
-  createStore: (data: { name: string; marketplace: string; seller_id?: string }) =>
-    requestJson<{ success: boolean; store: any }>('/api/v1/stores', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    }),
-  deleteStore: (id: string) => requestJson<{ success: boolean }>('/api/v1/stores/' + id, { method: 'DELETE' }),
+  // Store Management access for detection results
+  getStores: () => api.getStores(),
   getStore: (id: string) => requestJson<{ success: boolean; store: any }>('/api/v1/stores/' + id),
 };
