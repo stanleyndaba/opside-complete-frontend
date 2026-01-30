@@ -12,6 +12,7 @@ import { useCurrency, currencies } from '@/components/providers/CurrencyProvider
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api } from '@/lib/api';
 import { StoreSelector } from './StoreSelector';
+import { motion, AnimatePresence } from 'framer-motion';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
