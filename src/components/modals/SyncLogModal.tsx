@@ -258,7 +258,7 @@ export function SyncLogModal({ isOpen, onClose }: SyncLogModalProps) {
                                                     log.type === 'thinking' ? "text-white/40 animate-pulse" :
                                                         "text-white/60"
                                     )}>
-                                        <span className="mr-2 opacity-20 group-hover:opacity-100 transition-opacity">>></span>
+                                        <span className="mr-2 opacity-20 group-hover:opacity-100 transition-opacity">{">>"}</span>
                                         {log.message}
                                     </span>
                                 </div>
