@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { Mail, CheckCircle2, XCircle, RefreshCw, LogOut } from 'lucide-react';
@@ -126,83 +125,107 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
   if (loading) {
     return (
-      <Card className="bg-white border border-gray-200 shadow-sm">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 text-gray-500">
-            <RefreshCw className="h-4 w-4 animate-spin" />
-            <span>Loading Gmail status...</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-4 py-4">
+        <div className="relative flex h-5 w-5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
+          <span className="relative inline-flex rounded-full h-5 w-5 bg-emerald-500/40"></span>
+        </div>
+        <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">INITIATING_SECURE_LINK...</span>
+      </div>
     );
   }
 
   return (
-    <Card className="bg-white border border-gray-200 shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-800">
-          <img src="/G.png" alt="Gmail" className="h-4 w-4" />
-          Gmail Connection
-        </CardTitle>
-        <CardDescription className="text-xs text-gray-500">
-          Connect Gmail to automatically ingest evidence documents
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3 pt-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {status?.connected ? (
-              <>
-                <Badge className="bg-emerald-500 text-white border-emerald-500 font-medium text-xs px-2 py-0.5">
-                  <CheckCircle2 className="w-3 h-3 mr-1" />
-                  Connected
-                </Badge>
-                {status.email && (
-                  <span className="text-xs text-gray-600">{status.email}</span>
-                )}
-              </>
-            ) : (
-              <Badge className="bg-amber-500 text-white border-amber-500 text-xs px-2 py-0.5">
-                <XCircle className="w-3 h-3 mr-1" />
-                Not Connected
-              </Badge>
-            )}
+    <div className="relative group">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-emerald-500/30 transition-colors">
+            <Mail className="h-4 w-4 text-emerald-500/50" />
           </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">DATASOURCE_01</span>
+            <h3 className="text-sm font-serif font-medium text-white tracking-wide uppercase">Gmail_Connection</h3>
+          </div>
+        </div>
+
+        {status?.connected ? (
+          <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+            <CheckCircle2 className="w-3 h-3" />
+            SECURE_LINK_ACTIVE
+          </div>
+        ) : (
+          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[9px] font-mono font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+            <XCircle className="w-3 h-3" />
+            NODE_OFFLINE
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <span className="text-[10px] font-mono text-white/20 uppercase tracking-wider block">IDENTIFIED_ENDPOINT</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-white/60">
+                {status?.email || 'AWAITING_AUTHORIZATION'}
+              </span>
+            </div>
+          </div>
+
           {showActions && status?.connected && (
             <Button
               variant="ghost"
               size="sm"
               onClick={handleDisconnect}
               disabled={disconnecting}
-              className="bg-transparent border-0 text-red-400 hover:bg-red-500/10">
+              className="h-9 px-4 text-[10px] font-mono font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-widest rounded-lg"
+            >
               {disconnecting ? (
                 <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  Disconnecting...
+                  <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" />
+                  SEVERING...
                 </>
               ) : (
                 <>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Disconnect
+                  <LogOut className="w-3.5 h-3.5 mr-2" />
+                  SEVER_LINK
                 </>
               )}
             </Button>
           )}
+
+          {!status?.connected && showActions && (
+            <Link to="/integrations-hub">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 px-4 text-[10px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-widest rounded-lg"
+              >
+                AUTHORIZE_NODE
+              </Button>
+            </Link>
+          )}
         </div>
 
         {status?.connected && status.lastSync && (
-          <div className="text-xs text-gray-500">
-            Last sync: {new Date(status.lastSync).toLocaleString()}
+          <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+            <RefreshCw className="h-3 w-3 text-white/20" />
+            <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">
+              LAST_SYNCHRONIZATION_EVENT: <span className="text-white/40">{new Date(status.lastSync).toLocaleString().toUpperCase()}</span>
+            </span>
           </div>
         )}
 
-        {!status?.connected && showActions && (
-          <div className="text-xs text-gray-500">
-            Connect Gmail to start automatically collecting evidence documents from your emails.
+        {!status?.connected && (
+          <div className="p-4 bg-white/[0.01] border border-white/5 rounded-lg">
+            <p className="text-[10px] font-mono text-white/20 leading-relaxed uppercase tracking-wider">
+              System awaits authorization to initiate autonomous document ingestion protocol.
+              Gmail link required for forensic scanning of invoice attachments.
+            </p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

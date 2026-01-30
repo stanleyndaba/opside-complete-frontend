@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
-import { Mail, RefreshCw, CheckCircle2, AlertCircle, Cloud, Loader2 } from 'lucide-react';
+import { RefreshCw, AlertCircle, Cloud, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface LogEvent {
   type: 'info' | 'success' | 'warning' | 'error' | 'progress' | 'thinking';
@@ -87,7 +85,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     loadSources();
   }, []);
 
-  const hasConnectedSources = sources.length> 0;
+  const hasConnectedSources = sources.length > 0;
 
   // Listen for SSE events
   useEffect(() => {
@@ -154,11 +152,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         // Log success with details
         onLogEvent?.({ type: 'success', category: 'system', message: `[CONNECTED] All sources responded` }, 800);
 
-        if (res.data.totalItemsProcessed> 0) {
+        if (res.data.totalItemsProcessed > 0) {
           onLogEvent?.({ type: 'thinking', category: 'parse', message: `Found ${res.data.totalItemsProcessed} items to process...` }, 900);
         }
 
-        if (res.data.totalDocumentsIngested> 0) {
+        if (res.data.totalDocumentsIngested > 0) {
           onLogEvent?.({ type: 'success', category: 'parse', message: `[INGESTED] ${res.data.totalDocumentsIngested} document(s) extracted` }, 1100);
           onLogEvent?.({ type: 'thinking', category: 'parse', message: 'Running OCR and text extraction on new documents...' }, 1000);
           onLogEvent?.({ type: 'info', category: 'match', message: 'Queuing documents for claim matching...', thinkingDuration: 4 }, 1300);
@@ -196,7 +194,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           totalItemsProcessed: res.data.totalItemsProcessed || 0,
         });
 
-        if (res.data.errors && res.data.errors.length> 0) {
+        if (res.data.errors && res.data.errors.length > 0) {
           onLogEvent?.({ type: 'warning', category: 'system', message: `Completed with ${res.data.errors.length} error(s)` }, 500);
           toast({
             title: 'Ingestion Completed with Errors',
@@ -254,140 +252,123 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   };
 
   return (
-    <Card className="bg-white border border-gray-200 shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium text-gray-800">
-          <Cloud className="h-4 w-4" />
-          Evidence Ingestion
-        </CardTitle>
-        <CardDescription className="text-xs text-gray-500">
-          Collect documents from all connected sources (Gmail, Outlook, Google Drive, Dropbox)
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3 pt-0">
+    <div className="relative group">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-emerald-500/30 transition-colors">
+            <Cloud className="h-4 w-4 text-emerald-500/50" />
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">INGESTION_CONTROLLER</span>
+            <h3 className="text-sm font-serif font-medium text-white tracking-wide uppercase">Evidence_Scanner</h3>
+          </div>
+        </div>
+
         {loadingSources ? (
-          <div className="flex items-center justify-center py-3">
-            <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-            <span className="ml-2 text-xs text-gray-500">Loading sources...</span>
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-3 w-3 animate-spin text-white/20" />
+            <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">POLLING_SOURCES...</span>
           </div>
         ) : (
-          <>
-            {sources.length> 0 && (
-              <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
-                <div className="text-xs font-medium text-gray-500 mb-2">Connected Sources:</div>
-                <div className="flex flex-wrap gap-2">
-                  {sources.map((source) => (
-                    <Badge key={source.id} className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
-                      {getProviderName(source.provider)}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <Button
-              onClick={handleIngest}
-              disabled={ingesting || !hasConnectedSources}
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-white text-sm h-9">
-              {ingesting ? (
-                <>
-                  <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" />
-                  Ingesting from All Sources...
-                </>
-              ) : (
-                <>
-                  <Cloud className="w-3.5 h-3.5 mr-2" />
-                  Ingest from All Sources
-                </>
-              )}
-            </Button>
-
-            {!hasConnectedSources && (
-              <div className="flex items-center gap-2 text-xs text-amber-600">
-                <AlertCircle className="w-3.5 h-3.5" />
-                <span>Connect at least one source to ingest evidence documents.</span>
-              </div>
-            )}
-
-            {ingesting && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>Processing documents from all sources...</span>
-                  <span>{progress}%</span>
-                </div>
-                <Progress value={progress} className="h-2" />
-              </div>
-            )}
-
-            {result && (
-              <div className="space-y-3 p-4 rounded-lg bg-gray-50 border border-gray-200">
-                <div className="flex items-center gap-2">
-                  {result.success ? (
-                    <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
-                      <CheckCircle2 className="w-3 h-3 mr-1" />
-                      Completed
-                    </Badge>
-                  ) : (
-                    <Badge className="bg-red-100 text-red-700 border-red-200">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      Failed
-                    </Badge>
-                  )}
-                  <span className="text-sm text-gray-700">{result.message}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-gray-500">Documents Ingested:</span>
-                    <span className="ml-2 font-medium text-gray-800">{result.totalDocumentsIngested}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Items Processed:</span>
-                    <span className="ml-2 font-medium text-gray-800">{result.totalItemsProcessed}</span>
-                  </div>
-                </div>
-                {result.results && (
-                  <div className="pt-2 border-t border-white/10">
-                    <div className="text-xs font-medium text-gray-400 mb-2">Breakdown by Source:</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      {result.results.gmail && (
-                        <div className="text-gray-300">
-                          Gmail: {result.results.gmail.documentsIngested} docs
-                        </div>
-                      )}
-                      {result.results.outlook && (
-                        <div className="text-gray-300">
-                          Outlook: {result.results.outlook.documentsIngested} docs
-                        </div>
-                      )}
-                      {result.results.gdrive && (
-                        <div className="text-gray-300">
-                          Google Drive: {result.results.gdrive.documentsIngested} docs
-                        </div>
-                      )}
-                      {result.results.dropbox && (
-                        <div className="text-gray-300">
-                          Dropbox: {result.results.dropbox.documentsIngested} docs
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-                {result.errors && result.errors.length> 0 && (
-                  <div className="mt-2 p-2 rounded bg-red-500/10 border border-red-500/20">
-                    <div className="text-xs font-medium text-red-400 mb-1">Errors:</div>
-                    <ul className="text-xs text-red-300 list-disc list-inside">
-                      {result.errors.map((error, idx) => (
-                        <li key={idx}>{error}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
-          </>
+          <div className="flex items-center gap-2">
+            <div className={cn("h-1.5 w-1.5 rounded-full", hasConnectedSources ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-rose-500")} />
+            <span className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-widest">
+              {sources.length} ACTIVE_NODES
+            </span>
+          </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="space-y-6">
+        {!loadingSources && sources.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {sources.map((source) => (
+              <div key={source.id} className="px-2 py-0.5 bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-mono font-bold text-emerald-500/60 uppercase tracking-widest rounded-sm">
+                {getProviderName(source.provider)}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="relative">
+          <Button
+            onClick={handleIngest}
+            disabled={ingesting || !hasConnectedSources}
+            className={cn(
+              "w-full h-10 px-6 text-[11px] font-mono font-bold uppercase tracking-[0.2em] rounded-lg transition-all",
+              ingesting
+                ? "bg-white/[0.03] text-white/40 border border-white/10"
+                : "bg-emerald-500 hover:bg-emerald-600 text-black border-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+            )}
+          >
+            {ingesting ? (
+              <div className="flex items-center gap-3">
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                COLLECTING_EVIDENCE...
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Cloud className="w-3.5 h-3.5" />
+                INITIATE_GLOBAL_SYNC
+              </div>
+            )}
+          </Button>
+
+          {ingesting && (
+            <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-white/5 overflow-hidden rounded-full">
+              <div
+                className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          )}
+        </div>
+
+        {!hasConnectedSources && !loadingSources && (
+          <div className="flex items-start gap-3 p-4 bg-rose-500/[0.02] border border-rose-500/10 rounded-lg">
+            <AlertCircle className="w-3.5 h-3.5 text-rose-500/40 mt-0.5" />
+            <span className="text-[10px] font-mono text-rose-500/60 uppercase tracking-wide leading-relaxed">
+              PROTOCOL_HALTED: No active data sources identified. Authorized nodes required to start ingestion.
+            </span>
+          </div>
+        )}
+
+        {result && (
+          <div className="p-5 bg-white/[0.02] border border-white/5 rounded-xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">INGESTION_MANIFEST</span>
+                <span className={cn("text-xs font-mono font-bold uppercase", result.success ? "text-emerald-500" : "text-rose-500")}>
+                  {result.success ? 'PROTOCOL_SUCCESS' : 'EXECUTION_FAULT'}
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest">DOCS_INGESTED</div>
+                  <div className="text-sm font-mono font-bold text-white">{result.totalDocumentsIngested}</div>
+                </div>
+                <div className="h-6 w-[1px] bg-white/5" />
+                <div className="text-right">
+                  <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest">ITEMS_SCANNED</div>
+                  <div className="text-sm font-mono font-bold text-white">{result.totalItemsProcessed}</div>
+                </div>
+              </div>
+            </div>
+
+            {result.results && (
+              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-white/5">
+                {Object.entries(result.results).map(([source, data]: [string, any]) => (
+                  <div key={source} className="flex flex-col gap-0.5">
+                    <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest">{source}</span>
+                    <span className="text-[10px] font-mono text-white/60">{data.documentsIngested || 0}_DOCS_FOUND</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
