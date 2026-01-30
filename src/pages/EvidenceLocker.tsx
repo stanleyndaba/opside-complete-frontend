@@ -1,15 +1,17 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { PageLayout } from '@/components/layout/PageLayout';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Navbar } from '@/components/layout/Navbar';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { cn } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw, Hexagon, CheckCircle2, XCircle, Activity, AlertCircle, ArrowRight } from 'lucide-react';
+import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw, Hexagon, CheckCircle2, XCircle, Activity, AlertCircle, ArrowRight, Shield, Terminal, Cloud, Database } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useErrorToast } from '@/hooks/use-error-toast';
 import { api } from '@/lib/api';
-import { Link } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
@@ -108,15 +110,15 @@ const getDocCategoryIcon = (category: DocLogEntry['category']) => {
   }
 };
 
-// Get log color
+// Get log color for the Matrix Terminal
 const getDocLogColor = (type: DocLogEntry['type']) => {
   switch (type) {
-    case 'success': return 'text-emerald-400';
-    case 'error': return 'text-red-400';
-    case 'warning': return 'text-amber-400';
-    case 'progress': return 'text-blue-400';
-    case 'thinking': return 'text-gray-500 italic';
-    default: return 'text-gray-300';
+    case 'success': return 'text-emerald-500 font-bold';
+    case 'error': return 'text-rose-500';
+    case 'warning': return 'text-amber-500';
+    case 'progress': return 'text-emerald-500/60';
+    case 'thinking': return 'text-white/40 italic';
+    default: return 'text-white/60';
   }
 };
 
@@ -125,6 +127,12 @@ const formatDocTimestamp = (date: Date) => {
   return date.toISOString().replace('T', ' ').slice(0, 23);
 };
 export default function EvidenceLocker() {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const toggleSidebar = useCallback(() => setIsSidebarCollapsed(prev => !prev), []);
+  const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
+
   const [dragActive, setDragActive] = useState(false);
   const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
 
@@ -228,6 +236,83 @@ export default function EvidenceLocker() {
   const [pageSize, setPageSize] = useState(10);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+
+  // Unified upload protocol for Ingestion Nodes
+  const handleFileUpload = async (files: File[]) => {
+    if (!files || files.length === 0) {
+      toast({
+        title: 'INGESTION_EMPTY',
+        description: 'No document objects detected for protocol initiation.',
+        variant: 'destructive'
+      });
+      addDocLog({ type: 'warning', category: 'upload', message: 'Ingestion stream empty' }, 0);
+      return;
+    }
+
+    addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document object(s)...`, thinkingDuration: 1 }, 0);
+    addDocLog({ type: 'thinking', category: 'upload', message: `Analyzing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}` }, 600);
+
+    toast({
+      title: 'Initiating Ingestion',
+      description: `Processing ${files.length} document(s)...`
+    });
+
+    try {
+      setLoading(true);
+      const uploadUrls = [
+        api.buildApiUrl('/api/documents/upload'),
+        api.buildApiUrl('/api/evidence/upload')
+      ];
+
+      let lastError: Error | null = null;
+      let res: Response | null = null;
+      let successfulUrl: string | null = null;
+
+      for (const uploadUrl of uploadUrls) {
+        try {
+          const form = new FormData();
+          for (const f of files) {
+            form.append('file', f);
+          }
+          res = await fetch(uploadUrl, { method: 'POST', credentials: 'include', body: form });
+          if (res.ok) { successfulUrl = uploadUrl; break; }
+          else {
+            const errorText = await res.text();
+            lastError = new Error(`PROTOCOL_FAULT: ${res.status} - ${errorText}`);
+          }
+        } catch (err: any) { lastError = err; }
+      }
+
+      if (!res || !res.ok) throw lastError || new Error('INGESTION_HANDSHAKE_FAILED');
+
+      addDocLog({ type: 'success', category: 'upload', message: `[INGESTED] ${files.length} objects stored securely` }, 400);
+      addDocLog({ type: 'thinking', category: 'parse', message: 'Extracting forensic metadata streams...' }, 800);
+      addDocLog({ type: 'progress', category: 'parse', message: 'Executing OCR and neural parsing...', thinkingDuration: 2 }, 1000);
+
+      toast({
+        title: 'PROTOCOL_SECURED',
+        description: `${files.length} document(s) ingested. Forensic audit in progress.`,
+      });
+
+      const refresh = await api.getDocuments();
+      if (refresh.ok && Array.isArray(refresh.data)) {
+        const previousCount = documents.length;
+        setDocuments(refresh.data);
+        if (refresh.data.length > previousCount) {
+          const newCount = refresh.data.length - previousCount;
+          addDocLog({ type: 'success', category: 'parse', message: `[REGISTRY_UPDATED] ${newCount} new entries identified` }, 1200);
+        }
+      }
+
+      const statusRes = await api.getEvidenceStatus();
+      if (statusRes.ok && statusRes.data) setEvidenceStatus(statusRes.data);
+    } catch (err: any) {
+      addDocLog({ type: 'error', category: 'upload', message: `PROTOCOL_FAILURE: ${err?.message || 'Unknown error'}` }, 0);
+      toast({ title: 'INGESTION_CRASHED', description: err?.message || 'Handshake failed.', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Document Activity Log state
   const [docLogs, setDocLogs] = useState<DocLogEntry[]>([]);
@@ -595,168 +680,7 @@ export default function EvidenceLocker() {
     e.stopPropagation();
     setDragActive(false);
     const files = Array.from(e.dataTransfer.files || []);
-    if (!files.length) {
-      toast({
-        title: 'No files',
-        description: 'Please drop valid files to upload.',
-        variant: 'destructive'
-      });
-      addDocLog({ type: 'warning', category: 'upload', message: 'No files detected in drop' }, 0);
-      return;
-    }
-
-    // Add upload logs
-    addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document(s)...`, thinkingDuration: 2 }, 0);
-    addDocLog({ type: 'thinking', category: 'upload', message: `Let me process: ${files.map(f => f.name).join(', ')}` }, 800);
-
-    // Show immediate feedback
-    toast({
-      title: 'Uploading...',
-      description: `Uploading ${files.length} document(s)...`
-    });
-
-    try {
-      setLoading(true);
-      // Try /api/documents/upload first, fallback to /api/evidence/upload
-      const uploadUrls = [
-        api.buildApiUrl('/api/documents/upload'),
-        api.buildApiUrl('/api/evidence/upload')
-      ];
-
-      console.log('[Upload] Files to upload:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
-
-      let lastError: Error | null = null;
-      let res: Response | null = null;
-      let successfulUrl: string | null = null;
-
-      // Try both endpoints - recreate FormData for each attempt
-      for (const uploadUrl of uploadUrls) {
-        try {
-          // Recreate FormData for each endpoint attempt (FormData is consumed after fetch)
-          const form = new FormData();
-          // OpenAPI spec shows 'file' (singular) - append all files with 'file' field name
-          for (const f of files) {
-            form.append('file', f);
-          }
-
-          console.log('[Upload] Trying endpoint:', uploadUrl);
-          console.log('[Upload] FormData entries:', Array.from(form.entries()).map(([key, value]) => ({ key, value: value instanceof File ? value.name : value })));
-
-          res = await fetch(uploadUrl, {
-            method: 'POST',
-            credentials: 'include',
-            body: form
-          });
-
-          console.log('[Upload] Response status:', res.status, res.statusText, 'from', uploadUrl);
-
-          if (res.ok) {
-            console.log('[Upload] Success from endpoint:', uploadUrl);
-            successfulUrl = uploadUrl;
-            break;
-          } else {
-            const errorText = await res.text();
-            console.warn('[Upload] Failed on', uploadUrl, ':', res.status, errorText);
-            lastError = new Error(`Upload failed on ${uploadUrl}: ${res.status} ${res.statusText} - ${errorText}`);
-            // Continue to next endpoint
-          }
-        } catch (err: any) {
-          console.warn('[Upload] Error on', uploadUrl, ':', err);
-          lastError = err;
-          // Continue to next endpoint
-        }
-      }
-
-      if (!res || !res.ok) {
-        const errorText = res ? await res.text().catch(() => 'Unknown error') : 'No response from server';
-        console.error('[Upload] All endpoints failed. Last error:', lastError);
-        console.error('[Upload] Last response:', res ? { status: res.status, statusText: res.statusText, body: errorText } : 'No response');
-
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { message: errorText || lastError?.message || `Upload failed. Check console for details.` };
-        }
-        throw new Error(errorData.message || errorData.error || `Upload failed. Please check if the backend endpoint is available. Endpoints tried: ${uploadUrls.join(', ')}`);
-      }
-
-      const responseData = await res.json().catch(() => null);
-      console.log('[Upload] Success response from', successfulUrl, ':', responseData);
-
-      // Add success logs
-      addDocLog({ type: 'success', category: 'upload', message: `[UPLOADED] ${files.length} document(s) received` }, 600);
-      addDocLog({ type: 'thinking', category: 'parse', message: 'Now let me extract text and metadata...' }, 900);
-      addDocLog({ type: 'progress', category: 'parse', message: 'Running OCR and text extraction...', thinkingDuration: 3 }, 1200);
-
-      // Show success toast
-      toast({
-        title: 'Uploaded Successfully',
-        description: `${files.length} document(s) uploaded successfully. Parsing will begin automatically.`,
-        duration: 5000
-      });
-
-      // Refresh documents list
-      const refresh = await api.getDocuments();
-      if (refresh.ok && Array.isArray(refresh.data)) {
-        setDocuments(refresh.data);
-        // Show toast if new documents were added
-        if (refresh.data.length > documents.length) {
-          const newCount = refresh.data.length - documents.length;
-          addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
-          addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
-          addDocLog({ type: 'info', category: 'match', message: 'Cross-referencing invoice numbers and amounts...', thinkingDuration: 4 }, 1300);
-          toast({
-            title: 'Documents Added',
-            description: `${newCount} new document(s) are now in your Doc Locker.`,
-            duration: 4000
-          });
-        }
-      }
-
-      // Refresh evidence status
-      const statusRes = await api.getEvidenceStatus();
-      if (statusRes.ok && statusRes.data) {
-        setEvidenceStatus(statusRes.data);
-      }
-    } catch (err: any) {
-      console.error('Upload error:', err);
-      addDocLog({ type: 'error', category: 'upload', message: `Upload failed: ${err?.message || 'Unknown error'}` }, 0);
-
-      // Show user-friendly error toast instead of raw error
-      const errorMessage = err?.message?.toLowerCase() || '';
-      if (errorMessage.includes('network') || errorMessage.includes('failed to fetch')) {
-        toast({
-          title: 'Connection Issue',
-          description: "We couldn't reach the server. Please check your internet and try again.",
-          variant: 'destructive',
-          duration: 5000
-        });
-      } else if (errorMessage.includes('too large') || errorMessage.includes('size')) {
-        toast({
-          title: 'File Too Large',
-          description: 'Please upload files under 25MB.',
-          variant: 'destructive',
-          duration: 5000
-        });
-      } else if (errorMessage.includes('format') || errorMessage.includes('type')) {
-        toast({
-          title: 'Unsupported Format',
-          description: 'Please upload PDF, PNG, or JPG files.',
-          variant: 'destructive',
-          duration: 5000
-        });
-      } else {
-        toast({
-          title: 'Upload Issue',
-          description: "We couldn't upload your file. Please try again or contact support.",
-          variant: 'destructive',
-          duration: 5000
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
+    handleFileUpload(files);
   };
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -908,629 +832,474 @@ export default function EvidenceLocker() {
     }
   };
 
-  return <PageLayout title="Doc Locker">
-    <div className="relative -m-4 lg:-m-6 overflow-x-hidden">
-      <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-        <div className="relative w-full max-w-full mx-auto px-8 pt-8 pb-10 text-gray-900">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-lg font-medium text-gray-900 tracking-tight">Evidence Locker</h1>
-            <p className="text-xs text-gray-500 mt-0.5">Document Management</p>
-          </div>
+  return (
+    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+      {/* Background Matrix Pattern / Noise */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <GmailConnectionStatus onStatusChange={setGmailConnected} />
-            <EvidenceIngestion
-              gmailConnected={gmailConnected}
-              onLogEvent={(event, delayMs) => addDocLog(event, delayMs)}
-              onIngestionComplete={() => {
-                // Refresh documents after ingestion
-                api.getDocuments().then(res => {
-                  if (res.ok && Array.isArray(res.data)) {
-                    setDocuments(res.data);
-                  }
-                });
-                api.getEvidenceStatus().then(res => {
-                  if (res.ok && res.data) {
-                    setEvidenceStatus(res.data);
-                  }
-                });
-              }}
-            />
-          </div>
-
-          {/* Document Activity Log */}
-          <div className="bg-white border border-gray-200 rounded-sm mb-8">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-              <div>
-                <h2 className="text-xs font-medium text-gray-900">Document Activity</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Real-time document processing log</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={showDevLogs}
-                    onChange={(e) => setShowDevLogs(e.target.checked)}
-                    className="w-3 h-3 rounded border-gray-300 text-gray-600 focus:ring-gray-500"
-                  />
-                  Dev Logs
-                </label>
-                <span className="text-xs text-gray-400">{filteredDocLogs.length} entries</span>
-              </div>
-            </div>
-            <div className="p-6">
-              {/* Search Bar */}
-              <div className="relative mb-3">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search logs... (upload, parse, match)"
-                  value={docLogSearch}
-                  onChange={(e) => setDocLogSearch(e.target.value)}
-                  className="pl-10 h-9 text-sm bg-gray-50 border-gray-200 focus:bg-white"
-                />
-              </div>
-
-              {/* Log Container - Terminal Style */}
-              <div
-                ref={docLogContainerRef}
-                className="bg-[#1f1f1f] rounded-lg p-4 font-mono text-xs h-48 overflow-y-auto scroll-smooth">
-                {filteredDocLogs.length === 0 ? (
-                  <div className="text-gray-500 flex items-center justify-center h-full">
-                    {docLogs.length === 0 ? 'Waiting for document activity...' : 'No logs match your search'}
+      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+      <div className="flex-1 flex h-full overflow-hidden">
+        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+        <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+          <div className="relative pt-8">
+            <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
+              {/* Institutional Header */}
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">EVIDENCE_MANAGEMENT_SYSTEM</span>
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase">Doc_Locker_Node_05</h1>
+                    <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
-                ) : (
-                  <div className="space-y-1">
-                    {filteredDocLogs.map((log) => (
-                      <div key={log.id} className="flex flex-col">
-                        <div className={`flex flex-wrap sm:flex-nowrap items-start gap-1 sm:gap-2 hover:bg-gray-800/50 px-1 rounded ${log.type === 'thinking' ? 'opacity-70' : ''}`}>
-                          <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                            {formatDocTimestamp(log.timestamp)}
-                          </span>
-                          <span className="sm:hidden text-gray-500 shrink-0 select-none text-xs">
-                            {log.timestamp.toLocaleTimeString()}
-                          </span>
-                          <span className="text-cyan-500 shrink-0 select-none font-medium text-xs sm:text-xs">
-                            doc agent
-                          </span>
-                          <span className={`shrink-0 ${getDocLogColor(log.type)}`}>
-                            {log.type === 'thinking' ? null : getDocCategoryIcon(log.category)}
-                          </span>
-                          <span className={`${getDocLogColor(log.type)} break-words min-w-0 flex-1`}>
-                            {/* Show story message by default, dev message when toggled */}
-                            {showDevLogs ? log.message : (log.storyMessage || log.message)}
-                            {/* Inline money badge */}
-                            {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
-                              <span className="ml-1.5 text-emerald-400 font-medium">+${log.moneyImpact.toLocaleString()}</span>
-                            )}
-                            {/* Inline claims badge */}
-                            {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
-                              <span className="ml-1 text-blue-400">({log.claimsAffected} claim{log.claimsAffected !== 1 ? 's' : ''})</span>
-                            )}
-                          </span>
-                        </div>
-                        {log.thinkingDuration && (
-                          <div className="ml-1 mt-0.5 mb-1">
-                            <span className="text-xs text-gray-600 italic">
-                              Thought for {log.thinkingDuration}s
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {loading && (
-                      <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-2 text-blue-400 animate-pulse">
-                        <span className="hidden sm:inline text-gray-500 shrink-0 select-none">
-                          {formatDocTimestamp(new Date())}
+                </div>
+
+                {/* Evidence Stats Badges */}
+                <div className="hidden xl:flex items-center gap-10">
+                  {[
+                    { label: 'Total_Archive', value: evidenceStatus?.documentsCount || documents.length, icon: Database },
+                    { label: 'Ingestion_Active', value: evidenceStatus?.processingCount || 0, icon: RefreshCw, pulse: (evidenceStatus?.processingCount || 0) > 0 }
+                  ].map((stat, idx) => (
+                    <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
+                      <span className="text-[9px] font-mono font-bold text-white/20 tracking-[0.2em] uppercase">{stat.label}</span>
+                      <div className="flex items-center gap-3">
+                        <stat.icon className={cn("h-3 w-3", stat.pulse ? "text-emerald-500 animate-spin" : "text-white/20")} />
+                        <span className="text-lg font-mono font-bold text-white tracking-tight">
+                          {stat.value}
                         </span>
-                        <span className="text-cyan-500 shrink-0 select-none font-medium text-xs sm:text-xs">
-                          doc agent
-                        </span>
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        <span>Processing...</span>
                       </div>
-                    )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-6">
+                  <GmailConnectionStatus onStatusChange={setGmailConnected} />
+                </div>
+                <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-6">
+                  <EvidenceIngestion
+                    gmailConnected={gmailConnected}
+                    onLogEvent={(event, delayMs) => addDocLog(event, delayMs)}
+                    onIngestionComplete={() => {
+                      // Refresh documents after ingestion
+                      api.getDocuments().then(res => {
+                        if (res.ok && Array.isArray(res.data)) {
+                          setDocuments(res.data);
+                        }
+                      });
+                      api.getEvidenceStatus().then(res => {
+                        if (res.ok && res.data) {
+                          setEvidenceStatus(res.data);
+                        }
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Forensic Ingestion Terminal */}
+              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-8 relative">
+                {/* Terminal Header */}
+                <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Terminal className="h-3 w-3 text-emerald-500/50" />
+                    <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">FORENSIC_INGESTION_TERMINAL_v5.0</h2>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Upload Documents */}
-          <div className="bg-white border border-gray-200 rounded-sm mb-8">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-start justify-between">
-              <div>
-                <h2 className="text-xs font-medium text-gray-900">Upload Documents</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Invoices, purchase orders, and receipts</p>
-              </div>
-              <p className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                82% of claims rejected without invoice
-              </p>
-            </div>
-            <div className="p-6">
-              <div className={`border border-dashed rounded-sm p-6 text-center transition-all ${dragActive ? 'border-gray-900 bg-gray-50' : 'border-gray-300 hover:border-gray-400'}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-                <Upload className="h-6 w-6 mx-auto mb-3 text-gray-400" />
-                <h3 className="text-xs font-medium text-gray-900 mb-1">Drag & Drop Documents</h3>
-                <p className="text-xs text-gray-500 mb-3">
-                  PDF, JPG, PNG up to 10MB
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-                  <button className="px-4 py-2 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => document.getElementById('doc-file-input')?.click()}>
-                    <Upload className="w-3 h-3 mr-1.5 inline" />
-                    Browse Files
-                  </button>
-                  <input id="doc-file-input" type="file" multiple className="hidden" onChange={async (e) => {
-                    const files = Array.from((e.target as HTMLInputElement).files || []);
-                    if (!files.length) {
-                      toast({
-                        title: 'No files',
-                        description: 'Please select valid files to upload.',
-                        variant: 'destructive'
-                      });
-                      addDocLog({ type: 'warning', category: 'upload', message: 'No files selected' }, 0);
-                      return;
-                    }
-
-                    // Add upload logs
-                    addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document(s)...`, thinkingDuration: 2 }, 0);
-                    addDocLog({ type: 'thinking', category: 'upload', message: `Processing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}` }, 800);
-
-                    // Show immediate feedback
-                    toast({
-                      title: 'Uploading...',
-                      description: `Uploading ${files.length} document(s)...`
-                    });
-
-                    try {
-                      setLoading(true);
-                      // Try /api/documents/upload first, fallback to /api/evidence/upload
-                      const uploadUrls = [
-                        api.buildApiUrl('/api/documents/upload'),
-                        api.buildApiUrl('/api/evidence/upload')
-                      ];
-
-                      console.log('[Upload] Files to upload:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
-
-                      let lastError: Error | null = null;
-                      let res: Response | null = null;
-                      let successfulUrl: string | null = null;
-
-                      // Try both endpoints - recreate FormData for each attempt
-                      for (const uploadUrl of uploadUrls) {
-                        try {
-                          // Recreate FormData for each endpoint attempt (FormData is consumed after fetch)
-                          const form = new FormData();
-                          // OpenAPI spec shows 'file' (singular) - append all files with 'file' field name
-                          for (const f of files) {
-                            form.append('file', f);
-                          }
-
-                          console.log('[Upload] Trying endpoint:', uploadUrl);
-                          console.log('[Upload] FormData entries:', Array.from(form.entries()).map(([key, value]) => ({ key, value: value instanceof File ? value.name : value })));
-
-                          res = await fetch(uploadUrl, {
-                            method: 'POST',
-                            credentials: 'include',
-                            body: form
-                          });
-
-                          console.log('[Upload] Response status:', res.status, res.statusText, 'from', uploadUrl);
-
-                          if (res.ok) {
-                            console.log('[Upload] Success from endpoint:', uploadUrl);
-                            successfulUrl = uploadUrl;
-                            break;
-                          } else {
-                            const errorText = await res.text();
-                            console.warn('[Upload] Failed on', uploadUrl, ':', res.status, errorText);
-                            lastError = new Error(`Upload failed on ${uploadUrl}: ${res.status} ${res.statusText} - ${errorText}`);
-                            // Continue to next endpoint
-                          }
-                        } catch (err: any) {
-                          console.warn('[Upload] Error on', uploadUrl, ':', err);
-                          lastError = err;
-                          // Continue to next endpoint
-                        }
-                      }
-
-                      if (!res || !res.ok) {
-                        const errorText = res ? await res.text().catch(() => 'Unknown error') : 'No response from server';
-                        console.error('[Upload] All endpoints failed. Last error:', lastError);
-                        console.error('[Upload] Last response:', res ? { status: res.status, statusText: res.statusText, body: errorText } : 'No response');
-
-                        let errorData;
-                        try {
-                          errorData = JSON.parse(errorText);
-                        } catch {
-                          errorData = { message: errorText || lastError?.message || `Upload failed. Check console for details.` };
-                        }
-                        throw new Error(errorData.message || errorData.error || `Upload failed. Please check if the backend endpoint is available. Endpoints tried: ${uploadUrls.join(', ')}`);
-                      }
-
-                      const responseData = await res.json().catch(() => null);
-                      console.log('[Upload] Success response from', successfulUrl, ':', responseData);
-
-                      // Add success logs
-                      addDocLog({ type: 'success', category: 'upload', message: `[UPLOADED] ${files.length} document(s) received` }, 600);
-                      addDocLog({ type: 'thinking', category: 'parse', message: 'Now let me extract text and metadata...' }, 900);
-                      addDocLog({ type: 'progress', category: 'parse', message: 'Running OCR and text extraction...', thinkingDuration: 3 }, 1200);
-
-                      // Show success toast
-                      toast({
-                        title: 'Uploaded Successfully',
-                        description: `${files.length} document(s) uploaded successfully. Parsing will begin automatically.`,
-                        duration: 5000
-                      });
-
-                      // Refresh documents list
-                      const refresh = await api.getDocuments();
-                      if (refresh.ok && Array.isArray(refresh.data)) {
-                        const previousCount = documents.length;
-                        setDocuments(refresh.data);
-                        // Show toast if new documents were added
-                        if (refresh.data.length > previousCount) {
-                          const newCount = refresh.data.length - previousCount;
-                          addDocLog({ type: 'success', category: 'parse', message: `[PARSED] ${newCount} document(s) added to library` }, 1500);
-                          addDocLog({ type: 'thinking', category: 'match', message: 'I\'ll look for matches with your open claims...' }, 1100);
-                          addDocLog({ type: 'info', category: 'match', message: 'Cross-referencing invoice numbers and amounts...', thinkingDuration: 4 }, 1300);
-                          toast({
-                            title: 'Documents Added',
-                            description: `${newCount} new document(s) are now in your Doc Locker.`,
-                            duration: 4000
-                          });
-                        }
-                      }
-
-                      // Refresh evidence status
-                      const statusRes = await api.getEvidenceStatus();
-                      if (statusRes.ok && statusRes.data) {
-                        setEvidenceStatus(statusRes.data);
-                      }
-
-                      // Reset file input
-                      e.target.value = '';
-                    } catch (err: any) {
-                      console.error('Upload error:', err);
-                      addDocLog({ type: 'error', category: 'upload', message: `Upload failed: ${err?.message || 'Unknown error'}` }, 0);
-                      toast({
-                        title: 'Upload Failed',
-                        description: err?.message || 'Failed to upload documents. Please try again.',
-                        variant: 'destructive',
-                        duration: 5000
-                      });
-                    } finally {
-                      setLoading(false);
-                    }
-                  }} />
-
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>or email to:</span>
-                    <code className="bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded text-xs text-gray-900">
-                      store@invoices.margin.app
-                    </code>
-                    <Link to="/integrations-hub" className="ml-2 inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs">
-                      Connect Sources <ExternalLink className="h-3 w-3" />
-                    </Link>
+                  <div className="flex items-center gap-6">
+                    <label className="flex items-center gap-2 text-[9px] font-mono text-white/20 hover:text-white/40 cursor-pointer transition-colors uppercase tracking-widest">
+                      <input
+                        type="checkbox"
+                        checked={showDevLogs}
+                        onChange={(e) => setShowDevLogs(e.target.checked)}
+                        className="w-2.5 h-2.5 rounded border-white/10 bg-transparent text-emerald-500 focus:ring-0"
+                      />
+                      Verbose_Output
+                    </label>
+                    <span className="text-[9px] font-mono text-white/10 uppercase tracking-widest">{filteredDocLogs.length} LOG_ENTRIES</span>
                   </div>
-                  <Button variant="outline" className="bg-white text-blue-900 border-blue-200 hover:bg-blue-50" onClick={exportCsv}>Export CSV</Button>
-                  {documents.length > 0 && (
-                    <Button
-                      variant="outline"
-                      className="bg-white text-red-600 border-red-200 hover:bg-red-50"
-                      onClick={handleDeleteAllDocuments}>
-                      <Trash2 className="w-4 h-4 mr-1" />
-                      Delete All
-                    </Button>
-                  )}
-                  <div className="text-xs text-gray-600 ml-2">{selectedIds.size > 0 ? `${selectedIds.size} selected` : ''}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Document Library Section */}
-          <div className="flex flex-col space-y-4 mb-6">
-            <div className="flex items-end justify-between border-b border-gray-100 pb-4">
-              <div>
-                <h2 className="text-xs font-medium text-gray-900">Document Library</h2>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-gray-400 tabular-nums">
-                    {sorted.length} Documents • Agent 5 Extraction Vault
-                  </span>
-                  <div className="h-1 w-1 rounded-full bg-emerald-500/50" />
-                  <span className="text-xs text-emerald-600/80 font-medium">
-                    Ready for Matching
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="relative group/search">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-300 group-focus-within/search:text-gray-900 transition-colors" />
-                  <Input
-                    placeholder="Search Evidence..."
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                    className="h-8 w-64 bg-gray-50/50 border-gray-100 text-sm pl-8 focus:bg-white focus:ring-0 focus:border-gray-200 transition-all rounded-none placeholder:text-gray-400"
-                  />
-                  {q && (
-                    <button
-                      onClick={() => setQ('')}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-900"
-                    >
-                      <XCircle className="h-3.5 w-3.5" />
-                    </button>
-                  )}
                 </div>
 
-                <div className="flex items-center border border-gray-100 divide-x divide-gray-100">
-                  <Input
-                    placeholder="Supplier"
-                    value={supplier}
-                    onChange={(e) => setSupplier(e.target.value)}
-                    className="h-8 w-32 border-none shadow-none text-sm rounded-none focus-visible:ring-0 placeholder:text-gray-300"
-                  />
-                  <Input
-                    placeholder="Type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className="h-8 w-24 border-none shadow-none text-sm rounded-none focus-visible:ring-0 placeholder:text-gray-300"
-                  />
-                </div>
+                <div className="p-8">
+                  {/* Terminal Search */}
+                  <div className="relative mb-6">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                      <span className="text-emerald-500/40 text-[10px] font-mono">$</span>
+                    </div>
+                    <Input
+                      type="text"
+                      placeholder="EXECUTE_SEARCH_QUERY..."
+                      value={docLogSearch}
+                      onChange={(e) => setDocLogSearch(e.target.value)}
+                      className="pl-8 h-10 text-[11px] font-mono bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+                    />
+                  </div>
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 rounded-none border border-gray-100 text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                  onClick={() => {
-                    setQ('');
-                    setSupplier('');
-                    setType('');
-                    setAmountMin('');
-                    setAmountMax('');
-                    setDateFrom('');
-                    setDateTo('');
-                  }}
-                >
-                  <RefreshCw className="mr-2 h-3 w-3" />
-                  Reset
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col min-h-[400px]">
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-500">
-                <Loader2 className="h-6 w-6 text-gray-200 animate-spin mb-4" />
-                <span className="text-xs font-medium text-gray-400">Synchronizing Intelligence</span>
-              </div>
-            ) : error ? (
-              <div className="flex flex-col items-center justify-center py-20 border border-dashed border-red-100 bg-red-50/30">
-                <AlertCircle className="h-6 w-6 text-red-200 mb-4" />
-                <span className="text-xs font-medium text-red-900 mb-1">Interface Error</span>
-                <p className="text-xs text-red-500 mb-4">{error}</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs rounded-none border-red-200 text-red-600 hover:bg-red-50"
-                  onClick={() => window.location.reload()}
-                >
-                  Retry Connection
-                </Button>
-              </div>
-            ) : (
-              <div className="flex flex-col divide-y divide-gray-100 border-t border-gray-100">
-                {pageData.map((doc) => (
+                  {/* Terminal Logs */}
                   <div
-                    key={doc.id}
-                    className="group relative flex items-center justify-between py-4 pl-4 pr-6 hover:bg-gray-50/50 transition-all duration-200"
-                  >
-                    {/* Hover Accent Bar */}
-                    <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    ref={docLogContainerRef}
+                    className="bg-black/40 border border-white/5 rounded-lg p-6 font-mono text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative">
+                    {/* Shadow overlay for depth */}
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/20" />
 
-                    <div className="flex items-start gap-4 flex-1 pr-12">
-                      <div className="mt-1">
-                        <Checkbox
-                          checked={selectedIds.has(doc.id)}
-                          onCheckedChange={(c) => {
-                            setSelectedIds(prev => {
-                              const next = new Set(prev);
-                              if (c) next.add(doc.id); else next.delete(doc.id);
-                              return next;
-                            });
-                          }}
-                          className="h-3.5 w-3.5 border-gray-200 rounded-none data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-900 transition-colors"
-                        />
+                    {filteredDocLogs.length === 0 ? (
+                      <div className="text-white/10 flex items-center justify-center h-full gap-3">
+                        <Loader2 className="h-3 w-3 animate-spin opacity-20" />
+                        <span className="uppercase tracking-[0.2em]">INITIALIZING_AUDIT_STREAMS...</span>
                       </div>
+                    ) : (
+                      <div className="relative space-y-1.5">
+                        {filteredDocLogs.map((log) => (
+                          <div key={log.id} className="flex flex-col group/log">
+                            <div className="flex items-start gap-4 hover:bg-white/[0.02] -mx-2 px-2 py-1 rounded transition-colors">
+                              <span className="text-white/10 shrink-0 select-none tabular-nums group-hover/log:text-white/20 transition-colors">
+                                [{log.timestamp.toLocaleTimeString()}]
+                              </span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <Shield className="h-2.5 w-2.5 text-emerald-500/30" />
+                                <span className="text-emerald-500/60 font-bold uppercase tracking-tighter">AGENT_05</span>
+                              </div>
+                              <span className={cn("flex-1 break-words leading-relaxed", getDocLogColor(log.type))}>
+                                <span className="mr-2 opacity-50">{">>"}</span>
+                                {showDevLogs ? log.message : (log.storyMessage || log.message)}
 
-                      <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <Hexagon className="h-3 w-3 text-gray-300 group-hover:text-gray-900 transition-colors" />
-                          <span className="text-[13px] font-medium text-gray-900 truncate">
-                            {doc.name}
-                          </span>
-                          <div className="flex items-center gap-1.5 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {doc.matchedClaims && doc.matchedClaims.length > 0 && (
-                              <div className="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 text-xs font-medium text-emerald-700 border border-emerald-100">
-                                <Link2 className="h-2.5 w-2.5" />
-                                {doc.matchedClaims.length} Linked
+                                {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
+                                  <span className="ml-2 text-emerald-500 bg-emerald-500/10 px-1 border border-emerald-500/20 rounded-sm font-bold">
+                                    +${log.moneyImpact.toLocaleString()}
+                                  </span>
+                                )}
+                                {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
+                                  <span className="ml-2 text-white/30 border-l border-white/10 pl-2">
+                                    {log.claimsAffected} IMPACT_ID
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            {log.thinkingDuration && showDevLogs && (
+                              <div className="ml-14 mb-1">
+                                <span className="text-[9px] text-white/10 italic">
+                                  LATENCY_RESOLVED: {log.thinkingDuration}ms
+                                </span>
                               </div>
                             )}
                           </div>
+                        ))}
+                        {loading && (
+                          <div className="flex items-center gap-4 text-emerald-500/40 animate-pulse mt-1 px-1">
+                            <span className="text-white/10 shrink-0 select-none tabular-nums">[{new Date().toLocaleTimeString()}]</span>
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                              <span className="font-bold uppercase tracking-tighter">PARSING_OBJECTS...</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Ingestion Node - Dropzone */}
+              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-12 relative p-10">
+                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30 rounded-tl-xl" />
+                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-emerald-500/30 rounded-tr-xl" />
+
+                <div
+                  className={cn(
+                    "border border-dashed transition-all duration-300 rounded-xl p-12 text-center group relative overflow-hidden",
+                    dragActive ? "border-emerald-500/50 bg-emerald-500/[0.02]" : "border-white/10 hover:border-white/20 bg-white/[0.01]"
+                  )}
+                  onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
+                >
+                  <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-emerald-500" : "text-white/10 group-hover:text-white/20")} />
+                  <h3 className="text-sm font-serif font-medium text-white mb-2 uppercase tracking-wide">Autonomous_Ingestion_Node</h3>
+                  <p className="text-[10px] text-white/20 font-mono mb-8 uppercase tracking-[0.2em]">
+                    PDF_PORTAL | JPG_SCANNER | PNG_CAPTURE
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button
+                      className="group relative px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 transition-all rounded-lg overflow-hidden"
+                      onClick={() => document.getElementById('doc-file-input')?.click()}
+                    >
+                      <div className="relative flex items-center gap-2">
+                        <Upload className="w-3.5 h-3.5 text-black" />
+                        <span className="text-[11px] font-mono font-bold text-black uppercase tracking-widest">ACTIVATE_UPLOAD</span>
+                      </div>
+                    </button>
+                    <input id="doc-file-input" type="file" multiple className="hidden" onChange={(e) => {
+                      const files = Array.from((e.target as HTMLInputElement).files || []);
+                      handleFileUpload(files);
+                      e.target.value = '';
+                    }} />
+
+                    <div className="flex items-center gap-6 pl-4 border-l border-white/5">
+                      <div className="flex items-center gap-2 text-white/20">
+                        <Mail className="w-3.5 h-3.5" />
+                        <span className="text-[10px] font-mono uppercase tracking-widest">store@invoices.margin.app</span>
+                      </div>
+                      <Link to="/integrations-hub" className="text-[10px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-widest transition-colors">
+                        LINK_DATASOURCES {">>"}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Audit Registry Ledger - Document Library */}
+              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                {/* Ledger Header */}
+                <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                  <div>
+                    <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">AUDIT_REGISTRY_LEDGER</h2>
+                    <div className="flex items-center gap-3 mt-1.5">
+                      <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">{sorted.length} ACTIVE_ENTRIES</span>
+                      <div className="h-1.5 w-[1px] bg-white/10" />
+                      <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">Agent_05_Validation_Enabled</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="relative group/search">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-white/20 group-focus-within/search:text-white transition-colors" />
+                      <Input
+                        placeholder="SCAN_QUERY..."
+                        value={q}
+                        onChange={(e) => setQ(e.target.value)}
+                        className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-mono pl-9 focus:border-emerald-500/30 transition-all rounded-lg placeholder:text-white/10"
+                      />
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 px-4 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+                      onClick={exportCsv}
+                    >
+                      <Download className="mr-2 h-3.5 w-3.5" />
+                      EXPORT
+                    </Button>
+
+                    {documents.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-9 px-4 text-[10px] font-mono font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-widest rounded-lg"
+                        onClick={handleDeleteAllDocuments}>
+                        <Trash2 className="w-3.5 h-3.5 mr-2" />
+                        PURGE
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Ledger Body */}
+                <div className="flex flex-col min-h-[500px]">
+                  {loading ? (
+                    <div className="flex flex-col items-center justify-center py-40">
+                      <div className="relative flex h-4 w-4 mb-6">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500/40"></span>
+                      </div>
+                      <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">SYNCHRONIZING_NODE_DATA...</span>
+                    </div>
+                  ) : error ? (
+                    <div className="flex flex-col items-center justify-center py-40 bg-rose-500/[0.02]">
+                      <AlertCircle className="h-8 w-8 text-rose-500/20 mb-6" />
+                      <span className="text-[11px] font-mono font-bold text-rose-500 uppercase tracking-widest">PROTOCOL_FAULT_DETECTED</span>
+                      <p className="text-[10px] text-rose-500/40 mt-2 font-mono">{error}</p>
+                      <Button
+                        variant="ghost"
+                        className="mt-8 text-[11px] font-mono font-bold text-white/20 hover:text-white"
+                        onClick={() => window.location.reload()}
+                      >
+                        RETRY_CONNECTION
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="divide-y divide-white/5 overflow-hidden">
+                        {pageData.map((doc) => (
+                          <div
+                            key={doc.id}
+                            className="group relative flex items-center justify-between py-6 px-8 hover:bg-white/[0.02] transition-all duration-300"
+                          >
+                            <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                            <div className="flex items-start gap-6 flex-1 pr-12">
+                              <div className="mt-1.5 flex flex-col items-center gap-3">
+                                <Checkbox
+                                  checked={selectedIds.has(doc.id)}
+                                  onCheckedChange={(c) => {
+                                    setSelectedIds(prev => {
+                                      const next = new Set(prev);
+                                      if (c) next.add(doc.id); else next.delete(doc.id);
+                                      return next;
+                                    });
+                                  }}
+                                  className="h-3.5 w-3.5 border-white/20 rounded-sm data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none transition-colors"
+                                />
+                                <Hexagon className="h-3.5 w-3.5 text-white/5 group-hover:text-emerald-500/50 transition-colors" />
+                              </div>
+
+                              <div className="flex flex-col gap-2 flex-1 min-w-0">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-sm font-bold text-white tracking-tight truncate uppercase group-hover:text-emerald-500/80 transition-colors">
+                                    {doc.name.replace(' ', '_')}
+                                  </span>
+                                  {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                                    <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
+                                      <Link2 className="h-2.5 w-2.5" />
+                                      {doc.matchedClaims.length} LINKED_OBJECTS
+                                    </div>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center text-[10px] font-mono font-bold text-white/20 gap-4 uppercase tracking-[0.1em]">
+                                  <span className="text-white/40">{doc.supplier || "VENDOR_UNKNOWN"}</span>
+                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/40">{doc.invoice || "NO_REF"}</span>
+                                  <span className="text-white/5">|</span>
+                                  <div className="flex items-center gap-2">
+                                    <div className={cn(
+                                      "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
+                                      doc.parser_status === 'completed' ? 'bg-emerald-500 shadow-emerald-500/50' :
+                                        doc.parser_status === 'processing' ? 'bg-amber-500 shadow-amber-500/50 animate-pulse' :
+                                          doc.parser_status === 'failed' ? 'bg-rose-500 shadow-rose-500/50' : 'bg-white/10'
+                                    )} />
+                                    <span className={cn(
+                                      doc.parser_status === 'completed' ? 'text-emerald-500/60' :
+                                        doc.parser_status === 'failed' ? 'text-rose-500/60' : 'text-white/20'
+                                    )}>
+                                      {doc.parser_status || "PENDING_INGESTION"}
+                                    </span>
+                                  </div>
+                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/40">
+                                    {doc.parser_confidence !== undefined ? `${(doc.parser_confidence * 100).toFixed(0)}%_CONF` : "CONF_TBD"}
+                                  </span>
+                                  <span className="text-white/5">|</span>
+                                  <span className="text-white font-bold">
+                                    {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
+                                  </span>
+                                  <span className="text-white/5">|</span>
+                                  <span className="tabular-nums">
+                                    {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                              {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                                <Link
+                                  to={`/case/${doc.matchedClaims[0]}`}
+                                  className="text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-widest flex items-center gap-2"
+                                >
+                                  ID_{doc.matchedClaims[0].slice(0, 8)}
+                                  <ArrowRight className="h-3 w-3" />
+                                </Link>
+                              )}
+
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/10 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 rounded-lg transition-all">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-3xl backdrop-blur-3xl p-2 animate-in fade-in slide-in-from-top-1">
+                                  <DropdownMenuItem asChild className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest">
+                                    <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
+                                      <Eye className="w-3.5 h-3.5" />
+                                      Analyze_Detail
+                                    </Link>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => downloadDoc(doc.id)}
+                                    className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest"
+                                  >
+                                    <Download className="w-3.5 h-3.5 mr-3" />
+                                    Retrieve_Source
+                                  </DropdownMenuItem>
+                                  <div className="h-[1px] bg-white/5 my-2" />
+                                  <DropdownMenuItem
+                                    onClick={() => handleDeleteDocument(doc.id, doc.name)}
+                                    className="text-[11px] font-mono text-rose-500/60 focus:bg-rose-500/10 focus:text-rose-500 rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5 mr-3" />
+                                    Purge_Evidence
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Ledger Pagination */}
+                      <div className="px-8 py-6 flex items-center justify-between border-t border-white/5 bg-white/[0.01]">
+                        <div className="flex items-center gap-6">
+                          <div className="flex items-center gap-3">
+                            <Checkbox
+                              checked={selectedIds.size > 0 && selectedIds.size === pageData.length}
+                              onCheckedChange={(c) => {
+                                if (c) setSelectedIds(new Set(pageData.map(d => d.id)));
+                                else setSelectedIds(new Set());
+                              }}
+                              className="h-3 w-3 border-white/10 rounded-sm"
+                            />
+                            <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">BATCH_SELECTION</span>
+                          </div>
+                          <span className="text-white/5 h-3 w-[1px]" />
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">
+                            PAGE {page} OF {totalPages}
+                          </span>
                         </div>
 
-                        <div className="flex items-center text-xs text-gray-400 font-medium gap-2">
-                          <span>{doc.supplier || "INTERNAL"}</span>
-                          <span className="text-gray-200">|</span>
-                          <span className="font-mono">{doc.invoice || "NO_REF"}</span>
-                          <span className="text-gray-200">|</span>
-                          <div className="flex items-center gap-1.5">
-                            <div className={`h-1 w-1 rounded-full ${doc.parser_status === 'completed' ? 'bg-emerald-500' :
-                              doc.parser_status === 'processing' ? 'bg-amber-500 animate-pulse' :
-                                doc.parser_status === 'failed' ? 'bg-red-500' : 'bg-gray-300'
-                              }`} />
-                            <span className={
-                              doc.parser_status === 'completed' ? 'text-gray-600' :
-                                doc.parser_status === 'failed' ? 'text-red-500' : 'text-gray-400'
-                            }>
-                              {doc.parser_status || "PENDING"}
-                            </span>
+                        <div className="flex items-center gap-8">
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">PAGE_DENSITY</span>
+                            <select
+                              className="bg-transparent border-none text-[10px] font-mono font-bold text-white/60 focus:ring-0 cursor-pointer p-0 uppercase"
+                              value={pageSize}
+                              onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
+                            >
+                              <option value={10}>10_ENTRIES</option>
+                              <option value={20}>20_ENTRIES</option>
+                              <option value={50}>50_ENTRIES</option>
+                            </select>
                           </div>
-                          <span className="text-gray-200">|</span>
-                          <span className="font-mono text-gray-500">
-                            {doc.parser_confidence !== undefined ? `${(doc.parser_confidence * 100).toFixed(0)}% CONF` : "NO_CONF"}
-                          </span>
-                          <span className="text-gray-200">|</span>
-                          <span className="font-mono text-gray-900">
-                            {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
-                          </span>
-                          <span className="text-gray-200">|</span>
-                          <span className="font-mono tabular-nums text-gray-500">
-                            {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
-                          </span>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              className="h-9 px-4 text-[10px] font-mono font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10"
+                              disabled={page <= 1}
+                              onClick={() => setPage(p => Math.max(1, p - 1))}
+                            >
+                              PREVIOUS
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              className="h-9 px-4 text-[10px] font-mono font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10"
+                              disabled={page >= totalPages}
+                              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                            >
+                              NEXT_CYCLE
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      {doc.matchedClaims && doc.matchedClaims.length > 0 && (
-                        <div className="flex items-center gap-1.5">
-                          {doc.matchedClaims.slice(0, 1).map((id: string) => (
-                            <Link
-                              key={id}
-                              to={`/case/${id}`}
-                              className="group/link flex items-center gap-1 text-xs font-mono text-gray-500 hover:text-gray-900 transition-colors"
-                            >
-                              {id.slice(0, 8)}
-                              <ArrowRight className="h-2.5 w-2.5 opacity-0 -translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all" />
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-300 hover:text-gray-900 hover:bg-white border border-transparent hover:border-gray-100 rounded-none transition-all">
-                            <MoreHorizontal className="h-3.5 w-3.5" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-100 rounded-none shadow-sm animate-in fade-in slide-in-from-top-1">
-                          <DropdownMenuItem asChild className="text-sm text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer">
-                            <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-2">
-                              <Eye className="w-3.5 h-3.5" />
-                              View Detail
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => downloadDoc(doc.id)}
-                            className="text-sm text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
-                          >
-                            <Download className="w-3.5 h-3.5 mr-2" />
-                            Download Original
-                          </DropdownMenuItem>
-                          {doc.parser_status !== 'completed' && doc.parser_status !== 'processing' && (
-                            <DropdownMenuItem
-                              onClick={async () => {
-                                try {
-                                  const res = await api.reparseDocument(doc.id);
-                                  if (res.ok) {
-                                    toast({ title: 'Parsing Started', description: 'Document parsing has been triggered.' });
-                                    const parsedRes = await api.getDocumentWithParsedData(doc.id);
-                                    if (parsedRes.ok && parsedRes.data) {
-                                      setDocuments(prev => prev.map(d =>
-                                        d.id === doc.id
-                                          ? { ...d, parser_status: parsedRes.data!.parser_status }
-                                          : d
-                                      ));
-                                    }
-                                  }
-                                } catch (error) { }
-                              }}
-                              className="text-sm text-gray-600 focus:bg-gray-50 focus:text-gray-900 rounded-none cursor-pointer"
-                            >
-                              <Activity className="w-3.5 h-3.5 mr-2" />
-                              Re-Parse
-                            </DropdownMenuItem>
-                          )}
-                          <div className="h-[1px] bg-gray-100 my-1" />
-                          <DropdownMenuItem
-                            onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                            className="text-sm text-red-500 focus:bg-red-50 focus:text-red-700 rounded-none cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5 mr-2" />
-                            Delete Permanent
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Pagination / Footer */}
-            {!loading && sorted.length > 0 && (
-              <div className="mt-auto border-t border-gray-100 px-6 py-4 flex items-center justify-between bg-white text-gray-500">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      checked={selectedIds.size > 0 && selectedIds.size === pageData.length}
-                      onCheckedChange={(c) => {
-                        if (c) setSelectedIds(new Set(pageData.map(d => d.id)));
-                        else setSelectedIds(new Set());
-                      }}
-                      className="h-3 w-3 border-gray-200 rounded-none shadow-none"
-                    />
-                    <span className="text-xs text-gray-400">Select Page</span>
-                  </div>
-                  <span className="text-gray-200">|</span>
-                  <span className="text-xs text-gray-400 tabular-nums">
-                    Page {page} of {totalPages} • {sorted.length} Records
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-300">Show</span>
-                    <select
-                      className="bg-transparent border-none text-xs font-mono text-gray-500 focus:ring-0 cursor-pointer p-0"
-                      value={pageSize}
-                      onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
-                    >
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                    </select>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      className="h-8 rounded-none border border-gray-100 text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
-                      disabled={page <= 1}
-                      onClick={() => setPage(p => Math.max(1, p - 1))}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="h-8 rounded-none border border-gray-100 text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-30"
-                      disabled={page >= totalPages}
-                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                    >
-                      Next
-                    </Button>
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
-  </PageLayout>;
+  );
 }
