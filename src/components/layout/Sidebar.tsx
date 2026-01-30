@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Lightweight prefetch using dynamic import hints matching route chunks
 const prefetchRoute = (path: string) => {
@@ -192,19 +193,22 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-8 h-8 transition-colors duration-200 rounded-lg",
+                  "relative flex items-center justify-center w-12 h-12 transition-all duration-300 rounded-xl group",
                   isActive
-                    ? "bg-slate-100 text-slate-900"
-                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
+                    ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+                    : "text-white/30 hover:bg-white/5 hover:text-white"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
-                  <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B] rounded-full shadow-[0_0_8px_rgba(6,78,59,0.3)]" />
+                  <motion.span
+                    layoutId="active-indicator-collapsed"
+                    className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
+                  />
                 )}
-                <item.icon className="h-4 w-4" strokeWidth={isActive ? 2 : 1.5} />
+                <item.icon className="h-5 w-5" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-gray-900 text-white text-xs">
+            <TooltipContent side="right" className="bg-[#0c0c0c] border border-white/10 text-emerald-500 text-[10px] font-mono uppercase tracking-widest px-3 py-1.5 backdrop-blur-xl">
               {item.title}
             </TooltipContent>
           </Tooltip>
@@ -216,27 +220,32 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-center gap-3 w-full px-4 py-1.5 transition-all duration-300 group rounded-lg mb-0.5",
+          "relative flex items-center gap-3 w-full px-5 py-2.5 transition-all duration-300 group rounded-xl mb-1",
           isActive
-            ? "bg-slate-100/80 text-slate-900"
-            : "text-slate-800 hover:bg-slate-50 hover:text-slate-900"
+            ? "bg-white/[0.03] text-white shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+            : "text-white/40 hover:bg-white/[0.02] hover:text-white"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
-          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B] rounded-full shadow-[0_0_8px_rgba(6,78,59,0.2)]" />
+          <motion.span
+            layoutId="active-indicator"
+            className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
+          />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-1.5 bottom-1.5 w-[2px] bg-[#064E3B]/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-[#064E3B]" : "text-slate-600 group-hover:text-slate-900")} />
+        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4.5 w-4.5 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-white/20 group-hover:text-white")} />
         <span className={cn(
-          "text-[12px] font-montserrat transition-colors tracking-wide",
-          isActive ? "font-semibold" : "font-normal"
+          "text-[11px] font-serif transition-colors tracking-[0.1em] uppercase",
+          isActive ? "font-medium text-white" : "font-light"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
-            "ml-auto text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
-            isActive ? "text-[#064E3B] bg-[#064E3B]/10" : "text-gray-500 bg-white/5"
+            "ml-auto text-[10px] font-mono tabular-nums px-2 py-0.5 rounded-md border",
+            isActive
+              ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
+              : "text-white/20 bg-white/5 border-white/5"
           )}>
             {claimCount}
           </span>
@@ -247,24 +256,24 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 transition-all duration-300 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-montserrat",
-        isCollapsed ? "w-16" : "w-60",
-        "text-slate-900 border-r border-slate-200",
-        "bg-white",
+        "fixed left-0 top-0 transition-all duration-500 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-serif shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
+        isCollapsed ? "w-20" : "w-64",
+        "text-white/60 border-r border-white/5",
+        "bg-[#070707]",
         className
       )}
       style={{ willChange: 'width' }}>
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-slate-200 flex items-center h-14",
-          isCollapsed ? "justify-center px-2" : "justify-between px-4"
+          "border-b border-white/5 flex items-center h-16",
+          isCollapsed ? "justify-center px-2" : "justify-between px-6"
         )}>
-        <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-2.5")}>
+        <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-3")}>
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-4" : "h-4", "w-auto object-contain")}
+            className={cn(isCollapsed ? "h-5" : "h-5", "w-auto object-contain brightness-200")}
           />
         </div>
       </div>
@@ -276,12 +285,12 @@ export function Sidebar({
             isCollapsed ? "px-2" : "px-3"
           )}>
           <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
-            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
+            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
               {primaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
               ))}
             </div>
-            {!isCollapsed && <div className="h-px bg-slate-100 w-full mx-4" />}
+            {!isCollapsed && <div className="h-px bg-white/5 w-full mx-4 my-2" />}
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
               {secondaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
@@ -293,47 +302,47 @@ export function Sidebar({
 
       {/* Version Badge */}
       <div className={cn(
-        "border-t border-gray-100 py-2",
-        isCollapsed ? "px-2 text-center" : "px-4"
+        "border-t border-white/5 py-3",
+        isCollapsed ? "px-2 text-center" : "px-6"
       )}>
         <span className={cn(
-          "text-[10px] font-mono text-gray-400",
+          "text-[9px] font-mono text-white/20 uppercase tracking-[0.2em]",
           isCollapsed ? "block" : ""
         )}>
-          {isCollapsed ? "v1" : "v1.0.0-GOLD"}
+          {isCollapsed ? "v1" : "v1.0.0-GOLD // PROD"}
         </span>
       </div>
 
       {/* More Menu / Logout */}
       <div className={cn(
-        "mt-auto border-t border-slate-200 py-2",
+        "mt-auto border-t border-white/5 py-3",
         isCollapsed ? "px-2 flex justify-center" : ""
       )}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               className={cn(
-                "w-full flex items-center transition-all group",
+                "w-full flex items-center transition-all group outline-none",
                 isCollapsed
-                  ? "justify-center p-2 rounded-lg hover:bg-slate-50"
-                  : "gap-2.5 px-6 py-3 text-left hover:bg-slate-50 text-slate-800"
+                  ? "justify-center p-3 rounded-xl hover:bg-white/5"
+                  : "gap-3 px-6 py-3 text-left hover:bg-white/[0.02] text-white/50 hover:text-white"
               )}>
-              <Menu className={cn("h-4 w-4 text-slate-600 group-hover:text-slate-900", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[12px] font-semibold tracking-wide">More</span>}
+              <Menu className={cn("h-4.5 w-4.5 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              {!isCollapsed && <span className="text-[11px] font-serif uppercase tracking-[0.2em]">More_System</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1 bg-white border-slate-200 rounded-lg shadow-xl mb-2 ml-2">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
-              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <LifeBuoy className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
-              <span>Report a problem</span>
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+              <span>Report_Incident</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
-              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <Sparkles className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
-              <span>What's New</span>
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <Sparkles className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
+              <span>Patch_Notes</span>
             </DropdownMenuItem>
 
             {/* Limited Offer / Referral */}
@@ -345,31 +354,31 @@ export function Sidebar({
               className="p-0">
               <HoverCard openDelay={100} closeDelay={200}>
                 <HoverCardTrigger asChild>
-                  <div className="flex items-center justify-between w-full px-3 py-2 text-[12px] text-emerald-600 hover:bg-emerald-50 cursor-pointer rounded-md transition-all">
-                    <div className="flex items-center gap-2.5">
+                  <div className="flex items-center justify-between w-full px-3 py-2 text-[11px] text-emerald-500 hover:bg-emerald-500/10 cursor-pointer rounded-lg transition-all font-serif uppercase tracking-widest">
+                    <div className="flex items-center gap-3">
                       <Gift className="h-4 w-4 text-emerald-500" strokeWidth={1.5} />
-                      <span className="font-semibold">Limited Offer</span>
+                      <span className="font-medium">Alpha_Provision</span>
                     </div>
-                    <div className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <div className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   </div>
                 </HoverCardTrigger>
                 <HoverCardContent
                   side="right"
                   align="start"
-                  className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden z-[100]">
+                  className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-[20px_0_40px_rgba(0,0,0,0.8)] rounded-xl overflow-hidden z-[100] backdrop-blur-xl">
                   <div className="p-5">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                        <Gift className="h-4 w-4 text-emerald-600" />
+                      <div className="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                        <Gift className="h-4 w-4 text-emerald-500" />
                       </div>
-                      <span className="text-xs font-bold text-emerald-600">Limited Offer</span>
+                      <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">Limited_Alpha_Provision</span>
                     </div>
-                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Referral</h4>
-                    <p className="text-xs text-gray-600 leading-relaxed font-montserrat">
-                      Sellers that invite sellers to Margin secure <span className="font-bold text-emerald-600">100% of their recovered funds</span> without commission deductions.
+                    <h4 className="text-sm font-serif text-white mb-2">Network Expansion</h4>
+                    <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                      "Sellers that invite other institutional heads secure 100% of their recovered artifacts without commission deductions."
                     </p>
-                    <div className="mt-4 pt-3 border-t border-gray-100">
-                      <span className="text-xs text-gray-400">Click to learn more</span>
+                    <div className="mt-4 pt-3 border-t border-white/5">
+                      <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">System Instruction: Click to Invoke</span>
                     </div>
                   </div>
                 </HoverCardContent>
@@ -377,16 +386,16 @@ export function Sidebar({
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/settings`)}
-              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-slate-800 hover:bg-slate-50 cursor-pointer rounded-md">
-              <Settings2 className="h-4 w-4 text-slate-500" strokeWidth={1.5} />
-              <span>Settings</span>
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <Settings2 className="h-4 w-4 text-white/20" strokeWidth={1.5} />
+              <span>Core_Terminal</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-slate-100 my-1" />
+            <DropdownMenuSeparator className="bg-white/5 my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex items-center gap-2.5 px-3 py-2 text-[12px] text-rose-600 hover:bg-rose-50 cursor-pointer rounded-md">
-              <LogOut className="h-4 w-4 text-rose-500" strokeWidth={1.5} />
-              <span className="font-medium">Sign Out</span>
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <LogOut className="h-4 w-4" strokeWidth={1.5} />
+              <span className="font-medium">Terminate_Session</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -394,28 +403,40 @@ export function Sidebar({
 
       {/* Sign Out Confirmation Dialog */}
       <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
-        <DialogContent className="sm:max-w-[400px] bg-white border-gray-200 p-0 gap-0 rounded-none">
-          <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
-            <DialogTitle className="text-base font-semibold text-gray-900">
-              Signing out already?
-            </DialogTitle>
-            <DialogDescription className="text-sm text-gray-500 mt-2 leading-relaxed">
-              Margin continues to monitor your margins and recover funds around the clock. Log back in anytime to review the latest recoveries.
-            </DialogDescription>
+        <DialogContent className="sm:max-w-[420px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-2xl rounded-2xl">
+          <DialogHeader className="px-8 pt-8 pb-6 border-b border-white/5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
+                <LogOut className="h-5 w-5 text-rose-500" />
+              </div>
+              <div>
+                <DialogTitle className="text-xl font-serif text-white tracking-tight">
+                  Terminate Session?
+                </DialogTitle>
+                <DialogDescription className="text-gray-500 font-mono text-[10px] uppercase tracking-widest mt-1">
+                  SESSION_DECOMMISSION_SEQUENCE // READY
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
-          <DialogFooter className="px-6 py-4 bg-gray-50/50 flex gap-3 sm:justify-end">
+          <div className="px-8 py-6">
+            <p className="text-[13px] text-white/40 leading-relaxed font-serif italic">
+              "The institutional matrix continues to monitor your artifacts and recover funds autonomously. Your presence is not required for background harvesting."
+            </p>
+          </div>
+          <DialogFooter className="px-8 py-6 bg-white/[0.02] flex gap-3 sm:justify-end border-t border-white/5">
             <Button
               variant="outline"
               onClick={() => setSignOutOpen(false)}
-              className="border-gray-200 text-gray-700 hover:bg-gray-100 rounded-none font-medium"
+              className="bg-transparent border-white/10 text-white hover:bg-white/5 rounded-xl font-serif uppercase tracking-widest text-[10px] h-10 px-6"
             >
-              Cancel
+              Abort_Termination
             </Button>
             <Button
               onClick={handleSignOut}
-              className="bg-gray-900 hover:bg-gray-800 text-white rounded-none font-medium"
+              className="bg-white text-black hover:bg-white/90 rounded-xl font-serif font-bold uppercase tracking-widest text-[10px] h-10 px-6"
             >
-              Sign Out
+              Confirm_Decommission
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -423,29 +444,32 @@ export function Sidebar({
 
       {/* Referral Popup - Institutional Style */}
       <Dialog open={showReferralPopup} onOpenChange={setShowReferralPopup}>
-        <DialogContent className="max-w-sm bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
+        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden backdrop-blur-3xl">
           {/* Header - Institutional Dark */}
-          <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
-            <h3 className="text-xs font-bold text-white">
-              Referral
-            </h3>
-            <p className="text-xs text-gray-400 mt-1 font-mono">
-              COMMISSION-FREE NETWORK EXPANSION
+          <div className="px-8 py-7 border-b border-white/5 bg-white/[0.01]">
+            <div className="flex items-center gap-3 mb-1">
+              <Gift className="h-5 w-5 text-emerald-500" />
+              <h3 className="text-xl font-serif text-white tracking-tight">
+                Alpha_Provision
+              </h3>
+            </div>
+            <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.3em]">
+              COMMISSION-FREE_NETWORK_EXPANSION
             </p>
           </div>
 
-          <div className="p-6">
-            <div className="space-y-6">
+          <div className="p-8">
+            <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-sm text-gray-500 leading-relaxed font-medium">
-                  PROVISION: Bring new sellers to Margin and secure 100% of their recovered funds without commission deductions.
+                <p className="text-[13px] text-white/50 leading-relaxed font-serif italic">
+                  "PROVISION: Integrate strategic allies into the Margin matrix to secure 100% of recovered artifacts without commission deductions."
                 </p>
 
                 {/* Value Proposition */}
-                <div className="p-4 bg-gray-50/50 border border-gray-100 relative group">
-                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900" />
-                  <p className="text-xs text-gray-400 font-mono mb-1">NETWORK BENEFIT</p>
-                  <p className="text-[13px] font-bold text-gray-900 tracking-tight">100% OF RECOVERED FUNDS</p>
+                <div className="p-5 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl relative group overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-500" />
+                  <p className="text-[9px] text-emerald-500/40 font-mono mb-2 uppercase tracking-widest">NETWORK_BENEFIT_PROTOCOL</p>
+                  <p className="text-base font-serif font-bold text-white tracking-tight uppercase">100%_RECOVERY_YIELD</p>
                 </div>
               </div>
 
@@ -455,8 +479,8 @@ export function Sidebar({
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all">
-                Initiate Invitation
+                className="w-full bg-white text-black hover:bg-white/90 text-[10px] h-12 font-bold font-serif uppercase tracking-[0.2em] rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                Invoke_Invitation_Sequence
               </Button>
             </div>
           </div>
@@ -465,45 +489,45 @@ export function Sidebar({
 
       {/* Invite Form Popup - Institutional style */}
       <Dialog open={showInviteForm} onOpenChange={setShowInviteForm}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
-            <h3 className="text-xs font-bold text-gray-900">Transmit Invitation</h3>
-            <p className="text-xs text-gray-400 mt-1 font-mono">Target: External Seller Alliance</p>
+        <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden backdrop-blur-3xl">
+          <div className="px-8 py-7 border-b border-white/5 bg-white/[0.01]">
+            <h3 className="text-xl font-serif text-white tracking-tight">Transmit_Invitation</h3>
+            <p className="text-[10px] text-emerald-500/50 font-mono mt-1 uppercase tracking-[0.3em]">TARGET: EXTERNAL_SELLER_ALLIANCE</p>
           </div>
 
-          <div className="p-6 space-y-5">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 mb-1 block">Recipient Email</label>
+          <div className="p-8 space-y-8">
+            <div className="space-y-3">
+              <label className="text-[10px] font-mono text-white/30 uppercase tracking-widest block">Recipient_Coordinate (Email)</label>
               <Input
                 type="email"
-                placeholder="SELLER@ENTITY.COM"
+                placeholder="SELLER@ENTITY.INTEL"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                className="w-full border-gray-100 h-10 text-sm font-mono rounded-none bg-gray-50/50 focus:bg-white focus:border-gray-900 transition-all"
+                className="w-full border-white/10 h-12 text-sm font-mono rounded-xl bg-white/[0.02] text-white focus:bg-white/[0.05] focus:border-emerald-500/50 transition-all placeholder:text-white/10"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 mb-1 block">Authentication Link</label>
-              <div className="flex items-center gap-0 p-3 bg-gray-50/50 border border-gray-100 rounded-none group hover:border-gray-200 transition-all">
-                <span className="flex-1 text-xs text-gray-500 font-mono break-all truncate overflow-hidden">{shortLink}</span>
+            <div className="space-y-3">
+              <label className="text-[10px] font-mono text-white/30 uppercase tracking-widest block">Authentication_Protocol_Link</label>
+              <div className="flex items-center gap-0 p-4 bg-white/[0.02] border border-white/5 rounded-xl group hover:border-white/10 transition-all">
+                <span className="flex-1 text-[11px] text-emerald-500/70 font-mono break-all truncate overflow-hidden">{shortLink}</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(referralLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="flex items-center gap-2 px-3 py-1 text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors shrink-0">
+                  className="flex items-center gap-2 px-4 py-1.5 text-[10px] font-mono font-bold text-white/30 hover:text-white transition-colors shrink-0 uppercase tracking-widest">
                   {linkCopied ? (
-                    <>
-                      <Check className="h-3 w-3 text-emerald-600" />
-                      <span className="text-emerald-600">Copied</span>
-                    </>
+                    <div className="flex items-center gap-2 text-emerald-500">
+                      <Check className="h-3 w-3" />
+                      <span>COPIED</span>
+                    </div>
                   ) : (
-                    <>
+                    <div className="flex items-center gap-2">
                       <Copy className="h-3 w-3" />
-                      <span>Copy</span>
-                    </>
+                      <span>CLONE</span>
+                    </div>
                   )}
                 </button>
               </div>
@@ -512,7 +536,7 @@ export function Sidebar({
             <Button
               onClick={async () => {
                 if (!inviteEmail || !inviteEmail.includes('@')) {
-                  alert('Verification Failure: Invalid Email Address');
+                  alert('PROTOCOL_ERROR: INVALID_COORDINATES');
                   return;
                 }
 
@@ -525,26 +549,26 @@ export function Sidebar({
                     },
                     body: JSON.stringify({
                       email: inviteEmail,
-                      message: `You've been invited to join Margin! Use this link to get started: ${referralLink}`
+                      message: `Protocol: Invitation for institutional access generated. Link: ${referralLink}`
                     })
                   });
 
                   const result = await response.json();
 
                   if (result.success) {
-                    alert(`Transmission Successful: Invite dispatched to ${inviteEmail}`);
+                    alert(`TRANSMISSION_COMPLETE: NODE_ALERT_SENT to ${inviteEmail}`);
                     setShowInviteForm(false);
                     setInviteEmail('');
                   } else {
-                    alert(`Transmission Failure: ${result.error || 'Unknown Error State'}`);
+                    alert(`TRANSMISSION_FAILED: ${result.error || 'UNSTABLE_STATE'}`);
                   }
                 } catch (error: any) {
                   console.error('Transmission processing error:', error);
-                  alert('Internal Connection Failure');
+                  alert('INTERNAL_MATRIX_ERROR');
                 }
               }}
-              className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all">
-              Execute Transmission
+              className="w-full bg-white text-black hover:bg-white/90 text-[10px] h-12 font-bold font-serif uppercase tracking-[0.2em] rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              Execute_Transmission
             </Button>
           </div>
         </DialogContent>
@@ -555,9 +579,9 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-2.5 z-50 h-5 w-5 rounded-full border border-slate-200 bg-white backdrop-blur-sm flex items-center justify-center text-slate-400 hover:text-slate-900 shadow-sm',
+          'absolute top-14 -right-3 z-50 h-6 w-6 rounded-full border border-white/10 bg-[#0c0c0c]/80 backdrop-blur-md flex items-center justify-center text-white/40 hover:text-white hover:border-emerald-500/50 shadow-2xl transition-all duration-300',
         )}>
-        {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+        {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
       </button>
     </aside>
   );
