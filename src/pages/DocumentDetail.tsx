@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { PageLayout } from '@/components/layout/PageLayout';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,12 +25,22 @@ import {
   Sparkles,
   Hexagon,
   Copy,
-  Square
+  Square,
+  Activity,
+  Shield,
+  Search,
+  Database,
+  Terminal,
+  ArrowRight,
+  ChevronRight
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
 import { useToast } from '@/components/ui/use-toast';
 import { format } from 'date-fns';
+import { Navbar } from '@/components/layout/Navbar';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { cn } from '@/lib/utils';
 
 export default function DocumentDetail() {
   const { id, documentId } = useParams();
@@ -45,6 +54,14 @@ export default function DocumentDetail() {
   const [triggeringParse, setTriggeringParse] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const { toast } = useToast();
+
+  const location = useLocation();
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
+
+  const mainClass = useMemo(() => {
+    return isSidebarCollapsed ? 'ml-16' : 'ml-64';
+  }, [isSidebarCollapsed]);
 
   useEffect(() => {
     let cancelled = false;
@@ -118,553 +135,474 @@ export default function DocumentDetail() {
 
   const getSourceIcon = (source: string) => {
     const lower = source?.toLowerCase() || '';
-    if (lower.includes('gmail') || lower.includes('email')) return <Mail className="w-4 h-4" />;
-    if (lower.includes('drive') || lower.includes('dropbox')) return <Cloud className="w-4 h-4" />;
-    return <FileText className="w-4 h-4" />;
+    if (lower.includes('gmail') || lower.includes('email')) return <Mail className="w-3.5 h-3.5" />;
+    if (lower.includes('drive') || lower.includes('dropbox')) return <Cloud className="w-3.5 h-3.5" />;
+    return <FileText className="w-3.5 h-3.5" />;
   };
 
   const getParserStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'completed':
-        return <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200"><CheckCircle2 className="w-3 h-3 mr-1" />Parsed</Badge>;
+        return (
+          <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+            <CheckCircle2 className="w-3 h-3" />
+            VALIDATED_OBJECT
+          </div>
+        );
       case 'pending':
-        return <Badge className="bg-amber-100 text-amber-800 border-amber-200"><Clock className="w-3 h-3 mr-1" />Pending</Badge>;
+        return (
+          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm animate-pulse">
+            <Clock className="w-3 h-3" />
+            IN_QUEUE
+          </div>
+        );
       case 'failed':
-        return <Badge className="bg-red-100 text-red-800 border-red-200"><AlertCircle className="w-3 h-3 mr-1" />Failed</Badge>;
+        return (
+          <div className="px-2.5 py-1 bg-rose-500/10 border border-rose-500/20 text-[10px] font-mono font-bold text-rose-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+            <AlertCircle className="w-3 h-3" />
+            PROTOCOL_FAULT
+          </div>
+        );
       default:
-        return <Badge className="bg-gray-100 text-gray-800 border-gray-200">{status || 'Unknown'}</Badge>;
+        return (
+          <div className="px-2.5 py-1 bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+            <Activity className="w-3 h-3" />
+            {status || 'UNKNOWN_STATE'}
+          </div>
+        );
     }
   };
 
   const extracted = documentData?.extracted || parsedData?.extracted || {};
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <PageLayout title="Document Details">
-        <div className="flex items-center justify-center min-h-[400px] bg-white">
-          <div className="text-center">
-            <RefreshCw className="w-8 h-8 mx-auto text-gray-400 animate-spin mb-4" />
-            <div className="text-gray-600">Loading document...</div>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
+      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-  if (error) {
-    return (
-      <PageLayout title="Document Details">
-        <div className="flex items-center justify-center min-h-[400px] bg-white">
-          <div className="text-center">
-            <AlertCircle className="w-12 h-12 mx-auto text-red-400 mb-4" />
-            <div className="text-red-600 mb-4">{error}</div>
-            <Link to="/evidence-locker">
-              <Button variant="outline" className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Evidence Locker
-              </Button>
-            </Link>
-          </div>
+        <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+        <div className="flex-1 flex h-full overflow-hidden">
+          <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+          <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+            <div className="flex items-center justify-center min-h-[500px]">
+              {loading ? (
+                <div className="text-center">
+                  <div className="relative flex h-8 w-8 mx-auto mb-6">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
+                    <span className="relative inline-flex rounded-full h-8 w-8 bg-emerald-500/40"></span>
+                  </div>
+                  <div className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">INITIATING_SECURE_LINK...</div>
+                </div>
+              ) : (
+                <div className="text-center p-12 bg-rose-500/[0.02] border border-rose-500/10 rounded-xl max-w-md">
+                  <AlertCircle className="w-12 h-12 mx-auto text-rose-500/20 mb-6" />
+                  <div className="text-sm font-mono font-bold text-rose-500 uppercase tracking-widest mb-4">NODE_ACCESS_FAILURE</div>
+                  <div className="text-xs text-rose-500/40 mb-8 font-mono">{error}</div>
+                  <Link to="/evidence-locker">
+                    <Button variant="ghost" className="text-[11px] font-mono font-bold text-white/40 hover:text-white border border-white/5 hover:border-white/10">
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      RETURN_TO_LOCKER
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </main>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
   return (
-    <PageLayout title="Document Details">
-      <div className="space-y-6 bg-white min-h-screen">
-        {/* Header */}
-        <div className="border-b border-gray-200 pb-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link to="/evidence-locker">
-                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 -ml-2">
-                  <ArrowLeft className="w-4 h-4 mr-1" />
-                  Back
-                </Button>
-              </Link>
-              <div className="border-l border-gray-300 pl-3">
-                <h1 className="text-base font-semibold text-gray-900">
-                  {documentData?.name || documentData?.filename || 'Document'}
-                </h1>
-                <div className="flex items-center gap-3 text-xs text-gray-600 mt-0.5">
-                  {documentData?.source && (
-                    <span className="flex items-center gap-1">
-                      {getSourceIcon(documentData.source)}
-                      {documentData.source}
-                    </span>
-                  )}
-                  {documentData?.created_at && (
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {format(new Date(documentData.created_at), 'MMM dd, yyyy')}
-                    </span>
-                  )}
-                  {documentData?.file_size && (
-                    <span>{(documentData.file_size / 1024).toFixed(1)} KB</span>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              {getParserStatusBadge(documentData?.parser_status || parsedData?.parser_status)}
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                onClick={handleTriggerParsing}
-                disabled={triggeringParse}>
-                {triggeringParse ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : null}
-                {triggeringParse ? 'Parsing...' : 'Re-Parse'}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                onClick={async () => {
-                  if (!docId) return;
-                  try {
-                    const response = await api.getDocumentDownload(docId);
-                    if (response.ok && response.data?.url) {
-                      window.open(response.data.url, '_blank');
-                    } else {
-                      toast({ title: 'Download Failed', description: response.error || 'Could not get download URL', variant: 'destructive' });
-                    }
-                  } catch (err: any) {
-                    toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
-                  }
-                }}>
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </Button>
-            </div>
-          </div>
-        </div>
+    <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+      {/* Background Matrix Pattern / Noise */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        {/* Document Summary Dropdown */}
-        <div className="mb-4 inline-block relative">
-          <button
-            type="button"
-            onClick={() => setSummaryOpen(!summaryOpen)}
-            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors">
-            <span>Document Summary</span>
-            <span className="text-gray-400">
-              ({(extracted.order_ids?.length || 0) + (extracted.asins?.length || 0) + (extracted.tracking_numbers?.length || 0) + (extracted.amounts?.length || 0) + matchedClaims.length} total)
-            </span>
-            <svg className={`w-3 h-3 text-gray-400 transition-transform ${summaryOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {summaryOpen && (
-            <div className="absolute mt-1 py-2 bg-white border border-gray-200 rounded-md shadow-lg z-10 min-w-[180px]">
-              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
-                <span>Order IDs</span>
-                <span className="font-medium">{extracted.order_ids?.length || 0}</span>
-              </div>
-              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
-                <span>ASINs</span>
-                <span className="font-medium">{extracted.asins?.length || 0}</span>
-              </div>
-              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
-                <span>Tracking #s</span>
-                <span className="font-medium">{extracted.tracking_numbers?.length || 0}</span>
-              </div>
-              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
-                <span>Amounts</span>
-                <span className="font-medium">{extracted.amounts?.length || 0}</span>
-              </div>
-              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between">
-                <span>Matched Claims</span>
-                <span className="font-medium">{matchedClaims.length}</span>
-              </div>
-              <div className="px-3 py-1.5 text-sm text-gray-700 flex justify-between border-t border-gray-100 mt-1 pt-1">
-                <span>Confidence</span>
-                <span className="font-medium text-blue-600">
-                  {documentData?.parser_confidence !== undefined
-                    ? `${(documentData.parser_confidence * 100).toFixed(0)}%`
-                    : '—'}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
+      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+      <div className="flex-1 flex h-full overflow-hidden">
+        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+        <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+          <div className="relative pt-8">
+            <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="extracted" className="w-full">
-          <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0 mb-6">
-            <TabsTrigger
-              value="extracted"
-              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-              Extracted Data
-            </TabsTrigger>
-            <TabsTrigger
-              value="matches"
-              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-              Matched Claims
-              <span className="ml-1.5 text-xs text-gray-400">({matchedClaims.length})</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="raw"
-              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-              Raw Text
-            </TabsTrigger>
-            <TabsTrigger
-              value="parsing"
-              className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-              Parsing Status
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Extracted Data Tab */}
-          <TabsContent value="extracted">
-            <div className="space-y-4">
-              {/* Order IDs & ASINs Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Order IDs */}
-                <div className="border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700">Order IDs</h4>
-                  </div>
-                  <div className="bg-white p-4">
-                    {extracted.order_ids?.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {extracted.order_ids.map((id: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
-                            {id}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No order IDs extracted</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* ASINs / SKUs */}
-                <div className="border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700">ASINs / SKUs</h4>
-                  </div>
-                  <div className="bg-white p-4">
-                    {(extracted.asins?.length > 0 || extracted.skus?.length > 0) ? (
-                      <div className="flex flex-wrap gap-2">
-                        {extracted.asins?.map((asin: string, idx: number) => (
-                          <Badge key={`asin-${idx}`} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
-                            {asin}
-                          </Badge>
-                        ))}
-                        {extracted.skus?.map((sku: string, idx: number) => (
-                          <Badge key={`sku-${idx}`} className="bg-gray-50 text-gray-600 border-gray-200 font-mono text-xs">
-                            {sku}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No ASINs or SKUs extracted</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Tracking & Amounts Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Tracking Numbers */}
-                <div className="border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700">Tracking Numbers</h4>
-                  </div>
-                  <div className="bg-white p-4">
-                    {extracted.tracking_numbers?.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {extracted.tracking_numbers.map((num: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
-                            {num}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No tracking numbers extracted</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Amounts */}
-                <div className="border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700">Financial Amounts</h4>
-                  </div>
-                  <div className="bg-white p-4">
-                    {extracted.amounts?.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {extracted.amounts.map((amt: number | string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
-                            ${typeof amt === 'number' ? amt.toFixed(2) : amt}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No amounts extracted</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Invoice & Dates Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Invoice Numbers */}
-                <div className="border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700">Invoice Numbers</h4>
-                  </div>
-                  <div className="bg-white p-4">
-                    {extracted.invoice_numbers?.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {extracted.invoice_numbers.map((inv: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 font-mono text-xs">
-                            {inv}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No invoice numbers extracted</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Dates */}
-                <div className="border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                    <h4 className="text-xs font-semibold text-gray-700">Dates Found</h4>
-                  </div>
-                  <div className="bg-white p-4">
-                    {extracted.dates?.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {extracted.dates.map((date: string, idx: number) => (
-                          <Badge key={idx} className="bg-gray-100 text-gray-700 border-gray-200 text-xs">
-                            {date}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-500">No dates extracted</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Matched Claims Tab - Redesigned for Institutional Aesthetic */}
-          <TabsContent value="matches" className="mt-0">
-            <div className="space-y-0 border-t border-gray-100">
-              {matchedClaims.length > 0 ? (
-                <div>
-                  {matchedClaims.map((match, idx) => (
-                    <div
-                      key={idx}
-                      className="group relative flex items-center justify-between py-6 px-4 border-b border-gray-100 transition-all hover:bg-gray-50/50"
-                    >
-                      {/* Left Accent Bar on Hover */}
-                      <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1">
-                          <Hexagon className="w-4 h-4 text-indigo-500 fill-indigo-50/50" />
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-semibold text-gray-400">
-                              Claim Recovery ID
-                            </span>
-                            <span className="font-mono text-xs text-gray-900 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
-                              {match.claim_id}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
-                            <span className="text-gray-900">
-                              {match.match_type?.replace(/_/g, ' ')}
-                            </span>
-                            <span className="text-gray-300">|</span>
-                            <span>
-                              Matched: <span className="text-gray-700">{match.matched_fields?.join(', ')}</span>
-                            </span>
-                            <span className="text-gray-300">|</span>
-                            <span className="flex items-center gap-1.5">
-                              <span className="text-indigo-600 font-bold">
-                                {(match.confidence_score * 100).toFixed(0)}%
-                              </span>
-                              <span>Confidence</span>
-                            </span>
-                          </div>
-
-                          {match.reasoning && (
-                            <p className="text-xs text-gray-400 font-light leading-relaxed max-w-2xl pt-1 italic">
-                              "{match.reasoning}"
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <Link
-                        to={`/recoveries/${match.claim_id}`}
-                        className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-indigo-600 transition-colors pr-2"
-                      >
-                        View Recovery
-                        <ArrowLeft className="w-3 h-3 rotate-180" />
-                      </Link>
+              {/* Analysis Header */}
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center gap-6">
+                  <Link to="/evidence-locker">
+                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0 text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all">
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">FORENSIC_ANALYSIS_NODE</span>
+                    <div className="flex items-center gap-3">
+                      <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase">
+                        {documentData?.name?.replace(' ', '_') || 'OBJECT_NULL'}
+                      </h1>
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-20 bg-gray-50/30">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm mb-4">
-                    <Link2 className="w-5 h-5 text-gray-300" />
                   </div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">No Matches Found</h3>
-                  <p className="text-xs text-gray-500 max-w-[240px] mx-auto leading-relaxed">
-                    This document hasn't been linked to any active claims yet. Use Evidence Matching to find matches.
-                  </p>
                 </div>
-              )}
-            </div>
-          </TabsContent>
 
-          {/* Raw Text Tab - Redesigned for Institutional Aesthetic */}
-          <TabsContent value="raw" className="mt-0">
-            <div className="border-t border-gray-100">
-              {(() => {
-                const rawText = documentData?.raw_text_preview || parsedData?.raw_text_preview;
-                const lines = rawText ? rawText.split('\n') : [];
+                <div className="flex items-center gap-4">
+                  {getParserStatusBadge(documentData?.parser_status || parsedData?.parser_status)}
+                  <div className="h-6 w-[1px] bg-white/10 mx-2" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-10 px-5 text-[10px] font-mono font-bold text-white/40 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+                    onClick={handleTriggerParsing}
+                    disabled={triggeringParse}>
+                    {triggeringParse ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <Activity className="w-3.5 h-3.5 mr-2" />}
+                    {triggeringParse ? 'PROCESSING...' : 'REENGAGE_PARSER'}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-10 px-5 text-[10px] font-mono font-bold text-white/40 hover:text-white hover:bg-white/5 border border-white/5 hover:border-white/10 transition-all uppercase tracking-widest rounded-lg"
+                    onClick={async () => {
+                      if (!docId) return;
+                      try {
+                        const response = await api.getDocumentDownload(docId);
+                        if (response.ok && response.data?.url) {
+                          window.open(response.data.url, '_blank');
+                        } else {
+                          toast({ title: 'Download Failed', description: response.error || 'Could not get download URL', variant: 'destructive' });
+                        }
+                      } catch (err: any) {
+                        toast({ title: 'Download Error', description: err?.message || 'Failed to download', variant: 'destructive' });
+                      }
+                    }}>
+                    <Download className="w-3.5 h-3.5 mr-2" />
+                    DOWNLOAD_SOURCE
+                  </Button>
+                </div>
+              </div>
 
-                return (
-                  <>
-                    <div className="flex items-center justify-between py-4 px-4 bg-gray-50/50">
-                      <div className="flex items-center gap-3">
-                        <Square className="w-3.5 h-3.5 text-gray-400 fill-gray-100" />
-                        <h4 className="text-xs font-semibold text-gray-400">
-                          Extracted Intelligence Output
-                        </h4>
-                        <span className="text-gray-300">|</span>
-                        <span className="text-xs font-medium text-gray-500">
-                          {lines.length} Entries Detected
-                        </span>
-                      </div>
-                      {rawText && (
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(rawText);
-                            toast({ title: 'Intelligence Data Copied', description: 'Raw document output has been copied to your clipboard.' });
-                          }}
-                          className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-indigo-600 transition-colors"
+              {/* Main Matrix Tabs */}
+              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                <Tabs defaultValue="extracted" className="p-0">
+                  <div className="px-8 bg-white/[0.02] border-b border-white/5">
+                    <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto no-scrollbar">
+                      {[
+                        { value: 'extracted', label: 'INTELLIGENCE_ENTRIES', icon: Database },
+                        { value: 'matches', label: 'LINKED_OBJECTS', icon: Link2, count: matchedClaims.length },
+                        { value: 'raw', label: 'FORENSIC_STREAM', icon: Terminal },
+                        { value: 'parsing', label: 'NODE_STATUS', icon: Activity }
+                      ].map((tab) => (
+                        <TabsTrigger
+                          key={tab.value}
+                          value={tab.value}
+                          className="relative h-16 px-0 text-[11px] font-mono font-bold text-white/20 bg-transparent rounded-none border-0 shadow-none transition-all hover:text-white group data-[state=active]:text-emerald-500 uppercase tracking-widest"
                         >
-                          <Copy className="w-3 h-3" />
-                          Copy Raw Intelligence
-                        </button>
-                      )}
+                          <div className="flex items-center gap-2.5">
+                            <tab.icon className="h-3.5 w-3.5 opacity-40 group-data-[state=active]:opacity-100" />
+                            {tab.label}
+                            {tab.count !== undefined && (
+                              <span className="text-[9px] px-1.5 py-0.5 bg-white/5 rounded-full text-white/40 group-data-[state=active]:bg-emerald-500/10 group-data-[state=active]:text-emerald-500">
+                                {tab.count}
+                              </span>
+                            )}
+                          </div>
+                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500 opacity-0 group-data-[state=active]:opacity-100 shadow-[0_0_10px_rgba(16,185,129,0.8)] transition-all" />
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </div>
+
+                  {/* Extracted Intelligence Tab */}
+                  <TabsContent value="extracted" className="p-8 m-0 outline-none">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {/* Identification Data */}
+                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 relative group overflow-hidden">
+                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                          <Hash className="h-8 w-8 text-white" />
+                        </div>
+                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">IDENTIFICATION_DATA</h4>
+
+                        <div className="space-y-6">
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase">Order_IDs</span>
+                            <div className="flex flex-wrap gap-2">
+                              {extracted.order_ids?.length > 0 ? extracted.order_ids.map((id: string, i: number) => (
+                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{id}</div>
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase">ASINs_SKUs</span>
+                            <div className="flex flex-wrap gap-2">
+                              {[...(extracted.asins || []), ...(extracted.skus || [])].length > 0 ? [...(extracted.asins || []), ...(extracted.skus || [])].map((id: string, i: number) => (
+                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{id}</div>
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Financial/Tracking Data */}
+                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 relative group overflow-hidden">
+                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                          <DollarSign className="h-8 w-8 text-white" />
+                        </div>
+                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">TRANSACTION_METRICS</h4>
+
+                        <div className="space-y-6">
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase">Amounts_Extracted</span>
+                            <div className="flex flex-wrap gap-2">
+                              {extracted.amounts?.length > 0 ? extracted.amounts.map((amt: any, i: number) => (
+                                <div key={i} className="px-2.5 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-md text-xs font-mono font-bold text-emerald-500">
+                                  ${typeof amt === 'number' ? amt.toFixed(2) : amt}
+                                </div>
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase">Tracking_Numbers</span>
+                            <div className="flex flex-wrap gap-2">
+                              {extracted.tracking_numbers?.length > 0 ? extracted.tracking_numbers.map((num: string, i: number) => (
+                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{num}</div>
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Verification Context */}
+                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 relative group overflow-hidden">
+                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                          <Calendar className="h-8 w-8 text-white" />
+                        </div>
+                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">TEMPORAL_CONTEXT</h4>
+
+                        <div className="space-y-6">
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase">Invoice_References</span>
+                            <div className="flex flex-wrap gap-2">
+                              {extracted.invoice_numbers?.length > 0 ? extracted.invoice_numbers.map((inv: string, i: number) => (
+                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{inv}</div>
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <span className="text-[10px] font-mono text-white/20 uppercase">Detected_Timestamps</span>
+                            <div className="flex flex-wrap gap-2">
+                              {extracted.dates?.length > 0 ? extracted.dates.map((date: string, i: number) => (
+                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{date}</div>
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="border-b border-gray-100 bg-white">
-                      {rawText ? (
-                        <div className="flex font-mono text-sm leading-relaxed max-h-[600px] overflow-hidden">
-                          {/* Institutional Line Numbers */}
-                          <div className="bg-gray-50/80 border-r border-gray-100 px-3 py-6 text-right select-none text-gray-300 min-w-[3.5rem] flex-shrink-0">
-                            {lines.map((_, i) => (
-                              <div key={i} className="h-5">{(i + 1).toString().padStart(2, '0')}</div>
-                            ))}
-                          </div>
+                    <div className="mt-8 p-6 bg-white/[0.01] border border-white/5 rounded-xl flex items-center justify-between">
+                      <div className="flex items-center gap-6">
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">VALIDATION_CONFIDENCE</span>
+                          <span className="text-xl font-mono font-bold text-emerald-500">
+                            {documentData?.parser_confidence !== undefined ? `${(documentData.parser_confidence * 100).toFixed(0)}%_RELIABILITY` : 'TBD_NODE_DATA'}
+                          </span>
+                        </div>
+                        <div className="h-10 w-[1px] bg-white/5" />
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">TOTAL_ENTRIES</span>
+                          <span className="text-xl font-mono font-bold text-white">
+                            {(extracted.order_ids?.length || 0) + (extracted.asins?.length || 0) + (extracted.tracking_numbers?.length || 0) + (extracted.amounts?.length || 0)}
+                          </span>
+                        </div>
+                      </div>
 
-                          {/* Inspection Panel */}
-                          <div className="flex-1 overflow-auto p-6 text-gray-700 whitespace-pre scrollbar-thin scrollbar-thumb-gray-200">
-                            {lines.map((text, i) => (
-                              <div key={i} className="h-5 hover:bg-indigo-50/30 transition-colors px-2 -mx-2 rounded-sm">
-                                {text || ' '}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-10 px-6 text-[11px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-widest rounded-lg"
+                        onClick={() => setSummaryOpen(!summaryOpen)}
+                      >
+                        {summaryOpen ? 'CLOSE_MANIFEST' : 'VIEW_FULL_MANIFEST'}
+                        <ChevronRight className={cn("ml-2 h-4 w-4 transition-transform", summaryOpen ? "rotate-90" : "")} />
+                      </Button>
+                    </div>
+                  </TabsContent>
+
+                  {/* Linked Objects Tab */}
+                  <TabsContent value="matches" className="p-0 m-0 outline-none">
+                    <div className="flex flex-col min-h-[400px]">
+                      {matchedClaims.length > 0 ? (
+                        <div className="divide-y divide-white/5">
+                          {matchedClaims.map((match, idx) => (
+                            <div key={idx} className="group relative flex items-center justify-between py-8 px-8 hover:bg-white/[0.02] transition-all duration-300">
+                              <div className="absolute left-0 top-4 bottom-4 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                              <div className="flex items-start gap-8">
+                                <div className="mt-1.5 p-3 rounded-xl bg-white/5 border border-white/10">
+                                  <Shield className="h-5 w-5 text-emerald-500" />
+                                </div>
+
+                                <div className="space-y-4">
+                                  <div className="flex items-center gap-6">
+                                    <div className="flex flex-col gap-1">
+                                      <span className="text-[10px] font-mono font-bold text-white/20 uppercase">CLAIM_RECOVERY_NODE</span>
+                                      <span className="text-sm font-mono font-bold text-white group-hover:text-emerald-500 transition-colors uppercase">
+                                        RECOVERY_{match.claim_id?.slice(0, 8)}
+                                      </span>
+                                    </div>
+                                    <div className="h-8 w-[1px] bg-white/5" />
+                                    <div className="flex flex-col gap-1">
+                                      <span className="text-[10px] font-mono font-bold text-white/20 uppercase">MATCH_ALGORITHM</span>
+                                      <span className="text-xs font-mono font-medium text-white/60">
+                                        {match.match_type?.replace(/_/g, ' ') || 'GENERAL_HEURISTIC'}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-4">
+                                    <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest rounded-full">
+                                      {(match.confidence_score * 100).toFixed(0)}%_CONFIDENCE
+                                    </div>
+                                    <div className="text-[10px] font-mono text-white/30 uppercase tracking-wider">
+                                      DATA_POINTS: <span className="text-white/60">{match.matched_fields?.join(', ') || 'NONE'}</span>
+                                    </div>
+                                  </div>
+
+                                  {match.reasoning && (
+                                    <div className="flex gap-4 p-4 bg-white/[0.01] border border-white/5 rounded-xl max-w-2xl">
+                                      <div className="mt-1"><Terminal className="h-3.5 w-3.5 text-white/20" /></div>
+                                      <p className="text-[11px] text-white/40 font-mono leading-relaxed italic">
+                                        "{match.reasoning}"
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
-                            ))}
-                          </div>
+
+                              <Link to={`/case/${match.claim_id}`}>
+                                <Button variant="ghost" className="h-12 px-6 text-[11px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all uppercase tracking-[0.2em] group/btn">
+                                  NAVIGATE_TO_NODE
+                                  <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                                </Button>
+                              </Link>
+                            </div>
+                          ))}
                         </div>
                       ) : (
-                        <div className="text-center py-20 bg-gray-50/30">
-                          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-100 shadow-sm mb-4">
-                            <FileText className="w-5 h-5 text-gray-300" />
+                        <div className="flex flex-col items-center justify-center py-32">
+                          <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
+                            <Link2 className="h-8 w-8 text-white/10" />
                           </div>
-                          <h3 className="text-sm font-semibold text-gray-900 mb-1">Intelligence Data Pending</h3>
-                          <p className="text-xs text-gray-500 max-w-[240px] mx-auto leading-relaxed mb-6">
-                            This document hasn't been processed by the intelligence engine yet.
-                          </p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="bg-white text-xs h-8 px-4 font-bold border-gray-200 hover:bg-gray-50 hover:text-indigo-600 transition-all"
-                            onClick={handleTriggerParsing}
-                            disabled={triggeringParse}
-                          >
-                            {triggeringParse ? <RefreshCw className="w-3 h-3 mr-2 animate-spin" /> : null}
-                            {triggeringParse ? 'Processing...' : 'Engage Processing'}
-                          </Button>
+                          <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">NO_LINKED_OBJECTS_DETECTED</span>
+                          <p className="text-xs text-white/10 mt-4 font-mono uppercase tracking-widest">Awaiting match engine synchronization...</p>
                         </div>
                       )}
                     </div>
-                  </>
-                );
-              })()}
-            </div>
-          </TabsContent>
+                  </TabsContent>
 
-          {/* Parsing Status Tab - Redesigned for Institutional Aesthetic */}
-          <TabsContent value="parsing" className="mt-0">
-            <div className="border-t border-gray-100">
-              {docId && <ParsingStatus documentId={docId} autoPoll={true} />}
-            </div>
-          </TabsContent>
-        </Tabs>
+                  {/* Forensic Stream Tab */}
+                  <TabsContent value="raw" className="p-0 m-0 outline-none">
+                    <div className="flex flex-col min-h-[400px]">
+                      {(() => {
+                        const rawText = documentData?.raw_text_preview || parsedData?.raw_text_preview;
+                        const lines = rawText ? rawText.split('\n') : [];
 
-        {/* Document Metadata Footer - Redesigned for Institutional Aesthetic */}
-        <div className="pt-8 border-t border-gray-100">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-1 w-3 bg-indigo-500" />
-                <span className="text-xs font-medium text-gray-400">Document ID</span>
-              </div>
-              <div className="font-mono text-sm text-gray-900 break-all bg-gray-50 px-2 py-1.5 rounded-sm border border-gray-100">
-                {docId}
-              </div>
-            </div>
+                        if (!rawText) return (
+                          <div className="flex flex-col items-center justify-center py-32">
+                            <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
+                              <Terminal className="h-8 w-8 text-white/10" />
+                            </div>
+                            <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">STREAM_BUFFER_EMPTY</span>
+                            <Button
+                              variant="ghost"
+                              className="mt-8 text-[11px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 uppercase tracking-widest"
+                              onClick={handleTriggerParsing}
+                              disabled={triggeringParse}
+                            >
+                              INVOKE_STREAM_CAPTURE
+                            </Button>
+                          </div>
+                        );
 
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-1 w-3 bg-gray-300" />
-                <span className="text-xs font-medium text-gray-400">File Type</span>
-              </div>
-              <div className="text-sm font-medium text-gray-900 pl-5">
-                {documentData?.mime_type || documentData?.type || 'application/pdf'}
-              </div>
-            </div>
+                        return (
+                          <>
+                            <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
+                              <div className="flex items-center gap-4">
+                                <Terminal className="h-3.5 w-3.5 text-emerald-500" />
+                                <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">RAW_INTELLIGENCE_STREAM</span>
+                                <div className="h-3 w-[1px] bg-white/10 mx-2" />
+                                <span className="text-[10px] font-mono text-emerald-500/50">{lines.length} ENTRIES_CACHED</span>
+                              </div>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(rawText);
+                                  toast({ title: 'Stream Data Copied', description: 'Raw intelligence output has been copied to clipboard.' });
+                                }}
+                                className="text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-[0.1em] flex items-center gap-2"
+                              >
+                                <Copy className="h-3.5 w-3.5" />
+                                COPY_STREAM
+                              </button>
+                            </div>
 
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-1 w-3 bg-gray-300" />
-                <span className="text-xs font-medium text-gray-400">Source</span>
-              </div>
-              <div className="text-sm font-medium text-gray-900 pl-5 capitalize">
-                {documentData?.source || 'Manual Upload'}
-              </div>
-            </div>
+                            <div className="flex font-mono text-xs leading-relaxed max-h-[800px] overflow-hidden">
+                              {/* Line Numbers */}
+                              <div className="bg-[#080808] border-r border-white/5 p-6 text-right select-none text-white/10 min-w-[4rem]">
+                                {lines.map((_, i) => (
+                                  <div key={i} className="h-5">{(i + 1).toString().padStart(3, '0')}</div>
+                                ))}
+                              </div>
+                              {/* Content */}
+                              <div className="flex-1 overflow-auto p-6 text-white/60 whitespace-pre scrollbar-thin scrollbar-thumb-white/10">
+                                {lines.map((text, i) => (
+                                  <div key={i} className="h-5 hover:bg-white/[0.03] transition-colors px-2 -mx-2 rounded-sm group relative">
+                                    <div className="absolute left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100" />
+                                    {text || ' '}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </TabsContent>
 
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-1 w-3 bg-gray-300" />
-                <span className="text-xs font-medium text-gray-400">Created</span>
+                  {/* Node Status Tab */}
+                  <TabsContent value="parsing" className="p-8 m-0 outline-none">
+                    <div className="max-w-4xl mx-auto">
+                      {docId && <ParsingStatus documentId={docId} autoPoll={true} />}
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
-              <div className="text-sm font-medium text-gray-900 pl-5">
-                {documentData?.created_at ? format(new Date(documentData.created_at), 'MMM dd, yyyy HH:mm') : '—'}
+
+              {/* Registry Metadata Footer */}
+              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+                {[
+                  { label: 'OBJECT_IDENTIFIER', value: docId, icon: Hash },
+                  { label: 'SCHEMA_TYPE', value: documentData?.mime_type || 'application/pdf', icon: Database },
+                  { label: 'DATASOURCE_NODE', value: documentData?.source || 'MANUAL_INGESTION', icon: Cloud },
+                  { label: 'REGISTRATION_TIME', value: documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'NULL', icon: Calendar }
+                ].map((item, i) => (
+                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5 group hover:border-white/10 transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                      <item.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-colors" />
+                      <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">{item.label}</span>
+                    </div>
+                    <div className="font-mono text-[11px] text-white/60 group-hover:text-white transition-colors truncate">
+                      {item.value}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
-    </PageLayout>
+    </div>
   );
 }
