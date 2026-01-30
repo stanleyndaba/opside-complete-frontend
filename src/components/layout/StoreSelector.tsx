@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface StoreEntity {
     id: string;
@@ -81,72 +82,76 @@ export function StoreSelector() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-slate-100/80 rounded-lg transition-all group border border-transparent hover:border-slate-200/50">
-                    <div className="h-6 w-6 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-100 transition-colors">
-                        <Store className="h-3.5 w-3.5" />
+                <button className="flex items-center gap-3 px-4 py-2 hover:bg-white/[0.03] rounded-xl transition-all group border border-transparent hover:border-white/5">
+                    <div className="h-7 w-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500/20 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                        <Store className="h-4 w-4" />
                     </div>
                     <div className="flex flex-col items-start min-w-[100px]">
-                        <span className="text-[13px] font-semibold text-slate-900 leading-none mb-0.5">
-                            {activeStore?.name || 'Select Store'}
+                        <span className="text-[11px] font-serif font-medium text-white tracking-wide uppercase">
+                            {activeStore?.name || 'SELECT_NODE'}
                         </span>
-                        <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1 uppercase tracking-wider">
+                        <span className="text-[9px] font-mono text-emerald-500/50 flex items-center gap-1 uppercase tracking-[0.2em]">
                             <Globe className="h-2 w-2" />
-                            {activeStore?.marketplace?.replace('amazon_', '') || 'Marketplace'}
+                            {activeStore?.marketplace?.replace('amazon_', '') || 'REGION_LOCKED'}
                         </span>
                     </div>
-                    <ChevronDown className="h-3.5 w-3.5 text-slate-400 group-hover:text-slate-600 transition-colors ml-1" />
+                    <ChevronDown className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-colors ml-1" />
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-64 p-1 shadow-2xl border-slate-200/60 rounded-xl">
-                <DropdownMenuLabel className="px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                    Personal Control Plane
+            <DropdownMenuContent align="start" className="w-64 p-1.5 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl">
+                <DropdownMenuLabel className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">
+                    Control_Plane_Nodes
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-slate-100" />
+                <DropdownMenuSeparator className="bg-white/5 mx-2" />
 
-                {stores.map((store) => (
-                    <DropdownMenuItem
-                        key={store.id}
-                        onClick={() => handleSwitchStore(store.id)}
-                        className={cn(
-                            "flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-all mb-0.5 last:mb-0",
-                            activeStoreId === store.id ? "bg-emerald-50 text-emerald-900" : "hover:bg-slate-50 text-slate-600"
-                        )}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className={cn(
-                                "h-8 w-8 rounded-lg flex items-center justify-center transition-colors",
-                                activeStoreId === store.id ? "bg-emerald-100 text-emerald-600" : "bg-slate-100 text-slate-400 group-hover:bg-slate-200"
-                            )}>
-                                <Store className="h-4 w-4" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-[13px] font-semibold tracking-tight">{store.name}</span>
-                                <span className="text-[11px] opacity-70 font-medium">{store.marketplace}</span>
-                            </div>
-                        </div>
-                        {activeStoreId === store.id && (
-                            <div className="h-5 w-5 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                                <Check className="h-3 w-3" />
-                            </div>
-                        )}
-                    </DropdownMenuItem>
-                ))}
+                <ScrollArea className="max-h-[280px]">
+                    <div className="p-1 space-y-1">
+                        {stores.map((store) => (
+                            <DropdownMenuItem
+                                key={store.id}
+                                onClick={() => handleSwitchStore(store.id)}
+                                className={cn(
+                                    "flex items-center justify-between px-3 py-3 rounded-lg cursor-pointer transition-all group/item",
+                                    activeStoreId === store.id ? "bg-emerald-500/10 text-emerald-500" : "hover:bg-white/5 text-white/40 hover:text-white"
+                                )}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={cn(
+                                        "h-9 w-9 rounded-lg flex items-center justify-center transition-all",
+                                        activeStoreId === store.id ? "bg-emerald-500/20 text-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.2)]" : "bg-white/5 text-white/20 group-hover/item:text-white"
+                                    )}>
+                                        <Store className="h-4.5 w-4.5" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[12px] font-serif font-medium tracking-tight uppercase">{store.name}</span>
+                                        <span className="text-[9px] font-mono opacity-50 uppercase tracking-widest">{store.marketplace}</span>
+                                    </div>
+                                </div>
+                                {activeStoreId === store.id && (
+                                    <div className="h-5 w-5 rounded-full bg-emerald-500 flex items-center justify-center text-black">
+                                        <Check className="h-3 w-3" />
+                                    </div>
+                                )}
+                            </DropdownMenuItem>
+                        ))}
+                    </div>
+                </ScrollArea>
 
-                <DropdownMenuSeparator className="bg-slate-100" />
+                <DropdownMenuSeparator className="bg-white/5 mx-2" />
                 <DropdownMenuItem
                     onClick={() => window.location.href = '/integrations-hub'}
-                    className="px-3 py-2.5 rounded-lg cursor-pointer text-emerald-600 hover:bg-emerald-50 font-semibold text-[13px] flex items-center gap-2"
+                    className="px-3 py-3 rounded-lg cursor-pointer text-white/60 hover:bg-emerald-500/10 hover:text-emerald-500 font-serif font-medium text-[12px] flex items-center gap-3 uppercase tracking-widest transition-all"
                 >
-                    <div className="h-8 w-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                    <div className="h-9 w-9 rounded-lg bg-white/5 flex items-center justify-center text-white/20 group-hover:text-emerald-500">
                         <Plus className="h-4 w-4" />
                     </div>
-                    Add New Marketplace
+                    Link_New_Marketplace
                 </DropdownMenuItem>
 
-                <div className="px-3 py-2 mt-1 bg-slate-50 rounded-lg flex items-center gap-2 group border border-slate-100">
-                    <ShieldCheck className="h-3 w-3 text-slate-400" />
-                    <span className="text-[10px] text-slate-400 font-medium leading-none">
-                        Hard Execution Boundary Active
+                <div className="px-4 py-2.5 mt-1 bg-white/[0.02] rounded-lg flex items-center gap-2 border border-white/5 mx-1">
+                    <ShieldCheck className="h-3 w-3 text-emerald-500/50" />
+                    <span className="text-[9px] text-white/20 font-mono uppercase tracking-widest">
+                        EXECUTION_BOUNDARY: SECURE
                     </span>
                 </div>
             </DropdownMenuContent>

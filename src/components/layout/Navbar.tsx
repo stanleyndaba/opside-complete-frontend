@@ -178,49 +178,48 @@ export function Navbar({
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-30 transition-all duration-300 font-montserrat",
-        sidebarCollapsed ? "ml-16" : "ml-60",
-        isGreyBgPage ? "bg-[#fefefe]/90 border-b border-slate-200/50 backdrop-blur-xl" :
-          isTransparent ? "bg-transparent border-transparent" : "bg-[#fefefe]/80 border-b border-slate-200/50 backdrop-blur-xl",
+        "sticky top-0 z-30 transition-all duration-500 ease-in-out font-serif",
+        sidebarCollapsed ? "ml-20" : "ml-64",
+        "bg-[#070707]/90 border-b border-white/5 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]",
         className
       )}>
         <div className="flex items-center justify-between h-14 px-6">
           {/* Left/Center Group - Search, Icons, Currency, Connect */}
           <div className="flex items-center gap-x-8">
             <div className="relative flex items-center gap-4" ref={searchContainerRef}>
-              <div className="relative w-80 lg:w-96 group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+              <div className="relative w-80 lg:w-[420px] group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
-                  placeholder="Search invoices, products, documents..."
+                  placeholder="QUERY_SYSTEM: SEARCH_ARTEFACTS_//_TRANS_ID..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-10 pr-10 h-9 text-[13px] bg-slate-100/50 border-slate-200/30 rounded-lg focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100/30 transition-all placeholder:text-slate-400 font-medium"
+                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-emerald-500/30 focus:ring-0 transition-all placeholder:text-white/10 font-mono tracking-tight text-emerald-500 uppercase"
                 />
                 {/* Clear button */}
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors">
                     <X className="h-3 w-3" />
                   </button>
                 )}
 
                 {/* Search Dropdown */}
                 {isSearchFocused && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-sm shadow-sm z-50 overflow-hidden">
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-3xl z-50 overflow-hidden backdrop-blur-2xl">
                     {/* Recent Searches */}
                     {recentSearches.length > 0 && (
-                      <div className="p-2 border-b border-gray-100">
-                        <div className="flex items-center justify-between px-2 mb-1">
-                          <span className="text-xs font-medium text-gray-500">Recent</span>
+                      <div className="p-3 border-b border-white/5">
+                        <div className="flex items-center justify-between px-2 mb-2">
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Recent_Queries</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-xs text-gray-400 hover:text-gray-600">
-                            Clear
+                            className="text-[10px] font-mono text-emerald-500/50 hover:text-emerald-500 uppercase tracking-wider transition-colors">
+                            Purge_Cache
                           </button>
                         </div>
                         {recentSearches.map((search, idx) => (
@@ -230,17 +229,17 @@ export function Navbar({
                               setSearchQuery(search);
                               handleSearch(search);
                             }}
-                            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50">
-                            <Clock className="h-3 w-3 text-gray-400" />
+                            className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-mono uppercase tracking-tight group">
+                            <Clock className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                             {search}
                           </button>
                         ))}
                       </div>
                     )}
 
-                    {/* Quick Links */}
-                    <div className="p-2">
-                      <span className="text-xs font-medium text-gray-500 px-2">Quick Links</span>
+                    {/* Quick Access */}
+                    <div className="p-3">
+                      <span className="text-[10px] font-mono font-bold text-white/20 px-2 uppercase tracking-widest block mb-2">Matrix_Pathways</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -248,17 +247,17 @@ export function Navbar({
                             setIsSearchFocused(false);
                             navigate(link.path);
                           }}
-                          className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-700 hover:bg-gray-50 mt-0.5">
-                          <link.icon className="h-3 w-3 text-gray-400" />
+                          className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-mono uppercase tracking-tight group">
+                          <link.icon className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                           {link.label}
                         </button>
                       ))}
                     </div>
 
                     {/* Search Tip */}
-                    <div className="px-3 py-2 bg-gray-50 border-t border-gray-100">
-                      <p className="text-xs text-gray-500">
-                        Press <kbd className="px-1 py-0.5 bg-gray-200 rounded-sm text-gray-600 font-mono text-xs">Enter</kbd> to search
+                    <div className="px-4 py-3 bg-white/[0.01] border-t border-white/5">
+                      <p className="text-[9px] text-white/20 font-mono uppercase tracking-widest">
+                        Invoke system command with <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-emerald-500 font-mono text-[9px]">ENTER</kbd>
                       </p>
                     </div>
                   </div>
@@ -268,13 +267,13 @@ export function Navbar({
               <StoreSelector />
 
               {/* Functional Icons Group - Compact Horizontal */}
-              <div className="flex items-center gap-x-4 border-l border-gray-200/60 pl-4 ml-3">
+              <div className="flex items-center gap-x-3 border-l border-white/5 pl-4 ml-3">
                 {/* Notifications */}
                 <NotificationBell
-                  label="Notifications"
+                  label="Alert"
                   showLabel={false}
-                  className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all"
-                  iconClassName="h-4 w-4"
+                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
+                  iconClassName="h-4.5 w-4.5"
                 />
 
                 {/* Notes */}
@@ -284,35 +283,41 @@ export function Navbar({
                     onClick={() => setShowNotesModal(true)}
                     onMouseEnter={() => setIsNoteHovered(true)}
                     onMouseLeave={() => setIsNoteHovered(false)}
-                    className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all relative"
+                    className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                     aria-label="Notes">
-                    <NotebookPen className="h-4 w-4" />
+                    <NotebookPen className="h-4.5 w-4.5" />
                     {notes.length > 0 && (
-                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-gray-300 rounded-full" />
+                      <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                     )}
                   </button>
 
                   {/* Hover tooltip showing recent notes */}
-                  {isNoteHovered && notes.length > 0 && (
-                    <div className="absolute top-full right-1/2 translate-x-1/2 mt-2 w-72 bg-white border border-gray-200 rounded-none shadow-xl z-50 overflow-hidden">
-                      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                        <span className="text-xs font-bold text-gray-900">External REC</span>
-                        <span className="text-xs text-gray-400 font-mono">{notes.length} REC</span>
-                      </div>
-                      <div className="max-h-64 overflow-y-auto divide-y divide-gray-50">
-                        {notes.slice(0, 5).map((note, index) => (
-                          <div key={note.id} className="group relative p-4 hover:bg-gray-50/50 transition-colors">
-                            <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <p className="text-xs text-gray-700 font-mono tracking-tight line-clamp-3 leading-relaxed">{note.text}</p>
-                            <p className="text-xs text-gray-400 mt-2 font-mono flex items-center justify-between">
-                              <span>TS.{new Date(note.createdAt).getTime().toString().slice(-8)}</span>
-                              <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {isNoteHovered && notes.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute top-full right-0 mt-3 w-[280px] bg-[#0c0c0c] border border-white/10 rounded-2xl shadow-3xl z-50 overflow-hidden backdrop-blur-3xl">
+                        <div className="px-5 py-4 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">External_Logs</span>
+                          <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">{notes.length} REC</span>
+                        </div>
+                        <div className="max-h-64 overflow-y-auto divide-y divide-white/5 scrollbar-hide">
+                          {notes.slice(0, 5).map((note) => (
+                            <div key={note.id} className="group relative p-5 hover:bg-white/[0.02] transition-all">
+                              <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              <p className="text-[11px] text-white/40 font-serif italic tracking-tight line-clamp-3 leading-relaxed group-hover:text-white/60">{note.text}</p>
+                              <div className="text-[9px] text-white/10 mt-3 font-mono flex items-center justify-between uppercase tracking-widest">
+                                <span>ID.{note.id.substring(0, 6)}</span>
+                                <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
 
@@ -321,29 +326,30 @@ export function Navbar({
                   <HoverCardTrigger asChild>
                     <button
                       onClick={() => navigate('/integrations-hub')}
-                      className="h-8 w-8 flex items-center justify-center text-slate-900 hover:bg-slate-100/80 rounded-lg transition-all relative"
+                      className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                       aria-label="Store connections">
-                      <Store className="h-4 w-4" />
-                      <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-slate-300 rounded-full" />
+                      <Store className="h-4.5 w-4.5" />
+                      <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-emerald-500/30 rounded-full" />
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
                     side="bottom"
                     align="center"
-                    className="w-72 p-0 bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden">
-                    <div className="p-5">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center">
-                          <Store className="h-4 w-4 text-slate-600" />
+                    sideOffset={12}
+                    className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
+                    <div className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                          <Store className="h-4 w-4 text-emerald-500" />
                         </div>
-                        <span className="text-xs font-bold text-slate-900">Store Management</span>
+                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Store_Management</span>
                       </div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">Connect Your Stores</h4>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        Seamlessly link your Amazon, Shopify, or Walmart marketplaces to consolidate audits and maximize recoveries.
+                      <h4 className="text-[13px] font-serif font-medium text-white mb-2 uppercase tracking-tight">Node Synchronization</h4>
+                      <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                        "Consolidate institutional data flows from Amazon, Shopify, or Walmart to maximize multi-vector recoveries."
                       </p>
-                      <div className="mt-4 pt-3 border-t border-gray-100">
-                        <span className="text-xs text-gray-400">Manage connections</span>
+                      <div className="mt-5 pt-4 border-t border-white/5">
+                        <span className="text-[9px] font-mono text-emerald-500/30 uppercase tracking-[0.2em]">Invoke Control Hub</span>
                       </div>
                     </div>
                   </HoverCardContent>
@@ -354,51 +360,51 @@ export function Navbar({
           </div>
 
           {/* Right Group - Connect & Account */}
-          <div className="flex items-center gap-x-6 border-l border-slate-200/50 pl-6 ml-6">
+          <div className="flex items-center gap-x-6 border-l border-white/5 pl-6 ml-6">
             <button
               onClick={() => navigate('/integrations-hub')}
-              className="flex items-center gap-1.5 text-[13px] text-slate-900 hover:text-slate-600 transition-all font-normal tracking-tight">
-              <Link2 className="h-3.5 w-3.5 text-slate-900" />
-              <span className="hidden sm:inline">Connect</span>
+              className="flex items-center gap-2.5 text-[11px] text-white/40 hover:text-white transition-all font-serif font-medium uppercase tracking-[0.2em] group">
+              <Link2 className="h-3.5 w-3.5 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+              <span className="hidden sm:inline">Link_Node</span>
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 text-[13px] text-slate-900 hover:text-slate-600 transition-colors group/account">
-                  <User className="h-3.5 w-3.5 text-slate-900" />
-                  <span className="hidden sm:inline font-normal tracking-tight">Account</span>
-                  <ChevronDown className="h-3 w-3 text-slate-900" />
+                <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
+                  <User className="h-4 w-4 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
+                  <span className="hidden sm:inline font-medium">Principal</span>
+                  <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80 bg-white border border-slate-200 shadow-2xl rounded-xl p-0 overflow-hidden mt-2 font-montserrat">
-                {/* Connection Status Header - Compact Light */}
-                <div className="px-5 py-4 bg-white border-b border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900 tracking-tight">Amazon Seller Profile</h3>
-                  <div className="flex items-center gap-2 mt-1">
+              <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
+                {/* Connection Status Header - Institutional */}
+                <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
+                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">Principal_Profile</h3>
+                  <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
                     </div>
-                    <p className="text-[11px] text-gray-400 font-medium">Connected</p>
+                    <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.2em]">MATRIX_ID: CONNECTED</p>
                   </div>
                 </div>
 
-                <div className="p-5 space-y-5">
+                <div className="p-6 space-y-6">
                   {/* Compact Data Grid */}
-                  <div className="grid grid-cols-1 gap-y-3.5">
+                  <div className="grid grid-cols-1 gap-y-4">
                     {[
-                      { label: 'Seller Id', value: 'Not available' },
-                      { label: 'Store Name', value: 'Amazon Seller Account' },
-                      { label: 'Internal User Id', value: 'ID_NOT_MAPPED' },
-                      { label: 'Audit Permission', value: 'Active Delegation' },
-                      { label: 'Contact Method', value: 'Seller Central Case Mgr' }
+                      { label: 'Entity ID', value: 'Not available' },
+                      { label: 'Matrix Node', value: 'Primary Seller Terminal' },
+                      { label: 'Security Cleared', value: 'ID_NOT_MAPPED' },
+                      { label: 'Audit Protocol', value: 'Active Delegation' },
+                      { label: 'Comm Channel', value: 'Matrix Secure Line' }
                     ].map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between gap-4">
-                        <span className="text-xs font-medium text-slate-500 shrink-0">
+                      <div key={idx} className="flex items-center justify-between gap-4 group/item">
+                        <span className="text-[10px] font-mono font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-widest shrink-0">
                           {item.label}
                         </span>
                         <span className={cn(
-                          "text-xs font-medium text-slate-900 text-right",
-                          item.value.includes('_') || item.value === 'Not available' ? "font-mono text-slate-300 text-[10px]" : ""
+                          "text-[10px] font-mono transition-colors text-right truncate uppercase tracking-tighter",
+                          item.value.includes('_') || item.value === 'Not available' ? "text-emerald-500/30" : "text-white/60 group-hover/item:text-white"
                         )}>
                           {item.value}
                         </span>
@@ -407,12 +413,12 @@ export function Navbar({
                   </div>
 
                   {/* Sign Out Action - Compact */}
-                  <div className="pt-4 border-t border-slate-100 mt-2">
+                  <div className="pt-5 border-t border-white/5 mt-2">
                     <button
                       onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between text-[12px] font-medium text-slate-400 hover:text-red-500 transition-all group/logout">
-                      <span>Sign Out</span>
-                      <LogOut className="h-4 w-4 group-hover/logout:translate-x-1 transition-transform opacity-40 group-hover/logout:opacity-100" />
+                      className="w-full flex items-center justify-between text-[10px] font-serif font-bold text-white/20 hover:text-rose-500 transition-all group/logout uppercase tracking-[0.3em]">
+                      <span>Decommission</span>
+                      <LogOut className="h-4 w-4 group-hover/logout:translate-x-1 transition-transform opacity-20 group-hover/logout:opacity-100" />
                     </button>
                   </div>
                 </div>
@@ -425,24 +431,26 @@ export function Navbar({
 
       {/* Notes Modal - Institutional Style */}
       <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden flex flex-col max-h-[90vh]">
-          <div className="px-6 py-5 border-b border-gray-900 bg-gray-900">
-            <h3 className="text-xs font-bold text-white">
-              Note Ingestion
+        <DialogContent className="max-w-[520px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-3xl rounded-2xl backdrop-blur-3xl flex flex-col max-h-[85vh]">
+          {/* Header - Institutional Dark */}
+          <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01]">
+            <h3 className="text-[14px] font-serif font-bold text-white uppercase tracking-[0.2em]">
+              Note_Ingestion_Protocol
             </h3>
-            <p className="text-xs text-gray-400 mt-1 font-mono">
-              Internal Logs
+            <p className="text-[10px] text-white/20 mt-2 font-mono uppercase tracking-[0.1em]">
+              Internal_Audit_Logs // Manual_Entries
             </p>
           </div>
 
-          <div className="p-6 space-y-6 overflow-y-auto flex-1 scrollbar-hide">
-            {/* Add new note */}
-            <div className="space-y-3">
+          <div className="p-8 space-y-8 overflow-y-auto flex-1 scrollbar-hide">
+            {/* Add new note - Technical Command Input */}
+            <div className="space-y-4">
+              <label className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Command_Payload</label>
               <textarea
                 value={currentNote}
                 onChange={(e) => setCurrentNote(e.target.value)}
-                placeholder="INPUT TECHNICAL DATA OR REMINDERS HERE..."
-                className="w-full h-32 p-4 text-sm border border-gray-100 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-gray-50/50 focus:bg-white font-mono leading-relaxed transition-all"
+                placeholder="PROMPT: Input manual audit data, transaction anomalies, or case notes..."
+                className="w-full h-32 bg-white/[0.03] border-white/10 rounded-xl p-5 text-[12px] text-white/60 placeholder:text-white/10 focus:ring-0 focus:border-emerald-500/30 transition-all font-serif resize-none leading-relaxed"
               />
               <Button
                 onClick={async () => {
@@ -458,8 +466,6 @@ export function Navbar({
                       };
                       setNotes([newNote, ...notes]);
                       setCurrentNote('');
-                    } else {
-                      console.error('Failed to save note:', response.error);
                     }
                   } catch (error) {
                     console.error('Failed to save note:', error);
@@ -467,36 +473,36 @@ export function Navbar({
                     setIsSavingNote(false);
                   }
                 }}
-                className="w-full bg-gray-900 hover:bg-black text-white text-xs h-10 font-bold rounded-none transition-all"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black text-[10px] font-serif font-bold h-11 transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)]"
                 disabled={!currentNote.trim() || isSavingNote}>
-                {isSavingNote ? 'Processing...' : 'Ingest Note Record'}
+                {isSavingNote ? 'Processing...' : 'INITIALIZE_INGESTION'}
               </Button>
             </div>
 
-            {/* Notes list */}
+            {/* Notes list - High Density Records */}
             {notes.length > 0 && (
-              <div className="border-t border-gray-100 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold text-gray-400">Stored REC</span>
-                  <span className="text-xs font-mono text-gray-400">VOL.{notes.length}</span>
+              <div className="border-t border-white/5 pt-8">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Archived_Artefacts</span>
+                  <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">VOL.{notes.length.toString().padStart(3, '0')}</span>
                 </div>
-                <div className="space-y-3 max-h-60 overflow-y-auto pr-2 scrollbar-hide">
+                <div className="space-y-4">
                   {notes.map((note) => (
-                    <div key={note.id} className="group relative p-4 bg-gray-50/50 border border-gray-100 rounded-none transition-all hover:bg-white hover:border-gray-200">
-                      <div className="absolute left-[-1px] top-[-1px] bottom-[-1px] w-[3px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div key={note.id} className="group relative p-6 bg-white/[0.01] border border-white/5 rounded-xl transition-all hover:bg-white/[0.03] hover:border-white/10">
+                      <div className="absolute left-0 top-4 bottom-4 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                       {editingNoteId === note.id ? (
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                           <textarea
                             value={editingNoteContent}
                             onChange={(e) => setEditingNoteContent(e.target.value)}
-                            className="w-full h-24 p-3 text-sm border border-gray-200 rounded-none resize-none focus:outline-none focus:border-gray-900 bg-white font-mono"
+                            className="w-full h-28 p-4 bg-white/[0.04] border border-white/10 rounded-lg text-[12px] text-white/80 focus:outline-none focus:border-emerald-500/30 font-serif leading-relaxed"
                             autoFocus
                           />
-                          <div className="flex justify-end gap-3">
+                          <div className="flex justify-end gap-4">
                             <button
                               onClick={() => setEditingNoteId(null)}
-                              className="text-xs text-gray-400 hover:text-gray-900 font-bold transition-colors">
+                              className="text-[10px] font-mono text-white/20 hover:text-white uppercase tracking-widest transition-colors">
                               Discard
                             </button>
                             <button
@@ -522,29 +528,29 @@ export function Navbar({
                                   setIsSavingNote(false);
                                 }
                               }}
-                              className="text-xs text-gray-900 hover:text-black font-bold disabled:opacity-50"
+                              className="text-[10px] font-serif font-bold text-emerald-500 hover:text-emerald-400 uppercase tracking-widest transition-colors disabled:opacity-50"
                               disabled={isSavingNote}>
-                              {isSavingNote ? 'Syncing...' : 'Confirm Change'}
+                              {isSavingNote ? 'Syncing...' : 'Confirm_Update'}
                             </button>
                           </div>
                         </div>
                       ) : (
                         <>
-                          <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
-                              <div className="h-1.5 w-1.5 rounded-full bg-gray-400 group-hover:bg-gray-900" />
-                              <span className="text-xs text-gray-400 font-mono">RECORD.{note.id.substring(0, 8).toUpperCase()}</span>
+                              <div className="h-1 w-1 rounded-full bg-emerald-500/50 group-hover:bg-emerald-500" />
+                              <span className="text-[10px] text-white/20 font-mono uppercase tracking-tighter">REC_ID.{note.id.substring(0, 8).toUpperCase()}</span>
                             </div>
-                            <span className="text-xs text-gray-400 font-mono">{new Date(note.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}</span>
+                            <span className="text-[9px] text-white/20 font-mono uppercase">{new Date(note.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}</span>
                           </div>
-                          <p className="text-sm text-gray-700 font-mono leading-relaxed mb-3">{note.text}</p>
-                          <div className="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                          <p className="text-[11px] text-white/60 font-serif italic leading-relaxed group-hover:text-white/80 transition-colors">{note.text}</p>
+                          <div className="flex items-center justify-end gap-6 mt-4 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
                             <button
                               onClick={() => {
                                 setEditingNoteId(note.id);
                                 setEditingNoteContent(note.text);
                               }}
-                              className="text-xs font-bold text-gray-400 hover:text-gray-900">
+                              className="text-[10px] font-mono text-white/20 hover:text-white uppercase tracking-widest">
                               Modify
                             </button>
                             <button
@@ -558,7 +564,7 @@ export function Navbar({
                                   console.error('Failed to delete note:', error);
                                 }
                               }}
-                              className="text-xs font-bold text-gray-400 hover:text-red-600">
+                              className="text-[10px] font-mono text-white/10 hover:text-rose-500 uppercase tracking-widest">
                               Purge
                             </button>
                           </div>
@@ -570,10 +576,10 @@ export function Navbar({
               </div>
             )}
 
-            {notes.length === 0 && (
-              <div className="text-center py-6">
-                <NotebookPen className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-                <p className="text-xs text-gray-400">No notes yet. Start by adding one above.</p>
+            {notes.length === 0 && !isSavingNote && (
+              <div className="text-center py-12 border border-dashed border-white/5 rounded-2xl">
+                <NotebookPen className="h-10 w-10 text-white/10 mx-auto mb-4" />
+                <p className="text-[11px] text-white/20 font-serif italic">"No manual artefacts detected in local memory."</p>
               </div>
             )}
           </div>
@@ -582,34 +588,34 @@ export function Navbar({
 
       {/* Sign Out Confirmation Modal */}
       <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
-        <DialogContent className="sm:max-w-[400px] bg-white border-gray-200 p-0 gap-0 rounded-none">
-          <DialogHeader className="px-6 pt-6 pb-4 border-b border-gray-100">
-            <DialogTitle className="text-base font-semibold text-gray-900">
-              Signing out already?
-            </DialogTitle>
-            <DialogDescription className="text-sm text-gray-500 mt-2 leading-relaxed">
-              Margin continues to monitor your margins and recover funds around the clock. Log back in anytime to review the latest recoveries.
+        <DialogContent className="sm:max-w-[420px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-3xl rounded-2xl backdrop-blur-3xl">
+          <DialogHeader className="px-8 pt-10 pb-6 text-center">
+            <div className="mx-auto w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mb-6 border border-rose-500/20">
+              <LogOut className="h-8 w-8 text-rose-500" />
+            </div>
+            <DialogTitle className="text-[16px] font-serif font-bold text-white uppercase tracking-[0.2em]">Terminate_Session?</DialogTitle>
+            <DialogDescription className="text-[12px] text-white/40 mt-4 font-serif italic leading-relaxed max-w-[280px] mx-auto">
+              "Margin core continues to monitor your assets and recover funds 24/7. Re-authorize anytime to audit recent anomalies."
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="px-6 py-4 bg-gray-50/50 flex gap-3 sm:justify-end">
-            <Button
-              variant="outline"
-              onClick={() => setShowSignOutModal(false)}
-              className="border-gray-200 text-gray-700 hover:bg-gray-100 rounded-none font-medium"
-            >
-              Cancel
-            </Button>
+
+          <div className="px-8 pb-10 pt-2 flex flex-col gap-3">
             <Button
               onClick={async () => {
                 setShowSignOutModal(false);
                 try { await api.logout(); } catch (_) { }
                 window.location.href = '/';
               }}
-              className="bg-gray-900 hover:bg-gray-800 text-white rounded-none font-medium"
-            >
-              Sign Out
+              className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-serif font-bold transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.1)]">
+              CONFIRM_TERMINATION
             </Button>
-          </DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setShowSignOutModal(false)}
+              className="w-full h-12 text-[10px] font-mono text-white/20 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest">
+              Maintain_Access
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

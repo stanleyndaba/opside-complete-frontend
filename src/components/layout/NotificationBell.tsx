@@ -115,10 +115,10 @@ export function NotificationBell({
     : 'flex items-center justify-center h-10 w-10 hover:bg-white/10';
 
   const triggerClassNames = [
-    'relative rounded-md transition-colors',
+    'relative rounded-xl transition-all duration-300',
     isSidebarStyle
       ? baseSidebarClass
-      : 'h-9 w-9 flex items-center justify-center ' + (isTransparentNavbar ? 'hover:bg-white/10 text-gray-200' : 'hover:bg-muted/50'),
+      : 'h-10 w-10 flex items-center justify-center ' + (isTransparentNavbar ? 'hover:bg-white/[0.03] text-white/40 hover:text-white border border-transparent hover:border-white/5' : 'hover:bg-white/[0.02]'),
     className
   ].filter(Boolean).join(' ');
 
@@ -151,14 +151,14 @@ export function NotificationBell({
           className={triggerClassNames}
           onClick={() => setIsOpen(true)}>
           <IconComponent className={cn(
-            'h-4 w-4',
-            iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-gray-200' : 'text-gray-500')
+            'h-4.5 w-4.5',
+            iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-white/20' : 'text-white/40')
           )} />
-          {shouldShowLabel && <span className="text-xs font-bold">{label}</span>}
+          {shouldShowLabel && <span className="text-xs font-serif font-medium uppercase tracking-widest">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
-              "absolute flex items-center justify-center bg-[#1F2937] text-white text-[10px] font-semibold leading-none rounded-full min-w-[15px] h-[15px] px-0.5",
-              isSidebarStyle ? "top-0 right-1" : "-top-1 -right-1"
+              "absolute flex items-center justify-center bg-emerald-500 text-black text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 shadow-[0_0_10px_rgba(16,185,129,0.5)]",
+              isSidebarStyle ? "top-1 right-2" : "-top-0.5 -right-0.5"
             )}>
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
@@ -169,25 +169,25 @@ export function NotificationBell({
       {/* Pentagon/JP Morgan Style - Minimal, Grayscale, Serious */}
       <HoverCardContent
         align="end"
-        sideOffset={8}
-        className="w-[340px] max-h-[420px] bg-white border border-gray-200 shadow-lg z-50 rounded-sm flex flex-col overflow-hidden p-0">
+        sideOffset={12}
+        className="w-[380px] max-h-[480px] bg-[#0c0c0c] border border-white/10 shadow-3xl z-50 rounded-2xl flex flex-col overflow-hidden p-0 backdrop-blur-3xl">
         {/* Header - Fixed, Institutional Style */}
-        <div className="px-5 py-4 border-b border-gray-100 flex-shrink-0 bg-gray-50/50">
+        <div className="px-6 py-5 border-b border-white/5 flex-shrink-0 bg-white/[0.01]">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-gray-900">
-              {label}
+            <h3 className="text-[11px] font-serif font-bold text-white uppercase tracking-[0.2em]">
+              {label}_Feed
             </h3>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors">
-                  Clear All
+                  className="text-[10px] font-mono text-white/20 hover:text-white transition-colors uppercase tracking-widest">
+                  Purge_All
                 </button>
               )}
               {unreadCount > 0 && (
-                <div className="px-1.5 py-0.5 bg-gray-900 text-white text-xs font-bold tracking-tighter">
-                  {unreadCount} NEW
+                <div className="px-2 py-0.5 bg-emerald-500 text-black text-[9px] font-bold tracking-tighter rounded">
+                  {unreadCount} UNREAD
                 </div>
               )}
             </div>
@@ -205,57 +205,49 @@ export function NotificationBell({
               const content = (
                 <div
                   className={cn(
-                    'group relative px-5 py-4 transition-all duration-200 cursor-pointer border-r-2 border-transparent hover:bg-gray-50/50',
-                    !notification.read ? 'bg-gray-50/30' : 'bg-white'
+                    'group relative px-6 py-5 transition-all duration-300 cursor-pointer border-r-2 border-transparent hover:bg-white/[0.03]',
+                    !notification.read ? 'bg-white/[0.01]' : 'bg-transparent'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}>
 
                   {/* Hover Accent Bar */}
-                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gray-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  <div className="flex items-center justify-between gap-3 mb-0.5">
-                    <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                      <div className="h-1 w-1 rounded-full shrink-0 bg-gray-300 mt-1" />
+                  <div className="flex items-center justify-between gap-3 mb-1.5">
+                    <div className="flex items-center gap-3 overflow-hidden min-w-0">
+                      <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.3)]", !notification.read ? "bg-emerald-500" : "bg-white/10")} />
                       <p className={cn(
-                        'text-xs truncate flex items-center gap-2',
-                        !notification.read ? 'font-bold text-gray-900' : 'font-medium text-gray-600 group-hover:text-gray-900'
+                        'text-[11px] truncate flex items-center gap-2 uppercase font-serif tracking-widest',
+                        !notification.read ? 'font-bold text-white' : 'font-medium text-white/40 group-hover:text-white'
                       )}>
-                        {/* We use the type as title since bell notifications don't strictly separate title/body in the object structure passed here same as dashboard, 
-                            but looking at the code above, the 'message' seems to be the main content. 
-                            Wait, the dashboard used notification.title. NotificationBell uses notification.type or generic "System Update" vs "Action Required".
-                            Let's try to match the Dashboard's title logic if possible, or stick to the existing "Action Required" / "System Update" 
-                            but honestly the user probably wants the specific titles like "FUNDS DEPOSITED". 
-                            The current code just says "Action Required" or "System Update". 
-                            Let's try to use the type to make a better title like "FUNDS DEPOSITED" instead of generic "Action Required".
-                        */}
                         {notification.type.replace(/_/g, ' ')}
                       </p>
                     </div>
-                    <span className="text-xs text-gray-300 font-mono text-right shrink-0 pt-0.5 whitespace-nowrap">
+                    <span className="text-[10px] text-white/20 font-mono text-right shrink-0 pt-0.5 whitespace-nowrap uppercase tracking-tighter">
                       {notification.timestamp}
                     </span>
                   </div>
 
-                  <div className="flex items-baseline justify-between gap-4 ml-3.5">
+                  <div className="flex items-baseline justify-between gap-4 ml-4.5">
                     <p className={cn(
-                      'text-xs leading-relaxed font-normal truncate',
-                      !notification.read ? 'text-gray-600' : 'text-gray-400 group-hover:text-gray-500'
+                      'text-[11px] leading-relaxed font-serif italic truncate',
+                      !notification.read ? 'text-white/60' : 'text-white/20 group-hover:text-white/40'
                     )}>
                       {stripEmojis(notification.message)}
                     </p>
                     {(() => {
                       let statusText = '';
-                      if (notification.type === 'funds_deposited') statusText = 'Paid';
-                      else if (notification.type === 'case_filed') statusText = 'Open';
-                      else if (notification.type === 'claim_detected') statusText = 'Found';
+                      if (notification.type === 'funds_deposited') statusText = 'PAID';
+                      else if (notification.type === 'case_filed') statusText = 'OPEN';
+                      else if (notification.type === 'claim_detected') statusText = 'FOUND';
 
                       if (!statusText) return null;
 
                       return (
                         <span className={cn(
-                          "text-xs font-medium shrink-0 transition-colors",
-                          notification.type === 'funds_deposited' ? "text-emerald-500" :
-                            notification.type === 'case_filed' ? "text-blue-500" : "text-gray-400"
+                          "text-[9px] font-mono font-bold shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] px-1.5 py-0.5 rounded border",
+                          notification.type === 'funds_deposited' ? "text-emerald-500 border-emerald-500/20 bg-emerald-500/5" :
+                            notification.type === 'case_filed' ? "text-blue-400 border-blue-400/20 bg-blue-400/5" : "text-white/20 border-white/5"
                         )}>
                           {statusText}
                         </span>
@@ -284,10 +276,10 @@ export function NotificationBell({
         </div>
 
         {/* Footer - Institutional Style */}
-        <div className="px-4 py-3 border-t border-gray-100 flex-shrink-0 bg-gray-50/20">
+        <div className="px-6 py-4 border-t border-white/5 flex-shrink-0 bg-white/[0.01]">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
-            <button className="w-full text-center text-xs font-bold text-gray-400 hover:text-gray-900 transition-colors">
-              Archives
+            <button className="w-full text-center text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-[0.3em]">
+              Archive_Matrix
             </button>
           </Link>
         </div>
