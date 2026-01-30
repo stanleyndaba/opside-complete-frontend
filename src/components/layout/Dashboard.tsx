@@ -743,8 +743,11 @@ export function Dashboard() {
 
   return (
     <div
-      className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-gray-50">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-gray-50 to-white" />
+      className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+      {/* Background Matrix Pattern / Noise */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+
       <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
@@ -752,33 +755,33 @@ export function Dashboard() {
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-8 text-slate-900">
               {/* Command Center Header */}
-              <div className="flex items-center justify-end mb-10">
-                <div className="flex flex-col gap-1 invisible">
-                  <span className="text-[10px] font-medium text-slate-500 tracking-tight">Dashboard</span>
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">SYSTEM_OVERVIEW</span>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-2xl font-semibold text-slate-900 tracking-tight text-nowrap">Reimbursement Overview</h1>
+                    <h1 className="text-xl font-serif font-medium text-white tracking-tight text-nowrap uppercase">Command_Center</h1>
+                    <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
                 </div>
 
                 {/* Performance Analytics Badges */}
-                <div className="hidden xl:flex items-center gap-8 pl-12">
+                <div className="hidden xl:flex items-center gap-10">
                   {[
-                    { label: 'Today', value: 1242.00, growth: 12.5, trend: 'up' },
-                    { label: 'Last 7 Days', value: 8432.50, growth: 8.2, trend: 'up' },
-                    { label: 'This Month', value: 34210.00, growth: 15.4, trend: 'up' }
+                    { label: 'Real_Time_Inflow', value: 1242.00, growth: 12.5, trend: 'up' },
+                    { label: 'Rolling_7D_Yield', value: 8432.50, growth: 8.2, trend: 'up' },
+                    { label: 'Operational_30D', value: 34210.00, growth: 15.4, trend: 'up' }
                   ].map((metric, idx) => (
-                    <div key={idx} className="flex flex-col gap-1.5 border-l border-slate-100 pl-8 first:border-0 first:pl-0">
-                      <span className="text-[10px] font-bold text-slate-400 tracking-wider line-clamp-1">{metric.label}</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg font-bold text-slate-900 tracking-tight font-mono">
+                    <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
+                      <span className="text-[9px] font-mono font-bold text-white/20 tracking-[0.2em] uppercase">{metric.label}</span>
+                      <div className="flex items-center gap-4">
+                        <span className="text-lg font-mono font-bold text-white tracking-tight">
                           ${metric.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                         <div className={cn(
-                          "flex items-center gap-0.5 px-2.5 py-1 rounded-sm text-[10px] font-bold transition-all duration-300",
-                          metric.trend === 'up' ? "bg-[#e6f4f1] text-[#064E3B] border border-[#d1e9e4]" : "bg-rose-50 text-rose-600 border border-rose-100"
+                          "px-2 py-0.5 rounded-sm text-[9px] font-mono font-bold",
+                          metric.trend === 'up' ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
                         )}>
-                          {metric.trend === 'up' ? <ArrowUp className="h-2.5 w-2.5" /> : <ArrowDown className="h-2.5 w-2.5" />}
-                          {metric.growth}%
+                          {metric.trend === 'up' ? '+' : '-'}{metric.growth}%
                         </div>
                       </div>
                     </div>
@@ -791,218 +794,247 @@ export function Dashboard() {
                 <div className="lg:col-span-3 space-y-6">
 
                   {/* Institutional Instrument Panel */}
-                  <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
-                    <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                    {/* Corner Accents */}
+                    <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30 rounded-tl-xl" />
+                    <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-emerald-500/30 rounded-tr-xl" />
+
+                    <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-[3px] h-3 bg-gray-900" />
+                        <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         <div>
-                          <h2 className="text-lg font-bold text-gray-900 font-montserrat">Audit Performance</h2>
-                          <p className="text-xs text-gray-400 font-mono mt-1">Audit-verified reimbursements secured.</p>
+                          <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">AUDIT_PERFORMANCE_METRICS</h2>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Aggregate_Recovery_Yield</span>
+                            <Shield className="h-3 w-3 text-emerald-500/50" />
+                          </div>
                         </div>
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
                         <button
                           onClick={() => navigate('/recoveries')}
-                          className="flex items-center gap-2 px-2 py-1 bg-gray-50 border border-gray-100 hover:bg-gray-100 hover:border-gray-200 transition-colors cursor-pointer"
+                          className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all group rounded-lg"
                         >
-                          <span className="text-xs font-mono font-bold text-gray-500 hover:text-gray-700">{submittedClaimsCount} SETTLEMENTS FILED</span>
+                          <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active_Disputes</span>
+                          <ArrowRight className="h-3 w-3 text-emerald-500/30 group-hover:text-emerald-500" />
                         </button>
                       )}
                     </div>
 
-                    <div className="p-8 border-b border-gray-100">
+                    <div className="p-10">
                       <div className="flex flex-col">
                         {(recoveredTotal ?? 0) > 0 ? (
                           <>
-                            <div className="text-4xl font-light text-gray-900 tracking-tighter mb-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                            <div className="text-5xl font-mono font-bold text-white tracking-tighter mb-4 flex items-baseline gap-2">
                               {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
+                              <span className="text-sm font-mono text-emerald-500 animate-pulse">_</span>
                             </div>
                             {reconciledCount != null && reconciledCount > 0 && (
-                              <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-500 delay-100">
-                                <ArrowUp className="h-3 w-3 text-emerald-500" />
-                                <span className="text-xs font-mono text-emerald-600 font-bold">
-                                  {reconciledCount} Verified this period
+                              <div className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full w-fit">
+                                <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                                <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
+                                  {reconciledCount} Nodes_Synchronized
                                 </span>
                               </div>
                             )}
                           </>
                         ) : (
-                          <div className="flex flex-col gap-2 py-1 animate-in fade-in duration-700">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Loader2 className="h-3 w-3 text-emerald-600 animate-spin" />
-                              <span className="text-xs font-bold text-emerald-700">Analysis in Progress</span>
+                          <div className="flex flex-col gap-6 py-2">
+                            <div className="flex items-center gap-3 text-emerald-500">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]">Matrix_Analysis_Active</span>
                             </div>
-                            <div className="text-3xl font-light text-gray-200 tracking-tighter blur-[2px] select-none">
-                              $0.00
+                            <div className="text-5xl font-mono font-bold text-white/5 tracking-tighter select-none">
+                              $0,000.00
                             </div>
-                            <p className="text-xs text-gray-400 font-medium max-w-sm mt-2 leading-relaxed">
-                              Your recovery data is being compiled. Once the forensic audit completes its initial cycle, recovered funds will appear here.
+                            <p className="text-xs text-white/30 font-serif leading-relaxed max-w-sm">
+                              Forensic audit cycle in progress. Predictive recovery algorithms are parsing FBA transaction logs for discrepancies.
                             </p>
                           </div>
                         )}
 
-                        <div className="mt-8 flex items-center justify-between text-xs font-mono text-gray-400 border-t border-gray-50 pt-4">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span className="cursor-help border-b border-dotted border-gray-300">Margin Protection: <span className="text-gray-900 font-bold">2.3% EST</span></span>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom" className="max-w-xs text-xs">
-                              <p>Calculated as percentage of last 12 months FBA revenue recovered through audit-verified reimbursements.</p>
-                            </TooltipContent>
-                          </Tooltip>
-                          <span>Audit Status: <span className="text-emerald-600 font-bold">Compliant</span></span>
-                          <span className="text-gray-300">REF: SYS.REC.09112</span>
+                        <div className="mt-12 flex items-center justify-between text-[10px] font-mono font-bold text-white/20 border-t border-white/5 pt-6">
+                          <div className="flex items-center gap-4">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="cursor-help flex items-center gap-2 hover:text-white/40 transition-colors uppercase tracking-widest">
+                                  Margin_Protection: <span className="text-emerald-500">2.3% EST</span>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom" className="bg-[#0c0c0c] border-white/10 text-[10px] font-mono text-white/60">
+                                <p>Operational yield recovered through audit-verified reimbursements.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            <span className="text-white/5">|</span>
+                            <span className="uppercase tracking-widest">System_Integrity: <span className="text-emerald-500">SECURE</span></span>
+                          </div>
+                          <span className="uppercase tracking-widest">REF_ID: <span className="text-white/40">SYS_REC_09112</span></span>
                         </div>
                       </div>
                     </div>
 
                     {/* Secondary Metrics Grid - Unified */}
-                    <div className="grid grid-cols-3 divide-x divide-gray-100 bg-gray-50/30">
+                    <div className="grid grid-cols-3 bg-[#0a0a0a]/50 divide-x divide-white/5 border-t border-white/5">
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
-                          <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
-                            <div className="text-xs font-bold text-gray-400 mb-3">Scheduled Payout</div>
-                            <div className="text-2xl font-light text-gray-900 tracking-tight">
+                          <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">SCHEDULED_LIQUIDITY</div>
+                            <div className="text-2xl font-mono font-bold text-white tracking-tight">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
-                            <div className="mt-4 text-xs font-mono text-gray-500">
-                              {nextPaymentDate
-                                ? `Est: ${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-                                : 'Pending Confirmation'}
+                            <div className="mt-4 flex items-center gap-2">
+                              <Clock className="h-3 w-3 text-emerald-500/30" />
+                              <span className="text-[10px] font-mono text-emerald-500/40 uppercase tracking-widest">
+                                {nextPaymentDate
+                                  ? `${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                                  : 'EST_TBD'}
+                              </span>
                             </div>
+                            <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
                           </div>
                         </HoverCardTrigger>
-                        <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="start">
-                          <div className="p-4">
-                            <h4 className="text-xs font-bold text-gray-900 mb-2">Scheduled Payout</h4>
-                            <p className="text-sm text-gray-600 leading-relaxed">
-                              Amount confirmed by Amazon and scheduled for your next payout cycle. Typically processed within 7-14 business days after approval.
+                        <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="start">
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">LIQUIDITY_REPORT</h4>
+                            </div>
+                            <p className="text-xs text-white/40 leading-relaxed font-serif">
+                              Capital currently verified and queued for the primary settlement ledger. Disbursement typically occurs within the standard 14-day protocol.
                             </p>
-                            <a href={`/app/${location.pathname.split('/')[2] || 'default'}/help`} className="inline-flex items-center gap-1 mt-3 text-xs text-gray-500 hover:text-gray-900 hover:underline transition-colors">
-                              Learn more <ArrowRight className="h-3 w-3" />
-                            </a>
                           </div>
                         </HoverCardContent>
                       </HoverCard>
 
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
-                          <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
-                            <div className="text-xs font-bold text-gray-400 mb-3">In Active Review</div>
-                            <div className="text-2xl font-light text-gray-900 tracking-tight">
+                          <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">ACTIVE_RECONCILIATION</div>
+                            <div className="text-2xl font-mono font-bold text-white tracking-tight">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
-                            <div className="mt-4 text-xs font-mono text-gray-500">
-                              {effectivePendingClaims} Disputes currently being worked
+                            <div className="mt-4 flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                              <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
+                                {effectivePendingClaims} PROCESSES_ENGAGED
+                              </span>
                             </div>
+                            <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
                           </div>
                         </HoverCardTrigger>
-                        <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="center">
-                          <div className="p-4">
-                            <h4 className="text-xs font-bold text-gray-900 mb-2">In Active Review</h4>
-                            <p className="text-sm text-gray-600 leading-relaxed">
-                              Claims currently being reviewed by Amazon. Our AI agents are actively gathering evidence and tracking these disputes to maximize recovery.
+                        <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="center">
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">ENGAGEMENT_LOG</h4>
+                            </div>
+                            <p className="text-xs text-white/40 leading-relaxed font-serif">
+                              High-probability discrepancies currently undergoing active forensic verification across the global marketplace nodes.
                             </p>
-                            <a href={`/app/${location.pathname.split('/')[2] || 'default'}/help`} className="inline-flex items-center gap-1 mt-3 text-xs text-gray-500 hover:text-gray-900 hover:underline transition-colors">
-                              Learn more <ArrowRight className="h-3 w-3" />
-                            </a>
                           </div>
                         </HoverCardContent>
                       </HoverCard>
 
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
-                          <div className="p-6 cursor-help hover:bg-gray-50/50 transition-colors">
-                            <div className="text-xs font-bold text-gray-400 mb-3">Settlement Rate</div>
-                            <div className="flex items-baseline gap-2">
-                              <div className="text-2xl font-light text-gray-900 tracking-tight">{settlementRate !== null ? `${settlementRate.toFixed(1)}%` : '—'}</div>
-                              <div className={`w-1.5 h-1.5 rounded-full ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500' : (settlementRate ?? 0) >= 50 ? 'bg-yellow-500' : 'bg-gray-300'}`} />
+                          <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">OPTIMIZATION_YIELD</div>
+                            <div className="flex items-baseline gap-3">
+                              <div className="text-2xl font-mono font-bold text-white tracking-tight">{settlementRate !== null ? `${settlementRate.toFixed(1)}%` : '—'}</div>
+                              <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500 shadow-emerald-500/50' : (settlementRate ?? 0) >= 50 ? 'bg-amber-500 shadow-amber-500/50' : 'bg-white/10'}`} />
                             </div>
-                            <div className="mt-4 text-xs font-mono text-gray-500">
-                              Optimized Yield
+                            <div className="mt-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
+                              ALGORITHMIC_PRECISION
                             </div>
+                            <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
                           </div>
                         </HoverCardTrigger>
-                        <HoverCardContent className="w-72 p-0 border border-gray-200 shadow-2xl" side="bottom" align="end">
-                          <div className="p-4">
-                            <h4 className="text-xs font-bold text-gray-900 mb-2">Settlement Rate</h4>
-                            <p className="text-sm text-gray-600 leading-relaxed">
-                              Percentage of submitted claims that resulted in successful reimbursements. Higher rates indicate stronger evidence matching and optimized claim strategies.
+                        <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="end">
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">PRECISION_METRIC</h4>
+                            </div>
+                            <p className="text-xs text-white/40 leading-relaxed font-serif">
+                              The ratio of successfully closed settlement cycles relative to initiated recovery protocols.
                             </p>
-                            <a href={`/app/${location.pathname.split('/')[2] || 'default'}/help`} className="inline-flex items-center gap-1 mt-3 text-xs text-gray-500 hover:text-gray-900 hover:underline transition-colors">
-                              Learn more <ArrowRight className="h-3 w-3" />
-                            </a>
                           </div>
                         </HoverCardContent>
                       </HoverCard>
                     </div>
 
                     {/* Emotional Anchor Line */}
-                    <div className="px-6 py-3 bg-gray-50/50 border-t border-gray-100">
-                      <p className="text-xs text-gray-400 italic text-center">
-                        Margin continuously protects your revenue and recovers what would have been lost.
+                    <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
+                      <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                      <p className="text-[9px] text-white/20 font-mono uppercase tracking-[0.4em]">
+                        Autonomous_Revenue_Protection_Active
                       </p>
+                      <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                     </div>
                   </div>
 
-                  {/* Detection Summary - Simplified */}
+                  {/* Detection Summary - Instrument Panel */}
                   {detectionStats && detectionStats.totalDetections > 0 && (
-                    <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
-                      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                        <h2 className="text-xs font-bold text-gray-900">Detected Opportunities</h2>
+                    <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                      <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                        <div className="flex items-center gap-3">
+                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
+                          <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">PROXIMITY_DETECTION_LOG</h2>
+                        </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 text-xs text-gray-400 hover:text-gray-900 font-medium"
+                          className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
                           onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}>
-                          Full Report
+                          View_Full_Registry
                         </Button>
                       </div>
-                      <div className="grid grid-cols-4 divide-x divide-gray-100">
+                      <div className="grid grid-cols-4 divide-x divide-white/5">
                         <div className="p-6">
-                          <div className="text-xs font-bold text-gray-400 mb-2">Total Cases</div>
-                          <div className="text-xl font-light text-gray-900">{detectionStats.totalDetections}</div>
+                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Aggregate_Cases</div>
+                          <div className="text-xl font-mono font-bold text-white">{detectionStats.totalDetections}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-xs font-bold text-gray-400 mb-2">Est. Recovery</div>
-                          <div className="text-xl font-light text-gray-900 text-emerald-600">{formatCurrency(detectionStats.estimatedRecovery)}</div>
+                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Est_Yield</div>
+                          <div className="text-xl font-mono font-bold text-emerald-500">{formatCurrency(detectionStats.estimatedRecovery)}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-xs font-bold text-gray-400 mb-2">High Prob.</div>
-                          <div className="text-xl font-light text-gray-900">{detectionStats.highConfidence}</div>
+                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Verified_Nodes</div>
+                          <div className="text-xl font-mono font-bold text-white">{detectionStats.highConfidence}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-xs font-bold text-gray-400 mb-2">Average Conf.</div>
-                          <div className="text-xl font-light text-gray-900">{(detectionStats.averageConfidence || 92.4).toFixed(1)}%</div>
+                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Confidence_Prob</div>
+                          <div className="text-xl font-mono font-bold text-white">{(detectionStats.averageConfidence || 92.4).toFixed(1)}%</div>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  {/* Quick Actions - Clinical List */}
-                  <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                      <h2 className="text-xs font-bold text-gray-900">Quick Command Center</h2>
+                  {/* Quick Actions - Execution Terminal */}
+                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                    <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <Terminal className="h-3 w-3 text-emerald-500/50" />
+                        <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">EXECUTION_OVERRIDE_TERMINAL</h2>
+                      </div>
                       <button
                         aria-label="Customize quick actions"
-                        className="text-gray-400 hover:text-gray-600"
+                        className="text-white/10 hover:text-emerald-500 transition-colors"
                         onClick={() => setQuickActionsEditOpen(true)}>
                         <Plus className="h-3 w-3" />
                       </button>
                     </div>
-                    <div className="divide-y divide-gray-50">
-                      <div className="grid grid-cols-2 lg:grid-cols-3 divide-x divide-gray-50">
+                    <div className="divide-y divide-white/5">
+                      <div className="grid grid-cols-2 lg:grid-cols-3 divide-x divide-white/5">
                         {selectedQuickActions.slice(0, 6).map((actionId) => {
                           const action = QUICK_ACTIONS.find(a => a.id === actionId);
                           if (!action) return null;
 
-                          // Map icons for clinical look
                           let IconComp = FileText;
                           if (actionId === 'ingest_now') IconComp = Cloud;
                           if (actionId === 'run_detector') IconComp = RefreshCw;
                           if (actionId === 'connect_evidence') IconComp = Mail;
                           if (actionId === 'invite_teammate') IconComp = Link2;
-                          // ... others
 
                           return (
                             <button
@@ -1010,16 +1042,17 @@ export function Dashboard() {
                               onClick={() => {
                                 if (actionId === 'connect_evidence') setShowSourcesModal(true);
                                 else if (actionId === 'invite_teammate') setInviteOpen(true);
-                                else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Ingest Started' }));
+                                else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Ingest_Protocol_Started' }));
                                 else navigate(`/${actionId.replace(/_/g, '-')}`);
                               }}
-                              className="group flex flex-col p-6 hover:bg-gray-50 transition-colors text-left border-b border-gray-50">
-                              <div className="flex items-center justify-between mb-3 text-gray-300 group-hover:text-gray-900 transition-colors">
+                              className="group flex flex-col p-8 hover:bg-white/[0.02] transition-all text-left border-b border-white/5 relative overflow-hidden">
+                              <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
+                              <div className="flex items-center justify-between mb-4 text-white/10 group-hover:text-emerald-500 transition-colors">
                                 <IconComp className="h-4 w-4" />
                                 <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
                               </div>
-                              <span className="text-xs text-gray-900 font-bold mb-1">{action.label}</span>
-                              <span className="text-xs text-gray-400 font-mono">{action.subtitle}</span>
+                              <span className="text-[11px] text-white font-bold mb-1 tracking-tight uppercase group-hover:text-emerald-500/80 transition-colors">{action.label.replace(' ', '_')}</span>
+                              <span className="text-[9px] text-white/20 font-mono uppercase tracking-[0.1em]">{action.subtitle.replace(' ', '_')}</span>
                             </button>
                           );
                         })}
@@ -1028,82 +1061,78 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                {/* System Activity - Right Sidebar */}
+                {/* System Activity - Audit Registry Sidebar */}
                 <div className="lg:col-span-1">
-                  <div className="bg-gray-50/80 border border-gray-200 rounded-none h-full flex flex-col">
+                  <div className="bg-[#0c0c0c]/80 border border-white/10 rounded-xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+
                     <button
                       onClick={() => setIsActivityExpanded(!isActivityExpanded)}
-                      className="px-5 py-4 border-b border-slate-100 bg-[#fefefe] flex items-center justify-between w-full hover:bg-slate-50 transition-all font-montserrat">
-                      <div className="flex items-center gap-3">
-                        <div className="w-[3px] h-3 bg-slate-900 rounded-full" />
-                        <h3 className="text-[13px] font-bold text-slate-900 tracking-tight">Activity</h3>
+                      className="px-6 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full hover:bg-white/[0.04] transition-all group">
+                      <div className="flex items-center gap-4">
+                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
+                        <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">AUDIT_REGISTRY_v4.2</h3>
                         {unreadCount > 0 && (
-                          <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-md">
-                            <span className="text-[10px] font-bold text-emerald-600 tabular-nums">
+                          <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                            <span className="text-[9px] font-mono font-bold text-emerald-500 tabular-nums">
                               {unreadCount > 50 ? '50+' : unreadCount}
                             </span>
                           </div>
                         )}
                       </div>
-                      <ChevronDown className={cn("h-3.5 w-3.5 text-slate-400 transition-transform duration-300", isActivityExpanded ? "" : "-rotate-180")} />
+                      <ChevronDown className={cn("h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-transform duration-300", isActivityExpanded ? "" : "-rotate-180")} />
                     </button>
 
                     {isActivityExpanded && (
                       <>
-                        <div className="flex-1 max-h-[600px] overflow-y-auto scrollbar-hide divide-y divide-gray-100">
+                        <div className="flex-1 max-h-[800px] overflow-y-auto scrollbar-hide divide-y divide-white/5">
                           {displayNotifications.length === 0 ? (
-                            /* Live 'Heartbeat' Feed for Empty State - Minimalist */
-                            <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-                              <div className="relative flex h-3 w-3 mb-4">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                            <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
+                              <div className="relative flex h-3 w-3 mb-6">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500/40"></span>
                               </div>
-                              <p className="text-xs text-gray-400 font-mono">System Monitoring Active</p>
-                              <p className="text-xs text-gray-300 mt-2">No new alerts or discrepancies found.</p>
+                              <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">NO_LOG_ANOMALIES_DETECTED</p>
+                              <p className="text-[10px] text-white/10 mt-2 font-serif italic">Operational baseline maintained.</p>
                             </div>
                           ) : (
                             <div className="flex flex-col">
-                              {displayNotifications.slice(0, 12).map((notification) => {
+                              {displayNotifications.slice(0, 15).map((notification) => {
                                 const isUnread = notification.status !== 'read';
                                 const notificationDate = new Date(notification.created_at);
                                 const isValidDate = notificationDate instanceof Date && !isNaN(notificationDate.getTime());
                                 const timeAgo = isValidDate
                                   ? formatDistanceToNow(notificationDate, { addSuffix: true })
-                                  : 'recently';
+                                  : 'just_now';
 
-                                // Standardized premium grey dots, white if read
-                                let statusColor = isUnread ? 'bg-slate-300' : 'bg-white';
-
-                                // Textual Status (subtle, not badge)
                                 let statusText = '';
-                                if (notification.type === 'funds_deposited') statusText = 'Paid';
-                                else if (notification.type === 'case_filed') statusText = 'Open';
-                                else if (notification.type === 'claim_detected') statusText = 'Found';
+                                if (notification.type === 'funds_deposited') statusText = 'SETTLED';
+                                else if (notification.type === 'case_filed') statusText = 'ENGAGED';
+                                else if (notification.type === 'claim_detected') statusText = 'IDENTIFIED';
+                                else statusText = 'SYSTEM_LOG';
 
                                 return (
                                   <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
                                     <HoverCardTrigger asChild>
                                       <div
                                         className={cn(
-                                          "group relative px-5 py-3 cursor-pointer transition-all duration-200 border-l-2 border-transparent hover:bg-gray-50/50",
-                                          isUnread ? "bg-gray-50/30" : "bg-white"
+                                          "group relative px-6 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-white/[0.03]",
+                                          isUnread ? "bg-emerald-500/[0.02]" : "bg-transparent"
                                         )}
                                         onClick={() => navigate('/recoveries')}>
 
-                                        {/* Hover Accent Bar (Glowing Emerald) */}
-                                        <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-emerald-500 rounded-full opacity-0 group-hover:opacity-100 shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-300" />
+                                        {/* Hover Glow Bar */}
+                                        <div className="absolute left-[-2px] top-3 bottom-3 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                                        {/* Stacked Ledger Layout - Two Rows */}
-                                        <div className="flex flex-col gap-0.5 font-montserrat">
-                                          {/* Top Row: Label + Amount */}
-                                          <div className="flex items-center justify-between gap-3">
+                                        <div className="flex flex-col gap-1.5">
+                                          <div className="flex items-center justify-between gap-4">
                                             <p className={cn(
-                                              "text-[12px] tracking-tight truncate",
-                                              isUnread ? "font-medium text-slate-900" : "font-medium text-slate-600 group-hover:text-slate-900 transition-colors"
+                                              "text-[11px] tracking-tight truncate uppercase font-medium",
+                                              isUnread ? "text-white" : "text-white/40 group-hover:text-white transition-colors"
                                             )}>
                                               {(() => {
                                                 const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
-                                                return label || enrichNotificationTitle(notification.title);
+                                                return label.replace(' ', '_') || enrichNotificationTitle(notification.title).replace(' ', '_');
                                               })()}
                                             </p>
 
@@ -1112,12 +1141,12 @@ export function Dashboard() {
                                               if (amount) {
                                                 return (
                                                   <span className={cn(
-                                                    "text-[13px] font-bold tabular-nums shrink-0",
+                                                    "text-[12px] font-mono font-bold tabular-nums shrink-0",
                                                     notification.type === 'funds_deposited' || notification.type === 'refund_approved'
-                                                      ? "text-emerald-600"
-                                                      : "text-slate-900"
+                                                      ? "text-emerald-500"
+                                                      : "text-white"
                                                   )}>
-                                                    + {amount}
+                                                    +{amount}
                                                   </span>
                                                 );
                                               }
@@ -1125,12 +1154,20 @@ export function Dashboard() {
                                             })()}
                                           </div>
 
-                                          {/* Bottom Row: Date + Type */}
                                           <div className="flex items-center justify-between">
-                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                              {statusText || 'LOG'}
-                                            </span>
-                                            <span className="text-[10px] text-slate-400 font-medium lowercase">
+                                            <div className="flex items-center gap-2">
+                                              <span className={cn(
+                                                "text-[9px] font-mono font-bold tracking-[0.1em]",
+                                                isUnread ? "text-emerald-500/60" : "text-white/10"
+                                              )}>
+                                                {statusText}
+                                              </span>
+                                              <span className="text-white/5 h-2 w-[1px] bg-white/10" />
+                                              <span className="text-[9px] text-white/10 font-mono tracking-widest uppercase">
+                                                ID_{notification.id.substring(0, 4)}
+                                              </span>
+                                            </div>
+                                            <span className="text-[9px] text-white/20 font-mono tabular-nums">
                                               {formatLedgerDate(notification.created_at)}
                                             </span>
                                           </div>
@@ -1211,295 +1248,218 @@ export function Dashboard() {
       </div>
       {/* Document Sources Modal */}
       <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
-        <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-gray-200 rounded-sm shadow-2xl">
-          <DialogHeader className="px-6 py-5 bg-gray-900 border-b border-gray-900">
-            <DialogTitle className="text-xs font-semibold text-white">Connect Document Sources</DialogTitle>
-            <DialogDescription className="text-xs text-gray-400 mt-1 font-medium">
-              AUTHORIZED ACCESS FOR DOCUMENT INGESTION
-            </DialogDescription>
+        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
+          <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
+            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">CONNECT_DOCUMENT_SOURCES</DialogTitle>
+            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Authorize automated forensic ingestion protocols.</DialogDescription>
           </DialogHeader>
 
-          <div className="p-6">
+          <div className="p-8">
             <div className="grid grid-cols-2 gap-4">
-              <button
-                onClick={async () => {
-                  try {
-                    setProviderLoading('gmail');
-                    const r = await api.connectDocs('gmail');
-                    if (r.ok && r.data?.auth_url) {
-                      window.location.href = r.data.auth_url;
-                    } else {
-                      toast({
-                        title: 'Connection Failed',
-                        description: r.error || 'Failed to initiate Gmail connection.',
-                        variant: 'destructive',
-                      });
+              {[
+                { id: 'gmail', label: 'Gmail_Vault', icon: GmailIcon, color: 'hover:border-red-500/30 hover:bg-red-500/5' },
+                { id: 'outlook', label: 'Outlook_Portal', icon: OutlookIcon, color: 'hover:border-blue-500/30 hover:bg-blue-500/5' },
+                { id: 'gdrive', label: 'Drive_Archive', icon: GoogleDriveIcon, color: 'hover:border-emerald-500/30 hover:bg-emerald-500/5' },
+                { id: 'dropbox', label: 'Dropbox_Node', icon: DropboxIcon, color: 'hover:border-indigo-500/30 hover:bg-indigo-500/5' }
+              ].map((provider) => (
+                <button
+                  key={provider.id}
+                  onClick={async () => {
+                    try {
+                      setProviderLoading(provider.id as any);
+                      const r = await api.connectDocs(provider.id as any);
+                      if (r.ok && r.data?.auth_url) {
+                        window.location.href = r.data.auth_url;
+                      } else {
+                        toast({ title: 'PROTOCOL_INIT_FAILURE', description: r.error || `Failed to establish ${provider.label} link.`, variant: 'destructive' });
+                        setProviderLoading(null);
+                      }
+                    } catch (error) {
+                      toast({ title: 'CRITICAL_AUTH_ERROR', description: 'Handshake protocol failed. Retry requested.', variant: 'destructive' });
                       setProviderLoading(null);
                     }
-                  } catch (error) {
-                    toast({
-                      title: 'Connection Failed',
-                      description: 'An error occurred. Please try again.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                }}
-                disabled={providerLoading === 'gmail'}
-                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                {providerLoading === 'gmail' ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                ) : (
-                  <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                )}
-                <span className="text-xs font-bold text-gray-900 group-hover:text-black">Gmail</span>
-              </button>
-
-              <button
-                onClick={async () => {
-                  try {
-                    setProviderLoading('outlook');
-                    const r = await api.connectDocs('outlook');
-                    if (r.ok && r.data?.auth_url) {
-                      window.location.href = r.data.auth_url;
-                    } else {
-                      toast({
-                        title: 'Connection Failed',
-                        description: r.error || 'Failed to initiate Outlook connection.',
-                        variant: 'destructive',
-                      });
-                      setProviderLoading(null);
-                    }
-                  } catch (error) {
-                    toast({
-                      title: 'Connection Failed',
-                      description: 'An error occurred. Please try again.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                }}
-                disabled={providerLoading === 'outlook'}
-                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                {providerLoading === 'outlook' ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                ) : (
-                  <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                )}
-                <span className="text-xs font-bold text-gray-900 group-hover:text-black">Outlook</span>
-              </button>
-
-              <button
-                onClick={async () => {
-                  try {
-                    setProviderLoading('gdrive');
-                    const r = await api.connectDocs('gdrive');
-                    if (r.ok && r.data?.auth_url) {
-                      window.location.href = r.data.auth_url;
-                    } else {
-                      toast({
-                        title: 'Connection Failed',
-                        description: r.error || 'Failed to initiate Google Drive connection.',
-                        variant: 'destructive',
-                      });
-                      setProviderLoading(null);
-                    }
-                  } catch (error) {
-                    toast({
-                      title: 'Connection Failed',
-                      description: 'An error occurred. Please try again.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                }}
-                disabled={providerLoading === 'gdrive'}
-                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                {providerLoading === 'gdrive' ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                ) : (
-                  <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                )}
-                <span className="text-xs font-bold text-gray-900 group-hover:text-black">Drive</span>
-              </button>
-
-              <button
-                onClick={async () => {
-                  try {
-                    setProviderLoading('dropbox');
-                    const r = await api.connectDocs('dropbox');
-                    if (r.ok && r.data?.auth_url) {
-                      window.location.href = r.data.auth_url;
-                    } else {
-                      toast({
-                        title: 'Connection Failed',
-                        description: r.error || 'Failed to initiate Dropbox connection.',
-                        variant: 'destructive',
-                      });
-                      setProviderLoading(null);
-                    }
-                  } catch (error) {
-                    toast({
-                      title: 'Connection Failed',
-                      description: 'An error occurred. Please try again.',
-                      variant: 'destructive',
-                    });
-                    setProviderLoading(null);
-                  }
-                }}
-                disabled={providerLoading === 'dropbox'}
-                className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 hover:border-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-sm disabled:opacity-50">
-                {providerLoading === 'dropbox' ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-900" />
-                ) : (
-                  <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-all duration-300" />
-                )}
-                <span className="text-xs font-bold text-gray-900 group-hover:text-black">Dropbox</span>
-              </button>
+                  }}
+                  disabled={providerLoading === provider.id}
+                  className={cn(
+                    "group flex flex-col items-center justify-center gap-4 p-8 bg-white/[0.02] border border-white/5 transition-all duration-300 rounded-xl relative overflow-hidden",
+                    provider.color
+                  )}
+                >
+                  <div className="absolute inset-0 bg-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {providerLoading === provider.id ? (
+                    <Loader2 className="h-6 w-6 animate-spin text-white/40" />
+                  ) : (
+                    <img src={provider.icon} alt={provider.label} className="h-8 w-8 object-contain opacity-40 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-300" />
+                  )}
+                  <span className="text-[10px] font-mono font-bold text-white/20 group-hover:text-white uppercase tracking-widest transition-colors">{provider.label}</span>
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
+          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-center">
+            <button
               onClick={() => setShowSourcesModal(false)}
-              className="text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100">
-              Skip for Now
-            </Button>
+              className="text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-[0.2em] transition-colors"
+            >
+              SKIP_SECURE_AUTH
+            </button>
           </div>
         </DialogContent>
       </Dialog>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
-        <DialogContent className="max-w-md bg-white border border-gray-200 rounded-sm p-0">
-          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <DialogTitle className="text-xs font-medium text-gray-900">Customize Quick Actions</DialogTitle>
-            <DialogDescription className="text-xs text-gray-500 mt-0.5">Select which actions to show.</DialogDescription>
+        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
+          <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
+            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">CONFIGURE_TERMINAL_OVERRIDE</DialogTitle>
+            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Select active operational modules for the command grid.</DialogDescription>
           </DialogHeader>
-          <div className="p-6 space-y-3">
-            {QUICK_ACTIONS.map(a => (
-              <label key={a.id} className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors cursor-pointer rounded-sm border border-transparent hover:border-gray-100">
-                <Checkbox checked={selectedQuickActions.includes(a.id)} onCheckedChange={(c) => {
-                  setSelectedQuickActions(prev => {
-                    const next = new Set(prev);
-                    if (c) next.add(a.id); else next.delete(a.id);
-                    return Array.from(next);
-                  });
-                }} />
+          <div className="p-6 max-h-[400px] overflow-y-auto space-y-2">
+            {QUICK_ACTIONS.map((a) => (
+              <label key={a.id} className="flex items-center gap-4 p-4 hover:bg-white/[0.03] transition-colors cursor-pointer group rounded-lg border border-transparent hover:border-white/5">
+                <Checkbox
+                  className="border-white/20 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none"
+                  checked={selectedQuickActions.includes(a.id)}
+                  onCheckedChange={(c) => {
+                    setSelectedQuickActions(prev => {
+                      const next = new Set(prev);
+                      if (c) next.add(a.id); else next.delete(a.id);
+                      return Array.from(next);
+                    });
+                  }}
+                />
                 <div className="flex flex-col">
-                  <span className="text-xs text-gray-900 font-medium">{a.label}</span>
-                  <span className="text-xs text-gray-500">{a.subtitle}</span>
+                  <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace(' ', '_')}</span>
+                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-widest">{a.subtitle.replace(' ', '_')}</span>
                 </div>
               </label>
             ))}
           </div>
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
-            <button onClick={() => setQuickActionsEditOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
-            <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'Saved', description: 'Quick actions updated.' }); } catch { } setQuickActionsEditOpen(false); }}>Save</button>
+          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3">
+            <button
+              onClick={() => setQuickActionsEditOpen(false)}
+              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-widest transition-colors"
+            >
+              ABORT_CHANGES
+            </button>
+            <button
+              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+              onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'PROTOCOL_UPDATED_SECURELY' }); } catch { } setQuickActionsEditOpen(false); }}
+            >
+              SAVE_CONFIGURATION
+            </button>
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent className="max-w-sm bg-white border border-gray-200 rounded-sm p-0">
-          <DialogHeader className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <DialogTitle className="text-xs font-medium text-gray-900">Invite a Teammate</DialogTitle>
-            <DialogDescription className="text-xs text-gray-500 mt-0.5">Send a read-only invite to finance/ops.</DialogDescription>
+        <DialogContent className="max-w-sm bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
+          <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
+            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">PROVISION_ACCESS_INVITE</DialogTitle>
+            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Authorize read-only access for internal personnel.</DialogDescription>
           </DialogHeader>
           <div className="p-6">
-            <Input type="email" placeholder="email@company.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} className="h-9 text-xs border-gray-200 rounded-sm" />
+            <Input
+              type="email"
+              placeholder="IDENTITY@CORPORATION.SYS"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              className="h-10 bg-white/5 border-white/10 text-[11px] font-mono text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+            />
           </div>
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2">
-            <button onClick={() => setInviteOpen(false)} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-900">Cancel</button>
-            <button className="px-4 py-1.5 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors" onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'Invite sent', description: inviteEmail }); } catch (e: any) { toast({ title: 'Invite failed', description: e?.message || 'Please try again.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}>Send Invite</button>
+          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end gap-3">
+            <button
+              onClick={() => setInviteOpen(false)}
+              className="px-4 py-2 text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-widest transition-colors"
+            >
+              CANCEL_AUTHORIZATION
+            </button>
+            <button
+              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+              onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'INVITATION_PROTOCOL_INITIATED' }); } catch (e: any) { toast({ title: 'INVITE_FAILURE', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
+            >
+              SEND_CREDENTIALS
+            </button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Discrepancy Detail Modal - Ultra-Minimalist View */}
+      {/* Discrepancy Detail Modal - Institutional Registry View */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="max-w-lg bg-white border border-gray-200 shadow-2xl rounded-none p-0 overflow-hidden">
-          <div className="p-6 pt-10">
-            <div className="space-y-4">
-              {/* Overview Section - Minimalist */}
-              <div className="grid grid-cols-2 gap-4 border-b border-gray-100 pb-4">
-                <div className="space-y-0.5">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Audit Segment</span>
-                  <p className="text-sm font-bold text-gray-900">Inventory Reconciliation</p>
-                </div>
-                <div className="space-y-0.5">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Detection Cadence</span>
-                  <p className="text-sm font-bold text-gray-900">Continuous Sync</p>
-                </div>
-              </div>
-
-              {/* Main Analysis Area - Maintained Findings Section */}
-              <div className="bg-white space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-gray-900" />
-                  <h4 className="text-xs font-bold text-gray-900 uppercase">Audit Findings</h4>
-                </div>
-
-                {(() => {
-                  if (!activeDiscrepancyLog) return null;
-
-                  // Extract count using regex from title or message
-                  const combinedText = `${activeDiscrepancyLog.title || ''} ${activeDiscrepancyLog.message || ''}`;
-                  const countMatch = combinedText.match(/(\d+)\s+(?:discrepancies|claims|high-probability)/i);
-                  const count = countMatch ? parseInt(countMatch[1]) : 0;
-
-                  if (count > 0) {
-                    return (
-                      <div className="space-y-4">
-                        <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                          Our audit engine has identified <span className="text-gray-900 font-bold underline decoration-gray-200 underline-offset-4">{count} automated discrepancies</span> within this specific reconciliation cycle.
-                        </p>
-
-                        <ScrollArea className={cn("pr-4", count > 6 ? "h-[260px]" : "h-auto")}>
-                          <div className="grid grid-cols-1 gap-2 pt-2">
-                            {[...Array(count)].map((_, i) => (
-                              <div key={i} className="flex items-center justify-between p-4 bg-gray-50/50 border border-gray-100 hover:bg-gray-50 transition-colors">
-                                <div className="flex flex-col gap-0.5">
-                                  <span className="text-[10px] font-mono text-gray-400">REF.{Math.random().toString(36).substring(7).toUpperCase()}</span>
-                                  <span className="text-[11px] font-bold text-gray-900 uppercase tracking-tight">FBA Inventory Mismatch</span>
-                                </div>
-                                <div className="text-right">
-                                  <span className="block text-[10px] font-bold text-emerald-600 uppercase tracking-wide">Verified Check</span>
-                                  <span className="text-[9px] text-gray-400 font-medium">Pending Review</span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </ScrollArea>
-                        {count > 6 && (
-                          <div className="pt-4 flex justify-center border-t border-gray-50 mt-2">
-                            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
-                              End of Audit Segment
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div className="py-12 text-center bg-gray-50 border border-dashed border-gray-200">
-                      <p className="text-xs text-gray-400 font-medium italic">
-                        No audit discrepancies currently identified within this log segment.
-                      </p>
+        <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-xl p-0 overflow-hidden backdrop-blur-3xl">
+          <div className="absolute top-0 right-0 p-6">
+            <button onClick={() => setShowDiscrepancyModal(false)} className="text-white/10 hover:text-white transition-colors">
+              <Plus className="h-4 w-4 rotate-45" />
+            </button>
+          </div>
+          <div className="p-10 pt-12">
+            {activeDiscrepancy ? (
+              <div className="space-y-10">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">FORENSIC_DISCREPANCY_LOG</span>
+                  </div>
+                  <h2 className="text-xl font-serif font-medium text-white uppercase tracking-tight">{activeDiscrepancy.reason.replace(' ', '_')}</h2>
+                  <div className="flex items-center gap-4 mt-2">
+                    <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">
+                      ID: {activeDiscrepancy.id.substring(0, 12)}
                     </div>
-                  );
-                })()}
+                    <div className="px-3 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-full text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
+                      PROBABILITY: 94.2%
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-8 py-8 border-y border-white/5">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">RECOVERY_POTENTIAL</span>
+                    <span className="text-2xl font-mono font-bold text-white">{formatCurrency(activeDiscrepancy.estimatedRecovery)}</span>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">INCIDENT_TIMESTAMP</span>
+                    <span className="text-[13px] font-mono text-white/60 uppercase">{new Date(activeDiscrepancy.occurrenceDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">INCIDENT_ANALYSIS_SUMMARY</h3>
+                  <div className="p-4 bg-white/5 border border-white/5 rounded-lg">
+                    <p className="text-xs text-white/40 leading-relaxed font-serif italic">
+                      Automated audit engines identified a discrepancy in the {activeDiscrepancy.reason} ledger. High-fidelity evidence has been indexed and is queued for dispute protocol initiation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowDiscrepancyModal(false)}
+                    className="flex-1 bg-white/5 border-white/10 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-widest h-12"
+                  >
+                    CLOSE_REGISTRY
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      toast({ title: 'INITIATION_PROTOCOL_SECURED', description: 'Dispute cycle engaged for REF_ID: ' + activeDiscrepancy.id.substring(0, 8) });
+                      setShowDiscrepancyModal(false);
+                    }}
+                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-black text-[10px] font-mono font-bold uppercase tracking-widest h-12"
+                  >
+                    INITIATE_RECOVERY
+                  </Button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-6 w-6 text-emerald-500 animate-spin" />
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Sync Log Modal */}
       <SyncLogModal isOpen={showSyncModal} onClose={() => setShowSyncModal(false)} />
     </div>
   );
 }
-
+```
