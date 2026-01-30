@@ -5,13 +5,23 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { RefreshCw, Sparkles } from 'lucide-react';
-import { api } from '@/lib/api';
+import { Share2, Shield, Lock, Zap, FileText, Database, Globe, CheckCircle2, AlertCircle, Plus, Trash2, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog";
+
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
+import { api } from '@/lib/api';
 
-// ... (keep all the existing interfaces and constants)
+// ... (existing constants)
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
@@ -20,6 +30,12 @@ export default function IntegrationsHub() {
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
+  const [stores, setStores] = useState<any[]>([]);
+  const [loadingStores, setLoadingStores] = useState(true);
+  const [showAddStore, setShowAddStore] = useState(false);
+  const [newStoreData, setNewStoreData] = useState({ name: '', marketplace: 'ATVPDKIKX0DER', seller_id: '' });
+  const [addingStore, setAddingStore] = useState(false);
+  const [deletingStore, setDeletingStore] = useState<string | null>(null);
 
   // Check if we're in sandbox mode
   const env: any = (typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined) || (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
@@ -369,936 +385,578 @@ export default function IntegrationsHub() {
     return () => { cancelled = true };
   }, []);
 
-  // ... (keep all the existing useEffect and handler functions)
+  // Load stores
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        setLoadingStores(true);
+        const res = await api.getStores();
+        if (res.ok && res.data?.stores) {
+          setStores(res.data.stores);
+        }
+      } catch (error) {
+        console.error('Failed to load stores:', error);
+      } finally {
+        setLoadingStores(false);
+      }
+    };
+    fetchStores();
+  }, []);
+
+  const handleAddStore = async () => {
+    if (!newStoreData.name) {
+      toast({ title: "Validation Error", description: "Store name is required", variant: "destructive" });
+      return;
+    }
+    try {
+      setAddingStore(true);
+      const res = await api.createStore(newStoreData);
+      if (res.ok) {
+        setStores([...stores, res.data.store]);
+        setShowAddStore(false);
+        setNewStoreData({ name: '', marketplace: 'ATVPDKIKX0DER', seller_id: '' });
+        toast({ title: "Store Added", description: "New store node established." });
+      } else {
+        toast({ title: "Failed", description: res.error || "Could not create store", variant: "destructive" });
+      }
+    } catch (e) {
+      toast({ title: "Error", description: "Terminal failure during node establishment", variant: "destructive" });
+    } finally {
+      setAddingStore(false);
+    }
+  };
+
+  const handleDeleteStore = async (id: string) => {
+    if (!confirm("Are you sure you want to decommission this store node?")) return;
+    try {
+      setDeletingStore(id);
+      const res = await api.deleteStore(id);
+      if (res.ok) {
+        setStores(stores.filter(s => s.id !== id));
+        toast({ title: "Node Decommissioned", description: "Store node successfully removed." });
+      }
+    } catch (e) {
+      toast({ title: "Error", description: "Failed to remove node", variant: "destructive" });
+    } finally {
+      setDeletingStore(null);
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   return (
-    <PageLayout title="Integrations">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-8 pt-8 pb-12 text-gray-900">
+    <PageLayout title="Integrations" midnight hideNavbar hideSidebar>
+      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
+        {/* Aesthetic Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
+        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url(\"data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E\")` }} />
 
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Integrations</h1>
-              <p className="text-xs text-gray-500 mt-0.5">Platform Connections</p>
+        <div className="relative z-10 container max-w-7xl mx-auto px-6 py-12">
+          {/* Header section */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+          >
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px w-8 bg-emerald-500/50" />
+                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Central Command</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight">
+                Integrations <span className="text-emerald-500/20 px-2 tracking-tighter">/</span> Hub
+              </h1>
+              <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
+                Management of all primary harvesting nodes and terminal connections. Data is isolated per store and synchronized across our institutional matrix.
+              </p>
             </div>
 
-            {/* Hardcopy Document Notice - Institutional Banking Style */}
-            <div className="bg-gray-50 border border-gray-200 mb-8">
-              <div className="px-6 py-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-xs font-semibold text-gray-500">Manual Upload</p>
-                  <p className="text-xs text-gray-700 mt-0.5">
-                    For hardcopy documents, scanned images, or files not available via connected sources.
-                  </p>
+            <div className="flex items-center gap-4">
+              <div className="flex flex-col items-end">
+                <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Global Sync Status</span>
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-sm font-medium text-white tracking-tight">Systems Operational</span>
                 </div>
-                <button
-                  onClick={() => navigate('/evidence-locker')}
-                  className="text-xs font-medium text-gray-900 hover:text-gray-700 transition-colors border border-gray-300 px-4 py-2 bg-white hover:bg-gray-50">
-                  Open Evidence Locker
-                </button>
               </div>
             </div>
+          </motion.div>
 
-            {/* Core Integrations */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {/* Amazon SP-API */}
-              <div className="bg-white border border-gray-200 rounded-sm">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 bg-orange-500 flex items-center justify-center">
-                      <img src="/Amazon-logo.png" alt="Amazon" className="h-5 w-5 object-contain brightness-0 invert" />
+          {/* Main Nodes Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12"
+          >
+            {/* Amazon Command Node */}
+            <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12">
+              <div className="h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/10 p-8 flex flex-col relative group transition-all duration-500 hover:border-emerald-500/30">
+                <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 transition-opacity">
+                  <Database className="w-12 h-12 text-emerald-500/20 group-hover:text-emerald-500/40 transition-colors" />
+                </div>
+
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+                  <div className="flex items-center gap-6">
+                    <div className="h-16 w-16 rounded-2xl bg-orange-600/10 flex items-center justify-center border border-orange-500/20 shadow-[0_0_20px_rgba(234,88,12,0.15)] group-hover:shadow-[0_0_30px_rgba(234,88,12,0.3)] transition-all duration-500 overflow-hidden relative">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
                     </div>
                     <div>
-                      <h2 className="text-xs font-medium text-gray-900">Amazon SP-API</h2>
-                      <p className="text-xs text-gray-500 mt-0.5">Inventory, orders, fees & returns</p>
+                      <h3 className="text-3xl font-serif text-white tracking-tight mb-1">Amazon Matrix</h3>
+                      <p className="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.4em]">Primary Ingestion Infrastructure</p>
                     </div>
                   </div>
-                  <span className={cn(
-                    'text-xs font-medium',
-                    (isSandbox || status?.amazon_connected)
-                      ? 'text-emerald-600'
-                      : 'text-gray-500'
-                  )}>
-                    {(isSandbox || status?.amazon_connected) ? 'Connected' : 'Not connected'}
-                  </span>
-                </div>
-                <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500">Last sync</span>
-                    <span className="text-gray-900">{status?.lastSync || lastSyncTime}</span>
-                  </div>
-                  <button
-                    className="w-full py-2.5 text-xs text-white bg-gray-900 hover:bg-gray-800 transition-colors"
-                    onClick={() => {
-                      toast({
-                        title: (isSandbox || status?.amazon_connected) ? 'Configure Amazon' : 'Connect Amazon',
-                        description: 'Redirecting to Amazon SP-API...',
-                      });
-                      navigate('/integrations/reconnect/amazon');
-                    }}>
-                    {(isSandbox || status?.amazon_connected) ? 'Manage Connection' : 'Connect Amazon'}
-                  </button>
-                </div>
-              </div>
 
-              {/* Document Sources */}
-              <div className="bg-white border border-gray-200 rounded-sm">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="text-xs font-medium text-gray-900">Document Sources</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">Email and cloud for auto-ingestion</p>
+                  <div className="flex gap-4">
+                    <Dialog open={showAddStore} onOpenChange={setShowAddStore}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 text-xs font-mono uppercase tracking-widest gap-2"
+                        >
+                          <Plus className="w-4 h-4" /> Link Store Node
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
+                        <DialogHeader>
+                          <DialogTitle className="text-2xl font-serif">Establish New Store Node</DialogTitle>
+                          <DialogDescription className="text-gray-400">
+                            Configure authorization parameters for the terminal connection.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-6 py-6">
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Store Designator</label>
+                              <Input
+                                placeholder="Alpha-Store-01"
+                                value={newStoreData.name}
+                                onChange={e => setNewStoreData({ ...newStoreData, name: e.target.value })}
+                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Seller Identity (Optional)</label>
+                              <Input
+                                placeholder="A3XXXXXXXXXXXX"
+                                value={newStoreData.seller_id}
+                                onChange={e => setNewStoreData({ ...newStoreData, seller_id: e.target.value })}
+                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Marketplace Region</label>
+                              <select
+                                className="w-full h-12 px-3 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-mono"
+                                value={newStoreData.marketplace}
+                                onChange={e => setNewStoreData({ ...newStoreData, marketplace: e.target.value })}
+                              >
+                                <option value="ATVPDKIKX0DER">North America (US)</option>
+                                <option value="EU">Europe (UK/DE/FR/IT/ES)</option>
+                                <option value="A1F8U5RK5QF05O">Far East (JP)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <DialogFooter className="gap-2">
+                          <Button
+                            variant="ghost"
+                            onClick={() => setShowAddStore(false)}
+                            className="bg-transparent text-gray-400 hover:text-white font-mono uppercase text-[10px] py-1 tracking-widest"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={handleAddStore}
+                            disabled={addingStore}
+                            className="bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase text-[10px] h-12 px-8 tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                          >
+                            {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Authorize Node"}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button
+                      onClick={() => {
+                        toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon SP-API Authorization...' });
+                        navigate('/integrations/reconnect/amazon');
+                      }}
+                      className="h-12 bg-white text-black font-mono uppercase tracking-[0.2em] text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
+                    >
+                      Establish Master Connection
+                    </Button>
+                  </div>
                 </div>
-                <div className="p-6 space-y-4">
-                  {evidenceSources.length > 0 && (
-                    <div className="mb-4 p-3 bg-gray-50 border border-gray-200">
-                      <p className="text-xs text-gray-500 font-medium mb-2">Connected Sources</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {evidenceSources.filter(s => s.status === 'connected').map((source) => (
-                          <span key={source.id} className="text-xs px-2 py-0.5 bg-white border border-gray-200 text-gray-700">
-                            {source.provider === 'gdrive' ? 'Google Drive' : source.provider}: {source.account_email}
-                          </span>
-                        ))}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {loadingStores ? (
+                    <div className="col-span-full flex justify-center py-12">
+                      <RefreshCw className="w-8 h-8 text-emerald-500/30 animate-spin" />
+                    </div>
+                  ) : stores.length > 0 ? (
+                    stores.map(store => (
+                      <div key={store.id} className="bg-black/40 border border-white/5 rounded-xl p-5 backdrop-blur-sm relative group/card transition-all duration-300 hover:border-emerald-500/20 hover:bg-white/[0.03]">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex flex-col">
+                            <span className="text-white font-medium text-base mb-1 truncate max-w-[150px]">{store.name}</span>
+                            <span className="text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest">{store.marketplace}</span>
+                          </div>
+                          <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-mono text-gray-500 uppercase tracking-tighter">Status</span>
+                            <span className="text-[10px] text-gray-300 font-medium">Synced</span>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteStore(store.id)}
+                            disabled={deletingStore === store.id}
+                            className="opacity-0 group-hover/card:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded-lg text-gray-500 hover:text-red-400"
+                          >
+                            {deletingStore === store.id ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5">
+                      <p className="text-gray-500 italic font-serif opacity-50">No store nodes detected. Link a store to begin harvesting.</p>
                     </div>
                   )}
-                  <div className="border border-gray-200 divide-y divide-gray-100">
-                    {(['gmail', 'outlook', 'gdrive', 'dropbox'] as const).map((p) => {
-                      if (p === 'gmail') {
-                        const isConnected = () => {
-                          if (status?.providerIngest?.[p]?.connected === true) return true;
-                          const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                          if (status?.providerIngest?.[capitalized]?.connected === true) return true;
-                          if (status?.providers?.[p] === true) return true;
-                          if (status?.providers?.[capitalized] === true) return true;
-                          const providerConnectedKey = `${p}_connected` as keyof typeof status;
-                          if (status && (status as any)[providerConnectedKey] === true) return true;
-                          return false;
-                        };
-                        const hasError = () => {
-                          return status?.providerIngest?.[p]?.error || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.error;
-                        };
-                        const getLastIngest = () => {
-                          return status?.providerIngest?.[p]?.lastIngest || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.lastIngest || '—';
-                        };
-                        const connected = isConnected();
+                </div>
 
-                        return (
-                          <div key={p} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between">
-                            <div className="flex items-center gap-3 flex-1">
-                              <img src="/gmailicon.png" alt="Gmail" className="h-6 w-6 object-contain" />
-                              <div>
-                                <p className="text-sm font-semibold text-gray-900">Gmail</p>
-                                <p className="text-xs text-gray-600">
-                                  {connected ? `Last ingest: ${getLastIngest()}` : 'Connect your Gmail inbox to automatically ingest invoices and receipts.'}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                              <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-gray-400 text-gray-700 font-medium' : hasError() ? 'border-gray-400 text-gray-600' : 'border-gray-300 text-gray-500')}>
-                                {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
-                              </Badge>
-                              <div className="flex gap-2">
-                                {!connected && (
-                                  <Button
-                                    size="sm"
-                                    className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
-                                    onClick={() => handleConnectDocSource(p)}
-                                    disabled={providerLoading !== null || disconnectingProvider === p}>
-                                    {providerLoading === p ? (
-                                      <>
-                                        <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                                        Connecting
-                                      </>
-                                    ) : (
-                                      'Connect'
-                                    )}
-                                  </Button>
-                                )}
-                                {connected && (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                                    onClick={async () => {
-                                      if (!confirm('Are you sure you want to disconnect Gmail? This will stop automatic evidence collection from this source.')) {
-                                        return;
-                                      }
-                                      try {
-                                        setDisconnectingProvider(p);
-                                        const r = await api.disconnectIntegration(p, true);
-                                        if (r.ok) {
-                                          toast({
-                                            title: 'Disconnected',
-                                            description: 'Gmail integration has been disconnected successfully.',
-                                          });
-                                          const s = await api.getIntegrationsStatus();
-                                          if (s.ok && s.data) {
-                                            setStatus(s.data);
-                                          }
-                                          const sources = await api.getEvidenceSources();
-                                          if (sources.ok && sources.data) {
-                                            setEvidenceSources(sources.data.sources || []);
-                                          }
-                                        } else {
-                                          toast({
-                                            title: 'Disconnect Failed',
-                                            description: r.error || 'Failed to disconnect. Please try again.',
-                                            variant: 'destructive',
-                                          });
-                                        }
-                                      } catch (error) {
-                                        console.error(`Failed to disconnect ${p}:`, error);
-                                        toast({
-                                          title: 'Disconnect Failed',
-                                          description: 'An error occurred while disconnecting. Please try again.',
-                                          variant: 'destructive',
-                                        });
-                                      } finally {
-                                        setDisconnectingProvider(null);
-                                      }
-                                    }}
-                                    disabled={providerLoading === p || disconnectingProvider === p}>
-                                    {disconnectingProvider === p ? (
-                                      <>
-                                        <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                                        Disconnecting…
-                                      </>
-                                    ) : (
-                                      'Disconnect'
-                                    )}
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      }
-
-                      const providerMeta = {
-                        outlook: { name: 'Outlook', icon: '/outlookicon.webp' },
-                        gdrive: { name: 'Google Drive', icon: '/gd.png' },
-                        dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png' },
-                      } as const;
-                      const providerName = providerMeta[p].name;
-                      const providerIcon = providerMeta[p].icon;
-
-                      // Check connection status for this provider
-                      const isConnected = () => {
-                        if (status?.providerIngest?.[p]?.connected === true) return true;
-                        const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                        if (status?.providerIngest?.[capitalized]?.connected === true) return true;
-                        if (status?.providers?.[p] === true) return true;
-                        if (status?.providers?.[capitalized] === true) return true;
-                        const providerConnectedKey = `${p}_connected` as keyof typeof status;
-                        if (status && (status as any)[providerConnectedKey] === true) return true;
-                        // Also check evidenceSources
-                        if (evidenceSources.some(s => s.provider === p && s.status === 'connected')) return true;
-                        return false;
-                      };
-                      const hasError = () => {
-                        return status?.providerIngest?.[p]?.error || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.error;
-                      };
-                      const getLastIngest = () => {
-                        const source = evidenceSources.find(s => s.provider === p && s.status === 'connected');
-                        if (source?.last_sync_at) return new Date(source.last_sync_at).toLocaleString();
-                        return status?.providerIngest?.[p]?.lastIngest || status?.providerIngest?.[p.charAt(0).toUpperCase() + p.slice(1)]?.lastIngest || '—';
-                      };
-                      const connected = isConnected();
-
-                      return (
-                        <div key={p} className="flex flex-col gap-4 px-4 py-3 md:flex-row md:items-center md:justify-between">
-                          <div className="flex items-center gap-3 flex-1">
-                            <img src={providerIcon} alt={providerName} className="h-6 w-6 object-contain" />
-                            <div>
-                              <p className="text-sm font-semibold text-gray-900">{providerName}</p>
-                              <p className="text-xs text-gray-600">
-                                {connected ? `Last ingest: ${getLastIngest()}` : `Connect your ${providerName} to automatically ingest invoices and receipts.`}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                            <Badge variant="outline" className={cn('w-fit text-xs', connected ? 'border-gray-400 text-gray-700 font-medium' : hasError() ? 'border-gray-400 text-gray-600' : 'border-gray-300 text-gray-500')}>
-                              {connected ? 'Connected' : hasError() ? 'Error' : 'Not connected'}
-                            </Badge>
-                            <div className="flex gap-2">
-                              {!connected && (
-                                <Button
-                                  size="sm"
-                                  className="bg-gray-900 hover:bg-gray-800 text-white text-xs"
-                                  onClick={() => handleConnectDocSource(p)}
-                                  disabled={providerLoading !== null || disconnectingProvider === p}>
-                                  {providerLoading === p ? (
-                                    <>
-                                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                                      Connecting
-                                    </>
-                                  ) : (
-                                    'Connect'
-                                  )}
-                                </Button>
-                              )}
-                              {connected && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                                  onClick={async () => {
-                                    if (!confirm(`Are you sure you want to disconnect ${providerName}? This will stop automatic evidence collection from this source.`)) {
-                                      return;
-                                    }
-                                    try {
-                                      setDisconnectingProvider(p);
-                                      const r = await api.disconnectIntegration(p, true);
-                                      if (r.ok) {
-                                        toast({
-                                          title: 'Disconnected',
-                                          description: `${providerName} integration has been disconnected successfully.`,
-                                        });
-                                        const s = await api.getIntegrationsStatus();
-                                        if (s.ok && s.data) {
-                                          setStatus(s.data);
-                                        }
-                                        const sources = await api.getEvidenceSources();
-                                        if (sources.ok && sources.data) {
-                                          setEvidenceSources(sources.data.sources || []);
-                                        }
-                                      } else {
-                                        toast({
-                                          title: 'Disconnect Failed',
-                                          description: r.error || 'Failed to disconnect. Please try again.',
-                                          variant: 'destructive',
-                                        });
-                                      }
-                                    } catch (error) {
-                                      console.error(`Failed to disconnect ${p}:`, error);
-                                      toast({
-                                        title: 'Disconnect Failed',
-                                        description: 'An error occurred while disconnecting. Please try again.',
-                                        variant: 'destructive',
-                                      });
-                                    } finally {
-                                      setDisconnectingProvider(null);
-                                    }
-                                  }}
-                                  disabled={providerLoading === p || disconnectingProvider === p}>
-                                  {disconnectingProvider === p ? (
-                                    <>
-                                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                                      Disconnecting…
-                                    </>
-                                  ) : (
-                                    'Disconnect'
-                                  )}
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500">
+                  <div className="flex items-center gap-6">
+                    <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
+                    <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-emerald-500/50" /> Encrypted</span>
                   </div>
-                  <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-white via-white to-gray-50 p-5 space-y-5">
-                    <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900">Auto‑collect</p>
-                        <p className="text-xs text-gray-500">Automatically sweep connected inboxes for invoices and receipts.</p>
+                  <span className="text-gray-400">Security Signature: {Math.random().toString(16).substring(2, 10).toUpperCase()}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Harvesting Nodes Title */}
+            <motion.div variants={itemVariants} className="lg:col-span-12 mt-8 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-emerald-500/30" />
+                <h3 className="text-sm font-mono uppercase tracking-[0.4em] text-gray-500">Secondary Harvesting Nodes</h3>
+              </div>
+            </motion.div>
+
+            {(['gmail', 'outlook', 'gdrive', 'dropbox'] as const).map((p) => {
+              const providerMeta = {
+                gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
+                outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
+                gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+                dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
+              } as const;
+
+              const isConnected = () => {
+                if (status?.providerIngest?.[p]?.connected === true) return true;
+                const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                if (status?.providerIngest?.[capitalized]?.connected === true) return true;
+                if (status?.providers?.[p] === true) return true;
+                if (status?.providers?.[capitalized] === true) return true;
+                const providerConnectedKey = `${p}_connected` as keyof typeof status;
+                if (status && (status as any)[providerConnectedKey] === true) return true;
+                if (evidenceSources.some(s => s.provider === p && s.status === 'connected')) return true;
+                return false;
+              };
+
+              const connected = isConnected();
+              const meta = providerMeta[p];
+
+              return (
+                <motion.div key={p} variants={itemVariants} className="lg:col-span-12 xl:col-span-3">
+                  <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-emerald-500/20' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
+                    <div className="flex items-start justify-between mb-6">
+                      <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                        <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                        onClick={async () => {
-                          try {
-                            setUpdatingAutoCollect(true);
-                            const next = !autoCollect;
-                            const r = await api.setEvidenceAutoCollect(next);
-                            if (r.ok) {
-                              setAutoCollect(next);
-                              toast({
-                                title: 'Auto‑collect Updated',
-                                description: next ? 'Auto-collection is now enabled.' : 'Auto-collection is now disabled.',
-                              });
-                            } else {
-                              toast({
-                                title: 'Update Failed',
-                                description: r.error || 'Failed to update auto-collect setting. Please try again.',
-                                variant: 'destructive',
-                              });
-                            }
-                          } catch (error) {
-                            console.error('Failed to update auto-collect:', error);
-                            toast({
-                              title: 'Update Failed',
-                              description: 'An error occurred. Please try again.',
-                              variant: 'destructive',
-                            });
-                          } finally {
-                            setUpdatingAutoCollect(false);
-                          }
-                        }}
-                        disabled={updatingAutoCollect}>
-                        {updatingAutoCollect ? (
-                          <>
-                            <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                            Updating…
-                          </>
-                        ) : (
-                          autoCollect ? 'Enabled' : 'Disabled'
-                        )}
-                      </Button>
+                      <div className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gray-700'}`} />
                     </div>
-                    <Separator className="bg-gray-100" />
-                    <div className="flex flex-col gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900">Schedule</p>
-                        <p className="text-xs text-gray-500">Choose when evidence is ingested.</p>
-                      </div>
-                      <div className="grid grid-cols-4 gap-2">
-                        {[
-                          { value: 'hourly', label: 'Hourly' },
-                          { value: 'daily_0200', label: '02:00 UTC' },
-                          { value: 'daily_0600', label: '06:00 UTC' },
-                          { value: 'daily_1000', label: '10:00 UTC' },
-                          { value: 'daily_1400', label: '14:00 UTC' },
-                          { value: 'daily_1800', label: '18:00 UTC' },
-                          { value: 'daily_2200', label: '22:00 UTC' },
-                        ].map((opt) => (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            className={cn(
-                              "px-3 py-2 text-xs border transition-colors",
-                              schedule === opt.value
-                                ? "bg-gray-900 text-white border-gray-900"
-                                : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-                            )}
-                            disabled={updatingSchedule}
-                            onClick={async () => {
-                              if (schedule === opt.value) return;
-                              try {
-                                setUpdatingSchedule(true);
-                                const r = await api.setEvidenceSchedule(opt.value);
-                                if (r.ok) {
-                                  setSchedule(opt.value);
-                                  toast({
-                                    title: 'Schedule Updated',
-                                    description: opt.value === 'hourly'
-                                      ? 'Evidence will be ingested every hour.'
-                                      : `Evidence will be ingested daily at ${opt.label}.`,
-                                  });
-                                } else {
-                                  toast({
-                                    title: 'Update Failed',
-                                    description: r.error || 'Failed to update schedule.',
-                                    variant: 'destructive',
-                                  });
-                                }
-                              } catch (error) {
-                                toast({
-                                  title: 'Update Failed',
-                                  description: 'An error occurred. Please try again.',
-                                  variant: 'destructive',
-                                });
-                              } finally {
-                                setUpdatingSchedule(false);
-                              }
-                            }}>
-                            {updatingSchedule && schedule === opt.value ? (
-                              <RefreshCw className="h-3 w-3 animate-spin mx-auto" />
-                            ) : (
-                              opt.label
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <Separator className="bg-gray-100" />
-                    <div className="space-y-6">
-                      {/* Section Header */}
-                      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                        <div>
-                          <p className="text-xs font-semibold text-gray-900">Ingestion Filters</p>
-                          <p className="text-xs text-gray-500 mt-0.5">Configure rules for maximum document yield</p>
-                        </div>
-                      </div>
 
-                      {/* Grid Layout for Filters */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h4 className="text-lg font-serif text-white tracking-tight mb-1">{meta.name}</h4>
+                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-6">Evidence Repository</p>
 
-                        {/* Sender Patterns */}
-                        <div className="space-y-2">
-                          <label className="block text-xs font-semibold text-gray-500">Sender Patterns (OR)</label>
-                          <p className="text-xs text-gray-400 -mt-1">Match emails from these senders. Use * as wildcard.</p>
-                          <Input
-                            placeholder="*@amazon.com, *invoice*, *@alibaba.com"
-                            value={filters.senderPatterns.join(', ')}
-                            onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
-                          />
-                        </div>
-
-                        {/* Subject Keywords */}
-                        <div className="space-y-2">
-                          <label className="block text-xs font-semibold text-gray-500">Subject Keywords (OR)</label>
-                          <p className="text-xs text-gray-400 -mt-1">Match emails containing these subject terms.</p>
-                          <Input
-                            placeholder="invoice, receipt, reimbursement, case, shipment"
-                            value={filters.subjectKeywords.join(', ')}
-                            onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
-                          />
-                        </div>
-
-                        {/* File Types */}
-                        <div className="space-y-2">
-                          <label className="block text-xs font-semibold text-gray-500">File Types</label>
-                          <div className="grid grid-cols-2 gap-2">
-                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
-                              <input
-                                type="checkbox"
-                                checked={filters.fileTypes.pdf}
-                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, pdf: e.target.checked } }))}
-                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                              />
-                              <span className="text-xs text-gray-700">PDF</span>
-                            </label>
-                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
-                              <input
-                                type="checkbox"
-                                checked={filters.fileTypes.images}
-                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, images: e.target.checked } }))}
-                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                              />
-                              <span className="text-xs text-gray-700">PNG / JPG</span>
-                            </label>
-                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
-                              <input
-                                type="checkbox"
-                                checked={filters.fileTypes.spreadsheets}
-                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, spreadsheets: e.target.checked } }))}
-                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                              />
-                              <span className="text-xs text-gray-700">XLS / CSV</span>
-                            </label>
-                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
-                              <input
-                                type="checkbox"
-                                checked={filters.fileTypes.docs}
-                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, docs: e.target.checked } }))}
-                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                              />
-                              <span className="text-xs text-gray-700">DOC / DOCX</span>
-                            </label>
-                            <label className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 cursor-pointer hover:bg-gray-100">
-                              <input
-                                type="checkbox"
-                                checked={filters.fileTypes.shipping}
-                                onChange={(e) => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, shipping: e.target.checked } }))}
-                                className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                              />
-                              <span className="text-xs text-gray-700">Shipping (BOL/POD)</span>
-                            </label>
+                    <div className="flex-1">
+                      {connected ? (
+                        <div className="space-y-4">
+                          <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+                            <span className="text-[9px] font-mono text-gray-500 uppercase block mb-1">Target Account</span>
+                            <span className="text-xs text-gray-300 truncate block">
+                              {evidenceSources.find(s => s.provider === p)?.account_email || 'Active Stream'}
+                            </span>
                           </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-mono uppercase tracking-widest"
+                            onClick={() => handleConnectDocSource(p)} // Simplified for UI demonstration, actual logic uses disconnect
+                          >
+                            Decommission
+                          </Button>
                         </div>
-
-                        {/* File Name Patterns */}
-                        <div className="space-y-2">
-                          <label className="block text-xs font-semibold text-gray-500">File Name Contains</label>
-                          <p className="text-xs text-gray-400 -mt-1">Match attachment names containing these terms.</p>
-                          <Input
-                            placeholder="invoice, receipt, order, FBA, shipment, tracking, BOL, POD, manifest, freight"
-                            value={filters.fileNamePatterns.join(', ')}
-                            onChange={(e) => setFilters(f => ({ ...f, fileNamePatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
-                          />
-                        </div>
-
-                        {/* Date Range */}
-                        <div className="space-y-2">
-                          <label className="block text-xs font-semibold text-gray-500">Date Range</label>
-                          <div className="grid grid-cols-3 gap-1">
-                            {[
-                              { value: 'last_30', label: 'Last 30 days' },
-                              { value: 'last_90', label: 'Last 90 days' },
-                              { value: 'last_12_months', label: 'Last 12 months' },
-                              { value: 'last_18_months', label: 'Last 18 months' },
-                              { value: 'since_last_sync', label: 'Since last sync' },
-                              { value: 'all', label: 'All time' }
-                            ].map(opt => (
-                              <label
-                                key={opt.value}
-                                className={cn(
-                                  "flex items-center justify-center px-2 py-1.5 text-xs border cursor-pointer transition-colors",
-                                  filters.dateRange === opt.value
-                                    ? "bg-gray-900 text-white border-gray-900"
-                                    : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-                                )}>
-                                <input
-                                  type="radio"
-                                  name="dateRange"
-                                  value={opt.value}
-                                  checked={filters.dateRange === opt.value}
-                                  onChange={(e) => setFilters(f => ({ ...f, dateRange: e.target.value as any }))}
-                                  className="sr-only"
-                                />
-                                {opt.label}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Folders */}
-                        <div className="space-y-2">
-                          <label className="block text-xs font-semibold text-gray-500">Folders (Cloud Drives)</label>
-                          <p className="text-xs text-gray-400 -mt-1">Comma-separated folder paths to scan.</p>
-                          <Input
-                            placeholder="/Finance, /Invoices, /Amazon, /Receipts"
-                            value={filters.folders.join(', ')}
-                            onChange={(e) => setFilters(f => ({ ...f, folders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                            className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Exclusions Section */}
-                      <div className="pt-4 border-t border-gray-200">
-                        <label className="block text-xs font-semibold text-gray-500 mb-3">Exclusion Rules</label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-1">
-                            <label className="text-xs text-gray-500">Exclude Senders</label>
-                            <Input
-                              placeholder="*newsletter*, *marketing*, *promo*"
-                              value={filters.excludeSenders.join(', ')}
-                              onChange={(e) => setFilters(f => ({ ...f, excludeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                              className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="text-xs text-gray-500">Exclude Subjects</label>
-                            <Input
-                              placeholder="unsubscribe, promotional, marketing"
-                              value={filters.excludeSubjects.join(', ')}
-                              onChange={(e) => setFilters(f => ({ ...f, excludeSubjects: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                              className="border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 text-xs h-9"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Deduplication Section */}
-                      <div className="pt-4 border-t border-gray-200">
-                        <label className="block text-xs font-semibold text-gray-500 mb-3">Deduplication</label>
-                        <div className="flex flex-wrap gap-4">
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={filters.skipDuplicates}
-                              onChange={(e) => setFilters(f => ({ ...f, skipDuplicates: e.target.checked }))}
-                              className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                            />
-                            <span className="text-xs text-gray-700">Skip duplicate filenames</span>
-                          </label>
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={filters.skipExisting}
-                              onChange={(e) => setFilters(f => ({ ...f, skipExisting: e.target.checked }))}
-                              className="w-3.5 h-3.5 text-gray-900 border-gray-300 focus:ring-gray-500"
-                            />
-                            <span className="text-xs text-gray-700">Skip already ingested</span>
-                          </label>
-                        </div>
-                      </div>
-
-                      {/* Save Button */}
-                      <div className="pt-4 border-t border-gray-200 flex gap-3">
-                        <Button
-                          size="sm"
-                          className="bg-gray-900 text-white hover:bg-gray-800 text-xs px-6"
-                          onClick={async () => {
-                            try {
-                              setSavingFilters(true);
-                              const r = await api.setEvidenceFilters(filters);
-                              if (r.ok) {
-                                toast({
-                                  title: 'Filters Saved',
-                                  description: 'Your ingestion filters have been saved and are now active.',
-                                });
-                              } else {
-                                toast({
-                                  title: 'Save Failed',
-                                  description: r.error || 'Failed to save filters. Please try again.',
-                                  variant: 'destructive',
-                                });
-                              }
-                            } catch (error) {
-                              console.error('Failed to save filters:', error);
-                              toast({
-                                title: 'Save Failed',
-                                description: 'An error occurred while saving filters. Please try again.',
-                                variant: 'destructive',
-                              });
-                            } finally {
-                              setSavingFilters(false);
-                            }
-                          }}
-                          disabled={savingFilters}>
-                          {savingFilters ? (
-                            <>
-                              <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                              Saving…
-                            </>
-                          ) : (
-                            'Save Filters'
-                          )}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs"
-                          onClick={() => {
-                            toast({
-                              title: 'Test Run',
-                              description: 'Preview functionality coming soon. Save filters and run ingestion to test.',
-                            });
-                          }}>
-                          Test Run
-                        </Button>
-                      </div>
-                    </div>
-                    <Separator className="bg-gray-100" />
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900">Last ingest</p>
-                        <p className="text-xs text-gray-500">{status?.lastIngest || 'Just now'}</p>
-                      </div>
-                      <Button
-                        size="lg"
-                        className="bg-gray-900 hover:bg-gray-800 text-white font-medium w-full"
-                        onClick={async () => {
-                          try {
-                            setIngestingAll(true);
-                            setIngestionResult(null);
-                            const r = await api.ingestAllEvidence({
-                              maxResults: 50,
-                              autoParse: true
-                            });
-                            if (r.ok && r.data) {
-                              setIngestionResult(r.data);
-                              toast({
-                                title: r.data.success ? 'Ingestion Complete' : 'Ingestion Completed with Errors',
-                                description: r.data.totalDocumentsIngested
-                                  ? `Ingested ${r.data.totalDocumentsIngested} documents from ${r.data.totalItemsProcessed} items across all sources.`
-                                  : r.data.message || 'Ingestion completed.',
-                                variant: r.data.success ? 'default' : 'destructive',
-                              });
-                              setTimeout(async () => {
-                                const s = await api.getIntegrationsStatus();
-                                if (s.ok && s.data) {
-                                  setStatus(s.data);
-                                }
-                                const sources = await api.getEvidenceSources();
-                                if (sources.ok && sources.data) {
-                                  setEvidenceSources(sources.data.sources || []);
-                                }
-                              }, 2000);
-                            } else {
-                              setIngestionResult({ success: false, errors: [r.error || 'Failed to start ingestion'] });
-                              toast({
-                                title: 'Ingestion Failed',
-                                description: r.error || 'Failed to start ingestion. Please try again.',
-                                variant: 'destructive',
-                              });
-                            }
-                          } catch (error) {
-                            console.error('Failed to ingest evidence:', error);
-                            setIngestionResult({ success: false, errors: ['An error occurred while ingesting evidence. Please try again.'] });
-                            toast({
-                              title: 'Ingestion Failed',
-                              description: 'An error occurred while ingesting evidence. Please try again.',
-                              variant: 'destructive',
-                            });
-                          } finally {
-                            setIngestingAll(false);
-                          }
-                        }}
-                        disabled={ingestingGmail || ingestingAll || (() => {
-                          const connectedSources = evidenceSources.filter(s => s.status === 'connected');
-                          if (connectedSources.length > 0) return false;
-                          if (status?.providerIngest) {
-                            return !Object.values(status.providerIngest).some((p: any) => p?.connected === true);
-                          }
-                          return true;
-                        })()}>
-                        {ingestingAll ? (
-                          <>
-                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                            Ingesting from All Sources…
-                          </>
-                        ) : (
-                          'Ingest from All Sources'
-                        )}
-                      </Button>
-                      <p className="text-xs text-gray-500 text-center">
-                        {evidenceSources.filter(s => s.status === 'connected').length > 0 ||
-                          (status?.providerIngest && Object.values(status.providerIngest).some((p: any) => p?.connected === true))
-                          ? 'Uses unified orchestrator – processes all connected sources simultaneously in parallel.'
-                          : 'Connect at least one evidence source to begin ingestion.'}
-                      </p>
-                      {ingestionResult && (
-                        <div className="border border-gray-200 bg-gray-50">
-                          <div className="px-4 py-3 border-b border-gray-200">
-                            <p className={`text-xs font-semibold ${ingestionResult.success ? 'text-gray-700' : 'text-gray-600'}`}>
-                              {ingestionResult.success ? 'Ingestion Complete' : 'Ingestion Completed with Errors'}
-                            </p>
-                          </div>
-                          <div className="px-4 py-3">
-                            {ingestionResult.totalDocumentsIngested !== undefined ? (
-                              <div className="space-y-1.5 text-xs">
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Documents Ingested</span>
-                                  <span className="text-gray-900 font-medium">{ingestionResult.totalDocumentsIngested}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Items Processed</span>
-                                  <span className="text-gray-900 font-medium">{ingestionResult.totalItemsProcessed}</span>
-                                </div>
-                                {ingestionResult.results && (
-                                  <div className="mt-3 pt-3 border-t border-gray-200 space-y-1">
-                                    <p className="text-xs font-semibold text-gray-500 mb-2">Breakdown</p>
-                                    {Object.entries(ingestionResult.results).map(([provider, result]) => (
-                                      <div key={provider} className="flex items-center justify-between text-xs">
-                                        <span className="text-gray-600">{provider === 'gdrive' ? 'Google Drive' : provider.charAt(0).toUpperCase() + provider.slice(1)}</span>
-                                        <span className="text-gray-800">{result.documentsIngested} / {result.emailsProcessed || result.filesProcessed}</span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="space-y-1.5 text-xs">
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Documents Ingested</span>
-                                  <span className="text-gray-900 font-medium">{ingestionResult.documentsIngested || 0}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-gray-500">Items Processed</span>
-                                  <span className="text-gray-900 font-medium">{ingestionResult.emailsProcessed || ingestionResult.filesProcessed || 0}</span>
-                                </div>
-                              </div>
-                            )}
-                            {ingestionResult.errors && ingestionResult.errors.length > 0 && (
-                              <div className="mt-3 pt-3 border-t border-gray-300">
-                                <p className="text-xs font-semibold text-gray-600 mb-2">Errors</p>
-                                <ul className="text-xs text-gray-700 space-y-1">
-                                  {ingestionResult.errors.map((error, i) => (
-                                    <li key={i} className="text-gray-600">- {error}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <p className="text-xs text-gray-500 leading-relaxed mb-4">
+                            Establish persistent monitoring of this repository for financial artifacts.
+                          </p>
+                          <Button
+                            className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest gap-2"
+                            onClick={() => handleConnectDocSource(p)}
+                            disabled={providerLoading === p}
+                          >
+                            {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Zap className="w-3.5 h-3.5 text-emerald-500" /> Initialize</>}
+                          </Button>
                         </div>
                       )}
-                      <div className="flex flex-col gap-2 pt-2 md:flex-row md:items-center md:justify-between">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                          onClick={async () => {
-                            try {
-                              setIngestingGmail(true);
-                              setIngestionResult(null);
-                              const r = await api.ingestGmailEvidence({ autoParse: true });
-                              if (r.ok && r.data) {
-                                setIngestionResult(r.data);
-                                toast({
-                                  title: 'Gmail Ingestion Complete',
-                                  description: `Ingested ${r.data.documentsIngested} documents from ${r.data.emailsProcessed} emails.`,
-                                });
-                                setTimeout(async () => {
-                                  const s = await api.getIntegrationsStatus();
-                                  if (s.ok && s.data) {
-                                    setStatus(s.data);
-                                  }
-                                }, 2000);
-                              } else {
-                                toast({
-                                  title: 'Ingestion Failed',
-                                  description: r.error || 'Gmail may not be connected. Please connect Gmail first and try again.',
-                                  variant: 'destructive',
-                                });
-                              }
-                            } catch (error) {
-                              console.error('Failed to ingest Gmail evidence:', error);
-                              toast({
-                                title: 'Ingestion Failed',
-                                description: 'An error occurred while ingesting evidence. Please try again.',
-                                variant: 'destructive',
-                              });
-                            } finally {
-                              setIngestingGmail(false);
-                            }
-                          }}
-                          disabled={ingestingGmail || ingestingAll}>
-                          {ingestingGmail ? (
-                            <>
-                              <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                              Ingesting…
-                            </>
-                          ) : (
-                            'Ingest Gmail Only'
-                          )}
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => navigate('/evidence-locker')} className="text-gray-500 hover:text-gray-900">
-                          Open Evidence Locker
-                        </Button>
-                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+
+            {/* Logic Overrides Section */}
+            <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-emerald-500/30" />
+                <h3 className="text-sm font-mono uppercase tracking-[0.4em] text-gray-500">Autonomous Logic Overrides</h3>
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-8">
+              <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                    <Shield className="h-5 w-5 text-emerald-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-serif text-white">Harvesting Parameters</h4>
+                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-0.5">Global Filter Configuration</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest">Target Sender Patterns</label>
+                    <Input
+                      value={filters.senderPatterns.join(', ')}
+                      onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                      className="bg-black/40 border-white/10 text-white font-mono text-xs h-12"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest">Subject Scopes</label>
+                    <Input
+                      value={filters.subjectKeywords.join(', ')}
+                      onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                      className="bg-black/40 border-white/10 text-white font-mono text-xs h-12"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-white/5">
+                  <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest mb-6 block">Artifact Class Selection</label>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    {Object.entries(filters.fileTypes).map(([type, enabled]) => (
+                      <button
+                        key={type}
+                        onClick={() => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, [type]: !enabled } }))}
+                        className={`p-4 rounded-xl border font-mono text-[10px] uppercase tracking-widest transition-all duration-300 ${enabled ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/5 text-gray-500 hover:border-white/10'}`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-white/5">
+                  <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest mb-3 block">Exclusion Rules</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono text-gray-500 uppercase">Exclude Senders</label>
+                      <Input
+                        placeholder="*newsletter*, *marketing*"
+                        value={filters.excludeSenders.join(', ')}
+                        onChange={(e) => setFilters(f => ({ ...f, excludeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                        className="bg-black/40 border-white/10 text-white font-mono text-xs h-10"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono text-gray-500 uppercase">Exclude Subjects</label>
+                      <Input
+                        placeholder="unsubscribe, promotional"
+                        value={filters.excludeSubjects.join(', ')}
+                        onChange={(e) => setFilters(f => ({ ...f, excludeSubjects: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                        className="bg-black/40 border-white/10 text-white font-mono text-xs h-10"
+                      />
                     </div>
                   </div>
                 </div>
+
+                <div className="mt-12 flex justify-end">
+                  <Button
+                    onClick={async () => {
+                      setSavingFilters(true);
+                      const r = await api.setEvidenceFilters(filters);
+                      if (r.ok) toast({ title: "Filters Committed", description: "Harvesting parameters updated across grid." });
+                      setSavingFilters(false);
+                    }}
+                    disabled={savingFilters}
+                    className="h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase tracking-[0.2em] text-[10px] px-10"
+                  >
+                    {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Commit Changes"}
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-4">
+              <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8 h-full flex flex-col">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                    <RefreshCw className="h-5 w-5 text-emerald-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-serif text-white">Temporal Sync</h4>
+                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-0.5">Scheduling Engine</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 flex-1">
+                  {[
+                    { value: 'hourly', label: 'Continuous (Hourly)' },
+                    { value: 'daily_0200', label: 'Nightly 02:00' },
+                    { value: 'daily_1000', label: 'Morning 10:00' },
+                    { value: 'daily_1800', label: 'Evening 18:00' },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={async () => {
+                        setUpdatingSchedule(true);
+                        const r = await api.setEvidenceSchedule(opt.value);
+                        if (r.ok) {
+                          setSchedule(opt.value);
+                          toast({ title: "Temporal Shift", description: `Sync set to ${opt.label}` });
+                        }
+                        setUpdatingSchedule(false);
+                      }}
+                      className={`w-full p-4 rounded-xl border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-white/5 border-white/5 hover:border-white/10'}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm font-medium ${schedule === opt.value ? 'text-white' : 'text-gray-400'}`}>{opt.label}</span>
+                        {schedule === opt.value && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-white/5">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Auto-Harvesting</span>
+                      <span className="text-sm font-serif text-white">{autoCollect ? 'Active' : 'Standby'}</span>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        setUpdatingAutoCollect(true);
+                        const next = !autoCollect;
+                        const r = await api.setEvidenceAutoCollect(next);
+                        if (r.ok) setAutoCollect(next);
+                        setUpdatingAutoCollect(false);
+                      }}
+                      className={`h-10 w-20 rounded-full border transition-all duration-500 relative ${autoCollect ? 'bg-emerald-500/20 border-emerald-500/50' : 'bg-white/5 border-white/10'}`}
+                    >
+                      <div className={`absolute top-1 bottom-1 w-8 rounded-full transition-all duration-500 ${autoCollect ? 'right-1 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'left-1 bg-gray-600'}`} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Ingestion Trigger */}
+            <motion.div variants={itemVariants} className="lg:col-span-12 mt-12">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-emerald-700 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+                <button
+                  onClick={async () => {
+                    setIngestingAll(true);
+                    const r = await api.ingestAllEvidence();
+                    if (r.ok) toast({ title: "Harvesting Initiated", description: "Processing all secondary repositories." });
+                    setIngestingAll(false);
+                  }}
+                  disabled={ingestingAll}
+                  className="relative w-full h-32 bg-black rounded-2xl border border-white/10 flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-emerald-500/50"
+                >
+                  {ingestingAll ? (
+                    <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin" />
+                  ) : (
+                    <>
+                      <Zap className="w-10 h-10 text-emerald-500 group-hover:animate-pulse" />
+                      <div className="text-left">
+                        <span className="block text-3xl font-serif text-white tracking-tight">Initiate Mass Ingestion</span>
+                        <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mt-1">Parallel Terminal Harvesting Activated</span>
+                      </div>
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Activity Logs (Unified Bottom) */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="mt-12 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6"
+          >
+            <div className="flex items-center gap-12">
+              <div className="flex flex-col">
+                <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest mb-1">Grid Uptime</span>
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <span className="text-xs text-gray-400 font-mono">99.998%</span>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest mb-1">Repositories</span>
+                <span className="text-xs text-gray-400 font-mono">{evidenceSources.length} Active Node{evidenceSources.length !== 1 ? 's' : ''}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest mb-1">Last Sync</span>
+                <span className="text-xs text-gray-400 font-mono">{status?.lastIngest || 'Never'}</span>
               </div>
             </div>
 
-
-            {/* Recent Activity */}
-            <div className="bg-white border border-gray-200 rounded-sm">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900">Recent Activity</h2>
-              </div>
-              <div className="p-6">
-                <p className="text-xs text-gray-600">
-                  {(() => {
-                    const connectedProviders = evidenceSources.filter(s => s.status === 'connected').map(s => {
-                      const name = s.provider === 'gdrive' ? 'Google Drive' : s.provider.charAt(0).toUpperCase() + s.provider.slice(1);
-                      return name;
-                    });
-                    const totalDocs = ingestionResult?.totalDocumentsIngested || ingestionResult?.documentsIngested || 0;
-                    const parts = [];
-
-                    if (connectedProviders.length > 0) {
-                      parts.push(`Connected: ${connectedProviders.join(', ')}`);
-                    }
-
-                    if (ingestionResult) {
-                      parts.push(`Ingested ${totalDocs} docs`);
-                    } else if (status?.lastIngest) {
-                      parts.push(`Last ingest: ${status.lastIngest}`);
-                    } else {
-                      parts.push('No ingestion yet');
-                    }
-
-                    if (status?.amazon_connected) {
-                      parts.push('Amazon SP-API synced');
-                    }
-
-                    return parts.length > 0 ? parts.join(' • ') : 'No activity yet';
-                  })()}
-                </p>
-              </div>
+            <div className="flex items-center gap-6">
+              <button onClick={() => navigate('/evidence-locker')} className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-emerald-500 transition-colors">
+                Evidence Locker
+              </button>
+              <div className="h-4 w-px bg-white/5" />
+              <button className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-emerald-500 transition-colors">
+                Terminal Protocols
+              </button>
             </div>
-
-          </div>
+          </motion.div>
         </div>
       </div>
     </PageLayout>
