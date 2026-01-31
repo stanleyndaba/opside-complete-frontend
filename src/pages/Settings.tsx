@@ -1005,11 +1005,7 @@ const Settings = () => {
                   ))}
                 </nav>
 
-                <div className="p-6 bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl">
-                  <p className="text-[10px] text-emerald-500/40 font-mono leading-relaxed uppercase tracking-widest">
-                    "Institutional protocols ensure all data remains encrypted and sovereign under Seller-Central authority."
-                  </p>
-                </div>
+
               </div>
             </div>
 
