@@ -5,49 +5,52 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Search, Mail, Calendar, BookOpen, Video, Phone, ArrowRight } from 'lucide-react';
+import { Search, Mail, Calendar, BookOpen, Video, Phone, ArrowRight, MessageSquare, Shield, Clock, Zap, Search as SearchIcon, ChevronRight, LifeBuoy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
-// FAQ data
+// FAQ data - Simplified language
 const faqs = [
   {
     id: '1',
-    question: 'How do you calculate the recovery fee?',
-    answer: 'We charge a success-based fee of 20% only on funds we successfully recover for you. There are no upfront costs, monthly fees, or charges if we don\'t recover anything. For example, if we recover $1,000, our fee would be $200, and you keep $800.'
+    question: 'How do you calculate the service fee?',
+    answer: 'We only charge a 20% fee on what we actually recover for you. If we don\'t find any funds, you don\'t pay a cent. There are no monthly subscriptions or hidden costs.'
   },
   {
     id: '2',
-    question: 'Is it safe to connect my Amazon account?',
-    answer: 'Yes, completely safe. We use read-only API access that only allows us to view your account data - we cannot make any changes, place orders, or access sensitive information like your bank details. We use bank-level encryption to protect your data.'
+    question: 'Is it safe to link my store?',
+    answer: 'Yes, absolutely. We use a secure connection with restricted access that only lets us view data needed for recoveries. We can\'t change your prices, place orders, or see any of your private financial details.'
   },
   {
     id: '3',
-    question: 'How long does a typical recovery take?',
-    answer: 'Most recoveries are completed within 14-21 days from when we submit the claim to Amazon. Our average recovery time is 16.8 days. Some complex cases may take longer, but we provide regular updates throughout the process.'
+    question: 'How long does it take to get my money back?',
+    answer: 'Most requests are completed within 2 to 3 weeks. You\'ll see updates as things progress, and the funds are paid directly into your account.'
   },
   {
     id: '4',
-    question: 'Where can I find my invoices?',
-    answer: 'All your invoices are available in the Billing section of your dashboard. You can access them by clicking on "Billing" in the sidebar, then viewing the "Invoice History" tab.'
+    question: 'Where can I see my history?',
+    answer: 'You can find everything in your sidebar. Click on "Settings" then "Billing" to see your past statements and recoveries.'
   },
   {
     id: '5',
-    question: 'What types of losses can you recover?',
-    answer: 'We recover lost inventory, damaged goods, fee disputes, storage overcharges, FBA fulfillment errors, and various Amazon billing mistakes. Our system continuously monitors your account for any discrepancies.'
+    question: 'What kinds of issues do you find?',
+    answer: 'Our systems look for lost inventory, warehouse damage, shipping mistakes, and overcharges. We essentially check everything to make sure you\'re not missing out on revenue.'
   },
   {
     id: '6',
-    question: 'Do I need to do anything after connecting my account?',
-    answer: 'No! Once connected, our system automatically monitors your account 24/7, detects issues, and files recovery claims on your behalf. You\'ll receive notifications when we find new recovery opportunities.'
+    question: 'Do I need to manage the claims myself?',
+    answer: 'No, we handle the entire process from start to finish. Once your store is connected, we monitor it daily and handle all the paperwork for you.'
   }
 ];
 
-// Getting started steps
+// Getting started steps - Simplified language
 const gettingStartedSteps = [
-  { step: 1, title: 'Connect Your Amazon Account', time: '2 min' },
-  { step: 2, title: 'Review Your Command Center', time: '3 min' },
-  { step: 3, title: 'Explore Active Recoveries', time: '2 min' },
-  { step: 4, title: 'Set Up Notifications', time: '1 min' }
+  { step: 1, title: 'Link your store', time: '2 min', description: 'Connect your store to start the audit.' },
+  { step: 2, title: 'Check your dashboard', time: '3 min', description: 'See your recovery potential in real-time.' },
+  { step: 3, title: 'View your claims', time: '2 min', description: 'Track every dollar we find for you.' },
+  { step: 4, title: 'Set up alerts', time: '1 min', description: 'Get notified when we find new funds.' }
 ];
 
 export default function Help() {
@@ -70,260 +73,209 @@ export default function Help() {
     if (!contactForm.name || !contactForm.sellerId || !contactForm.category || !contactForm.message) {
       toast({
         title: "Please fill in all fields",
-        description: "All fields are required to submit your support request.",
+        description: "We need these details to help you out.",
         variant: "destructive"
       });
       return;
     }
     toast({
-      title: "Support request submitted",
-      description: "We'll get back to you within 24 hours.",
+      title: "Request submitted",
+      description: "Our team will reach out to you shortly.",
     });
     setContactForm({ name: '', sellerId: '', category: '', message: '' });
   };
 
   return (
-    <PageLayout title="Help">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-8 pt-8 pb-12">
+    <PageLayout title="Support and Requests" midnight>
+      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
+        {/* Aesthetic Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.06),transparent_70%)] pointer-events-none" />
+        <div className="fixed inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
-            {/* Header */}
-            <header className="mb-10">
-              <h1 className="text-lg font-medium text-gray-900 tracking-tight">
-                Help Center
-              </h1>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Support & Resources
-              </p>
-              <p className="mt-4 text-sm text-gray-600 max-w-2xl leading-relaxed">
-                Find answers, learn the platform, or contact our team.
-              </p>
-            </header>
+        <div className="relative z-10 container max-w-6xl mx-auto px-6 py-12">
+          {/* Header Section */}
+          <motion.header
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-16"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <LifeBuoy className="h-5 w-5 text-emerald-500" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Support and Requests</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-serif text-white mb-6 italic">
+              How can we <span className="text-white/40 not-italic">help you today?</span>
+            </h1>
+            <p className="text-gray-400 max-w-2xl text-lg leading-relaxed font-light italic">
+              Whether you have a question about your account or need help with a specific claim, our team is here to support your business.
+            </p>
+          </motion.header>
 
-            {/* Search */}
-            <div className="relative mb-8">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          {/* Search Bar */}
+          <div className="relative mb-16 max-w-2xl">
+            <div className="relative group">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500 group-focus-within:text-emerald-500 transition-colors" />
               <Input
-                placeholder="Search for help..."
+                placeholder="Search for answers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 py-2 h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white focus:border-gray-300 rounded-sm"
+                className="pl-12 py-6 h-14 text-sm border-white/5 bg-white/[0.02] focus:bg-white/[0.05] focus:border-emerald-500/30 text-white rounded-2xl transition-all"
               />
             </div>
+          </div>
 
-            {/* FAQs */}
-            <section className="mb-10">
-              <h2 className="text-xs font-medium text-gray-900 mb-4">Frequently Asked Questions</h2>
-              <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                <Accordion type="single" collapsible className="w-full">
-                  {filteredFaqs.map((faq, index) => (
-                    <AccordionItem
-                      key={faq.id}
-                      value={faq.id}
-                      className={index !== filteredFaqs.length - 1 ? 'border-b border-gray-100' : 'border-0'}>
-                      <AccordionTrigger className="px-4 py-3 text-left hover:no-underline text-xs font-medium text-gray-900 hover:bg-gray-50">
-                        {faq.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-3 text-xs text-gray-600 leading-relaxed">
-                        {faq.answer}
-                      </AccordionContent>
-                    </AccordionItem>
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Left/Middle Columns: FAQs & Guides */}
+            <div className="lg:col-span-2 space-y-16">
+              {/* FAQs Section */}
+              <section>
+                <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+                  <div className="h-px w-8 bg-gray-500/30" />
+                  Common Questions
+                </h2>
+                <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden backdrop-blur-sm">
+                  <Accordion type="single" collapsible className="w-full">
+                    {filteredFaqs.map((faq, index) => (
+                      <AccordionItem
+                        key={faq.id}
+                        value={faq.id}
+                        className={cn(
+                          "px-6 border-white/5 transition-all hover:bg-white/[0.01]",
+                          index !== filteredFaqs.length - 1 ? 'border-b' : 'border-0'
+                        )}
+                      >
+                        <AccordionTrigger className="py-6 text-left hover:no-underline text-sm font-medium text-white/80 hover:text-white transition-colors">
+                          {faq.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="pb-6 text-sm text-gray-400 leading-relaxed font-light">
+                          {faq.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                  {filteredFaqs.length === 0 && (
+                    <div className="text-center py-12 text-gray-500 italic font-light">
+                      We couldn't find any results matching your search.
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Guides Section */}
+              <section>
+                <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+                  <div className="h-px w-8 bg-gray-500/30" />
+                  Quick Guides
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {gettingStartedSteps.map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      whileHover={{ y: -4 }}
+                      className="p-6 bg-[#0c0c0c] border border-white/5 rounded-2xl group hover:border-emerald-500/30 transition-all"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-mono text-white group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                          {item.step}
+                        </div>
+                        <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">{item.time}</span>
+                      </div>
+                      <h3 className="text-white font-medium mb-2">{item.title}</h3>
+                      <p className="text-xs text-gray-400 font-light leading-relaxed mb-4">{item.description}</p>
+                      <Button variant="ghost" className="h-auto p-0 text-[10px] font-mono uppercase tracking-widest text-emerald-500/60 hover:text-emerald-500 hover:bg-transparent group/btn">
+                        Learn More <ChevronRight className="h-3 w-3 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </motion.div>
                   ))}
-                </Accordion>
-                {filteredFaqs.length === 0 && searchTerm && (
-                  <div className="text-center py-8 text-xs text-gray-500">
-                    No matching questions found.
-                  </div>
-                )}
-              </div>
-            </section>
+                </div>
+              </section>
+            </div>
 
-            {/* Getting Started & Guides */}
-            <section className="mb-10">
-              <h2 className="text-xs font-medium text-gray-900 mb-4">Learn the Platform</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* Getting Started */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
-                        <BookOpen className="h-3 w-3 text-gray-600" />
-                      </div>
-                      Getting Started
-                    </h3>
+            {/* Right Column: Contact Form */}
+            <div className="space-y-8">
+              <section className="sticky top-24">
+                <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+                  <div className="h-px w-8 bg-gray-500/30" />
+                  Reach Out
+                </h2>
+
+                <div className="bg-[#0c0c0c] border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
+                    <Mail className="h-24 w-24 text-white" />
                   </div>
-                  <div className="p-4">
-                    <div className="space-y-2 mb-4">
-                      {gettingStartedSteps.map((item) => (
-                        <div key={item.step} className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="h-5 w-5 bg-gray-900 text-white text-xs font-medium flex items-center justify-center">
-                              {item.step}
-                            </div>
-                            <span className="text-xs text-gray-700">{item.title}</span>
-                          </div>
-                          <span className="px-1.5 py-0 text-xs bg-gray-100 text-gray-500 border border-gray-200">
-                            {item.time}
-                          </span>
-                        </div>
-                      ))}
+
+                  <form onSubmit={handleContactSubmit} className="space-y-6 relative z-10">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Your Name</Label>
+                      <Input
+                        id="name"
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        placeholder="Name"
+                        className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:border-emerald-500/30"
+                      />
                     </div>
-                    <button className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors flex items-center justify-center gap-1">
-                      <Video className="h-3 w-3" />
-                      Watch Tutorial
-                    </button>
-                  </div>
-                </div>
 
-                {/* Dashboard Guide */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
-                        <Video className="h-3 w-3 text-gray-600" />
-                      </div>
-                      Understanding Your Dashboard
-                    </h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="space-y-2 mb-4">
-                      <div className="p-2.5 bg-gray-50 border border-gray-100">
-                        <p className="text-xs font-medium text-gray-900">Total Guaranteed</p>
-                        <p className="text-xs text-gray-500">Amount committed to recover for active claims</p>
-                      </div>
-                      <div className="p-2.5 bg-gray-50 border border-gray-100">
-                        <p className="text-xs font-medium text-gray-900">Recovery Success Rate</p>
-                        <p className="text-xs text-gray-500">Percentage of claims that result in payouts</p>
-                      </div>
-                      <div className="p-2.5 bg-gray-50 border border-gray-100">
-                        <p className="text-xs font-medium text-gray-900">Avg Processing Time</p>
-                        <p className="text-xs text-gray-500">Time from submission to payout</p>
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="sellerId" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Store Name or ID</Label>
+                      <Input
+                        id="sellerId"
+                        value={contactForm.sellerId}
+                        onChange={(e) => setContactForm({ ...contactForm, sellerId: e.target.value })}
+                        placeholder="Store Name"
+                        className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:border-emerald-500/30"
+                      />
                     </div>
-                    <a href="#" className="inline-flex items-center gap-1 text-xs font-medium text-gray-900 hover:text-gray-600 transition-colors">
-                      Read full guide
-                      <ArrowRight className="h-3 w-3" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </section>
 
-            {/* Contact Support */}
-            <section>
-              <h2 className="text-xs font-medium text-gray-900 mb-4">Contact Support</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* Email Form */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
-                        <Mail className="h-3 w-3 text-gray-600" />
-                      </div>
-                      Email Support
-                    </h3>
-                  </div>
-                  <div className="p-4">
-                    <form onSubmit={handleContactSubmit} className="space-y-3">
-                      <div>
-                        <Label htmlFor="name" className="text-xs font-medium text-gray-500">Name</Label>
-                        <Input
-                          id="name"
-                          value={contactForm.name}
-                          onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                          placeholder="Your name"
-                          className="mt-1 h-8 text-xs border-gray-200 rounded-sm"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="sellerId" className="text-xs font-medium text-gray-500">Seller ID</Label>
-                        <Input
-                          id="sellerId"
-                          value={contactForm.sellerId}
-                          onChange={(e) => setContactForm({ ...contactForm, sellerId: e.target.value })}
-                          placeholder="A1B2C3D4E5F6G7"
-                          className="mt-1 h-8 text-xs border-gray-200 rounded-sm"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="category" className="text-xs font-medium text-gray-500">Category</Label>
-                        <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                          <SelectTrigger className="mt-1 h-8 text-xs border-gray-200 rounded-sm">
-                            <SelectValue placeholder="Select..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="billing" className="text-xs">Billing</SelectItem>
-                            <SelectItem value="technical" className="text-xs">Technical</SelectItem>
-                            <SelectItem value="account" className="text-xs">Account</SelectItem>
-                            <SelectItem value="recovery" className="text-xs">Recovery</SelectItem>
-                            <SelectItem value="general" className="text-xs">General</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="message" className="text-xs font-medium text-gray-500">Message</Label>
-                        <Textarea
-                          id="message"
-                          value={contactForm.message}
-                          onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                          placeholder="Describe your issue..."
-                          rows={2}
-                          className="mt-1 text-xs border-gray-200 rounded-sm"
-                        />
-                      </div>
-                      <button type="submit" className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
-                        Send Message
-                      </button>
-                    </form>
-                  </div>
-                </div>
-
-                {/* Book a Call */}
-                <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-xs font-medium text-gray-900 flex items-center gap-2">
-                      <div className="h-6 w-6 bg-gray-200 flex items-center justify-center">
-                        <Calendar className="h-3 w-3 text-gray-600" />
-                      </div>
-                      Book a Call
-                    </h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
-                        <Phone className="h-3 w-3 text-gray-400" />
-                        <div>
-                          <p className="text-xs font-medium text-gray-900">Direct Access</p>
-                          <p className="text-xs text-gray-500">Speak with a recovery specialist</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
-                        <Calendar className="h-3 w-3 text-gray-400" />
-                        <div>
-                          <p className="text-xs font-medium text-gray-900">Flexible Scheduling</p>
-                          <p className="text-xs text-gray-500">Choose a time that works for you</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 p-2.5 bg-gray-50 border border-gray-100">
-                        <Video className="h-3 w-3 text-gray-400" />
-                        <div>
-                          <p className="text-xs font-medium text-gray-900">Screen Sharing</p>
-                          <p className="text-xs text-gray-500">Walk through your dashboard together</p>
-                        </div>
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="category" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">How can we help?</Label>
+                      <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
+                        <SelectTrigger className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:ring-0 focus:border-emerald-500/30">
+                          <SelectValue placeholder="Select a topic..." />
+                        </SelectTrigger>
+                        <SelectContent className="bg-[#0c0c0c] border-white/10 text-white rounded-xl">
+                          <SelectItem value="billing">Billing & Payments</SelectItem>
+                          <SelectItem value="technical">App Support</SelectItem>
+                          <SelectItem value="account">Manage My Account</SelectItem>
+                          <SelectItem value="recovery">Help With a Claim</SelectItem>
+                          <SelectItem value="general">Other Questions</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <button className="w-full px-4 py-2 text-xs font-medium text-white bg-gray-900 hover:bg-gray-800 transition-colors">
-                      Schedule 15-min Call
-                    </button>
-                    <p className="text-xs text-gray-400 mt-2 text-center">
-                      Mon-Fri, 9 AM - 6 PM EST
-                    </p>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="message" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Tell us more</Label>
+                      <Textarea
+                        id="message"
+                        value={contactForm.message}
+                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                        placeholder="Type your message here..."
+                        rows={4}
+                        className="bg-white/[0.02] border-white/5 text-sm text-white rounded-xl focus:border-emerald-500/30 resize-none"
+                      />
+                    </div>
+
+                    <Button type="submit" className="w-full h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-widest transition-all rounded-xl">
+                      Submit Request
+                    </Button>
+                  </form>
+                </div>
+
+                {/* Secondary Contact Info */}
+                <div className="mt-8 grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl text-center group hover:bg-white/[0.04] transition-all">
+                    <Mail className="h-4 w-4 text-emerald-500/50 mx-auto mb-2 group-hover:text-emerald-500 transition-colors" />
+                    <span className="block text-[10px] font-mono text-gray-500 uppercase">Email</span>
+                    <span className="text-[10px] text-white/60">support@opside.app</span>
+                  </div>
+                  <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl text-center group hover:bg-white/[0.04] transition-all">
+                    <MessageSquare className="h-4 w-4 text-emerald-500/50 mx-auto mb-2 group-hover:text-emerald-500 transition-colors" />
+                    <span className="block text-[10px] font-mono text-gray-500 uppercase">Response</span>
+                    <span className="text-[10px] text-white/60">Under 24 Hours</span>
                   </div>
                 </div>
-              </div>
-            </section>
-
+              </section>
+            </div>
           </div>
         </div>
       </div>
