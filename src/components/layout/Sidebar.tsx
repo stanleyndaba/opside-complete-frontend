@@ -42,6 +42,9 @@ const prefetchRoute = (path: string) => {
       case '/integrations-hub':
         import('@/pages/IntegrationsHub');
         break;
+      case '/billing':
+        import('@/pages/Billing');
+        break;
       default:
         break;
     }
@@ -384,6 +387,12 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
+            <DropdownMenuItem
+              onClick={() => navigate(`/app/${currentTenantSlug}/billing`)}
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <CreditCard className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+              <span>Billing</span>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/settings`)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
