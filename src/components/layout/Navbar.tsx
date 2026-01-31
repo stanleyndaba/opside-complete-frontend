@@ -379,13 +379,13 @@ export function Navbar({
               <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
                 {/* Connection Status Header - Institutional */}
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">Account Profile</h3>
+                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">Amazon Profile</h3>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
                     </div>
-                    <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.2em]">Account connected</p>
+                    <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.2em]">Connected</p>
                   </div>
                 </div>
 
@@ -393,11 +393,11 @@ export function Navbar({
                   {/* Compact Data Grid */}
                   <div className="grid grid-cols-1 gap-y-4">
                     {[
-                      { label: 'Entity ID', value: 'Not available' },
-                      { label: 'Matrix Node', value: 'Primary Seller Terminal' },
-                      { label: 'Security Cleared', value: 'ID_NOT_MAPPED' },
-                      { label: 'Audit Protocol', value: 'Active Delegation' },
-                      { label: 'Comm Channel', value: 'Matrix Secure Line' }
+                      { label: 'Account ID', value: 'Not available' },
+                      { label: 'Primary System', value: 'Main Seller Account' },
+                      { label: 'Verified Status', value: 'ID_NOT_MAPPED' },
+                      { label: 'Monitoring', value: 'Active Monitoring' },
+                      { label: 'Support Channel', value: 'Opside Secure Support' }
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-4 group/item">
                         <span className="text-[10px] font-mono font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-widest shrink-0">
