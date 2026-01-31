@@ -360,55 +360,62 @@ const Settings = () => {
         const isAmazonConnected = sellerProfile.amazon_connected || false;
 
         return (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Seller Profile</h2>
-              <p className="text-xs text-gray-600">Manage your business identity and linked Amazon accounts</p>
+              <h2 className="text-xl font-serif text-white tracking-tight">Seller Profile</h2>
+              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+                IDENTITY_MANAGEMENT // CORE_SYSTEM
+              </p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <Building2 className="h-32 w-32" />
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group hover:border-emerald-500/20 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
+                <Building2 className="h-48 w-48 text-emerald-500 rotate-12" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
 
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-4">
+              <CardContent className="p-8 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">
-                        {sellerProfile.company_name || 'Verification Required'}
+                      <h3 className="text-2xl font-serif text-white tracking-tighter">
+                        {sellerProfile.company_name || 'Identity Logged'}
                       </h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs border-gray-200 px-2 py-0.5">
-                          {isAmazonConnected ? 'Verified Account' : 'Pending Verification'}
+                      <div className="flex items-center gap-3 mt-2">
+                        <Badge variant="outline" className={cn("text-[10px] font-mono uppercase tracking-widest px-3 py-1", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-red-500/10 text-red-500 border-red-500/20")}>
+                          {isAmazonConnected ? 'VERIFIED_CONNECTION' : 'PENDING_HANDSHAKE'}
                         </Badge>
                         {sellerProfile.amazon_seller_id && (
-                          <span className="text-xs text-gray-400 font-mono tracking-tighter">
+                          <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
                             ID: {sellerProfile.amazon_seller_id}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Marketplaces</p>
-                        <p className="text-sm font-semibold text-gray-900">{marketplaces.length} Active</p>
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Marketplaces</p>
+                        <p className="text-sm font-serif text-white/80">{marketplaces.length} Nodes Online</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Last Sync</p>
-                        <p className="text-sm font-semibold text-gray-900">{formatDate(sellerProfile.last_sync_completed_at)}</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Last Sync</p>
+                        <p className="text-sm font-serif text-white/80">{formatDate(sellerProfile.last_sync_completed_at)}</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Network Age</p>
-                        <p className="text-sm font-semibold text-gray-900">{formatDate(sellerProfile.created_at)}</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">System Age</p>
+                        <p className="text-sm font-serif text-white/80">{formatDate(sellerProfile.created_at)}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                       onClick={() => navigate('/integrations-hub')}
                     >
                       Manage Profile
@@ -419,47 +426,51 @@ const Settings = () => {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-bold text-gray-500">Platform Status</CardTitle>
+              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
+                <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
+                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Platform Connectivity</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Store className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900">Amazon SP-API</span>
+                <CardContent className="p-6 space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
+                    <div className="flex items-center gap-3">
+                      <Store className="h-4 w-4 text-white/40" />
+                      <span className="text-xs font-serif text-white/80">Amazon SP-API</span>
                     </div>
-                    <Badge className={cn("text-xs px-2 py-0.5", isAmazonConnected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
-                      {isAmazonConnected ? 'Enabled' : 'Disconnected'}
+                    <Badge variant="outline" className={cn("text-[9px] font-mono uppercase tracking-[0.2em] px-2 py-0.5", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
+                      {isAmazonConnected ? 'Linked' : 'Offline'}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900">Stripe Billing</span>
+                  <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
+                    <div className="flex items-center gap-3">
+                      <CreditCard className="h-4 w-4 text-white/40" />
+                      <span className="text-xs font-serif text-white/80">Stripe Billing</span>
                     </div>
-                    <Badge className={cn("text-xs px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-gray-50 text-gray-500 border-gray-100")}>
-                      {sellerProfile.stripe_connected ? 'Enabled' : 'Inactive'}
+                    <Badge variant="outline" className={cn("text-[9px] font-mono uppercase tracking-[0.2em] px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
+                      {sellerProfile.stripe_connected ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-bold text-gray-500">Business Support</CardTitle>
+              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
+                <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
+                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Support Tier</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
-                    Your account is currently under review. For white-glove support or bulk account management, contact our dedicated desk.
+                <CardContent className="p-6">
+                  <p className="text-xs text-white/40 font-serif leading-relaxed italic mb-6">
+                    "Your account is managed under our institutional tier. For custom engineering or bulk logistics support, contact your dedicated desk."
                   </p>
-                  <Button variant="outline" size="sm" className="w-full text-sm font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
-                    Contact Dedicated Support
+                  <Button
+                    variant="outline"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    onClick={() => navigate('/help')}
+                  >
+                    Open Support Channel
                   </Button>
                 </CardContent>
               </Card>
             </div>
-          </div>
+          </motion.div>
         );
 
 
@@ -560,80 +571,89 @@ const Settings = () => {
 
       case 'api':
         return (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Developer & API Access</h2>
-              <p className="text-xs text-gray-600">Programmatic access to your recovery data for internal systems</p>
+              <h2 className="text-xl font-serif text-white tracking-tight">Advanced Developer Access</h2>
+              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+                SYSTEM_INTEGRATION // API_TERMINAL
+              </p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <Key className="h-32 w-32" />
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group hover:border-emerald-500/20 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
+                <Key className="h-48 w-48 text-emerald-500 rotate-12" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
 
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-4">
+              <CardContent className="p-8 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">API Management</h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-xs border-blue-100 px-2 py-0.5">
-                          Production Environment
+                      <h3 className="text-2xl font-serif text-white tracking-tighter">Gateway Management</h3>
+                      <div className="flex items-center gap-3 mt-2">
+                        <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                          PRODUCTION_ENVIRONMENT
                         </Badge>
-                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
-                          Live System
+                        <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
+                          <span className="h-1 w-1 bg-emerald-500 rounded-full" />
+                          API Service Operational
                         </span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Available Scopes</p>
-                        <p className="text-sm font-semibold text-gray-900">7 Active Endpoints</p>
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Available Nodes</p>
+                        <p className="text-sm font-serif text-white/80">14 Secure Endpoints</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Webhooks</p>
-                        <p className="text-sm font-semibold text-gray-900">Operational</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Latency</p>
+                        <p className="text-sm font-serif text-emerald-500 font-medium">84ms Premium</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Rate Limit</p>
-                        <p className="text-sm font-semibold text-gray-900">High Capacity</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Rate Policy</p>
+                        <p className="text-sm font-serif text-white/80">Institutional Scale</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                       onClick={() => navigate('/api-access')}
                     >
-                      Access Gateway
+                      Enter Vault
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <div className="p-4 border border-gray-200 rounded-sm bg-gray-50">
-              <h4 className="text-sm font-bold text-gray-500 mb-4">Integration Resources</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start gap-3">
-                  <Monitor className="h-4 w-4 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-gray-900">Documentation</p>
-                    <p className="text-xs text-gray-500">API references and authentication guides.</p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="col-span-1 p-6 bg-white/[0.02] border border-white/5 rounded-2xl group hover:border-emerald-500/20 transition-all">
+                <div className="flex items-center gap-4 mb-4">
+                  <Monitor className="h-5 w-5 text-white/30" />
+                  <h4 className="text-[11px] font-mono font-bold text-white/60 uppercase tracking-widest">Documentation</h4>
                 </div>
-                <div className="flex items-start gap-3">
-                  <Zap className="h-4 w-4 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-gray-900">Webhooks</p>
-                    <p className="text-xs text-gray-500">Standardized events for claim lifecycle.</p>
-                  </div>
+                <p className="text-xs text-white/40 font-serif leading-relaxed italic">
+                  "Full schema specifications for triangulating recovery data into external data warehouses."
+                </p>
+              </div>
+              <div className="col-span-1 p-6 bg-white/[0.02] border border-white/5 rounded-2xl group hover:border-emerald-500/20 transition-all">
+                <div className="flex items-center gap-4 mb-4">
+                  <Zap className="h-5 w-5 text-white/30" />
+                  <h4 className="text-[11px] font-mono font-bold text-white/60 uppercase tracking-widest">Webhooks</h4>
                 </div>
+                <p className="text-xs text-white/40 font-serif leading-relaxed italic">
+                  "Real-time event streams for confirmed recoveries and manual claim overrides."
+                </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         );
 
       case 'integrations': {
@@ -648,42 +668,49 @@ const Settings = () => {
           }
         ];
         const upcomingPlatforms = [
-          { id: 'shopify', name: 'Shopify', icon: '/lovable-uploads/8efb84ba-e777-4413-ae5a-f7f54bfa6cab.png' },
-          { id: 'walmart', name: 'Walmart Marketplace', icon: '/lovable-uploads/cef56367-b57b-46cc-b0cb-a2ffad47fb03.png' },
-          { id: 'quickbooks', name: 'QuickBooks', icon: '/lovable-uploads/02ff2e6e-9e67-4481-99a8-4b9caead4540.png' },
+          { id: 'shopify', name: 'Shopify' },
+          { id: 'walmart', name: 'Walmart Marketplace' },
+          { id: 'quickbooks', name: 'QuickBooks' },
         ];
         return (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Ecosystem Integrations</h2>
-              <p className="text-xs text-gray-600">Connect your e-commerce platforms and financial stack to the Margin intelligence layer.</p>
+              <h2 className="text-xl font-serif text-white tracking-tight">Institutional Hub</h2>
+              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+                ECOLOGY_MAP // DATA_STREAMS
+              </p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <Plug className="h-32 w-32" />
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group hover:border-emerald-500/20 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
+                <Plug className="h-48 w-48 text-emerald-500 rotate-12" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
 
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-4">
+              <CardContent className="p-8 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Integrations Hub</h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-xs border-emerald-100 px-2 py-0.5">
-                          {activePlatforms.length} Direct Connection
+                      <h3 className="text-2xl font-serif text-white tracking-tighter">Connectivity Matrix</h3>
+                      <div className="flex items-center gap-3 mt-2">
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                          {activePlatforms.length} ACTIVE_FEED
                         </Badge>
-                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
+                        <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
                           Last Handshake: {activePlatforms[0].lastSync}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-4 pt-2">
+                    <div className="flex flex-wrap gap-4 pt-4">
                       {activePlatforms.map(p => (
-                        <div key={p.id} className="flex items-center gap-2 p-2 px-3 border border-gray-100 bg-gray-50 rounded-sm">
-                          <img src={p.icon} alt="" className="h-4 w-4 grayscale" />
-                          <span className="text-xs font-semibold text-gray-900">{p.name}</span>
+                        <div key={p.id} className="flex items-center gap-3 p-3 px-5 border border-white/5 bg-white/[0.02] rounded-xl hover:border-emerald-500/20 transition-all group/chip">
+                          <span className="text-xs font-serif text-white/80">{p.name}</span>
+                          <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse" />
                         </div>
                       ))}
                     </div>
@@ -691,10 +718,10 @@ const Settings = () => {
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                       onClick={() => navigate('/integrations-hub')}
                     >
-                      Institutional Hub
+                      Configure Feeds
                     </Button>
                   </div>
                 </div>
@@ -702,114 +729,125 @@ const Settings = () => {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-bold text-gray-500">Integration Roadmap</CardTitle>
+              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
+                <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
+                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Integration Roadmap</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="p-6 space-y-4">
                   {upcomingPlatforms.map(p => (
-                    <div key={p.id} className="flex items-center justify-between opacity-60">
-                      <div className="flex items-center gap-2">
-                        <img src={p.icon} alt="" className="h-3.5 w-3.5 grayscale" />
-                        <span className="text-xs text-gray-900 font-medium">{p.name}</span>
-                      </div>
-                      <span className="text-xs font-bold text-gray-400">Planned</span>
+                    <div key={p.id} className="flex items-center justify-between p-3 bg-white/[0.01] border border-white/5 rounded-xl opacity-40">
+                      <span className="text-xs font-serif text-white/60">{p.name}</span>
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/20">Awaiting_Launch</span>
                     </div>
                   ))}
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-bold text-gray-500">Custom Integrations</CardTitle>
+              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
+                <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
+                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Custom Connectors</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
-                    Require a custom connector for your proprietary ERP or specialized accounting stack? Our systems engineers can facilitate private deployments.
+                <CardContent className="p-6">
+                  <p className="text-xs text-white/40 font-serif leading-relaxed italic mb-6">
+                    "Require a high-throughput tunnel for proprietary ERP or legacy accounting silos? Our system engineers can bridge the gap."
                   </p>
-                  <Button variant="outline" size="sm" className="w-full text-sm font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
-                    Request Private Connector
+                  <Button
+                    variant="outline"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    onClick={() => navigate('/help')}
+                  >
+                    Request Custom Bridge
                   </Button>
                 </CardContent>
               </Card>
             </div>
-          </div>
+          </motion.div>
         );
       }
 
       case 'notifications':
         return (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Communication & Alerting</h2>
-              <p className="text-xs text-gray-600">Configure alert channels and event notifications for your account.</p>
+              <h2 className="text-xl font-serif text-white tracking-tight">Alert Protocol</h2>
+              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+                COMM_LINK // SIGNAL_CHANNELS
+              </p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <Bell className="h-32 w-32" />
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group hover:border-emerald-500/20 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
+                <Bell className="h-48 w-48 text-emerald-500 rotate-12" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
 
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-4">
+              <CardContent className="p-8 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Notification Protocol</h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-xs border-emerald-100 px-2 py-0.5">
-                          Active Monitoring
+                      <h3 className="text-2xl font-serif text-white tracking-tighter">Transmission Registry</h3>
+                      <div className="flex items-center gap-3 mt-2">
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                          ACTIVE_MONITORING
                         </Badge>
-                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
-                          Standard Priority
+                        <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
+                          Standard Priority Grid
                         </span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Email Alerts</p>
-                        <p className="text-sm font-semibold text-gray-900">Enabled</p>
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Email Alerts</p>
+                        <p className="text-sm font-serif text-emerald-500">Online</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Web Push</p>
-                        <p className="text-sm font-semibold text-gray-900">Inactive</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Web Push</p>
+                        <p className="text-sm font-serif text-white/40">Dormant</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Slack/Webhook</p>
-                        <p className="text-sm font-semibold text-gray-900">Premium Required</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Slack Stream</p>
+                        <p className="text-sm font-serif text-white/40">Institutional Required</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
-                      onClick={() => toast({ title: "Settings Saved", description: "Your notification preferences are active." })}
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                      onClick={() => toast({ title: "Configuration Locked", description: "Signal parameters modified." })}
                     >
-                      Update Preferences
+                      Update Registry
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
-              <CardHeader className="border-b border-gray-100 pb-3">
-                <CardTitle className="text-sm font-bold text-gray-500">Audit Events</CardTitle>
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
+              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
+                <CardTitle className="text-xs font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Event Subscriptions</CardTitle>
               </CardHeader>
-              <CardContent className="pt-4 divide-y divide-gray-100">
+              <CardContent className="p-8 space-y-4">
                 {notificationSettings.map((setting) => (
-                  <div key={setting.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-medium text-gray-900">{setting.label}</p>
-                      <p className="text-sm text-gray-500">{setting.description}</p>
+                  <div key={setting.id} className="flex items-center justify-between py-4 border-b border-white/5 last:border-0">
+                    <div className="space-y-1">
+                      <p className="text-sm font-serif text-white font-medium">{setting.label}</p>
+                      <p className="text-xs text-white/40 font-serif italic leading-relaxed">{setting.description}</p>
                     </div>
-                    <Switch defaultChecked={setting.enabled} />
+                    <Switch
+                      defaultChecked={setting.enabled}
+                      className="data-[state=checked]:bg-emerald-500"
+                    />
                   </div>
                 ))}
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         );
 
       case 'security':
