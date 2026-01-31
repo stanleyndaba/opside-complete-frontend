@@ -2129,8 +2129,7 @@ export default function Recoveries() {
       totalClaimsFound,
       currentlyInProgress,
       valueInProgress,
-      successRate,
-      successRate30d: Math.round(successRate)
+      successRate
     };
   }, [filteredClaims, claims, mergedRecoveries]);
 
@@ -2244,395 +2243,1501 @@ export default function Recoveries() {
     }
   };
 
-  const refreshAllData = async () => {
-    setLoading(true);
-    try {
-      await Promise.all([
-        recoveryApi.getRecoveries(),
-        api.getRecoveriesMetrics(),
-        api.getAmazonRecoveries(),
-        detectionApi.getDetectionResults({ limit: 100, offset: 0 })
-      ]);
-      toast({ title: 'Refreshed', description: 'Data has been synchronized.' });
-    } catch (e) {
-      toast({ title: 'Refresh failed', description: 'Unable to sync data.', variant: 'destructive' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleViewDetails = (claim: any) => {
-    setDetectionDetails(claim);
-    setDetailsModalOpen(true);
-  };
-
-  const handleFileClaim = (claim: any) => {
-    setClaimToFile(claim);
-    setFileAnywayModalOpen(true);
-  };
-
   return (
-    <div className="flex h-screen bg-[#060606] text-white overflow-hidden font-sans selection:bg-white/20">
-      <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
-
-      <div className={cn(
-        "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out relative",
-        isSidebarCollapsed ? "ml-20" : "ml-64"
-      )}>
-        <Navbar
-          sidebarCollapsed={isSidebarCollapsed}
-          onToggleSidebar={toggleSidebar}
-          className="border-b border-white/5 bg-[#0A0A0A]/80 backdrop-blur-xl z-30"
-        />
-
-        <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-[#060606] relative">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.03)_0%,transparent_50%)] pointer-events-none" />
-
-          <div className="p-8 space-y-8 relative z-10 max-w-[1600px] mx-auto">
-            {/* AUDIT TERMINAL HEADER */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-white/40 animate-pulse" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40">Network Recovery Console</span>
-                </div>
-                <h1 className="text-4xl font-light tracking-tight text-white flex items-center gap-3">
-                  Recoveries
-                  <span className="px-2 py-0.5 rounded border border-white/10 bg-white/5 text-[10px] uppercase tracking-widest text-white/30 align-middle">Beta</span>
-                </h1>
-                <p className="text-white/40 text-sm max-w-2xl font-light">
-                  Direct interface to Amazon financial reconciliation systems. Monitoring <span className="text-white/60 font-medium">{claims.length}</span> active recovery vectors.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-sm border border-white/10">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-mono text-white/30 uppercase leading-none">Recovered Value</span>
-                    <span className="text-xl font-mono text-white leading-tight">
-                      {formatCurrencyWithSelection(recoveredTotal || 0, recoveredCurrency)}
-                    </span>
-                  </div>
-                  <div className="w-px h-8 bg-white/10 mx-2" />
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-mono text-white/30 uppercase leading-none">Active Vector</span>
-                    <span className="text-xl font-mono text-white leading-tight">{amazonClaimCount || '0'}</span>
+    <PageLayout title="Reimbursements">
+      <div className="relative w-full overflow-x-hidden">
+        <div className="relative w-full bg-white min-h-screen">
+          <div className="relative w-full max-w-full px-8 pt-8 pb-6 text-gray-900">
+            {/* Header Section */}
+            <div className="border-b border-gray-200 pb-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-lg font-medium text-gray-900 tracking-tight">Audit Ledger</h1>
+                  <div className="mt-2 pl-3 border-l-2 border-gray-200">
+                    <p className="text-xs text-gray-500">
+                      All detected discrepancies and submitted claims
+                    </p>
                   </div>
                 </div>
-
-                <Button
-                  onClick={() => refreshAllData()}
-                  disabled={loading}
-                  variant="outline"
-                  className="h-10 border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 px-4"
-                >
-                  <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-                  <span className="text-xs uppercase tracking-widest font-light">Sync</span>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="h-10 border-white/10 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 gap-2 px-4"
-                  onClick={() => {
-                    const exportRange = dateRange?.from && dateRange?.to ? { from: dateRange.from, to: dateRange.to } : null;
-                    generateCasebookPDF(rankedClaims, exportRange);
-                    toast({ title: 'Statement Generated', description: 'Saved as PDF.' });
+                <button
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 text-xs text-white transition-colors",
+                    selectedIds.size === 0 || submittingBulk
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-gray-900 hover:bg-gray-800"
+                  )}
+                  disabled={selectedIds.size === 0 || submittingBulk}
+                  onClick={async () => {
+                    setSubmittingBulk(true);
+                    const ids = Array.from(selectedIds);
+                    for (const id of ids) {
+                      try {
+                        await recoveryApi.submitClaim(id);
+                        toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
+                        setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
+                      } catch (e: any) {
+                        toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                      }
+                    }
+                    setSubmittingBulk(false);
                   }}>
-                  <ArrowUpFromLine className="h-4 w-4" />
-                  <span className="text-xs uppercase tracking-widest font-light">Share</span>
-                </Button>
+                  <Upload className="h-3.5 w-3.5" />
+                  Submit Selected
+                </button>
+              </div>
+              {selectedIds.size > 0 && (
+                <span className="text-xs text-gray-500">{selectedIds.size} selected</span>
+              )}
+            </div>
+
+            {/* Recovered Value Section */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-medium text-gray-500">Recovered Value</span>
+                    {recoveredTotal != null && recoveredTotal > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            aria-label="About recovered value"
+                            className="w-3 h-3 rounded-full bg-gray-400 flex items-center justify-center hover:bg-gray-500 transition-colors">
+                            <span className="text-white text-[7px] font-serif italic leading-none">i</span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="bg-gray-900 text-white text-xs rounded-sm">
+                          Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                  <div className="text-2xl font-light text-gray-900">
+                    {recoveredTotal != null && recoveredTotal > 0 ? (
+                      <>
+                        {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
+                        <div className="text-xs text-gray-500 font-normal mt-1">
+                          from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {formatCurrencyWithSelection(0)}
+                        <div className="text-xs text-gray-600 font-normal mt-0.5">No recoveries yet</div>
+                      </>
+                    )}
+                  </div>
+                  {/* Sync status message */}
+                  {(syncMessage || needsSync || syncTriggered) && (
+                    <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : needsSync
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : 'bg-gray-50 text-gray-700 border border-gray-200'
+                      }`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start gap-2 flex-1">
+                          {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
+                          <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                        </div>
+                        {activeSyncId && (
+                          <Link
+                            to={`/sync?id=${activeSyncId}`}
+                            className="text-blue-400 hover:text-blue-300 underline text-xs ml-2">
+                            View progress
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
+                      <span className="font-medium">Event Types</span>
+                      <span className="text-gray-500">({Object.values(categoryCounts).reduce((a, b) => a + b, 0)} total)</span>
+                      <ChevronDown className="h-3 w-3 text-gray-500" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-72 max-h-80 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-lg p-2">
+                    <div className="text-xs font-medium text-gray-500 px-2 py-1.5 border-b border-gray-100 mb-1">
+                      Amazon Financial Event Types
+                    </div>
+                    {Object.entries(categoryCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([label, count]) => (
+                        <DropdownMenuItem
+                          key={label}
+                          className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default">
+                          <span className="text-gray-700 truncate">{label}</span>
+                          <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
+                        </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
-            {/* RECOVERY DASHBOARD GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { label: 'Total Claims Found', value: keyMetrics.totalClaimsFound, icon: Cpu },
-                { label: 'Currently in Progress', value: keyMetrics.currentlyInProgress, icon: Activity },
-                { label: 'Value in Progress', value: formatCurrencyWithSelection(keyMetrics.valueInProgress), icon: TrendingUp },
-                { label: '30D Success Rate', value: `${keyMetrics.successRate30d}%`, icon: Shield },
-              ].map((m, i) => (
-                <div key={i} className="bg-white/[0.02] border border-white/5 p-5 relative overflow-hidden group hover:border-white/20 transition-all duration-500">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="p-2 bg-white/5 rounded-sm">
-                      <m.icon className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+
+            {/* Tabs for Claims, Evidence Matching, and Cases */}
+            <div className="mb-6">
+              <h2 className="text-sm font-medium text-gray-900 mb-4">Revenue Recovery</h2>
+              <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
+                <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
+                  <TabsTrigger
+                    value="claims"
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+                    Claims {tabCounts.claimsCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.claimsCount}</span>}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="matching"
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+                    Evidence Matching {tabCounts.evidenceMatchingCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.evidenceMatchingCount}</span>}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="cases"
+                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
+                    Dispute Cases {tabCounts.disputeCasesCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.disputeCasesCount}</span>}
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Claims Tab (Existing Content) */}
+                <TabsContent value="claims" className="mt-0">
+                  {/* Controls */}
+                  <div className="mb-6 bg-white border border-white rounded-sm">
+                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                      <h3 className="text-xs font-medium text-gray-900">Capital Recovery</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>
+                    </div>
+                    <div className="p-6">
+
+                      {/* Search & Quick Filters */}
+                      <div className="space-y-3">
+                        {/* Search Bar */}
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <Input
+                            placeholder="Search by Claim ID, ASIN, or Keyword..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500"
+                          />
+                        </div>
+
+                        {/* Quick Date Range Buttons */}
+                        <div className="flex flex-wrap gap-2">
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('year')}>This Year</Button>
+                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                        </div>
+
+                        {/* Filter Row */}
+                        <div className="flex flex-wrap gap-2 items-center">
+                          {/* Custom Date Range */}
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs", !dateRange && "text-gray-500")}>
+                                <CalendarIcon className="mr-2 h-3 w-3" />
+                                {dateRange?.from ? (
+                                  dateRange.to ? (
+                                    <>
+                                      {format(dateRange.from, "MMM dd, y")} -{" "}
+                                      {format(dateRange.to, "MMM dd, y")}
+                                    </>
+                                  ) : (
+                                    format(dateRange.from, "MMM dd, y")
+                                  )
+                                ) : (
+                                  <span>Pick a date range</span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={dateRange?.from}
+                                selected={dateRange}
+                                onSelect={setDateRange}
+                                numberOfMonths={2}
+                                className="pointer-events-auto"
+                              />
+                            </PopoverContent>
+                          </Popover>
+
+                          {/* Claim Type Filter */}
+                          <Select
+                            value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
+                            onValueChange={(value) => {
+                              if (value === 'all') {
+                                setSelectedClaimTypes([]);
+                              } else {
+                                setSelectedClaimTypes([value]);
+                              }
+                            }}>
+                            <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="Filter by Claim Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Claim Types</SelectItem>
+                              {claimTypes.map(type => (
+                                <SelectItem key={type} value={type}>{type}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          {/* Status Filter */}
+                          <Select
+                            value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
+                            onValueChange={(value) => {
+                              if (value === 'all') {
+                                setSelectedStatuses([]);
+                              } else {
+                                setSelectedStatuses([value]);
+                              }
+                            }}>
+                            <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="Filter by Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Statuses</SelectItem>
+                              {statusOptions.map(status => (
+                                <SelectItem key={status} value={status}>{status}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          {/* Source Filter (Phase 3) */}
+                          <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
+                            setFilterSource(value);
+                          }}>
+                            <SelectTrigger className="w-auto min-w-[120px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="All Sources" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Sources</SelectItem>
+                              <SelectItem value="detected">Detected Claims</SelectItem>
+                              <SelectItem value="synced">Synced from Amazon</SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
+                          {filterSource === 'detected' && (
+                            <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
+                              setFilterConfidence(value);
+                            }}>
+                              <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                                <SelectValue placeholder="All Confidence" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="all">All Confidence Levels</SelectItem>
+                                <SelectItem value="high">High (≥85%)</SelectItem>
+                                <SelectItem value="medium">Medium (50-85%)</SelectItem>
+                                <SelectItem value="low">Low (&lt;50%)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+
+                          {/* Urgent Filter */}
+                          <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
+                            setFilterUrgent(value);
+                          }}>
+                            <SelectTrigger className="w-auto min-w-[120px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
+                              <SelectValue placeholder="All Claims" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Claims</SelectItem>
+                              <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
+                              <SelectItem value="critical">Critical (≤3 days)</SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {/* Show risky claims toggle */}
+                          <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
+                            <Checkbox
+                              checked={showRiskyClaims}
+                              onCheckedChange={(checked) => setShowRiskyClaims(!!checked)}
+                              className="border-gray-300"
+                            />
+                            Show weak claims
+                          </label>
+
+                          {/* Share Button */}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700 text-xs ml-auto"
+                            onClick={() => {
+                              const exportRange = dateRange?.from && dateRange?.to
+                                ? { from: dateRange.from, to: dateRange.to }
+                                : null;
+                              generateCasebookPDF(rankedClaims, exportRange);
+                              toast({ title: 'Statement Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
+                            }}>
+                            <ArrowUpFromLine className="h-3 w-3 mr-2" />
+                            Share
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-mono text-white mb-1">{m.value}</h3>
-                    <p className="text-[10px] font-mono uppercase tracking-wider text-white/30">{m.label}</p>
-                  </div>
-                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:via-white/20 transition-all duration-700" />
-                </div>
-              ))}
-            </div>
 
-            <Tabs defaultValue="claims" className="w-full" onValueChange={(v) => setActiveTab(v as any)}>
-              <TabsList className="bg-transparent h-auto p-0 flex gap-8 border-b border-white/5 mb-8">
-                {[
-                  { id: 'claims', label: 'Claims Console' },
-                  { id: 'matching', label: 'Evidence Terminal' },
-                  { id: 'cases', label: 'Dispute Registry' },
-                ].map((tab) => (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    className="bg-transparent border-none p-0 pb-4 rounded-none text-xs uppercase tracking-[0.2em] font-light text-white/30 data-[state=active]:text-white data-[state=active]:font-medium relative group"
-                  >
-                    {tab.label}
-                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-data-[state=active]:scale-x-100 transition-transform duration-500 ease-out" />
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+                  {/* Data Table */}
+                  <div className="bg-white border-0 text-slate-900 w-full overflow-hidden shadow-none rounded-none">
+                    <div className="p-0 w-full">
+                      {loading && (
+                        <div className="py-12 flex flex-col items-center justify-center space-y-4">
+                          <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
+                          <span className="text-sm text-gray-400">Synchronizing Intelligence</span>
+                        </div>
+                      )}
+                      {error && (
+                        <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center px-6">
+                          <AlertTriangle className="w-6 h-6 text-red-200" />
+                          <span className="text-sm text-gray-500">Interface Error: {error}</span>
+                        </div>
+                      )}
+                      {!loading && !error && rankedClaims.length === 0 && (
+                        <div className="py-20 flex flex-col items-center justify-center space-y-4">
+                          <Search className="w-10 h-10 text-gray-100" />
+                          <div className="flex flex-col items-center text-center max-w-sm px-6">
+                            <span className="text-sm text-gray-900 font-semibold">Ledger Clean</span>
+                            <span className="text-xs text-gray-400 mt-2 leading-relaxed">
+                              {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
+                                ? 'SYNC YOUR AMAZON ACCOUNT OR RUN AN ANALYSIS TO IDENTIFY RECOVERY OPPORTUNITIES.'
+                                : 'TRY ADJUSTING YOUR FILTERS TO SEE MORE RESULTS.'}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      {!loading && rankedClaims.length > 0 && (
+                        <div className="mt-0 border-t border-gray-100 divide-y divide-gray-100 bg-white">
+                          <div className="flex items-center px-6 py-3 bg-gray-50/50 border-b border-gray-100">
+                            <Checkbox
+                              checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length}
+                              onCheckedChange={(checked) => {
+                                if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
+                                else setSelectedIds(new Set());
+                              }}
+                              className="mr-4"
+                            />
+                            <span className="text-xs font-semibold text-gray-400">Batch Operation Queue</span>
+                          </div>
 
-              {/* Claims Tab */}
-              <TabsContent value="claims" className="mt-0 outline-none">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-                  <div className="relative group max-w-xl flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-white transition-colors" />
-                    <Input
-                      placeholder="SCAN RECOVERY LEDGER..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="h-10 border-white/5 bg-white/[0.02] pl-10 text-white font-mono text-xs focus:ring-0 focus:border-white/20 transition-all uppercase tracking-wider"
-                    />
-                  </div>
-                  <div className="flex items-center gap-1 bg-white/5 border border-white/5 p-0.5 rounded-sm">
-                    {['ALL', 'HIGH', 'URGENT'].map((f) => (
-                      <button
-                        key={f}
-                        className={cn(
-                          "px-3 py-1.5 text-[10px] font-mono tracking-widest transition-colors",
-                          (f === 'ALL' && filterConfidence === 'all') || (f === 'HIGH' && filterConfidence === 'high') ? "bg-white/10 text-white" : "text-white/20 hover:text-white/40"
-                        )}
-                        onClick={() => {
-                          if (f === 'ALL') setFilterConfidence('all');
-                          if (f === 'HIGH') setFilterConfidence('high');
-                          if (f === 'URGENT') setFilterUrgent('urgent');
-                        }}
-                      >
-                        {f}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bg-white/[0.02] border border-white/5 rounded-sm overflow-hidden">
-                  <Table>
-                    <TableHeader className="bg-white/[0.03] hover:bg-white/[0.03]">
-                      <TableRow className="border-white/5 hover:bg-transparent">
-                        <TableHead className="text-[10px] uppercase tracking-widest text-white/40 font-light font-mono py-4 px-6">Reference_ID</TableHead>
-                        <TableHead className="text-[10px] uppercase tracking-widest text-white/40 font-light font-mono py-4 text-center">Discovery_Date</TableHead>
-                        <TableHead className="text-[10px] uppercase tracking-widest text-white/40 font-light font-mono py-4 text-center">Network_Status</TableHead>
-                        <TableHead className="text-[10px] uppercase tracking-widest text-white/40 font-light font-mono py-4 text-right pr-6">Yield</TableHead>
-                        <TableHead className="w-[100px]"></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {rankedClaims.length > 0 ? (
-                        rankedClaims.map((claim) => (
-                          <TableRow key={claim.id} className="border-white/5 group hover:bg-white/[0.02] transition-colors">
-                            <TableCell className="py-4 px-6">
-                              <div className="flex items-center gap-3">
-                                <div className="p-2 bg-white/5 rounded-sm">
-                                  <Cpu className="w-3 h-3 text-white/40 group-hover:text-blue-400 transition-colors" />
-                                </div>
-                                <div className="space-y-0.5">
-                                  <div className="text-xs font-mono text-white flex items-center gap-2">
-                                    {(claim.claim_number || claim.id.slice(0, 12)).toUpperCase()}
-                                    {getConfidenceTier(getConfidence(claim.id)) === 'high' && <Shield className="w-3 h-3 text-emerald-500/50" />}
-                                  </div>
-                                  <div className="text-[10px] text-white/30 uppercase tracking-tight">{(claim.anomaly_type || claim.type || 'Recovery').replace(/_/g, ' ')}</div>
-                                </div>
+                          {claimsByMonth.map((monthGroup, groupIndex) => (
+                            <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
+                              {/* Institutional Month Header */}
+                              <div className="sticky top-0 z-10 bg-gray-50/80 backdrop-blur-sm px-6 py-2.5 border-y border-gray-100 flex items-center justify-between">
+                                <span className="text-sm font-bold text-gray-900">
+                                  {monthGroup.month} {monthGroup.year}
+                                </span>
+                                <span className="text-xs font-medium text-gray-400">
+                                  {monthGroup.claims.length} AUDIT ENTRI{monthGroup.claims.length !== 1 ? 'ES' : 'Y'}
+                                </span>
                               </div>
-                            </TableCell>
-                            <TableCell className="text-center font-mono text-[10px] text-white/50 py-4">
-                              {format(new Date(claim.discovery_date || claim.created_at || new Date()), 'dd MMM yyyy')}
-                            </TableCell>
-                            <TableCell className="text-center py-4">
-                              <span className={cn(
-                                "text-[10px] font-mono px-2 py-0.5 border capitalize",
-                                claim.status === 'resolved' || claim.status === 'Paid' ? "bg-emerald-500/5 text-emerald-500/80 border-emerald-500/10" :
-                                  claim.status === 'disputed' || claim.status === 'Submitted' ? "bg-amber-500/5 text-amber-500/80 border-amber-500/10" :
-                                    "bg-white/5 text-white/40 border-white/10"
-                              )}>
-                                {claim.status}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-right font-mono text-xs text-white py-4 pr-6">
-                              {formatCurrencyWithSelection(claim.guaranteedAmount || claim.amount || 0)}
-                            </TableCell>
-                            <TableCell className="text-right py-4 pr-6">
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/40 hover:text-white">
-                                    <MoreHorizontal className="w-4 h-4" />
+
+                              {/* Claims in this month */}
+                              <div className="divide-y divide-gray-100">
+                                {monthGroup.claims.map((claim: any) => {
+                                  const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
+                                  const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
+                                  const claimDate = new Date(claim.created || claim.discovery_date || claim.created_at);
+
+                                  return (
+                                    <div
+                                      key={claim.id}
+                                      className={cn(
+                                        "group relative bg-white hover:bg-gray-50/40 transition-all duration-200",
+                                        isCritical && "bg-red-50/10",
+                                        isUrgent && !isCritical && "bg-amber-50/10"
+                                      )}
+                                    >
+                                      {/* Signature Left Accent */}
+                                      <div className={cn(
+                                        "absolute left-0 top-0 bottom-0 w-[2px] transition-all duration-200 origin-center scale-y-0 group-hover:scale-y-100",
+                                        isCritical ? "bg-red-500" : isUrgent ? "bg-amber-500" : "bg-gray-900"
+                                      )} />
+
+                                      <div className="flex items-center px-6 py-5">
+                                        <div className="flex-shrink-0 mr-5">
+                                          <Checkbox
+                                            checked={selectedIds.has(claim.id)}
+                                            onCheckedChange={(checked) => {
+                                              setSelectedIds(prev => {
+                                                const next = new Set(prev);
+                                                if (checked) next.add(claim.id); else next.delete(claim.id);
+                                                return next;
+                                              });
+                                            }}
+                                          />
+                                        </div>
+
+                                        <div className="flex items-center gap-5 min-w-0 flex-1">
+                                          <div className="flex-shrink-0">
+                                            <Hexagon className={cn(
+                                              "w-5 h-5 transition-colors duration-300",
+                                              isCritical ? "text-red-300" : isUrgent ? "text-amber-300" : "text-gray-200 group-hover:text-gray-900"
+                                            )} strokeWidth={1.5} />
+                                          </div>
+
+                                          <div className="flex flex-col min-w-0">
+                                            <div className="flex items-center gap-3">
+                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                                <span className="text-[13px] font-mono font-medium text-gray-900 truncate hover:underline">
+                                                  {claim.claim_number || claim.id.slice(0, 12)}
+                                                </span>
+                                              </Link>
+                                              <span className="text-xs text-gray-400 font-mono">
+                                                {format(claimDate, 'd MMM')} {format(claimDate, 'HH:mm')}
+                                              </span>
+                                            </div>
+
+                                            <div className="text-sm text-gray-600 mt-1 line-clamp-1 flex items-center gap-2">
+                                              {claim.details}
+                                              <span className="text-gray-300">|</span>
+                                              <span className="font-mono text-xs text-gray-400">SKU: {claim.sku || 'N/A'}</span>
+                                            </div>
+
+                                            <div className="flex items-center gap-2 mt-2">
+                                              <div className="flex items-center gap-2 text-xs font-medium">
+                                                <span className={cn(
+                                                  "px-2 py-0.5 rounded-none border font-semibold",
+                                                  getStatusColor(claim.status)
+                                                )}>
+                                                  {claim.status}
+                                                </span>
+                                                <span className="text-gray-200">|</span>
+                                                <span className="text-gray-400">DUP:</span>
+                                                {(() => {
+                                                  const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
+                                                  return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-gray-500">NONE</span>;
+                                                })()}
+                                                <span className="text-gray-200">|</span>
+                                                <span className={cn(
+                                                  "font-mono",
+                                                  isCritical ? "text-red-600" : isUrgent ? "text-amber-600" : "text-gray-500"
+                                                )}>
+                                                  {claim.days_remaining !== null ? `${claim.days_remaining}D REMAINING` : 'EXPIRY N/A'}
+                                                </span>
+                                                <span className="text-gray-200">|</span>
+                                                <EvidenceQualityBadge validation={validateEvidencePolicy(claim, claim.matchedDocs)} claim={claim} matchedDocs={claim.matchedDocs} />
+                                                <span className="text-gray-200">|</span>
+                                                <span className="text-gray-900 font-mono font-bold">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-4 ml-6">
+                                          <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-none">
+                                                <MoreHorizontal className="h-4 w-4" />
+                                              </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-100 shadow-2xl rounded-none p-1">
+                                              <DropdownMenuItem asChild className="text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2">
+                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW DETAILS</Link>
+                                              </DropdownMenuItem>
+
+                                              <DropdownMenuItem
+                                                className="text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                onClick={async () => {
+                                                  try {
+                                                    const res = await api.getRecoveryDetail(claim.id);
+                                                    const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
+                                                    setProofDocs(docs);
+                                                    setProofDocsClaim(claim);
+                                                    setProofDocsModalOpen(true);
+                                                  } catch (e: any) {
+                                                    toast({ title: 'Error loading documents', description: e?.message });
+                                                  }
+                                                }}>
+                                                PROOF DOCUMENTS
+                                              </DropdownMenuItem>
+
+                                              <DropdownMenuItem
+                                                className="text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                onClick={() => {
+                                                  setEvidencePackClaim(claim);
+                                                  setEvidencePackOpen(true);
+                                                }}>
+                                                VIEW EVIDENCE PACK
+                                              </DropdownMenuItem>
+
+                                              {claim.status === 'Denied' && (
+                                                <DropdownMenuItem
+                                                  className="text-sm font-bold text-red-600 hover:bg-red-50 cursor-pointer px-3 py-2"
+                                                  onClick={async () => {
+                                                    try {
+                                                      await api.resubmitClaim(claim.id);
+                                                      toast({ title: 'Resubmitted', description: 'Claim resubmitted with enhanced evidence.' });
+                                                    } catch (e: any) {
+                                                      toast({ title: 'Resubmission failed', description: e?.message });
+                                                    }
+                                                  }}>
+                                                  RESUBMIT WITH STRONGER DOCS
+                                                </DropdownMenuItem>
+                                              )}
+                                            </DropdownMenuContent>
+                                          </DropdownMenu>
+
+                                          <Link
+                                            to={`/recoveries/${claim.id}`}
+                                            state={{ claim }}
+                                            className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-gray-900 transition-all duration-200 group/link"
+                                          >
+                                            AUDIT
+                                            <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Phase 3: Resolve Detection Modal */}
+                  <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
+                    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+                      <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
+                        <DialogTitle className="text-xs font-medium text-gray-900">Resolution Record</DialogTitle>
+                        <DialogDescription className="text-xs text-gray-500 mt-0.5">
+                          Complete resolution details and mark claim as resolved
+                        </DialogDescription>
+                      </DialogHeader>
+                      {selectedDetection && (
+                        <div className="space-y-4 px-5 py-4">
+                          <div>
+                            <Label className="text-xs text-gray-500">Detection ID</Label>
+                            <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-500">Anomaly Type</Label>
+                            <p className="text-xs text-gray-900 capitalize mt-0.5">
+                              {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
+                            </p>
+                          </div>
+                          <div>
+                            <Label htmlFor="resolve-amount" className="text-xs text-gray-500">Resolution Amount</Label>
+                            <Input
+                              id="resolve-amount"
+                              type="number"
+                              step="0.01"
+                              value={resolveAmount}
+                              onChange={(e) => setResolveAmount(e.target.value)}
+                              placeholder="0.00"
+                              className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="resolve-notes" className="text-xs text-gray-500">Notes</Label>
+                            <Textarea
+                              id="resolve-notes"
+                              value={resolveNotes}
+                              onChange={(e) => setResolveNotes(e.target.value)}
+                              placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
+                              className="mt-1 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm min-h-[80px]"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <DialogFooter className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setResolveModalOpen(false);
+                            setSelectedDetection(null);
+                            setResolveNotes('');
+                            setResolveAmount('');
+                          }}
+                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            if (!selectedDetection) return;
+                            try {
+                              const res = await detectionApi.resolveDetection(selectedDetection.id, {
+                                notes: resolveNotes,
+                                resolution_amount: resolveAmount ? parseFloat(resolveAmount) : undefined,
+                              });
+                              if (res.ok) {
+                                toast({
+                                  title: 'Detection Resolved',
+                                  description: res.data?.message || 'Detection marked as resolved successfully.',
+                                });
+                                // Update the detection in state
+                                setDetectionResults(prev => prev.map(d =>
+                                  d.id === selectedDetection.id ? { ...d, status: 'resolved' } : d
+                                ));
+                                setMergedRecoveries(prev => prev?.map(c =>
+                                  c.id === selectedDetection.id ? { ...c, status: 'resolved' } : c
+                                ));
+                                setResolveModalOpen(false);
+                                setSelectedDetection(null);
+                                setResolveNotes('');
+                                setResolveAmount('');
+                                // Refresh statistics
+                                const statsRes = await detectionApi.getDetectionStatistics();
+                                if (statsRes.ok && statsRes.data?.statistics) {
+                                  setDetectionStats(statsRes.data.statistics);
+                                }
+                              } else {
+                                toast({
+                                  title: 'Unable to Resolve Right Now',
+                                  description: 'We encountered an issue marking this claim as resolved. Please try again in a moment.'
+                                });
+                              }
+                            } catch (e: any) {
+                              console.error('[Mark as Resolved] Error:', e);
+                              toast({
+                                title: 'Unable to Resolve Right Now',
+                                description: 'We encountered an issue marking this claim as resolved. Please try again in a moment.'
+                              });
+                            }
+                          }}
+                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
+                          Complete Resolution
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Phase 3: Status Update Modal */}
+                  <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
+                    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+                      <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
+                        <DialogTitle className="text-xs font-medium text-gray-900">Status Update</DialogTitle>
+                        <DialogDescription className="text-xs text-gray-500 mt-0.5">
+                          Update claim status and record change notes
+                        </DialogDescription>
+                      </DialogHeader>
+                      {selectedDetection && (
+                        <div className="space-y-4 px-5 py-4">
+                          <div>
+                            <Label className="text-xs text-gray-500">Detection ID</Label>
+                            <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
+                          </div>
+                          <div>
+                            <Label htmlFor="status-select" className="text-xs text-gray-500">Status</Label>
+                            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                              <SelectTrigger id="status-select" className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white border-gray-200 rounded-sm">
+                                <SelectItem value="pending" className="text-xs">Pending</SelectItem>
+                                <SelectItem value="reviewed" className="text-xs">Reviewed</SelectItem>
+                                <SelectItem value="disputed" className="text-xs">Disputed</SelectItem>
+                                <SelectItem value="resolved" className="text-xs">Resolved</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="status-notes" className="text-xs text-gray-500">Notes</Label>
+                            <Textarea
+                              id="status-notes"
+                              value={statusUpdateNotes}
+                              onChange={(e) => setStatusUpdateNotes(e.target.value)}
+                              placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
+                              className="mt-1 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm min-h-[80px]"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <DialogFooter className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setStatusUpdateModalOpen(false);
+                            setSelectedDetection(null);
+                            setStatusUpdateNotes('');
+                            setSelectedStatus('pending');
+                          }}
+                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            if (!selectedDetection) return;
+                            try {
+                              const res = await detectionApi.updateDetectionStatus(selectedDetection.id, {
+                                status: selectedStatus,
+                                notes: statusUpdateNotes,
+                              });
+                              if (res.ok) {
+                                toast({
+                                  title: 'Status Updated',
+                                  description: res.data?.message || 'Detection status updated successfully.',
+                                });
+                                // Update the detection in state
+                                setDetectionResults(prev => prev.map(d =>
+                                  d.id === selectedDetection.id ? { ...d, status: selectedStatus } : d
+                                ));
+                                setMergedRecoveries(prev => prev?.map(c =>
+                                  c.id === selectedDetection.id ? { ...c, status: selectedStatus } : c
+                                ));
+                                setStatusUpdateModalOpen(false);
+                                setSelectedDetection(null);
+                                setStatusUpdateNotes('');
+                                setSelectedStatus('pending');
+                              } else {
+                                toast({
+                                  title: 'Unable to Update Status',
+                                  description: 'We encountered an issue updating this claim. Please try again in a moment.'
+                                });
+                              }
+                            } catch (e: any) {
+                              console.error('[Update Status] Error:', e);
+                              toast({
+                                title: 'Unable to Update Status',
+                                description: 'We encountered an issue updating this claim. Please try again in a moment.'
+                              });
+                            }
+                          }}
+                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
+                          Update Status
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Mark All Read Modal */}
+                  <Dialog open={markAllReadModalOpen} onOpenChange={setMarkAllReadModalOpen}>
+                    <DialogContent className="max-w-xs bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
+                      <div className="px-5 py-6 text-center">
+                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Mail className="h-5 w-5 text-gray-600" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                          Mark all Read
+                        </h3>
+                        <p className="text-xs text-gray-500 mb-6">
+                          All claims will be marked as reviewed.
+                        </p>
+                        <div className="flex gap-2 justify-center">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setMarkAllReadModalOpen(false)}
+                            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm px-4">
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              toast({
+                                title: 'All Marked as Read',
+                                description: 'All claims have been marked as reviewed.'
+                              });
+                              setMarkAllReadModalOpen(false);
+                            }}
+                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm px-4">
+                            Confirm
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                </TabsContent>
+
+                {/* File Anyway Confirmation Modal for Medium-Strength Claims */}
+                <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
+                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-md max-h-[80vh] overflow-y-auto">
+                    <DialogHeader className="border-b border-gray-200 pb-3">
+                      <DialogTitle className="text-base font-semibold text-gray-900">
+                        Claim Assessment Review
+                      </DialogTitle>
+                      <DialogDescription className="text-xs text-gray-600 mt-1">
+                        Claim strength analysis and filing recommendation
+                      </DialogDescription>
+                    </DialogHeader>
+                    {claimToFile && (() => {
+                      const strength = calculateClaimStrength(claimToFile);
+                      const claimAmount = claimToFile.amount || claimToFile.estimated_value || claimToFile.claim_amount || 0;
+                      const claimType = claimToFile.anomaly_type || claimToFile.type || claimToFile.claim_type || 'Unknown';
+                      const claimDate = claimToFile.discovery_date || claimToFile.created || claimToFile.created_at;
+                      return (
+                        <div className="space-y-4 py-4">
+                          {/* Claim Details */}
+                          <div className="border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
+                              <h4 className="text-xs font-semibold text-gray-700">Claim Details</h4>
+                            </div>
+                            <div className="bg-white divide-y divide-gray-100">
+                              <div className="flex justify-between items-center px-3 py-2">
+                                <span className="text-xs text-gray-600">Claim ID</span>
+                                <div className="flex h-screen bg-[#060606] text-white overflow-hidden font-sans selection:bg-white/20">
+                                  <Sidebar collapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+
+                                  <div className={cn(
+                                    "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out relative",
+                                    isSidebarCollapsed ? "ml-20" : "ml-64"
+                                  )}>
+                                    <Navbar
+                                      onSearch={setSearchTerm}
+                                      sidebarCollapsed={isSidebarCollapsed}
+                                      className="border-b border-white/5 bg-[#0A0A0A]/80 backdrop-blur-xl z-30"
+                                    />
+
+                                    <main className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-[#060606] relative">
+                                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.03)_0%,transparent_50%)] pointer-events-none" />
+
+                                      <div className="p-8 space-y-8 relative z-10 max-w-[1600px] mx-auto">
+                                        {/* AUDIT TERMINAL HEADER */}
+                                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/5">
+                                          <div className="space-y-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                              <div className="w-2 h-2 rounded-full bg-white/40 animate-pulse" />
+                                              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40">Network Recovery Console</span>
+                                            </div>
+                                            <h1 className="text-4xl font-light tracking-tight text-white flex items-center gap-3">
+                                              Recoveries
+                                              <span className="px-2 py-0.5 rounded border border-white/10 bg-white/5 text-[10px] uppercase tracking-widest text-white/30 align-middle">Beta</span>
+                                            </h1>
+                                            <p className="text-white/40 text-sm max-w-2xl font-light">
+                                              Direct interface to Amazon financial reconciliation systems. Monitoring <span className="text-white/60 font-medium">{claims.length}</span> active recovery vectors.
+                                            </p>
+                                          </div>
+
+                                          <div className="flex flex-wrap items-center gap-3">
+                                            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-sm border border-white/10">
+                                              <div className="flex flex-col items-end">
+                                                <span className="text-[10px] font-mono text-white/30 uppercase leading-none">Recovered Value</span>
+                                                <span className="text-xl font-mono text-white leading-tight">
+                                                  {formatCurrencyWithSelection(recoveredTotal || 0, recoveredCurrency)}
+                                                </span>
+                                              </div>
+                                              <div className="w-px h-8 bg-white/10 mx-2" />
+                                              <div className="flex flex-col">
+                                                <span className="text-[10px] font-mono text-white/30 uppercase leading-none">Active Vector</span>
+                                                <span className="text-xl font-mono text-white leading-tight">{amazonClaimCount || '0'}</span>
+                                              </div>
+                                            </div>
+
+                                            <Button
+                                              onClick={() => refreshAllData()}
+                                              disabled={loading}
+                                              variant="outline"
+                                              className="h-10 border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2 px-4"
+                                            >
+                                              <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+                                              <span className="text-xs uppercase tracking-widest font-light">Sync</span>
+                                            </Button>
+                                          </div>
+                                        </div>
+
+                                        {/* RECOVERY DASHBOARD GRID */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                          {[
+                                            { label: 'Total Claims Found', value: keyMetrics.totalClaimsFound, icon: Cpu, trend: null },
+                                            { label: 'Currently in Progress', value: keyMetrics.currentlyInProgress, icon: Activity, trend: null },
+                                            { label: 'Value in Progress', value: formatCurrencyWithSelection(keyMetrics.valueInProgress), icon: TrendingUp, trend: null },
+                                            { label: '30D Success Rate', value: `${keyMetrics.successRate30d}%`, icon: Shield, trend: 'Optimal' },
+                                          ].map((m, i) => (
+                                            <div key={i} className="bg-white/[0.02] border border-white/5 p-5 relative overflow-hidden group hover:border-white/20 transition-all duration-500">
+                                              <div className="flex justify-between items-start mb-4">
+                                                <div className="p-2 bg-white/5 rounded-sm">
+                                                  <m.icon className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
+                                                </div>
+                                                {m.trend && (
+                                                  <span className="text-[10px] font-mono text-emerald-500/80 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10">
+                                                    {m.trend}
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <div>
+                                                <h3 className="text-2xl font-mono text-white mb-1">{m.value}</h3>
+                                                <p className="text-[10px] font-mono uppercase tracking-wider text-white/30">{m.label}</p>
+                                              </div>
+                                              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:via-white/20 transition-all duration-700" />
+                                            </div>
+                                          ))}
+                                        </div>
+
+                                        {/* SYNC STATUS TERMINAL (Only if sync info available) */}
+                                        {(syncTriggered || needsSync || syncMessage) && (
+                                          <div className="bg-[#0A0A0A] border border-blue-500/20 p-4 rounded-sm relative overflow-hidden group">
+                                            <div className="absolute top-0 left-0 w-[2px] h-full bg-blue-500/40" />
+                                            <div className="flex items-center gap-4">
+                                              <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                                                <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+                                              </div>
+                                              <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                  <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">System Sync Active</span>
+                                                  <span className="text-[10px] font-mono text-white/30 px-1 border border-white/5">v2.4.0</span>
+                                                </div>
+                                                <p className="text-sm text-white/60 font-light">{syncMessage || 'Syncing financial records with Amazon Marketplace Web Service...'}</p>
+                                              </div>
+                                              <Button variant="ghost" size="sm" className="text-white/40 hover:text-white" onClick={() => setSyncMessage(null)}>
+                                                <X className="w-4 h-4" />
+                                              </Button>
+                                            </div>
+                                          </div>
+                                        )}
+
+                                        {/* TABS - CONSOLE SELECTOR */}
+                                        <Tabs defaultValue="claims" className="w-full" onValueChange={(v) => setActiveTab(v as any)}>
+                                          <TabsList className="bg-transparent h-auto p-0 flex gap-8 border-b border-white/5 mb-8">
+                                            {[
+                                              { id: 'claims', label: 'Claims Console' },
+                                              { id: 'matching', label: 'Evidence Terminal' },
+                                              { id: 'cases', label: 'Dispute Registry' },
+                                            ].map((tab) => (
+                                              <TabsTrigger
+                                                key={tab.id}
+                                                value={tab.id}
+                                                className="bg-transparent border-none p-0 pb-4 rounded-none text-xs uppercase tracking-[0.2em] font-light text-white/30 data-[state=active]:text-white data-[state=active]:font-medium relative group"
+                                              >
+                                                {tab.label}
+                                                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-data-[state=active]:scale-x-100 transition-transform duration-500 ease-out" />
+                                              </TabsTrigger>
+                                            ))}
+                                          </TabsList>
+
+                                          <TabsContent value="claims" className="mt-0 outline-none">
+                                            {/* Search & Filter Terminal Sub-header */}
+                                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                                              <div className="relative group max-w-xl flex-1">
+                                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-white transition-colors" />
+                                                <Input
+                                                  placeholder="SCAN RECOVERY LEDGER..."
+                                                  value={searchTerm}
+                                                  onChange={(e) => setSearchTerm(e.target.value)}
+                                                  className="h-10 border-white/5 bg-white/[0.02] pl-10 text-white font-mono text-xs focus:ring-0 focus:border-white/20 transition-all uppercase tracking-wider"
+                                                />
+                                              </div>
+
+                                              <div className="flex flex-wrap items-center gap-2">
+                                                {/* Simplified filter set for obsidian aesthetic */}
+                                                <div className="flex items-center gap-1 bg-white/5 border border-white/5 p-0.5 rounded-sm">
+                                                  {['ALL', 'HIGH', 'URGENT'].map((f) => (
+                                                    <button
+                                                      key={f}
+                                                      className={cn(
+                                                        "px-3 py-1.5 text-[10px] font-mono tracking-widest transition-colors",
+                                                        (f === 'ALL' && filterConfidence === 'all') || (f === 'HIGH' && filterConfidence === 'high') ? "bg-white/10 text-white" : "text-white/20 hover:text-white/40"
+                                                      )}
+                                                    >
+                                                      {f}
+                                                    </button>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            {activeTab === 'claims' && (
+                                              <>
+                                                {/* Claim Table */}
+                                                <div className="bg-white/[0.02] border border-white/5 rounded-sm overflow-hidden">
+                                                  <Table>
+                                                    <TableHeader className="bg-white/5">
+                                                      <TableRow className="border-white/5">
+                                                        <TableHead className="text-white/40 text-[10px] uppercase tracking-wider font-light">Claim ID</TableHead>
+                                                        <TableHead className="text-white/40 text-[10px] uppercase tracking-wider font-light">Type</TableHead>
+                                                        <TableHead className="text-white/40 text-[10px] uppercase tracking-wider font-light">Amount</TableHead>
+                                                        <TableHead className="text-white/40 text-[10px] uppercase tracking-wider font-light">Status</TableHead>
+                                                        <TableHead className="text-white/40 text-[10px] uppercase tracking-wider font-light">Discovered</TableHead>
+                                                        <TableHead className="text-white/40 text-[10px] uppercase tracking-wider font-light text-right">Actions</TableHead>
+                                                      </TableRow>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                      {filteredClaims.length > 0 ? (
+                                                        filteredClaims.map((claim) => (
+                                                          <TableRow key={claim.id} className="border-white/5 hover:bg-white/[0.03] transition-colors">
+                                                            <TableCell className="font-mono text-xs text-white/80">{claim.id?.slice(0, 12)}...</TableCell>
+                                                            <TableCell className="text-xs text-white/70">{claim.anomaly_type?.replace(/_/g, ' ') || 'N/A'}</TableCell>
+                                                            <TableCell className="font-mono text-xs text-white/80">{formatCurrency(claim.amount || claim.estimated_value || 0, claim.currency || 'USD')}</TableCell>
+                                                            <TableCell>
+                                                              <span className={cn(
+                                                                "px-2 py-0.5 rounded-full text-[10px] font-medium",
+                                                                getStatusColor(claim.status)
+                                                              )}>
+                                                                {claim.status || 'Pending'}
+                                                              </span>
+                                                            </TableCell>
+                                                            <TableCell className="text-xs text-white/70">
+                                                              {claim.discovery_date ? format(new Date(claim.discovery_date), 'MMM dd, yyyy') : 'N/A'}
+                                                            </TableCell>
+                                                            <TableCell className="text-right">
+                                                              <DropdownMenu>
+                                                                <DropdownMenuTrigger asChild>
+                                                                  <Button variant="ghost" className="h-8 w-8 p-0 text-white/50 hover:text-white">
+                                                                    <span className="sr-only">Open menu</span>
+                                                                    <MoreHorizontal className="h-4 w-4" />
+                                                                  </Button>
+                                                                </DropdownMenuTrigger>
+                                                                <DropdownMenuContent align="end" className="bg-[#0A0A0A] border border-white/10 text-white">
+                                                                  <DropdownMenuLabel className="text-white/70">Actions</DropdownMenuLabel>
+                                                                  <DropdownMenuItem
+                                                                    onClick={() => handleViewDetails(claim)}
+                                                                    className="hover:bg-white/5 cursor-pointer"
+                                                                  >
+                                                                    View Details
+                                                                  </DropdownMenuItem>
+                                                                  <DropdownMenuItem
+                                                                    onClick={() => handleFileClaim(claim)}
+                                                                    disabled={claim.status === 'Submitted'}
+                                                                    className="hover:bg-white/5 cursor-pointer"
+                                                                  >
+                                                                    File Claim
+                                                                  </DropdownMenuItem>
+                                                                  <DropdownMenuItem
+                                                                    onClick={() => handleOpenEvidencePack(claim)}
+                                                                    className="hover:bg-white/5 cursor-pointer"
+                                                                  >
+                                                                    View Evidence Pack
+                                                                  </DropdownMenuItem>
+                                                                  <DropdownMenuItem
+                                                                    onClick={() => handleOpenProofDocs(claim)}
+                                                                    className="hover:bg-white/5 cursor-pointer"
+                                                                  >
+                                                                    View Proof Docs
+                                                                  </DropdownMenuItem>
+                                                                  <DropdownMenuSeparator className="bg-white/10" />
+                                                                  <DropdownMenuItem
+                                                                    onClick={() => handleOpenStatusUpdateModal(claim)}
+                                                                    className="hover:bg-white/5 cursor-pointer"
+                                                                  >
+                                                                    Update Status
+                                                                  </DropdownMenuItem>
+                                                                  <DropdownMenuItem
+                                                                    onClick={() => handleOpenResolveModal(claim)}
+                                                                    className="hover:bg-white/5 cursor-pointer"
+                                                                  >
+                                                                    Mark as Resolved
+                                                                  </DropdownMenuItem>
+                                                                </DropdownMenuContent>
+                                                              </DropdownMenu>
+                                                            </TableCell>
+                                                          </TableRow>
+                                                        ))
+                                                      ) : (
+                                                        <TableRow className="border-white/5">
+                                                          <TableCell colSpan={6} className="h-24 text-center text-white/50">
+                                                            No claims found.
+                                                          </TableCell>
+                                                        </TableRow>
+                                                      )}
+                                                    </TableBody>
+                                                  </Table>
+                                                </div>
+                                              </>
+                                            )}
+                                          </TabsContent>
+
+                                          <TabsContent value="matching" className="mt-0 outline-none">
+                                            <EvidenceTerminal />
+                                          </TabsContent>
+
+                                          <TabsContent value="cases" className="mt-0 outline-none">
+                                            <DisputeRegistry />
+                                          </TabsContent>
+                                        </Tabs>
+                                      </div>
+                                    </main>
+                                  </div>
+                                </div>
+                                );
+                    })()}
+                                <DialogFooter>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                      setFileAnywayModalOpen(false);
+                                      setClaimToFile(null);
+                                    }}
+                                    className="border-gray-200">
+                                    Cancel
                                   </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="bg-[#0A0A0A] border-white/10 text-white shadow-2xl">
-                                  <DropdownMenuItem onClick={() => handleViewDetails(claim)} className="hover:bg-white/5 cursor-pointer text-xs uppercase tracking-widest focus:bg-white/5">View Details</DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => handleFileClaim(claim)} className="hover:bg-white/5 cursor-pointer text-xs uppercase tracking-widest text-blue-400 focus:bg-white/5 focus:text-blue-400">File Claim</DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => { setEvidencePackClaim(claim); setEvidencePackOpen(true); }} className="hover:bg-white/5 cursor-pointer text-xs uppercase tracking-widest focus:bg-white/5">Evidence Pack</DropdownMenuItem>
-                                  <DropdownMenuItem
+                                  <Button
                                     onClick={async () => {
+                                      if (!claimToFile) return;
                                       try {
-                                        const res = await api.getRecoveryDetail(claim.id);
-                                        const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                        setProofDocs(docs);
-                                        setProofDocsClaim(claim);
-                                        setProofDocsModalOpen(true);
+                                        await recoveryApi.submitClaim(claimToFile.id);
+                                        setClaims(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
+                                        setMergedRecoveries(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
+                                        toast({ title: 'Claim Filed', description: `${claimToFile.id} has been submitted to Amazon.` });
+                                        setFileAnywayModalOpen(false);
+                                        setClaimToFile(null);
                                       } catch (e: any) {
-                                        toast({ title: 'Error loading documents', description: e?.message });
+                                        console.error('[File Anyway] Submit error:', e);
+                                        toast({
+                                          title: 'Unable to File Right Now',
+                                          description: 'We encountered an issue filing this claim. Please try again in a moment or contact support if the issue persists.'
+                                        });
+                                        setFileAnywayModalOpen(false);
+                                        setClaimToFile(null);
                                       }
                                     }}
-                                    className="hover:bg-white/5 cursor-pointer text-xs uppercase tracking-widest focus:bg-white/5"
-                                  >
-                                    Proof Docs
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow className="border-white/5">
-                          <TableCell colSpan={5} className="h-24 text-center text-white/50 text-[10px] uppercase tracking-widest font-light py-12">
-                            No active recovery vectors identified
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                                    className="bg-gray-200 hover:bg-gray-300 text-[#36454F]">
+                                    <ArrowUpFromLine className="h-4 w-4 mr-2" />
+                                    File Anyway
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+
+                            {/* Evidence Pack Dossier View */}
+                            {evidencePackClaim && (
+                              <EvidencePackView
+                                open={evidencePackOpen}
+                                onClose={() => {
+                                  setEvidencePackOpen(false);
+                                  setEvidencePackClaim(null);
+                                }}
+                                claim={evidencePackClaim}
+                              />
+                            )}
+
+                            {/* Proof Documents Modal */}
+                            <ProofDocumentsModal
+                              open={proofDocsModalOpen}
+                              onClose={() => {
+                                setProofDocsModalOpen(false);
+                                setProofDocsClaim(null);
+                                setProofDocs([]);
+                              }}
+                              claimId={proofDocsClaim?.id || ''}
+                              claimNumber={proofDocsClaim?.claim_number}
+                              documents={proofDocs}
+                            />
+
+                            {/* Claim Details Modal - Institutional Banking Style */}
+                            <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
+                              <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+                                {/* Header - Institutional Style */}
+                                <div className="px-6 py-4 border-b border-gray-200">
+                                  <div className="flex justify-between items-start">
+                                    <div>
+                                      <div className="text-xs font-semibold text-gray-400 mb-1">MARGIN</div>
+                                      <DialogTitle className="text-base font-semibold text-gray-900">
+                                        Claim Details
+                                      </DialogTitle>
+                                    </div>
+                                    <div className="text-right">
+                                      {detectionDetails && (
+                                        <>
+                                          <div
+                                            className="text-xs font-mono text-gray-600 cursor-pointer hover:text-gray-900 transition-colors"
+                                            onClick={() => {
+                                              navigator.clipboard.writeText(detectionDetails.id || '');
+                                              toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
+                                            }}
+                                            title="Click to copy">
+                                            REF: {(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
+                                          </div>
+                                          <div className="text-xs text-gray-400 mt-0.5">
+                                            {detectionDetails.created_at || detectionDetails.discovery_date
+                                              ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'MMM dd, yyyy')
+                                              : ''
+                                            }
+                                          </div>
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                  {detectionDetails && (
+                                    <div className="mt-2 text-xs text-gray-500">
+                                      {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase()}
+                                    </div>
+                                  )}
+                                  {detectionDetails && (
+                                    <Link
+                                      to={`/recoveries/${detectionDetails.id}`}
+                                      state={{ claim: detectionDetails }}
+                                      className="mt-2 inline-flex items-center text-xs text-gray-600 hover:text-gray-900 hover:underline transition-colors">
+                                      View Full Claim Details →
+                                    </Link>
+                                  )}
+                                </div>
+
+                                {detectionDetails && (
+                                  <div className="px-6 py-4 space-y-5">
+                                    {/* Summary Card - Institutional Style */}
+                                    <div className="border border-gray-200">
+                                      <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                                        <h4 className="text-xs font-semibold text-gray-500">Claim Summary</h4>
+                                      </div>
+                                      <div className="divide-y divide-gray-100">
+                                        <div className="flex justify-between items-center px-4 py-2.5">
+                                          <span className="text-sm text-gray-500">Amount</span>
+                                          <span className="text-sm font-semibold text-gray-900 font-mono">
+                                            {formatCurrency(detectionDetails.guaranteedAmount || detectionDetails.amount || detectionDetails.estimated_value || 0, detectionDetails.currency || 'USD')}
+                                          </span>
+                                        </div>
+                                        <div className="flex justify-between items-center px-4 py-2.5">
+                                          <span className="text-sm text-gray-500">Status</span>
+                                          <span className="text-xs font-medium text-gray-900">{detectionDetails.status || 'Pending'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center px-4 py-2.5">
+                                          <span className="text-sm text-gray-500">Evidence</span>
+                                          <span className="text-xs font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} document{(detectionDetails.matchedCount || 0) !== 1 ? 's' : ''}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+
+                                    {/* Claim Info Section */}
+                                    <div className="border-t border-gray-100 pt-4">
+                                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Information</h4>
+                                      <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                          <div className="text-xs text-gray-500">Claim ID</div>
+                                          <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.id?.slice(0, 12) || '—'}...</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-xs text-gray-500">Sync ID</div>
+                                          <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sync_id || 'N/A'}</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-xs text-gray-500">Type</div>
+                                          <div className="text-sm text-gray-900 mt-1">
+                                            {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || '—'}
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <div className="text-xs text-gray-500">Severity</div>
+                                          <Badge className="mt-1 bg-gray-100 text-[#36454F] border-gray-400">
+                                            {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
+                                          </Badge>
+                                        </div>
+                                        {detectionDetails.sku && (
+                                          <div>
+                                            <div className="text-xs text-gray-500">SKU</div>
+                                            <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sku}</div>
+                                          </div>
+                                        )}
+                                        {detectionDetails.asin && (
+                                          <div>
+                                            <div className="text-xs text-gray-500">ASIN</div>
+                                            <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.asin}</div>
+                                          </div>
+                                        )}
+
+                                      </div>
+                                    </div>
+
+                                    {/* Evidence Quality & Policy Check */}
+                                    {(() => {
+                                      const validation = validateEvidencePolicy(detectionDetails, detectionDetails.matchedDocs);
+
+                                      return (
+                                        <div className="border-t border-gray-100 pt-4">
+                                          <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                                              <h4 className="text-xs font-semibold text-gray-700">Evidence Assessment</h4>
+                                            </div>
+                                            <div className="bg-white p-4 space-y-4">
+                                              {/* Quality Summary */}
+                                              <div className="flex justify-between items-start pb-3 border-b border-gray-100">
+                                                <div>
+                                                  <div className="text-sm font-medium text-gray-900">Quality Level</div>
+                                                  <div className="text-xs text-gray-600 mt-1">{validation.recommendationText}</div>
+                                                </div>
+                                                <div className="text-right">
+                                                  <div className="text-sm font-semibold text-gray-900">{validation.quality.charAt(0).toUpperCase() + validation.quality.slice(1)}</div>
+                                                </div>
+                                              </div>
+
+                                              {/* Field Verification */}
+                                              <div className="space-y-2">
+                                                <p className="text-xs font-semibold text-gray-700">Field Verification</p>
+                                                <div className="space-y-1">
+                                                  {validation.fieldChecks.map((check, i) => (
+                                                    <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-gray-50 last:border-0">
+                                                      <span className="text-gray-600">{check.label}</span>
+                                                      <span className="font-medium text-gray-900">
+                                                        {check.present ? "Present" : check.required ? "Required" : "Optional"}
+                                                      </span>
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              </div>
+
+                                              {/* Policy Notes */}
+                                              {validation.warnings.length > 0 && (
+                                                <div className="space-y-2 pt-2 border-t border-gray-100">
+                                                  <p className="text-xs font-semibold text-gray-700">Policy Notes</p>
+                                                  <ul className="text-xs space-y-1">
+                                                    {validation.warnings.map((w, i) => (
+                                                      <li key={i} className="text-gray-600 pl-3 relative before:content-['•'] before:absolute before:left-0">{w}</li>
+                                                    ))}
+                                                  </ul>
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    })()}
+
+                                    {/* Financial Information - Institutional Style */}
+                                    <div className="border border-gray-200">
+                                      <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+                                        <h4 className="text-xs font-semibold text-gray-500">Financial Information</h4>
+                                      </div>
+                                      <div className="divide-y divide-gray-100">
+                                        <div className="flex justify-between items-center px-4 py-2.5">
+                                          <span className="text-sm text-gray-500">Estimated Value</span>
+                                          <span className="text-sm font-semibold text-gray-900 font-mono">
+                                            {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
+                                          </span>
+                                        </div>
+                                        <div className="flex justify-between items-center px-4 py-2.5">
+                                          <span className="text-sm text-gray-500">Currency</span>
+                                          <span className="text-xs font-medium text-gray-900">{detectionDetails.currency || 'USD'}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Dates & Deadlines */}
+                                    <div className="border-t border-gray-100 pt-4">
+                                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Dates & Deadlines</h4>
+                                      <div className="grid grid-cols-2 gap-4">
+                                        {detectionDetails.discovery_date && (
+                                          <div>
+                                            <div className="text-xs text-gray-500">Discovery Date</div>
+                                            <div className="text-sm text-gray-900 mt-1">
+                                              {format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy')}
+                                            </div>
+                                          </div>
+                                        )}
+                                        {detectionDetails.deadline_date && (
+                                          <div>
+                                            <div className="text-xs text-gray-500">Deadline Date</div>
+                                            <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                                              ? 'text-amber-600'
+                                              : 'text-gray-900'
+                                              }`}>
+                                              {format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')}
+                                            </div>
+                                          </div>
+                                        )}
+                                        {detectionDetails.days_remaining !== undefined && (
+                                          <div>
+                                            <div className="text-xs text-gray-500">Days Remaining</div>
+                                            <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-600' :
+                                              detectionDetails.days_remaining <= 7 ? 'text-amber-600' :
+                                                'text-gray-900'
+                                              }`}>
+                                              {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
+                                            </div>
+                                          </div>
+                                        )}
+                                        {detectionDetails.created_at && (
+                                          <div>
+                                            <div className="text-xs text-gray-500">Created At</div>
+                                            <div className="text-sm text-gray-900 mt-1">
+                                              {format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {/* Related Event IDs */}
+                                    {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
+                                      <div className="border-t border-gray-100 pt-4">
+                                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Related Event IDs</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                          {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
+                                            <Badge key={idx} variant="outline" className="font-mono text-xs">
+                                              {eventId}
+                                            </Badge>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Evidence Data */}
+                                    {detectionDetails.evidence && (
+                                      <div className="border-t border-gray-100 pt-4">
+                                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Evidence Data</h4>
+                                        <div className="bg-gray-50 border border-gray-200 rounded-md p-3 max-h-48 overflow-auto">
+                                          <pre className="text-xs text-gray-700">
+                                            {JSON.stringify(detectionDetails.evidence, null, 2)}
+                                          </pre>
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Details/Description */}
+                                    {detectionDetails.details && (
+                                      <div className="border-t border-gray-100 pt-4">
+                                        <h4 className="text-sm font-semibold text-gray-900 mb-2">Details</h4>
+                                        <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{detectionDetails.details}</p>
+                                      </div>
+                                    )}
+
+
+                                    {/* Claim Timeline & Escalation */}
+                                    <div className="border-t border-gray-100 pt-4">
+                                      <ClaimNegotiationTimeline
+                                        claim={detectionDetails}
+                                        maxEscalations={2}
+                                        onEscalate={(playbook) => {
+                                          toast({
+                                            title: `Escalation: ${playbook.label}`,
+                                            description: playbook.autoTriggerable
+                                              ? 'Auto-escalation initiated with updated evidence package.'
+                                              : 'Manual review required. Check playbook actions above.',
+                                          });
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                                <DialogFooter className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setDetailsModalOpen(false)}
+                                    className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
+                                    Close
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setEvidencePackClaim(detectionDetails);
+                                      setEvidencePackOpen(true);
+                                      setDetailsModalOpen(false);
+                                    }}
+                                    className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
+                                    <FileText className="h-3.5 w-3.5 mr-1.5" />
+                                    View Evidence Pack
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+
+                            {/* Evidence Matching Tab (Agent 6) */}
+                            <TabsContent value="matching" className="mt-0">
+                              <EvidenceMatchingTable />
+                            </TabsContent>
+
+                            {/* Dispute Cases Tab (Agent 7) */}
+                            <TabsContent value="cases" className="mt-0">
+                              <DisputeCasesTable />
+                            </TabsContent>
+                          </Tabs>
+                        </div>
+          </div>
                 </div>
-              </TabsContent>
-
-              <TabsContent value="matching" className="mt-0 outline-none">
-                <EvidenceMatchingTable />
-              </TabsContent>
-
-              <TabsContent value="cases" className="mt-0 outline-none">
-                <DisputeCasesTable />
-              </TabsContent>
-            </Tabs>
+            </div>
           </div>
         </main>
-
-        {/* MODALS */}
-        <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
-          <DialogContent className="bg-[#0A0A0A] border-white/10 text-white max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-light tracking-tight">File Claim Anyway?</DialogTitle>
-              <DialogDescription className="text-white/40 text-xs uppercase tracking-widest font-mono mt-2">
-                Strength Analysis: Low Confidence Recovery Vector
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-6 space-y-4">
-              <p className="text-sm text-white/60 font-light leading-relaxed">
-                Our analysis indicates this claim might have a higher probability of rejection due to incomplete evidence chains or Amazon policy constraints.
-              </p>
-              <div className="p-4 bg-white/5 border border-white/5 rounded-sm">
-                <div className="flex items-center gap-3 text-white/40 text-[10px] uppercase tracking-[0.2em] mb-2 font-mono">
-                  <Info className="w-3 h-3" />
-                  Recommendation
-                </div>
-                <p className="text-xs text-white/80 italic">
-                  Wait for automated agents to finish gathering matching evidence before filing.
-                </p>
-              </div>
-            </div>
-            <DialogFooter className="gap-3">
-              <Button variant="ghost" className="text-white/40 hover:text-white uppercase tracking-widest text-[10px]" onClick={() => setFileAnywayModalOpen(false)}>Abort</Button>
-              <Button
-                className="bg-white text-black hover:bg-white/90 uppercase tracking-widest text-[10px] font-medium"
-                onClick={async () => {
-                  if (!claimToFile) return;
-                  try {
-                    await recoveryApi.submitClaim(claimToFile.id);
-                    toast({ title: 'Claim Filed', description: `${claimToFile.id} has been submitted.` });
-                    setFileAnywayModalOpen(false);
-                  } catch (e: any) {
-                    toast({ title: 'Error', description: 'Failed to submit claim.', variant: 'destructive' });
-                  }
-                }}
-              >
-                Exectute Filing
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        {evidencePackClaim && (
-          <EvidencePackView
-            open={evidencePackOpen}
-            onClose={() => {
-              setEvidencePackOpen(false);
-              setEvidencePackClaim(null);
-            }}
-            claim={evidencePackClaim}
-          />
-        )}
-
-        <ProofDocumentsModal
-          open={proofDocsModalOpen}
-          onClose={() => {
-            setProofDocsModalOpen(false);
-            setProofDocsClaim(null);
-            setProofDocs([]);
-          }}
-          claimId={proofDocsClaim?.id || ''}
-          claimNumber={proofDocsClaim?.claim_number}
-          documents={proofDocs}
-        />
-
-        <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-          <DialogContent className="bg-[#0A0A0A] border-white/10 text-white max-w-2xl max-h-[90vh] overflow-y-auto p-0">
-            <DialogHeader className="px-6 py-4 border-b border-white/5">
-              <DialogTitle className="text-xl font-light tracking-tight">Recovery Vector Details</DialogTitle>
-              <DialogDescription className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-mono mt-1">
-                {detectionDetails?.id?.toUpperCase()} // {detectionDetails?.status?.toUpperCase()}
-              </DialogDescription>
-            </DialogHeader>
-            {detectionDetails && (
-              <div className="px-6 py-4 space-y-8">
-                <div className="grid grid-cols-2 gap-8">
-                  <div className="space-y-1">
-                    <span className="text-[10px] text-white/30 uppercase tracking-widest font-mono">Yield Potential</span>
-                    <p className="text-2xl font-mono">{formatCurrencyWithSelection(detectionDetails.guaranteedAmount || 0)}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-[10px] text-white/30 uppercase tracking-widest font-mono">Anomaly Type</span>
-                    <p className="text-lg text-white/80 font-light">{(detectionDetails.anomaly_type || detectionDetails.type || 'N/A').replace(/_/g, ' ')}</p>
-                  </div>
-                </div>
-                <div className="space-y-4 pt-4 border-t border-white/5">
-                  <h4 className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-mono">Context Nodes</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-3 bg-white/5 border border-white/5 rounded-sm">
-                      <span className="text-[9px] text-white/20 uppercase tracking-widest block mb-1 font-mono">SKU / Identifier</span>
-                      <span className="text-xs text-white/60 font-mono">{detectionDetails.sku || 'UNKNOWN'}</span>
-                    </div>
-                    <div className="p-3 bg-white/5 border border-white/5 rounded-sm">
-                      <span className="text-[9px] text-white/20 uppercase tracking-widest block mb-1 font-mono">Discovery Node</span>
-                      <span className="text-xs text-white/60 font-mono">{format(new Date(detectionDetails.discovery_date || detectionDetails.created_at || new Date()), 'dd MMM yyyy')}</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4 flex flex-col pt-6">
-                  <Button asChild className="bg-white/5 border border-white/10 text-white hover:bg-white/10 h-11 uppercase tracking-widest text-[10px] font-light">
-                    <Link to={`/recoveries/${detectionDetails.id}`} state={{ claim: detectionDetails }}>
-                      Open In Full Analysis Terminal →
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );
 }
-
-
-
-
