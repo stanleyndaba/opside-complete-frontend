@@ -276,7 +276,7 @@ export function Sidebar({
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-5" : "h-5", "w-auto object-contain brightness-200")}
+            className={cn(isCollapsed ? "h-5" : "h-5", "w-auto object-contain invert brightness-0")}
           />
         </div>
       </div>

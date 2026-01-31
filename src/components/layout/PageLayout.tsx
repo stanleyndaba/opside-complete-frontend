@@ -50,7 +50,7 @@ export function PageLayout({
               <img
                 src="/logoimagetwo.png"
                 alt="Margin"
-                className="h-4 w-auto object-contain opacity-80"
+                className="h-4 w-auto object-contain invert brightness-0 opacity-80"
               />
             </div>
           )}
