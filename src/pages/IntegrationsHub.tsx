@@ -635,13 +635,13 @@ export default function IntegrationsHub() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-emerald-500/50" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Central Command</span>
+                  <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Connections</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight">
-                  Integrations <span className="text-emerald-500/20 px-2 tracking-tighter">/</span> Hub
+                  Integrations
                 </h1>
                 <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
-                  Management of all primary harvesting nodes and terminal connections. Data is isolated per store and synchronized across our institutional matrix.
+                  Management of all primary data sources and store connections. Data is isolated per store and synchronized across our platform.
                 </p>
               </div>
 
@@ -692,8 +692,8 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-serif text-white tracking-tight mb-1">Amazon Matrix</h3>
-                      <p className="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.4em]">Primary Ingestion Infrastructure</p>
+                      <h3 className="text-3xl font-serif text-white tracking-tight mb-1">Amazon SP API</h3>
+                      <p className="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.4em]">Primary Store Connection</p>
                     </div>
                   </div>
 
@@ -704,12 +704,12 @@ export default function IntegrationsHub() {
                           variant="ghost"
                           className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 text-xs font-mono uppercase tracking-widest gap-2"
                         >
-                          <Plus className="w-4 h-4" /> Link Store Node
+                          <Plus className="w-4 h-4" /> Add a New Store
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
                         <DialogHeader>
-                          <DialogTitle className="text-2xl font-serif">Establish New Store Node</DialogTitle>
+                          <DialogTitle className="text-2xl font-serif">Add a New Store</DialogTitle>
                           <DialogDescription className="text-gray-400">
                             Configure authorization parameters for the terminal connection.
                           </DialogDescription>
@@ -761,7 +761,7 @@ export default function IntegrationsHub() {
                             disabled={addingStore}
                             className="bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase text-[10px] h-12 px-8 tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                           >
-                            {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Authorize Node"}
+                            {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Add Store"}
                           </Button>
                         </DialogFooter>
                       </DialogContent>
@@ -1166,10 +1166,9 @@ export default function IntegrationsHub() {
                     <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin" />
                   ) : (
                     <>
-                      <Zap className="w-10 h-10 text-emerald-500 group-hover:animate-pulse" />
                       <div className="text-left">
-                        <span className="block text-3xl font-serif text-white tracking-tight">Initiate Mass Ingestion</span>
-                        <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mt-1">Parallel Terminal Harvesting Activated</span>
+                        <span className="block text-3xl font-serif text-white tracking-tight">Ingest from all Sources</span>
+                        <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mt-1">Sync data from all connected accounts</span>
                       </div>
                     </>
                   )}
