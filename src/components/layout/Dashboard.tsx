@@ -757,9 +757,9 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">SYSTEM_OVERVIEW</span>
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">OVERVIEW</span>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-xl font-serif font-medium text-white tracking-tight text-nowrap uppercase">Command_Center</h1>
+                    <h1 className="text-xl font-serif font-medium text-white tracking-tight text-nowrap uppercase">Dashboard</h1>
                     <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
                 </div>
@@ -767,9 +767,9 @@ export function Dashboard() {
                 {/* Performance Analytics Badges */}
                 <div className="hidden xl:flex items-center gap-10">
                   {[
-                    { label: 'Real_Time_Inflow', value: 1242.00, growth: 12.5, trend: 'up' },
-                    { label: 'Rolling_7D_Yield', value: 8432.50, growth: 8.2, trend: 'up' },
-                    { label: 'Operational_30D', value: 34210.00, growth: 15.4, trend: 'up' }
+                    { label: 'RECENT_RETURNS', value: 1242.00, growth: 12.5, trend: 'up' },
+                    { label: '7D_RECOVERED', value: 8432.50, growth: 8.2, trend: 'up' },
+                    { label: '30D_TOTAL', value: 34210.00, growth: 15.4, trend: 'up' }
                   ].map((metric, idx) => (
                     <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
                       <span className="text-[9px] font-mono font-bold text-white/20 tracking-[0.2em] uppercase">{metric.label}</span>
@@ -803,9 +803,9 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         <div>
-                          <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">AUDIT_PERFORMANCE_METRICS</h2>
+                          <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">PERFORMANCE</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Aggregate_Recovery_Yield</span>
+                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Total_Recovered</span>
                             <Shield className="h-3 w-3 text-emerald-500/50" />
                           </div>
                         </div>
@@ -815,7 +815,7 @@ export function Dashboard() {
                           onClick={() => navigate('/recoveries')}
                           className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all group rounded-lg"
                         >
-                          <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active_Disputes</span>
+                          <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active_Claims</span>
                           <ArrowRight className="h-3 w-3 text-emerald-500/30 group-hover:text-emerald-500" />
                         </button>
                       )}
@@ -833,7 +833,7 @@ export function Dashboard() {
                               <div className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full w-fit">
                                 <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                                 <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
-                                  {reconciledCount} Nodes_Synchronized
+                                  {reconciledCount} Verified_Records
                                 </span>
                               </div>
                             )}
@@ -842,13 +842,13 @@ export function Dashboard() {
                           <div className="flex flex-col gap-6 py-2">
                             <div className="flex items-center gap-3 text-emerald-500">
                               <Loader2 className="h-4 w-4 animate-spin" />
-                              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]">Matrix_Analysis_Active</span>
+                              <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]">System_Scanning_Assets</span>
                             </div>
                             <div className="text-5xl font-mono font-bold text-white/5 tracking-tighter select-none">
                               $0,000.00
                             </div>
                             <p className="text-xs text-white/30 font-serif leading-relaxed max-w-sm">
-                              Forensic audit cycle in progress. Predictive recovery algorithms are parsing FBA transaction logs for discrepancies.
+                              Analyzing your store data for potential FBA reimbursements. This process typically takes 24-48 hours.
                             </p>
                           </div>
                         )}
@@ -878,7 +878,7 @@ export function Dashboard() {
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
                           <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">SCHEDULED_LIQUIDITY</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">ESTIMATED_PAYOUT</div>
                             <div className="text-2xl font-mono font-bold text-white tracking-tight">
                               {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
                             </div>
@@ -897,7 +897,7 @@ export function Dashboard() {
                           <div className="space-y-4">
                             <div className="flex items-center gap-3">
                               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">LIQUIDITY_REPORT</h4>
+                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">PAYOUT_DETAILS</h4>
                             </div>
                             <p className="text-xs text-white/40 leading-relaxed font-serif">
                               Capital currently verified and queued for the primary settlement ledger. Disbursement typically occurs within the standard 14-day protocol.
@@ -909,14 +909,14 @@ export function Dashboard() {
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
                           <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">ACTIVE_RECONCILIATION</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">PENDING_RECOVERY</div>
                             <div className="text-2xl font-mono font-bold text-white tracking-tight">
                               {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
                             </div>
                             <div className="mt-4 flex items-center gap-2">
                               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                               <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
-                                {effectivePendingClaims} PROCESSES_ENGAGED
+                                {effectivePendingClaims} CLAIMS_IN_PROGRESS
                               </span>
                             </div>
                             <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
@@ -938,13 +938,13 @@ export function Dashboard() {
                       <HoverCard openDelay={200} closeDelay={100}>
                         <HoverCardTrigger asChild>
                           <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">OPTIMIZATION_YIELD</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">SUCCESS_RATE</div>
                             <div className="flex items-baseline gap-3">
                               <div className="text-2xl font-mono font-bold text-white tracking-tight">{settlementRate !== null ? `${settlementRate.toFixed(1)}%` : '—'}</div>
                               <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500 shadow-emerald-500/50' : (settlementRate ?? 0) >= 50 ? 'bg-amber-500 shadow-amber-500/50' : 'bg-white/10'}`} />
                             </div>
                             <div className="mt-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
-                              ALGORITHMIC_PRECISION
+                              RECOVERY_EFFICIENCY
                             </div>
                             <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
                           </div>
@@ -953,7 +953,7 @@ export function Dashboard() {
                           <div className="space-y-4">
                             <div className="flex items-center gap-3">
                               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">PRECISION_METRIC</h4>
+                              <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">SUCCESS_METRICS</h4>
                             </div>
                             <p className="text-xs text-white/40 leading-relaxed font-serif">
                               The ratio of successfully closed settlement cycles relative to initiated recovery protocols.
@@ -967,7 +967,7 @@ export function Dashboard() {
                     <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
                       <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                       <p className="text-[9px] text-white/20 font-mono uppercase tracking-[0.4em]">
-                        Autonomous_Revenue_Protection_Active
+                        Store_Monitoring_Active
                       </p>
                       <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                     </div>
@@ -979,23 +979,23 @@ export function Dashboard() {
                       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                         <div className="flex items-center gap-3">
                           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-                          <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">PROXIMITY_DETECTION_LOG</h2>
+                          <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">DETECTION_EVENTS</h2>
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
                           className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
                           onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}>
-                          View_Full_Registry
+                          View_All
                         </Button>
                       </div>
                       <div className="grid grid-cols-4 divide-x divide-white/5">
                         <div className="p-6">
-                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Aggregate_Cases</div>
+                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Total_Claims</div>
                           <div className="text-xl font-mono font-bold text-white">{detectionStats.totalDetections}</div>
                         </div>
                         <div className="p-6">
-                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Est_Yield</div>
+                          <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Estimated_Results</div>
                           <div className="text-xl font-mono font-bold text-emerald-500">{formatCurrency(detectionStats.estimatedRecovery)}</div>
                         </div>
                         <div className="p-6">

@@ -199,8 +199,8 @@ const Settings = () => {
     { id: 'api' as SettingsSection, label: 'API Keys', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations', icon: Box },
     { id: 'notifications' as SettingsSection, label: 'Notifications', icon: Bell },
-    { id: 'security' as SettingsSection, label: 'Security', icon: Shield },
-    { id: 'careers' as SettingsSection, label: 'Careers', icon: Briefcase }
+    // { id: 'security' as SettingsSection, label: 'Security', icon: Shield },
+    // { id: 'careers' as SettingsSection, label: 'Careers', icon: Briefcase }
   ];
 
   const notificationSettings = [
@@ -362,7 +362,7 @@ const Settings = () => {
           <div className="space-y-6">
             <div>
               <h2 className="text-base font-semibold text-gray-900">Seller Profile</h2>
-              <p className="text-xs text-gray-600">Manage your institutional identity and linked Amazon accounts</p>
+              <p className="text-xs text-gray-600">Manage your business identity and linked Amazon accounts</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
@@ -379,7 +379,7 @@ const Settings = () => {
                       </h3>
                       <div className="flex items-center gap-3 mt-1">
                         <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs border-gray-200 px-2 py-0.5">
-                          {isAmazonConnected ? 'Institutional Account' : 'Pending Verification'}
+                          {isAmazonConnected ? 'Verified Account' : 'Pending Verification'}
                         </Badge>
                         {sellerProfile.amazon_seller_id && (
                           <span className="text-xs text-gray-400 font-mono tracking-tighter">
@@ -446,11 +446,11 @@ const Settings = () => {
 
               <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-bold text-gray-500">Institutional Support</CardTitle>
+                  <CardTitle className="text-sm font-bold text-gray-500">Business Support</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-gray-600 leading-relaxed mb-4">
-                    Your account is currently under institutional audit. For white-glove support or bulk account management, contact our dedicated desk.
+                    Your account is currently under review. For white-glove support or bulk account management, contact our dedicated desk.
                   </p>
                   <Button variant="outline" size="sm" className="w-full text-sm font-semibold border-gray-200 hover:bg-gray-50 rounded-none" onClick={() => navigate('/help')}>
                     Contact Dedicated Support
@@ -468,7 +468,7 @@ const Settings = () => {
           <div className="space-y-6">
             <div>
               <h2 className="text-base font-semibold text-gray-900">Billing & Value Reporting</h2>
-              <p className="text-xs text-gray-600">Audit recovery billing, ROI analysis, and institutional fee management</p>
+              <p className="text-xs text-gray-600">Recovery billing, ROI analysis, and fee management</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
@@ -486,7 +486,7 @@ const Settings = () => {
                           Active Account
                         </Badge>
                         <span className="text-xs text-gray-400 font-mono tracking-tighter">
-                          Valuation: Real-Time
+                          Real-Time Data
                         </span>
                       </div>
                     </div>
@@ -494,7 +494,7 @@ const Settings = () => {
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
                       <div className="space-y-1">
                         <p className="text-xs font-bold text-gray-500">Subscription</p>
-                        <p className="text-sm font-semibold text-gray-900">Enterprise Audit</p>
+                        <p className="text-sm font-semibold text-gray-900">Professional Account</p>
                       </div>
                       <div className="space-y-1">
                         <p className="text-xs font-bold text-gray-500">ROI Coverage</p>
@@ -546,7 +546,7 @@ const Settings = () => {
           <div className="space-y-6">
             <div>
               <h2 className="text-base font-semibold text-gray-900">Developer & API Access</h2>
-              <p className="text-xs text-gray-600">Programmatic access to your recovery data for institutional automation systems</p>
+              <p className="text-xs text-gray-600">Programmatic access to your recovery data for internal systems</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
@@ -564,7 +564,7 @@ const Settings = () => {
                           Production Environment
                         </Badge>
                         <span className="text-xs text-gray-400 font-mono tracking-tighter">
-                          mgn_live_v2
+                          Live System
                         </span>
                       </div>
                     </div>
@@ -580,7 +580,7 @@ const Settings = () => {
                       </div>
                       <div className="space-y-1">
                         <p className="text-xs font-bold text-gray-500">Rate Limit</p>
-                        <p className="text-sm font-semibold text-gray-900">Institutional High</p>
+                        <p className="text-sm font-semibold text-gray-900">High Capacity</p>
                       </div>
                     </div>
                   </div>
@@ -725,7 +725,7 @@ const Settings = () => {
           <div className="space-y-6">
             <div>
               <h2 className="text-base font-semibold text-gray-900">Communication & Alerting</h2>
-              <p className="text-xs text-gray-600">Configure institutional alert channels and event notifications for your audit network.</p>
+              <p className="text-xs text-gray-600">Configure alert channels and event notifications for your account.</p>
             </div>
 
             <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">

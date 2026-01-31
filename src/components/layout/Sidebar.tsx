@@ -143,7 +143,7 @@ export function Sidebar({
     { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
     { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
     { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
-    { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
+    // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
     { title: 'Refund Recoveries', icon: Plug, href: `/app/${currentTenantSlug}/upcoming-payments` },
     { title: 'Transaction History', icon: BarChart3, href: `/app/${currentTenantSlug}/transaction-history` },
     { title: 'Integrations', icon: Box, href: `/app/${currentTenantSlug}/integrations-hub` }
@@ -336,17 +336,17 @@ export function Sidebar({
               onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
-              <span>Report_Incident</span>
+              <span>Support</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <Sparkles className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
               <span>Patch_Notes</span>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
 
             {/* Limited Offer / Referral */}
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
                 setShowReferralPopup(true);
@@ -383,19 +383,19 @@ export function Sidebar({
                   </div>
                 </HoverCardContent>
               </HoverCard>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/settings`)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <Settings2 className="h-4 w-4 text-white/20" strokeWidth={1.5} />
-              <span>Core_Terminal</span>
+              <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/5 my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
-              <span className="font-medium">Terminate_Session</span>
+              <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -411,17 +411,17 @@ export function Sidebar({
               </div>
               <div>
                 <DialogTitle className="text-xl font-serif text-white tracking-tight">
-                  Terminate Session?
+                  Sign Out?
                 </DialogTitle>
                 <DialogDescription className="text-gray-500 font-mono text-[10px] uppercase tracking-widest mt-1">
-                  SESSION_DECOMMISSION_SEQUENCE // READY
+                  SIGN OUT SESSION // READY
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
           <div className="px-8 py-6">
             <p className="text-[13px] text-white/40 leading-relaxed font-serif italic">
-              "The institutional matrix continues to monitor your artifacts and recover funds autonomously. Your presence is not required for background harvesting."
+              "Opside continues to monitor your store and recover funds for you automatically. You don't need to be logged in for the system to work."
             </p>
           </div>
           <DialogFooter className="px-8 py-6 bg-white/[0.02] flex gap-3 sm:justify-end border-t border-white/5">
@@ -430,13 +430,13 @@ export function Sidebar({
               onClick={() => setSignOutOpen(false)}
               className="bg-transparent border-white/10 text-white hover:bg-white/5 rounded-xl font-serif uppercase tracking-widest text-[10px] h-10 px-6"
             >
-              Abort_Termination
+              Cancel
             </Button>
             <Button
               onClick={handleSignOut}
               className="bg-white text-black hover:bg-white/90 rounded-xl font-serif font-bold uppercase tracking-widest text-[10px] h-10 px-6"
             >
-              Confirm_Decommission
+              Confirm Sign Out
             </Button>
           </DialogFooter>
         </DialogContent>
