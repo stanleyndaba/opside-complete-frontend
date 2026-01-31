@@ -72,7 +72,7 @@ const renderNotificationMessage = (message: string) => {
   const parts = message.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={index} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
+      return <strong key={index} className="font-bold text-white">{part.slice(2, -2)}</strong>;
     }
     return <span key={index}>{part}</span>;
   });
@@ -426,297 +426,311 @@ export default function NotificationHub() {
   ];
 
   return (
-    <PageLayout title="Notifications">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-8 pt-8 pb-10 space-y-6">
-            {/* Page Header */}
-            <header>
-              <h1 className="text-lg font-medium text-gray-900 tracking-tight">
-                Notifications
-              </h1>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Hub & Preferences
-              </p>
-            </header>
+    <PageLayout title="Notifications" midnight>
+      <div className="relative min-h-screen">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
-            {/* Notification Log */}
-            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 300px)' }}>
-              {/* Fixed Header */}
-              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between flex-shrink-0">
+        <div className="relative max-w-[1600px] mx-auto px-8 py-12">
+          {/* Analysis Header */}
+          <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
+            <div className="flex items-center gap-3">
+              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+              <h1 className="text-4xl font-light text-white tracking-tight font-serif italic">Notifications <span className="text-white/40 not-italic">and Settings</span></h1>
+            </div>
+            <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
+              Updates and communication preferences.
+            </p>
+          </div>
+
+          {/* Notification Log */}
+          <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl flex flex-col mb-12" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+            {/* Fixed Header */}
+            <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <RefreshCw className="h-3 w-3 text-emerald-500/50" />
                 <div>
-                  <h2 className="text-xs font-medium text-gray-900">
-                    Notification Log
+                  <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">
+                    History
                   </h2>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Complete history of all notifications sent to you.
+                  <p className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-0.5">
+                    Your update log
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleMarkAllRead}
-                    disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50">
-                    <CheckCheck className="h-3.5 w-3.5" />
-                    Mark all read
-                  </button>
-                  <button
-                    onClick={handleRefresh}
-                    disabled={loading}
-                    className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors flex items-center gap-1 disabled:opacity-50">
-                    {loading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <RefreshCw className="h-3.5 w-3.5" />
-                    )}
-                    Refresh
-                  </button>
-                </div>
               </div>
-
-              {/* Fixed Search and Filters Row */}
-              <div className="px-4 py-3 border-b border-gray-100 bg-white flex-shrink-0">
-                <div className="flex flex-col sm:flex-row gap-3">
-                  {/* Search Bar */}
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-                    <Input
-                      placeholder="Search notifications..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9 pr-8 h-8 text-xs bg-gray-50 border-gray-200 focus:bg-white"
-                    />
-                    {searchQuery && (
-                      <button
-                        onClick={() => setSearchQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                        <X className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Filter Dropdowns */}
-                  <div className="flex gap-2">
-                    {/* Type Filter */}
-                    <Select value={typeFilter} onValueChange={setTypeFilter}>
-                      <SelectTrigger className="h-8 w-[120px] text-xs bg-gray-50 border-gray-200">
-                        <SelectValue placeholder="Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all" className="text-xs">All Types</SelectItem>
-                        <SelectItem value="financial" className="text-xs">Financial</SelectItem>
-                        <SelectItem value="document" className="text-xs">Documents</SelectItem>
-                        <SelectItem value="system" className="text-xs">System</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    {/* Date Filter */}
-                    <Select value={dateFilter} onValueChange={setDateFilter}>
-                      <SelectTrigger className="h-8 w-[100px] text-xs bg-gray-50 border-gray-200">
-                        <SelectValue placeholder="Date" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all" className="text-xs">All Time</SelectItem>
-                        <SelectItem value="today" className="text-xs">Today</SelectItem>
-                        <SelectItem value="week" className="text-xs">This Week</SelectItem>
-                        <SelectItem value="month" className="text-xs">This Month</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    {/* Status Filter */}
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
-                      <SelectTrigger className="h-8 w-[100px] text-xs bg-gray-50 border-gray-200">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all" className="text-xs">All</SelectItem>
-                        <SelectItem value="unread" className="text-xs">Unread</SelectItem>
-                        <SelectItem value="read" className="text-xs">Read</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    {/* Clear Filters */}
-                    {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
-                      <button
-                        onClick={clearFilters}
-                        className="px-2 h-8 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 bg-white hover:bg-gray-50">
-                        Clear
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Filter Summary */}
-                {(searchQuery || typeFilter !== 'all' || statusFilter !== 'all') && (
-                  <p className="text-xs text-gray-500 mt-2">
-                    Showing {filteredNotifications.length} of {notifications.length} notifications
-                  </p>
-                )}
-              </div>
-
-              {/* Scrollable Content Area */}
-              <div className="p-4 overflow-y-auto flex-1">
-                {loading && (
-                  <div className="text-center py-6 text-gray-600">
-                    <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
-                    <p className="text-xs">Loading notifications...</p>
-                  </div>
-                )}
-
-                {error && !loading && (
-                  <div className="text-center py-6">
-                    <p className="text-xs text-gray-600 mb-2">{error}</p>
-                    <button
-                      onClick={handleRefresh}
-                      className="px-3 py-1.5 text-xs text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
-                      Retry
-                    </button>
-                  </div>
-                )}
-
-                {!loading && !error && filteredNotifications.length === 0 && notifications.length> 0 && (
-                  <div className="text-center py-6 text-gray-600">
-                    <p className="text-xs mb-1">No notifications match your filters.</p>
-                    <button onClick={clearFilters} className="text-xs text-blue-600 hover:text-blue-700">
-                      Clear filters
-                    </button>
-                  </div>
-                )}
-
-                {!loading && !error && notifications.length === 0 && (
-                  <div className="text-center py-6 text-gray-600">
-                    <p className="text-xs mb-1">No notifications found.</p>
-                    <p className="text-xs text-gray-500">Notifications will appear here as events occur.</p>
-                  </div>
-                )}
-
-                {!loading && !error && filteredNotifications.length> 0 && (
-                  <div className="space-y-2">
-                    {filteredNotifications.map((notification) => {
-                      const IconComponent = notification.icon;
-                      return (
-                        <div
-                          key={notification.id}
-                          className={`flex items-start gap-3 p-3 border transition-colors cursor-pointer ${!notification.read
-                            ? 'bg-gray-50 border-gray-200'
-                            : 'bg-white hover:bg-gray-50 border-gray-100'
-                            }`}
-                          onClick={() => !notification.read && handleMarkAsRead(notification.id)}>
-                          <div className="flex-shrink-0">
-                            <div className="w-6 h-6 bg-gray-100 flex items-center justify-center">
-                              <IconComponent className="w-3 h-3 text-gray-600" />
-                            </div>
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-gray-900 mb-0.5">
-                              {renderNotificationMessage(notification.message)}
-                            </p>
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
-                              <span>{notification.timestamp}</span>
-                              <div className="flex gap-1">
-                                {notification.channels.map((channel) => (
-                                  <span key={channel} className="px-1 py-0 text-xs border border-gray-200 text-gray-600 bg-gray-50">{channel}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-
-                          {!notification.read && (
-                            <div className="w-2 h-2 bg-gray-900 flex-shrink-0 mt-2"></div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleMarkAllRead}
+                  disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
+                  className="px-3 py-1.5 text-[10px] font-mono font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-emerald-500/10 hover:text-emerald-500 rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-20 uppercase tracking-widest">
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  Mark read
+                </button>
+                <button
+                  onClick={handleRefresh}
+                  disabled={loading}
+                  className="p-1.5 bg-white/[0.02] border border-white/5 rounded-lg hover:border-emerald-500/30 transition-all text-white/40 hover:text-emerald-500 disabled:opacity-20">
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
+                  ) : (
+                    <RefreshCw className="h-4 w-4" />
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* Notification Preferences */}
-            <div className="bg-white border border-gray-200 rounded-sm overflow-hidden">
-              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xs font-medium text-gray-900">
-                  Notification Preferences
-                </h2>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Control how and when you hear from us.
-                </p>
+            {/* Fixed Search and Filters Row */}
+            <div className="px-6 py-4 border-b border-white/5 bg-white/[0.01] flex-shrink-0">
+              <div className="flex flex-col sm:flex-row gap-4">
+                {/* Search Bar */}
+                <div className="relative flex-1 group/search">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within/search:text-white transition-colors" />
+                  <Input
+                    placeholder="Search updates..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 pr-10 h-10 text-[11px] font-mono bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white">
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Filter Dropdowns */}
+                <div className="flex gap-2">
+                  {/* Type Filter */}
+                  <Select value={typeFilter} onValueChange={setTypeFilter}>
+                    <SelectTrigger className="h-10 w-[130px] text-[11px] font-mono bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-widest">
+                      <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
+                      <SelectItem value="all" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">All Types</SelectItem>
+                      <SelectItem value="financial" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Financial</SelectItem>
+                      <SelectItem value="document" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Documents</SelectItem>
+                      <SelectItem value="system" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">System</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Date Filter */}
+                  <Select value={dateFilter} onValueChange={setDateFilter}>
+                    <SelectTrigger className="h-10 w-[120px] text-[11px] font-mono bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-widest">
+                      <SelectValue placeholder="Date" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
+                      <SelectItem value="all" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">All Time</SelectItem>
+                      <SelectItem value="today" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Today</SelectItem>
+                      <SelectItem value="week" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Week</SelectItem>
+                      <SelectItem value="month" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Month</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Status Filter */}
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="h-10 w-[110px] text-[11px] font-mono bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-widest">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
+                      <SelectItem value="all" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">All</SelectItem>
+                      <SelectItem value="unread" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Unread</SelectItem>
+                      <SelectItem value="read" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Read</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Clear Filters */}
+                  {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
+                    <button
+                      onClick={clearFilters}
+                      className="px-4 h-10 text-[10px] font-mono font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-widest">
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
 
-              <div className="p-4 space-y-6">
-                {categories.map((category, catIdx) => {
-                  const categoryPrefs = preferences.filter(pref => pref.category === category);
+              {/* Filter Summary */}
+              {(searchQuery || typeFilter !== 'all' || statusFilter !== 'all') && (
+                <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest mt-4">
+                  Showing {filteredNotifications.length} of {notifications.length} matches
+                </p>
+              )}
+            </div>
 
+            {/* Scrollable Content Area */}
+            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+              {loading && (
+                <div className="text-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-emerald-500" />
+                  <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Loading updates...</p>
+                </div>
+              )}
+
+              {error && !loading && (
+                <div className="text-center py-20">
+                  <p className="text-[11px] font-mono text-rose-500 mb-6 uppercase tracking-widest">{error}</p>
+                  <button
+                    onClick={handleRefresh}
+                    className="px-6 py-2.5 text-[10px] font-mono font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-widest">
+                    Retry
+                  </button>
+                </div>
+              )}
+
+              {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
+                <div className="text-center py-20">
+                  <p className="text-[11px] font-mono text-white/20 mb-4 uppercase tracking-widest">No matching results found.</p>
+                  <button onClick={clearFilters} className="text-[10px] font-mono font-bold text-emerald-500 hover:underline uppercase tracking-widest">
+                    Reset filters
+                  </button>
+                </div>
+              )}
+
+              {!loading && !error && notifications.length === 0 && (
+                <div className="text-center py-20">
+                  <p className="text-[11px] font-mono text-white/20 mb-2 uppercase tracking-widest">Update log empty.</p>
+                  <p className="text-[9px] font-mono text-white/10 uppercase tracking-widest italic">Notifications will appear here as events occur.</p>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {filteredNotifications.map((notification) => {
+                  const IconComponent = notification.icon;
                   return (
-                    <div key={category}>
-                      <div className="mb-3">
-                        <h3 className="text-xs font-medium text-gray-900 mb-0.5">
-                          {category}
-                        </h3>
-                        <p className="text-xs text-gray-500">
-                          {category === 'Financial Milestones' && 'High-signal, essential updates about your money'}
-                          {category === 'Account & Security' && 'Important account and security notifications'}
-                          {category === 'Platform & Performance' && 'Updates about platform features and performance'}
+                    <div
+                      key={notification.id}
+                      className={`flex items-start gap-4 p-4 border rounded-2xl transition-all cursor-pointer group/item ${!notification.read
+                        ? 'bg-emerald-500/[0.03] border-emerald-500/20'
+                        : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/5 hover:border-white/10'
+                        }`}
+                      onClick={() => !notification.read && handleMarkAsRead(notification.id)}>
+                      <div className="flex-shrink-0 mt-0.5">
+                        <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${!notification.read ? 'bg-emerald-500/20 text-emerald-500' : 'bg-white/5 text-white/40 group-hover/item:text-white'}`}>
+                          <IconComponent className="w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white mb-1.5 leading-relaxed tracking-tight">
+                          {renderNotificationMessage(notification.message)}
                         </p>
+                        <div className="flex items-center gap-3 text-[10px] font-mono font-bold uppercase tracking-widest text-white/20">
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="h-3 w-3" />
+                            {notification.timestamp}
+                          </span>
+                          <div className="flex gap-2">
+                            {notification.channels.map((channel) => (
+                              <span key={channel} className="px-2 py-0.5 border border-white/5 text-white/40 bg-white/[0.03] rounded-sm">{channel}</span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="space-y-2">
-                        {categoryPrefs.map((pref) => {
-                          const IconComponent = pref.icon;
-                          return (
-                            <div key={pref.id} className="flex items-start gap-3 p-3 border border-gray-100 bg-gray-50">
-                              <div className="flex-shrink-0">
-                                <div className="w-6 h-6 bg-gray-200 flex items-center justify-center">
-                                  <IconComponent className="w-3 h-3 text-gray-600" />
-                                </div>
-                              </div>
-
-                              <div className="flex-1 min-w-0">
-                                <h4 className="text-xs font-medium text-gray-900 mb-0.5">
-                                  {pref.title}
-                                </h4>
-                                <p className="text-xs text-gray-500 mb-2">
-                                  {pref.description}
-                                </p>
-
-                                <div className="flex items-center gap-4">
-                                  <div className="flex items-center gap-1.5">
-                                    <Switch
-                                      checked={pref.email}
-                                      onCheckedChange={(checked) =>
-                                        updatePreference(pref.id, 'email', checked)
-                                      }
-                                      className="scale-90"
-                                    />
-                                    <span className="text-xs text-gray-600">Email</span>
-                                  </div>
-
-                                  <div className="flex items-center gap-1.5">
-                                    <Switch
-                                      checked={pref.inApp}
-                                      onCheckedChange={(checked) =>
-                                        updatePreference(pref.id, 'inApp', checked)
-                                      }
-                                      className="scale-90"
-                                    />
-                                    <span className="text-xs text-gray-600">In-App</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {catIdx < categories.length - 1 && (
-                        <div className="border-t border-gray-200 mt-6"></div>
+                      {!notification.read && (
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-2.5 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
                       )}
                     </div>
                   );
                 })}
               </div>
             </div>
+          </div>
+
+          {/* Notification Preferences */}
+          <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
+            <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+              <div className="flex items-center gap-3">
+                <Shield className="h-3 w-3 text-emerald-500/50" />
+                <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">
+                  Settings
+                </h2>
+              </div>
+              <div className="flex items-center gap-3 mt-1.5">
+                <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Preferences</span>
+                <div className="h-1.5 w-[1px] bg-white/10" />
+                <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">Configuration Active</span>
+              </div>
+            </div>
+
+            <div className="p-8 space-y-12">
+              {categories.map((category, catIdx) => {
+                const categoryPrefs = preferences.filter(pref => pref.category === category);
+
+                return (
+                  <div key={category} className="space-y-6">
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-[10px] font-mono font-bold text-emerald-500/60 uppercase tracking-widest">
+                        {category}
+                      </h3>
+                      <p className="text-xs text-white/40 italic font-mono uppercase tracking-tighter">
+                        {category === 'Financial Milestones' && '// High-signal, essential updates about your money'}
+                        {category === 'Account & Security' && '// Important account and security notifications'}
+                        {category === 'Platform & Performance' && '// Updates about platform features and performance'}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      {categoryPrefs.map((pref) => {
+                        const IconComponent = pref.icon;
+                        return (
+                          <div key={pref.id} className="flex items-start gap-5 p-5 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors rounded-2xl group/pref">
+                            <div className="flex-shrink-0 mt-1">
+                              <div className="w-10 h-10 bg-white/5 flex items-center justify-center rounded-xl group-hover/pref:bg-emerald-500/10 transition-colors">
+                                <IconComponent className="w-5 h-5 text-white/40 group-hover/pref:text-emerald-500 transition-colors" />
+                              </div>
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-medium text-white mb-1 uppercase tracking-wider font-serif">
+                                {pref.title}
+                              </h4>
+                              <p className="text-[11px] font-mono text-white/20 uppercase tracking-widest mb-4 leading-relaxed">
+                                {pref.description}
+                              </p>
+
+                              <div className="flex items-center gap-8">
+                                <div className="flex items-center gap-3">
+                                  <Switch
+                                    checked={pref.email}
+                                    onCheckedChange={(checked) =>
+                                      updatePreference(pref.id, 'email', checked)
+                                    }
+                                    className="scale-90 data-[state=checked]:bg-emerald-500"
+                                  />
+                                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Email</span>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                  <Switch
+                                    checked={pref.inApp}
+                                    onCheckedChange={(checked) =>
+                                      updatePreference(pref.id, 'inApp', checked)
+                                    }
+                                    className="scale-90 data-[state=checked]:bg-emerald-500"
+                                  />
+                                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">In-App</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Analysis Footer */}
+          <div className="mt-12 text-center border-t border-white/5 pt-8 mb-12">
+            <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
+              Communication Registry • Status: Active
+            </p>
           </div>
         </div>
       </div>

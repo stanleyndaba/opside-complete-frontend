@@ -193,12 +193,12 @@ export function Navbar({
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
-                  placeholder="QUERY_SYSTEM: SEARCH_ARTEFACTS_//_TRANS_ID..."
+                  placeholder="Search documents or claims..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-emerald-500/30 focus:ring-0 transition-all placeholder:text-white/10 font-mono tracking-tight text-emerald-500 uppercase"
+                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-emerald-500/30 focus:ring-0 transition-all placeholder:text-white/10 font-mono tracking-tight text-emerald-500"
                 />
                 {/* Clear button */}
                 {searchQuery && (
@@ -216,11 +216,11 @@ export function Navbar({
                     {recentSearches.length > 0 && (
                       <div className="p-3 border-b border-white/5">
                         <div className="flex items-center justify-between px-2 mb-2">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Recent_Queries</span>
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Recent searches</span>
                           <button
                             onClick={clearRecentSearches}
                             className="text-[10px] font-mono text-emerald-500/50 hover:text-emerald-500 uppercase tracking-wider transition-colors">
-                            Purge_Cache
+                            Clear
                           </button>
                         </div>
                         {recentSearches.map((search, idx) => (
@@ -240,7 +240,7 @@ export function Navbar({
 
                     {/* Quick Access */}
                     <div className="p-3">
-                      <span className="text-[10px] font-mono font-bold text-white/20 px-2 uppercase tracking-widest block mb-2">Matrix_Pathways</span>
+                      <span className="text-[10px] font-mono font-bold text-white/20 px-2 uppercase tracking-widest block mb-2">Quick links</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -301,8 +301,8 @@ export function Navbar({
                         exit={{ opacity: 0, y: 10 }}
                         className="absolute top-full right-0 mt-3 w-[280px] bg-[#0c0c0c] border border-white/10 rounded-2xl shadow-3xl z-50 overflow-hidden backdrop-blur-3xl">
                         <div className="px-5 py-4 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">External_Logs</span>
-                          <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">{notes.length} REC</span>
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">Recent notes</span>
+                          <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">{notes.length} total</span>
                         </div>
                         <div className="max-h-64 overflow-y-auto divide-y divide-white/5 scrollbar-hide">
                           {notes.slice(0, 5).map((note) => (
@@ -343,14 +343,14 @@ export function Navbar({
                         <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                           <Store className="h-4 w-4 text-emerald-500" />
                         </div>
-                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Store_Management</span>
+                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Store Setup</span>
                       </div>
-                      <h4 className="text-[13px] font-serif font-medium text-white mb-2 uppercase tracking-tight">Node Synchronization</h4>
+                      <h4 className="text-[13px] font-serif font-medium text-white mb-2 uppercase tracking-tight">Connections</h4>
                       <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
                         "Consolidate institutional data flows from Amazon, Shopify, or Walmart to maximize multi-vector recoveries."
                       </p>
                       <div className="mt-5 pt-4 border-t border-white/5">
-                        <span className="text-[9px] font-mono text-emerald-500/30 uppercase tracking-[0.2em]">Invoke Control Hub</span>
+                        <span className="text-[9px] font-mono text-emerald-500/30 uppercase tracking-[0.2em]">Manage connections</span>
                       </div>
                     </div>
                   </HoverCardContent>
@@ -366,26 +366,26 @@ export function Navbar({
               onClick={() => navigate('/integrations-hub')}
               className="flex items-center gap-2.5 text-[11px] text-white/40 hover:text-white transition-all font-serif font-medium uppercase tracking-[0.2em] group">
               <Link2 className="h-3.5 w-3.5 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
-              <span className="hidden sm:inline">Link_Node</span>
+              <span className="hidden sm:inline">Connect</span>
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
                   <User className="h-4 w-4 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
-                  <span className="hidden sm:inline font-medium">Principal</span>
+                  <span className="hidden sm:inline font-medium">Account</span>
                   <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
                 {/* Connection Status Header - Institutional */}
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">Principal_Profile</h3>
+                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">Account Profile</h3>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
                     </div>
-                    <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.2em]">MATRIX_ID: CONNECTED</p>
+                    <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.2em]">Account connected</p>
                   </div>
                 </div>
 
@@ -418,7 +418,7 @@ export function Navbar({
                     <button
                       onClick={() => setShowSignOutModal(true)}
                       className="w-full flex items-center justify-between text-[10px] font-serif font-bold text-white/20 hover:text-rose-500 transition-all group/logout uppercase tracking-[0.3em]">
-                      <span>Decommission</span>
+                      <span>Sign out</span>
                       <LogOut className="h-4 w-4 group-hover/logout:translate-x-1 transition-transform opacity-20 group-hover/logout:opacity-100" />
                     </button>
                   </div>
@@ -436,10 +436,10 @@ export function Navbar({
           {/* Header - Institutional Dark */}
           <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01]">
             <h3 className="text-[14px] font-serif font-bold text-white uppercase tracking-[0.2em]">
-              Note_Ingestion_Protocol
+              Notes
             </h3>
             <p className="text-[10px] text-white/20 mt-2 font-mono uppercase tracking-[0.1em]">
-              Internal_Audit_Logs // Manual_Entries
+              Private records and manual entries
             </p>
           </div>
 
@@ -476,7 +476,7 @@ export function Navbar({
                 }}
                 className="w-full bg-emerald-500 hover:bg-emerald-400 text-black text-[10px] font-serif font-bold h-11 transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)]"
                 disabled={!currentNote.trim() || isSavingNote}>
-                {isSavingNote ? 'Processing...' : 'INITIALIZE_INGESTION'}
+                {isSavingNote ? 'Saving...' : 'Save Note'}
               </Button>
             </div>
 
@@ -484,8 +484,8 @@ export function Navbar({
             {notes.length > 0 && (
               <div className="border-t border-white/5 pt-8">
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Archived_Artefacts</span>
-                  <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">VOL.{notes.length.toString().padStart(3, '0')}</span>
+                  <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Saved notes</span>
+                  <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">Items: {notes.length}</span>
                 </div>
                 <div className="space-y-4">
                   {notes.map((note) => (
@@ -531,7 +531,7 @@ export function Navbar({
                               }}
                               className="text-[10px] font-serif font-bold text-emerald-500 hover:text-emerald-400 uppercase tracking-widest transition-colors disabled:opacity-50"
                               disabled={isSavingNote}>
-                              {isSavingNote ? 'Syncing...' : 'Confirm_Update'}
+                              {isSavingNote ? 'Syncing...' : 'Save Changes'}
                             </button>
                           </div>
                         </div>
@@ -552,7 +552,7 @@ export function Navbar({
                                 setEditingNoteContent(note.text);
                               }}
                               className="text-[10px] font-mono text-white/20 hover:text-white uppercase tracking-widest">
-                              Modify
+                              Edit
                             </button>
                             <button
                               onClick={async () => {
@@ -566,7 +566,7 @@ export function Navbar({
                                 }
                               }}
                               className="text-[10px] font-mono text-white/10 hover:text-rose-500 uppercase tracking-widest">
-                              Purge
+                              Delete
                             </button>
                           </div>
                         </>
@@ -594,7 +594,7 @@ export function Navbar({
             <div className="mx-auto w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mb-6 border border-rose-500/20">
               <LogOut className="h-8 w-8 text-rose-500" />
             </div>
-            <DialogTitle className="text-[16px] font-serif font-bold text-white uppercase tracking-[0.2em]">Terminate_Session?</DialogTitle>
+            <DialogTitle className="text-[16px] font-serif font-bold text-white uppercase tracking-[0.2em]">Sign out?</DialogTitle>
             <DialogDescription className="text-[12px] text-white/40 mt-4 font-serif italic leading-relaxed max-w-[280px] mx-auto">
               "Margin core continues to monitor your assets and recover funds 24/7. Re-authorize anytime to audit recent anomalies."
             </DialogDescription>
@@ -608,13 +608,13 @@ export function Navbar({
                 window.location.href = '/';
               }}
               className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-serif font-bold transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.1)]">
-              CONFIRM_TERMINATION
+              SIGN OUT
             </Button>
             <Button
               variant="ghost"
               onClick={() => setShowSignOutModal(false)}
               className="w-full h-12 text-[10px] font-mono text-white/20 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest">
-              Maintain_Access
+              Cancel
             </Button>
           </div>
         </DialogContent>
