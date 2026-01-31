@@ -326,9 +326,9 @@ export default function TransactionHistory() {
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[10px] font-mono text-emerald-500/80 uppercase tracking-[0.2em]">Institutional Ledger</span>
+                                <span className="text-[10px] font-mono text-emerald-500/80 uppercase tracking-[0.2em]">Account Statement</span>
                             </div>
-                            <h1 className="text-4xl font-light text-white tracking-tight font-serif italic">Transaction <span className="text-white/40 not-italic">Pipeline</span></h1>
+                            <h1 className="text-4xl font-light text-white tracking-tight font-serif italic">Transaction <span className="text-white/40 not-italic">History</span></h1>
                             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
                                 Real-time monitoring of recovery disbursements and matched financial repositories.
                             </p>
@@ -341,7 +341,7 @@ export default function TransactionHistory() {
                                 className="bg-white/5 border-white/10 text-white hover:bg-white/10 h-11 px-6 rounded-xl font-mono text-xs transition-all duration-300"
                             >
                                 <Download className="h-4 w-4 mr-2 text-emerald-500" />
-                                EXPORT_LEDGER.PDF
+                                Export Statement (PDF)
                             </Button>
                         </div>
                     </div>
@@ -358,9 +358,6 @@ export default function TransactionHistory() {
                             <div key={i} className="group relative">
                                 <div className="absolute inset-0 bg-white/[0.02] rounded-2xl blur-xl group-hover:bg-white/[0.05] transition-all duration-500" />
                                 <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                                        <DollarSign className="h-12 w-12 text-white" />
-                                    </div>
                                     <div className="text-[10px] font-mono text-gray-500 mb-3 tracking-widest">{stat.label}</div>
                                     <div className={cn(
                                         "text-2xl font-mono tracking-tighter",
@@ -382,7 +379,7 @@ export default function TransactionHistory() {
                             <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-emerald-500/50 transition-all duration-300">
                                 <Search className="h-4 w-4 text-gray-500 ml-4 group-hover:text-emerald-500 transition-colors" />
                                 <Input
-                                    placeholder="QUERY_LEDGER (CASE_ID, REIMB_ID...)"
+                                    placeholder="Search History (Case ID, Reimb ID...)"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className="bg-transparent border-none text-white font-mono text-[10px] h-12 uppercase placeholder:text-gray-600 focus-visible:ring-0"
@@ -400,7 +397,7 @@ export default function TransactionHistory() {
                                     <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                                         <Calculator className="h-4 w-4 text-emerald-500" />
                                     </div>
-                                    <h2 className="text-sm font-light text-white tracking-wide">Audit Ledger</h2>
+                                    <h2 className="text-sm font-light text-white tracking-wide">Transaction History</h2>
                                 </div>
                                 <span className="text-[10px] font-mono text-gray-500">SYS_UPTIME: 99.99%</span>
                             </div>
@@ -493,7 +490,7 @@ export default function TransactionHistory() {
                     {/* Footer Note */}
                     <div className="mt-12 text-center border-t border-white/5 pt-8">
                         <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
-                            Institutional Ledger • Node_Sync: Active
+                            Account Statement • Sync Status: Active
                         </p>
                     </div>
                 </div>
