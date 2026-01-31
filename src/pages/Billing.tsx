@@ -108,17 +108,14 @@ export default function Billing() {
               };
             });
             setInvoices(mappedInvoices);
-          } else {
-            console.warn('API returned non-ok or no invoices:', response);
-            setInvoices([]);
-            setError(response.error || 'Failed to sync ledger data from remote stream.');
+            setError(response.error || 'Failed to sync billing data.');
           }
         }
       } catch (err: any) {
         console.error('Failed to fetch billing data:', err);
         if (!cancelled) {
           setInvoices([]);
-          setError("Ledger synchronization interrupted. Please re-establish connection to financial nodes.");
+          setError("Billing information temporary unavailable. Please refresh and try again.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -129,20 +126,20 @@ export default function Billing() {
 
   const saveBillingSettings = () => {
     localStorage.setItem('clario.billing', JSON.stringify({ recipients: invoiceRecipients, taxId }));
-    toast({ title: 'Protocol Updated', description: 'Financial transmission parameters saved.' });
+    toast({ title: 'Settings Updated', description: 'Your billing preferences have been saved.' });
   };
 
   const exportBillingCSV = () => {
-    const headers = ['Transmission ID', 'Timestamp', 'Status', 'Yield Recovered', 'Institutional Fee', 'Charged Amount'];
+    const headers = ['Invoice ID', 'Date', 'Status', 'Total Recovered', 'Commission', 'Amount Charged'];
     const rows = invoices.map(inv => [inv.id, inv.dateIssued, inv.status, inv.totalRecovered, inv.commission, inv.amountCharged].join(','));
     const csvContent = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `financial-ledger-${Date.now()}.csv`;
+    a.download = `billing-history-${Date.now()}.csv`;
     a.click();
-    toast({ title: 'Data Exported', description: 'Financial ledger archived to local storage.' });
+    toast({ title: 'File Exported', description: 'Your billing history has been downloaded.' });
   };
 
   const exportAction = () => {
@@ -187,7 +184,7 @@ export default function Billing() {
   };
 
   return (
-    <PageLayout title="Financial Ledger" midnight>
+    <PageLayout title="Billing" midnight>
       <div className="relative min-h-screen font-serif bg-[#050505]">
         {/* Matrix Background Aesthetic */}
         <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
@@ -202,11 +199,11 @@ export default function Billing() {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <Badge variant="outline" className="px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-mono text-[9px] tracking-[0.2em] uppercase">
-                  FINANCIAL_CORE // v2.4.0
+                  Billing System // Active
                 </Badge>
               </div>
-              <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Financial <span className="text-emerald-500">Ledger</span>.</h1>
-              <p className="text-white/40 mt-3 font-serif italic text-lg max-w-2xl">Complete yield transparency and capital recovery logs.</p>
+              <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Billing.</h1>
+              <p className="text-white/40 mt-3 font-serif italic text-lg max-w-2xl">View your billing history and managed payment settings.</p>
             </div>
           </motion.div>
 
@@ -226,11 +223,10 @@ export default function Billing() {
                 <CardHeader className="p-8 pb-4">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <Zap className="h-4 w-4 text-emerald-500" />
+                      <Scale className="h-4 w-4 text-emerald-500" />
                     </div>
-                    <p className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-[0.3em]">Yield Protocol</p>
                   </div>
-                  <CardTitle className="text-2xl font-serif tracking-tight">Scale-Adjusted Recovery</CardTitle>
+                  <CardTitle className="text-2xl font-serif tracking-tight">Success Fee</CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 pt-0 space-y-6">
                   <div className="p-5 border border-emerald-500/10 bg-emerald-500/[0.02] rounded-2xl relative overflow-hidden group/box">
@@ -261,9 +257,8 @@ export default function Billing() {
                     <div className="p-2 rounded-lg bg-white/5 border border-white/10">
                       <CreditCard className="h-4 w-4 text-white/60" />
                     </div>
-                    <p className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Transmission Port</p>
                   </div>
-                  <CardTitle className="text-2xl font-serif tracking-tight">Settlement Parameters</CardTitle>
+                  <CardTitle className="text-2xl font-serif tracking-tight">Billing Settings</CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 pt-0 space-y-8">
                   <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl">
@@ -281,10 +276,10 @@ export default function Billing() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Transmission Nodes</label>
+                      <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Invoice recipients</label>
                       <div className="flex gap-2">
                         <Input
-                          placeholder="Node URL / Email"
+                          placeholder="Email address"
                           value={newRecipient}
                           onChange={(e) => setNewRecipient(e.target.value)}
                           className="h-10 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20"
@@ -296,16 +291,16 @@ export default function Billing() {
                             setNewRecipient('');
                           }}
                           variant="outline"
-                          className="h-10 px-4 border-white/10 hover:border-emerald-500/50 text-white font-mono text-[10px]"
+                          className="h-10 px-4 border-white/10 hover:border-emerald-500/50 text-black bg-white hover:bg-emerald-500 font-mono text-[10px]"
                         >
-                          REGISTER
+                          Add
                         </Button>
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Tax Identifier</label>
+                      <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Tax details</label>
                       <Input
-                        placeholder="Institutional ID"
+                        placeholder="Tax ID"
                         value={taxId}
                         onChange={(e) => setTaxId(e.target.value)}
                         className="h-10 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/20"
@@ -318,14 +313,14 @@ export default function Billing() {
                       onClick={saveBillingSettings}
                       className="bg-white text-black hover:bg-emerald-500 rounded-xl font-serif font-bold uppercase text-[10px] tracking-widest h-12 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                     >
-                      Lock Governance
+                      Save changes
                     </Button>
                     <Button
                       onClick={() => window.location.href = '/stripe/callback'}
                       variant="outline"
-                      className="border-white/10 hover:border-emerald-500/50 text-white rounded-xl font-mono uppercase text-[9px] tracking-[0.2em] h-12"
+                      className="border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 rounded-xl font-mono uppercase text-[9px] tracking-[0.2em] h-12 px-6"
                     >
-                      Connect Gateway
+                      Connect payment method
                     </Button>
                   </div>
                 </CardContent>
@@ -342,14 +337,14 @@ export default function Billing() {
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
               <div className="space-y-1">
-                <h2 className="text-2xl font-serif text-white tracking-tight">Transaction Registry</h2>
-                <p className="text-white/30 text-sm font-serif italic">History of capital synchronization and yield settlement.</p>
+                <h2 className="text-2xl font-serif text-white tracking-tight">Billing History</h2>
+                <p className="text-white/30 text-sm font-serif italic">Complete log of all recoveries and payments.</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="relative group">
                   <History className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
                   <Input
-                    placeholder="Filter by ID..."
+                    placeholder="Search by ID..."
                     value={invoiceSearch}
                     onChange={(e) => setInvoiceSearch(e.target.value)}
                     className="pl-10 h-11 w-64 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20"
@@ -357,11 +352,11 @@ export default function Billing() {
                 </div>
                 <Button
                   variant="outline"
-                  className="h-11 border-white/10 hover:border-emerald-500/50 text-white font-mono uppercase text-[10px] tracking-widest rounded-xl px-6"
+                  className="h-11 border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 transition-all font-mono uppercase text-[10px] tracking-widest rounded-xl px-6"
                   onClick={() => setExportOpen(true)}
                 >
                   <Download className="h-3.5 w-3.5 mr-2 text-emerald-500" />
-                  Archive Logs
+                  Download history
                 </Button>
               </div>
             </div>
@@ -390,10 +385,10 @@ export default function Billing() {
                   <Table>
                     <TableHeader className="bg-white/[0.02]">
                       <TableRow className="border-b border-white/5 hover:bg-transparent">
-                        <TableHead className="py-6 px-8 text-white/20 font-mono text-[9px] uppercase tracking-widest">Registry ID</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Timestamp</TableHead>
+                        <TableHead className="py-6 px-8 text-white/20 font-mono text-[9px] uppercase tracking-widest">Invoice ID</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Date</TableHead>
                         <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Status</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Yield recovered</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Recovered</TableHead>
                         <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Fee</TableHead>
                         <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Charged</TableHead>
                         <TableHead className="pr-8"></TableHead>

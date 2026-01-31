@@ -349,8 +349,15 @@ export function Navbar({
                       <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
                         "Consolidate institutional data flows from Amazon, Shopify, or Walmart to maximize multi-vector recoveries."
                       </p>
-                      <div className="mt-5 pt-4 border-t border-white/5">
-                        <span className="text-[9px] font-mono text-emerald-500/30 uppercase tracking-[0.2em]">Manage connections</span>
+                      <div className="mt-6">
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            navigate('/integrations-hub');
+                          }}
+                          className="w-full h-10 border border-emerald-500/20 bg-emerald-500/[0.02] hover:bg-emerald-500/10 hover:border-emerald-500/50 text-emerald-500 text-[10px] font-mono font-bold uppercase tracking-widest transition-all rounded-xl">
+                          Manage connections
+                        </Button>
                       </div>
                     </div>
                   </HoverCardContent>
@@ -362,12 +369,6 @@ export function Navbar({
 
           {/* Right Group - Connect & Account */}
           <div className="flex items-center gap-x-6 border-l border-white/5 pl-6 ml-6">
-            <button
-              onClick={() => navigate('/integrations-hub')}
-              className="flex items-center gap-2.5 text-[11px] text-white/40 hover:text-white transition-all font-serif font-medium uppercase tracking-[0.2em] group">
-              <Link2 className="h-3.5 w-3.5 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
-              <span className="hidden sm:inline">Connect</span>
-            </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
