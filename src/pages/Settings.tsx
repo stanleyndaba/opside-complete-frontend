@@ -465,52 +465,60 @@ const Settings = () => {
 
       case 'billing':
         return (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Billing & Value Reporting</h2>
-              <p className="text-xs text-gray-600">Recovery billing, ROI analysis, and fee management</p>
+              <h2 className="text-xl font-serif text-white tracking-tight">Billing and Recovery Summary</h2>
+              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+                FINANCIAL_RECORDS // RECOVERY_LOGS
+              </p>
             </div>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm relative overflow-hidden rounded-sm">
-              <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-                <CreditCard className="h-32 w-32" />
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group hover:border-emerald-500/20 transition-all duration-500">
+              <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
+                <CreditCard className="h-48 w-48 text-emerald-500 rotate-12" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
 
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-4">
+              <CardContent className="p-8 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Billing Dashboard</h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 text-xs border-emerald-100 px-2 py-0.5">
-                          Active Account
+                      <h3 className="text-2xl font-serif text-white tracking-tighter">Account Status</h3>
+                      <div className="flex items-center gap-3 mt-2">
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                          ACTIVE_DELEGATION
                         </Badge>
-                        <span className="text-xs text-gray-400 font-mono tracking-tighter">
-                          Real-Time Data
+                        <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
+                          <span className="h-1 w-1 bg-emerald-500 rounded-full animate-pulse" />
+                          Live Sync Active
                         </span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Subscription</p>
-                        <p className="text-sm font-semibold text-gray-900">Professional Account</p>
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Subscription</p>
+                        <p className="text-sm font-serif text-white/80">Professional Suite</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">ROI Coverage</p>
-                        <p className="text-sm font-semibold text-gray-900">100% Guaranteed</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Protection Status</p>
+                        <p className="text-sm font-serif text-emerald-500 font-medium">100% Comprehensive</p>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-bold text-gray-500">Fee Structure</p>
-                        <p className="text-sm font-semibold text-gray-900">Commission-Based</p>
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Fee Structure</p>
+                        <p className="text-sm font-serif text-white/80">Commission Managed</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-[#0a0a0f] hover:bg-[#1a1a1f] text-white shadow-sm ring-1 ring-white/5 active:scale-[0.98] rounded-none h-10 px-6 font-normal"
-                      onClick={() => navigate('/billing')}
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                      onClick={() => navigate('/app/default/upcoming-payments')}
                     >
                       View Documents
                     </Button>
@@ -519,26 +527,34 @@ const Settings = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white border-gray-200 text-gray-700 shadow-sm rounded-sm">
-              <CardHeader className="border-b border-gray-100 pb-3">
-                <CardTitle className="text-sm font-bold text-gray-500">Auto-Claim (ACG)</CardTitle>
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
+              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-500/20 group-hover:bg-emerald-500 transition-colors duration-500" />
+              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
+                <CardTitle className="text-xs font-mono font-bold text-white/30 uppercase tracking-[0.3em]">
+                  Automated Filing System
+                </CardTitle>
               </CardHeader>
-              <CardContent className="pt-4 space-y-4">
+              <CardContent className="p-8 space-y-6">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-medium text-gray-900">Automated Filing Presence</p>
-                    <p className="text-xs text-gray-500">Automatically submit approved claims once evidence is strictly verified by risk desk.</p>
+                  <div className="space-y-1.5 max-w-md">
+                    <p className="text-base font-serif text-white font-medium">Auto-Pilot Mode</p>
+                    <p className="text-xs text-white/40 font-serif leading-relaxed italic">
+                      "Opside will automatically transmit verified claims to Amazon's systems twice per day without requiring manual intervention."
+                    </p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch
+                    defaultChecked
+                    className="data-[state=checked]:bg-emerald-500"
+                  />
                 </div>
-                <div className="p-3 bg-gray-50 border border-gray-100 rounded-sm">
-                  <p className="text-xs text-gray-400 leading-relaxed font-medium">
-                    Note: Enabled by default for VIP accounts. You can manually override individual cases in the Recoveries terminal.
+                <div className="p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
+                  <p className="text-[10px] text-emerald-500/60 leading-relaxed font-mono uppercase tracking-widest">
+                    SYSTEM_NOTE: Enabled by default for all institutional accounts. Manual overrides available in the Claims Terminal.
                   </p>
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
         );
 
       case 'api':
@@ -945,49 +961,70 @@ const Settings = () => {
   };
 
   return (
-    <PageLayout title="Account Control Center">
-      <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24">
-          <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-700">
-            {/* Header */}
-            <header className="mb-10">
-              <h1 className="text-lg font-medium text-gray-900 tracking-tight">Settings</h1>
-              <p className="text-xs text-gray-500 mt-0.5">Account Configuration</p>
-            </header>
+    <PageLayout title="Account Control Center" midnight>
+      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
+        {/* Aesthetic Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
+        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Navigation Menu */}
-              <div className="lg:col-span-1">
-                <div className="lg:sticky lg:top-6 h-fit bg-white border border-gray-200 rounded-none">
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                    <h2 className="text-xs font-medium text-gray-900">Quick Settings</h2>
-                  </div>
-                  <nav className="p-2 space-y-0.5">
-                    {menuItems.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
-                        className={cn(
-                          "relative w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors text-left",
-                          activeSection === item.id
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        )}>
-                        {activeSection === item.id && (
-                          <span className="absolute left-0 h-4 w-[2px] bg-gray-900" />
-                        )}
-                        <item.icon className="h-4 w-4 shrink-0" />
+        <div className="relative container mx-auto px-8 pt-10 pb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            {/* Navigation Menu */}
+            <div className="lg:col-span-1">
+              <div className="lg:sticky lg:top-24 space-y-8">
+                <div>
+                  <h1 className="text-2xl font-serif text-white tracking-tight mb-1">Settings</h1>
+                  <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.3em]">
+                    SYSTEM_CONFIG // V1.0.0
+                  </p>
+                </div>
+
+                <nav className="space-y-1">
+                  {menuItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => item.id === 'careers' ? navigate('/careers') : setActiveSection(item.id)}
+                      className={cn(
+                        "group relative w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 overflow-hidden",
+                        activeSection === item.id
+                          ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+                          : "text-white/40 hover:bg-white/[0.03] hover:text-white"
+                      )}>
+                      {activeSection === item.id && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute left-0 w-1 h-4 bg-emerald-500 rounded-full"
+                        />
+                      )}
+                      <item.icon className={cn("h-4.5 w-4.5 transition-colors", activeSection === item.id ? "text-emerald-500" : "text-white/20 group-hover:text-emerald-500/50")} />
+                      <span className="text-[11px] font-mono uppercase tracking-widest font-bold">
                         {item.label}
-                      </button>
-                    ))}
-                  </nav>
+                      </span>
+                    </button>
+                  ))}
+                </nav>
+
+                <div className="p-6 bg-emerald-500/[0.02] border border-emerald-500/10 rounded-2xl">
+                  <p className="text-[10px] text-emerald-500/40 font-mono leading-relaxed uppercase tracking-widest">
+                    "Institutional protocols ensure all data remains encrypted and sovereign under Seller-Central authority."
+                  </p>
                 </div>
               </div>
+            </div>
 
-              {/* Main Content */}
-              <div className="lg:col-span-3">
-                {renderContent()}
-              </div>
+            {/* Main Content Area */}
+            <div className="lg:col-span-3">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSection}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {renderContent()}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </div>
