@@ -1715,147 +1715,30 @@ export const api = {
     requestJson<{ success: boolean }>(`/api/v1/stores/${encodeURIComponent(id)}`, {
       method: 'DELETE',
     }),
-
-  // Recovery Data (Consolidated robust version at 437)
 };
 
 // Phase 3: Detection/Claims API methods
 export const detectionApi = {
   // Get all detection results
-  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }) => {
-    const queryParams = new URLSearchParams();
-    if (params?.status) queryParams.append('status', params.status);
-    if (params?.limit) queryParams.append('limit', params.limit.toString());
-    if (params?.offset) queryParams.append('offset', params.offset.toString());
-    if (params?.userId) queryParams.append('userId', params.userId);
-    const query = queryParams.toString();
-    return requestJson<{
-      success: boolean;
-      results: Array<{
-        id: string;
-        seller_id: string;
-        sync_id: string;
-        anomaly_type: string;
-        severity: string;
-        estimated_value: number;
-        currency: string;
-        confidence_score: number;
-        evidence: any;
-        status: string;
-        discovery_date: string;
-        deadline_date: string;
-        days_remaining: number;
-      }>;
-      total: number;
-    }>(`/api/detections/results${query ? `?${query}` : ''}`);
-  },
-
-  // Get detection statistics (full format from Phase 3 guide)
-  getDetectionStatistics: async (userId?: string) => {
-    const queryParams = new URLSearchParams();
-    if (userId) queryParams.append('userId', userId);
-    const query = queryParams.toString();
-    return requestJson<{
-      success: boolean;
-      statistics: {
-        total_anomalies?: number;
-        totalDetections?: number; // Fallback for backward compatibility
-        total_value?: number;
-        estimatedRecovery?: number; // Fallback
-        by_severity?: {
-          high?: { count: number; value: number };
-          medium?: { count: number; value: number };
-          low?: { count: number; value: number };
-        };
-        by_type?: Record<string, { count: number; value: number }>;
-        by_confidence?: {
-          high: number;
-          medium: number;
-          low: number;
-        };
-        highConfidence?: number; // Fallback
-        mediumConfidence?: number; // Fallback
-        lowConfidence?: number; // Fallback
-        expiring_soon?: number;
-        expired_count?: number;
-        averageConfidence?: number;
-      };
-    }>(`/api/detections/statistics${query ? `?${query}` : ''}`);
-  },
-
-  // Get confidence distribution
-  getConfidenceDistribution: async (userId?: string) => {
-    const queryParams = new URLSearchParams();
-    if (userId) queryParams.append('userId', userId);
-    const query = queryParams.toString();
-    return requestJson<{
-      success: boolean;
-      distribution: {
-        total_detections: number;
-        by_confidence: {
-          high: number;
-          medium: number;
-          low: number;
-        };
-        by_anomaly_type?: Record<string, {
-          high: number;
-          medium: number;
-          low: number;
-          total: number;
-        }>;
-        confidence_ranges?: Record<string, number>;
-        recovery_rates?: {
-          high: number;
-          medium: number;
-          low: number;
-        };
-        average_confidence: number;
-      };
-    }>(`/api/detections/confidence-distribution${query ? `?${query}` : ''}`);
-  },
-
-  // Resolve a detection
-  resolveDetection: async (id: string, body: { notes?: string; resolution_amount?: number }) => {
-    return requestJson<{
-      success: boolean;
-      message: string;
-      detection: any;
-    }>(`/api/detections/${encodeURIComponent(id)}/resolve`, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    });
-  },
-
-  // Update detection status
-  updateDetectionStatus: async (id: string, body: { status: string; notes?: string }) => {
-    return requestJson<{
-      success: boolean;
-      message: string;
-      detection: any;
-    }>(`/api/detections/${encodeURIComponent(id)}/status`, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    });
-  },
-
-  // Timeline
-  getClaimTimeline: async (claimId: string, table: 'detection_results' | 'claims' = 'detection_results') => {
-    return requestJson<{
-      success: boolean;
-      timeline: Array<{
-        id: string;
-        date: string;
-        action: string;
-        description: string;
-        amount?: number;
-        rejectionReason?: string;
-        escalationRound?: number;
-      }>;
-      count: number;
-    }>(`/api/claims/${encodeURIComponent(claimId)}/timeline?table=${table}`);
-  },
-
-  // Store Management access for detection results
+  getDetectionResults: (params?: { status?: string; limit?: number; offset?: number; userId?: string }) => api.get(`/api/detections/results${params ? '?' + new URLSearchParams(params as any).toString() : ''}`),
+  getDetectionStatistics: (userId?: string) => api.get(`/api/detections/statistics${userId ? '?userId=' + userId : ''}`),
+  getConfidenceDistribution: (userId?: string) => api.get(`/api/detections/confidence-distribution${userId ? '?userId=' + userId : ''}`),
+  resolveDetection: (id: string, body: { notes?: string; resolution_amount?: number }) => api.post(`/api/detections/${encodeURIComponent(id)}/resolve`, body),
+  updateDetectionStatus: (id: string, body: { status: string; notes?: string }) => api.post(`/api/detections/${encodeURIComponent(id)}/status`, body),
+  getClaimTimeline: (claimId: string, table: 'detection_results' | 'claims' = 'detection_results') => api.get(`/api/claims/${encodeURIComponent(claimId)}/timeline?table=${table}`),
   getStores: () => api.getStores(),
-  getStore: (id: string) => requestJson<{ success: boolean; store: any }>('/api/v1/stores/' + id),
+  getStore: (id: string) => api.get(`/api/v1/stores/${id}`),
+};
+
+// Export recoveryApi for backward compatibility
+export const recoveryApi = {
+  getRecoveries: () => api.get('/api/recoveries'),
+  getRecoveriesMetrics: (tenantSlug?: string) => api.getRecoveriesMetrics(tenantSlug),
+  submitClaim: (id: string) => api.submitClaim(id),
+  resubmitClaim: (id: string) => api.resubmitClaim(id),
+  getRecoveryStatus: (id: string) => api.getRecoveryStatus(id),
+  getRecoveryDetail: (id: string) => api.getRecoveryDetail(id),
+  getRecoveryDocumentUrl: (id: string) => api.getRecoveryDocumentUrl(id),
+  setAutoClaimEnabled: (enabled: boolean) => api.setAutoClaimEnabled(enabled),
+  getClaimTimeline: (claimId: string) => detectionApi.getClaimTimeline(claimId, 'claims'),
 };
