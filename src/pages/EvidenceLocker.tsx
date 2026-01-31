@@ -241,11 +241,11 @@ export default function EvidenceLocker() {
   const handleFileUpload = async (files: File[]) => {
     if (!files || files.length === 0) {
       toast({
-        title: 'INGESTION_EMPTY',
-        description: 'No document objects detected for protocol initiation.',
+        title: 'Empty upload',
+        description: 'Please select at least one document to upload.',
         variant: 'destructive'
       });
-      addDocLog({ type: 'warning', category: 'upload', message: 'Ingestion stream empty' }, 0);
+      addDocLog({ type: 'warning', category: 'upload', message: 'No documents selected' }, 0);
       return;
     }
 
@@ -278,20 +278,20 @@ export default function EvidenceLocker() {
           if (res.ok) { successfulUrl = uploadUrl; break; }
           else {
             const errorText = await res.text();
-            lastError = new Error(`PROTOCOL_FAULT: ${res.status} - ${errorText}`);
+            lastError = new Error(`Connection error: ${res.status} - ${errorText}`);
           }
         } catch (err: any) { lastError = err; }
       }
 
-      if (!res || !res.ok) throw lastError || new Error('INGESTION_HANDSHAKE_FAILED');
+      if (!res || !res.ok) throw lastError || new Error('Upload failed');
 
-      addDocLog({ type: 'success', category: 'upload', message: `[INGESTED] ${files.length} objects stored securely` }, 400);
-      addDocLog({ type: 'thinking', category: 'parse', message: 'Extracting forensic metadata streams...' }, 800);
-      addDocLog({ type: 'progress', category: 'parse', message: 'Executing OCR and neural parsing...', thinkingDuration: 2 }, 1000);
+      addDocLog({ type: 'success', category: 'upload', message: `Successfully uploaded ${files.length} documents` }, 400);
+      addDocLog({ type: 'thinking', category: 'parse', message: 'Identifying document details...' }, 800);
+      addDocLog({ type: 'progress', category: 'parse', message: 'Scanning for dates, amounts, and IDs...', thinkingDuration: 2 }, 1000);
 
       toast({
-        title: 'PROTOCOL_SECURED',
-        description: `${files.length} document(s) ingested. Forensic audit in progress.`,
+        title: 'Upload successful',
+        description: `${files.length} document(s) uploaded. Scanning for details...`,
       });
 
       const refresh = await api.getDocuments();
@@ -300,15 +300,15 @@ export default function EvidenceLocker() {
         setDocuments(refresh.data);
         if (refresh.data.length > previousCount) {
           const newCount = refresh.data.length - previousCount;
-          addDocLog({ type: 'success', category: 'parse', message: `[REGISTRY_UPDATED] ${newCount} new entries identified` }, 1200);
+          addDocLog({ type: 'success', category: 'parse', message: `New entries identified: ${newCount}` }, 1200);
         }
       }
 
       const statusRes = await api.getEvidenceStatus();
       if (statusRes.ok && statusRes.data) setEvidenceStatus(statusRes.data);
     } catch (err: any) {
-      addDocLog({ type: 'error', category: 'upload', message: `PROTOCOL_FAILURE: ${err?.message || 'Unknown error'}` }, 0);
-      toast({ title: 'INGESTION_CRASHED', description: err?.message || 'Handshake failed.', variant: 'destructive' });
+      addDocLog({ type: 'error', category: 'upload', message: `Upload error: ${err?.message || 'Unknown error'}` }, 0);
+      toast({ title: 'Upload failed', description: err?.message || 'Check your connection and try again.', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -379,9 +379,9 @@ export default function EvidenceLocker() {
 
   // Initialize with welcome logs
   useEffect(() => {
-    addDocLog({ type: 'info', category: 'system', message: 'Doc Locker initialized...', thinkingDuration: 2 }, 0);
+    addDocLog({ type: 'info', category: 'system', message: 'Evidence Locker initialized...', thinkingDuration: 2 }, 0);
     addDocLog({ type: 'thinking', category: 'system', message: 'Ready to process invoices, receipts, and purchase orders' }, 1200);
-    addDocLog({ type: 'info', category: 'system', message: 'Waiting for documents to analyze...' }, 1000);
+    addDocLog({ type: 'info', category: 'system', message: 'Waiting for documents...' }, 1000);
   }, []);
 
   useEffect(() => {
@@ -473,8 +473,8 @@ export default function EvidenceLocker() {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'evidence' && evt?.status === 'completed') {
             const story = generateStoryMessage('gmail_scan', { source: 'Gmail', count: evt.count || 1, matched: evt.matched || 0, unmatched: evt.unmatched || 0 });
-            addDocLog({ type: 'success', category: 'system', message: '[INGESTION] New documents available', storyMessage: story.story, claimsAffected: story.claims }, 500);
-            toast({ title: 'Ingestion complete', description: 'New documents are available.' });
+            addDocLog({ type: 'success', category: 'system', message: 'New documents found in Gmail', storyMessage: story.story, claimsAffected: story.claims }, 500);
+            toast({ title: 'Scan complete', description: 'New documents have been added.' });
             // Refresh documents
             api.getDocuments().then(res => {
               if (res.ok && Array.isArray(res.data)) {
@@ -484,8 +484,8 @@ export default function EvidenceLocker() {
           }
           if (evt?.type === 'parsing' && evt?.status === 'completed') {
             const parseStory = generateStoryMessage('invoice_parsed', { lineItems: evt.lineItems || 0, claimsLinked: evt.claimsLinked || 0, supplier: evt.supplier });
-            addDocLog({ type: 'success', category: 'parse', message: `[PARSED] Document parsing complete`, storyMessage: parseStory.story, claimsAffected: parseStory.claims }, 600);
-            addDocLog({ type: 'thinking', category: 'match', message: 'Checking for claim matches...', storyMessage: '🔍 Analyzing document for matching claims...' }, 900);
+            addDocLog({ type: 'success', category: 'parse', message: `Document scanning finished`, storyMessage: parseStory.story, claimsAffected: parseStory.claims }, 600);
+            addDocLog({ type: 'thinking', category: 'match', message: 'Connecting to claims...', storyMessage: '🔍 Looking for matching claims...' }, 900);
             // Refresh document with parsed data
             if (evt?.document_id) {
               api.getDocumentWithParsedData(evt.document_id).then(res => {
@@ -525,7 +525,7 @@ export default function EvidenceLocker() {
             const held = evt.held || 0;
 
             const matchStory = generateStoryMessage('match_found', { claimsLinked: matches, moneyAtRisk: evt.moneyAtRisk || 0 });
-            addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)`, storyMessage: matchStory.story, moneyImpact: matchStory.money, claimsAffected: matchStory.claims }, 600);
+            addDocLog({ type: 'success', category: 'match', message: `Found ${matches} match(es)`, storyMessage: matchStory.story, moneyImpact: matchStory.money, claimsAffected: matchStory.claims }, 600);
 
             if (autoSubmitted > 0) {
               const boostStory = generateStoryMessage('approval_boost', { claimsLinked: autoSubmitted });
@@ -580,7 +580,7 @@ export default function EvidenceLocker() {
             addDocLog({
               type: 'info',
               category: 'match',
-              message: `[MATCHING] Analyzing ${evt.documentCount || 0} document(s) for claim matches...`
+              message: `Searching for claim matches in ${evt.documentCount || 0} document(s)...`
             }, 400);
           }
         } catch { }
@@ -596,7 +596,7 @@ export default function EvidenceLocker() {
             const smartPrompts = evt.smartPromptsCreated || 0;
             const held = evt.held || 0;
 
-            addDocLog({ type: 'success', category: 'match', message: `[MATCHED] Found ${matches} claim-document match(es)` }, 600);
+            addDocLog({ type: 'success', category: 'match', message: `Found ${matches} match(es)` }, 600);
 
             if (autoSubmitted > 0) {
               addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
@@ -847,9 +847,9 @@ export default function EvidenceLocker() {
               {/* Institutional Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">EVIDENCE_MANAGEMENT_SYSTEM</span>
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">Evidence Management</span>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase">Doc_Locker_Node_05</h1>
+                    <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase">Evidence Locker</h1>
                     <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
                 </div>
@@ -904,7 +904,7 @@ export default function EvidenceLocker() {
                 <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Terminal className="h-3 w-3 text-emerald-500/50" />
-                    <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">FORENSIC_INGESTION_TERMINAL_v5.0</h2>
+                    <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Activity Log</h2>
                   </div>
                   <div className="flex items-center gap-6">
                     <label className="flex items-center gap-2 text-[9px] font-mono text-white/20 hover:text-white/40 cursor-pointer transition-colors uppercase tracking-widest">
@@ -914,9 +914,9 @@ export default function EvidenceLocker() {
                         onChange={(e) => setShowDevLogs(e.target.checked)}
                         className="w-2.5 h-2.5 rounded border-white/10 bg-transparent text-emerald-500 focus:ring-0"
                       />
-                      Verbose_Output
+                      Detailed Logs
                     </label>
-                    <span className="text-[9px] font-mono text-white/10 uppercase tracking-widest">{filteredDocLogs.length} LOG_ENTRIES</span>
+                    <span className="text-[9px] font-mono text-white/10 uppercase tracking-widest">{filteredDocLogs.length} entries</span>
                   </div>
                 </div>
 
@@ -928,9 +928,9 @@ export default function EvidenceLocker() {
                     </div>
                     <Input
                       type="text"
-                      placeholder="EXECUTE_SEARCH_QUERY..."
+                      placeholder="Search activity..."
                       value={docLogSearch}
-                      onChange={(e) => setDocLogSearch(e.target.value)}
+                      onChange={(e) => setQ(e.target.value)}
                       className="pl-8 h-10 text-[11px] font-mono bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
                     />
                   </div>
@@ -945,7 +945,7 @@ export default function EvidenceLocker() {
                     {filteredDocLogs.length === 0 ? (
                       <div className="text-white/10 flex items-center justify-center h-full gap-3">
                         <Loader2 className="h-3 w-3 animate-spin opacity-20" />
-                        <span className="uppercase tracking-[0.2em]">INITIALIZING_AUDIT_STREAMS...</span>
+                        <span className="uppercase tracking-[0.2em]">Initializing...</span>
                       </div>
                     ) : (
                       <div className="relative space-y-1.5">
@@ -957,7 +957,7 @@ export default function EvidenceLocker() {
                               </span>
                               <div className="flex items-center gap-2 shrink-0">
                                 <Shield className="h-2.5 w-2.5 text-emerald-500/30" />
-                                <span className="text-emerald-500/60 font-bold uppercase tracking-tighter">AGENT_05</span>
+                                <span className="text-emerald-500/60 font-bold uppercase tracking-tighter">System</span>
                               </div>
                               <span className={cn("flex-1 break-words leading-relaxed", getDocLogColor(log.type))}>
                                 <span className="mr-2 opacity-50">{">>"}</span>
@@ -970,7 +970,7 @@ export default function EvidenceLocker() {
                                 )}
                                 {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
                                   <span className="ml-2 text-white/30 border-l border-white/10 pl-2">
-                                    {log.claimsAffected} IMPACT_ID
+                                    {log.claimsAffected} claims
                                   </span>
                                 )}
                               </span>
@@ -978,7 +978,7 @@ export default function EvidenceLocker() {
                             {log.thinkingDuration && showDevLogs && (
                               <div className="ml-14 mb-1">
                                 <span className="text-[9px] text-white/10 italic">
-                                  LATENCY_RESOLVED: {log.thinkingDuration}ms
+                                  Duration: {log.thinkingDuration}ms
                                 </span>
                               </div>
                             )}
@@ -989,7 +989,7 @@ export default function EvidenceLocker() {
                             <span className="text-white/10 shrink-0 select-none tabular-nums">[{new Date().toLocaleTimeString()}]</span>
                             <div className="flex items-center gap-2">
                               <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                              <span className="font-bold uppercase tracking-tighter">PARSING_OBJECTS...</span>
+                              <span className="font-bold uppercase tracking-tighter">Scanning documents...</span>
                             </div>
                           </div>
                         )}
@@ -1014,9 +1014,9 @@ export default function EvidenceLocker() {
                   <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-emerald-500" : "text-white/10 group-hover:text-white/20")} />
-                  <h3 className="text-sm font-serif font-medium text-white mb-2 uppercase tracking-wide">Autonomous_Ingestion_Node</h3>
+                  <h3 className="text-sm font-serif font-medium text-white mb-2 uppercase tracking-wide">Document Ingestion</h3>
                   <p className="text-[10px] text-white/20 font-mono mb-8 uppercase tracking-[0.2em]">
-                    PDF_PORTAL | JPG_SCANNER | PNG_CAPTURE
+                    Supported types: PDF, JPG, PNG
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -1026,7 +1026,7 @@ export default function EvidenceLocker() {
                     >
                       <div className="relative flex items-center gap-2">
                         <Upload className="w-3.5 h-3.5 text-black" />
-                        <span className="text-[11px] font-mono font-bold text-black uppercase tracking-widest">ACTIVATE_UPLOAD</span>
+                        <span className="text-[11px] font-mono font-bold text-black uppercase tracking-widest">Upload Files</span>
                       </div>
                     </button>
                     <input id="doc-file-input" type="file" multiple className="hidden" onChange={(e) => {
@@ -1041,7 +1041,7 @@ export default function EvidenceLocker() {
                         <span className="text-[10px] font-mono uppercase tracking-widest">store@invoices.margin.app</span>
                       </div>
                       <Link to="/integrations-hub" className="text-[10px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-widest transition-colors">
-                        LINK_DATASOURCES {">>"}
+                        Connect sources {">>"}
                       </Link>
                     </div>
                   </div>
@@ -1053,11 +1053,11 @@ export default function EvidenceLocker() {
                 {/* Ledger Header */}
                 <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                   <div>
-                    <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">AUDIT_REGISTRY_LEDGER</h2>
+                    <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Document Library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">{sorted.length} ACTIVE_ENTRIES</span>
+                      <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">{sorted.length} documents</span>
                       <div className="h-1.5 w-[1px] bg-white/10" />
-                      <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">Agent_05_Validation_Enabled</span>
+                      <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">AI Analysis Enabled</span>
                     </div>
                   </div>
 
@@ -1065,7 +1065,7 @@ export default function EvidenceLocker() {
                     <div className="relative group/search">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-white/20 group-focus-within/search:text-white transition-colors" />
                       <Input
-                        placeholder="SCAN_QUERY..."
+                        placeholder="Search documents..."
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
                         className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-mono pl-9 focus:border-emerald-500/30 transition-all rounded-lg placeholder:text-white/10"
@@ -1089,7 +1089,7 @@ export default function EvidenceLocker() {
                         className="h-9 px-4 text-[10px] font-mono font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-widest rounded-lg"
                         onClick={handleDeleteAllDocuments}>
                         <Trash2 className="w-3.5 h-3.5 mr-2" />
-                        PURGE
+                        Delete All
                       </Button>
                     )}
                   </div>
@@ -1103,19 +1103,19 @@ export default function EvidenceLocker() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
                         <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500/40"></span>
                       </div>
-                      <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">SYNCHRONIZING_NODE_DATA...</span>
+                      <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">Loading documents...</span>
                     </div>
                   ) : error ? (
                     <div className="flex flex-col items-center justify-center py-40 bg-rose-500/[0.02]">
                       <AlertCircle className="h-8 w-8 text-rose-500/20 mb-6" />
-                      <span className="text-[11px] font-mono font-bold text-rose-500 uppercase tracking-widest">PROTOCOL_FAULT_DETECTED</span>
+                      <span className="text-[11px] font-mono font-bold text-rose-500 uppercase tracking-widest">Connection error</span>
                       <p className="text-[10px] text-rose-500/40 mt-2 font-mono">{error}</p>
                       <Button
                         variant="ghost"
                         className="mt-8 text-[11px] font-mono font-bold text-white/20 hover:text-white"
                         onClick={() => window.location.reload()}
                       >
-                        RETRY_CONNECTION
+                        Retry
                       </Button>
                     </div>
                   ) : (
@@ -1147,20 +1147,20 @@ export default function EvidenceLocker() {
                               <div className="flex flex-col gap-2 flex-1 min-w-0">
                                 <div className="flex items-center gap-3">
                                   <span className="text-sm font-bold text-white tracking-tight truncate uppercase group-hover:text-emerald-500/80 transition-colors">
-                                    {doc.name.replace(' ', '_')}
+                                    {doc.name}
                                   </span>
                                   {doc.matchedClaims && doc.matchedClaims.length > 0 && (
                                     <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
                                       <Link2 className="h-2.5 w-2.5" />
-                                      {doc.matchedClaims.length} LINKED_OBJECTS
+                                      {doc.matchedClaims.length} linked claims
                                     </div>
                                   )}
                                 </div>
 
                                 <div className="flex items-center text-[10px] font-mono font-bold text-white/20 gap-4 uppercase tracking-[0.1em]">
-                                  <span className="text-white/40">{doc.supplier || "VENDOR_UNKNOWN"}</span>
+                                  <span className="text-white/40">{doc.supplier || "Vendor unknown"}</span>
                                   <span className="text-white/5">|</span>
-                                  <span className="text-white/40">{doc.invoice || "NO_REF"}</span>
+                                  <span className="text-white/40">{doc.invoice || "No reference"}</span>
                                   <span className="text-white/5">|</span>
                                   <div className="flex items-center gap-2">
                                     <div className={cn(
@@ -1173,7 +1173,7 @@ export default function EvidenceLocker() {
                                       doc.parser_status === 'completed' ? 'text-emerald-500/60' :
                                         doc.parser_status === 'failed' ? 'text-rose-500/60' : 'text-white/20'
                                     )}>
-                                      {doc.parser_status || "PENDING_INGESTION"}
+                                      {doc.parser_status || "Pending"}
                                     </span>
                                   </div>
                                   <span className="text-white/5">|</span>
@@ -1213,7 +1213,7 @@ export default function EvidenceLocker() {
                                   <DropdownMenuItem asChild className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest">
                                     <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
                                       <Eye className="w-3.5 h-3.5" />
-                                      Analyze_Detail
+                                      View Details
                                     </Link>
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
@@ -1221,7 +1221,7 @@ export default function EvidenceLocker() {
                                     className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest"
                                   >
                                     <Download className="w-3.5 h-3.5 mr-3" />
-                                    Retrieve_Source
+                                    Download
                                   </DropdownMenuItem>
                                   <div className="h-[1px] bg-white/5 my-2" />
                                   <DropdownMenuItem
@@ -1229,7 +1229,7 @@ export default function EvidenceLocker() {
                                     className="text-[11px] font-mono text-rose-500/60 focus:bg-rose-500/10 focus:text-rose-500 rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest"
                                   >
                                     <Trash2 className="w-3.5 h-3.5 mr-3" />
-                                    Purge_Evidence
+                                    Delete
                                   </DropdownMenuItem>
                                 </DropdownMenuContent>
                               </DropdownMenu>
@@ -1250,7 +1250,7 @@ export default function EvidenceLocker() {
                               }}
                               className="h-3 w-3 border-white/10 rounded-sm"
                             />
-                            <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">BATCH_SELECTION</span>
+                            <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Selection</span>
                           </div>
                           <span className="text-white/5 h-3 w-[1px]" />
                           <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">
@@ -1260,15 +1260,15 @@ export default function EvidenceLocker() {
 
                         <div className="flex items-center gap-8">
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">PAGE_DENSITY</span>
+                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Page size</span>
                             <select
                               className="bg-transparent border-none text-[10px] font-mono font-bold text-white/60 focus:ring-0 cursor-pointer p-0 uppercase"
                               value={pageSize}
                               onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
                             >
-                              <option value={10}>10_ENTRIES</option>
-                              <option value={20}>20_ENTRIES</option>
-                              <option value={50}>50_ENTRIES</option>
+                              <option value={10}>10 records</option>
+                              <option value={20}>20 records</option>
+                              <option value={50}>50 records</option>
                             </select>
                           </div>
 
