@@ -25,7 +25,7 @@ import {
   ArrowUpRight,
   Scale
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -54,6 +54,7 @@ const getStatusStyles = (status: InvoiceRecord['status']) => {
 };
 
 export default function Billing() {
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const [exportOpen, setExportOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
   const { toast } = useToast();
@@ -97,25 +98,27 @@ export default function Billing() {
               const dateIssued = inv.period_end || inv.created_at || inv.date_issued || new Date().toISOString();
 
               return {
-                id: inv.id || inv.invoice_id || `TRN-${Date.now()}`,
+                id: (inv.id || inv.invoice_id || `TRN-${Date.now()}`).toString(),
                 dateIssued: dateIssued.split('T')[0],
                 status,
-                totalRecovered: inv.total_amount || inv.total_recovered || 0,
-                commission: inv.platform_fee || inv.commission || 0,
-                amountCharged: inv.platform_fee || inv.amount_charged || 0,
+                totalRecovered: Number(inv.total_amount || inv.total_recovered || 0),
+                commission: Number(inv.platform_fee || inv.commission || 0),
+                amountCharged: Number(inv.platform_fee || inv.amount_charged || 0),
                 recoveryClaimIds: inv.recovery_claim_ids || inv.recovery_ids || []
               };
             });
             setInvoices(mappedInvoices);
           } else {
+            console.warn('API returned non-ok or no invoices:', response);
             setInvoices([]);
-            setError(response.error || 'Failed to sync ledger data');
+            setError(response.error || 'Failed to sync ledger data from remote stream.');
           }
         }
       } catch (err: any) {
+        console.error('Failed to fetch billing data:', err);
         if (!cancelled) {
           setInvoices([]);
-          setError("Ledger synchronization interrupted. Please re-establish connection.");
+          setError("Ledger synchronization interrupted. Please re-establish connection to financial nodes.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -158,9 +161,12 @@ export default function Billing() {
 
   const filteredInvoices = useMemo(() => {
     const term = invoiceSearch.trim().toLowerCase();
-    return invoices
+    return (invoices || [])
       .filter(inv => {
-        const matchesSearch = !term || inv.id.toLowerCase().includes(term) || inv.status.toLowerCase().includes(term);
+        if (!inv) return false;
+        const matchesSearch = !term ||
+          (inv.id && inv.id.toLowerCase().includes(term)) ||
+          (inv.status && inv.status.toLowerCase().includes(term));
         const matchesStatus = statusFilter === 'ALL' || inv.status === statusFilter;
         return matchesSearch && matchesStatus;
       })
@@ -182,12 +188,12 @@ export default function Billing() {
 
   return (
     <PageLayout title="Financial Ledger" midnight>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden font-serif">
+      <div className="relative min-h-screen font-serif bg-[#050505]">
         {/* Matrix Background Aesthetic */}
         <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
         <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
-        <div className="relative container mx-auto px-8 py-16">
+        <div className="relative container mx-auto px-4 md:px-8 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -307,7 +313,7 @@ export default function Billing() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 pt-4 border-t border-white/5">
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
                     <Button
                       onClick={saveBillingSettings}
                       className="bg-white text-black hover:bg-emerald-500 rounded-xl font-serif font-bold uppercase text-[10px] tracking-widest h-12 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
@@ -360,81 +366,113 @@ export default function Billing() {
               </div>
             </div>
 
-            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl overflow-hidden backdrop-blur-3xl">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader className="bg-white/[0.02]">
-                    <TableRow className="border-b border-white/5 hover:bg-transparent">
-                      <TableHead className="py-6 px-8 text-white/20 font-mono text-[9px] uppercase tracking-widest">Registry ID</TableHead>
-                      <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Timestamp</TableHead>
-                      <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Status</TableHead>
-                      <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Yield recovered</TableHead>
-                      <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Fee</TableHead>
-                      <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Charged</TableHead>
-                      <TableHead className="pr-8"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <AnimatePresence mode="popLayout">
-                      {pageData.map((invoice) => (
-                        <motion.tr
-                          key={invoice.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group"
-                        >
-                          <TableCell className="py-6 px-8">
-                            <Link to={`/billing/invoice/${invoice.id}`} className="text-[11px] font-mono text-white/60 group-hover:text-emerald-500 transition-colors">
-                              {invoice.id}
-                            </Link>
-                          </TableCell>
-                          <TableCell className="text-[10px] font-mono text-white/40 uppercase tracking-tight">
-                            {new Date(invoice.dateIssued).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className={cn("text-[9px] font-mono px-3 py-0.5 tracking-widest", getStatusStyles(invoice.status))}>
-                              {invoice.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right text-[11px] font-mono text-white/80">
-                            ${invoice.totalRecovered.toLocaleString()}
-                          </TableCell>
-                          <TableCell className="text-right text-[11px] font-mono text-white/30">
-                            ${invoice.commission.toLocaleString()}
-                          </TableCell>
-                          <TableCell className="text-right text-[12px] font-mono font-bold text-white">
-                            ${invoice.amountCharged.toLocaleString()}
-                          </TableCell>
-                          <TableCell className="pr-8">
-                            <div className="flex justify-end invisible group-hover:visible">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-white/20 hover:text-emerald-500"
-                                onClick={async () => {
-                                  try {
-                                    await api.downloadInvoicePdf(invoice.id);
-                                    toast({ title: 'Download Initialized', description: `Record ${invoice.id} archived.` });
-                                  } catch {
-                                    toast({ title: 'Transmission Error', description: 'Could not fetch record PDF.', variant: 'destructive' });
-                                  }
-                                }}
-                              >
-                                <Download className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </motion.tr>
-                      ))}
-                    </AnimatePresence>
-                  </TableBody>
-                </Table>
-              </div>
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl overflow-hidden backdrop-blur-3xl min-h-[400px]">
+              {loading && (
+                <div className="flex flex-col items-center justify-center py-24 gap-4">
+                  <div className="h-8 w-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+                  <p className="text-[10px] font-mono text-white/20 uppercase tracking-[0.3em]">Synchronizing Ledger...</p>
+                </div>
+              )}
+
+              {error && !loading && (
+                <div className="flex flex-col items-center justify-center py-24 gap-4 px-6 text-center">
+                  <AlertCircle className="h-8 w-8 text-rose-500 opacity-50 mb-2" />
+                  <div className="space-y-2">
+                    <p className="text-sm text-white/40 italic font-serif">"{error}"</p>
+                    <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Error Code: SYNC_NODE_INTERRUPT</p>
+                  </div>
+                  <Button onClick={() => window.location.reload()} variant="outline" className="mt-4 h-10 border-white/10 hover:border-white/20 text-white font-mono text-[9px] px-6">RE-ATTEMPT SYNC</Button>
+                </div>
+              )}
+
+              {!loading && !error && (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader className="bg-white/[0.02]">
+                      <TableRow className="border-b border-white/5 hover:bg-transparent">
+                        <TableHead className="py-6 px-8 text-white/20 font-mono text-[9px] uppercase tracking-widest">Registry ID</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Timestamp</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Status</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Yield recovered</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Fee</TableHead>
+                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Charged</TableHead>
+                        <TableHead className="pr-8"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <AnimatePresence>
+                        {pageData.length > 0 ? (
+                          pageData.map((invoice, idx) => (
+                            <motion.tr
+                              key={invoice.id}
+                              initial={{ opacity: 0, y: 5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.05 }}
+                              className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group"
+                            >
+                              <TableCell className="py-6 px-8">
+                                <Link to={`/app/${tenantSlug || 'default'}/billing/invoice/${invoice.id}`} className="text-[11px] font-mono text-white/60 group-hover:text-emerald-500 transition-colors">
+                                  {invoice.id}
+                                </Link>
+                              </TableCell>
+                              <TableCell className="text-[10px] font-mono text-white/40 uppercase tracking-tight">
+                                {new Date(invoice.dateIssued).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="outline" className={cn("text-[9px] font-mono px-3 py-0.5 tracking-widest", getStatusStyles(invoice.status))}>
+                                  {invoice.status}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-right text-[11px] font-mono text-white/80">
+                                ${invoice.totalRecovered.toLocaleString()}
+                              </TableCell>
+                              <TableCell className="text-right text-[11px] font-mono text-white/30">
+                                ${invoice.commission.toLocaleString()}
+                              </TableCell>
+                              <TableCell className="text-right text-[12px] font-mono font-bold text-white">
+                                ${invoice.amountCharged.toLocaleString()}
+                              </TableCell>
+                              <TableCell className="pr-8">
+                                <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-white/20 hover:text-emerald-500"
+                                    onClick={async () => {
+                                      try {
+                                        await api.downloadInvoicePdf(invoice.id);
+                                        toast({ title: 'Download Initialized', description: `Record ${invoice.id} archived.` });
+                                      } catch {
+                                        toast({ title: 'Transmission Error', description: 'Could not fetch record PDF.', variant: 'destructive' });
+                                      }
+                                    }}
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </motion.tr>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={7} className="py-32 text-center border-none">
+                              <div className="flex flex-col items-center justify-center space-y-3 opacity-20">
+                                <Receipt className="h-8 w-8 mb-2" />
+                                <p className="text-[10px] font-mono uppercase tracking-[0.2em]">Transaction registry empty.</p>
+                                <p className="text-xs italic font-serif">"No capital synchronization events detected on this node."</p>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </AnimatePresence>
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </Card>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between pt-10">
+            <div className="flex flex-col md:flex-row items-center justify-between pt-10 gap-6">
               <div className="flex items-center gap-6">
                 <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Showing {pageData.length} records</p>
                 <div className="h-4 w-[1px] bg-white/5" />
@@ -475,9 +513,9 @@ export default function Billing() {
               {[
                 { q: "Execution Timelines", a: "Yield settlements are generated upon cycle completion and processed within seven standard verification intervals." },
                 { q: "Recovery Reversals", a: "In the rare event of asset reclamation by platform entities, counter-credits are autonomously applied to the subsequent ledger cycle." },
-                { q: "Sovereignty & Security", a: "All transactions route through Level 1 PCI-compliant corridors. Margin does not store core decryption keys for financial instruments." }
+                { q: "Sovereignty & Security", a: "All transactions route through Level 1 PCI-compliant corridors. Opside does not store core decryption keys for financial instruments." }
               ].map((item, i) => (
-                <AccordionItem key={i} value={`item-${i}`} className="border-white/5 bg-white/[0.01] rounded-2xl px-8 overflow-hidden">
+                <AccordionItem key={i} value={`item-${i}`} className="border-white/5 bg-white/[0.01] rounded-2xl px-6 md:px-8 overflow-hidden">
                   <AccordionTrigger className="text-sm font-serif text-white/80 hover:text-white transition-colors py-6 uppercase tracking-widest hover:no-underline">
                     {item.q}
                   </AccordionTrigger>
@@ -493,7 +531,7 @@ export default function Billing() {
           <div className="text-center pt-32 pb-16">
             <p className="text-white/20 font-mono text-[10px] uppercase tracking-widest">
               Need direct protocol assistance?{' '}
-              <Link to="/help" className="text-emerald-500 hover:text-emerald-400 font-bold ml-2">Open Transmission</Link>
+              <Link to={`/app/${tenantSlug || 'default'}/help`} className="text-emerald-500 hover:text-emerald-400 font-bold ml-2">Open Transmission</Link>
             </p>
           </div>
         </div>
