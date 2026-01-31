@@ -2240,7 +2240,7 @@ export default function Recoveries() {
             <div className="border-b border-gray-200 pb-6 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h1 className="text-lg font-medium text-gray-900 tracking-tight">Audit Ledger</h1>
+                  <h1 className="text-lg font-medium text-gray-900 tracking-tight">Claims & Recoveries</h1>
                   <div className="mt-2 pl-3 border-l-2 border-gray-200">
                     <p className="text-xs text-gray-500">
                       All detected discrepancies and submitted claims
@@ -2394,8 +2394,8 @@ export default function Recoveries() {
                   {/* Controls */}
                   <div className="mb-6 bg-white border border-white rounded-sm">
                     <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                      <h3 className="text-xs font-medium text-gray-900">Capital Recovery</h3>
-                      <p className="text-xs text-gray-500 mt-0.5">Track finalized reimbursements and measure your automated ROI.</p>
+                      <h3 className="text-xs font-medium text-gray-900">Recovered Revenue</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">Track finalized reimbursements and track your recoveries.</p>
                     </div>
                     <div className="p-6">
 
@@ -2577,20 +2577,20 @@ export default function Recoveries() {
                       {loading && (
                         <div className="py-12 flex flex-col items-center justify-center space-y-4">
                           <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
-                          <span className="text-sm text-gray-400">Synchronizing Intelligence</span>
+                          <span className="text-sm text-gray-400">Updating data...</span>
                         </div>
                       )}
                       {error && (
                         <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center px-6">
                           <AlertTriangle className="w-6 h-6 text-red-200" />
-                          <span className="text-sm text-gray-500">Interface Error: {error}</span>
+                          <span className="text-sm text-gray-500">Error: {error}</span>
                         </div>
                       )}
                       {!loading && !error && rankedClaims.length === 0 && (
                         <div className="py-20 flex flex-col items-center justify-center space-y-4">
                           <Search className="w-10 h-10 text-gray-100" />
                           <div className="flex flex-col items-center text-center max-w-sm px-6">
-                            <span className="text-sm text-gray-900 font-semibold">Ledger Clean</span>
+                            <span className="text-sm text-gray-900 font-semibold">No Claims Found</span>
                             <span className="text-xs text-gray-400 mt-2 leading-relaxed">
                               {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
                                 ? 'SYNC YOUR AMAZON ACCOUNT OR RUN AN ANALYSIS TO IDENTIFY RECOVERY OPPORTUNITIES.'
@@ -2610,7 +2610,7 @@ export default function Recoveries() {
                               }}
                               className="mr-4"
                             />
-                            <span className="text-xs font-semibold text-gray-400">Batch Operation Queue</span>
+                            <span className="text-xs font-semibold text-gray-400">Bulk Actions</span>
                           </div>
 
                           {claimsByMonth.map((monthGroup, groupIndex) => (
@@ -2621,7 +2621,7 @@ export default function Recoveries() {
                                   {monthGroup.month} {monthGroup.year}
                                 </span>
                                 <span className="text-xs font-medium text-gray-400">
-                                  {monthGroup.claims.length} AUDIT ENTRI{monthGroup.claims.length !== 1 ? 'ES' : 'Y'}
+                                  {monthGroup.claims.length} CLAIM{monthGroup.claims.length !== 1 ? 'S' : ''}
                                 </span>
                               </div>
 
@@ -2776,7 +2776,7 @@ export default function Recoveries() {
                                             state={{ claim }}
                                             className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-gray-900 transition-all duration-200 group/link"
                                           >
-                                            AUDIT
+                                            DETAILS
                                             <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
                                           </Link>
                                         </div>
@@ -2796,7 +2796,7 @@ export default function Recoveries() {
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
                     <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
                       <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-                        <DialogTitle className="text-xs font-medium text-gray-900">Resolution Record</DialogTitle>
+                        <DialogTitle className="text-xs font-medium text-gray-900">Resolution Details</DialogTitle>
                         <DialogDescription className="text-xs text-gray-500 mt-0.5">
                           Complete resolution details and mark claim as resolved
                         </DialogDescription>

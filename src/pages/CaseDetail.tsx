@@ -146,7 +146,7 @@ const mockCaseData = {
       {
         timestamp: '2025-01-08T12:07:22Z',
         title: 'Claim Draft Generated',
-        description: 'Margin AI Agent generated comprehensive claim documentation with supporting evidence',
+        description: 'Recovery Assistant generated comprehensive claim documentation with supporting evidence',
         type: 'generation'
       },
       {
@@ -674,7 +674,7 @@ export default function CaseDetail() {
       <div className="relative -m-4 lg:-m-6">
         <div className="relative w-full bg-white min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-gray-900">
-            {/* Header - Institutional Metadata */}
+            {/* Header - Case Information */}
             <div className="mb-10 flex items-center justify-between border-b border-gray-100 pb-8">
               <div className="flex items-center gap-6">
                 <Link to="/recoveries" className="h-10 w-10 flex items-center justify-center border border-gray-100 hover:bg-gray-50 transition-colors">
@@ -684,7 +684,7 @@ export default function CaseDetail() {
                   <div className="flex items-center gap-3">
                     <h1 className="text-xl font-light text-gray-900 tracking-tight font-mono">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1 font-mono tracking-tight">Case Audit</p>
+                  <p className="text-xs text-gray-400 mt-1 font-mono tracking-tight">Case Details</p>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
@@ -698,12 +698,12 @@ export default function CaseDetail() {
                   Get PDF
                 </Button>
                 <div className="text-right">
-                  <div className="text-xs text-gray-400 font-bold">Confidence Engine</div>
-                  <div className="text-xs font-mono font-bold text-emerald-600 mt-0.5">{derivedConfidencePct}% verified</div>
+                  <div className="text-xs text-gray-400 font-bold">Verification</div>
+                  <div className="text-xs font-mono font-bold text-emerald-600 mt-0.5">{derivedConfidencePct}% confident</div>
                 </div>
                 <div className="h-8 w-[1px] bg-gray-100" />
                 <div className="text-right">
-                  <div className="text-xs text-gray-400 font-bold">Audit Progress</div>
+                  <div className="text-xs text-gray-400 font-bold">Resolution Progress</div>
                   <div className="text-xs font-mono font-bold text-gray-900 mt-0.5">{typeof effectiveCase.progress === 'number' ? Math.round(effectiveCase.progress) : 85}% completed</div>
                 </div>
               </div>
@@ -712,11 +712,11 @@ export default function CaseDetail() {
             {/* Auto-Filing Banner - Refined Style */}
             <div className="flex items-center py-2 bg-white mb-8">
               <p className="text-[14px] font-mono text-gray-400 tracking-wider">
-                Protocol: Margin auto-files cases ≥85% confidence
+                Rule: Auto-files cases ≥85% confidence
               </p>
             </div>
 
-            {/* Institutional Tab Switcher */}
+            {/* Navigation Tabs */}
             <div className="flex border-b border-gray-100 mb-8">
               <button
                 onClick={() => setActiveTab('RECORD')}
@@ -724,7 +724,7 @@ export default function CaseDetail() {
                   "px-8 py-4 text-[15px] font-bold transition-all duration-300 relative",
                   activeTab === 'RECORD' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
-                Case Record
+                Claim Record
                 <div className={cn(
                   "absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 transition-all duration-300 transform origin-left",
                   activeTab === 'RECORD' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
@@ -736,7 +736,7 @@ export default function CaseDetail() {
                   "px-8 py-4 text-[15px] font-bold transition-all duration-300 relative",
                   activeTab === 'PROTOCOL' ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
                 )}>
-                Resolution Protocol
+                Resolution Steps
                 <div className={cn(
                   "absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 transition-all duration-300 transform origin-left",
                   activeTab === 'PROTOCOL' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
@@ -749,7 +749,7 @@ export default function CaseDetail() {
                 {/* Tile 1: Audit Narrative & Logistics */}
                 <div className="p-8 bg-gray-50/30">
                   <div className="mb-6">
-                    <h3 className="text-sm font-bold text-gray-900">Audit Narrative & Logistics</h3>
+                    <h3 className="text-sm font-bold text-gray-900">Case Summary</h3>
                   </div>
                   <div className="space-y-8">
                     <p className="text-[15px] text-gray-700 leading-relaxed font-normal tracking-tight">
@@ -758,7 +758,7 @@ export default function CaseDetail() {
 
                     <div className="pt-6 border-t border-gray-100">
                       <div className="text-xs text-gray-400 font-bold mb-6 flex items-center gap-2">
-                        Product Trace & Protocols
+                        Product & Facility Details
                         <div className="h-px flex-1 bg-gray-100" />
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -777,7 +777,7 @@ export default function CaseDetail() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-[10px] font-bold text-gray-400 mb-2 tracking-wider">Facility Protocol</p>
+                          <p className="text-[10px] font-bold text-gray-400 mb-2 tracking-wider">Fulfillment Center</p>
                           <div className="flex items-center gap-2">
                             <MapPin className="h-3.5 w-3.5 text-gray-400" />
                             <p className="text-sm font-bold text-gray-900">{effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN') ? effectiveCase.facility : <span className="text-gray-300">LOCATING FC...</span>}</p>
@@ -818,7 +818,7 @@ export default function CaseDetail() {
                   </div>
                 </div>
 
-                {/* Tile 2: Transaction Forensics */}
+                {/* Tile 2: Transaction Details */}
                 <div className="p-8 bg-white">
                   <div className="mb-6">
                     <h3 className="text-sm font-bold text-gray-900">Transaction Details</h3>
@@ -828,7 +828,7 @@ export default function CaseDetail() {
                     {/* Forensic Metrics */}
                     <div className="space-y-4">
                       <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
-                        <div className="h-1 w-2 bg-emerald-500 rounded-full" /> Transaction Details
+                        <div className="h-1 w-2 bg-emerald-500 rounded-full" /> Case Details
                       </h4>
                       <dl className="space-y-4">
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
@@ -884,7 +884,7 @@ export default function CaseDetail() {
                     {/* Logistical Trace */}
                     <div className="space-y-4">
                       <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
-                        <div className="h-1 w-2 bg-gray-400 rounded-full" /> Logistical Trace
+                        <div className="h-1 w-2 bg-gray-400 rounded-full" /> Shipment Details
                       </h4>
                       <dl className="space-y-3">
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
@@ -909,7 +909,7 @@ export default function CaseDetail() {
                     {/* System Metadata */}
                     <div className="space-y-4">
                       <h4 className="flex items-center gap-2 text-[10px] font-bold text-gray-400 border-b border-gray-100 pb-2.5 mb-4 tracking-wider">
-                        <div className="h-1 w-2 bg-indigo-500 rounded-full" /> System Metadata
+                        <div className="h-1 w-2 bg-indigo-500 rounded-full" /> Recovery Metadata
                       </h4>
                       <dl className="space-y-3">
                         <div className="flex justify-between items-baseline border-b border-gray-50 pb-2">
@@ -932,12 +932,12 @@ export default function CaseDetail() {
                 {/* Tile 3: Vital Instrumentation */}
                 <div className="p-8 bg-gray-50/30">
                   <div className="mb-8">
-                    <h3 className="text-sm font-bold text-gray-900">Financial Vitals</h3>
+                    <h3 className="text-sm font-bold text-gray-900">Recovery Value</h3>
                   </div>
 
                   <div className="flex flex-col md:flex-row gap-12 items-start">
                     <div className="min-w-[240px]">
-                      <div className="text-[10px] text-gray-400 font-bold mb-3">Guaranteed Amount</div>
+                      <div className="text-[10px] text-gray-400 font-bold mb-3">Recovery Amount</div>
                       <div className="text-4xl font-light text-gray-900 font-mono tracking-tighter">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
@@ -986,8 +986,8 @@ export default function CaseDetail() {
                           </div>
                           <div className="text-[10px] text-gray-400 mt-2 font-bold tracking-wider">
                             {selectedMetric === 'payout' && 'Scheduled Settlement'}
-                            {selectedMetric === 'confidence' && 'AI Analysis Precision'}
-                            {selectedMetric === 'units' && 'Inventory Discrepancy'}
+                            {selectedMetric === 'confidence' && 'Analysis Precision'}
+                            {selectedMetric === 'units' && 'Inventory Units'}
                             {selectedMetric === 'cost' && 'Verified Cost Basis'}
                           </div>
                         </div>
@@ -1003,7 +1003,7 @@ export default function CaseDetail() {
                 {/* Row 1: Audit Flow Timeline */}
                 <div className="p-8 bg-gray-50/30">
                   <div className="mb-8">
-                    <h3 className="text-sm font-bold text-gray-900">Audit Flow Timeline</h3>
+                    <h3 className="text-sm font-bold text-gray-900">Resolution Timeline</h3>
                   </div>
 
                   <div className="space-y-10">
@@ -1037,7 +1037,7 @@ export default function CaseDetail() {
                       </div>
                     </div>
 
-                    {/* Visual Audit Timeline Component */}
+                    {/* Timeline View */}
                     <div className="bg-white border border-gray-100 p-6">
                       <Timeline claimId={effectiveCase.id} />
                     </div>
@@ -1072,7 +1072,7 @@ export default function CaseDetail() {
                 {/* Row 2: Evidence Vault & Identity */}
                 <div className="p-8 bg-white">
                   <div className="mb-8">
-                    <h3 className="text-sm font-bold text-gray-900">Evidence Vault & Verification</h3>
+                    <h3 className="text-sm font-bold text-gray-900">Evidence & Verification</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-12">

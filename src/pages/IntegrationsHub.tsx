@@ -449,25 +449,25 @@ export default function IntegrationsHub() {
         setStores([...stores, res.data.store]);
         setShowAddStore(false);
         setNewStoreData({ name: '', marketplace: 'ATVPDKIKX0DER', seller_id: '' });
-        toast({ title: "Store Added", description: "New store node established." });
+        toast({ title: "Store Added", description: "Store added successfully." });
       } else {
         toast({ title: "Failed", description: res.error || "Could not create store", variant: "destructive" });
       }
     } catch (e) {
-      toast({ title: "Error", description: "Terminal failure during node establishment", variant: "destructive" });
+      toast({ title: "Error", description: "Failed to add store", variant: "destructive" });
     } finally {
       setAddingStore(false);
     }
   };
 
   const handleDeleteStore = async (id: string) => {
-    if (!confirm("Are you sure you want to decommission this store node?")) return;
+    if (!confirm("Are you sure you want to remove this store?")) return;
     try {
       setDeletingStore(id);
       const res = await api.deleteStore(id);
       if (res.ok) {
         setStores(stores.filter(s => s.id !== id));
-        toast({ title: "Node Decommissioned", description: "Store node successfully removed." });
+        toast({ title: "Store Removed", description: "Store removed successfully." });
       }
     } catch (e) {
       toast({ title: "Error", description: "Failed to remove node", variant: "destructive" });
@@ -520,7 +520,7 @@ export default function IntegrationsHub() {
                     </div>
                     <div className="mt-4">
                       <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/40 text-emerald-400 font-mono text-[10px] uppercase tracking-widest px-3 py-1">
-                        {recoveryData.claimCount} Distinct Harvesting Opportunities
+                        {recoveryData.claimCount} Distinct Recovery Opportunities
                       </Badge>
                     </div>
                   </div>
@@ -551,7 +551,7 @@ export default function IntegrationsHub() {
             </div>
             <DialogFooter>
               <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-mono uppercase tracking-widest text-xs hover:bg-emerald-500 transition-colors">
-                Continue to Command Center
+                Continue to Dashboard
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -563,10 +563,10 @@ export default function IntegrationsHub() {
             <DialogHeader>
               <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-serif">
                 <Shield className="h-8 w-8 text-emerald-500" />
-                Fortify Claim Integrity
+                Protect Your Revenue
               </DialogTitle>
               <DialogDescription className="text-center text-gray-400 italic">
-                Connect secondary harvesting nodes to bridge evidence gaps and automate document matching.
+                Connect your data sources to automate document matching.
               </DialogDescription>
             </DialogHeader>
 
@@ -585,7 +585,7 @@ export default function IntegrationsHub() {
                       setShowEvidenceModal(false);
                     }}
                   >
-                    Link Repository
+                    Link Account
                   </Button>
                 </div>
 
@@ -593,7 +593,7 @@ export default function IntegrationsHub() {
                   <Cloud className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
                   <h3 className="font-serif text-lg mb-2">Cloud Storage</h3>
                   <p className="text-xs text-gray-500 mb-6 font-mono leading-relaxed">
-                    INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL DISTRIBUTED EVIDENCE ARTIFACTS.
+                    INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL YOUR BUSINESS DOCUMENTS.
                   </p>
                   <Button
                     variant="outline"

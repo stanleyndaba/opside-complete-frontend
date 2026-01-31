@@ -146,28 +146,28 @@ export default function DocumentDetail() {
         return (
           <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
             <CheckCircle2 className="w-3 h-3" />
-            VALIDATED_OBJECT
+            VALIDATED
           </div>
         );
       case 'pending':
         return (
           <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm animate-pulse">
             <Clock className="w-3 h-3" />
-            IN_QUEUE
+            PROCESSING
           </div>
         );
       case 'failed':
         return (
           <div className="px-2.5 py-1 bg-rose-500/10 border border-rose-500/20 text-[10px] font-mono font-bold text-rose-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
             <AlertCircle className="w-3 h-3" />
-            PROTOCOL_FAULT
+            ERROR
           </div>
         );
       default:
         return (
           <div className="px-2.5 py-1 bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
             <Activity className="w-3 h-3" />
-            {status || 'UNKNOWN_STATE'}
+            {status || 'UNKNOWN'}
           </div>
         );
     }
@@ -192,17 +192,17 @@ export default function DocumentDetail() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
                     <span className="relative inline-flex rounded-full h-8 w-8 bg-emerald-500/40"></span>
                   </div>
-                  <div className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">INITIATING_SECURE_LINK...</div>
+                  <div className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">LOADING...</div>
                 </div>
               ) : (
                 <div className="text-center p-12 bg-rose-500/[0.02] border border-rose-500/10 rounded-xl max-w-md">
                   <AlertCircle className="w-12 h-12 mx-auto text-rose-500/20 mb-6" />
-                  <div className="text-sm font-mono font-bold text-rose-500 uppercase tracking-widest mb-4">NODE_ACCESS_FAILURE</div>
+                  <div className="text-sm font-mono font-bold text-rose-500 uppercase tracking-widest mb-4">LOAD_FAILURE</div>
                   <div className="text-xs text-rose-500/40 mb-8 font-mono">{error}</div>
                   <Link to="/evidence-locker">
                     <Button variant="ghost" className="text-[11px] font-mono font-bold text-white/40 hover:text-white border border-white/5 hover:border-white/10">
                       <ArrowLeft className="w-4 h-4 mr-2" />
-                      RETURN_TO_LOCKER
+                      RETURN_TO_DOCUMENTS
                     </Button>
                   </Link>
                 </div>
@@ -236,10 +236,10 @@ export default function DocumentDetail() {
                     </Button>
                   </Link>
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">FORENSIC_ANALYSIS_NODE</span>
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">DOCUMENT_DETAILS</span>
                     <div className="flex items-center gap-3">
                       <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase">
-                        {documentData?.name?.replace(' ', '_') || 'OBJECT_NULL'}
+                        {documentData?.name?.replace(' ', '_') || 'UNNAMED_DOCUMENT'}
                       </h1>
                       <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                     </div>
@@ -256,7 +256,7 @@ export default function DocumentDetail() {
                     onClick={handleTriggerParsing}
                     disabled={triggeringParse}>
                     {triggeringParse ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <Activity className="w-3.5 h-3.5 mr-2" />}
-                    {triggeringParse ? 'PROCESSING...' : 'REENGAGE_PARSER'}
+                    {triggeringParse ? 'PROCESSING...' : 'REFRESH_DATA'}
                   </Button>
                   <Button
                     variant="ghost"
@@ -276,7 +276,7 @@ export default function DocumentDetail() {
                       }
                     }}>
                     <Download className="w-3.5 h-3.5 mr-2" />
-                    DOWNLOAD_SOURCE
+                    DOWNLOAD
                   </Button>
                 </div>
               </div>
@@ -287,10 +287,10 @@ export default function DocumentDetail() {
                   <div className="px-8 bg-white/[0.02] border-b border-white/5">
                     <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto no-scrollbar">
                       {[
-                        { value: 'extracted', label: 'INTELLIGENCE_ENTRIES', icon: Database },
-                        { value: 'matches', label: 'LINKED_OBJECTS', icon: Link2, count: matchedClaims.length },
-                        { value: 'raw', label: 'FORENSIC_STREAM', icon: Terminal },
-                        { value: 'parsing', label: 'NODE_STATUS', icon: Activity }
+                        { value: 'extracted', label: 'EXTRACTED_DATA', icon: Database },
+                        { value: 'matches', label: 'MATCHED_CLAIMS', icon: Link2, count: matchedClaims.length },
+                        { value: 'raw', label: 'RAW_DATA', icon: Terminal },
+                        { value: 'parsing', label: 'STATUS', icon: Activity }
                       ].map((tab) => (
                         <TabsTrigger
                           key={tab.value}
@@ -320,7 +320,7 @@ export default function DocumentDetail() {
                         <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                           <Hash className="h-8 w-8 text-white" />
                         </div>
-                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">IDENTIFICATION_DATA</h4>
+                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">IDENTIFICATION</h4>
 
                         <div className="space-y-6">
                           <div className="space-y-3">
@@ -328,7 +328,7 @@ export default function DocumentDetail() {
                             <div className="flex flex-wrap gap-2">
                               {extracted.order_ids?.length > 0 ? extracted.order_ids.map((id: string, i: number) => (
                                 <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{id}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
                             </div>
                           </div>
 
@@ -337,7 +337,7 @@ export default function DocumentDetail() {
                             <div className="flex flex-wrap gap-2">
                               {[...(extracted.asins || []), ...(extracted.skus || [])].length > 0 ? [...(extracted.asins || []), ...(extracted.skus || [])].map((id: string, i: number) => (
                                 <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{id}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
                             </div>
                           </div>
                         </div>
@@ -348,7 +348,7 @@ export default function DocumentDetail() {
                         <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                           <DollarSign className="h-8 w-8 text-white" />
                         </div>
-                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">TRANSACTION_METRICS</h4>
+                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">FINANCIAL_DATA</h4>
 
                         <div className="space-y-6">
                           <div className="space-y-3">
@@ -358,7 +358,7 @@ export default function DocumentDetail() {
                                 <div key={i} className="px-2.5 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-md text-xs font-mono font-bold text-emerald-500">
                                   ${typeof amt === 'number' ? amt.toFixed(2) : amt}
                                 </div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
                             </div>
                           </div>
 
@@ -367,7 +367,7 @@ export default function DocumentDetail() {
                             <div className="flex flex-wrap gap-2">
                               {extracted.tracking_numbers?.length > 0 ? extracted.tracking_numbers.map((num: string, i: number) => (
                                 <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{num}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
                             </div>
                           </div>
                         </div>
@@ -378,7 +378,7 @@ export default function DocumentDetail() {
                         <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                           <Calendar className="h-8 w-8 text-white" />
                         </div>
-                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">TEMPORAL_CONTEXT</h4>
+                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">DATES_AND_REFERENCES</h4>
 
                         <div className="space-y-6">
                           <div className="space-y-3">
@@ -386,7 +386,7 @@ export default function DocumentDetail() {
                             <div className="flex flex-wrap gap-2">
                               {extracted.invoice_numbers?.length > 0 ? extracted.invoice_numbers.map((inv: string, i: number) => (
                                 <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{inv}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
                             </div>
                           </div>
 
@@ -395,7 +395,7 @@ export default function DocumentDetail() {
                             <div className="flex flex-wrap gap-2">
                               {extracted.dates?.length > 0 ? extracted.dates.map((date: string, i: number) => (
                                 <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{date}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_DETECTED</span>}
+                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
                             </div>
                           </div>
                         </div>
@@ -405,14 +405,14 @@ export default function DocumentDetail() {
                     <div className="mt-8 p-6 bg-white/[0.01] border border-white/5 rounded-xl flex items-center justify-between">
                       <div className="flex items-center gap-6">
                         <div className="flex flex-col gap-1">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">VALIDATION_CONFIDENCE</span>
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">CONFIDENCE_SCORE</span>
                           <span className="text-xl font-mono font-bold text-emerald-500">
-                            {documentData?.parser_confidence !== undefined ? `${(documentData.parser_confidence * 100).toFixed(0)}%_RELIABILITY` : 'TBD_NODE_DATA'}
+                            {documentData?.parser_confidence !== undefined ? `${(documentData.parser_confidence * 100).toFixed(0)}%_MATCH` : 'PENDING'}
                           </span>
                         </div>
                         <div className="h-10 w-[1px] bg-white/5" />
                         <div className="flex flex-col gap-1">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">TOTAL_ENTRIES</span>
+                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">TOTAL_FIELDS</span>
                           <span className="text-xl font-mono font-bold text-white">
                             {(extracted.order_ids?.length || 0) + (extracted.asins?.length || 0) + (extracted.tracking_numbers?.length || 0) + (extracted.amounts?.length || 0)}
                           </span>
@@ -425,7 +425,7 @@ export default function DocumentDetail() {
                         className="h-10 px-6 text-[11px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-widest rounded-lg"
                         onClick={() => setSummaryOpen(!summaryOpen)}
                       >
-                        {summaryOpen ? 'CLOSE_MANIFEST' : 'VIEW_FULL_MANIFEST'}
+                        {summaryOpen ? 'CLOSE_VIEW' : 'VIEW_SUMMARY'}
                         <ChevronRight className={cn("ml-2 h-4 w-4 transition-transform", summaryOpen ? "rotate-90" : "")} />
                       </Button>
                     </div>
@@ -448,16 +448,16 @@ export default function DocumentDetail() {
                                 <div className="space-y-4">
                                   <div className="flex items-center gap-6">
                                     <div className="flex flex-col gap-1">
-                                      <span className="text-[10px] font-mono font-bold text-white/20 uppercase">CLAIM_RECOVERY_NODE</span>
+                                      <span className="text-[10px] font-mono font-bold text-white/20 uppercase">ASSOCIATED_CLAIM</span>
                                       <span className="text-sm font-mono font-bold text-white group-hover:text-emerald-500 transition-colors uppercase">
-                                        RECOVERY_{match.claim_id?.slice(0, 8)}
+                                        CLAIM_{match.claim_id?.slice(0, 8)}
                                       </span>
                                     </div>
                                     <div className="h-8 w-[1px] bg-white/5" />
                                     <div className="flex flex-col gap-1">
-                                      <span className="text-[10px] font-mono font-bold text-white/20 uppercase">MATCH_ALGORITHM</span>
+                                      <span className="text-[10px] font-mono font-bold text-white/20 uppercase">MATCH_METHOD</span>
                                       <span className="text-xs font-mono font-medium text-white/60">
-                                        {match.match_type?.replace(/_/g, ' ') || 'GENERAL_HEURISTIC'}
+                                        {match.match_type?.replace(/_/g, ' ') || 'FUZZY_MATCH'}
                                       </span>
                                     </div>
                                   </div>
@@ -484,7 +484,7 @@ export default function DocumentDetail() {
 
                               <Link to={`/case/${match.claim_id}`}>
                                 <Button variant="ghost" className="h-12 px-6 text-[11px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all uppercase tracking-[0.2em] group/btn">
-                                  NAVIGATE_TO_NODE
+                                  VIEW_CLAIM
                                   <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                                 </Button>
                               </Link>
@@ -496,7 +496,7 @@ export default function DocumentDetail() {
                           <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
                             <Link2 className="h-8 w-8 text-white/10" />
                           </div>
-                          <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">NO_LINKED_OBJECTS_DETECTED</span>
+                          <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">NO_MATCHED_CLAIMS</span>
                           <p className="text-xs text-white/10 mt-4 font-mono uppercase tracking-widest">Awaiting match engine synchronization...</p>
                         </div>
                       )}
@@ -515,14 +515,14 @@ export default function DocumentDetail() {
                             <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
                               <Terminal className="h-8 w-8 text-white/10" />
                             </div>
-                            <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">STREAM_BUFFER_EMPTY</span>
+                            <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">NO_DATA_FOUND</span>
                             <Button
                               variant="ghost"
                               className="mt-8 text-[11px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 uppercase tracking-widest"
                               onClick={handleTriggerParsing}
                               disabled={triggeringParse}
                             >
-                              INVOKE_STREAM_CAPTURE
+                              EXTRACT_DATA
                             </Button>
                           </div>
                         );
@@ -532,9 +532,9 @@ export default function DocumentDetail() {
                             <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
                               <div className="flex items-center gap-4">
                                 <Terminal className="h-3.5 w-3.5 text-emerald-500" />
-                                <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">RAW_INTELLIGENCE_STREAM</span>
+                                <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">DOCUMENT_STREAM</span>
                                 <div className="h-3 w-[1px] bg-white/10 mx-2" />
-                                <span className="text-[10px] font-mono text-emerald-500/50">{lines.length} ENTRIES_CACHED</span>
+                                <span className="text-[10px] font-mono text-emerald-500/50">{lines.length} LINES</span>
                               </div>
                               <button
                                 onClick={() => {
@@ -544,7 +544,7 @@ export default function DocumentDetail() {
                                 className="text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-[0.1em] flex items-center gap-2"
                               >
                                 <Copy className="h-3.5 w-3.5" />
-                                COPY_STREAM
+                                COPY_ALL
                               </button>
                             </div>
 
@@ -583,10 +583,10 @@ export default function DocumentDetail() {
               {/* Registry Metadata Footer */}
               <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8">
                 {[
-                  { label: 'OBJECT_IDENTIFIER', value: docId, icon: Hash },
-                  { label: 'SCHEMA_TYPE', value: documentData?.mime_type || 'application/pdf', icon: Database },
-                  { label: 'DATASOURCE_NODE', value: documentData?.source || 'MANUAL_INGESTION', icon: Cloud },
-                  { label: 'REGISTRATION_TIME', value: documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'NULL', icon: Calendar }
+                  { label: 'DOCUMENT_ID', value: docId, icon: Hash },
+                  { label: 'DOCUMENT_TYPE', value: documentData?.mime_type || 'application/pdf', icon: Database },
+                  { label: 'SOURCE', value: documentData?.source || 'MANUAL_INGESTION', icon: Cloud },
+                  { label: 'CREATED_AT', value: documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'N/A', icon: Calendar }
                 ].map((item, i) => (
                   <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5 group hover:border-white/10 transition-all">
                     <div className="flex items-center gap-3 mb-4">
