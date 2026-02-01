@@ -11,6 +11,7 @@ import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
+import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -77,6 +78,7 @@ export function Sidebar({
   const { tenant } = useTenant();
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
+  const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
 
   // States for referral functionality
@@ -339,13 +341,21 @@ export function Sidebar({
               onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
-              <span>Support and Requests</span>
+              <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/notifications`)}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
-              <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
-              <span>Updates</span>
+              className="flex items-center justify-between px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+                  <div className={cn(
+                    "absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full",
+                    unreadCount > 0 ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-white/10"
+                  )} />
+                </div>
+                <span>Updates</span>
+              </div>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/reports`)}
