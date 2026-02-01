@@ -144,6 +144,7 @@ export function Sidebar({
 
   const primaryItems: NavItem[] = [
     { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
+    { title: 'Updates', icon: Mail, href: `/app/${currentTenantSlug}/notifications` },
     { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
     { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
     // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },

@@ -322,46 +322,6 @@ export function Navbar({
                 </div>
 
 
-                {/* Store Connection */}
-                <HoverCard openDelay={100} closeDelay={200}>
-                  <HoverCardTrigger asChild>
-                    <button
-                      onClick={() => navigate('/integrations-hub')}
-                      className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
-                      aria-label="Store connections">
-                      <Store className="h-4.5 w-4.5" />
-                      <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-emerald-500/30 rounded-full" />
-                    </button>
-                  </HoverCardTrigger>
-                  <HoverCardContent
-                    side="bottom"
-                    align="center"
-                    sideOffset={12}
-                    className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
-                    <div className="p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                          <Store className="h-4 w-4 text-emerald-500" />
-                        </div>
-                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Store Setup</span>
-                      </div>
-                      <h4 className="text-[13px] font-serif font-medium text-white mb-2 uppercase tracking-tight">Connections</h4>
-                      <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
-                        "Consolidate institutional data flows from Amazon, Shopify, or Walmart to maximize multi-vector recoveries."
-                      </p>
-                      <div className="mt-6">
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            navigate('/integrations-hub');
-                          }}
-                          className="w-full h-10 border border-emerald-500/20 bg-emerald-500/[0.02] hover:bg-emerald-500/10 hover:border-emerald-500/50 text-emerald-500 text-[10px] font-mono font-bold uppercase tracking-widest transition-all rounded-xl">
-                          Manage connections
-                        </Button>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
               </div>
 
             </div>

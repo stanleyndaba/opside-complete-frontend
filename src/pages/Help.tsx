@@ -124,87 +124,86 @@ export default function Help() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Left/Middle Columns: FAQs & Guides */}
-            <div className="lg:col-span-2 space-y-16">
-              {/* FAQs Section */}
-              <section>
-                <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
-                  <div className="h-px w-8 bg-gray-500/30" />
-                  Common Questions
-                </h2>
-                <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden backdrop-blur-sm">
-                  <Accordion type="single" collapsible className="w-full">
-                    {filteredFaqs.map((faq, index) => (
-                      <AccordionItem
-                        key={faq.id}
-                        value={faq.id}
-                        className={cn(
-                          "px-6 border-white/5 transition-all hover:bg-white/[0.01]",
-                          index !== filteredFaqs.length - 1 ? 'border-b' : 'border-0'
-                        )}
-                      >
-                        <AccordionTrigger className="py-6 text-left hover:no-underline text-sm font-medium text-white/80 hover:text-white transition-colors">
-                          {faq.question}
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-6 text-sm text-gray-400 leading-relaxed font-light">
-                          {faq.answer}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                  {filteredFaqs.length === 0 && (
-                    <div className="text-center py-12 text-gray-500 italic font-light">
-                      We couldn't find any results matching your search.
-                    </div>
-                  )}
-                </div>
-              </section>
-
-              {/* Guides Section */}
-              <section>
-                <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
-                  <div className="h-px w-8 bg-gray-500/30" />
-                  Quick Guides
-                </h2>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {gettingStartedSteps.map((item, idx) => (
-                    <motion.div
-                      key={idx}
-                      whileHover={{ y: -4 }}
-                      className="p-6 bg-[#0c0c0c] border border-white/5 rounded-2xl group hover:border-emerald-500/30 transition-all"
+          <div className="flex flex-col gap-12">
+            {/* FAQs Section */}
+            <section className="w-full">
+              <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+                <div className="h-px w-8 bg-gray-500/30" />
+                Common Questions
+              </h2>
+              <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden backdrop-blur-sm">
+                <Accordion type="single" collapsible className="w-full">
+                  {filteredFaqs.map((faq, index) => (
+                    <AccordionItem
+                      key={faq.id}
+                      value={faq.id}
+                      className={cn(
+                        "px-6 border-white/5 transition-all hover:bg-white/[0.01]",
+                        index !== filteredFaqs.length - 1 ? 'border-b' : 'border-0'
+                      )}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-mono text-white group-hover:bg-emerald-500 group-hover:text-black transition-all">
-                          {item.step}
-                        </div>
+                      <AccordionTrigger className="py-6 text-left hover:no-underline text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        {faq.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-6 text-sm text-gray-400 leading-relaxed font-light">
+                        {faq.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+                {filteredFaqs.length === 0 && (
+                  <div className="text-center py-12 text-gray-500 italic font-light">
+                    We couldn't find any results matching your search.
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Guides Section */}
+            <section className="w-full">
+              <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+                <div className="h-px w-8 bg-gray-500/30" />
+                Quick Guides
+              </h2>
+              <div className="flex flex-col gap-6">
+                {gettingStartedSteps.map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ x: 4 }}
+                    className="p-6 bg-[#0c0c0c] border border-white/5 rounded-2xl group hover:border-emerald-500/30 transition-all flex items-center gap-6"
+                  >
+                    <div className="h-12 w-12 shrink-0 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-sm font-mono text-white group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                      {item.step}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-white font-medium">{item.title}</h3>
                         <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">{item.time}</span>
                       </div>
-                      <h3 className="text-white font-medium mb-2">{item.title}</h3>
-                      <p className="text-xs text-gray-400 font-light leading-relaxed mb-4">{item.description}</p>
+                      <p className="text-xs text-gray-400 font-light leading-relaxed mb-2">{item.description}</p>
                       <Button variant="ghost" className="h-auto p-0 text-[10px] font-mono uppercase tracking-widest text-emerald-500/60 hover:text-emerald-500 hover:bg-transparent group/btn">
                         Learn More <ChevronRight className="h-3 w-3 ml-1 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
-                    </motion.div>
-                  ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* Reach Out Section */}
+            <section className="w-full">
+              <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+                <div className="h-px w-8 bg-gray-500/30" />
+                Reach Out
+              </h2>
+
+              <div className="bg-[#0c0c0c] border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
+                  <Mail className="h-24 w-24 text-white" />
                 </div>
-              </section>
-            </div>
 
-            {/* Right Column: Contact Form */}
-            <div className="space-y-8">
-              <section className="sticky top-24">
-                <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
-                  <div className="h-px w-8 bg-gray-500/30" />
-                  Reach Out
-                </h2>
-
-                <div className="bg-[#0c0c0c] border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
-                    <Mail className="h-24 w-24 text-white" />
-                  </div>
-
-                  <form onSubmit={handleContactSubmit} className="space-y-6 relative z-10">
+                <form onSubmit={handleContactSubmit} className="space-y-6 relative z-10 max-w-2xl">
+                  <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Your Name</Label>
                       <Input
@@ -226,56 +225,64 @@ export default function Help() {
                         className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:border-emerald-500/30"
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="category" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">How can we help?</Label>
-                      <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                        <SelectTrigger className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:ring-0 focus:border-emerald-500/30">
-                          <SelectValue placeholder="Select a topic..." />
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#0c0c0c] border-white/10 text-white rounded-xl">
-                          <SelectItem value="billing">Billing & Payments</SelectItem>
-                          <SelectItem value="technical">App Support</SelectItem>
-                          <SelectItem value="account">Manage My Account</SelectItem>
-                          <SelectItem value="recovery">Help With a Claim</SelectItem>
-                          <SelectItem value="general">Other Questions</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Tell us more</Label>
-                      <Textarea
-                        id="message"
-                        value={contactForm.message}
-                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                        placeholder="Type your message here..."
-                        rows={4}
-                        className="bg-white/[0.02] border-white/5 text-sm text-white rounded-xl focus:border-emerald-500/30 resize-none"
-                      />
-                    </div>
-
-                    <Button type="submit" className="w-full h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-widest transition-all rounded-xl">
-                      Submit Request
-                    </Button>
-                  </form>
-                </div>
-
-                {/* Secondary Contact Info */}
-                <div className="mt-8 grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl text-center group hover:bg-white/[0.04] transition-all">
-                    <Mail className="h-4 w-4 text-emerald-500/50 mx-auto mb-2 group-hover:text-emerald-500 transition-colors" />
-                    <span className="block text-[10px] font-mono text-gray-500 uppercase">Email</span>
-                    <span className="text-[10px] text-white/60">support@opside.app</span>
                   </div>
-                  <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl text-center group hover:bg-white/[0.04] transition-all">
-                    <MessageSquare className="h-4 w-4 text-emerald-500/50 mx-auto mb-2 group-hover:text-emerald-500 transition-colors" />
-                    <span className="block text-[10px] font-mono text-gray-500 uppercase">Response</span>
-                    <span className="text-[10px] text-white/60">Under 24 Hours</span>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="category" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">How can we help?</Label>
+                    <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
+                      <SelectTrigger className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:ring-0 focus:border-emerald-500/30">
+                        <SelectValue placeholder="Select a topic..." />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#0c0c0c] border-white/10 text-white rounded-xl">
+                        <SelectItem value="billing">Billing & Payments</SelectItem>
+                        <SelectItem value="technical">App Support</SelectItem>
+                        <SelectItem value="account">Manage My Account</SelectItem>
+                        <SelectItem value="recovery">Help With a Claim</SelectItem>
+                        <SelectItem value="general">Other Questions</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Tell us more</Label>
+                    <Textarea
+                      id="message"
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      placeholder="Type your message here..."
+                      rows={4}
+                      className="bg-white/[0.02] border-white/5 text-sm text-white rounded-xl focus:border-emerald-500/30 resize-none"
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full md:w-auto px-12 h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-widest transition-all rounded-xl">
+                    Submit Request
+                  </Button>
+                </form>
+              </div>
+
+              {/* Secondary Contact Info */}
+              <div className="mt-8 grid md:grid-cols-2 gap-4 max-w-2xl">
+                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
+                  <div className="h-10 w-10 shrink-0 bg-white/5 rounded-xl flex items-center justify-center">
+                    <Mail className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest">Email Support</span>
+                    <span className="text-[11px] text-white/60">support@opside.app</span>
                   </div>
                 </div>
-              </section>
-            </div>
+                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
+                  <div className="h-10 w-10 shrink-0 bg-white/5 rounded-xl flex items-center justify-center">
+                    <MessageSquare className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest">Response Time</span>
+                    <span className="text-[11px] text-white/60">Under 24 Hours</span>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
