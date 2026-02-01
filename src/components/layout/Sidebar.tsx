@@ -144,7 +144,6 @@ export function Sidebar({
 
   const primaryItems: NavItem[] = [
     { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
-    { title: 'Updates', icon: Mail, href: `/app/${currentTenantSlug}/notifications` },
     { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
     { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
     // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
@@ -341,6 +340,21 @@ export function Sidebar({
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Support and Requests</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/app/${currentTenantSlug}/notifications`)}
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+              <span>Updates</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/app/${currentTenantSlug}/reports`)}
+              className="flex items-center justify-between px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
+              <div className="flex items-center gap-3">
+                <BarChart3 className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
+                <span>Reports</span>
+              </div>
+              <span className="text-[8px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded font-mono font-bold tracking-tighter">BETA</span>
             </DropdownMenuItem>
             {/* <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
