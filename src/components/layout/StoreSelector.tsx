@@ -66,17 +66,7 @@ export function StoreSelector() {
 
     // Handle case with no stores (e.g. new user)
     if (stores.length === 0) {
-        return (
-            <Button
-                variant="outline"
-                size="sm"
-                className="h-9 px-3 gap-2 border-dashed border-slate-300 text-slate-500 hover:text-emerald-600 hover:border-emerald-200"
-                onClick={() => window.location.href = '/integrations-hub'}
-            >
-                <Plus className="h-3.5 w-3.5" />
-                <span className="text-[13px] font-medium">Connect Store</span>
-            </Button>
-        );
+        return null;
     }
 
     return (
