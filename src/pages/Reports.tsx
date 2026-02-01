@@ -737,7 +737,10 @@ export default function Reports() {
           {/* Page Header & Controls */}
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-xl font-semibold text-gray-900 mb-0.5">Reports</h1>
+              <div className="flex items-center gap-3 mb-0.5">
+                <h1 className="text-xl font-semibold text-gray-900">Reports</h1>
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded font-mono font-bold tracking-tighter">BETA</span>
+              </div>
               <p className="text-xs text-gray-500">Financial analytics and recovery performance insights</p>
             </div>
             <div className="flex flex-wrap gap-2 items-center">
