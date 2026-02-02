@@ -1157,9 +1157,9 @@ export default function Recoveries() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [submittingBulk, setSubmittingBulk] = useState(false);
   const { toast } = useToast();
-  const [showParkedOnly, setShowParkedOnly] = useState(false);
   const [autoSubmitHigh, setAutoSubmitHigh] = useState(false);
   const [smartPromptOpen, setSmartPromptOpen] = useState(false);
+
   const [promptClaim, setPromptClaim] = useState<any | null>(null);
   const autoSubmittedRef = useRef<Set<string>>(new Set());
 
@@ -1181,13 +1181,10 @@ export default function Recoveries() {
   const [selectedStatus, setSelectedStatus] = useState<string>('pending');
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detectionDetails, setDetectionDetails] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState<'claims' | 'matching' | 'cases'>('claims');
-  const [showRiskyClaims, setShowRiskyClaims] = useState(false); // Toggle to show low-strength claims
-  const [fileAnywayModalOpen, setFileAnywayModalOpen] = useState(false);
-  const [claimToFile, setClaimToFile] = useState<RecoveryClaim | null>(null);
   const [evidencePackOpen, setEvidencePackOpen] = useState(false);
   const [evidencePackClaim, setEvidencePackClaim] = useState<RecoveryClaim | null>(null);
   const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
+
   const [proofDocsClaim, setProofDocsClaim] = useState<RecoveryClaim | null>(null);
   const [proofDocs, setProofDocs] = useState<any[]>([]);
   const [markAllReadModalOpen, setMarkAllReadModalOpen] = useState(false);
