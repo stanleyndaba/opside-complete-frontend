@@ -642,10 +642,12 @@ export default function CaseDetail() {
   // Guard: show loading or error if no data
   if (!effectiveCase && loading) {
     return (
-      <PageLayout title="Loading...">
-        <div className="text-center py-12">
-          <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-gray-400" />
-          <p className="text-gray-500">Loading case details...</p>
+      <PageLayout title="Loading..." midnight>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-emerald-500/50" />
+            <p className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Loading case details...</p>
+          </div>
         </div>
       </PageLayout>
     );
@@ -653,17 +655,19 @@ export default function CaseDetail() {
 
   if (!effectiveCase) {
     return (
-      <PageLayout title="Case Not Found">
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900">Case not found</h2>
-          <p className="text-gray-500 mb-6">Case ID: {caseId}</p>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <Button asChild>
-            <Link to="/recoveries">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Cases
-            </Link>
-          </Button>
+      <PageLayout title="Case Not Found" midnight>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-4 text-white">Case not found</h2>
+            <p className="text-white/40 mb-6 font-mono">Case ID: {caseId}</p>
+            {error && <p className="text-red-400 mb-4">{error}</p>}
+            <Button asChild className="bg-white/10 border border-white/10 hover:bg-white/20 text-white">
+              <Link to="/recoveries">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Cases
+              </Link>
+            </Button>
+          </div>
         </div>
       </PageLayout>
     );
