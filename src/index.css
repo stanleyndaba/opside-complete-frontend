@@ -137,6 +137,17 @@
     @apply bg-background text-foreground text-[15px];
   }
 
+  /* Force dark background when midnight mode is active */
+  body:has(.bg-\[#050505\]),
+  html:has(.bg-\[#050505\]) {
+    background-color: #050505 !important;
+  }
+
+  /* Fallback for browsers that don't support :has() */
+  .midnight-body {
+    background-color: #050505 !important;
+  }
+
   /* All text elements use Inter - comprehensive coverage */
   /* Exception for .font-montserrat, .font-code, .font-merriweather which are used for specific branding */
   *:not(.font-montserrat):not(.font-merriweather),
