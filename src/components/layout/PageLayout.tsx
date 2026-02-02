@@ -38,13 +38,13 @@ export function PageLayout({
       <Navbar sidebarCollapsed={isSidebarCollapsed} onToggleSidebar={toggleSidebar} forceTransparent={forceTransparent} />
     )}
 
-    <div className="flex-1 flex">
+    <div className={`flex-1 flex ${shouldShowMidnightBg ? 'bg-[#050505]' : ''}`}>
       {!hideSidebar && (
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
       )}
 
-      <main className={`flex-1 transition-all duration-300 ${mainIndent} overflow-hidden`}>
-        <div className="w-full max-w-full mx-auto p-4 lg:p-6 animate-fade-in overflow-x-hidden">
+      <main className={`flex-1 transition-all duration-300 ${mainIndent} overflow-hidden ${shouldShowMidnightBg ? 'bg-[#050505]' : ''}`}>
+        <div className={`w-full max-w-full mx-auto p-4 lg:p-6 animate-fade-in overflow-x-hidden ${shouldShowMidnightBg ? 'bg-[#050505] min-h-screen' : ''}`}>
           {(hideNavbar && hideSidebar && !hideLogo) && (
             <div className="fixed top-4 left-5 z-50 pointer-events-none">
               <img
