@@ -1166,9 +1166,7 @@ export default function Recoveries() {
   // Phase 3: Detection results integration
   const [detectionResults, setDetectionResults] = useState<any[]>([]);
   const [mergedRecoveries, setMergedRecoveries] = useState<any[] | null>(null); // null means not initialized yet
-  const [filterSource, setFilterSource] = useState<'all' | 'detected' | 'synced'>('all');
-  const [filterConfidence, setFilterConfidence] = useState<'all' | 'high' | 'medium' | 'low'>('all');
-  const [filterUrgent, setFilterUrgent] = useState<'all' | 'urgent' | 'critical'>('all');
+
 
   // Phase 3: Detection statistics and urgent claims
   const [detectionStats, setDetectionStats] = useState<any>(null);
