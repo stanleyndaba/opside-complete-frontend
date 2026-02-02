@@ -255,7 +255,7 @@ export default function DocumentDetail() {
                     className="h-10 px-5 text-[10px] font-mono font-bold text-white/40 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
                     onClick={handleTriggerParsing}
                     disabled={triggeringParse}>
-                    {triggeringParse ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <Activity className="w-3.5 h-3.5 mr-2" />}
+                    {triggeringParse ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-2" />}
                     {triggeringParse ? 'PROCESSING...' : 'REFRESH_DATA'}
                   </Button>
                   <Button
@@ -295,7 +295,7 @@ export default function DocumentDetail() {
                         <TabsTrigger
                           key={tab.value}
                           value={tab.value}
-                          className="relative h-16 px-0 text-[11px] font-mono font-bold text-white/20 bg-transparent rounded-none border-0 shadow-none transition-all hover:text-white group data-[state=active]:text-emerald-500 uppercase tracking-widest"
+                          className="relative h-16 px-0 text-[11px] font-mono font-bold text-white/20 bg-transparent data-[state=active]:bg-transparent rounded-none border-0 shadow-none transition-all hover:text-white group data-[state=active]:text-emerald-500 uppercase tracking-widest"
                         >
                           <div className="flex items-center gap-2.5">
                             <tab.icon className="h-3.5 w-3.5 opacity-40 group-data-[state=active]:opacity-100" />
