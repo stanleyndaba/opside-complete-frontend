@@ -498,7 +498,7 @@ export function EvidenceMatchingTable() {
                         {match.created_at && (
                           <div className="text-[9px] font-mono text-white/20 flex items-center gap-1.5 uppercase tracking-wide">
                             <Clock className="h-2.5 w-2.5" />
-                            SUBMITTED_{format(new Date(match.created_at), 'MMM_dd,_yyyy_•_HH:mm')}
+                            SUBMITTED {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm').replace(/ /g, '_')}
                           </div>
                         )}
                       </div>
