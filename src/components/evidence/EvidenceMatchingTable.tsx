@@ -316,24 +316,25 @@ export function EvidenceMatchingTable() {
 
   if (loading && matchingResults.length === 0) {
     return (
-      <div className="bg-white border border-gray-200 p-12 text-center">
-        <Loader2 className="w-8 h-8 mx-auto text-gray-200 mb-4 animate-spin" />
-        <p className="text-xs text-gray-400 font-semibold">Synchronizing Intelligence...</p>
+      <div className="bg-[#0c0c0c] border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
+        <Loader2 className="w-8 h-8 mx-auto text-emerald-500/50 mb-4 animate-spin" />
+        <p className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">SYNCHRONIZING_INTELLIGENCE...</p>
       </div>
     );
   }
 
   if (error && matchingResults.length === 0) {
     return (
-      <div className="bg-white border border-gray-200 p-8 text-center">
-        <p className="text-xs text-red-600 font-bold mb-4">{error}</p>
-        <Button onClick={fetchMatchingResults} variant="outline" size="sm" className="h-8 text-xs font-bold border-gray-200">
-          <RefreshCw className="w-4 h-4 mr-2" />
-          RETRY
+      <div className="bg-[#0c0c0c] border border-red-500/20 p-8 text-center rounded-2xl backdrop-blur-xl">
+        <p className="text-[10px] font-mono font-bold text-red-500/80 uppercase tracking-[0.2em] mb-4">{error}</p>
+        <Button onClick={fetchMatchingResults} className="h-10 px-6 text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-white/5 hover:bg-white/10 text-white/60 border border-white/10 rounded-xl">
+          <RefreshCw className="w-3.5 h-3.5 mr-2" />
+          RETRY_CONNECTION
         </Button>
       </div>
     );
   }
+
 
   return (
     <div className="space-y-4">
@@ -448,64 +449,64 @@ export function EvidenceMatchingTable() {
         </TabsContent>
 
         {/* Auto-Submitted Tab */}
-        <TabsContent value="auto-submitted" className="mt-0 border-t border-gray-100">
+        <TabsContent value="auto-submitted" className="mt-0 border-t border-white/5">
           {autoSubmitted.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-gray-200 mb-4 bg-gray-50/50">
-                <Hexagon className="h-5 w-5 text-gray-300" />
+            <div className="py-20 text-center bg-white/[0.02] rounded-2xl border border-white/5 backdrop-blur-xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
+                <Hexagon className="h-5 w-5 text-white/20" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-900">No Auto-Submitted Matches</h3>
-              <p className="text-xs text-gray-500 mt-2 max-w-[280px] mx-auto leading-relaxed">
+              <h3 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.2em]">NO_AUTO_SUBMITTED_VECTORS</h3>
+              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-wide">
                 System initiates automatic filing for matches exceeding the 85% confidence threshold. No high-confidence pairings detected.
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-white/5">
               {autoSubmitted.map((match) => (
-                <div key={match.id} className="group relative pl-6 py-5 hover:bg-gray-50/50 transition-colors">
-                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-900 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
+                <div key={match.id} className="group relative pl-6 py-5 hover:bg-white/[0.02] transition-colors">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
-                      <div className="mt-1 flex items-center justify-center w-8 h-8 border border-gray-200 bg-white">
-                        <Hexagon className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                      <div className="mt-1 flex items-center justify-center w-8 h-8 border border-white/10 bg-white/5 rounded-lg">
+                        <Hexagon className="h-4 w-4 text-white/20 group-hover:text-emerald-500/60 transition-colors" />
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-gray-900">
+                          <span className="text-[11px] font-mono font-bold text-white/80 uppercase tracking-wide">
                             {getMatchTypeLabel(match.match_type)}
                           </span>
-                          <span className="text-xs text-gray-300">|</span>
-                          <span className="text-xs font-semibold text-emerald-600">
-                            {Math.round(match.confidence_score * 100)}% CONFIDENCE
+                          <span className="text-[10px] text-white/10">|</span>
+                          <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-wider">
+                            {Math.round(match.confidence_score * 100)}%_CONFIDENCE
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
+                        <div className="flex items-center gap-3 text-[9px] font-mono text-white/40 uppercase tracking-wide">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-gray-400">CLAIM:</span>
-                            <Link to={`/recoveries/${match.claim_id}`} className="font-mono text-gray-700 hover:text-gray-900 underline underline-offset-2 decoration-gray-200 hover:decoration-gray-400">
+                            <span className="text-white/20">CLAIM:</span>
+                            <Link to={`/recoveries/${match.claim_id}`} className="text-emerald-500/60 hover:text-emerald-500 transition-colors">
                               {match.claim_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
-                          <span className="text-gray-300">/</span>
+                          <span className="text-white/10">/</span>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-gray-400">DOC:</span>
-                            <Link to={`/documents/${match.document_id}`} className="font-mono text-gray-700 hover:text-gray-900 underline underline-offset-2 decoration-gray-200 hover:decoration-gray-400">
+                            <span className="text-white/20">DOC:</span>
+                            <Link to={`/documents/${match.document_id}`} className="text-emerald-500/60 hover:text-emerald-500 transition-colors">
                               {match.document_details?.filename?.substring(0, 20) || match.document_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
                         </div>
                         {match.created_at && (
-                          <div className="text-xs text-gray-400 flex items-center gap-1.5">
+                          <div className="text-[9px] font-mono text-white/20 flex items-center gap-1.5 uppercase tracking-wide">
                             <Clock className="h-2.5 w-2.5" />
-                            SUBMITTED {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm')}
+                            SUBMITTED_{format(new Date(match.created_at), 'MMM_dd,_yyyy_•_HH:mm')}
                           </div>
                         )}
                       </div>
                     </div>
                     <div className="pr-6">
-                      <Button asChild variant="ghost" size="sm" className="h-8 text-xs font-semibold text-gray-400 hover:text-gray-900 hover:bg-transparent group/btn p-0">
+                      <Button asChild variant="ghost" size="sm" className="h-8 text-[9px] font-mono font-bold text-white/30 hover:text-emerald-500 hover:bg-transparent group/btn uppercase tracking-widest p-0">
                         <Link to={`/recoveries/${match.claim_id}`} className="flex items-center gap-2">
-                          VIEW RECOVERY
+                          VIEW_RECOVERY
                           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
                         </Link>
                       </Button>
@@ -517,20 +518,21 @@ export function EvidenceMatchingTable() {
           )}
         </TabsContent>
 
+
         {/* Held / Rejected Tab */}
-        <TabsContent value="held" className="mt-0 border-t border-gray-100">
+        <TabsContent value="held" className="mt-0 border-t border-white/5">
           {heldForReview.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-gray-200 mb-4 bg-gray-50/50">
-                <CheckCircle2 className="h-5 w-5 text-gray-300" />
+            <div className="py-20 text-center bg-white/[0.02] rounded-2xl border border-white/5 backdrop-blur-xl">
+              <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
+                <CheckCircle2 className="h-5 w-5 text-white/20" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-900">No Parked Claims</h3>
-              <p className="text-xs text-gray-500 mt-2 max-w-[280px] mx-auto leading-relaxed">
+              <h3 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.2em]">NO_PARKED_CLAIMS</h3>
+              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-wide">
                 All identified overlaps have been either actioned or dismissed. Systematic queue is clear.
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-white/5">
               {heldForReview.map(claim => (
                 <ParkedClaimCard
                   key={claim.id}
