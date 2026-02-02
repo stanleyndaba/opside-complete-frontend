@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
-import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload, Mail, Hexagon, ArrowRight, Loader2 } from 'lucide-react';
+import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload, Mail, Hexagon, ArrowRight, Loader2, Sparkles, FileSearch } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -1139,6 +1139,15 @@ export default function Recoveries() {
     from: subDays(new Date(), 30),
     to: new Date(),
   });
+  const [quickDateRange, setQuickDateRangeState] = useState('30days');
+  const [activeTab, setActiveTab] = useState<'claims' | 'matching' | 'cases'>('claims');
+  const [filterSource, setFilterSource] = useState('all');
+  const [filterConfidence, setFilterConfidence] = useState('all');
+  const [filterUrgent, setFilterUrgent] = useState('all');
+  const [showRiskyClaims, setShowRiskyClaims] = useState(true);
+  const [showParkedOnly, setShowParkedOnly] = useState(false);
+  const [claimToFile, setClaimToFile] = useState<RecoveryClaim | null>(null);
+  const [fileAnywayModalOpen, setFileAnywayModalOpen] = useState(false);
   const [claims, setClaims] = useState<RecoveryClaim[]>([]);
   const [metricsLoaded, setMetricsLoaded] = useState(false);
   const [metricsError, setMetricsError] = useState<string | null>(null);
@@ -2214,6 +2223,7 @@ export default function Recoveries() {
   };
 
   const setQuickDateRange = (range: string) => {
+    setQuickDateRangeState(range);
     const now = new Date();
     switch (range) {
       case '30days':
@@ -2232,401 +2242,444 @@ export default function Recoveries() {
   };
 
   return (
-    <PageLayout title="Reimbursements">
+    <PageLayout title="Reimbursements" midnight>
+      {/* Background Matrix Pattern / Noise */}
+      <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+
       <div className="relative w-full overflow-x-hidden">
-        <div className="relative w-full bg-white min-h-screen">
-          <div className="relative w-full max-w-full px-8 pt-8 pb-6 text-gray-900">
-            {/* Header Section */}
-            <div className="border-b border-gray-200 pb-6 mb-6">
-              <div className="flex items-center justify-between mb-4">
+        <div className="relative w-full min-h-screen">
+          <div className="relative w-full max-w-full px-8 pt-8 pb-6">
+            {/* Header Section - Matrix Terminal Design */}
+            <div className="border-b border-white/10 pb-8 mb-8 relative">
+              <div className="absolute -bottom-px left-0 w-24 h-px bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-lg font-medium text-gray-900 tracking-tight">Claims & Recoveries</h1>
-                  <div className="mt-2 pl-3 border-l-2 border-gray-200">
-                    <p className="text-xs text-gray-500">
-                      All detected discrepancies and submitted claims
-                    </p>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">SYSTEM_BUFFER</span>
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   </div>
+                  <h1 className="text-4xl font-serif italic text-white mb-2 tracking-tight">Claims & Recoveries <span className="text-xs not-italic font-mono text-white/20 ml-2 uppercase tracking-widest border border-white/5 px-2 py-0.5 rounded-full">BETA</span></h1>
+                  <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] max-w-md leading-relaxed">
+                    Active auditing of detected discrepancies and financial reconciliation ledger
+                  </p>
                 </div>
-                <button
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 text-xs text-white transition-colors",
-                    selectedIds.size === 0 || submittingBulk
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-gray-900 hover:bg-gray-800"
-                  )}
-                  disabled={selectedIds.size === 0 || submittingBulk}
-                  onClick={async () => {
-                    setSubmittingBulk(true);
-                    const ids = Array.from(selectedIds);
-                    for (const id of ids) {
-                      try {
-                        await recoveryApi.submitClaim(id);
-                        toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
-                        setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
-                      } catch (e: any) {
-                        toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                <div className="flex flex-col items-end gap-3">
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "h-11 px-6 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all border border-white/5",
+                      selectedIds.size === 0 || submittingBulk
+                        ? "text-white/20 bg-transparent"
+                        : "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30"
+                    )}
+                    disabled={selectedIds.size === 0 || submittingBulk}
+                    onClick={async () => {
+                      setSubmittingBulk(true);
+                      const ids = Array.from(selectedIds);
+                      for (const id of ids) {
+                        try {
+                          await recoveryApi.submitClaim(id);
+                          toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
+                          setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
+                        } catch (e: any) {
+                          toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                        }
                       }
-                    }
-                    setSubmittingBulk(false);
-                  }}>
-                  <Upload className="h-3.5 w-3.5" />
-                  Submit Selected
-                </button>
+                      setSubmittingBulk(false);
+                    }}>
+                    {submittingBulk ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
+                    ) : (
+                      <>
+                        <Upload className="h-3.5 w-3.5 mr-2" />
+                        Execute Submission ({selectedIds.size})
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
-              {selectedIds.size > 0 && (
-                <span className="text-xs text-gray-500">{selectedIds.size} selected</span>
-              )}
             </div>
 
-            {/* Recovered Value Section */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between">
+            {/* Recovered Value Section - Matrix Instrumentation */}
+            <div className="mb-12">
+              <div className="flex items-end justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-medium text-gray-500">Recovered Value</span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.2em]">RECOVERY_YIELD</span>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-3 h-3 rounded-full bg-gray-400 flex items-center justify-center hover:bg-gray-500 transition-colors">
-                            <span className="text-white text-[7px] font-serif italic leading-none">i</span>
+                            className="w-3.5 h-3.5 rounded-full border border-white/10 flex items-center justify-center hover:border-emerald-500/30 transition-colors group">
+                            <span className="text-white/40 text-[8px] font-mono group-hover:text-emerald-500">i</span>
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-gray-900 text-white text-xs rounded-sm">
+                        <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-lg shadow-2xl backdrop-blur-3xl">
                           Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
                         </TooltipContent>
                       </Tooltip>
                     )}
                   </div>
-                  <div className="text-2xl font-light text-gray-900">
+                  <div className="flex items-baseline gap-4">
+                    <div className="text-6xl font-serif italic text-white tracking-tighter shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
+                      {recoveredTotal != null && recoveredTotal > 0 ? (
+                        formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)
+                      ) : (
+                        formatCurrencyWithSelection(0)
+                      )}
+                    </div>
                     {recoveredTotal != null && recoveredTotal > 0 ? (
-                      <>
-                        {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
-                        <div className="text-xs text-gray-500 font-normal mt-1">
-                          from {amazonClaimCount ?? 0} approved claim{amazonClaimCount !== 1 ? 's' : ''}
-                        </div>
-                      </>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-mono font-bold text-emerald-500 tracking-widest uppercase">PROCESSED</span>
+                        <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">
+                          {amazonClaimCount ?? 0} NODES_FINALIZED
+                        </span>
+                      </div>
                     ) : (
-                      <>
-                        {formatCurrencyWithSelection(0)}
-                        <div className="text-xs text-gray-600 font-normal mt-0.5">No recoveries yet</div>
-                      </>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-mono font-bold text-white/20 tracking-widest uppercase">INITIALIZING</span>
+                        <span className="text-[10px] font-mono text-white/10 uppercase tracking-tighter">NO_ACTIVE_RECOVERIES</span>
+                      </div>
                     )}
                   </div>
-                  {/* Sync status message */}
+
+                  {/* Sync status message - Matrix Alert style */}
                   {(syncMessage || needsSync || syncTriggered) && (
-                    <div className={`mt-3 px-3 py-2 rounded-md text-xs ${syncTriggered
-                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                      : needsSync
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-gray-50 text-gray-700 border border-gray-200'
-                      }`}>
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-start gap-2 flex-1">
-                          {syncTriggered && <RefreshCw className="h-3 w-3 mt-0.5 animate-spin" />}
-                          <span>{syncMessage || (needsSync ? 'Syncing your Amazon account... Please refresh in a few moments.' : '')}</span>
+                    <div className={cn(
+                      "mt-6 px-4 py-3 border rounded-lg max-w-2xl backdrop-blur-md transition-all duration-500",
+                      syncTriggered
+                        ? 'bg-blue-500/5 border-blue-500/20 text-blue-400'
+                        : needsSync
+                          ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400'
+                          : 'bg-white/5 border-white/10 text-white/60'
+                    )}>
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          {syncTriggered ? (
+                            <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <div className="h-1.5 w-1.5 rounded-full bg-current animate-pulse shadow-[0_0_8px_rgba(current,0.5)]" />
+                          )}
+                          <span className="text-[10px] font-mono uppercase tracking-widest">
+                            {syncMessage || (needsSync ? 'SYNCHRONIZING_AMAZON_NODES..._UPDATE_PENDING' : '')}
+                          </span>
                         </div>
                         {activeSyncId && (
                           <Link
                             to={`/sync?id=${activeSyncId}`}
-                            className="text-blue-400 hover:text-blue-300 underline text-xs ml-2">
-                            View progress
+                            className="text-[10px] font-mono font-bold uppercase tracking-widest hover:underline px-2 py-1 border border-current/20 rounded">
+                            VIEW_STREAM
                           </Link>
                         )}
                       </div>
                     </div>
                   )}
                 </div>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
-                      <span className="font-medium">Event Types</span>
-                      <span className="text-gray-500">({Object.values(categoryCounts).reduce((a, b) => a + b, 0)} total)</span>
-                      <ChevronDown className="h-3 w-3 text-gray-500" />
-                    </button>
+                    <Button variant="outline" className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-mono text-[9px] uppercase tracking-widest rounded-lg px-4 gap-3 group transition-all">
+                      <div className="flex items-center gap-2">
+                        <div className="h-1 w-1 rounded-full bg-emerald-500/50 group-hover:bg-emerald-500" />
+                        EVENT_MATRICES
+                      </div>
+                      <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/30 tracking-tighter group-hover:border-emerald-500/30 group-hover:text-emerald-500">
+                        ({Object.values(categoryCounts).reduce((a, b) => a + b, 0)})
+                      </span>
+                      <ChevronDown className="h-3 w-3 text-white/20 group-hover:text-emerald-500" />
+                    </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-72 max-h-80 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-lg p-2">
-                    <div className="text-xs font-medium text-gray-500 px-2 py-1.5 border-b border-gray-100 mb-1">
-                      Amazon Financial Event Types
+                  <DropdownMenuContent align="end" className="w-80 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-2 outline-none">
+                    <div className="text-[9px] font-mono font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-2 uppercase tracking-[0.2em]">
+                      AMAZON_FINANCIAL_SPECTRUM
                     </div>
-                    {Object.entries(categoryCounts)
-                      .sort((a, b) => b[1] - a[1])
-                      .map(([label, count]) => (
-                        <DropdownMenuItem
-                          key={label}
-                          className="flex justify-between items-center px-2 py-1.5 text-xs rounded hover:bg-gray-100 hover:text-[#36454F] focus:bg-gray-100 focus:text-[#36454F] cursor-default">
-                          <span className="text-gray-700 truncate">{label}</span>
-                          <span className={`font-medium ml-2 ${count > 0 ? 'text-gray-700' : 'text-[#36454F]'}`}>{count}</span>
-                        </DropdownMenuItem>
-                      ))}
+                    <div className="max-h-80 overflow-y-auto custom-scrollbar">
+                      {Object.entries(categoryCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([label, count]) => (
+                          <DropdownMenuItem
+                            key={label}
+                            className="flex justify-between items-center px-3 py-2 text-[10px] font-mono font-medium rounded-lg hover:bg-white/5 focus:bg-white/5 cursor-default group transition-all">
+                            <span className="text-white/60 group-hover:text-white truncate uppercase tracking-tight">{label}</span>
+                            <span className="text-white/20 group-hover:text-emerald-500 tabular-nums">[{String(count).padStart(3, '0')}]</span>
+                          </DropdownMenuItem>
+                        ))}
+                    </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
 
 
-            {/* Tabs for Claims, Evidence Matching, and Cases */}
-            <div className="mb-6">
-              <h2 className="text-sm font-medium text-gray-900 mb-4">Revenue Recovery</h2>
+            {/* Tabs for Claims, Evidence Matching, and Cases - Matrix Design */}
+            <div className="mb-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px flex-1 bg-white/5" />
+                <h2 className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Operational_Vectors</h2>
+                <div className="h-px flex-1 bg-white/5" />
+              </div>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
-                <TabsList className="mb-6 inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0">
+                <TabsList className="mb-8 flex h-14 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl">
                   <TabsTrigger
                     value="claims"
-                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-                    Claims {tabCounts.claimsCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.claimsCount}</span>}
+                    className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+                    <div className="flex items-center justify-center gap-2">
+                      <Hexagon className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+                      Claims_Ledger
+                      {tabCounts.claimsCount > 0 && (
+                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+                          {tabCounts.claimsCount}
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
-                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-                    Evidence Matching {tabCounts.evidenceMatchingCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.evidenceMatchingCount}</span>}
+                    className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+                    <div className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+                      Evidence_Matrix
+                      {tabCounts.evidenceMatchingCount > 0 && (
+                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+                          {tabCounts.evidenceMatchingCount}
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
-                    className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-                    Dispute Cases {tabCounts.disputeCasesCount > 0 && <span className="ml-1.5 text-gray-400">{tabCounts.disputeCasesCount}</span>}
+                    className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+                    <div className="flex items-center justify-center gap-2">
+                      <FileSearch className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+                      Dispute_Vectors
+                      {tabCounts.disputeCasesCount > 0 && (
+                        <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
+                          {tabCounts.disputeCasesCount}
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
                   </TabsTrigger>
                 </TabsList>
 
                 {/* Claims Tab (Existing Content) */}
-                <TabsContent value="claims" className="mt-0">
-                  {/* Controls */}
-                  <div className="mb-6 bg-white border border-white rounded-sm">
-                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                      <h3 className="text-xs font-medium text-gray-900">Recovered Revenue</h3>
-                      <p className="text-xs text-gray-500 mt-0.5">Track finalized reimbursements and track your recoveries.</p>
-                    </div>
-                    <div className="p-6">
+                {/* Claims Tab - Matrix Ledger Controls */}
+                <TabsContent value="claims" className="mt-0 outline-none">
+                  <div className="mb-10 group/controls">
+                    <div className="relative overflow-hidden bg-white/5 border border-white/5 rounded-2xl backdrop-blur-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                      {/* Top Accent Line */}
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent opacity-0 group-hover/controls:opacity-100 transition-opacity duration-700" />
 
-                      {/* Search & Quick Filters */}
-                      <div className="space-y-3">
-                        {/* Search Bar */}
-                        <div className="relative">
-                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-                          <Input
-                            placeholder="Search by Claim ID, ASIN, or Keyword..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500"
-                          />
+                      <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between">
+                        <div>
+                          <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">REVENUE_RECOVERY_LEDGER</h3>
+                          <p className="text-[9px] font-mono text-white/20 mt-1 uppercase tracking-tight">Real-time audit of finalized reimbursements and recovery nodes</p>
                         </div>
-
-                        {/* Quick Date Range Buttons */}
-                        <div className="flex flex-wrap gap-2">
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('30days')}>Last 30 Days</Button>
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('quarter')}>Last Quarter</Button>
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('year')}>This Year</Button>
-                          <Button variant="outline" size="sm" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs" onClick={() => setQuickDateRange('all')}>All Time</Button>
+                        <div className="flex items-center gap-1.5 font-mono text-[9px] text-white/10 uppercase tracking-tighter">
+                          <Eye className="w-3 h-3" />
+                          MONITORING_ACTIVE
                         </div>
+                      </div>
 
-                        {/* Filter Row */}
-                        <div className="flex flex-wrap gap-2 items-center">
-                          {/* Custom Date Range */}
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs", !dateRange && "text-gray-500")}>
-                                <CalendarIcon className="mr-2 h-3 w-3" />
-                                {dateRange?.from ? (
-                                  dateRange.to ? (
-                                    <>
-                                      {format(dateRange.from, "MMM dd, y")} -{" "}
-                                      {format(dateRange.to, "MMM dd, y")}
-                                    </>
-                                  ) : (
-                                    format(dateRange.from, "MMM dd, y")
-                                  )
-                                ) : (
-                                  <span>Pick a date range</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                initialFocus
-                                mode="range"
-                                defaultMonth={dateRange?.from}
-                                selected={dateRange}
-                                onSelect={setDateRange}
-                                numberOfMonths={2}
-                                className="pointer-events-auto"
+                      <div className="p-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                          {/* Main Search Column */}
+                          <div className="lg:col-span-12 space-y-4">
+                            <div className="relative group/search max-w-2xl">
+                              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within/search:text-emerald-500 transition-colors" />
+                              <Input
+                                placeholder="IDENTIFY_NODES (Claim ID, ASIN, SKU)..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="pl-12 h-14 bg-white/5 border-white/5 text-white font-mono text-[11px] placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-2xl transition-all shadow-inner"
                               />
-                            </PopoverContent>
-                          </Popover>
+                            </div>
 
-                          {/* Claim Type Filter */}
-                          <Select
-                            value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
-                            onValueChange={(value) => {
-                              if (value === 'all') {
-                                setSelectedClaimTypes([]);
-                              } else {
-                                setSelectedClaimTypes([value]);
-                              }
-                            }}>
-                            <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
-                              <SelectValue placeholder="Filter by Claim Type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">All Claim Types</SelectItem>
-                              {claimTypes.map(type => (
-                                <SelectItem key={type} value={type}>{type}</SelectItem>
+                            {/* Temporal Accents (Quick Filters) */}
+                            <div className="flex flex-wrap gap-2">
+                              {[
+                                { label: 'LAST_30_DAYS', val: '30days' },
+                                { label: 'LAST_QUARTER', val: 'quarter' },
+                                { label: 'THIS_YEAR', val: 'year' },
+                                { label: 'MAX_HISTORICAL', val: 'all' }
+                              ].map((opt) => (
+                                <Button
+                                  key={opt.val}
+                                  variant="ghost"
+                                  size="sm"
+                                  className={cn(
+                                    "h-8 px-4 text-[9px] font-mono font-medium border border-white/5 rounded-full transition-all uppercase tracking-tight",
+                                    quickDateRange === opt.val
+                                      ? "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
+                                      : "text-white/30 hover:text-white/60 hover:bg-white/5"
+                                  )}
+                                  onClick={() => setQuickDateRange(opt.val as any)}>
+                                  {opt.label}
+                                </Button>
                               ))}
-                            </SelectContent>
-                          </Select>
+                            </div>
+                          </div>
 
-                          {/* Status Filter */}
-                          <Select
-                            value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
-                            onValueChange={(value) => {
-                              if (value === 'all') {
-                                setSelectedStatuses([]);
-                              } else {
-                                setSelectedStatuses([value]);
-                              }
-                            }}>
-                            <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
-                              <SelectValue placeholder="Filter by Status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">All Statuses</SelectItem>
-                              {statusOptions.map(status => (
-                                <SelectItem key={status} value={status}>{status}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          {/* Filter Matrix Row */}
+                          <div className="lg:col-span-12 flex flex-wrap gap-4 pt-4 border-t border-white/5">
+                            {/* Temporal Window Popover */}
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  className={cn(
+                                    "h-12 bg-white/5 border-white/5 text-[10px] font-mono uppercase tracking-widest px-5 gap-4 rounded-xl hover:bg-white/10 transition-all",
+                                    !dateRange ? "text-white/20" : "text-white/60"
+                                  )}>
+                                  <CalendarIcon className="h-4 w-4 text-emerald-500/40" />
+                                  {dateRange?.from ? (
+                                    dateRange.to ? (
+                                      `${format(dateRange.from, "MMM dd")} - ${format(dateRange.to, "MMM dd")}`
+                                    ) : (
+                                      format(dateRange.from, "MMM dd, y")
+                                    )
+                                  ) : (
+                                    "CUSTOM_WINDOW"
+                                  )}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl overflow-hidden" align="start">
+                                <Calendar
+                                  initialFocus
+                                  mode="range"
+                                  defaultMonth={dateRange?.from}
+                                  selected={dateRange}
+                                  onSelect={setDateRange}
+                                  numberOfMonths={2}
+                                  className="bg-transparent text-white font-mono text-[10px]"
+                                />
+                              </PopoverContent>
+                            </Popover>
 
-                          {/* Source Filter (Phase 3) */}
-                          <Select value={filterSource} onValueChange={(value: 'all' | 'detected' | 'synced') => {
-                            setFilterSource(value);
-                          }}>
-                            <SelectTrigger className="w-auto min-w-[120px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
-                              <SelectValue placeholder="All Sources" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">All Sources</SelectItem>
-                              <SelectItem value="detected">Detected Claims</SelectItem>
-                              <SelectItem value="synced">Synced from Amazon</SelectItem>
-                            </SelectContent>
-                          </Select>
-
-                          {/* Confidence Filter (Phase 3) - only show when filtering by detected */}
-                          {filterSource === 'detected' && (
-                            <Select value={filterConfidence} onValueChange={(value: 'all' | 'high' | 'medium' | 'low') => {
-                              setFilterConfidence(value);
-                            }}>
-                              <SelectTrigger className="w-auto min-w-[140px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
-                                <SelectValue placeholder="All Confidence" />
+                            {/* Spectrum Select Filter (Claim Type) */}
+                            <Select
+                              value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
+                              onValueChange={(value) => setSelectedClaimTypes(value === 'all' ? [] : [value])}>
+                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-mono text-[10px] uppercase tracking-widest rounded-xl px-5 hover:bg-white/10 transition-all">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
+                                  <SelectValue placeholder="CLAIM_SPECTRUM" />
+                                </div>
                               </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="all">All Confidence Levels</SelectItem>
-                                <SelectItem value="high">High (≥85%)</SelectItem>
-                                <SelectItem value="medium">Medium (50-85%)</SelectItem>
-                                <SelectItem value="low">Low (&lt;50%)</SelectItem>
+                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+                                <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">SPECTRUM_ALL</SelectItem>
+                                {claimTypes.map(type => (
+                                  <SelectItem key={type} value={type} className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">{type.replace(/_/g, ' ')}</SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
-                          )}
 
-                          {/* Urgent Filter */}
-                          <Select value={filterUrgent} onValueChange={(value: 'all' | 'urgent' | 'critical') => {
-                            setFilterUrgent(value);
-                          }}>
-                            <SelectTrigger className="w-auto min-w-[120px] bg-white text-gray-700 border-gray-200 hover:bg-gray-50 text-xs h-8">
-                              <SelectValue placeholder="All Claims" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">All Claims</SelectItem>
-                              <SelectItem value="urgent">Urgent (≤7 days)</SelectItem>
-                              <SelectItem value="critical">Critical (≤3 days)</SelectItem>
-                            </SelectContent>
-                          </Select>
+                            {/* Node Status Select */}
+                            <Select
+                              value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
+                              onValueChange={(value) => setSelectedStatuses(value === 'all' ? [] : [value])}>
+                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-mono text-[10px] uppercase tracking-widest rounded-xl px-5 hover:bg-white/10 transition-all">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
+                                  <SelectValue placeholder="NODE_STATUS" />
+                                </div>
+                              </SelectTrigger>
+                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+                                <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATUS_ALL</SelectItem>
+                                {['Pending', 'Approved', 'Submitted', 'Reimbursed', 'Denied', 'Under Review'].map(s => (
+                                  <SelectItem key={s} value={s} className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">{s.replace(/ /g, '_')}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
 
-                          {/* Show risky claims toggle */}
-                          <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
-                            <Checkbox
-                              checked={showRiskyClaims}
-                              onCheckedChange={(checked) => setShowRiskyClaims(!!checked)}
-                              className="border-gray-300"
-                            />
-                            Show weak claims
-                          </label>
-
-                          {/* Share Button */}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700 text-xs ml-auto"
-                            onClick={() => {
-                              const exportRange = dateRange?.from && dateRange?.to
-                                ? { from: dateRange.from, to: dateRange.to }
-                                : null;
-                              generateCasebookPDF(rankedClaims, exportRange);
-                              toast({ title: 'Statement Generated', description: 'Press Ctrl+P to save as PDF for audits and accounting.' });
-                            }}>
-                            <ArrowUpFromLine className="h-3 w-3 mr-2" />
-                            Share
-                          </Button>
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                setSearchTerm('');
+                                setQuickDateRange('all');
+                                setDateRange(undefined);
+                                setSelectedClaimTypes([]);
+                                setSelectedStatuses([]);
+                              }}
+                              className="h-12 text-[10px] font-mono font-bold text-white/20 hover:text-white/60 uppercase tracking-widest px-6 ml-auto">
+                              TERMINATE_FILTERS
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
+
                   {/* Data Table */}
-                  <div className="bg-white border-0 text-slate-900 w-full overflow-hidden shadow-none rounded-none">
-                    <div className="p-0 w-full">
+                  <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl shadow-2xl">
+                    <div className="p-0">
                       {loading && (
-                        <div className="py-12 flex flex-col items-center justify-center space-y-4">
-                          <Loader2 className="w-6 h-6 text-gray-300 animate-spin" />
-                          <span className="text-sm text-gray-400">Updating data...</span>
+                        <div className="py-24 flex flex-col items-center justify-center space-y-6">
+                          <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+                          <span className="text-[10px] font-mono font-bold text-white/30 tracking-[0.3em] uppercase">SYNCHRONIZING_DATA_NODES...</span>
                         </div>
                       )}
                       {error && (
-                        <div className="py-12 flex flex-col items-center justify-center space-y-4 text-center px-6">
-                          <AlertTriangle className="w-6 h-6 text-red-200" />
-                          <span className="text-sm text-gray-500">Error: {error}</span>
+                        <div className="py-24 flex flex-col items-center justify-center space-y-4 text-center px-6">
+                          <AlertTriangle className="w-8 h-8 text-red-500/50" />
+                          <span className="text-xs font-mono text-red-400">ERROR_OVERRIDE: {error}</span>
                         </div>
                       )}
                       {!loading && !error && rankedClaims.length === 0 && (
-                        <div className="py-20 flex flex-col items-center justify-center space-y-4">
-                          <Search className="w-10 h-10 text-gray-100" />
+                        <div className="py-32 flex flex-col items-center justify-center space-y-6">
+                          <div className="relative">
+                            <Search className="w-12 h-12 text-white/5" />
+                            <div className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-full" />
+                          </div>
                           <div className="flex flex-col items-center text-center max-w-sm px-6">
-                            <span className="text-sm text-gray-900 font-semibold">No Claims Found</span>
-                            <span className="text-xs text-gray-400 mt-2 leading-relaxed">
+                            <span className="text-xs font-mono font-bold text-white uppercase tracking-widest">ZERO_NODES_IDENTIFIED</span>
+                            <span className="text-[10px] font-mono text-white/20 mt-3 leading-relaxed uppercase tracking-tighter">
                               {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
-                                ? 'SYNC YOUR AMAZON ACCOUNT OR RUN AN ANALYSIS TO IDENTIFY RECOVERY OPPORTUNITIES.'
-                                : 'TRY ADJUSTING YOUR FILTERS TO SEE MORE RESULTS.'}
+                                ? 'SYNC_AMAZON_ACCOUNT_OR_RUN_ANALYSIS_TO_IDENTIFY_NODES'
+                                : 'ADJUST_PARAMETERS_TO_EXPAND_AUDIT_SPECTRUM'}
                             </span>
                           </div>
                         </div>
                       )}
                       {!loading && rankedClaims.length > 0 && (
-                        <div className="mt-0 border-t border-gray-100 divide-y divide-gray-100 bg-white">
-                          <div className="flex items-center px-6 py-3 bg-gray-50/50 border-b border-gray-100">
+                        <div className="mt-0 divide-y divide-white/5">
+                          <div className="flex items-center px-8 py-4 bg-white/[0.02] border-b border-white/5">
                             <Checkbox
                               checked={selectedIds.size > 0 && selectedIds.size === filteredClaims.length}
                               onCheckedChange={(checked) => {
                                 if (checked) setSelectedIds(new Set(filteredClaims.map(c => c.id)));
                                 else setSelectedIds(new Set());
                               }}
-                              className="mr-4"
+                              className="mr-6 border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                             />
-                            <span className="text-xs font-semibold text-gray-400">Bulk Actions</span>
+                            <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">BATCH_OPERATIONS_TARGETING</span>
                           </div>
 
                           {claimsByMonth.map((monthGroup, groupIndex) => (
                             <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
-                              {/* Institutional Month Header */}
-                              <div className="sticky top-0 z-10 bg-gray-50/80 backdrop-blur-sm px-6 py-2.5 border-y border-gray-100 flex items-center justify-between">
-                                <span className="text-sm font-bold text-gray-900">
-                                  {monthGroup.month} {monthGroup.year}
-                                </span>
-                                <span className="text-xs font-medium text-gray-400">
-                                  {monthGroup.claims.length} CLAIM{monthGroup.claims.length !== 1 ? 'S' : ''}
-                                </span>
+                              {/* Matrix Institutional Month Header */}
+                              <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header shadow-lg">
+                                <div className="flex items-center gap-4">
+                                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                  <span className="text-xs font-mono font-bold text-white uppercase tracking-[0.3em]">
+                                    {monthGroup.month} {monthGroup.year}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest border border-white/5 px-3 py-1 rounded-full bg-white/5">
+                                    {monthGroup.claims.length} NODES_FINALIZED
+                                  </span>
+                                </div>
                               </div>
 
-                              {/* Claims in this month */}
-                              <div className="divide-y divide-gray-100">
+                              {/* Claims in this month - Matrix Grid */}
+                              <div className="divide-y divide-white/5">
                                 {monthGroup.claims.map((claim: any) => {
                                   const isUrgent = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 7;
                                   const isCritical = claim.days_remaining !== null && claim.days_remaining !== undefined && claim.days_remaining <= 3;
@@ -2636,19 +2689,18 @@ export default function Recoveries() {
                                     <div
                                       key={claim.id}
                                       className={cn(
-                                        "group relative bg-white hover:bg-gray-50/40 transition-all duration-200",
-                                        isCritical && "bg-red-50/10",
-                                        isUrgent && !isCritical && "bg-amber-50/10"
-                                      )}
-                                    >
-                                      {/* Signature Left Accent */}
+                                        "group relative bg-transparent hover:bg-white/[0.02] transition-all duration-300",
+                                        isCritical && "bg-red-500/[0.02]",
+                                        isUrgent && !isCritical && "bg-amber-500/[0.02]"
+                                      )}>
+                                      {/* Status Accent Line */}
                                       <div className={cn(
-                                        "absolute left-0 top-0 bottom-0 w-[2px] transition-all duration-200 origin-center scale-y-0 group-hover:scale-y-100",
-                                        isCritical ? "bg-red-500" : isUrgent ? "bg-amber-500" : "bg-gray-900"
+                                        "absolute left-0 top-0 bottom-0 w-px transition-all duration-500 origin-top scale-y-0 group-hover:scale-y-100",
+                                        isCritical ? "bg-red-500" : isUrgent ? "bg-amber-500" : "bg-emerald-500"
                                       )} />
 
-                                      <div className="flex items-center px-6 py-5">
-                                        <div className="flex-shrink-0 mr-5">
+                                      <div className="flex items-center px-8 py-6">
+                                        <div className="flex-shrink-0 mr-8">
                                           <Checkbox
                                             checked={selectedIds.has(claim.id)}
                                             onCheckedChange={(checked) => {
@@ -2658,79 +2710,94 @@ export default function Recoveries() {
                                                 return next;
                                               });
                                             }}
+                                            className="border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                                           />
                                         </div>
 
-                                        <div className="flex items-center gap-5 min-w-0 flex-1">
+                                        <div className="flex items-center gap-8 min-w-0 flex-1">
                                           <div className="flex-shrink-0">
-                                            <Hexagon className={cn(
-                                              "w-5 h-5 transition-colors duration-300",
-                                              isCritical ? "text-red-300" : isUrgent ? "text-amber-300" : "text-gray-200 group-hover:text-gray-900"
-                                            )} strokeWidth={1.5} />
-                                          </div>
-
-                                          <div className="flex flex-col min-w-0">
-                                            <div className="flex items-center gap-3">
-                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                                <span className="text-[13px] font-mono font-medium text-gray-900 truncate hover:underline">
-                                                  {claim.claim_number || claim.id.slice(0, 12)}
-                                                </span>
-                                              </Link>
-                                              <span className="text-xs text-gray-400 font-mono">
-                                                {format(claimDate, 'd MMM')} {format(claimDate, 'HH:mm')}
-                                              </span>
-                                            </div>
-
-                                            <div className="text-sm text-gray-600 mt-1 line-clamp-1 flex items-center gap-2">
-                                              {claim.details}
-                                              <span className="text-gray-300">|</span>
-                                              <span className="font-mono text-xs text-gray-400">SKU: {claim.sku || 'N/A'}</span>
-                                            </div>
-
-                                            <div className="flex items-center gap-2 mt-2">
-                                              <div className="flex items-center gap-2 text-xs font-medium">
-                                                <span className={cn(
-                                                  "px-2 py-0.5 rounded-none border font-semibold",
-                                                  getStatusColor(claim.status)
-                                                )}>
-                                                  {claim.status}
-                                                </span>
-                                                <span className="text-gray-200">|</span>
-                                                <span className="text-gray-400">DUP:</span>
-                                                {(() => {
-                                                  const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
-                                                  return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : <span className="text-gray-500">NONE</span>;
-                                                })()}
-                                                <span className="text-gray-200">|</span>
-                                                <span className={cn(
-                                                  "font-mono",
-                                                  isCritical ? "text-red-600" : isUrgent ? "text-amber-600" : "text-gray-500"
-                                                )}>
-                                                  {claim.days_remaining !== null ? `${claim.days_remaining}D REMAINING` : 'EXPIRY N/A'}
-                                                </span>
-                                                <span className="text-gray-200">|</span>
-                                                <EvidenceQualityBadge validation={validateEvidencePolicy(claim, claim.matchedDocs)} claim={claim} matchedDocs={claim.matchedDocs} />
-                                                <span className="text-gray-200">|</span>
-                                                <span className="text-gray-900 font-mono font-bold">{formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}</span>
+                                            <div className="relative group/hex">
+                                              <Hexagon className={cn(
+                                                "w-6 h-6 transition-all duration-500 text-white/5 group-hover/hex:text-white/20",
+                                                isCritical ? "text-red-500/20" : isUrgent ? "text-amber-500/20" : ""
+                                              )} strokeWidth={1} />
+                                              <div className={cn(
+                                                "absolute inset-0 flex items-center justify-center text-[8px] font-mono font-bold text-white/20 transition-colors",
+                                                isCritical ? "text-red-400" : isUrgent ? "text-amber-400" : "group-hover/hex:text-emerald-500"
+                                              )}>
+                                                {claim.id.slice(0, 1)}
                                               </div>
                                             </div>
                                           </div>
+
+                                          <div className="flex flex-col min-w-0 flex-1">
+                                            <div className="flex items-center gap-4 mb-1.5">
+                                              <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
+                                                <span className="text-[11px] font-mono font-bold text-white hover:text-emerald-500 transition-colors tracking-tight">
+                                                  {claim.claim_number || claim.id.slice(0, 16)}
+                                                </span>
+                                              </Link>
+                                              <div className="h-1 w-1 rounded-full bg-white/5" />
+                                              <span className="text-[10px] font-mono font-medium text-white/20 uppercase tracking-tighter">
+                                                {format(claimDate, 'dd_MMM_yyyy HH:mm')}
+                                              </span>
+                                            </div>
+
+                                            <div className="flex items-center gap-3 text-[10px] font-mono text-white/40 mb-3">
+                                              <span className="truncate max-w-md uppercase tracking-tight">{claim.details}</span>
+                                              <span className="text-white/10">|</span>
+                                              <span className="text-white/10 uppercase tracking-tighter">SKU_FIX: {claim.sku || 'N/A'}</span>
+                                            </div>
+
+                                            <div className="flex items-center gap-3 flex-wrap">
+                                              <div className={cn(
+                                                "px-2 py-0.5 rounded border text-[9px] font-mono font-bold uppercase tracking-widest",
+                                                claim.status === 'Submitted' ? "bg-blue-500/10 border-blue-500/20 text-blue-400" :
+                                                  claim.status === 'Reimbursed' ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
+                                                    claim.status === 'Denied' ? "bg-red-500/10 border-red-500/20 text-red-400" :
+                                                      "bg-white/5 border-white/10 text-white/40"
+                                              )}>
+                                                {claim.status}
+                                              </div>
+                                              <div className="h-4 w-px bg-white/5" />
+                                              {(() => {
+                                                const doubleDipWarning = checkDoubleDip(claim, rankedClaims);
+                                                return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : null;
+                                              })()}
+                                              <div className={cn(
+                                                "text-[9px] font-mono font-bold uppercase tracking-tighter",
+                                                isCritical ? "text-red-500" : isUrgent ? "text-amber-500" : "text-white/20"
+                                              )}>
+                                                {claim.days_remaining !== null ? `EXPIRY_IN_${claim.days_remaining}D` : 'EXPIRY_N/A'}
+                                              </div>
+                                              <div className="h-4 w-px bg-white/5" />
+                                              <EvidenceQualityBadge validation={validateEvidencePolicy(claim, claim.matchedDocs)} claim={claim} matchedDocs={claim.matchedDocs} />
+                                            </div>
+                                          </div>
+
+                                          <div className="flex flex-col items-end gap-1">
+                                            <span className="text-sm font-serif italic text-white tracking-tighter">
+                                              {formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}
+                                            </span>
+                                            <span className="text-[9px] font-mono text-white/10 uppercase tracking-tighter font-bold">RECOVERY_VALUE</span>
+                                          </div>
                                         </div>
 
-                                        <div className="flex items-center gap-4 ml-6">
+                                        <div className="flex items-center gap-4 ml-8">
                                           <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-none">
+                                              <Button variant="ghost" className="h-10 w-10 p-0 text-white/20 hover:text-white hover:bg-white/5 rounded-xl transition-all">
                                                 <MoreHorizontal className="h-4 w-4" />
                                               </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-100 shadow-2xl rounded-none p-1">
-                                              <DropdownMenuItem asChild className="text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2">
-                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW DETAILS</Link>
+                                            <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
+                                              <div className="text-[9px] font-mono font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-widest">ACTION_VECTOR</div>
+                                              <DropdownMenuItem asChild className="text-[10px] font-mono font-medium text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase">
+                                                <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW_PARAMETERS</Link>
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                className="text-[10px] font-mono font-medium text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase"
                                                 onClick={async () => {
                                                   try {
                                                     const res = await api.getRecoveryDetail(claim.id);
@@ -2742,21 +2809,21 @@ export default function Recoveries() {
                                                     toast({ title: 'Error loading documents', description: e?.message });
                                                   }
                                                 }}>
-                                                PROOF DOCUMENTS
+                                                PROOF_DOCUMENTS_RETRIEVAL
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer px-3 py-2"
+                                                className="text-[10px] font-mono font-medium text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase"
                                                 onClick={() => {
                                                   setEvidencePackClaim(claim);
                                                   setEvidencePackOpen(true);
                                                 }}>
-                                                VIEW EVIDENCE PACK
+                                                AUDIT_PACKAGE_VIEW
                                               </DropdownMenuItem>
 
                                               {claim.status === 'Denied' && (
                                                 <DropdownMenuItem
-                                                  className="text-sm font-bold text-red-600 hover:bg-red-50 cursor-pointer px-3 py-2"
+                                                  className="text-[10px] font-mono font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2 cursor-pointer uppercase"
                                                   onClick={async () => {
                                                     try {
                                                       await api.resubmitClaim(claim.id);
@@ -2765,7 +2832,7 @@ export default function Recoveries() {
                                                       toast({ title: 'Resubmission failed', description: e?.message });
                                                     }
                                                   }}>
-                                                  RESUBMIT WITH STRONGER DOCS
+                                                  RESUBMIT_ENHANCED_AUDIT
                                                 </DropdownMenuItem>
                                               )}
                                             </DropdownMenuContent>
@@ -2774,10 +2841,10 @@ export default function Recoveries() {
                                           <Link
                                             to={`/recoveries/${claim.id}`}
                                             state={{ claim }}
-                                            className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-gray-900 transition-all duration-200 group/link"
+                                            className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-widest"
                                           >
-                                            DETAILS
-                                            <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200" />
+                                            NODE_SPEC
+                                            <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
                                           </Link>
                                         </div>
                                       </div>
@@ -2794,27 +2861,27 @@ export default function Recoveries() {
 
                   {/* Phase 3: Resolve Detection Modal */}
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
-                    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
-                      <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-                        <DialogTitle className="text-xs font-medium text-gray-900">Resolution Details</DialogTitle>
-                        <DialogDescription className="text-xs text-gray-500 mt-0.5">
-                          Complete resolution details and mark claim as resolved
+                    <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
+                      <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+                        <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">RESOLUTION_PARAMETER_ENTRY</DialogTitle>
+                        <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1">
+                          Complete resolution vectors and finalize node status
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
-                        <div className="space-y-4 px-5 py-4">
+                        <div className="space-y-6 px-8 py-8">
                           <div>
-                            <Label className="text-xs text-gray-500">Detection ID</Label>
-                            <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
+                            <Label className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">DETECTION_UUID</Label>
+                            <p className="text-[10px] font-mono text-emerald-500/60 font-bold mt-1.5 uppercase">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label className="text-xs text-gray-500">Anomaly Type</Label>
-                            <p className="text-xs text-gray-900 capitalize mt-0.5">
-                              {selectedDetection.type?.replace(/_/g, ' ') || selectedDetection.anomaly_type?.replace(/_/g, ' ')}
+                            <Label className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">ANOMALY_VECTOR_TYPE</Label>
+                            <p className="text-[11px] font-mono text-white/60 uppercase mt-1.5 tracking-tighter">
+                              {selectedDetection.type?.replace(/_/g, '_') || selectedDetection.anomaly_type?.replace(/_/g, '_')}
                             </p>
                           </div>
                           <div>
-                            <Label htmlFor="resolve-amount" className="text-xs text-gray-500">Resolution Amount</Label>
+                            <Label htmlFor="resolve-amount" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">FINAL_SETTLEMENT_VAL</Label>
                             <Input
                               id="resolve-amount"
                               type="number"
@@ -2822,33 +2889,32 @@ export default function Recoveries() {
                               value={resolveAmount}
                               onChange={(e) => setResolveAmount(e.target.value)}
                               placeholder="0.00"
-                              className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm"
+                              className="mt-2 h-10 text-[11px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-xs text-gray-500">Notes</Label>
+                            <Label htmlFor="resolve-notes" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">CLOSURE_NARRATIVE</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
                               onChange={(e) => setResolveNotes(e.target.value)}
-                              placeholder="Enter resolution notes (e.g., 'Resolved via Amazon reimbursement')"
-                              className="mt-1 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm min-h-[80px]"
+                              placeholder="INPUT_RESOLUTION_PROTOCOL_DATA..."
+                              className="mt-2 text-[11px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
                             />
                           </div>
                         </div>
                       )}
-                      <DialogFooter className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex gap-2">
+                      <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex sm:justify-end gap-3">
                         <Button
-                          variant="outline"
-                          size="sm"
+                          variant="ghost"
                           onClick={() => {
                             setResolveModalOpen(false);
                             setSelectedDetection(null);
                             setResolveNotes('');
                             setResolveAmount('');
                           }}
-                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
-                          Cancel
+                          className="h-10 px-6 font-mono text-[10px] font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
+                          ABORT_SESSION
                         </Button>
                         <Button
                           onClick={async () => {
@@ -2893,8 +2959,8 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
-                          Complete Resolution
+                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                          COMMIT_RESOLUTION_LINK
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -2902,57 +2968,57 @@ export default function Recoveries() {
 
                   {/* Phase 3: Status Update Modal */}
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
-                    <DialogContent className="max-w-md bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
-                      <DialogHeader className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-                        <DialogTitle className="text-xs font-medium text-gray-900">Status Update</DialogTitle>
-                        <DialogDescription className="text-xs text-gray-500 mt-0.5">
-                          Update claim status and record change notes
+                    <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
+                      <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+                        <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">NODE_STATUS_OVERRIDE</DialogTitle>
+                        <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1">
+                          Update claim status and inject audit log entry
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
-                        <div className="space-y-4 px-5 py-4">
+                        <div className="space-y-6 px-8 py-8">
                           <div>
-                            <Label className="text-xs text-gray-500">Detection ID</Label>
-                            <p className="text-xs text-gray-900 font-mono mt-0.5">{selectedDetection.id}</p>
+                            <Label className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">DETECTION_UUID</Label>
+                            <p className="text-[10px] font-mono text-emerald-500/60 font-bold mt-1.5 uppercase">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label htmlFor="status-select" className="text-xs text-gray-500">Status</Label>
+                            <Label htmlFor="status-select" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">TARGET_STATE</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                              <SelectTrigger id="status-select" className="mt-1 h-8 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm">
+                              <SelectTrigger id="status-select" className="mt-2 h-10 text-[11px] font-mono bg-white/5 border-white/5 text-white rounded-xl uppercase tracking-widest">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="bg-white border-gray-200 rounded-sm">
-                                <SelectItem value="pending" className="text-xs">Pending</SelectItem>
-                                <SelectItem value="reviewed" className="text-xs">Reviewed</SelectItem>
-                                <SelectItem value="disputed" className="text-xs">Disputed</SelectItem>
-                                <SelectItem value="resolved" className="text-xs">Resolved</SelectItem>
+                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+                                <SelectItem value="pending" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_PENDING</SelectItem>
+                                <SelectItem value="reviewed" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_REVIEWED</SelectItem>
+                                <SelectItem value="disputed" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_DISPUTED</SelectItem>
+                                <SelectItem value="resolved" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_RESOLVED</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="status-notes" className="text-xs text-gray-500">Notes</Label>
+                            <Label htmlFor="status-notes" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">INJECT_ANNOTATION</Label>
+                            <span className="text-[8px] font-mono text-white/10 ml-2 uppercase">(OPTIONAL)</span>
                             <Textarea
                               id="status-notes"
                               value={statusUpdateNotes}
                               onChange={(e) => setStatusUpdateNotes(e.target.value)}
-                              placeholder="Enter notes for this status change (e.g., 'Reviewed and verified')"
-                              className="mt-1 text-xs bg-gray-50 border-gray-200 text-gray-900 rounded-sm min-h-[80px]"
+                              placeholder="INPUT_AUDIT_DATA_VECT..."
+                              className="mt-2 text-[11px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
                             />
                           </div>
                         </div>
                       )}
-                      <DialogFooter className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex gap-2">
+                      <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex sm:justify-end gap-3">
                         <Button
-                          variant="outline"
-                          size="sm"
+                          variant="ghost"
                           onClick={() => {
                             setStatusUpdateModalOpen(false);
                             setSelectedDetection(null);
                             setStatusUpdateNotes('');
                             setSelectedStatus('pending');
                           }}
-                          className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
-                          Cancel
+                          className="h-10 px-6 font-mono text-[10px] font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
+                          ABORT_ACTION
                         </Button>
                         <Button
                           onClick={async () => {
@@ -2992,8 +3058,8 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
-                          Update Status
+                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                          COMMIT_STATE_CHANGE
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -3001,25 +3067,18 @@ export default function Recoveries() {
 
                   {/* Mark All Read Modal */}
                   <Dialog open={markAllReadModalOpen} onOpenChange={setMarkAllReadModalOpen}>
-                    <DialogContent className="max-w-xs bg-white border border-gray-200 shadow-lg rounded-sm p-0 overflow-hidden">
-                      <div className="px-5 py-6 text-center">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Mail className="h-5 w-5 text-gray-600" />
+                    <DialogContent className="max-w-xs bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
+                      <div className="px-8 py-10 text-center">
+                        <div className="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group">
+                          <Mail className="h-6 w-6 text-white/20 group-hover:text-emerald-500 transition-colors animate-pulse" />
                         </div>
-                        <h3 className="text-sm font-semibold text-gray-900 mb-2">
-                          Mark all Read
+                        <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em] mb-2">
+                          GLOBAL_ENTRY_SYNC
                         </h3>
-                        <p className="text-xs text-gray-500 mb-6">
-                          All claims will be marked as reviewed.
+                        <p className="text-[9px] font-mono text-white/20 uppercase tracking-widest mb-8 leading-relaxed">
+                          All active nodes will be marked as [REVIEWED] in the primary ledger.
                         </p>
-                        <div className="flex gap-2 justify-center">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setMarkAllReadModalOpen(false)}
-                            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm px-4">
-                            Cancel
-                          </Button>
+                        <div className="flex flex-col gap-2">
                           <Button
                             onClick={() => {
                               toast({
@@ -3028,8 +3087,14 @@ export default function Recoveries() {
                               });
                               setMarkAllReadModalOpen(false);
                             }}
-                            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm px-4">
-                            Confirm
+                            className="h-11 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all group">
+                            EXECUTE_MASS_SYNC
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            onClick={() => setMarkAllReadModalOpen(false)}
+                            className="h-10 text-[9px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl transition-all">
+                            ABORT_SESSION
                           </Button>
                         </div>
                       </div>
@@ -3040,13 +3105,13 @@ export default function Recoveries() {
 
                 {/* File Anyway Confirmation Modal for Medium-Strength Claims */}
                 <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
-                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-md max-h-[80vh] overflow-y-auto">
-                    <DialogHeader className="border-b border-gray-200 pb-3">
-                      <DialogTitle className="text-base font-semibold text-gray-900">
-                        Claim Assessment Review
+                  <DialogContent className="bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl max-w-lg max-h-[85vh] overflow-hidden p-0">
+                    <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+                      <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">
+                        CORRELATION_STRENGTH_AUDIT
                       </DialogTitle>
-                      <DialogDescription className="text-xs text-gray-600 mt-1">
-                        Claim strength analysis and filing recommendation
+                      <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1 leading-relaxed">
+                        Analysis of neural match vectors and risk-adjusted recovery recommendations
                       </DialogDescription>
                     </DialogHeader>
                     {claimToFile && (() => {
@@ -3055,59 +3120,67 @@ export default function Recoveries() {
                       const claimType = claimToFile.anomaly_type || claimToFile.type || claimToFile.claim_type || 'Unknown';
                       const claimDate = claimToFile.discovery_date || claimToFile.created || claimToFile.created_at;
                       return (
-                        <div className="space-y-4 py-4">
+                        <div className="space-y-6 py-8 px-8 overflow-y-auto max-h-[calc(85vh-160px)]">
                           {/* Claim Details */}
-                          <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
-                              <h4 className="text-xs font-semibold text-gray-700">Claim Details</h4>
+                          <div className="bg-white/5 border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
+                            <div className="bg-white/[0.05] border-b border-white/5 px-4 py-3 flex items-center gap-2">
+                              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+                              <h4 className="text-[8px] font-mono font-bold text-white/40 uppercase tracking-widest">RAW_NODE_PARAMETERS</h4>
                             </div>
-                            <div className="bg-white divide-y divide-gray-100">
-                              <div className="flex justify-between items-center px-3 py-2">
-                                <span className="text-xs text-gray-600">Claim ID</span>
-                                <span className="text-xs font-medium text-gray-900">{claimToFile.id?.slice(0, 12) || 'N/A'}...</span>
+                            <div className="divide-y divide-white/5">
+                              <div className="flex justify-between items-center px-4 py-3">
+                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">UUID</span>
+                                <span className="text-[9px] font-mono font-bold text-emerald-500/60 uppercase">{claimToFile.id?.slice(0, 16) || 'N/A'}</span>
                               </div>
-                              <div className="flex justify-between items-center px-3 py-2">
-                                <span className="text-xs text-gray-600">Amount</span>
-                                <span className="text-xs font-semibold text-gray-900">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
+                              <div className="flex justify-between items-center px-4 py-3">
+                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">ESTIMATED_VAL</span>
+                                <span className="text-[10px] font-mono font-bold text-white">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
                               </div>
-                              <div className="flex justify-between items-center px-3 py-2">
-                                <span className="text-xs text-gray-600">Type</span>
-                                <span className="text-xs font-medium text-gray-900">{String(claimType).replace(/_/g, ' ')}</span>
+                              <div className="flex justify-between items-center px-4 py-3">
+                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">ANOMALY_VECTOR</span>
+                                <span className="text-[9px] font-mono font-bold text-white/60 uppercase tracking-tight">{String(claimType).replace(/_/g, '_')}</span>
                               </div>
                               {claimDate && (
-                                <div className="flex justify-between items-center px-3 py-2">
-                                  <span className="text-xs text-gray-600">Discovered</span>
-                                  <span className="text-xs font-medium text-gray-900">{new Date(claimDate).toLocaleDateString()}</span>
+                                <div className="flex justify-between items-center px-4 py-3">
+                                  <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">INDEX_COORD</span>
+                                  <span className="text-[9px] font-mono font-bold text-white/40 uppercase">{new Date(claimDate).toLocaleDateString().replace(/\//g, '_')}</span>
                                 </div>
                               )}
                             </div>
                           </div>
 
                           {/* Assessment Summary */}
-                          <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
-                              <h4 className="text-xs font-semibold text-gray-700">Claim Strength Assessment</h4>
+                          <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6 relative group overflow-hidden">
+                            <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                              <Hexagon className="w-12 h-12 text-white" strokeWidth={1} />
                             </div>
-                            <div className="bg-white px-3 py-2">
-                              <div className="flex justify-between items-center">
-                                <span className="text-xs text-gray-600">Overall Score</span>
-                                <span className="text-xs font-semibold text-gray-900">{strength.score}/100</span>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">INTEGRITY_SCORE</span>
+                              <div className="flex items-baseline gap-2">
+                                <span className={cn(
+                                  "text-4xl font-mono font-bold tracking-tighter",
+                                  strength.score >= 80 ? "text-emerald-500" : strength.score >= 50 ? "text-amber-500" : "text-red-500"
+                                )}>
+                                  {strength.score}
+                                </span>
+                                <span className="text-xs font-mono text-white/10 uppercase font-bold">/ 100_PTS</span>
                               </div>
                             </div>
                           </div>
 
                           {/* Detailed Breakdown */}
-                          <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <div className="bg-gray-50 border-b border-gray-200 px-3 py-2">
-                              <h4 className="text-xs font-semibold text-gray-700">Component Analysis</h4>
-                            </div>
-                            <div className="bg-white divide-y divide-gray-100">
+                          <div className="space-y-3">
+                            <h4 className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-[0.2em] px-1">VECTOR_DECOMPOSITION</h4>
+                            <div className="space-y-2">
                               {strength.factors.map((f, i) => (
-                                <div key={i} className="flex justify-between items-center px-3 py-2">
-                                  <span className="text-xs text-gray-600">{f.label}</span>
+                                <div key={i} className="bg-white/5 rounded-xl border border-white/5 p-4 flex justify-between items-center group/item hover:border-white/10 transition-colors">
+                                  <div className="space-y-1">
+                                    <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-tighter group-hover/item:text-white transition-colors">{f.label.replace(/ /g, '_')}</span>
+                                    <p className="text-[9px] font-mono text-white/20 uppercase italic tracking-tight">{f.reason}</p>
+                                  </div>
                                   <div className="text-right">
-                                    <span className="text-xs font-medium text-gray-900">{f.value}/{f.max}</span>
-                                    <span className="text-xs text-gray-500 ml-2">{f.reason}</span>
+                                    <span className="text-xs font-mono font-bold text-emerald-500/50">{f.value}</span>
+                                    <span className="text-[10px] font-mono text-white/5 font-bold"> / {f.max}</span>
                                   </div>
                                 </div>
                               ))}
@@ -3115,23 +3188,24 @@ export default function Recoveries() {
                           </div>
 
                           {/* Advisory Note */}
-                          <div className="bg-gray-50 rounded-lg px-3 py-2">
-                            <p className="text-xs text-gray-700">
-                              <span className="font-semibold">Advisory:</span> Consider obtaining additional supporting evidence before filing to strengthen claim validity and maintain account standing.
+                          <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl px-5 py-4">
+                            <p className="text-[10px] font-mono text-amber-500/60 leading-relaxed uppercase tracking-tight italic">
+                              <span className="font-bold text-amber-500 not-italic mr-2">PROTOCOL_ADVISORY:</span>
+                              OBTAIN SUPPLEMENTAL DATA_NODES BEFORE EXECUTION TO ENSURE LEDGER INTEGRITY. MANUAL BYPASS REQUIRED.
                             </p>
                           </div>
                         </div>
                       );
                     })()}
-                    <DialogFooter>
+                    <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex sm:justify-end gap-3">
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => {
                           setFileAnywayModalOpen(false);
                           setClaimToFile(null);
                         }}
-                        className="border-gray-200">
-                        Cancel
+                        className="h-10 px-6 font-mono text-[10px] font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl transition-all">
+                        TERMINATE_SESSION
                       </Button>
                       <Button
                         onClick={async () => {
@@ -3153,9 +3227,9 @@ export default function Recoveries() {
                             setClaimToFile(null);
                           }
                         }}
-                        className="bg-gray-200 hover:bg-gray-300 text-[#36454F]">
+                        className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-[0.2em] rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all">
                         <ArrowUpFromLine className="h-4 w-4 mr-2" />
-                        File Anyway
+                        MANUAL_OVERRIDE_RUN
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -3188,32 +3262,32 @@ export default function Recoveries() {
 
                 {/* Claim Details Modal - Institutional Banking Style */}
                 <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-                  <DialogContent className="bg-white border-gray-200 text-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+                  <DialogContent className="bg-[#0c0c0c] border border-white/10 text-white max-w-2xl max-h-[90vh] overflow-hidden p-0 rounded-2xl shadow-2xl backdrop-blur-3xl">
                     {/* Header - Institutional Style */}
-                    <div className="px-6 py-4 border-b border-gray-200">
+                    <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
                       <div className="flex justify-between items-start">
                         <div>
-                          <div className="text-xs font-semibold text-gray-400 mb-1">MARGIN</div>
-                          <DialogTitle className="text-base font-semibold text-gray-900">
-                            Claim Details
+                          <div className="text-[8px] font-mono font-bold text-white/20 mb-1.5 uppercase tracking-[0.3em]">NODE_SPECIFICATION_LEDGER</div>
+                          <DialogTitle className="text-xl font-serif italic text-white tracking-tighter">
+                            Claim_Data_Matrix
                           </DialogTitle>
                         </div>
                         <div className="text-right">
                           {detectionDetails && (
                             <>
                               <div
-                                className="text-xs font-mono text-gray-600 cursor-pointer hover:text-gray-900 transition-colors"
+                                className="text-[10px] font-mono font-bold text-emerald-500/60 cursor-pointer hover:text-emerald-500 transition-colors uppercase tracking-widest"
                                 onClick={() => {
                                   navigator.clipboard.writeText(detectionDetails.id || '');
                                   toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
                                 }}
                                 title="Click to copy">
-                                REF: {(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
+                                REF://{(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
                               </div>
-                              <div className="text-xs text-gray-400 mt-0.5">
+                              <div className="text-[9px] font-mono font-bold text-white/10 mt-1 uppercase tracking-widest">
                                 {detectionDetails.created_at || detectionDetails.discovery_date
-                                  ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'MMM dd, yyyy')
-                                  : ''
+                                  ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'dd_MMM_yyyy HH:mm')
+                                  : 'INDEX_PENDING'
                                 }
                               </div>
                             </>
@@ -3221,83 +3295,91 @@ export default function Recoveries() {
                         </div>
                       </div>
                       {detectionDetails && (
-                        <div className="mt-2 text-xs text-gray-500">
-                          {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase()}
+                        <div className="mt-3 flex items-center gap-3">
+                          <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+                          <div className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-widest">
+                            {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, '_')}
+                          </div>
                         </div>
                       )}
                       {detectionDetails && (
                         <Link
                           to={`/recoveries/${detectionDetails.id}`}
                           state={{ claim: detectionDetails }}
-                          className="mt-2 inline-flex items-center text-xs text-gray-600 hover:text-gray-900 hover:underline transition-colors">
-                          View Full Claim Details →
+                          className="mt-4 inline-flex items-center text-[10px] font-mono font-bold text-emerald-500/40 hover:text-emerald-500 transition-colors uppercase tracking-[0.2em] group">
+                          ACCESS_FULL_TELEMETRY
+                          <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
                       )}
                     </div>
 
                     {detectionDetails && (
-                      <div className="px-6 py-4 space-y-5">
+                      <div className="px-8 py-8 space-y-8 overflow-y-auto max-h-[calc(90vh-140px)]">
                         {/* Summary Card - Institutional Style */}
-                        <div className="border border-gray-200">
-                          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                            <h4 className="text-xs font-semibold text-gray-500">Claim Summary</h4>
+                        <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
+                          <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4">
+                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">EXECUTIVE_SUMMARY</h4>
                           </div>
-                          <div className="divide-y divide-gray-100">
-                            <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-sm text-gray-500">Amount</span>
-                              <span className="text-sm font-semibold text-gray-900 font-mono">
+                          <div className="divide-y divide-white/5">
+                            <div className="flex justify-between items-center px-6 py-4">
+                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">EXPECTED_RECOVERY</span>
+                              <span className="text-lg font-serif italic text-white tracking-tighter">
                                 {formatCurrency(detectionDetails.guaranteedAmount || detectionDetails.amount || detectionDetails.estimated_value || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
-                            <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-sm text-gray-500">Status</span>
-                              <span className="text-xs font-medium text-gray-900">{detectionDetails.status || 'Pending'}</span>
+                            <div className="flex justify-between items-center px-6 py-4">
+                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">CURRENT_STATE</span>
+                              <div className="flex items-center gap-2">
+                                <div className="h-1 w-1 rounded-full bg-emerald-500" />
+                                <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">{detectionDetails.status || 'PENDING'}</span>
+                              </div>
                             </div>
-                            <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-sm text-gray-500">Evidence</span>
-                              <span className="text-xs font-medium text-gray-900">{detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} document{(detectionDetails.matchedCount || 0) !== 1 ? 's' : ''}</span>
+                            <div className="flex justify-between items-center px-6 py-4">
+                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">EVIDENCE_COUNT</span>
+                              <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest">
+                                {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} FILE_NODES
+                              </span>
                             </div>
                           </div>
                         </div>
 
 
                         {/* Claim Info Section */}
-                        <div className="border-t border-gray-100 pt-4">
-                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Claim Information</h4>
+                        <div className="space-y-4">
+                          <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">TECHNICAL_TELEMETRY</h4>
                           <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <div className="text-xs text-gray-500">Claim ID</div>
-                              <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.id?.slice(0, 12) || '—'}...</div>
+                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">CLAIM_UUID</div>
+                              <div className="text-[10px] font-mono font-bold text-emerald-500/60 mt-2 uppercase tracking-tight">{detectionDetails.id?.slice(0, 16) || '—'}...</div>
                             </div>
-                            <div>
-                              <div className="text-xs text-gray-500">Sync ID</div>
-                              <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sync_id || 'N/A'}</div>
+                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">SYNC_NODE_ID</div>
+                              <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sync_id || 'N/A'}</div>
                             </div>
-                            <div>
-                              <div className="text-xs text-gray-500">Type</div>
-                              <div className="text-sm text-gray-900 mt-1">
-                                {detectionDetails.anomaly_type?.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || '—'}
+                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">VECTOR_TYPE</div>
+                              <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">
+                                {detectionDetails.anomaly_type?.replace(/_/g, '_').toUpperCase() || '—'}
                               </div>
                             </div>
-                            <div>
-                              <div className="text-xs text-gray-500">Severity</div>
-                              <Badge className="mt-1 bg-gray-100 text-[#36454F] border-gray-400">
-                                {detectionDetails.severity?.charAt(0).toUpperCase() + detectionDetails.severity?.slice(1) || 'Unknown'}
+                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">THREAT_LEVEL</div>
+                              <Badge className="mt-2 bg-white/5 hover:bg-white/10 text-white/60 border-white/10 text-[9px] font-mono font-bold uppercase tracking-widest">
+                                {detectionDetails.severity?.toUpperCase() || 'UNKNOWN'}
                               </Badge>
                             </div>
                             {detectionDetails.sku && (
-                              <div>
-                                <div className="text-xs text-gray-500">SKU</div>
-                                <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.sku}</div>
+                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">SKU_INDEX</div>
+                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sku}</div>
                               </div>
                             )}
                             {detectionDetails.asin && (
-                              <div>
-                                <div className="text-xs text-gray-500">ASIN</div>
-                                <div className="text-sm font-mono text-gray-900 mt-1">{detectionDetails.asin}</div>
+                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">ASIN_COORD</div>
+                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.asin}</div>
                               </div>
                             )}
-
                           </div>
                         </div>
 
@@ -3306,32 +3388,37 @@ export default function Recoveries() {
                           const validation = validateEvidencePolicy(detectionDetails, detectionDetails.matchedDocs);
 
                           return (
-                            <div className="border-t border-gray-100 pt-4">
-                              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                                <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                                  <h4 className="text-xs font-semibold text-gray-700">Evidence Assessment</h4>
+                            <div className="space-y-4">
+                              <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">EVIDENCE_AUTHENTICATION</h4>
+                              <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
+                                <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4 flex items-center justify-between">
+                                  <h4 className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest">VALIDATION_STATUS</h4>
+                                  <span className={cn(
+                                    "text-[10px] font-mono font-bold uppercase tracking-widest",
+                                    validation.quality === 'high' ? "text-emerald-500" : validation.quality === 'medium' ? "text-amber-500" : "text-red-500"
+                                  )}>
+                                    {validation.quality}_CONFIDENCE
+                                  </span>
                                 </div>
-                                <div className="bg-white p-4 space-y-4">
+                                <div className="p-6 space-y-6">
                                   {/* Quality Summary */}
-                                  <div className="flex justify-between items-start pb-3 border-b border-gray-100">
-                                    <div>
-                                      <div className="text-sm font-medium text-gray-900">Quality Level</div>
-                                      <div className="text-xs text-gray-600 mt-1">{validation.recommendationText}</div>
-                                    </div>
-                                    <div className="text-right">
-                                      <div className="text-sm font-semibold text-gray-900">{validation.quality.charAt(0).toUpperCase() + validation.quality.slice(1)}</div>
-                                    </div>
+                                  <div>
+                                    <div className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">PROTOCOL_RECOMMENDATION</div>
+                                    <div className="text-[9px] font-mono text-white/20 uppercase mt-2 tracking-tight leading-relaxed">{validation.recommendationText}</div>
                                   </div>
 
                                   {/* Field Verification */}
-                                  <div className="space-y-2">
-                                    <p className="text-xs font-semibold text-gray-700">Field Verification</p>
-                                    <div className="space-y-1">
+                                  <div className="space-y-3">
+                                    <p className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">FIELD_INTEGRITY_INDEX</p>
+                                    <div className="grid grid-cols-1 gap-2">
                                       {validation.fieldChecks.map((check, i) => (
-                                        <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-gray-50 last:border-0">
-                                          <span className="text-gray-600">{check.label}</span>
-                                          <span className="font-medium text-gray-900">
-                                            {check.present ? "Present" : check.required ? "Required" : "Optional"}
+                                        <div key={i} className="flex items-center justify-between text-[10px] font-mono py-2.5 border-b border-white/5 last:border-0 group/field">
+                                          <span className="text-white/40 uppercase tracking-tighter group-hover/field:text-white/60 transition-colors">{check.label.replace(/ /g, '_')}</span>
+                                          <span className={cn(
+                                            "font-bold uppercase tracking-widest",
+                                            check.present ? "text-emerald-500/50" : check.required ? "text-red-500/50" : "text-white/10"
+                                          )}>
+                                            {check.present ? "VALIDATED" : check.required ? "MISSING_CRITICAL" : "OPTIONAL_NULL"}
                                           </span>
                                         </div>
                                       ))}
@@ -3340,11 +3427,11 @@ export default function Recoveries() {
 
                                   {/* Policy Notes */}
                                   {validation.warnings.length > 0 && (
-                                    <div className="space-y-2 pt-2 border-t border-gray-100">
-                                      <p className="text-xs font-semibold text-gray-700">Policy Notes</p>
-                                      <ul className="text-xs space-y-1">
+                                    <div className="space-y-3 pt-4 border-t border-white/5">
+                                      <p className="text-[9px] font-mono font-bold text-red-500/40 uppercase tracking-widest">POLICY_CONFLICT_WARNINGS</p>
+                                      <ul className="space-y-2">
                                         {validation.warnings.map((w, i) => (
-                                          <li key={i} className="text-gray-600 pl-3 relative before:content-['•'] before:absolute before:left-0">{w}</li>
+                                          <li key={i} className="text-[9px] font-mono text-white/40 uppercase tracking-tight pl-4 relative before:content-['>'] before:absolute before:left-0 before:text-red-500/30 font-bold leading-relaxed">{w}</li>
                                         ))}
                                       </ul>
                                     </div>
@@ -3356,76 +3443,77 @@ export default function Recoveries() {
                         })()}
 
                         {/* Financial Information - Institutional Style */}
-                        <div className="border border-gray-200">
-                          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                            <h4 className="text-xs font-semibold text-gray-500">Financial Information</h4>
+                        <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
+                          <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4">
+                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">FINANCIAL_LEDGER</h4>
                           </div>
-                          <div className="divide-y divide-gray-100">
-                            <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-sm text-gray-500">Estimated Value</span>
-                              <span className="text-sm font-semibold text-gray-900 font-mono">
+                          <div className="divide-y divide-white/5">
+                            <div className="flex justify-between items-center px-6 py-4">
+                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">NET_ESTIMATED_VALUE</span>
+                              <span className="text-[11px] font-mono font-bold text-white">
                                 {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
-                            <div className="flex justify-between items-center px-4 py-2.5">
-                              <span className="text-sm text-gray-500">Currency</span>
-                              <span className="text-xs font-medium text-gray-900">{detectionDetails.currency || 'USD'}</span>
+                            <div className="flex justify-between items-center px-6 py-4">
+                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">CURRENCY_CODE</span>
+                              <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest">{detectionDetails.currency || 'USD'}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Dates & Deadlines */}
-                        <div className="border-t border-gray-100 pt-4">
-                          <h4 className="text-sm font-semibold text-gray-900 mb-3">Dates & Deadlines</h4>
+                        <div className="space-y-4">
+                          <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">TEMPORAL_MARKERS</h4>
                           <div className="grid grid-cols-2 gap-4">
                             {detectionDetails.discovery_date && (
-                              <div>
-                                <div className="text-xs text-gray-500">Discovery Date</div>
-                                <div className="text-sm text-gray-900 mt-1">
-                                  {format(new Date(detectionDetails.discovery_date), 'MMM dd, yyyy')}
+                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">DISCOVERY_INDEX</div>
+                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">
+                                  {format(new Date(detectionDetails.discovery_date), 'dd_MMM_yyyy')}
                                 </div>
                               </div>
                             )}
                             {detectionDetails.deadline_date && (
-                              <div>
-                                <div className="text-xs text-gray-500">Deadline Date</div>
-                                <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
-                                  ? 'text-amber-600'
-                                  : 'text-gray-900'
+                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">EXPIRY_COORD</div>
+                                <div className={`text-[10px] font-mono font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                                  ? 'text-amber-500'
+                                  : 'text-white/60'
                                   }`}>
-                                  {format(new Date(detectionDetails.deadline_date), 'MMM dd, yyyy')}
+                                  {format(new Date(detectionDetails.deadline_date), 'dd_MMM_yyyy')}
                                 </div>
                               </div>
                             )}
                             {detectionDetails.days_remaining !== undefined && (
-                              <div>
-                                <div className="text-xs text-gray-500">Days Remaining</div>
-                                <div className={`text-sm font-medium mt-1 ${detectionDetails.days_remaining <= 3 ? 'text-red-600' :
-                                  detectionDetails.days_remaining <= 7 ? 'text-amber-600' :
-                                    'text-gray-900'
+                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">COUNTDOWN_VAL</div>
+                                <div className={`text-[10px] font-mono font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining <= 3 ? 'text-red-500' :
+                                  detectionDetails.days_remaining <= 7 ? 'text-amber-500' :
+                                    'text-white/60'
                                   }`}>
-                                  {detectionDetails.days_remaining} day{detectionDetails.days_remaining !== 1 ? 's' : ''}
+                                  {detectionDetails.days_remaining}_DAYS_REMAINING
                                 </div>
                               </div>
                             )}
                             {detectionDetails.created_at && (
-                              <div>
-                                <div className="text-xs text-gray-500">Created At</div>
-                                <div className="text-sm text-gray-900 mt-1">
-                                  {format(new Date(detectionDetails.created_at), 'MMM dd, yyyy HH:mm')}
+                              <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">CREATION_STAMP</div>
+                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">
+                                  {format(new Date(detectionDetails.created_at), 'dd_MMM_yyyy HH:mm')}
                                 </div>
                               </div>
                             )}
                           </div>
                         </div>
 
+
                         {/* Related Event IDs */}
                         {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
-                          <div className="border-t border-gray-100 pt-4">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Related Event IDs</h4>
+                          <div className="space-y-4">
+                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">LINKED_TRANSACTION_IDS</h4>
                             <div className="flex flex-wrap gap-2">
                               {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
-                                <Badge key={idx} variant="outline" className="font-mono text-xs">
+                                <Badge key={idx} variant="outline" className="font-mono text-[9px] bg-white/5 border-white/10 text-white/60 uppercase tracking-widest">
                                   {eventId}
                                 </Badge>
                               ))}
@@ -3435,10 +3523,10 @@ export default function Recoveries() {
 
                         {/* Evidence Data */}
                         {detectionDetails.evidence && (
-                          <div className="border-t border-gray-100 pt-4">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3">Evidence Data</h4>
-                            <div className="bg-gray-50 border border-gray-200 rounded-md p-3 max-h-48 overflow-auto">
-                              <pre className="text-xs text-gray-700">
+                          <div className="space-y-4">
+                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">RAW_EVIDENCE_DUMP</h4>
+                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 max-h-48 overflow-auto">
+                              <pre className="text-[9px] font-mono text-white/40 uppercase">
                                 {JSON.stringify(detectionDetails.evidence, null, 2)}
                               </pre>
                             </div>
@@ -3447,15 +3535,15 @@ export default function Recoveries() {
 
                         {/* Details/Description */}
                         {detectionDetails.details && (
-                          <div className="border-t border-gray-100 pt-4">
-                            <h4 className="text-sm font-semibold text-gray-900 mb-2">Details</h4>
-                            <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{detectionDetails.details}</p>
+                          <div className="space-y-4">
+                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">ANOMALY_NARRATIVE</h4>
+                            <p className="text-[10px] font-mono text-white/40 bg-white/[0.02] border border-white/5 p-4 rounded-xl leading-relaxed uppercase tracking-tight">{detectionDetails.details}</p>
                           </div>
                         )}
 
 
                         {/* Claim Timeline & Escalation */}
-                        <div className="border-t border-gray-100 pt-4">
+                        <div className="border-t border-white/5 pt-6">
                           <ClaimNegotiationTimeline
                             claim={detectionDetails}
                             maxEscalations={2}
@@ -3471,13 +3559,14 @@ export default function Recoveries() {
                         </div>
                       </div>
                     )}
-                    <DialogFooter className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <DialogFooter className="px-8 py-6 border-t border-white/5 bg-white/[0.02]">
+
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => setDetailsModalOpen(false)}
-                        className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
-                        Close
+                        className="h-10 px-6 text-[10px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
+                        CLOSE_SESSION
                       </Button>
                       <Button
                         size="sm"
@@ -3486,10 +3575,11 @@ export default function Recoveries() {
                           setEvidencePackOpen(true);
                           setDetailsModalOpen(false);
                         }}
-                        className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
-                        <FileText className="h-3.5 w-3.5 mr-1.5" />
-                        View Evidence Pack
+                        className="h-10 px-6 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                        <FileText className="h-3.5 w-3.5 mr-2" />
+                        VIEW_AUDIT_PACK
                       </Button>
+
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -3506,8 +3596,8 @@ export default function Recoveries() {
               </Tabs>
             </div>
           </div>
-        </div>
-      </div>
-    </PageLayout>
+        </div >
+      </div >
+    </PageLayout >
   );
 }

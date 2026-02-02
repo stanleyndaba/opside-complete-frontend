@@ -22,6 +22,7 @@ import {
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Link2, FileText, Loader2 } from 'lucide-react';
 
 interface SmartPromptMatch {
     id: string;
@@ -114,62 +115,70 @@ export function SmartPromptCard({
 
     return (
         <>
-            {/* Pentagon Institutional Design - Clean, Minimal, List View */}
-            <div className="group relative pl-6 py-6 hover:bg-gray-50/50 transition-colors border-b border-gray-100 last:border-0">
-                {/* Institutional Accent Bar */}
-                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-900 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
+            {/* Matrix Institutional Design - Clean, Minimal, List View */}
+            <div className="group relative px-8 py-6 hover:bg-white/[0.02] transition-colors border-b border-white/5 last:border-0">
+                {/* Status Accent Bar */}
+                <div className={cn(
+                    "absolute left-0 top-0 bottom-0 w-px transition-all duration-500 origin-top scale-y-0 group-hover:scale-y-100",
+                    confidencePercent >= 85 ? "bg-emerald-500" :
+                        confidencePercent >= 50 ? "bg-amber-500" : "bg-white/20"
+                )} />
 
-                <div className="flex items-start justify-between gap-6">
-                    <div className="flex items-start gap-4 flex-1">
+                <div className="flex items-start justify-between gap-8">
+                    <div className="flex items-start gap-6 flex-1">
                         {/* Visual Indicator */}
-                        <div className="mt-1 flex items-center justify-center w-8 h-8 border border-gray-200 bg-white">
-                            <Hexagon className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                        <div className={cn(
+                            "mt-1 flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/5 transition-all duration-300",
+                            confidencePercent >= 85 ? "group-hover:border-emerald-500/30 group-hover:text-emerald-500" :
+                                confidencePercent >= 50 ? "group-hover:border-amber-500/30 group-hover:text-amber-500" : "group-hover:border-white/20 group-hover:text-white/40"
+                        )}>
+                            <Hexagon className="h-5 w-5" />
                         </div>
 
-                        <div className="space-y-3 flex-1">
+                        <div className="space-y-4 flex-1">
                             {/* Header Metadata */}
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm font-bold text-gray-900">
-                                        Manual Confirmation Required
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.2em]">
+                                        CORRELATION_VECT_REQUIRED
                                     </span>
-                                    <span className="text-xs text-gray-300">|</span>
+                                    <div className="h-1 w-1 rounded-full bg-white/10" />
                                     <span className={cn(
-                                        "text-xs font-semibold",
-                                        confidencePercent >= 85 ? "text-emerald-600" :
-                                            confidencePercent >= 50 ? "text-amber-600" : "text-gray-400"
+                                        "text-[10px] font-mono font-bold uppercase tracking-tighter",
+                                        confidencePercent >= 85 ? "text-emerald-500" :
+                                            confidencePercent >= 50 ? "text-amber-500" : "text-white/20"
                                     )}>
-                                        {confidencePercent}% CONFIDENCE
+                                        {confidencePercent}%_CONFIDENCE
                                     </span>
-                                    <span className="text-xs text-gray-300">|</span>
-                                    <span className="text-xs font-bold text-gray-400">
-                                        {getMatchTypeLabel(match.match_type)}
+                                    <div className="h-1 w-1 rounded-full bg-white/10" />
+                                    <span className="text-[10px] font-mono font-bold text-white/10 uppercase tracking-tighter">
+                                        TYPE_{getMatchTypeLabel(match.match_type).toUpperCase().replace(/ /g, '_')}
                                     </span>
                                 </div>
                                 {match.created_at && (
-                                    <div className="text-xs text-gray-400">
-                                        {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm')}
+                                    <div className="text-[9px] font-mono text-white/10 uppercase">
+                                        INDEXED_{format(new Date(match.created_at), 'yyyy_MM_dd__HH:mm').toUpperCase()}
                                     </div>
                                 )}
                             </div>
 
                             {/* ID & Source Group */}
-                            <div className="flex items-center gap-6">
-                                <div className="space-y-1">
-                                    <span className="text-xs text-gray-400 font-medium">Claim Reference</span>
-                                    <div className="flex items-center gap-1.5">
-                                        <Link2 className="h-3 w-3 text-gray-400" />
-                                        <Link to={`/recoveries/${match.claim_id}`} className="text-xs font-mono text-gray-700 hover:text-gray-900 underline underline-offset-4 decoration-gray-200 hover:decoration-gray-400 transition-colors">
+                            <div className="flex items-center gap-8">
+                                <div className="space-y-1.5">
+                                    <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest">CLAIM_UUID</span>
+                                    <div className="flex items-center gap-2">
+                                        <Link2 className="h-3 w-3 text-white/10" />
+                                        <Link to={`/recoveries/${match.claim_id}`} className="text-[10px] font-mono text-white/60 hover:text-emerald-500 transition-colors uppercase">
                                             {match.claim_id.substring(0, 16).toUpperCase()}
                                         </Link>
                                     </div>
                                 </div>
 
-                                <div className="space-y-1">
-                                    <span className="text-xs text-gray-400 font-medium">Linked Document</span>
-                                    <div className="flex items-center gap-1.5">
-                                        <FileText className="h-3 w-3 text-gray-400" />
-                                        <Link to={`/documents/${match.document_id}`} className="text-xs font-mono text-gray-700 hover:text-gray-900 underline underline-offset-4 decoration-gray-200 hover:decoration-gray-400 transition-colors">
+                                <div className="space-y-1.5">
+                                    <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest">DOC_REFS</span>
+                                    <div className="flex items-center gap-2">
+                                        <FileText className="h-3 w-3 text-white/10" />
+                                        <Link to={`/documents/${match.document_id}`} className="text-[10px] font-mono text-white/60 hover:text-emerald-500 transition-colors uppercase">
                                             {match.document_details?.filename?.substring(0, 24) || match.document_id.substring(0, 16).toUpperCase()}
                                         </Link>
                                     </div>
@@ -179,9 +188,9 @@ export function SmartPromptCard({
                             {/* Reasoning / System Insight */}
                             {match.reasoning && (
                                 <div className="flex items-start gap-2 pt-1">
-                                    <div className="space-y-1">
-                                        <span className="text-xs font-bold text-gray-900">System Reasoning</span>
-                                        <p className="text-sm text-gray-500 leading-relaxed max-w-xl">
+                                    <div className="space-y-1.5">
+                                        <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest leading-none">NEURAL_REASONING_ENGINE</span>
+                                        <p className="text-[11px] font-mono text-white/40 leading-relaxed max-w-2xl lowercase italic">
                                             {match.reasoning}
                                         </p>
                                     </div>
@@ -190,12 +199,12 @@ export function SmartPromptCard({
 
                             {/* Matched Fields */}
                             {match.matched_fields && match.matched_fields.length > 0 && (
-                                <div className="flex items-center gap-2 py-1 px-2 bg-gray-50 border border-gray-100 inline-flex">
-                                    <span className="text-xs text-gray-400 font-bold">Correlation:</span>
-                                    <div className="flex gap-2">
+                                <div className="flex items-center gap-3 py-1.5 px-3 bg-white/5 border border-white/5 rounded-lg inline-flex">
+                                    <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest">MATCH_VECTORS:</span>
+                                    <div className="flex gap-3">
                                         {match.matched_fields.map((field, idx) => (
-                                            <span key={idx} className="text-xs text-gray-600 font-semibold decoration-gray-300">
-                                                {field.replace(/_/g, ' ')}
+                                            <span key={idx} className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-tighter">
+                                                {field.replace(/_/g, '_')}
                                             </span>
                                         ))}
                                     </div>
@@ -205,26 +214,28 @@ export function SmartPromptCard({
                     </div>
 
                     {/* Vertical Actions Column */}
-                    <div className="flex flex-col gap-2 shrink-0 pr-6">
+                    <div className="flex flex-col gap-3 shrink-0">
                         <Button
-                            size="sm"
-                            variant="default"
                             onClick={handleApprove}
                             disabled={isApproving || isRejecting || isRequestingMore}
-                            className="bg-gray-900 hover:bg-gray-800 text-white h-8 text-xs font-bold px-4 rounded-none">
+                            className={cn(
+                                "h-11 px-6 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl border",
+                                confidencePercent >= 85
+                                    ? "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30"
+                                    : "bg-white/5 text-white/40 border-white/5 hover:text-white hover:bg-white/10"
+                            )}>
                             {isApproving ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
                             ) : null}
-                            CONFIRM MATCH
+                            {confidencePercent >= 85 ? 'EXECUTE_LINK' : 'CONFIRM_VECT'}
                         </Button>
 
-                        <div className="flex items-center gap-4 mt-1">
+                        <div className="flex items-center justify-between gap-4 px-1">
                             <Button
-                                size="sm"
                                 variant="ghost"
                                 onClick={() => setShowRejectDialog(true)}
                                 disabled={isApproving || isRejecting || isRequestingMore}
-                                className="h-8 text-xs font-bold text-gray-400 hover:text-red-700 hover:bg-transparent p-0">
+                                className="h-8 text-[9px] font-mono font-bold text-white/20 hover:text-red-400 hover:bg-transparent p-0 uppercase tracking-widest transition-colors">
                                 <span className="flex items-center gap-1.5">
                                     <XCircle className="w-3.5 h-3.5" />
                                     REJECT
@@ -232,14 +243,13 @@ export function SmartPromptCard({
                             </Button>
 
                             <Button
-                                size="sm"
                                 variant="ghost"
                                 onClick={handleRequestMore}
                                 disabled={isApproving || isRejecting || isRequestingMore}
-                                className="h-8 text-xs font-bold text-gray-400 hover:text-gray-900 hover:bg-transparent p-0">
+                                className="h-8 text-[9px] font-mono font-bold text-white/20 hover:text-white hover:bg-transparent p-0 uppercase tracking-widest transition-colors">
                                 <span className="flex items-center gap-1.5">
                                     <Search className="w-3.5 h-3.5" />
-                                    FIND MORE
+                                    SCAN_MORE
                                 </span>
                             </Button>
                         </div>
@@ -247,48 +257,50 @@ export function SmartPromptCard({
                 </div>
             </div>
 
-            {/* Reject Dialog - Pentagon Style */}
+            {/* Reject Dialog - Matrix Style */}
             <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-                <DialogContent className="bg-white border-gray-200">
-                    <DialogHeader>
-                        <DialogTitle className="text-sm font-medium text-gray-900">
-                            Reject Match
+                <DialogContent className="bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl max-w-sm">
+                    <DialogHeader className="border-b border-white/5 pb-4">
+                        <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">
+                            TERMINATE_CORRELATION
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-gray-500">
-                            This match will not be submitted. Provide an optional reason.
+                        <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1">
+                            This match will be purged from the active ledger. Provide rationale for node termination.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="py-4">
-                        <Label htmlFor="reject-reason" className="text-xs text-gray-500">
-                            Reason (optional)
+                    <div className="py-6">
+                        <Label htmlFor="reject-reason" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">
+                            TERMINATION_LOG
                         </Label>
                         <Textarea
                             id="reject-reason"
                             value={rejectReason}
                             onChange={(e) => setRejectReason(e.target.value)}
-                            placeholder="e.g., Wrong order, date mismatch..."
-                            className="mt-2 text-sm border-gray-200 focus:border-gray-400"
-                            rows={2}
+                            placeholder="e.g., WRONG_ID, TEMPORAL_MISMATCH..."
+                            className="mt-3 text-[10px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-red-500/30 focus:ring-red-500/10 rounded-xl transition-all"
+                            rows={3}
                         />
                     </div>
-                    <DialogFooter className="gap-2">
+                    <DialogFooter className="flex-col sm:flex-row gap-2 mt-2">
                         <Button
-                            variant="outline"
-                            size="sm"
+                            variant="ghost"
                             onClick={() => {
                                 setShowRejectDialog(false);
                                 setRejectReason('');
                             }}
-                            className="text-xs border-gray-200">
-                            Cancel
+                            className="flex-1 text-[9px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
+                            ABORT_ACTION
                         </Button>
                         <Button
-                            size="sm"
                             onClick={handleReject}
                             disabled={isRejecting}
-                            className="bg-gray-900 hover:bg-gray-800 text-white text-xs">
-                            {isRejecting && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />}
-                            Reject
+                            className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 text-[9px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                            {isRejecting ? (
+                                <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                            ) : (
+                                <XCircle className="w-3.5 h-3.5 mr-2" />
+                            )}
+                            CONFIRM_PURGE
                         </Button>
                     </DialogFooter>
                 </DialogContent>

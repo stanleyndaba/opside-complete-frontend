@@ -338,77 +338,102 @@ export function EvidenceMatchingTable() {
   return (
     <div className="space-y-4">
       {/* Header with Run Matching Button */}
-      <div className="flex items-center justify-between bg-white border border-gray-200 rounded-sm px-4 py-3">
-        <div>
-          <h3 className="text-xs font-medium text-gray-900">Evidence Matching</h3>
-          <p className="text-xs text-gray-500 mt-0.5">
-            {matchingResults.length} {matchingResults.length === 1 ? 'match' : 'matches'} found
-            {smartPrompts.length > 0 && (
-              <span className="ml-2">
-                • {smartPrompts.length} need{smartPrompts.length === 1 ? 's' : ''} review
-              </span>
+      <div className="flex items-center justify-between gap-6 mb-8 px-2">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+            <h2 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">Evidence_Correlation_Matrix</h2>
+          </div>
+          <p className="text-[9px] font-mono text-white/20 uppercase tracking-tight">
+            {refreshing ? (
+              <span className="animate-pulse">SYNCHRONIZING_NEURAL_VECTORS...</span>
+            ) : (
+              `ACTIVE_CORRELATIONS: ${matchingResults.length} NODES_IDENTIFIED`
             )}
           </p>
         </div>
         <Button
           onClick={handleRunMatching}
           disabled={refreshing}
-          size="sm"
-          className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium px-4">
-          {refreshing && <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />}
-          {refreshing ? 'Running...' : 'Run Matching'}
+          className={cn(
+            "h-12 px-6 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl border border-white/5",
+            refreshing
+              ? "bg-white/5 text-white/20"
+              : "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+          )}>
+          {refreshing ? (
+            <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+          ) : (
+            <RefreshCw className="w-3.5 h-3.5 mr-2" />
+          )}
+          {refreshing ? 'EXECUTING...' : 'RUN_CORRELATION'}
         </Button>
       </div>
 
       {/* Tabs for different match categories - Pentagon Style */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="inline-flex h-auto items-center justify-start gap-6 bg-transparent border-b border-gray-200 rounded-none p-0 w-full text-left">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="flex h-12 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl mb-6">
           <TabsTrigger
             value="smart-prompts"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-            Needs Review
-            {smartPrompts.length > 0 && (
-              <span className="ml-2 text-xs text-gray-400">{smartPrompts.length}</span>
-            )}
+            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+              PENDING_REVIEW
+              {smartPrompts.length > 0 && (
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{smartPrompts.length}</span>
+              )}
+            </div>
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-            Auto-Submitted
-            {autoSubmitted.length > 0 && (
-              <span className="ml-2 text-xs text-gray-400">{autoSubmitted.length}</span>
-            )}
+            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            <div className="flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+              AUTO_SUBMITTED
+              {autoSubmitted.length > 0 && (
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{autoSubmitted.length}</span>
+              )}
+            </div>
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-            Held / Rejected
-            {heldForReview.length > 0 && (
-              <span className="ml-2 text-xs text-gray-400">{heldForReview.length}</span>
-            )}
+            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            <div className="flex items-center justify-center gap-2">
+              <XCircle className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+              HELD_REJECTED
+              {heldForReview.length > 0 && (
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{heldForReview.length}</span>
+              )}
+            </div>
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="relative px-1 pb-3 pt-1 text-xs font-medium text-gray-500 bg-transparent rounded-none border-0 shadow-none transition-colors hover:text-gray-900 data-[state=active]:text-gray-900 data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-px data-[state=active]:after:bg-gray-900">
-            All Matches
-            <span className="ml-2 text-xs text-gray-400">{matchingResults.length}</span>
+            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            <div className="flex items-center justify-center gap-2">
+              <FileText className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
+              ALL_VECTORS
+              <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{matchingResults.length}</span>
+            </div>
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
         </TabsList>
 
-        {/* Needs Review Tab */}
-        <TabsContent value="smart-prompts" className="mt-0 border-t border-gray-100">
+        <TabsContent value="smart-prompts" className="mt-0 outline-none">
           {smartPrompts.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-gray-200 mb-4 bg-gray-50/50">
-                <CheckCircle2 className="h-5 w-5 text-gray-300" />
+            <div className="py-24 text-center bg-white/5 border border-white/5 rounded-2xl backdrop-blur-xl">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/5 border border-emerald-500/20 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+                <CheckCircle2 className="h-6 w-6 text-emerald-500" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-900">Queue Fully Audited</h3>
-              <p className="text-xs text-gray-500 mt-2 max-w-[280px] mx-auto leading-relaxed">
+              <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">QUEUE_FULLY_AUDITED</h3>
+              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-widest">
                 No matches currently require manual confirmation. Autonomous engine has finalized all active correlations.
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {smartPrompts.map(match => (
                 <SmartPromptCard
                   key={match.id}
@@ -520,83 +545,82 @@ export function EvidenceMatchingTable() {
         </TabsContent>
 
         {/* All Matches Tab */}
-        <TabsContent value="all" className="mt-0 border-t border-gray-100">
+        <TabsContent value="all" className="mt-0 outline-none">
           {matchingResults.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-gray-200 mb-4 bg-gray-50/50">
-                <FileText className="h-5 w-5 text-gray-300" />
+            <div className="py-24 text-center bg-white/5 border border-white/5 rounded-2xl backdrop-blur-xl">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-6">
+                <FileText className="h-6 w-6 text-white/20" />
               </div>
-              <h3 className="text-xs font-semibold text-gray-900">No Evidence Matches</h3>
-              <p className="text-xs text-gray-500 mt-2 max-w-[280px] mx-auto leading-relaxed">
+              <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">NO_EVIDENCE_MATCHES</h3>
+              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-widest">
                 No claim-to-document correlations established. Run matching to process backlog.
               </p>
               <Button
                 onClick={handleRunMatching}
-                variant="outline"
-                size="sm"
-                className="mt-6 h-8 text-xs font-bold border-gray-200">
-                <RefreshCw className="w-3 h-3 mr-2" />
-                Index Backlog
+                className="mt-8 h-10 px-6 font-mono text-[9px] font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-full transition-all uppercase tracking-widest">
+                <RefreshCw className="w-3.5 h-3.5 mr-2" />
+                INDEX_BACKLOG
               </Button>
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {matchingResults.map((match) => (
-                <div key={match.id} className="group relative pl-6 py-5 hover:bg-gray-50/50 transition-colors">
-                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-900 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
+                <div key={match.id} className="group relative px-8 py-6 hover:bg-white/[0.02] transition-colors">
+                  <div className="absolute left-0 top-0 bottom-0 w-px bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500" />
                   <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1 flex items-center justify-center w-8 h-8 border border-gray-200 bg-white">
-                        <Hexagon className="h-4 w-4 text-gray-400 group-hover:text-gray-900 transition-colors" />
+                    <div className="flex items-start gap-6">
+                      <div className="mt-1 flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/5 text-white/20 group-hover:text-emerald-500 group-hover:border-emerald-500/30 transition-all">
+                        <Hexagon className="h-5 w-5" />
                       </div>
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-gray-900">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-mono font-bold text-white uppercase tracking-widest">
                             {getMatchTypeLabel(match.match_type)}
                           </span>
-                          <span className="text-xs text-gray-300">|</span>
+                          <div className="h-1 w-1 rounded-full bg-white/10" />
                           <span className={cn(
-                            "text-xs font-semibold",
-                            match.confidence_score >= 0.85 ? "text-emerald-600" :
-                              match.confidence_score >= 0.5 ? "text-amber-600" : "text-gray-400"
+                            "text-[10px] font-mono font-bold uppercase tracking-tighter",
+                            match.confidence_score >= 0.85 ? "text-emerald-500" :
+                              match.confidence_score >= 0.5 ? "text-amber-500" : "text-white/20"
                           )}>
-                            {Math.round(match.confidence_score * 100)}% CONFIDENCE
+                            {Math.round(match.confidence_score * 100)}%_CONFIDENCE
                           </span>
-                          <span className="text-xs text-gray-300">|</span>
-                          <span className="text-xs font-bold text-gray-500">
-                            {match.action_taken.replace(/_/g, ' ')}
+                          <div className="h-1 w-1 rounded-full bg-white/10" />
+                          <span className="text-[10px] font-mono font-bold text-white/10 uppercase tracking-tighter">
+                            {match.action_taken.replace(/_/g, '_')}
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-gray-400">CLAIM:</span>
-                            <Link to={`/recoveries/${match.claim_id}`} className="font-mono text-gray-700 hover:text-gray-900 underline underline-offset-2 decoration-gray-200 hover:decoration-gray-400">
+                        <div className="flex items-center gap-4 text-[10px] font-mono text-white/40 uppercase tracking-tight">
+                          <div className="flex items-center gap-2">
+                            <span className="text-white/10">CLAIM:</span>
+                            <Link to={`/recoveries/${match.claim_id}`} className="text-white/60 hover:text-emerald-500 transition-colors">
                               {match.claim_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
-                          <span className="text-gray-300">/</span>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-gray-400">DOC:</span>
-                            <Link to={`/documents/${match.document_id}`} className="font-mono text-gray-700 hover:text-gray-900 underline underline-offset-2 decoration-gray-200 hover:decoration-gray-400">
+                          <span className="text-white/10">/</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white/10">DOC:</span>
+                            <Link to={`/documents/${match.document_id}`} className="text-white/60 hover:text-emerald-500 transition-colors">
                               {match.document_details?.filename?.substring(0, 20) || match.document_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
                         </div>
                         {match.created_at && (
-                          <div className="text-xs text-gray-400 flex items-center gap-1.5">
-                            <Clock className="h-2.5 w-2.5" />
-                            MATCHED {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm')}
+                          <div className="text-[9px] font-mono text-white/10 flex items-center gap-2 uppercase">
+                            <Clock className="h-3 w-3" />
+                            INDEXED_{format(new Date(match.created_at), 'yyyy_MM_dd__HH:mm').toUpperCase()}
                           </div>
                         )}
                       </div>
                     </div>
-                    <div className="pr-6">
-                      <Button asChild variant="ghost" size="sm" className="h-8 text-xs font-semibold text-gray-400 hover:text-gray-900 hover:bg-transparent group/btn p-0">
-                        <Link to={`/recoveries/${match.claim_id}`} className="flex items-center gap-2">
-                          VIEW
-                          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
-                        </Link>
-                      </Button>
+                    <div className="flex items-center gap-4 self-center">
+                      <Link
+                        to={`/recoveries/${match.claim_id}`}
+                        className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-widest"
+                      >
+                        DATA_NODE
+                        <ArrowRight className="h-3.5 w-3.5 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
+                      </Link>
                     </div>
                   </div>
                 </div>
