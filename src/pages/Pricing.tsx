@@ -36,93 +36,126 @@ const Pricing = () => {
 
             <main className="relative z-10 pt-40 pb-24">
                 <div className="container mx-auto px-6 max-w-5xl">
-                    {/* Header Section */}
-                    <div className="max-w-3xl mb-24">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="h-[1px] w-12 bg-emerald-500/50" />
-                            <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">
-                                Financial Model // Recovery Governance
-                            </span>
-                        </div>
-                        <h1 className="text-4xl md:text-6xl font-merriweather font-bold leading-tight tracking-tight mb-8">
-                            Transparent <br />
-                            Pricing Structure
-                        </h1>
-                        <p className="text-lg md:text-xl text-white/40 font-montserrat leading-relaxed max-w-2xl">
-                            Zero Risk. Performance Based. Margin operates on a strictly contingent fee model. We only generate invoices on successful reimbursements credited to your Seller Central account.
-                        </p>
-                    </div>
-
-                    {/* Pricing Matrix */}
-                    <div className="grid md:grid-cols-3 gap-8 mb-32">
-                        {[
-                            {
-                                title: "Audit",
-                                cost: "Free",
-                                icon: <Zap className="h-5 w-5 text-blue-500" />,
-                                desc: "Continuous forensic monitoring of your SP-API ledger nodes."
-                            },
-                            {
-                                title: "Analysis",
-                                cost: "Free",
-                                icon: <BarChart3 className="h-5 w-5 text-amber-500" />,
-                                desc: "Deep forensic mapping of 18 months of inventory drift."
-                            },
-                            {
-                                title: "Recovery Fee",
-                                cost: "Contingent",
-                                icon: <ShieldCheck className="h-5 w-5 text-emerald-500" />,
-                                desc: "Standard Industry Rate (Performance Only). If you don't get paid, we don't get paid."
-                            }
-                        ].map((item, i) => (
-                            <div key={i} className="group p-8 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-white/10 transition-all duration-500">
-                                <div className="p-3 bg-white/5 rounded-xl w-fit mb-6 border border-white/5 group-hover:bg-white/10 transition-colors">
-                                    {item.icon}
-                                </div>
-                                <h3 className="text-[11px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase mb-2">{item.title}</h3>
-                                <div className="text-3xl font-bold mb-4">{item.cost}</div>
-                                <p className="text-sm text-white/40 font-montserrat leading-relaxed">
-                                    {item.desc}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Enterprise / Aggregator Section */}
-                    <div className="p-12 bg-white/[0.02] border border-white/5 rounded-[32px] relative overflow-hidden mb-32">
-                        <div className="absolute top-0 right-0 w-[500px] h-[300px] bg-blue-500/[0.03] blur-[100px] pointer-events-none" />
-                        <div className="grid md:grid-cols-2 gap-12 items-center">
-                            <div className="space-y-6">
-                                <div className="flex items-center gap-3">
-                                    <Users className="h-4 w-4 text-white/30" />
-                                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">Enterprise Layer</span>
-                                </div>
-                                <h2 className="text-3xl font-merriweather font-bold leading-tight">
-                                    Aggregators & <br />
-                                    High-Volume Portfolios
-                                </h2>
-                                <p className="text-white/40 font-montserrat leading-relaxed pr-8">
-                                    Managing 10+ accounts? We offer bespoke volume discounts and dedicated forensic audit managers for institutional-grade portfolios.
-                                </p>
-                                <Link to="/contact">
-                                    <Button variant="outline" className="mt-4 rounded-none border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-mono text-[10px] uppercase tracking-widest px-8">
-                                        Request Briefing
-                                    </Button>
-                                </Link>
-                            </div>
+                    {/* Pricing Matrix - Redesigned to Split Layout */}
+                    <div className="grid lg:grid-cols-2 gap-24 items-start mb-32">
+                        {/* Left Side: Strategic Context */}
+                        <div className="space-y-8">
                             <div className="space-y-4">
-                                {[
-                                    "Consolidated Multi-Account Invoicing",
-                                    "Priority API Rate Limits",
-                                    "Custom Frequency Audit Cycles",
-                                    "Dedicated Settlement Analysts"
-                                ].map((feature, i) => (
-                                    <div key={i} className="flex items-center gap-4 text-sm text-white/60 font-montserrat">
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-500/50" />
-                                        {feature}
-                                    </div>
-                                ))}
+                                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
+                                    Financial Model
+                                </span>
+                                <h1 className="text-4xl md:text-6xl font-merriweather font-bold leading-tight tracking-tight">
+                                    Transparent <br />
+                                    Pricing Structure
+                                </h1>
                             </div>
+                            <p className="text-lg text-white/30 font-montserrat leading-relaxed max-w-lg">
+                                Zero Risk. Performance Based. Margin operates on a strictly contingent fee model. We only generate invoices on successful reimbursements credited to your Seller Central account.
+                            </p>
+                        </div>
+
+                        {/* Right Side: Pricing Nodes */}
+                        <div className="space-y-0">
+                            {[
+                                {
+                                    id: "01",
+                                    title: "Audit",
+                                    cost: "Free",
+                                    color: "text-blue-500",
+                                    desc: "Continuous forensic monitoring of your SP-API ledger nodes. We map discrepancies in real-time without upfront costs."
+                                },
+                                {
+                                    id: "02",
+                                    title: "Analysis",
+                                    cost: "Free",
+                                    color: "text-amber-500",
+                                    desc: "Deep forensic mapping of 18 months of inventory drift. Every SKU, every transaction, reconciled for loss."
+                                },
+                                {
+                                    id: "03",
+                                    title: "Recovery Fee",
+                                    cost: "Contingent",
+                                    color: "text-emerald-500",
+                                    desc: "Standard Industry Rate (Performance Only). We only earn when you do. If Amazon doesn't pay, neither do you."
+                                }
+                            ].map((item, i) => (
+                                <div key={i} className="group border-t border-white/10 py-10 first:border-0 hover:bg-white/[0.01] transition-all duration-300">
+                                    <div className="flex gap-8 md:gap-12">
+                                        <span className={`text-[10px] font-mono font-bold mt-1.5 transition-colors duration-300 ${item.id === "01" ? 'group-hover:text-blue-500' : item.id === "02" ? 'group-hover:text-amber-500' : 'group-hover:text-emerald-500'} text-white/20`}>
+                                            {item.id}
+                                        </span>
+                                        <div className="space-y-4 flex-1">
+                                            <div className="flex items-center justify-between">
+                                                <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest">
+                                                    {item.title}
+                                                </h3>
+                                                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest ${item.color}`}>
+                                                    {item.cost}
+                                                </span>
+                                            </div>
+                                            <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
+                                                {item.desc}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* System Requirement / Enterprise Section */}
+                    <div className="grid lg:grid-cols-2 gap-24 items-start mb-32 border-t border-white/5 pt-24">
+                        {/* Left Side: Requirement Context */}
+                        <div className="space-y-8">
+                            <div className="space-y-4">
+                                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
+                                    System Requirement
+                                </span>
+                                <h1 className="text-3xl md:text-5xl font-merriweather font-bold leading-tight tracking-tight">
+                                    Is Your Infrastructure <br />
+                                    Ready for Scale?
+                                </h1>
+                            </div>
+                            <p className="text-white/40 font-montserrat leading-relaxed max-w-lg">
+                                To ensure dedicated forensic validation and priority API rate limits, Enterprise access is strictly optimized for high-complexity operations. Standard private label accounts are recommended for the Core Plan&apos;s automated speed.
+                            </p>
+                        </div>
+
+                        {/* Right Side: Scaling Nodes */}
+                        <div className="space-y-0 text-white/40">
+                            {[
+                                {
+                                    id: "01",
+                                    title: "Aggregators & Agencies",
+                                    desc: "Multi-account architecture requiring unified ledger reconciliation."
+                                },
+                                {
+                                    id: "02",
+                                    title: "High-Velocity Catalogues",
+                                    desc: ">500 SKUs with rapid restock density and complex SKU-level drift."
+                                },
+                                {
+                                    id: "03",
+                                    title: "Cross-Border Logistics",
+                                    desc: "Managing multi-marketplace inventory splits (US, UK, EU, JP)."
+                                }
+                            ].map((item, i) => (
+                                <div key={i} className="group border-t border-white/5 py-10 first:border-0 hover:bg-white/[0.01] transition-all duration-300">
+                                    <div className="flex gap-8 md:gap-12">
+                                        <span className="text-[10px] font-mono font-bold mt-1.5 text-white/20 group-hover:text-white transition-colors">
+                                            {item.id}
+                                        </span>
+                                        <div className="space-y-3">
+                                            <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
+                                                {item.title}
+                                            </h3>
+                                            <p className="text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
+                                                {item.desc}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
