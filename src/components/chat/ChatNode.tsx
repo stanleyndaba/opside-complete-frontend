@@ -12,9 +12,9 @@ interface Message {
 }
 
 const AUDIT_PATHWAYS = [
-    { label: 'Estimate Recovery Potential', response: "Our audit forensic engine analyzes your last 18 months of FBA data. Most sellers recover between 1% and 3% of their annual revenue. Would you like a precise projection?" },
-    { label: 'Audit Process', response: "The Margin audit process is fully automated. We secure authorized API access, detect discrepancies across 64+ categories, and file verified disputes on your behalf. No manual work required." },
-    { label: 'Compliance Specs', response: "Margin is fully compliant with Amazon's Terms of Service. Each dispute is audit-verified with high-confidence evidence before submission. Your account health is our priority." }
+    { label: 'Estimate My Recovery', response: "We analyze your last 18 months of Amazon FBA data. Most sellers recover between 1-3% of their annual revenue. Would you like us to calculate your potential recovery?" },
+    { label: 'How It Works', response: "Our process is fully automated. We connect to your Amazon account, find discrepancies across 64+ categories, and file claims on your behalf. No manual work required from you." },
+    { label: 'Is It Safe?', response: "Yes! We're fully compliant with Amazon's Terms of Service. Every claim is verified with strong evidence before submission. Your account safety is our top priority." }
 ];
 
 export function ChatNode() {
@@ -23,7 +23,7 @@ export function ChatNode() {
         {
             id: 'init',
             role: 'agent',
-            text: "STATUS: AGNT.ACTIVE.01 // Forensic Assistant Node online. How can I assist with your margin protection audit today?",
+            text: "Hi there! I'm here to help you recover money from Amazon FBA. How can I assist you today?",
             timestamp: new Date().toISOString()
         }
     ]);
@@ -56,7 +56,7 @@ export function ChatNode() {
             const agentMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'agent',
-                text: "Analyzing query... Our documentation indicates high-confidence recovery pathways in this category. Would you like to initiate a preliminary forensic scan?",
+                text: "Thanks for your question! Based on what I'm seeing, there may be recovery opportunities here. Would you like me to look into this further?",
                 timestamp: new Date().toISOString()
             };
             setMessages(prev => [...prev, agentMsg]);
@@ -101,13 +101,13 @@ export function ChatNode() {
                         {/* Header */}
                         <div className="px-5 py-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
                             <div>
-                                <h3 className="text-xs font-bold text-white tracking-tight">Forensic Assistant Node</h3>
+                                <h3 className="text-xs font-bold text-white tracking-tight">Support Assistant</h3>
                                 <div className="flex items-center gap-1.5 mt-1">
                                     <span className="relative flex h-1.5 w-1.5">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                                     </span>
-                                    <span className="text-[10px] font-mono text-white/40">STATUS: AGNT.ACTIVE.01</span>
+                                    <span className="text-[10px] font-mono text-white/40">Online</span>
                                 </div>
                             </div>
                             <button
@@ -140,7 +140,7 @@ export function ChatNode() {
                                         {msg.text}
                                     </div>
                                     <span className="text-[9px] text-white/20 mt-1 font-mono uppercase tracking-widest">
-                                        {msg.role === 'agent' ? 'Node' : 'Client'} // {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {msg.role === 'agent' ? 'Assistant' : 'You'} · {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
                             ))}
@@ -148,7 +148,7 @@ export function ChatNode() {
                                 <div className="flex items-start">
                                     <div className="bg-gray-900 border border-white/5 px-4 py-3 rounded-none flex items-center gap-2">
                                         <Loader2 className="h-3 w-3 text-white/40 animate-spin" />
-                                        <span className="text-[10px] text-white/40 font-mono">ANALYZING...</span>
+                                        <span className="text-[10px] text-white/40 font-mono">Typing...</span>
                                     </div>
                                 </div>
                             )}
@@ -176,8 +176,8 @@ export function ChatNode() {
                                 type="text"
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
-                                placeholder="INPUT AUDIT QUERY..."
-                                className="flex-1 bg-transparent border-none text-xs text-white placeholder:text-white/20 focus:ring-0 font-mono uppercase"
+                                placeholder="Type a message..."
+                                className="flex-1 bg-transparent border-none text-xs text-white placeholder:text-white/20 focus:ring-0"
                             />
                             <button
                                 type="submit"

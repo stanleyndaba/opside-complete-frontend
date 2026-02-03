@@ -1227,14 +1227,14 @@ export function Dashboard() {
                           )}
                         </div>
 
-                        <div className="border-t border-gray-100 p-4 bg-gray-50/30">
+                        <div className="border-t border-white/5 p-4 bg-white/[0.02]">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => navigate('/notifications')}
-                            className="w-full h-8 text-xs text-gray-400 hover:text-gray-900 font-medium transition-colors"
+                            className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-emerald-500 uppercase tracking-widest transition-colors"
                           >
-                            Archived Activity Logs
+                            All Activity Logs
                           </Button>
                         </div>
                       </>

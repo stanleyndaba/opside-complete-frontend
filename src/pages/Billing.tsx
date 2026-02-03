@@ -212,44 +212,9 @@ export default function Billing() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16"
+            className="mb-16"
           >
-            {/* Yield Protocol Card */}
-            <motion.div variants={itemVariants}>
-              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
-                <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-700 pointer-events-none">
-                  <Scale className="h-32 w-32 text-emerald-500 rotate-12" />
-                </div>
-                <CardHeader className="p-8 pb-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <Scale className="h-4 w-4 text-emerald-500" />
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl font-serif tracking-tight">Success Fee</CardTitle>
-                </CardHeader>
-                <CardContent className="p-8 pt-0 space-y-6">
-                  <div className="p-5 border border-emerald-500/10 bg-emerald-500/[0.02] rounded-2xl relative overflow-hidden group/box">
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover/box:opacity-100 transition-opacity" />
-                    <p className="text-sm text-white/70 leading-relaxed font-serif relative z-10 italic">
-                      "Utilizing a <span className="text-emerald-400 font-bold">20% yield-share model</span>. Capital is only allocated upon successful recovery of lost assets. No retention fees required."
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-6 text-white/40">
-                    <div className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-mono uppercase tracking-widest">Active Monitoring</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-3 w-3" />
-                      <span className="text-[10px] font-mono uppercase tracking-widest">Global Audit Enabled</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Financial Transit Card */}
+            {/* Financial Transit Card - Full Width */}
             <motion.div variants={itemVariants}>
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
                 <CardHeader className="p-8 pb-4">

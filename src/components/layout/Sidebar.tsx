@@ -357,6 +357,7 @@ export function Sidebar({
                 <span>Updates</span>
               </div>
             </DropdownMenuItem>
+            {/* Reports hidden - Beta Roll Out Soon
             <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/reports`)}
               className="flex items-center justify-between px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
@@ -366,6 +367,7 @@ export function Sidebar({
               </div>
               <span className="text-[8px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded font-mono font-bold tracking-tighter">BETA</span>
             </DropdownMenuItem>
+            */}
             {/* <DropdownMenuItem
               onClick={() => navigate(`/app/${currentTenantSlug}/whats-new`)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
