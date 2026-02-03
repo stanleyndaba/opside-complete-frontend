@@ -285,7 +285,7 @@ export default function DocumentDetail() {
               <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                 <Tabs defaultValue="extracted" className="p-0">
                   <div className="px-8 bg-white/[0.02] border-b border-white/5">
-                    <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto no-scrollbar">
+                    <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto scrollbar-hide">
                       {[
                         { value: 'extracted', label: 'EXTRACTED_DATA', icon: Database },
                         { value: 'matches', label: 'MATCHED_CLAIMS', icon: Link2, count: matchedClaims.length },
@@ -336,8 +336,8 @@ export default function DocumentDetail() {
                             { id: '05', label: 'INVOICE_REFERENCES', data: extracted.invoice_numbers, icon: FileText, type: 'tags' },
                             { id: '06', label: 'TEMPORAL_MARKERS', data: extracted.dates, icon: Calendar, type: 'tags' }
                           ].map((row, idx) => (
-                            <div 
-                              key={row.id} 
+                            <div
+                              key={row.id}
                               className={cn(
                                 "group flex items-start hover:bg-white/[0.02] transition-all",
                                 idx !== 5 && "border-b border-white/5"
@@ -350,7 +350,7 @@ export default function DocumentDetail() {
                                   {row.label}
                                 </span>
                               </div>
-                              
+
                               {/* Right Column - Values */}
                               <div className="flex-1 px-5 py-4 flex items-center flex-wrap gap-2">
                                 {row.data?.length > 0 ? (
@@ -402,7 +402,7 @@ export default function DocumentDetail() {
                               </span>
                             </div>
                           </div>
-                          
+
                           <div className="h-8 w-[1px] bg-white/5" />
 
                           <div className="flex flex-col gap-1">
@@ -417,13 +417,13 @@ export default function DocumentDetail() {
                           <div className="flex flex-col gap-1">
                             <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.15em]">DATA_POINTS</span>
                             <span className="text-lg font-mono font-bold text-white/60">
-                              {(extracted.order_ids?.length || 0) + 
-                               (extracted.asins?.length || 0) + 
-                               (extracted.skus?.length || 0) + 
-                               (extracted.amounts?.length || 0) + 
-                               (extracted.tracking_numbers?.length || 0) + 
-                               (extracted.invoice_numbers?.length || 0) + 
-                               (extracted.dates?.length || 0)}
+                              {(extracted.order_ids?.length || 0) +
+                                (extracted.asins?.length || 0) +
+                                (extracted.skus?.length || 0) +
+                                (extracted.amounts?.length || 0) +
+                                (extracted.tracking_numbers?.length || 0) +
+                                (extracted.invoice_numbers?.length || 0) +
+                                (extracted.dates?.length || 0)}
                             </span>
                           </div>
                         </div>

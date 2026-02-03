@@ -1122,7 +1122,7 @@ const Index = () => {
 
               {/* Research Grid - Horizontal Scroller */}
               <div className="relative group/scroller">
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar -mx-6 px-6 scroll-smooth">
+                <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 scrollbar-hide -mx-6 px-6 scroll-smooth">
                   {/* Brief 01 */}
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
