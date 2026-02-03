@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle2, ShieldCheck, Zap, BarChart3, Users } from 'luc
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 
 const Pricing = () => {
     usePageMeta({
@@ -19,20 +20,7 @@ const Pricing = () => {
             {/* Technical Background */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
-            <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md">
-                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
-                        <span className="font-montserrat text-white font-bold tracking-tight">Margin</span>
-                    </Link>
-                    <Link to="/">
-                        <Button variant="ghost" className="text-white/60 hover:text-white hover:bg-white/5 gap-2 font-mono text-xs uppercase tracking-widest">
-                            <ArrowLeft className="h-3 w-3" />
-                            Return
-                        </Button>
-                    </Link>
-                </div>
-            </header>
+            <PublicNavbar />
 
             <main className="relative z-10 pt-40 pb-24">
                 <div className="container mx-auto px-6 max-w-5xl">
@@ -103,61 +91,6 @@ const Pricing = () => {
                         </div>
                     </div>
 
-                    {/* System Requirement / Enterprise Section */}
-                    <div className="grid lg:grid-cols-2 gap-24 items-start mb-32 border-t border-white/5 pt-24">
-                        {/* Left Side: Requirement Context */}
-                        <div className="space-y-8">
-                            <div className="space-y-4">
-                                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
-                                    System Requirement
-                                </span>
-                                <h1 className="text-3xl md:text-5xl font-merriweather font-bold leading-tight tracking-tight">
-                                    Is Your Infrastructure <br />
-                                    Ready for Scale?
-                                </h1>
-                            </div>
-                            <p className="text-white/40 font-montserrat leading-relaxed max-w-lg">
-                                To ensure dedicated forensic validation and priority API rate limits, Enterprise access is strictly optimized for high-complexity operations. Standard private label accounts are recommended for the Core Plan&apos;s automated speed.
-                            </p>
-                        </div>
-
-                        {/* Right Side: Scaling Nodes */}
-                        <div className="space-y-0 text-white/40">
-                            {[
-                                {
-                                    id: "01",
-                                    title: "Aggregators & Agencies",
-                                    desc: "Multi-account architecture requiring unified ledger reconciliation."
-                                },
-                                {
-                                    id: "02",
-                                    title: "High-Velocity Catalogues",
-                                    desc: ">500 SKUs with rapid restock density and complex SKU-level drift."
-                                },
-                                {
-                                    id: "03",
-                                    title: "Cross-Border Logistics",
-                                    desc: "Managing multi-marketplace inventory splits (US, UK, EU, JP)."
-                                }
-                            ].map((item, i) => (
-                                <div key={i} className="group border-t border-white/5 py-10 first:border-0 hover:bg-white/[0.01] transition-all duration-300">
-                                    <div className="flex gap-8 md:gap-12">
-                                        <span className="text-[10px] font-mono font-bold mt-1.5 text-white/20 group-hover:text-white transition-colors">
-                                            {item.id}
-                                        </span>
-                                        <div className="space-y-3">
-                                            <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
-                                                {item.title}
-                                            </h3>
-                                            <p className="text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
-                                                {item.desc}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
 
                     {/* Final CTA */}
                     <div className="text-center py-24 border-t border-white/5">

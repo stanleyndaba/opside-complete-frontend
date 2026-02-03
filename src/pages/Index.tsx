@@ -16,6 +16,7 @@ import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { InteractiveDemo } from '@/components/landing/InteractiveDemo';
 
 const heroImage = '/FRONTIMAGE.png';
@@ -77,6 +78,7 @@ const PadlockIcon: React.FC = () => (
   </svg>
 );
 
+
 const Index = () => {
   usePageMeta(SITE_META);
   const { toast } = useToast();
@@ -84,7 +86,6 @@ const Index = () => {
   const [signingIn, setSigningIn] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [agentHighlightIndex, setAgentHighlightIndex] = useState(0);
@@ -205,17 +206,6 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setMobileMenuOpen(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
     if (typeof window === 'undefined') return undefined;
     const interval = window.setInterval(() => {
       setAgentHighlightIndex((prev) => (prev + 1) % AGENT_HIGHLIGHTS.length);
@@ -223,18 +213,6 @@ const Index = () => {
     return () => window.clearInterval(interval);
   }, []);
 
-  // Prevent body scroll when mobile menu is open to prevent image movement
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
 
   // Animate precision counter from 0 to 99.27
   useEffect(() => {
@@ -394,265 +372,8 @@ const Index = () => {
     <div
       className="min-h-screen flex flex-col text-white relative overflow-x-hidden w-full bg-[#050505] selection:bg-emerald-500/30 selection:text-white"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
-      {/* Fixed navbar - stays at top while content scrolls underneath */}
-      <header className="fixed top-0 left-0 right-0 z-40 border-transparent bg-transparent" style={{ background: 'transparent' }}>
-        <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/10 bg-[#050505]/20 supports-[backdrop-filter]:bg-[#050505]/20 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(0,0,0,0.4)] transition-colors">
-            <div className="flex items-center gap-3">
-              <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5">
-                <img
-                  src="/logoimagetwo.png"
-                  alt="Margin"
-                  className="h-5 w-auto object-contain invert brightness-0"
-                />
-                <span className="font-montserrat text-white" style={{ fontWeight: 600 }}>Margin</span>
-              </Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link
-                to="/ultra-beta"
-                className="hidden md:flex items-center gap-2 group px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Ultra Beta</span>
-                <span className="px-1.5 py-0.5 bg-white text-[9px] font-bold text-black rounded-full leading-none">NEW</span>
-              </Link>
-              <Link
-                to="/pricing"
-                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Pricing</span>
-              </Link>
-              <Link
-                to="/about"
-                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>About Us</span>
-              </Link>
-              <div className="hidden md:block">
-                <ProductsMegaMenu />
-              </div>
-            </div>
 
-
-            <nav className="hidden md:flex items-center gap-4 text-sm text-gray-700">
-              {/* Gift icon - hidden temporarily
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
-                    className="inline-flex items-center justify-center rounded-full p-2 text-emerald-600 transition-colors hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                    aria-label="No commission on referrals">
-                    <Gift className="h-5 w-5" aria-hidden="true" />
-                    <span className="sr-only">No commission on referrals</span>
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent side="bottom" align="start" className="w-80 p-0 border-0 shadow-xl">
-                  <div className="bg-emerald-50 rounded-lg p-5 space-y-4">
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-emerald-900 text-base">No commission on referrals</h3>
-                      <p className="text-sm text-emerald-800">
-                        Sellers who bring new sellers to Margin keep 100% value of their recovered funds
-                      </p>
-                    </div>
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
-                      Invite Friend +
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-              */}
-              {primaryLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  to={link.href}
-                  className="px-3 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition-colors text-white/70">
-                  {link.label}
-                </Link>
-              ))}
-
-              <Link
-                to="/sales"
-                className="h-9 px-5 text-sm font-medium text-black bg-white hover:bg-white/90 transition-colors inline-flex items-center"
-                style={{ borderRadius: '0px' }}>
-                Enterprise
-              </Link>
-              <Link
-                to="/contact"
-                className="h-9 px-4 text-sm font-medium text-white/70 bg-transparent hover:text-white transition-colors inline-flex items-center gap-1.5"
-                style={{ borderRadius: '0px' }}>
-                Talk to Sales <span aria-hidden="true">→</span>
-              </Link>
-            </nav>
-            <button
-              type="button"
-              className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/10 bg-white/5 px-3 py-2 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
-              aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen((prev) => !prev)}>
-              <span className="block h-[1px] w-6 bg-white rounded-full" />
-              <span className="block h-[1px] w-5 bg-white rounded-full" />
-              <span className="block h-[1px] w-4 bg-white rounded-full" />
-            </button>
-          </div>
-          {mobileMenuOpen && (
-            <div className="mt-4 md:hidden relative z-50">
-              <div className="flex flex-col gap-2 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
-                <div className="rounded-[18px] border-white/5 bg-white/[0.02] px-3 py-2 text-sm font-semibold text-white shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <Gift className="h-4 w-4 text-emerald-500" aria-hidden="true" />
-                    <span>No commission on referrals</span>
-                  </div>
-                  <p className="mt-1 text-xs font-normal text-white/40">
-                    Sellers who bring new sellers to Margin keep 100% value of their recovered funds
-                  </p>
-                </div>
-                <Link
-                  to="/ultra-beta"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span>Ultra Beta</span>
-                    <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
-                  </div>
-                </Link>
-                <Link
-                  to="/pricing"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
-                  <span>Pricing</span>
-                  <ArrowRight className="h-4 w-4 text-white/20" />
-                </Link>
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="products" className="border-none">
-                    <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
-                      Products
-                    </AccordionTrigger>
-                    <AccordionContent className="pt-2 pb-4 px-4 space-y-5">
-                      {/* Trust & Scale Section */}
-                      <div className="space-y-4">
-                        <h5 className="text-[10px] font-semibold text-white/30 uppercase tracking-[0.15em] pl-1">Trust & Scale</h5>
-                        <div className="grid gap-2">
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <Search className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">Inbound Fee Governance</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Line-by-line proof for every claim filed.</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <Briefcase className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">Agency Portfolio Manager</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Multi-account reconciliation for high-volume agencies.</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <BadgePercent className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">Commission Rate Governance</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Detect category misclassifications and referral fee overcharges.</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Core Platform Section */}
-                      <div className="space-y-4">
-                        <h5 className="text-[10px] font-semibold text-white/30 uppercase tracking-[0.15em] pl-1">Core Platform</h5>
-                        <div className="grid gap-2">
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <CircleDollarSign className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">FBA Reimbursements</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Automated recovery for lost & damaged inventory.</p>
-                              <div className="mt-1.5 inline-block text-[9px] font-bold text-white/40 bg-white/5 px-1.5 py-0.5 rounded uppercase tracking-wider border border-white/10">18-month lookback</div>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <ShieldAlert className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">Inbound Variance Monitor</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Audit Inbound Placement & Defect fees in real-time.</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <FileText className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">Auto-Invoice Sync</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Zero-touch Gmail integration for evidence matching.</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 cursor-default">
-                            <div className="p-2 bg-white/5 rounded-lg text-white/60 border border-white/10">
-                              <BoxSelect className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-[13px] font-semibold text-white tracking-tight">Dimension & Weight Auditor</div>
-                              <p className="text-[10px] text-white/30 leading-tight mt-0.5 font-medium">Auto-detect storage tier overcharges and trigger re-measurements.</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-                {primaryLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors">
-                    {link.label}
-                  </Link>
-                ))}
-
-                <Link
-                  to="/contact"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-between">
-                  <span>Talk to Sales</span>
-                  <ArrowRight className="h-4 w-4 text-white/20" />
-                </Link>
-
-                <Link
-                  to="/about"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-between">
-                  <span>About Us</span>
-                  <ArrowRight className="h-4 w-4 text-white/20" />
-                </Link>
-
-                <Link
-                  to="/sales"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-between">
-                  <span>Margin Enterprise</span>
-                  <span className="text-xs bg-white text-black px-2 py-0.5 rounded-full font-bold">VIP</span>
-                </Link>
-
-                <Button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    handleSignIn();
-                  }}
-                  disabled={signingIn}
-                  variant="outline"
-                  className="mt-1 w-full justify-center h-9 rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white hover:bg-white/10 transition-colors">
-                  {signingIn ? 'Connecting...' : 'Sign in'}
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </header>
+      <PublicNavbar />
       <div className="relative z-10" style={{ background: '#050505' }}>
         <main className="flex-1 relative z-10" style={{ background: '#050505' }}>
           <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">

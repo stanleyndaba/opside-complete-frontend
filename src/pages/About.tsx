@@ -1,9 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { PageLayout } from '@/components/layout/PageLayout';
-import { BrandFooter } from '@/components/layout/BrandFooter';
-import { usePageMeta } from '@/hooks/usePageMeta';
-import { SITE_META } from '@/config/site';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 
 export default function About() {
   usePageMeta({
@@ -14,9 +11,10 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-emerald-500/30">
-      <PageLayout title="About Margin" midnight>
-        <div className="max-w-7xl mx-auto py-24 md:py-32">
+      <PublicNavbar />
 
+      <main className="relative z-10 pt-40 pb-24">
+        <div className="container mx-auto px-6 max-w-7xl">
           {/* Hero Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 mb-32 items-center">
             <motion.div
@@ -115,7 +113,8 @@ export default function About() {
             </div>
           </div>
         </div>
-      </PageLayout>
+      </main>
+
       <BrandFooter />
     </div>
   );
