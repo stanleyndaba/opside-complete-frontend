@@ -40,9 +40,9 @@ const WORKFLOW_STEPS = [
     duration: 6000
   },
   {
-    title: "Hands-Free Filing",
+    title: "Logic-Based Filing",
     color: "bg-blue-500/50",
-    description: "Margin constructs a perfect claim package and submits it directly to Amazon Seller Support. Our AI case managers handle all follow-up correspondence until the case is resolved.",
+    description: "Margin constructs a perfect claim package and validates it against Amazon policy. We prepare all documentation for your review, ensuring a streamlined audit trail for successful reimbursements.",
     duration: 5000
   },
   {
@@ -414,11 +414,16 @@ const Index = () => {
                 <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Ultra Beta</span>
                 <span className="px-1.5 py-0.5 bg-white text-[9px] font-bold text-black rounded-full leading-none">NEW</span>
               </Link>
-              <a
-                href="#about-us"
+              <Link
+                to="/pricing"
+                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
+                <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Pricing</span>
+              </Link>
+              <Link
+                to="/about"
                 className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
                 <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>About Us</span>
-              </a>
+              </Link>
               <div className="hidden md:block">
                 <ProductsMegaMenu />
               </div>
@@ -505,6 +510,13 @@ const Index = () => {
                     <span>Ultra Beta</span>
                     <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
                   </div>
+                </Link>
+                <Link
+                  to="/pricing"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
+                  <span>Pricing</span>
+                  <ArrowRight className="h-4 w-4 text-white/20" />
                 </Link>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="products" className="border-none">
@@ -610,13 +622,13 @@ const Index = () => {
                   <ArrowRight className="h-4 w-4 text-white/20" />
                 </Link>
 
-                <a
-                  href="#about-us"
+                <Link
+                  to="/about"
                   onClick={() => setMobileMenuOpen(false)}
                   className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-between">
                   <span>About Us</span>
                   <ArrowRight className="h-4 w-4 text-white/20" />
-                </a>
+                </Link>
 
                 <Link
                   to="/sales"
@@ -692,11 +704,14 @@ const Index = () => {
 
                 <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.05] selection:bg-emerald-500/30">
                   FBA Reimbursements <br className="hidden lg:block" />
-                  on <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Autopilot</span>
+                  via <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Automated Workflow*</span>
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-white/40 font-medium max-w-xl leading-[1.6]">
                   Margin provides the sovereign infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro-transaction and automate reimbursements—turning messy data into immediate capital.
+                </p>
+                <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest">
+                  *Automated detection within Amazon-approved policy windows.
                 </p>
 
                 {/* Buttons - centered */}
@@ -798,156 +813,6 @@ const Index = () => {
             </motion.div>
           </section>
 
-          {/* About Us Section - Redesigned Corporate Profile & Operational Mandate */}
-          <section id="about-us" className="w-full relative z-20 py-24 md:py-48 bg-[#050505] overflow-hidden border-t border-white/5">
-            {/* Background Mesh - Premium Aesthetic */}
-            <div className="absolute inset-0 -z-10 pointer-events-none">
-              <div className="absolute top-[10%] left-[20%] w-[600px] h-[600px] bg-emerald-500/[0.03] blur-[120px] rounded-full" />
-              <div className="absolute bottom-[10%] right-[20%] w-[500px] h-[500px] bg-blue-500/[0.02] blur-[100px] rounded-full" />
-            </div>
-
-            <div className="max-w-7xl mx-auto px-6 md:px-12">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-start">
-
-                {/* Left Side: Institutional Heading */}
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="space-y-8"
-                >
-                  <div className="space-y-4">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
-                      CORPORATE MANDATE
-                    </span>
-                    <h2 className="text-4xl md:text-6xl font-merriweather font-bold text-white tracking-tight leading-[1.1]">
-                      Corporate Profile & <br />
-                      <span className="text-white/40 italic">Operational Mandate</span>
-                    </h2>
-                  </div>
-                  <p className="max-w-md text-white/30 text-base md:text-lg font-montserrat leading-relaxed font-medium">
-                    To ensure institutional-grade forensic validation and priority API rate limits, Margin is strictly optimized for high-complexity FBA operations.
-                  </p>
-                </motion.div>
-
-                {/* Right Side: Numbered Mandates */}
-                <div className="space-y-0">
-                  {/* Mandate 01 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="group border-t border-white/10 py-10 first:border-t-0"
-                  >
-                    <div className="flex gap-8 md:gap-12">
-                      <span className="text-[10px] font-mono text-white/20 mt-1.5 font-bold group-hover:text-emerald-500 transition-colors">01</span>
-                      <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
-                          Algorithmic Reconciliation
-                        </h3>
-                        <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
-                          Margin functions as a high-frequency forensic audit layer for Amazon FBA sellers. Unlike manual virtual assistants, our proprietary logic nodes continually monitor inventory ledgers against financial settlements. We identify statistical anomalies in lost inventory, damaged stock, and uncredited returns with mathematical precision.
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Mandate 02 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="group border-t border-white/10 py-10"
-                  >
-                    <div className="flex gap-8 md:gap-12">
-                      <span className="text-[10px] font-mono text-white/20 mt-1.5 font-bold group-hover:text-blue-500 transition-colors">02</span>
-                      <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-blue-400 transition-colors">
-                          Data Sovereignty & Security
-                        </h3>
-                        <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
-                          We treat seller data as a financial asset. Margin is built on an isolated, multi-tenant architecture that ensures strict data segregation. We utilize the official Amazon Selling Partner API (SP-API) for all data ingress, ensuring that no sensitive credentials are ever scraped or compromised.
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Mandate 03 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="group border-t border-white/10 py-10"
-                  >
-                    <div className="flex gap-8 md:gap-12">
-                      <span className="text-[10px] font-mono text-white/20 mt-1.5 font-bold group-hover:text-amber-500 transition-colors">03</span>
-                      <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-amber-400 transition-colors">
-                          Strict Policy Compliance
-                        </h3>
-                        <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
-                          Margin is engineered to operate strictly within the bounds of Amazon’s Terms of Service (ToS). Our "Zero-Risk" claim engine ensures that all reimbursement requests are validated against Amazon's own policy windows before generation. We do not automate prohibited actions—protecting account health.
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Infrastructure Metrics Section - Tech Flex Simplified */}
-          <section className="w-full relative z-20 py-24 md:py-32 bg-[#050505] border-t border-white/5">
-            <div className="max-w-7xl mx-auto px-6 md:px-12">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12">
-
-                {/* 1. Throughput Capacity */}
-                <div className="space-y-6">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">THROUGHPUT CAPACITY</span>
-                    <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">10k TPS</div>
-                  </div>
-                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                    Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
-                  </p>
-                </div>
-
-                {/* 2. Audit Latency */}
-                <div className="space-y-6">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">AUDIT LATENCY</span>
-                    <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">&lt; 200ms</div>
-                  </div>
-                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                    Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
-                  </p>
-                </div>
-
-                {/* 3. System Uptime */}
-                <div className="space-y-6">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">SYSTEM UPTIME</span>
-                    <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">99.99%</div>
-                  </div>
-                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                    Redundant server clusters ensure your audit process never sleeps, even during global traffic surges.
-                  </p>
-                </div>
-
-              </div>
-
-              {/* Technical Marker */}
-              <div className="mt-24 pt-8 border-t border-white/5 text-center">
-                <p className="text-[10px] text-white/10 font-mono uppercase tracking-[0.2em]">
-                  Technical performance based on current infrastructure capacity // Audit_Node_Sigma_Active
-                </p>
-              </div>
-            </div>
-          </section>
 
           <div className="relative z-10 w-full" style={{ background: '#050505' }}>
 
@@ -1296,8 +1161,12 @@ const Index = () => {
 
               <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-white leading-[1.1]">
                 Bring Your Ledger <br className="hidden md:block" />
-                to 100% Accuracy.
+                to 100% Accuracy.**
               </h2>
+
+              <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest mt-4">
+                **Refers to internal reconciliation precision; individual recovery outcomes vary by account health.
+              </p>
 
               <div className="flex flex-col items-center gap-8 pt-4">
                 <div className="max-w-xl mx-auto">

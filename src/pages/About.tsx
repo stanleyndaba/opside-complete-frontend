@@ -1,92 +1,122 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { BrandFooter } from '@/components/layout/BrandFooter';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { SITE_META } from '@/config/site';
 
 export default function About() {
-  const team = [
-    { name: 'Stanley N.', role: 'Founder & CEO' },
-    { name: 'Operations', role: 'Support & Compliance' },
-  ];
+  usePageMeta({
+    title: 'Corporate Profile | Forensic Reconciliation Protocol',
+    description: 'Margin is a high-frequency forensic audit layer for Amazon FBA sellers, optimized for data sovereignty and strict policy compliance.',
+    url: `${SITE_META.url}/about`,
+  });
 
   return (
-    <PageLayout title="About Margin">
-      <div className="max-w-5xl mx-auto space-y-10">
-        {/* Mission */}
-        <section className="space-y-3 text-center">
-          <h1 className="text-3xl md:text-4xl font-semibold">Our Mission</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">End the manual work of FBA reimbursements. We recover every dollar sellers are owed — automatically, transparently, and securely.</p>
-        </section>
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-emerald-500/30">
+      <PageLayout title="About Margin" midnight>
+        <div className="max-w-7xl mx-auto py-24 md:py-32">
 
-        {/* Team */}
-        <section className="space-y-3">
-          <h2 className="text-2xl font-semibold">Team</h2>
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {team.map((m) => (
-              <Card key={m.name} className="border-muted/70">
-                <CardHeader>
-                  <CardTitle className="text-base">{m.name}</CardTitle>
-                  <CardDescription>{m.role}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+          {/* Hero Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 mb-32 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <div className="space-y-4">
+                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
+                  CORPORATE MANDATE
+                </span>
+                <h1 className="text-4xl md:text-6xl font-merriweather font-bold text-white tracking-tight leading-[1.1]">
+                  Corporate Profile & <br />
+                  <span className="text-white/40 italic">Operational Mandate</span>
+                </h1>
+              </div>
+              <p className="max-w-md text-white/30 text-base md:text-lg font-montserrat leading-relaxed font-medium">
+                To ensure institutional-grade forensic validation and priority API rate limits, Margin is strictly optimized for high-complexity FBA operations.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 gap-8">
+              {[
+                {
+                  id: '01',
+                  title: 'Algorithmic Reconciliation',
+                  color: 'text-emerald-500',
+                  desc: 'Margin functions as a high-frequency forensic audit layer for Amazon FBA sellers. Unlike manual virtual assistants, our proprietary logic nodes continually monitor inventory ledgers against financial settlements. We identify statistical anomalies in lost inventory, damaged stock, and uncredited returns with mathematical precision.'
+                },
+                {
+                  id: '02',
+                  title: 'Data Sovereignty & Security',
+                  color: 'text-blue-500',
+                  desc: 'We treat seller data as a financial asset. Margin is built on an isolated, multi-tenant architecture that ensures strict data segregation. We utilize the official Amazon Selling Partner API (SP-API) for all data ingress, ensuring that no sensitive credentials are ever scraped or compromised.'
+                },
+                {
+                  id: '03',
+                  title: 'Strict Policy Compliance',
+                  color: 'text-amber-500',
+                  desc: 'Margin is engineered to operate strictly within the bounds of Amazon’s Terms of Service (ToS). Our "Zero-Risk" claim engine ensures that all reimbursement requests are validated against Amazon\'s own policy windows before generation. We do not automate prohibited actions—protecting account health.'
+                }
+              ].map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="group border-t border-white/10 py-8 first:border-0"
+                >
+                  <div className="flex gap-8">
+                    <span className={`text-[10px] font-mono ${item.color.replace('text-', 'text-opacity-20 ')} mt-1.5 font-bold`}>{item.id}</span>
+                    <div className="space-y-2">
+                      <h3 className={`text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:${item.color} transition-colors`}>
+                        {item.title}
+                      </h3>
+                      <p className="text-white/40 text-[13px] font-montserrat leading-relaxed font-medium">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </section>
 
-        {/* Numbers */}
-        <section className="grid gap-4 sm:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Focus</CardTitle>
-              <CardDescription>FBA reimbursements</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Security</CardTitle>
-              <CardDescription>Encryption at rest & in transit</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Transparency</CardTitle>
-              <CardDescription>Audit trail for every claim</CardDescription>
-            </CardHeader>
-          </Card>
-        </section>
-
-        {/* Funding & Revenue */}
-        <section className="grid gap-4 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Funding</CardTitle>
-              <CardDescription>Seed stage (raising)</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">We’re expanding to accelerate detection, evidence automation, and global coverage. Interested? Email <a className="underline" href="mailto:hello@margin.io">hello@margin.io</a>.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue</CardTitle>
-              <CardDescription>Aligned incentives</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">We earn when sellers get paid. Transparent, outcome‑based billing via Stripe; no hidden fees.</p>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Roadmap */}
-        <section className="space-y-3">
-          <h2 className="text-2xl font-semibold">Roadmap</h2>
-          <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li>Phase 1: Amazon‑only, read‑only scopes → rapid sync and detection</li>
-            <li>Phase 2: Enhanced notifications, auto‑submit thresholds, sandbox filings</li>
-            <li>Phase 3: RDT approval & expanded markets; advanced reconciliation</li>
-          </ul>
-        </section>
-      </div>
-    </PageLayout>
+          {/* Infrastructure Metrics */}
+          <div className="border-t border-white/5 pt-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12 mb-24">
+              <div className="space-y-6">
+                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">THROUGHPUT CAPACITY</span>
+                <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">10k TPS</div>
+                <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                  Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">AUDIT LATENCY</span>
+                <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">&lt; 200ms</div>
+                <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                  Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
+                </p>
+              </div>
+              <div className="space-y-6">
+                <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">SYSTEM UPTIME</span>
+                <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">99.99%</div>
+                <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                  Redundant server clusters ensure your audit process never sleeps, even during global traffic surges.
+                </p>
+              </div>
+            </div>
+            <div className="text-center bg-white/[0.02] border border-white/5 p-6 rounded-2xl">
+              <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">
+                Technical performance based on current infrastructure capacity // Audit_Node_Sigma_Active
+              </p>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+      <BrandFooter />
+    </div>
   );
 }
-

@@ -61,6 +61,7 @@ const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Sales = lazy(() => import("./pages/Sales"));
 const UltraBeta = lazy(() => import("./pages/UltraBeta"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -126,6 +127,7 @@ const App = () => (
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/sales" element={<Sales />} />
                     <Route path="/ultra-beta" element={<UltraBeta />} />
+                    <Route path="/pricing" element={<Pricing />} />
                     <Route path="/developer-api" element={<ApiLanding />} />
 
                     {/* ============================================ */}

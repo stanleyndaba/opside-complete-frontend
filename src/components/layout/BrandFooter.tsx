@@ -62,6 +62,9 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
 
               {/* Policy Links Group */}
               <div className="grid grid-cols-1 gap-2.5 md:flex md:flex-row md:gap-x-6 text-[11px] font-semibold text-white/30 tracking-tight uppercase">
+                <Link to="/pricing" className="transition hover:text-white">
+                  Pricing
+                </Link>
                 <Link to="/privacy" className="transition hover:text-white">
                   Privacy Policy
                 </Link>
@@ -100,6 +103,13 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 </div>
               </div>
 
+            </div>
+
+            {/* Global Legal Disclaimer */}
+            <div className="pt-8 border-t border-white/5 opacity-40 hover:opacity-100 transition-opacity duration-300">
+              <p className="text-[9px] md:text-[10px] font-montserrat text-white/40 leading-relaxed max-w-5xl">
+                <span className="font-bold text-white/60">Disclaimer:</span> System performance metrics (Latency, Precision, Throughput) are based on internal benchmarks under controlled API load tests. "Recovery estimates" are projections based on historical FBA inventory error rates and are not guarantees of future refunds. All claims are generated in strict accordance with Amazon's reimbursement policy windows.
+              </p>
             </div>
           </div>
         </div>
