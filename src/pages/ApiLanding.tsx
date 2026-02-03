@@ -175,7 +175,7 @@ const ApiLanding = () => {
                 <p className="mt-4 text-gray-600">Our developer API is currently in a private beta with select partners. If you are an enterprise brand, an agency, or a developer interested in building on the Margin platform, please contact us to be added to the early access list.</p>
                 <div className="mt-6">
                   <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
-                    <a href="mailto:support@margin.app?subject=Margin%20API%20Early%20Access">Request Early Access</a>
+                    <a href="mailto:support@margin.io?subject=Margin%20API%20Early%20Access">Request Early Access</a>
                   </Button>
                 </div>
               </div>

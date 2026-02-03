@@ -176,7 +176,7 @@ export default function WhatsNew() {
             </div>
             <p className="text-sm text-gray-500 font-light italic">
               Have a feature request?{' '}
-              <a href="mailto:support@margin.app" className="text-white hover:text-emerald-500 font-mono transition-colors ml-1">
+              <a href="mailto:support@margin.io" className="text-white hover:text-emerald-500 font-mono transition-colors ml-1">
                 CONTACT_SUPPORT
               </a>
             </p>

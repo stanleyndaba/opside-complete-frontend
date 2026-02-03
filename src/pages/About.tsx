@@ -5,8 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 export default function About() {
   const team = [
     { name: 'Stanley N.', role: 'Founder & CEO' },
-    { name: 'TBD', role: 'Head of Engineering' },
-    { name: 'TBD', role: 'Head of Data' },
+    { name: 'Operations', role: 'Support & Compliance' },
   ];
 
   return (
@@ -63,7 +62,7 @@ export default function About() {
               <CardDescription>Seed stage (raising)</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">We’re raising to accelerate detection, evidence automation, and global coverage. Interested? Email <a className="underline" href="mailto:investors@margin.app">investors@margin.app</a>.</p>
+              <p className="text-sm text-muted-foreground">We’re expanding to accelerate detection, evidence automation, and global coverage. Interested? Email <a className="underline" href="mailto:hello@margin.io">hello@margin.io</a>.</p>
             </CardContent>
           </Card>
           <Card>

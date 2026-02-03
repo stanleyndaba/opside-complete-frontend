@@ -35,24 +35,26 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
               and a finance-ready audit trail—no agency overhead.
             </p>
-            <div className="flex items-center gap-3">
-              {SOCIAL_LINKS.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={social.label}
-                    className="inline-flex items-center justify-center text-white/20 transition-all hover:text-white group">
-                    <div className="transition-transform duration-300 group-hover:scale-110">
-                      <Icon />
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
+            {/* SOCIAL_LINKS.length > 0 && (
+              <div className="flex items-center gap-3">
+                {SOCIAL_LINKS.map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={social.label}
+                      className="inline-flex items-center justify-center text-white/20 transition-all hover:text-white group">
+                      <div className="transition-transform duration-300 group-hover:scale-110">
+                        <Icon />
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            ) */}
           </div>
           <div className="flex flex-col gap-10 border-t border-white/5 pt-10">
             {/* Split layout on mobile: 2x2 grid for links + bottom status block */}

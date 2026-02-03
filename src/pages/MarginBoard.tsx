@@ -80,7 +80,7 @@ const MarginBoard = () => {
                         <Button
                             variant="outline"
                             className="h-12 px-8 border-gray-200 text-gray-900 hover:bg-gray-50 text-sm font-medium rounded-sm"
-                            onClick={() => window.location.href = 'mailto:support@margin.app'}>
+                            onClick={() => window.location.href = 'mailto:support@margin.io'}>
                             Contact Sales
                         </Button>
                     </div>

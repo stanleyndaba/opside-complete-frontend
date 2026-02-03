@@ -35,17 +35,17 @@ export default function AdminUsersAndIntegrations() {
         } else {
           // Fallback to demo data if backend not available
           setUsers([
-            { id: 'u1', email: 'founder@margin.app', role: 'admin', status: 'active' },
-            { id: 'u2', email: 'ops@margin.app', role: 'user', status: 'active' },
-            { id: 'u3', email: 'analyst@margin.app', role: 'user', status: 'locked' },
+            { id: 'u1', email: 'founder@margin.io', role: 'admin', status: 'active' },
+            { id: 'u2', email: 'ops@margin.io', role: 'user', status: 'active' },
+            { id: 'u3', email: 'analyst@margin.io', role: 'user', status: 'locked' },
           ]);
         }
       } catch {
         // Fallback to demo data
         setUsers([
-          { id: 'u1', email: 'founder@margin.app', role: 'admin', status: 'active' },
-          { id: 'u2', email: 'ops@margin.app', role: 'user', status: 'active' },
-          { id: 'u3', email: 'analyst@margin.app', role: 'user', status: 'locked' },
+          { id: 'u1', email: 'founder@margin.io', role: 'admin', status: 'active' },
+          { id: 'u2', email: 'ops@margin.io', role: 'user', status: 'active' },
+          { id: 'u3', email: 'analyst@margin.io', role: 'user', status: 'locked' },
         ]);
       } finally {
         setUsersLoading(false);

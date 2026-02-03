@@ -297,7 +297,7 @@ export default function Careers() {
               We're always looking for exceptional talent. Send your details to our team and we'll keep you in mind for future openings.
             </p>
             <a
-              href="mailto:careers@margin.app"
+              href="mailto:careers@margin.io"
               className="inline-block px-8 py-3 bg-white text-black hover:bg-emerald-500 transition-all duration-300 font-mono text-xs uppercase tracking-[0.2em] font-bold"
             >
               Get in Touch

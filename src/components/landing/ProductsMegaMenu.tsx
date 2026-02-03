@@ -39,7 +39,7 @@ export function ProductsMegaMenu() {
                                         Trust & Scale
                                     </h4>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <a href="#forensic-auditor" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <Search className="h-5 w-5" />
@@ -51,9 +51,9 @@ export function ProductsMegaMenu() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
 
-                                        <a href="#portfolio-manager" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <Briefcase className="h-5 w-5" />
@@ -65,9 +65,9 @@ export function ProductsMegaMenu() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
 
-                                        <a href="#commission-governance" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <BadgePercent className="h-5 w-5" />
@@ -79,7 +79,7 @@ export function ProductsMegaMenu() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -91,7 +91,7 @@ export function ProductsMegaMenu() {
                                         Core Platform
                                     </h4>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <a href="#reimbursements" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <CircleDollarSign className="h-5 w-5" />
@@ -108,9 +108,9 @@ export function ProductsMegaMenu() {
                                                     </span>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
 
-                                        <a href="#fee-guard" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <ShieldAlert className="h-5 w-5" />
@@ -122,9 +122,9 @@ export function ProductsMegaMenu() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
 
-                                        <a href="#dimension-auditor" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <BoxSelect className="h-5 w-5" />
@@ -136,9 +136,9 @@ export function ProductsMegaMenu() {
                                                     </p>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
 
-                                        <a href="#invoice-sync" className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300">
+                                        <div className="group block p-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-default">
                                             <div className="flex items-start gap-4">
                                                 <div className="p-2.5 bg-white/5 rounded-lg text-white/50 border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:shadow-sm transition-all">
                                                     <FileText className="h-5 w-5" />
@@ -149,11 +149,11 @@ export function ProductsMegaMenu() {
                                                         Zero-touch Gmail integration for claim evidence matching.
                                                     </p>
                                                     <span className="inline-flex items-center gap-1 mt-2 text-[10px] font-medium text-emerald-500/70 group-hover:text-emerald-500 transition-colors">
-                                                        No VAs needed <ArrowRight className="h-2.5 w-2.5 ml-0.5" />
+                                                        No VAs needed
                                                     </span>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -57,7 +57,7 @@ export default function Sales() {
         const body = encodeURIComponent(
             `ENTERPRISE SALES INQUIRY\n${'='.repeat(40)}\n\nName: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company}\nAnnual Revenue: ${form.revenue || 'Not specified'}\nAmazon Seller ID: ${form.sellerId || 'Not provided'}\n\n${'='.repeat(40)}\nMESSAGE:\n\n${form.message || 'No additional message provided.'}\n\n${'='.repeat(40)}\nSent via Margin Enterprise Sales Form`
         );
-        window.open(`mailto:support@margin.app?subject=${subject}&body=${body}`, '_blank');
+        window.open(`mailto:support@margin.io?subject=${subject}&body=${body}`, '_blank');
 
         setIsSubmitting(false);
         setIsSubmitted(true);

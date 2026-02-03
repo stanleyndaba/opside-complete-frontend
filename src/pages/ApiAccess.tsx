@@ -96,7 +96,7 @@ const ApiAccess = () => {
       type: "ETL / BULK DATA",
       desc: "High-throughput endpoints for dumping massive transaction histories.",
       events: ["GET /v1/audit-ledger/stream"],
-      code: `curl -X GET "https://api.margin.app/v1/audit-ledger/stream" \\
+      code: `curl -X GET "https://api.margin.io/v1/audit-ledger/stream" \\
      -H "Authorization: Bearer os_live_xxxx" \\
      -d "format=json" \\
      -d "range=last_24h"`
@@ -133,7 +133,7 @@ const ApiAccess = () => {
               <div className="pt-8">
                 <Button
                   className="bg-white text-black hover:bg-emerald-500 transition-all rounded-xl h-14 px-10 font-serif font-bold uppercase tracking-widest text-sm shadow-[0_0_40px_rgba(255,255,255,0.1)]"
-                  onClick={() => window.location.href = 'mailto:enterprise@margin.app'}
+                  onClick={() => window.location.href = 'mailto:enterprise@margin.io'}
                 >
                   Request Dedicated Tunnel
                 </Button>
