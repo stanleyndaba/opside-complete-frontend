@@ -308,7 +308,7 @@ export function Navbar({
                           {notes.slice(0, 5).map((note) => (
                             <div key={note.id} className="group relative p-5 hover:bg-white/[0.02] transition-all">
                               <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                              <p className="text-[11px] text-white/40 font-serif italic tracking-tight line-clamp-3 leading-relaxed group-hover:text-white/60">{note.text}</p>
+                              <p className="text-[11px] text-white/40 font-serif tracking-tight line-clamp-3 leading-relaxed group-hover:text-white/60">{note.text}</p>
                               <div className="text-[9px] text-white/10 mt-3 font-mono flex items-center justify-between uppercase tracking-widest">
                                 <span>ID.{note.id.substring(0, 6)}</span>
                                 <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>

@@ -748,7 +748,19 @@ export default function Reports() {
     <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-    <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white space-y-8 pt-8">
+    {/* Beta Blur Overlay */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full backdrop-blur-sm">
+          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[11px] font-mono font-bold text-emerald-500 uppercase tracking-[0.3em]">Coming Soon</span>
+        </div>
+        <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Beta Roll Out Soon</h2>
+        <p className="text-white/40 font-serif italic text-lg max-w-md mx-auto">Advanced analytics and reporting features are currently in development.</p>
+      </div>
+    </div>
+
+    <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white space-y-8 pt-8 blur-[6px] select-none">
       {/* Page Header & Controls */}
       <div className="mb-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>

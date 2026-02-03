@@ -267,7 +267,7 @@ export function NotificationBell({
                     <div>{content}</div>
                   )}
                   {index < displayNotifications.length - 1 && (
-                    <div className="border-b border-gray-100" />
+                    <div className="border-b border-white/10" />
                   )}
                 </React.Fragment>
               );
@@ -279,7 +279,7 @@ export function NotificationBell({
         <div className="px-6 py-4 border-t border-white/5 flex-shrink-0 bg-white/[0.01]">
           <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
             <button className="w-full text-center text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-[0.3em]">
-              Archive_Matrix
+              All Notifications
             </button>
           </Link>
         </div>

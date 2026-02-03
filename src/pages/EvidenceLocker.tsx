@@ -846,12 +846,12 @@ export default function EvidenceLocker() {
             <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
               {/* Institutional Header */}
               <div className="flex items-center justify-between mb-10">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">Evidence Management</span>
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase">Evidence Locker</h1>
-                    <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <Badge variant="outline" className="w-fit px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-mono text-[9px] tracking-[0.2em] uppercase">
+                    Evidence System // Active
+                  </Badge>
+                  <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Evidence Locker.</h1>
+                  <p className="text-white/40 mt-1 font-serif italic text-lg max-w-2xl">Manage your uploaded documents and evidence artifacts.</p>
                 </div>
 
                 {/* Evidence Stats Badges */}
