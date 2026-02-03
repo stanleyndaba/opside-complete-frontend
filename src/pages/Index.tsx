@@ -1211,7 +1211,8 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Subtle Scroll Indicator */}
+                {/* Subtle Scroll Indicator - Hidden per user request */}
+                {/* 
                 <div className="mt-8 flex items-center gap-4">
                   <div className="h-[1px] flex-1 bg-white/5 relative">
                     <div className="absolute top-0 left-0 h-full w-1/6 bg-emerald-500/40" />
@@ -1221,6 +1222,7 @@ const Index = () => {
                   </span>
                   <div className="h-[1px] flex-1 bg-white/5" />
                 </div>
+                */}
               </div>
             </div>
           </section>
