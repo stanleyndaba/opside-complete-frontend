@@ -1,6 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
+import { BrandFooter } from '@/components/layout/BrandFooter';
+import { usePageMeta } from '@/hooks/usePageMeta';
+import { SITE_META } from '@/config/site';
 
 export default function About() {
   usePageMeta({
