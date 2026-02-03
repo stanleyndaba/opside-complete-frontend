@@ -312,122 +312,131 @@ export default function DocumentDetail() {
                     </TabsList>
                   </div>
 
-                  {/* Extracted Intelligence Tab */}
-                  <TabsContent value="extracted" className="p-8 m-0 outline-none">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* Identification Data */}
-                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 relative group overflow-hidden">
-                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                          <Hash className="h-8 w-8 text-white" />
-                        </div>
-                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">IDENTIFICATION</h4>
-
-                        <div className="space-y-6">
-                          <div className="space-y-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase">Order_IDs</span>
-                            <div className="flex flex-wrap gap-2">
-                              {extracted.order_ids?.length > 0 ? extracted.order_ids.map((id: string, i: number) => (
-                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{id}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
-                            </div>
-                          </div>
-
-                          <div className="space-y-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase">ASINs_SKUs</span>
-                            <div className="flex flex-wrap gap-2">
-                              {[...(extracted.asins || []), ...(extracted.skus || [])].length > 0 ? [...(extracted.asins || []), ...(extracted.skus || [])].map((id: string, i: number) => (
-                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{id}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
-                            </div>
-                          </div>
+                  {/* Extracted Intelligence Tab - Two-Column Key-Value Layout */}
+                  <TabsContent value="extracted" className="p-0 m-0 outline-none">
+                    <div className="flex flex-col">
+                      {/* Header */}
+                      <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <Database className="h-3.5 w-3.5 text-emerald-500" />
+                          <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">INTELLIGENCE_STREAM</span>
+                          <div className="h-3 w-[1px] bg-white/10 mx-2" />
+                          <span className="text-[10px] font-mono text-emerald-500/50">FORENSIC_DATA_POINTS</span>
                         </div>
                       </div>
 
-                      {/* Financial/Tracking Data */}
-                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 relative group overflow-hidden">
-                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                          <DollarSign className="h-8 w-8 text-white" />
-                        </div>
-                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">FINANCIAL_DATA</h4>
-
-                        <div className="space-y-6">
-                          <div className="space-y-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase">Amounts_Extracted</span>
-                            <div className="flex flex-wrap gap-2">
-                              {extracted.amounts?.length > 0 ? extracted.amounts.map((amt: any, i: number) => (
-                                <div key={i} className="px-2.5 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-md text-xs font-mono font-bold text-emerald-500">
-                                  ${typeof amt === 'number' ? amt.toFixed(2) : amt}
-                                </div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
+                      {/* Two-Column Key-Value Table */}
+                      <div className="px-8 py-6">
+                        <div className="border border-white/5 rounded-lg overflow-hidden bg-white/[0.01]">
+                          {[
+                            { id: '01', label: 'ORDER_IDENTIFIERS', data: extracted.order_ids, icon: Hash, type: 'tags' },
+                            { id: '02', label: 'ASIN_SKU_RESOURCES', data: [...(extracted.asins || []), ...(extracted.skus || [])], icon: Package, type: 'tags' },
+                            { id: '03', label: 'FINANCIAL_VALUES', data: extracted.amounts, icon: DollarSign, type: 'currency' },
+                            { id: '04', label: 'LOGISTICS_TRACKING', data: extracted.tracking_numbers, icon: Truck, type: 'tags' },
+                            { id: '05', label: 'INVOICE_REFERENCES', data: extracted.invoice_numbers, icon: FileText, type: 'tags' },
+                            { id: '06', label: 'TEMPORAL_MARKERS', data: extracted.dates, icon: Calendar, type: 'tags' }
+                          ].map((row, idx) => (
+                            <div 
+                              key={row.id} 
+                              className={cn(
+                                "group flex items-start hover:bg-white/[0.02] transition-all",
+                                idx !== 5 && "border-b border-white/5"
+                              )}
+                            >
+                              {/* Left Column - Label */}
+                              <div className="w-[220px] flex-shrink-0 px-5 py-4 bg-white/[0.02] border-r border-white/5 flex items-center gap-3">
+                                <row.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-colors" />
+                                <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider group-hover:text-white/60 transition-colors">
+                                  {row.label}
+                                </span>
+                              </div>
+                              
+                              {/* Right Column - Values */}
+                              <div className="flex-1 px-5 py-4 flex items-center flex-wrap gap-2">
+                                {row.data?.length > 0 ? (
+                                  row.type === 'currency' ? (
+                                    // Financial values - larger, emphasized
+                                    <div className="flex items-center gap-3">
+                                      {row.data.map((val: any, i: number) => (
+                                        <React.Fragment key={i}>
+                                          <span className="text-base font-mono font-bold text-emerald-500">
+                                            ${typeof val === 'number' ? val.toFixed(2) : val}
+                                          </span>
+                                          {i < row.data.length - 1 && (
+                                            <span className="text-white/10">·</span>
+                                          )}
+                                        </React.Fragment>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    // Regular values - inline with separator
+                                    <span className="text-[12px] font-mono text-white/70">
+                                      {row.data.map((val: any, i: number) => (
+                                        <React.Fragment key={i}>
+                                          <span className="hover:text-white transition-colors cursor-default">{val}</span>
+                                          {i < row.data.length - 1 && (
+                                            <span className="text-white/20 mx-2">·</span>
+                                          )}
+                                        </React.Fragment>
+                                      ))}
+                                    </span>
+                                  )
+                                ) : (
+                                  <span className="text-[10px] font-mono text-white/10 uppercase tracking-widest">—</span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-
-                          <div className="space-y-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase">Tracking_Numbers</span>
-                            <div className="flex flex-wrap gap-2">
-                              {extracted.tracking_numbers?.length > 0 ? extracted.tracking_numbers.map((num: string, i: number) => (
-                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{num}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
-                            </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Verification Context */}
-                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 relative group overflow-hidden">
-                        <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                          <Calendar className="h-8 w-8 text-white" />
-                        </div>
-                        <h4 className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-[0.2em] mb-6">DATES_AND_REFERENCES</h4>
-
-                        <div className="space-y-6">
-                          <div className="space-y-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase">Invoice_References</span>
-                            <div className="flex flex-wrap gap-2">
-                              {extracted.invoice_numbers?.length > 0 ? extracted.invoice_numbers.map((inv: string, i: number) => (
-                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{inv}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
+                      {/* Footer Stats */}
+                      <div className="px-8 pb-8 flex items-center justify-between">
+                        <div className="flex items-center gap-10">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.15em]">EXTRACT_CONFIDENCE</span>
+                            <div className="flex items-center gap-2">
+                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                              <span className="text-lg font-mono font-bold text-emerald-500">
+                                {documentData?.parser_confidence !== undefined ? `${(documentData.parser_confidence * 100).toFixed(0)}%` : '—'}
+                              </span>
                             </div>
                           </div>
+                          
+                          <div className="h-8 w-[1px] bg-white/5" />
 
-                          <div className="space-y-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase">Detected_Timestamps</span>
-                            <div className="flex flex-wrap gap-2">
-                              {extracted.dates?.length > 0 ? extracted.dates.map((date: string, i: number) => (
-                                <div key={i} className="px-2.5 py-1 bg-white/[0.03] border border-white/5 rounded-md text-xs font-mono text-white/80">{date}</div>
-                              )) : <span className="text-xs font-mono text-white/10 uppercase">NOT_FOUND</span>}
-                            </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.15em]">RECOVERY_POTENTIAL</span>
+                            <span className="text-lg font-mono font-bold text-white">
+                              {extracted.amounts?.length > 0 ? `$${Math.max(...extracted.amounts.filter((a: any) => typeof a === 'number')).toFixed(2)}` : '—'}
+                            </span>
+                          </div>
+
+                          <div className="h-8 w-[1px] bg-white/5" />
+
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.15em]">DATA_POINTS</span>
+                            <span className="text-lg font-mono font-bold text-white/60">
+                              {(extracted.order_ids?.length || 0) + 
+                               (extracted.asins?.length || 0) + 
+                               (extracted.skus?.length || 0) + 
+                               (extracted.amounts?.length || 0) + 
+                               (extracted.tracking_numbers?.length || 0) + 
+                               (extracted.invoice_numbers?.length || 0) + 
+                               (extracted.dates?.length || 0)}
+                            </span>
                           </div>
                         </div>
-                      </div>
-                    </div>
 
-                    <div className="mt-8 p-6 bg-white/[0.01] border border-white/5 rounded-xl flex items-center justify-between">
-                      <div className="flex items-center gap-6">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">CONFIDENCE_SCORE</span>
-                          <span className="text-xl font-mono font-bold text-emerald-500">
-                            {documentData?.parser_confidence !== undefined ? `${(documentData.parser_confidence * 100).toFixed(0)}%_MATCH` : 'PENDING'}
-                          </span>
-                        </div>
-                        <div className="h-10 w-[1px] bg-white/5" />
-                        <div className="flex flex-col gap-1">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase">TOTAL_FIELDS</span>
-                          <span className="text-xl font-mono font-bold text-white">
-                            {(extracted.order_ids?.length || 0) + (extracted.asins?.length || 0) + (extracted.tracking_numbers?.length || 0) + (extracted.amounts?.length || 0)}
-                          </span>
-                        </div>
+                        <Button
+                          variant="ghost"
+                          className="h-10 px-6 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/5 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-widest rounded-lg group/btn"
+                          onClick={() => setSummaryOpen(!summaryOpen)}
+                        >
+                          {summaryOpen ? 'COLLAPSE' : 'EXPAND_LOG'}
+                          <ChevronRight className={cn("ml-2 h-3.5 w-3.5 transition-transform", summaryOpen ? "rotate-90" : "group-hover/btn:translate-x-0.5")} />
+                        </Button>
                       </div>
-
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-10 px-6 text-[11px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-widest rounded-lg"
-                        onClick={() => setSummaryOpen(!summaryOpen)}
-                      >
-                        {summaryOpen ? 'CLOSE_VIEW' : 'VIEW_SUMMARY'}
-                        <ChevronRight className={cn("ml-2 h-4 w-4 transition-transform", summaryOpen ? "rotate-90" : "")} />
-                      </Button>
                     </div>
                   </TabsContent>
 
