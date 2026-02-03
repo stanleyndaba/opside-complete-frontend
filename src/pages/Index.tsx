@@ -798,92 +798,104 @@ const Index = () => {
             </motion.div>
           </section>
 
-          {/* About Us Section - Corporate Profile & Operational Mandate */}
-          <section id="about-us" className="w-full relative z-20 py-24 md:py-36 bg-[#050505] overflow-hidden">
+          {/* About Us Section - Redesigned Corporate Profile & Operational Mandate */}
+          <section id="about-us" className="w-full relative z-20 py-24 md:py-48 bg-[#050505] overflow-hidden border-t border-white/5">
             {/* Background Mesh - Premium Aesthetic */}
             <div className="absolute inset-0 -z-10 pointer-events-none">
               <div className="absolute top-[10%] left-[20%] w-[600px] h-[600px] bg-emerald-500/[0.03] blur-[120px] rounded-full" />
               <div className="absolute bottom-[10%] right-[20%] w-[500px] h-[500px] bg-blue-500/[0.02] blur-[100px] rounded-full" />
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 md:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="text-center mb-20"
-              >
-                <div className="flex items-center justify-center gap-3 mb-6">
-                  <div className="h-px w-8 bg-emerald-500/30" />
-                  <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.4em] uppercase">
-                    Institutional Profile
-                  </span>
-                  <div className="h-px w-8 bg-emerald-500/30" />
+            <div className="max-w-7xl mx-auto px-6 md:px-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-start">
+
+                {/* Left Side: Institutional Heading */}
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  className="space-y-8"
+                >
+                  <div className="space-y-4">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
+                      CORPORATE MANDATE
+                    </span>
+                    <h2 className="text-4xl md:text-6xl font-merriweather font-bold text-white tracking-tight leading-[1.1]">
+                      Corporate Profile & <br />
+                      <span className="text-white/40 italic">Operational Mandate</span>
+                    </h2>
+                  </div>
+                  <p className="max-w-md text-white/30 text-base md:text-lg font-montserrat leading-relaxed font-medium">
+                    To ensure institutional-grade forensic validation and priority API rate limits, Margin is strictly optimized for high-complexity FBA operations.
+                  </p>
+                </motion.div>
+
+                {/* Right Side: Numbered Mandates */}
+                <div className="space-y-0">
+                  {/* Mandate 01 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="group border-t border-white/10 py-10 first:border-t-0"
+                  >
+                    <div className="flex gap-8 md:gap-12">
+                      <span className="text-[10px] font-mono text-white/20 mt-1.5 font-bold group-hover:text-emerald-500 transition-colors">01</span>
+                      <div className="space-y-4">
+                        <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-emerald-400 transition-colors">
+                          Algorithmic Reconciliation
+                        </h3>
+                        <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
+                          Margin functions as a high-frequency forensic audit layer for Amazon FBA sellers. Unlike manual virtual assistants, our proprietary logic nodes continually monitor inventory ledgers against financial settlements. We identify statistical anomalies in lost inventory, damaged stock, and uncredited returns with mathematical precision.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Mandate 02 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="group border-t border-white/10 py-10"
+                  >
+                    <div className="flex gap-8 md:gap-12">
+                      <span className="text-[10px] font-mono text-white/20 mt-1.5 font-bold group-hover:text-blue-500 transition-colors">02</span>
+                      <div className="space-y-4">
+                        <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-blue-400 transition-colors">
+                          Data Sovereignty & Security
+                        </h3>
+                        <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
+                          We treat seller data as a financial asset. Margin is built on an isolated, multi-tenant architecture that ensures strict data segregation. We utilize the official Amazon Selling Partner API (SP-API) for all data ingress, ensuring that no sensitive credentials are ever scraped or compromised.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Mandate 03 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="group border-t border-white/10 py-10"
+                  >
+                    <div className="flex gap-8 md:gap-12">
+                      <span className="text-[10px] font-mono text-white/20 mt-1.5 font-bold group-hover:text-amber-500 transition-colors">03</span>
+                      <div className="space-y-4">
+                        <h3 className="text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:text-amber-400 transition-colors">
+                          Strict Policy Compliance
+                        </h3>
+                        <p className="text-white/40 text-[13px] md:text-sm font-montserrat leading-relaxed font-medium max-w-xl">
+                          Margin is engineered to operate strictly within the bounds of Amazon’s Terms of Service (ToS). Our "Zero-Risk" claim engine ensures that all reimbursement requests are validated against Amazon's own policy windows before generation. We do not automate prohibited actions—protecting account health.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
                 </div>
-                <h2 className="text-4xl md:text-6xl font-merriweather font-bold text-white tracking-tight leading-tight">
-                  Corporate Profile & <br className="hidden md:block" />
-                  <span className="text-white/40 italic">Operational Mandate</span>
-                </h2>
-              </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 pb-16">
-                {/* Mandate 01 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="group relative flex flex-col p-8 md:p-10 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-all duration-500 hover:bg-white/[0.04]"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center mb-8 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all">
-                    <Database className="h-6 w-6 text-emerald-500/60 group-hover:text-emerald-500 transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-merriweather font-bold text-white mb-6 group-hover:text-emerald-400 transition-colors">
-                    1. Algorithmic Reconciliation
-                  </h3>
-                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
-                    Margin functions as a high-frequency forensic audit layer for Amazon FBA sellers. Unlike manual virtual assistants, our proprietary logic nodes continually monitor inventory ledgers against financial settlements. We identify statistical anomalies in lost inventory, damaged stock, and uncredited returns with mathematical precision, ensuring that every unit is accounted for in the seller's balance sheet.
-                  </p>
-                </motion.div>
-
-                {/* Mandate 02 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="group relative flex flex-col p-8 md:p-10 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-blue-500/20 transition-all duration-500 hover:bg-white/[0.04]"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-center mb-8 group-hover:bg-blue-500/10 group-hover:border-blue-500/20 transition-all">
-                    <ShieldCheck className="h-6 w-6 text-blue-500/60 group-hover:text-blue-500 transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-merriweather font-bold text-white mb-6 group-hover:text-blue-400 transition-colors">
-                    2. Data Sovereignty & Security
-                  </h3>
-                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
-                    We treat seller data as a financial asset. Margin is built on an isolated, multi-tenant architecture that ensures strict data segregation. We utilize the official Amazon Selling Partner API (SP-API) for all data ingress, ensuring that no sensitive credentials are ever scraped or compromised. Our systems operate on a "Least Privilege" access model, encrypting data both in transit and at rest.
-                  </p>
-                </motion.div>
-
-                {/* Mandate 03 */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="group relative flex flex-col p-8 md:p-10 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-amber-500/20 transition-all duration-500 hover:bg-white/[0.04]"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex items-center justify-center mb-8 group-hover:bg-amber-500/10 group-hover:border-amber-500/20 transition-all">
-                    <Sparkles className="h-6 w-6 text-amber-500/60 group-hover:text-amber-500 transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-merriweather font-bold text-white mb-6 group-hover:text-amber-400 transition-colors">
-                    3. Strict Policy Compliance
-                  </h3>
-                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
-                    Margin is engineered to operate strictly within the bounds of Amazon’s Terms of Service (ToS). Our "Zero-Risk" claim engine ensures that all reimbursement requests are validated against Amazon's own policy windows before generation. We do not automate prohibited actions; we automate the evidence gathering required to prove the claim, protecting the health and standing of the seller account.
-                  </p>
-                </motion.div>
               </div>
             </div>
           </section>
