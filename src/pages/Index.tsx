@@ -900,75 +900,42 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Infrastructure Metrics Section - Tech Flex */}
+          {/* Infrastructure Metrics Section - Tech Flex Simplified */}
           <section className="w-full relative z-20 py-24 md:py-32 bg-[#050505] border-t border-white/5">
             <div className="max-w-7xl mx-auto px-6 md:px-12">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12 md:gap-y-20">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12">
 
-                {/* 1. Power Metrics */}
-                <div className="space-y-16">
-                  <div className="space-y-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">THROUGHPUT CAPACITY</span>
-                      <div className="text-4xl md:text-5xl font-merriweather font-bold text-emerald-500">10k TPS</div>
-                    </div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                      Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
-                    </p>
+                {/* 1. Throughput Capacity */}
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">THROUGHPUT CAPACITY</span>
+                    <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">10k TPS</div>
                   </div>
-                  <div className="space-y-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">DATA RETENTION</span>
-                      <div className="text-4xl md:text-5xl font-merriweather font-bold text-white">Institutional</div>
-                    </div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                      Full historical ledger storage with instant retrieval for audit defense and compliance.
-                    </p>
-                  </div>
+                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
+                    Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
+                  </p>
                 </div>
 
-                {/* 2. Speed Metrics */}
-                <div className="space-y-16">
-                  <div className="space-y-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">AUDIT LATENCY</span>
-                      <div className="text-4xl md:text-5xl font-merriweather font-bold text-blue-500">&lt; 200ms</div>
-                    </div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                      Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
-                    </p>
+                {/* 2. Audit Latency */}
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">AUDIT LATENCY</span>
+                    <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">&lt; 200ms</div>
                   </div>
-                  <div className="space-y-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">API RESPONSE</span>
-                      <div className="text-4xl md:text-5xl font-merriweather font-bold text-white">Real-Time</div>
-                    </div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                      Direct sync with Amazon SP-API. No waiting for daily batch files or delayed reconciliations.
-                    </p>
-                  </div>
+                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
+                    Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
+                  </p>
                 </div>
 
-                {/* 3. Quality Metrics */}
-                <div className="space-y-16">
-                  <div className="space-y-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">SYSTEM UPTIME</span>
-                      <div className="text-4xl md:text-5xl font-merriweather font-bold text-amber-500">99.99%</div>
-                    </div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                      Redundant server clusters ensure your audit process never sleeps, even during global traffic surges.
-                    </p>
+                {/* 3. System Uptime */}
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">SYSTEM UPTIME</span>
+                    <div className="text-4xl md:text-5xl font-inter font-bold text-white tracking-tight">99.99%</div>
                   </div>
-                  <div className="space-y-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">LOGIC PRECISION</span>
-                      <div className="text-4xl md:text-5xl font-merriweather font-bold text-white">Strict Mode</div>
-                    </div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
-                      Claims generated strictly within Amazon ToS parameters. Zero-risk logic engine protects account health.
-                    </p>
-                  </div>
+                  <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium pr-4">
+                    Redundant server clusters ensure your audit process never sleeps, even during global traffic surges.
+                  </p>
                 </div>
 
               </div>
