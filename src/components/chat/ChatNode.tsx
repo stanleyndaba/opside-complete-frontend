@@ -96,19 +96,16 @@ export function ChatNode() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="w-80 sm:w-96 h-[500px] mb-4 flex flex-col overflow-hidden bg-blue-950/20 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-none"
+                        className="w-80 sm:w-96 h-[500px] mb-4 flex flex-col overflow-hidden bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-2xl ring-1 ring-white/5"
                     >
                         {/* Header */}
-                        <div className="px-5 py-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                        <div className="px-5 py-4 border-b border-white/5 bg-[#050505]/95 flex items-center justify-between">
                             <div>
-                                <h3 className="text-xs font-bold text-white tracking-tight">Support Assistant</h3>
-                                <div className="flex items-center gap-1.5 mt-1">
-                                    <span className="relative flex h-1.5 w-1.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                                    </span>
-                                    <span className="text-[10px] font-mono text-white/40">Online</span>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                    <span className="text-[10px] font-mono text-emerald-500/70 tracking-widest uppercase">ONLINE</span>
                                 </div>
+                                <h3 className="text-sm font-bold text-white tracking-widest font-mono uppercase">Margin Assistance</h3>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
@@ -132,21 +129,22 @@ export function ChatNode() {
                                     )}
                                 >
                                     <div className={cn(
-                                        "px-4 py-3 text-xs leading-relaxed",
+                                        "px-4 py-3 text-xs leading-relaxed font-mono",
                                         msg.role === 'user'
-                                            ? "bg-white/10 text-white rounded-none border border-white/5"
-                                            : "bg-gray-900 text-gray-100 rounded-none border border-white/5"
+                                            ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                                            : "bg-white/5 text-gray-300 border border-white/5"
                                     )}>
                                         {msg.text}
                                     </div>
-                                    <span className="text-[9px] text-white/20 mt-1 font-mono uppercase tracking-widest">
-                                        {msg.role === 'agent' ? 'Assistant' : 'You'} · {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    <span className="text-[9px] text-white/30 mt-1.5 font-mono uppercase tracking-widest flex items-center gap-1">
+                                        {msg.role === 'agent' && <span className="w-1 h-1 rounded-full bg-emerald-500/50" />}
+                                        {msg.role === 'agent' ? 'AI_AGENT_01' : 'USER_ID_Auth'} · {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
                             ))}
                             {isTyping && (
                                 <div className="flex items-start">
-                                    <div className="bg-gray-900 border border-white/5 px-4 py-3 rounded-none flex items-center gap-2">
+                                    <div className="bg-white/5 border border-white/5 px-4 py-3 rounded-none flex items-center gap-2">
                                         <Loader2 className="h-3 w-3 text-white/40 animate-spin" />
                                         <span className="text-[10px] text-white/40 font-mono">Typing...</span>
                                     </div>
@@ -155,12 +153,12 @@ export function ChatNode() {
                         </div>
 
                         {/* Audit Pathways (Chips) */}
-                        <div className="px-5 py-3 border-t border-white/5 bg-white/5 overflow-x-auto scrollbar-hide flex gap-2">
+                        <div className="px-5 py-3 border-t border-white/5 bg-[#050505]/50 overflow-x-auto scrollbar-hide flex gap-2">
                             {AUDIT_PATHWAYS.map((path, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => handlePathwayClick(path)}
-                                    className="whitespace-nowrap px-3 py-1.5 bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/40 text-[10px] font-bold text-blue-400 transition-all rounded-none uppercase tracking-wider"
+                                    className="whitespace-nowrap px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/40 text-[10px] font-mono font-bold text-emerald-500 transition-all rounded-none uppercase tracking-wider"
                                 >
                                     {path.label}
                                 </button>
@@ -176,8 +174,8 @@ export function ChatNode() {
                                 type="text"
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
-                                placeholder="Type a message..."
-                                className="flex-1 bg-transparent border-none text-xs text-white placeholder:text-white/20 focus:ring-0"
+                                placeholder="Execute command or ask query..."
+                                className="flex-1 bg-transparent border-none text-xs font-mono text-emerald-500 placeholder:text-white/20 focus:ring-0 focus:outline-none"
                             />
                             <button
                                 type="submit"
@@ -197,8 +195,8 @@ export function ChatNode() {
                 className={cn(
                     "h-12 w-12 flex items-center justify-center rounded-none transition-all shadow-2xl border",
                     isOpen
-                        ? "bg-white text-gray-900 border-white"
-                        : "bg-gray-900 text-white border-white/10 hover:border-white/30"
+                        ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                        : "bg-[#050505] text-emerald-500 border-white/10 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]"
                 )}
             >
                 <MessageSquare className="h-5 w-5" />
