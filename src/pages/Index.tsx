@@ -391,7 +391,7 @@ const Index = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center text-center max-w-6xl mx-auto">
+              className="flex flex-col items-center text-center w-full max-w-none px-4 mx-auto">
 
               {/* Text content - now centered */}
               <div className="flex flex-col items-center space-y-6">
