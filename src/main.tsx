@@ -18,10 +18,16 @@ if ((import.meta as any).env?.VITE_SENTRY_DSN) {
       tracesSampleRate: Number((import.meta as any).env?.VITE_SENTRY_TRACES_RATE || 0.1),
       replaysSessionSampleRate: Number((import.meta as any).env?.VITE_SENTRY_REPLAYS_RATE || 0.1),
     });
-  }).catch(() => {});
+  }).catch(() => { });
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+import { GlobalErrorBoundary } from '@/components/error/GlobalErrorBoundary';
+
+createRoot(document.getElementById("root")!).render(
+  <GlobalErrorBoundary>
+    <App />
+  </GlobalErrorBoundary>
+);
 
 const report = (name: string, metric: any) => {
   api.trackEvent('web_vital', {

@@ -54,6 +54,10 @@ export const PublicNavbar = () => {
                             <img
                                 src="/logoimagetwo.png"
                                 alt="Margin"
+                                width="20"
+                                height="20"
+                                // @ts-ignore - fetchpriority is valid but react types might lag
+                                fetchPriority="high"
                                 className="h-5 w-auto object-contain invert brightness-0"
                             />
                             <span className="font-montserrat text-white" style={{ fontWeight: 600 }}>Margin</span>

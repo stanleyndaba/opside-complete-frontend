@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -823,10 +824,19 @@ export function Dashboard() {
 
                     <div className="p-10">
                       <div className="flex flex-col">
-                        {(recoveredTotal ?? 0) > 0 ? (
+                        {recoveredTotal === null ? (
+                          <div className="space-y-4 py-2">
+                            <div className="flex items-center gap-3">
+                              <Skeleton className="h-4 w-4 rounded-full bg-white/10" />
+                              <Skeleton className="h-4 w-32 bg-white/10" />
+                            </div>
+                            <Skeleton className="h-14 w-48 bg-white/10" />
+                            <Skeleton className="h-4 w-64 bg-white/10" />
+                          </div>
+                        ) : recoveredTotal > 0 ? (
                           <>
                             <div className="text-5xl font-mono font-bold text-white tracking-tighter mb-4 flex items-baseline gap-2">
-                              {formatCurrencyWithSelection(recoveredTotal ?? 0, recoveredCurrency)}
+                              {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
                               <span className="text-sm font-mono text-emerald-500 animate-pulse">_</span>
                             </div>
                             {reconciledCount != null && reconciledCount > 0 && (
@@ -880,7 +890,11 @@ export function Dashboard() {
                           <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
                             <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">ESTIMATED_PAYOUT</div>
                             <div className="text-2xl font-mono font-bold text-white tracking-tight">
-                              {formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)}
+                              {nextPaymentAmount === null && !upcomingPaymentsLoadedRef.current ? (
+                                <Skeleton className="h-8 w-32 bg-white/10" />
+                              ) : (
+                                formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)
+                              )}
                             </div>
                             <div className="mt-4 flex items-center gap-2">
                               <Clock className="h-3 w-3 text-emerald-500/30" />
@@ -911,7 +925,11 @@ export function Dashboard() {
                           <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
                             <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">PENDING_RECOVERY</div>
                             <div className="text-2xl font-mono font-bold text-white tracking-tight">
-                              {formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)}
+                              {pendingRecoveryAmount === null && !upcomingPaymentsLoadedRef.current ? (
+                                <Skeleton className="h-8 w-32 bg-white/10" />
+                              ) : (
+                                formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)
+                              )}
                             </div>
                             <div className="mt-4 flex items-center gap-2">
                               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
@@ -940,7 +958,13 @@ export function Dashboard() {
                           <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
                             <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">SUCCESS_RATE</div>
                             <div className="flex items-baseline gap-3">
-                              <div className="text-2xl font-mono font-bold text-white tracking-tight">{settlementRate !== null ? `${settlementRate.toFixed(1)}%` : '—'}</div>
+                              <div className="text-2xl font-mono font-bold text-white tracking-tight">
+                                {settlementRate === null ? (
+                                  <Skeleton className="h-8 w-16 bg-white/10" />
+                                ) : (
+                                  `${settlementRate.toFixed(1)}%`
+                                )}
+                              </div>
                               <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500 shadow-emerald-500/50' : (settlementRate ?? 0) >= 50 ? 'bg-amber-500 shadow-amber-500/50' : 'bg-white/10'}`} />
                             </div>
                             <div className="mt-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
