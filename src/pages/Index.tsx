@@ -376,7 +376,7 @@ const Index = () => {
       <PublicNavbar />
       <div className="relative z-10" style={{ background: '#050505' }}>
         <main className="flex-1 relative z-10" style={{ background: '#050505' }}>
-          <section className="relative container mx-auto px-6 pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
+          <section className="relative w-full pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
             {/* Premium Dual-Layer Background */}
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
               {/* Layer 1: Radial Mesh Gradients */}
@@ -394,7 +394,7 @@ const Index = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center text-center w-full max-w-none px-4 mx-auto">
+              className="flex flex-col items-center text-center max-w-6xl px-6 mx-auto">
 
               {/* Text content - now centered */}
               <div className="flex flex-col items-center space-y-6">
