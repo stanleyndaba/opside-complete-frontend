@@ -2242,9 +2242,9 @@ export default function Recoveries() {
       <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-      <div className="relative w-full overflow-x-hidden bg-[#050505]">
-        <div className="relative w-full min-h-screen bg-[#050505]">
-          <div className="relative w-full max-w-full px-8 pt-8 pb-16">
+      <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
+        <div className="relative w-full min-h-full bg-[#050505]">
+          <div className="relative w-full max-w-full px-8 pt-8 pb-24">
             {/* Header Section - Matrix Terminal Design */}
             <div className="border-b border-white/10 pb-8 mb-8 relative">
               <div className="absolute -bottom-px left-0 w-24 h-px bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
