@@ -101,8 +101,11 @@ export function TenantProvider({ children }: TenantProviderProps) {
 
             // Get current tenant
             const currentResponse = await api.get('/api/tenant/current');
-            if (currentResponse.data.success) {
+            if (currentResponse.data.success && currentResponse.data.tenant) {
                 setTenant(currentResponse.data.tenant);
+                // Persist to localStorage for API header usage
+                localStorage.setItem('active_tenant_id', currentResponse.data.tenant.id);
+                localStorage.setItem('active_tenant_slug', currentResponse.data.tenant.slug);
             }
 
             // Get all user's tenants
@@ -157,6 +160,11 @@ export function TenantProvider({ children }: TenantProviderProps) {
 
             if (response.data.success) {
                 setTenant(response.data.tenant);
+
+                // Persist tenant ID to localStorage for API header usage
+                // This allows api.ts to send x-tenant-id header on all requests
+                localStorage.setItem('active_tenant_id', response.data.tenant.id);
+                localStorage.setItem('active_tenant_slug', response.data.tenant.slug);
 
                 // Navigate to new tenant URL
                 const currentPath = window.location.pathname;

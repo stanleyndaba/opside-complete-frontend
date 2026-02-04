@@ -88,7 +88,9 @@ async function requestJsonWithRetry<T>(
         // Get user ID from localStorage (set by SessionContext) or fallback to demo-user
         // This allows API calls to work with the actual authenticated user
         'x-user-id': localStorage.getItem('user_id') || 'demo-user',
-        // Support multi-store isolation via X-Store-Id header
+        // Multi-tenant isolation: x-tenant-id is used by tenantMiddleware.ts
+        // Also send x-store-id for backwards compatibility with older API calls
+        'x-tenant-id': localStorage.getItem('active_tenant_id') || localStorage.getItem('active_store_id') || '',
         'x-store-id': localStorage.getItem('active_store_id') || '',
         ...options?.headers,
       },
@@ -1361,7 +1363,7 @@ export const api = {
     const queryParams = new URLSearchParams();
     if (userId) queryParams.append('userId', userId);
     const query = queryParams.toString();
-    const url = `${apiUrl}/api/billing/invoices/${encodeURIComponent(invoiceId)}/pdf${query ? `?${query}` : ''}`;
+    const url = buildApiUrl(`/api/billing/invoices/${encodeURIComponent(invoiceId)}/pdf${query ? `?${query}` : ''}`);
 
     const response = await fetch(url, {
       method: 'GET',
