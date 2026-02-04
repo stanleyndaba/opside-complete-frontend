@@ -391,7 +391,7 @@ const Index = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center text-center max-w-3xl mx-auto">
+              className="flex flex-col items-center text-center max-w-6xl mx-auto">
 
               {/* Text content - now centered */}
               <div className="flex flex-col items-center space-y-6">
@@ -423,8 +423,8 @@ const Index = () => {
                   </div>
                 </div>
 
-                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.05] selection:bg-emerald-500/30">
-                  The <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Financial Infrastructure</span> <br className="hidden lg:block" />
+                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-5xl">
+                  The <span className="font-merriweather bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Financial Infrastructure</span> <br className="hidden lg:block" />
                   for Amazon FBA
                 </h1>
 
