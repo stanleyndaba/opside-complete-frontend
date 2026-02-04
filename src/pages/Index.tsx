@@ -424,12 +424,12 @@ const Index = () => {
                 </div>
 
                 <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.05] selection:bg-emerald-500/30">
-                  FBA Reimbursements <br className="hidden lg:block" />
-                  via <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Automated Workflow</span>
+                  The <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Financial Infrastructure</span> <br className="hidden lg:block" />
+                  for Amazon FBA
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-white/40 font-medium max-w-xl leading-[1.6]">
-                  Margin provides the sovereign infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro-transaction and automate reimbursements—turning messy data into immediate capital.
+                  Margin continuously audits 70+ FBA data streams and micro-transactions, builds policy‑ready claims, and automates reimbursements—turning messy data into immediate capital.
                 </p>
                 <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest">
                   Automated detection within Amazon-approved policy windows.
