@@ -1050,7 +1050,7 @@ export default function IntegrationsHub() {
                     <div className="space-y-1">
                       <label className="text-[10px] font-mono text-gray-500 uppercase">Exclude Senders</label>
                       <Input
-                        placeholder="*newsletter*, *marketing*"
+                        placeholder="newsletter, marketing"
                         value={filters.excludeSenders.join(', ')}
                         onChange={(e) => setFilters(f => ({ ...f, excludeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
                         className="bg-black/40 border-white/10 text-white font-mono text-xs h-10"

@@ -29,7 +29,7 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[700px] lg:w-[820px] bg-[#050505]/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-black/80 max-h-[85vh] overflow-y-auto scrollbar-hide">
+                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[500px] lg:w-[580px] bg-[#050505]/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-black/80 max-h-[85vh] overflow-y-auto scrollbar-hide">
                             {/* Left Side: Features */}
                             <div className="flex-1 p-6 lg:p-8 grid gap-8">
 
@@ -158,48 +158,6 @@ export function ProductsMegaMenu() {
                                 </div>
                             </div>
 
-                            {/* Right Side: Impact Panel */}
-                            <div className="w-full lg:w-[280px] bg-[#0a0a0a] border-t lg:border-t-0 p-6 lg:p-8 flex flex-col justify-between shrink-0">
-                                <div>
-                                    <h4 className="flex items-center gap-2 text-[11px] font-semibold text-white uppercase tracking-widest mb-6">
-                                        <TrendingUp className="h-3.5 w-3.5" />
-                                        Live Impact
-                                    </h4>
-                                    <div className="space-y-4">
-                                        <div className="p-4 bg-white/[0.02] rounded-xl border border-white/10 shadow-sm backdrop-blur-sm">
-                                            <p className="text-[9px] text-white/30 font-bold uppercase tracking-[0.1em]">
-                                                Recovered this week
-                                            </p>
-                                            <p className="text-xl font-bold text-white mt-1 tracking-tight">
-                                                R4.2M
-                                            </p>
-                                            <p className="text-[9px] text-white/40 font-semibold mt-1.5 flex items-center gap-1">
-                                                <span className="text-emerald-500 font-bold">↑</span> 12.5% vs last week
-                                            </p>
-                                        </div>
-
-                                        <div className="flex items-center gap-3 p-3.5 bg-white/[0.02] rounded-xl border border-white/10">
-                                            <div className="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center border border-white/10 shadow-sm shrink-0">
-                                                <span className="text-[11px] font-bold text-white">67k</span>
-                                            </div>
-                                            <div>
-                                                <p className="text-[9px] text-white/30 font-bold uppercase tracking-wide leading-tight">
-                                                    Trusted by
-                                                </p>
-                                                <p className="text-[11px] font-bold text-white leading-tight">
-                                                    67k+ Sellers
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-8">
-                                    <a href="/contact" className="block w-full py-3 px-4 bg-white text-black text-[11px] font-bold text-center rounded-xl hover:bg-white/90 transition-all shadow-sm active:scale-[0.98]">
-                                        Get a Forensic Audit
-                                    </a>
-                                </div>
-                            </div>
                         </div>
                     </NavigationMenuContent>
                 </NavigationMenuItem>

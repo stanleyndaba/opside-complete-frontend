@@ -425,14 +425,14 @@ const Index = () => {
 
                 <h1 className="font-merriweather text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.05] selection:bg-emerald-500/30">
                   FBA Reimbursements <br className="hidden lg:block" />
-                  via <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Automated Workflow*</span>
+                  via <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Automated Workflow</span>
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-white/40 font-medium max-w-xl leading-[1.6]">
                   Margin provides the sovereign infrastructure for Amazon profit recovery. We link directly to your Seller Central to audit every micro-transaction and automate reimbursements—turning messy data into immediate capital.
                 </p>
                 <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest">
-                  *Automated detection within Amazon-approved policy windows.
+                  Automated detection within Amazon-approved policy windows.
                 </p>
 
                 {/* Buttons - centered */}
@@ -882,11 +882,11 @@ const Index = () => {
 
               <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-white leading-[1.1]">
                 Bring Your Ledger <br className="hidden md:block" />
-                to 100% Accuracy.**
+                to 100% Accuracy.
               </h2>
 
               <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest mt-4">
-                **Refers to internal reconciliation precision; individual recovery outcomes vary by account health.
+                Refers to internal reconciliation precision; individual recovery outcomes vary by account health.
               </p>
 
               <div className="flex flex-col items-center gap-8 pt-4">
