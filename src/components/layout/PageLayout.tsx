@@ -30,7 +30,7 @@ export function PageLayout({
   const isAuthView = !!hideNavbar && !!hideSidebar;
   const shouldShowMidnightBg = !plainBackground && (isAuthView || midnight);
   const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-60');
-  return <div className={`min-h-screen flex flex-col platform ${shouldShowMidnightBg ? 'relative bg-[#050505]' : plainBackground ? 'bg-white' : ''}`}>
+  return <div className={`min-h-screen h-full flex flex-col platform ${shouldShowMidnightBg ? 'relative bg-[#050505]' : plainBackground ? 'bg-white' : 'bg-[#050505]'}`}>
     {shouldShowMidnightBg && (
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0,rgba(56,189,248,0.03),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.03),transparent_35%)]" />
     )}

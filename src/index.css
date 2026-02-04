@@ -124,6 +124,7 @@
     max-width: 100%;
     overflow-x: hidden;
     min-height: 100vh;
+    background-color: #050505;
   }
 
   /* Ensure main content uses full width */
