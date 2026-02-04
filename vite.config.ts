@@ -10,18 +10,36 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Development proxy - route /api calls to local backend
+    // This eliminates CORS issues and simplifies development
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+        // Log proxy requests in development for debugging
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
+            console.log(`[Proxy] ${req.method} ${req.url} -> http://localhost:3001${req.url}`);
+          });
+          proxy.on('error', (err, req) => {
+            console.error(`[Proxy] Error for ${req.url}:`, err.message);
+          });
+        },
+      },
+    },
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (!id.includes('node_modules')) return undefined;
-          
+
           // Keep React and ReactDOM together to avoid timing issues
           if (id.includes('react') || id.includes('react-dom') || id.includes('react-is')) {
             return 'react-vendor';
           }
-          
+
           if (id.includes('react-router')) return 'react-router';
           if (id.includes('@tanstack')) return 'tanstack';
           if (id.includes('@radix-ui')) return 'radix';
@@ -30,7 +48,7 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('date-fns')) return 'date-fns';
           if (id.includes('zod')) return 'zod';
           if (id.includes('cmdk')) return 'cmdk';
-          
+
           // leave the rest to be split per entry to avoid a monolithic vendor
           return undefined;
         },
