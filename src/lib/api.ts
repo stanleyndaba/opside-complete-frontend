@@ -279,6 +279,12 @@ export const api = {
   // Waitlist
   joinWaitlist: (data: {
     email: string;
+    user_type?: string;
+    brand_count?: string;
+    annual_revenue?: string;
+    contact_handle?: string;
+    primary_goal?: string;
+    // Legacy support
     full_name?: string;
     company_name?: string;
     monthly_volume?: string;
