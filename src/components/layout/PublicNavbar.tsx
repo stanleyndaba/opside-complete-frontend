@@ -20,7 +20,14 @@ import {
     AccordionItem,
     AccordionTrigger
 } from '@/components/ui/accordion';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
+import { ChevronDown } from 'lucide-react';
 
 export const PublicNavbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -69,11 +76,23 @@ export const PublicNavbar = () => {
                             <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Ultra Beta</span>
                             <span className="px-1.5 py-0.5 bg-white text-[9px] font-bold text-black rounded-full leading-none">NEW</span>
                         </Link>
-                        <Link
-                            to="/pricing"
-                            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Pricing</span>
-                        </Link>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[13px] font-montserrat text-white outline-none" style={{ fontWeight: 600 }}>
+                                Finance <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-xl p-1 min-w-[160px]">
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-lg px-3 py-2">
+                                    <Link to="/pricing" className="flex items-center gap-2 w-full">
+                                        <span className="text-[13px] font-montserrat font-medium">Pricing</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-lg px-3 py-2">
+                                    <Link to="/contact" className="flex items-center gap-2 w-full">
+                                        <span className="text-[13px] font-montserrat font-medium">Talk to Sales</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
                         <Link
                             to="/about"
@@ -93,10 +112,10 @@ export const PublicNavbar = () => {
                             Enterprise
                         </Link>
                         <Link
-                            to="/contact"
-                            className="h-9 px-4 text-sm font-medium text-white/70 bg-transparent hover:text-white transition-colors inline-flex items-center gap-1.5"
+                            to="/waitlist"
+                            className="h-9 px-6 text-[13px] font-bold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center gap-2 tracking-widest uppercase"
                             style={{ borderRadius: '0px' }}>
-                            Talk to Sales <span aria-hidden="true">→</span>
+                            Join Waitlist <ArrowRight className="h-3.5 w-3.5" />
                         </Link>
                     </nav>
 
@@ -129,12 +148,29 @@ export const PublicNavbar = () => {
                                         <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
                                     </div>
                                 </Link>
-                                <Link
-                                    to="/pricing"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors">
-                                    Pricing
-                                </Link>
+                                <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="finance" className="border-none">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                            Finance
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pt-2 pb-2 px-2">
+                                            <div className="grid gap-1">
+                                                <Link
+                                                    to="/pricing"
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors">
+                                                    Pricing
+                                                </Link>
+                                                <Link
+                                                    to="/contact"
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors">
+                                                    Talk to Sales
+                                                </Link>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
 
                                 <Link
                                     to="/about"
@@ -216,10 +252,10 @@ export const PublicNavbar = () => {
                                     </AccordionItem>
                                 </Accordion>
                                 <Link
-                                    to="/contact"
+                                    to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-sm font-bold text-center">
-                                    Talk to Sales
+                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[13px] font-bold text-center tracking-widest uppercase">
+                                    Join Waitlist
                                 </Link>
                             </div>
                         </motion.div>
