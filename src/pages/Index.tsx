@@ -394,10 +394,10 @@ const Index = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center text-center max-w-6xl px-6 mx-auto">
+              className="flex flex-col items-start md:items-center text-left md:text-center max-w-6xl px-6 mx-auto">
 
-              {/* Text content - now centered */}
-              <div className="flex flex-col items-center space-y-6">
+              {/* Text content - left aligned on mobile, centered on desktop */}
+              <div className="flex flex-col items-start md:items-center space-y-6 w-full">
 
                 {/* Institutional Trust Badge */}
                 <div className="relative inline-flex items-center gap-3 md:gap-5 rounded-[22px] md:rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 md:px-6 md:py-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.4),0_1px_2px_rgba(255,255,255,0.05)_inset] overflow-hidden group transition-all duration-500 hover:bg-white/10">
@@ -439,8 +439,8 @@ const Index = () => {
                   Automated detection within Amazon-approved policy windows.
                 </p>
 
-                {/* Buttons - centered */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                {/* Buttons - left aligned on mobile, centered on desktop */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto">
                   <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" />
                 </div>
               </div>
