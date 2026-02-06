@@ -55,9 +55,15 @@ export const PublicNavbar = () => {
     return (
         <header className="fixed top-0 left-0 right-0 z-50 border-transparent bg-transparent">
             <div className="container mx-auto px-6 py-5">
-                <div className="flex items-center justify-between gap-6 px-6 py-4 rounded-[25px] border border-white/10 bg-[#050505]/20 supports-[backdrop-filter]:bg-[#050505]/20 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(0,0,0,0.4)] transition-colors">
+                <div className="flex items-center justify-between gap-6 px-6 py-4 border border-white/10 bg-[#050505]/40 supports-[backdrop-filter]:bg-[#050505]/40 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(0,0,0,0.4)] transition-colors relative group">
+                    {/* Corner Accents */}
+                    <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/20" />
+                    <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/20" />
+                    <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-white/20" />
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/20" />
+
                     <div className="flex items-center gap-3">
-                        <Link to="/" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5">
+                        <Link to="/" className="inline-flex items-center gap-2.5 px-3 py-1.5 transition-colors hover:bg-white/5">
                             <img
                                 src="/logoimagetwo.png"
                                 alt="Margin"
@@ -67,28 +73,28 @@ export const PublicNavbar = () => {
                                 fetchPriority="high"
                                 className="h-5 w-auto object-contain invert brightness-0"
                             />
-                            <span className="font-montserrat text-white" style={{ fontWeight: 600 }}>Margin</span>
+                            <span className="font-merriweather font-bold text-white text-lg tracking-tight">Margin</span>
                         </Link>
                         <span className="hidden md:inline text-gray-300">|</span>
                         <Link
                             to="/ultra-beta"
-                            className="hidden md:flex items-center gap-2 group px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Ultra Beta</span>
-                            <span className="px-1.5 py-0.5 bg-white text-[9px] font-bold text-black rounded-full leading-none">NEW</span>
+                            className="hidden md:flex items-center gap-2 group px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
+                            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Ultra Beta</span>
+                            <span className="px-1.5 py-0.5 bg-emerald-500 text-[8px] font-bold text-white rounded-none leading-none">NEW</span>
                         </Link>
                         <DropdownMenu>
-                            <DropdownMenuTrigger className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[13px] font-montserrat text-white outline-none" style={{ fontWeight: 600 }}>
-                                Finance <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                            <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
+                                Finance <ChevronDown className="h-3 w-3 opacity-30" />
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-xl p-1 min-w-[160px]">
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-lg px-3 py-2">
+                            <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-none p-1 min-w-[160px]">
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
                                     <Link to="/pricing" className="flex items-center gap-2 w-full">
-                                        <span className="text-[13px] font-montserrat font-medium">Pricing</span>
+                                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Pricing</span>
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-lg px-3 py-2">
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
                                     <Link to="/contact" className="flex items-center gap-2 w-full">
-                                        <span className="text-[13px] font-montserrat font-medium">Talk to Sales</span>
+                                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Talk to Sales</span>
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -96,8 +102,8 @@ export const PublicNavbar = () => {
 
                         <Link
                             to="/about"
-                            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>About Us</span>
+                            className="hidden md:flex items-center gap-2 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
+                            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">About Us</span>
                         </Link>
                         <div className="hidden md:block">
                             <ProductsMegaMenu />
@@ -107,21 +113,21 @@ export const PublicNavbar = () => {
                     <nav className="hidden md:flex items-center gap-4">
                         <Link
                             to="/sales"
-                            className="h-9 px-5 text-sm font-medium text-black bg-white hover:bg-white/90 transition-colors inline-flex items-center"
+                            className="h-9 px-5 text-[10px] font-bold text-black bg-white hover:bg-emerald-500 hover:text-white transition-all inline-flex items-center uppercase tracking-[0.2em] font-mono"
                             style={{ borderRadius: '0px' }}>
                             Enterprise
                         </Link>
                         <Link
                             to="/waitlist"
-                            className="h-9 px-6 text-[13px] font-bold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center gap-2 tracking-widest uppercase"
+                            className="h-9 px-6 text-[10px] font-bold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center gap-2 tracking-[0.3em] uppercase font-mono"
                             style={{ borderRadius: '0px' }}>
-                            Join Waitlist <ArrowRight className="h-3.5 w-3.5" />
+                            Join Waitlist <ArrowRight className="h-3 w-3" />
                         </Link>
                     </nav>
 
                     <button
                         type="button"
-                        className="md:hidden flex flex-col items-end gap-1.5 rounded-[16px] border border-white/10 bg-white/5 px-3 py-2 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+                        className="md:hidden flex flex-col items-end gap-1.5 px-3 py-2 transition-colors hover:bg-white/5 focus-visible:outline-none"
                         aria-label="Toggle menu"
                         aria-expanded={mobileMenuOpen}
                         onClick={() => setMobileMenuOpen((prev) => !prev)}>
@@ -150,7 +156,7 @@ export const PublicNavbar = () => {
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="finance" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
                                             Finance
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-2 px-2">
@@ -158,13 +164,13 @@ export const PublicNavbar = () => {
                                                 <Link
                                                     to="/pricing"
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors">
+                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors font-montserrat">
                                                     Pricing
                                                 </Link>
                                                 <Link
                                                     to="/contact"
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors">
+                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors font-montserrat">
                                                     Talk to Sales
                                                 </Link>
                                             </div>
@@ -175,18 +181,18 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/about"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
                                     About Us
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors">
+                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
                                     Enterprise
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-4 px-2 max-h-[50vh] overflow-y-auto">
@@ -254,7 +260,7 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[13px] font-bold text-center tracking-widest uppercase">
+                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[13px] font-bold text-center tracking-widest uppercase font-montserrat">
                                     Join Waitlist
                                 </Link>
                             </div>

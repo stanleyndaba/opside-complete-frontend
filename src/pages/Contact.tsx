@@ -77,7 +77,7 @@ export default function Contact() {
                 <div className="max-w-2xl mb-20 text-left">
                     <div className="flex items-center gap-2 mb-4">
                         <div className="h-[1px] w-8 bg-white/20" />
-                        <span className="text-[11px] font-bold text-white/40 font-mono tracking-wider sm:tracking-[0.2em] uppercase">Communication Node</span>
+                        <span className="text-[11px] font-bold text-white/40 font-montserrat tracking-wider sm:tracking-[0.2em] uppercase">Contact Us</span>
                     </div>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-merriweather font-bold text-white leading-tight mb-6 break-words">
                         Contact Support & <br />Enterprise Sales
@@ -104,7 +104,7 @@ export default function Contact() {
                                 <Button
                                     onClick={() => setIsSubmitted(false)}
                                     variant="outline"
-                                    className="font-bold text-xs uppercase tracking-widest border-white/10 text-white hover:bg-white/5 rounded-none h-12 px-8">
+                                    className="font-bold text-xs uppercase tracking-widest border-white/10 text-white hover:bg-white/5 rounded-xl h-12 px-8 font-montserrat">
                                     New Transmission
                                 </Button>
                             </div>
@@ -112,28 +112,28 @@ export default function Contact() {
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-white/30 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
-                                            Sender Name
+                                        <label className="text-[10px] font-bold text-white/30 tracking-wider sm:tracking-widest uppercase mb-2 block font-montserrat">
+                                            Your Name
                                         </label>
                                         <Input
                                             type="text"
                                             value={form.name}
                                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                                             placeholder="FULL NAME"
-                                            className="h-12 border-white/10 text-sm font-mono tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none placeholder:text-white/10"
+                                            className="h-12 border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl placeholder:text-white/10 font-montserrat"
                                             required
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-white/30 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
-                                            Electronic Mail
+                                        <label className="text-[10px] font-bold text-white/30 tracking-wider sm:tracking-widest uppercase mb-2 block font-montserrat">
+                                            Email Address
                                         </label>
                                         <Input
                                             type="email"
                                             value={form.email}
                                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                                             placeholder="SENDER@DOMAIN.COM"
-                                            className="h-12 border-white/10 text-sm font-mono tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none placeholder:text-white/10"
+                                            className="h-12 border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl placeholder:text-white/10 font-montserrat"
                                             required
                                         />
                                     </div>
@@ -167,14 +167,14 @@ export default function Contact() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase mb-2 block">
+                                    <label className="text-[10px] font-bold text-white/30 tracking-widest uppercase mb-2 block font-montserrat">
                                         Message Body
                                     </label>
                                     <Textarea
                                         value={form.message}
                                         onChange={(e) => setForm({ ...form, message: e.target.value })}
                                         placeholder="DECRYPTED MESSAGE CONTENT..."
-                                        className="min-h-[160px] border-white/10 text-sm font-mono tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none resize-none px-4 py-4 placeholder:text-white/10"
+                                        className="min-h-[160px] border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl resize-none px-4 py-4 placeholder:text-white/10 font-montserrat"
                                         required
                                     />
                                 </div>
@@ -182,7 +182,7 @@ export default function Contact() {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full h-14 bg-white hover:bg-white/90 text-black text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all shadow-2xl">
+                                    className="w-full h-14 bg-white hover:bg-white/90 text-black text-xs font-bold tracking-widest uppercase rounded-xl transition-all shadow-2xl font-montserrat">
                                     {isSubmitting ? (
                                         <>Formatting Transmission...</>
                                     ) : (

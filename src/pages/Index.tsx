@@ -401,6 +401,7 @@ const Index = () => {
 
                 {/* Institutional Trust Badge */}
                 <div className="relative inline-flex items-center gap-3 md:gap-5 rounded-[22px] md:rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 md:px-6 md:py-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.4),0_1px_2px_rgba(255,255,255,0.05)_inset] overflow-hidden group transition-all duration-500 hover:bg-white/10">
+
                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   <span className="relative flex items-center gap-1.5 md:gap-2">
                     <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-500">

@@ -104,10 +104,10 @@ export default function Sales() {
                         transition={{ duration: 0.8 }}
                         className="space-y-8"
                     >
-                        <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-sm">
-                            <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-widest uppercase">Institutional Access</span>
+                        <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                            <span className="text-[10px] font-bold text-emerald-500 font-montserrat tracking-widest uppercase">Institutional Access</span>
                             <div className="h-3 w-[1px] bg-white/10" />
-                            <span className="text-[10px] font-bold text-white/40 font-mono tracking-widest uppercase">High Volume Gateway</span>
+                            <span className="text-[10px] font-bold text-white/40 font-montserrat tracking-widest uppercase">High Volume Gateway</span>
                         </div>
 
                         <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight text-white">
@@ -156,10 +156,10 @@ export default function Sales() {
                                     }
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-6 pb-8 border-b border-white/5 last:border-0">
-                                        <div className="text-[10px] font-mono text-white/20 mt-1">{`0${i + 1}`}</div>
+                                        <div className="text-[10px] font-bold text-white/20 mt-1 font-montserrat">{`0${i + 1}`}</div>
                                         <div className="space-y-2">
-                                            <div className="font-bold text-white/90 uppercase tracking-tighter text-sm">{item.title}</div>
-                                            <div className="text-sm text-white/40">{item.desc}</div>
+                                            <div className="font-bold text-white/90 uppercase tracking-tighter text-sm font-montserrat">{item.title}</div>
+                                            <div className="text-sm text-white/40 font-montserrat">{item.desc}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -191,8 +191,8 @@ export default function Sales() {
                             <div key={i} className="space-y-6">
                                 <div className="h-[1px] w-12 bg-emerald-500/50" />
                                 <div className="space-y-2">
-                                    <div className="text-[10px] font-bold text-white/40 font-mono tracking-widest uppercase">{feature.label}</div>
-                                    <h4 className="text-xl font-bold tracking-tight text-white">{feature.title}</h4>
+                                    <div className="text-[10px] font-bold text-white/40 font-montserrat tracking-widest uppercase">{feature.label}</div>
+                                    <h4 className="text-xl font-bold tracking-tight text-white font-montserrat">{feature.title}</h4>
                                 </div>
                                 <p className="text-sm text-white/50 leading-loose">
                                     {feature.desc}
@@ -211,7 +211,7 @@ export default function Sales() {
                                 <p className="text-2xl font-merriweather text-white leading-relaxed mb-6 italic">
                                     "We personally review every institutional inquiry. If you're managing serious scale, our team will build a dedicated audit engine for your SKU architecture."
                                 </p>
-                                <p className="text-sm font-bold text-white/40 uppercase tracking-widest font-mono">
+                                <p className="text-sm font-bold text-white/40 uppercase tracking-widest font-montserrat">
                                     — Founder & CEO, Margin
                                 </p>
                             </div>
@@ -219,7 +219,7 @@ export default function Sales() {
 
                         {/* Inquiry Form */}
                         <div className="lg:col-start-3 lg:col-span-8">
-                            <div className="p-8 md:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm">
+                            <div className="p-8 md:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm rounded-2xl">
                                 {isSubmitted ? (
                                     <div className="text-center py-20">
                                         <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-8">
@@ -241,10 +241,10 @@ export default function Sales() {
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                                            <h3 className="text-[10px] font-bold text-emerald-500 font-montserrat tracking-[0.2em] uppercase">
                                                 Institutional Briefing Request // V.02
                                             </h3>
-                                            <p className="text-xs text-white/40 font-mono">Priority Node Allocation: 3/Week</p>
+                                            <p className="text-xs text-white/40 font-montserrat">Priority Node Allocation: 3/Week</p>
                                         </div>
 
                                         <div className="grid md:grid-cols-2 gap-10">
@@ -257,7 +257,7 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="FULL NAME"
-                                                    className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                    className="h-14 border-0 border-b border-white/10 text-sm font-montserrat tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                     required
                                                 />
                                             </div>
@@ -270,7 +270,7 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="PARTNER@DOMAIN.COM"
-                                                    className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                    className="h-14 border-0 border-b border-white/10 text-sm font-montserrat tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                     required
                                                 />
                                             </div>
@@ -285,7 +285,7 @@ export default function Sales() {
                                                 value={form.company}
                                                 onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                 placeholder="LEGAL ENTITY NAME"
-                                                className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                className="h-14 border-0 border-b border-white/10 text-sm font-montserrat tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                 required
                                             />
                                         </div>
@@ -296,10 +296,10 @@ export default function Sales() {
                                                     Annual Portfolio GMV
                                                 </label>
                                                 <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
-                                                    <SelectTrigger className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent rounded-none px-0 focus:ring-0 text-white">
+                                                    <SelectTrigger className="h-14 border-0 border-b border-white/10 text-sm font-montserrat tracking-tight bg-transparent rounded-none px-0 focus:ring-0 text-white">
                                                         <SelectValue placeholder="SELECT RANGE" />
                                                     </SelectTrigger>
-                                                    <SelectContent className="font-mono text-xs bg-[#050505] border-white/10 text-white">
+                                                    <SelectContent className="font-montserrat text-xs bg-[#050505] border-white/10 text-white">
                                                         <SelectItem value="$1M - $5M">$1M - $5M</SelectItem>
                                                         <SelectItem value="$5M - $10M">$5M - $10M</SelectItem>
                                                         <SelectItem value="$10M - $25M">$10M - $25M</SelectItem>
@@ -317,7 +317,7 @@ export default function Sales() {
                                                     value={form.sellerId}
                                                     onChange={(e) => setForm({ ...form, sellerId: e.target.value })}
                                                     placeholder="AMAZON SELLER ID (OPTIONAL)"
-                                                    className="h-14 border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                    className="h-14 border-0 border-b border-white/10 text-sm font-montserrat tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
                                                 />
                                             </div>
                                         </div>
@@ -330,16 +330,16 @@ export default function Sales() {
                                                 value={form.message}
                                                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                                                 placeholder="DESCRIBE DATA ARCHITECTURE AND SPECIFIC DRIFT CHALLENGES..."
-                                                className="min-h-[120px] border-0 border-b border-white/10 text-sm font-mono tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none resize-none px-0 py-4 text-white placeholder:text-white/10"
+                                                className="min-h-[120px] border-0 border-b border-white/10 text-sm font-montserrat tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none resize-none px-0 py-4 text-white placeholder:text-white/10"
                                             />
                                         </div>
 
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="w-full h-16 bg-white hover:bg-white/90 text-black text-xs font-bold font-mono tracking-widest uppercase rounded-none transition-all">
+                                            className="w-full h-16 bg-white hover:bg-white/90 text-black text-xs font-bold font-montserrat tracking-widest uppercase rounded-xl transition-all">
                                             {isSubmitting ? (
-                                                <>Encrypting Application...</>
+                                                <>Processing Application...</>
                                             ) : (
                                                 <>
                                                     Request Institutional Briefing
