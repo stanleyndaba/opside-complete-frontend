@@ -82,8 +82,8 @@ export default function Sales() {
             <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${scrolled ? 'bg-[#050505]/80 backdrop-blur-md border-white/10 py-4' : 'bg-transparent border-transparent py-6'}`}>
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-3 group">
-                        <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
-                        <span className="text-sm font-bold tracking-widest uppercase font-mono text-white/90">Enterprise Node</span>
+                        <img src="/logoimagetwo.png" alt="Margin" className="h-4 sm:h-5 w-auto invert brightness-0" />
+                        <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase font-mono text-white/90">Enterprise Node</span>
                     </Link>
                     <div className="flex items-center gap-8">
                         <Link to="/contact">
@@ -110,8 +110,8 @@ export default function Sales() {
                             <span className="text-[10px] font-bold text-white/40 font-montserrat tracking-widest uppercase">High Volume Gateway</span>
                         </div>
 
-                        <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight text-white">
-                            Scale Autonomously <br />
+                        <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-[1.1] tracking-tight text-white">
+                            Scale Autonomously <br className="hidden sm:block" />
                             with Margin Enterprise
                         </h1>
 
@@ -124,16 +124,16 @@ export default function Sales() {
                 </section>
 
                 {/* The Qualifier Section */}
-                <section className="bg-white/[0.02] border-y border-white/5 py-32 mb-32">
+                <section className="bg-white/[0.02] border-y border-white/5 py-16 md:py-32 mb-16 md:mb-32">
                     <div className="container mx-auto px-6 max-w-5xl">
-                        <div className="grid md:grid-cols-2 gap-24 font-montserrat">
+                        <div className="grid md:grid-cols-2 gap-12 md:gap-24 font-montserrat">
                             <div>
                                 <h2 className="text-[11px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase mb-12">System Requirement</h2>
                                 <h3 className="text-3xl font-merriweather font-bold mb-8 text-white">
                                     Is Your Infrastructure <br />
                                     Ready for Scale?
                                 </h3>
-                                <p className="text-white/60 leading-relaxed">
+                                <p className="text-white/60 leading-relaxed text-sm sm:text-base">
                                     To ensure dedicated forensic validation and priority API rate limits,
                                     Enterprise access is strictly optimized for high-complexity operations.
                                     Standard private label accounts are recommended for the Core Plan's autonomous speed.
@@ -169,8 +169,8 @@ export default function Sales() {
                 </section>
 
                 {/* Intelligence Section (Features) */}
-                <section className="container mx-auto px-6 max-w-5xl mb-40">
-                    <div className="grid md:grid-cols-3 gap-16">
+                <section className="container mx-auto px-6 max-w-5xl mb-24 md:mb-40">
+                    <div className="grid md:grid-cols-3 gap-12 md:gap-16">
                         {[
                             {
                                 title: "Forensic Ledger",
@@ -219,7 +219,7 @@ export default function Sales() {
 
                         {/* Inquiry Form */}
                         <div className="lg:col-start-3 lg:col-span-8">
-                            <div className="p-8 md:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm rounded-2xl">
+                            <div className="p-6 sm:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm rounded-2xl">
                                 {isSubmitted ? (
                                     <div className="text-center py-20">
                                         <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-8">

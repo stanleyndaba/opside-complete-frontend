@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download, Wifi, WifiOff, Info } from 'lucide-react';
-const GmailIcon = '/G.png';
+const GmailIcon = '/gmailicon.png';
 const OutlookIcon = '/outlookicon.webp';
 const GoogleDriveIcon = '/gd.png';
 const DropboxIcon = '/Dropbox_Icon.svg.png';
@@ -1389,7 +1389,7 @@ export default function Sync() {
 
         <div className="relative z-10 max-w-6xl mx-auto space-y-8">
           {/* Page Header - Screenshot Redesign - Aligned with Activity Log */}
-          <div className="mb-12 max-w-4xl mx-auto">
+          <div className="mb-12 max-w-4xl mx-auto md:mx-auto lg:mx-auto">
             <div className="flex items-start justify-between">
               <div className="space-y-6">
                 <div>
@@ -1419,7 +1419,7 @@ export default function Sync() {
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-4">
+          <div className="max-w-4xl mx-auto md:mx-auto lg:mx-auto space-y-4">
             {/* Add shimmer animation to global styles */}
             <style>{`
               @keyframes shimmer {

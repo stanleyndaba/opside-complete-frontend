@@ -465,8 +465,8 @@ const Index = () => {
                   <div className="h-[1px] w-8 bg-gray-200" />
                 </div>
                 <h2 className="text-3xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
-                  Detect 18+ Hidden <br className="hidden sm:block" />
-                  Discrepancies in &lt; 30s
+                  &lt;30s Automated <br className="hidden sm:block" />
+                  Ledger Reconciliation
                 </h2>
                 <p className="text-base md:text-lg text-white/50 font-montserrat leading-relaxed max-w-xl mx-auto">
                   Watch our real-time audit engine scan a $1M+ seller portfolio for missed capital and logistical errors.
