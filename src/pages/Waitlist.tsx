@@ -46,11 +46,9 @@ const Waitlist = () => {
 
     const handleSelection = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        // Auto-advance for some fields if it makes sense, but better to let user click Next
     };
 
     const nextStep = () => {
-        // Simple validation
         if (step === 1 && (!formData.user_type || !formData.annual_revenue)) {
             toast({ title: "Identification Required", description: "Please select your profile and revenue band.", variant: "destructive" });
             return;
@@ -77,20 +75,20 @@ const Waitlist = () => {
             if (response.ok) {
                 setIsSuccess(true);
                 toast({
-                    title: response.data?.already_registered ? "Already Registered" : "Access Requested",
-                    description: response.data?.message || "You have been added to the priority queue.",
+                    title: response.data?.already_registered ? "ALREADY REGISTERED" : "PROTOCOL SECURED",
+                    description: response.data?.message || "Identity verified. Transmission complete.",
                 });
             } else {
                 toast({
-                    title: "Request Failed",
-                    description: response.error || "Something went wrong. Please try again.",
+                    title: "SIGNAL FAILURE",
+                    description: response.error || "Unable to establish secure connection.",
                     variant: "destructive"
                 });
             }
         } catch (error) {
             toast({
-                title: "Error",
-                description: "An unexpected network error occurred.",
+                title: "SYSTEM ERROR",
+                description: "An unexpected network disruption occurred.",
                 variant: "destructive"
             });
         } finally {
@@ -99,51 +97,57 @@ const Waitlist = () => {
     };
 
     const sectionVariants = {
-        initial: { opacity: 0, x: 20 },
+        initial: { opacity: 0, x: 10 },
         animate: { opacity: 1, x: 0 },
-        exit: { opacity: 0, x: -20 }
+        exit: { opacity: 0, x: -10 }
     };
 
     return (
-        <div className="min-h-screen flex flex-col text-white bg-[#050505] selection:bg-emerald-500/30">
+        <div className="min-h-screen flex flex-col text-white bg-[#050505] selection:bg-emerald-500/30 font-montserrat relative overflow-hidden">
+            {/* Technical Background Layer */}
+            <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+
+            {/* Background Gradients */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <div className="absolute top-[10%] left-[5%] w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full" />
+                <div className="absolute top-[20%] right-[0%] w-[500px] h-[500px] bg-blue-500/3 blur-[100px] rounded-full" />
+                <div className="absolute -bottom-[10%] left-[20%] w-[700px] h-[700px] bg-emerald-600/5 blur-[130px] rounded-full" />
+            </div>
+
             <PublicNavbar />
 
-            <main className="flex-1 relative flex flex-col items-center justify-center pt-32 pb-20 px-6 overflow-hidden">
-                {/* Animated Background Elements */}
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-[10%] left-[5%] w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full animate-pulse" />
-                    <div className="absolute top-[20%] right-[0%] w-[500px] h-[500px] bg-blue-500/5 blur-[100px] rounded-full" />
-                    <div className="absolute -bottom-[10%] left-[20%] w-[700px] h-[700px] bg-emerald-600/5 blur-[130px] rounded-full" />
-                    <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-                </div>
-
+            <main className="flex-1 relative flex flex-col items-center justify-center pt-32 pb-20 px-6 z-10">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="w-full max-w-2xl relative z-10"
+                    className="w-full max-w-xl"
                 >
                     {/* Header */}
-                    <div className="text-center mb-10 space-y-4">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
-                            <Zap className="w-3 h-3" />
-                            Velvet Rope Access
+                    <div className="text-center mb-12 space-y-6">
+                        <div className="inline-flex items-center gap-3 px-3 py-1 bg-white/5 border border-white/10 rounded-sm">
+                            <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">Waitlist Protocol</span>
+                            <div className="h-3 w-[1px] bg-white/10" />
+                            <span className="text-[10px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase">V.01.NODE</span>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-merriweather font-bold leading-tight tracking-tight">
-                            Request <span className="text-emerald-500 italic">Early Access</span>
+
+                        <h1 className="text-4xl md:text-6xl font-merriweather font-bold leading-tight tracking-tight">
+                            Request <br />
+                            <span className="text-emerald-500 italic">Early Access</span>
                         </h1>
-                        <p className="text-white/40 font-montserrat text-base max-w-md mx-auto leading-relaxed">
-                            Currently at capacity. Join the priority waitlist for the next release.
+                        <p className="text-white/40 font-montserrat text-sm max-w-sm mx-auto leading-relaxed border-t border-white/5 pt-6 uppercase tracking-widest font-medium">
+                            Currently at capacity. <br />
+                            Join the priority node release.
                         </p>
                     </div>
 
-                    {/* Progress Indicator */}
+                    {/* Progress Indicator - Technical Style */}
                     {!isSuccess && (
-                        <div className="flex items-center justify-center gap-2 mb-8">
+                        <div className="flex items-center justify-between gap-1 mb-8 max-w-[200px] mx-auto overflow-hidden border border-white/10 p-1">
                             {[1, 2, 3].map((s) => (
                                 <div
                                     key={s}
-                                    className={`h-1 rounded-full transition-all duration-500 ${step >= s ? 'w-8 bg-emerald-500' : 'w-4 bg-white/10'}`}
+                                    className={`h-1.5 flex-1 transition-all duration-500 ${step >= s ? 'bg-emerald-500' : 'bg-white/5'}`}
                                 />
                             ))}
                         </div>
@@ -158,13 +162,19 @@ const Waitlist = () => {
                                 animate="animate"
                                 exit="exit"
                                 transition={{ duration: 0.3 }}
-                                className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[32px] p-8 md:p-10 shadow-[0_40px_100px_rgba(0,0,0,0.5)]"
+                                className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-8 md:p-12 shadow-[0_50px_100px_rgba(0,0,0,0.6)] relative group"
                             >
+                                {/* Form Corner Accents */}
+                                <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/20" />
+                                <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/20" />
+                                <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-white/20" />
+                                <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/20" />
+
                                 {step === 1 && (
-                                    <div className="space-y-8">
+                                    <div className="space-y-10">
                                         <div className="space-y-4">
-                                            <Label className="text-xs uppercase font-mono tracking-widest text-white/40 ml-1">Identity Profile</Label>
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                            <Label className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase ml-1">Identity Profile</Label>
+                                            <div className="grid grid-cols-1 gap-3">
                                                 {[
                                                     { id: 'brand', label: 'Brand Owner', icon: Building2 },
                                                     { id: 'agency', label: 'Agency / Aggregator', icon: Briefcase },
@@ -173,13 +183,14 @@ const Waitlist = () => {
                                                     <button
                                                         key={item.id}
                                                         onClick={() => handleSelection('user_type', item.id)}
-                                                        className={`flex flex-col items-center justify-center gap-3 p-4 rounded-2xl border transition-all duration-300 ${formData.user_type === item.id
-                                                                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
-                                                                : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:border-white/20'
+                                                        className={`flex items-center gap-4 p-5 rounded-none border transition-all duration-300 group ${formData.user_type === item.id
+                                                            ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
+                                                            : 'bg-white/[0.01] border-white/10 text-white/40 hover:bg-white/5 hover:border-white/20'
                                                             }`}
                                                     >
-                                                        <item.icon className="w-5 h-5" />
-                                                        <span className="text-xs font-semibold">{item.label}</span>
+                                                        <item.icon className={`w-4 h-4 transition-colors ${formData.user_type === item.id ? 'text-emerald-500' : 'text-white/20 group-hover:text-white/40'}`} />
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
+                                                        {formData.user_type === item.id && <Sparkles className="w-3 h-3 ml-auto animate-pulse" />}
                                                     </button>
                                                 ))}
                                             </div>
@@ -188,17 +199,16 @@ const Waitlist = () => {
                                         <AnimatePresence>
                                             {formData.user_type === 'agency' && (
                                                 <motion.div
-                                                    initial={{ opacity: 0, height: 0 }}
-                                                    animate={{ opacity: 1, height: 'auto' }}
-                                                    exit={{ opacity: 0, height: 0 }}
-                                                    className="space-y-2 overflow-hidden"
+                                                    initial={{ opacity: 0, y: -5 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    className="space-y-4"
                                                 >
-                                                    <Label htmlFor="brand_count" className="text-xs uppercase font-mono tracking-widest text-white/40 ml-1">Brands Managed</Label>
+                                                    <Label htmlFor="brand_count" className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase ml-1">Brands Managed</Label>
                                                     <Input
                                                         id="brand_count"
                                                         name="brand_count"
-                                                        placeholder="How many brands?"
-                                                        className="h-12 bg-white/5 border-white/10 focus:border-emerald-500/50 rounded-xl"
+                                                        placeholder="ENTER INTEGER"
+                                                        className="h-12 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-mono text-xs tracking-widest placeholder:text-white/10"
                                                         value={formData.brand_count}
                                                         onChange={handleInputChange}
                                                     />
@@ -206,17 +216,17 @@ const Waitlist = () => {
                                             )}
                                         </AnimatePresence>
 
-                                        <div className="space-y-2">
-                                            <Label className="text-xs uppercase font-mono tracking-widest text-white/40 ml-1">Annual FBA Revenue</Label>
+                                        <div className="space-y-4">
+                                            <Label className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase ml-1">Volume Band (Annual)</Label>
                                             <Select
                                                 onValueChange={(v) => handleSelection('annual_revenue', v)}
                                                 value={formData.annual_revenue}
                                             >
-                                                <SelectTrigger className="h-14 bg-white/5 border-white/10 focus:border-emerald-500/50 rounded-xl text-left">
-                                                    <SelectValue placeholder="Select Revenue Band" />
+                                                <SelectTrigger className="h-14 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none text-left font-mono text-[10px] tracking-[0.2em] uppercase transition-all">
+                                                    <SelectValue placeholder="SELECT RANGE" />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-[#0a0a0a] border-white/10 text-white">
-                                                    <SelectItem value="starter">Just Starting (&lt;$200k)</SelectItem>
+                                                <SelectContent className="bg-[#0a0a0a] border-white/10 text-white rounded-none font-mono text-[10px] tracking-widest uppercase">
+                                                    <SelectItem value="starter">Starter (&lt;$200k)</SelectItem>
                                                     <SelectItem value="growing">Growing ($200k - $1M)</SelectItem>
                                                     <SelectItem value="scaling">Scaling ($1M - $10M)</SelectItem>
                                                     <SelectItem value="enterprise">Enterprise ($10M+)</SelectItem>
@@ -224,165 +234,172 @@ const Waitlist = () => {
                                             </Select>
                                         </div>
 
-                                        <div className="pt-4">
+                                        <div className="pt-6">
                                             <Button
                                                 onClick={nextStep}
-                                                className="w-full h-14 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-300 rounded-full font-bold flex items-center justify-center gap-2 group"
+                                                className="w-full h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-2 group shadow-2xl"
                                             >
-                                                Next Step <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                Advance Signal <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                             </Button>
                                         </div>
                                     </div>
                                 )}
 
                                 {step === 2 && (
-                                    <div className="space-y-8">
-                                        <div className="space-y-6">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="email" className="text-xs uppercase font-mono tracking-widest text-white/40 ml-1">Work Identity (Email)</Label>
+                                    <div className="space-y-10">
+                                        <div className="space-y-8">
+                                            <div className="space-y-4">
+                                                <Label htmlFor="email" className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase ml-1">Electronic Mail</Label>
                                                 <div className="relative">
-                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
                                                     <Input
                                                         id="email"
                                                         name="email"
                                                         type="email"
-                                                        placeholder="satoshi@margin.labs"
-                                                        className="h-14 pl-12 bg-white/5 border-white/10 focus:border-emerald-500/50 rounded-xl"
+                                                        placeholder="PARTNER@DOMAIN.COM"
+                                                        className="h-14 pl-12 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-mono text-[11px] tracking-widest placeholder:text-white/10"
                                                         value={formData.email}
                                                         onChange={handleInputChange}
                                                     />
                                                 </div>
                                             </div>
 
-                                            <div className="space-y-2">
-                                                <Label htmlFor="contact_handle" className="text-xs uppercase font-mono tracking-widest text-white/40 ml-1">WhatsApp / Telegram (Optional)</Label>
+                                            <div className="space-y-4">
+                                                <Label htmlFor="contact_handle" className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase ml-1">Priority Channel (Optional)</Label>
                                                 <div className="relative">
-                                                    <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                                                    <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
                                                     <Input
                                                         id="contact_handle"
                                                         name="contact_handle"
-                                                        placeholder="@username or +1..."
-                                                        className="h-14 pl-12 bg-white/5 border-white/10 focus:border-emerald-500/50 rounded-xl"
+                                                        placeholder="WHATSAPP / TELEGRAM GATEWAY"
+                                                        className="h-14 pl-12 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-mono text-[10px] tracking-widest placeholder:text-white/10"
                                                         value={formData.contact_handle}
                                                         onChange={handleInputChange}
                                                     />
                                                 </div>
-                                                <p className="text-[10px] text-white/20 font-mono ml-1 italic">For faster onboarding updates.</p>
+                                                <p className="text-[9px] text-white/20 font-mono uppercase tracking-[0.2em] ml-1">For High-Velocity Node Status Updates.</p>
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-4 pt-4">
+                                        <div className="flex gap-4 pt-6">
                                             <Button
-                                                variant="ghost"
+                                                variant="outline"
                                                 onClick={prevStep}
-                                                className="h-14 px-6 border border-white/10 rounded-full hover:bg-white/5"
+                                                className="h-16 px-8 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
                                             >
-                                                <ChevronLeft className="w-5 h-5" />
+                                                <ChevronLeft className="w-4 h-4 text-white/40" />
                                             </Button>
                                             <Button
                                                 onClick={nextStep}
-                                                className="flex-1 h-14 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-300 rounded-full font-bold flex items-center justify-center gap-2 group"
+                                                className="flex-1 h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-2 group shadow-2xl"
                                             >
-                                                Continue <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                Confirm Node <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                             </Button>
                                         </div>
                                     </div>
                                 )}
 
                                 {step === 3 && (
-                                    <div className="space-y-8">
-                                        <div className="space-y-4">
-                                            <Label className="text-xs uppercase font-mono tracking-widest text-white/40 ml-1">Primary Objective</Label>
+                                    <div className="space-y-10">
+                                        <div className="space-y-6">
+                                            <Label className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase ml-1">Strategic Objective</Label>
                                             <div className="grid grid-cols-1 gap-3">
                                                 {[
-                                                    { id: 'recover', label: 'Recover lost profit (Cash Flow)', desc: 'Focus on maximum recovery accuracy.' },
-                                                    { id: 'audit', label: 'Audit the last 18 months (Compliance)', desc: 'Comprehensive historical deep-dive.' },
-                                                    { id: 'automate', label: "Automate my team's workload (Time)", desc: 'Autopilot dispute management.' }
+                                                    { id: 'recover', label: 'Recover Profit Flow', desc: 'Forensic accuracy optimization.' },
+                                                    { id: 'audit', label: '18M Historical Audit', desc: 'Compliance & Asset Reconciliation.' },
+                                                    { id: 'automate', label: "Autonomous Workflow", desc: 'Autopilot dispute management layer.' }
                                                 ].map((item) => (
                                                     <button
                                                         key={item.id}
                                                         onClick={() => handleSelection('primary_goal', item.id)}
-                                                        className={`flex items-start gap-4 p-5 rounded-2xl border text-left transition-all duration-300 ${formData.primary_goal === item.id
-                                                                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400'
-                                                                : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:border-white/20'
+                                                        className={`flex items-start gap-4 p-5 rounded-none border text-left transition-all duration-300 ${formData.primary_goal === item.id
+                                                            ? 'bg-emerald-500/10 border-emerald-500/50'
+                                                            : 'bg-white/[0.01] border-white/10 hover:bg-white/5 hover:border-white/20'
                                                             }`}
                                                     >
-                                                        <div className={`mt-1 w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.primary_goal === item.id ? 'border-emerald-500 bg-emerald-500' : 'border-white/20'}`}>
-                                                            {formData.primary_goal === item.id && <div className="w-1.5 h-1.5 bg-black rounded-full" />}
+                                                        <div className={`mt-1.5 w-3 h-3 rounded-none border flex items-center justify-center ${formData.primary_goal === item.id ? 'border-emerald-500 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'border-white/20'}`}>
                                                         </div>
-                                                        <div className="space-y-1">
-                                                            <div className="text-sm font-bold">{item.label}</div>
-                                                            <div className="text-[10px] opacity-60 font-mono uppercase tracking-wider">{item.desc}</div>
+                                                        <div className="space-y-2">
+                                                            <div className={`text-[11px] font-bold uppercase tracking-tight transition-colors ${formData.primary_goal === item.id ? 'text-emerald-400' : 'text-white/40'}`}>{item.label}</div>
+                                                            <div className="text-[9px] font-mono uppercase tracking-widest text-white/20">{item.desc}</div>
                                                         </div>
                                                     </button>
                                                 ))}
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-4 pt-4">
+                                        <div className="flex gap-4 pt-6">
                                             <Button
-                                                variant="ghost"
+                                                variant="outline"
                                                 onClick={prevStep}
                                                 disabled={isSubmitting}
-                                                className="h-14 px-6 border border-white/10 rounded-full hover:bg-white/5"
+                                                className="h-16 px-8 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
                                             >
-                                                <ChevronLeft className="w-5 h-5" />
+                                                <ChevronLeft className="w-4 h-4 text-white/40" />
                                             </Button>
                                             <Button
                                                 onClick={handleSubmit}
                                                 disabled={isSubmitting}
-                                                className="flex-1 h-14 bg-emerald-500 text-white hover:bg-emerald-400 transition-all duration-300 rounded-full font-bold flex items-center justify-center gap-2 group shadow-[0_15px_30px_rgba(16,185,129,0.2)]"
+                                                className={`flex-1 h-16 transition-all duration-500 rounded-none font-bold text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-2 group shadow-2xl ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-emerald-500 text-white hover:bg-emerald-400'
+                                                    }`}
                                             >
                                                 {isSubmitting ? (
-                                                    <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="w-3.5 h-3.5 border border-white/20 border-t-white rounded-full animate-spin" />
+                                                        ENCRYPTING...
+                                                    </div>
                                                 ) : (
                                                     <>
-                                                        Join Priority List <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                        Initialize Audit <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                                     </>
                                                 )}
                                             </Button>
                                         </div>
-                                        <p className="text-[10px] text-white/20 font-mono text-center uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-                                            <ShieldCheck className="w-3 h-3 text-emerald-500/50" />
-                                            JP Morgan Class Security Standard.
-                                        </p>
+
+                                        <div className="text-center space-y-4 pt-4">
+                                            <p className="text-[9px] text-white/20 font-mono text-center uppercase tracking-[0.3em] flex items-center justify-center gap-3">
+                                                <ShieldCheck className="w-3 h-3 text-emerald-500/30" />
+                                                JP Morgan Class Security Standard
+                                            </p>
+                                        </div>
                                     </div>
                                 )}
                             </motion.div>
                         ) : (
                             <motion.div
                                 key="success"
-                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-[32px] p-12 md:p-16 shadow-[0_40px_100px_rgba(0,0,0,0.5)] text-center space-y-8"
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="bg-white/[0.02] border border-white/10 p-12 md:p-20 shadow-[0_50px_100px_rgba(0,0,0,0.6)] text-center space-y-10 relative"
                             >
+                                <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-emerald-500/40" />
+                                <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-emerald-500/40" />
+                                <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-emerald-500/40" />
+                                <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-emerald-500/40" />
+
                                 <div className="relative mx-auto w-24 h-24 flex items-center justify-center">
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{ type: "spring", damping: 10, stiffness: 100 }}
-                                        className="absolute inset-0 bg-emerald-500/20 rounded-full animate-ping"
-                                    />
-                                    <div className="relative z-10 w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center text-black">
+                                    <div className="absolute inset-0 bg-emerald-500/10 rounded-none blur-2xl animate-pulse" />
+                                    <div className="w-20 h-20 border border-emerald-500/50 flex items-center justify-center text-emerald-500">
                                         <CheckCircle2 className="w-10 h-10" />
                                     </div>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <h3 className="text-3xl font-merriweather font-bold">Protocol Secured</h3>
-                                    <p className="text-white/50 font-montserrat text-lg max-w-md mx-auto leading-relaxed">
-                                        Identity verified. You have been added to the priority queue. A specialized agent will reach out when a node becomes available.
+                                <div className="space-y-6">
+                                    <h3 className="text-3xl font-merriweather font-bold uppercase tracking-tight">Protocol Operational</h3>
+                                    <p className="text-white/40 font-montserrat text-sm max-w-sm mx-auto leading-relaxed uppercase tracking-widest font-medium">
+                                        Priority queue assigned. <br />
+                                        Your node identifier is currently being encrypted and indexed.
                                     </p>
                                 </div>
 
-                                <div className="pt-6">
+                                <div className="pt-10">
                                     <Button
-                                        variant="ghost"
+                                        variant="outline"
                                         asChild
-                                        className="text-white/40 hover:text-white hover:bg-white/5 rounded-full font-mono text-xs uppercase tracking-widest gap-2"
+                                        className="text-white/40 hover:text-white bg-transparent border-white/10 rounded-none h-14 px-10 font-mono text-[10px] uppercase tracking-[0.3em] transition-all"
                                     >
                                         <a href="/">
-                                            Return to Command Center <ArrowRight className="w-3 h-3" />
+                                            Return to Node <ArrowRight className="w-3 h-3 ml-2" />
                                         </a>
                                     </Button>
                                 </div>
