@@ -254,19 +254,19 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   return (
     <div className={cn(
-      "flex flex-row items-center gap-0 border border-white/10",
+      "flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-0",
       isFullWidth ? "w-full" : "w-auto"
     )}>
-      <div className="min-w-[110px] sm:min-w-[180px] flex-1 sm:flex-none">
+      <div className="flex-1 sm:flex-none sm:min-w-[180px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-black border-none text-white font-bold focus:ring-0 transition-all px-2 sm:px-4 rounded-none h-11 text-[11px] sm:text-xs",
+              "w-full bg-black border border-white/10 sm:border-none text-white font-bold focus:ring-0 transition-all px-4 rounded-xl sm:rounded-none h-12 sm:h-11 text-xs sm:text-[11px]",
               buttonClassName
             )}>
-            <SelectValue placeholder="Marketplace" />
+            <SelectValue placeholder="Select Marketplace" />
           </SelectTrigger>
-          <SelectContent className="bg-black border-none shadow-2xl rounded-none text-white">
+          <SelectContent className="bg-black border-white/10 shadow-2xl rounded-xl sm:rounded-none text-white">
             {marketplaces.map((mp) => (
               <SelectItem key={mp.id} value={mp.id} className="text-sm font-normal py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
                 {mp.name}
@@ -280,20 +280,20 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
-          "flex-[1.5] sm:flex-none",
-          "justify-center font-bold transition-all active:scale-95 px-3 sm:px-6 shrink-0 border-none items-center gap-1.5 rounded-none h-11 text-[11px] sm:text-xs",
-          "bg-white text-black hover:bg-white/90",
+          "w-full sm:w-auto",
+          "justify-center font-bold transition-all active:scale-95 px-6 shrink-0 items-center gap-2 rounded-xl sm:rounded-none h-12 sm:h-11 text-xs sm:text-[11px]",
+          "bg-white text-black hover:bg-white/90 sm:border-l sm:border-white/10",
           connecting && 'opacity-80',
           buttonClassName?.replace('rounded-full', '')
         )}>
         {connecting ? (
           <>
-            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+            <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
             Wait...
           </>
         ) : (
           <>
-            {label} <ChevronRight className="h-3 w-3" />
+            {label} <ChevronRight className="h-4 w-4" />
           </>
         )}
       </Button>
