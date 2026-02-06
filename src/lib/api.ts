@@ -276,6 +276,18 @@ function getFrontendUrl(): string {
 }
 
 export const api = {
+  // Waitlist
+  joinWaitlist: (data: {
+    email: string;
+    full_name?: string;
+    company_name?: string;
+    monthly_volume?: string;
+    referral_source?: string;
+  }) => requestJson<{ success: boolean; message: string; already_registered?: boolean }>('/api/waitlist', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+
   // Export buildApiUrl for use in other modules
   buildApiUrl,
 

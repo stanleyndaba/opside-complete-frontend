@@ -75,6 +75,11 @@ export const PublicNavbar = () => {
                             <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>Pricing</span>
                         </Link>
                         <Link
+                            to="/waitlist"
+                            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
+                            <span className="text-[13px] font-montserrat text-emerald-400" style={{ fontWeight: 600 }}>Waitlist</span>
+                        </Link>
+                        <Link
                             to="/about"
                             className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-[16px] transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
                             <span className="text-[13px] font-montserrat text-white" style={{ fontWeight: 600 }}>About Us</span>
@@ -133,6 +138,12 @@ export const PublicNavbar = () => {
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors">
                                     Pricing
+                                </Link>
+                                <Link
+                                    to="/waitlist"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2.5 text-sm font-medium text-emerald-400/70 hover:text-emerald-400 transition-colors">
+                                    Waitlist
                                 </Link>
                                 <Link
                                     to="/about"

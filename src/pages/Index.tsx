@@ -441,6 +441,9 @@ const Index = () => {
                 {/* Buttons - centered */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" />
+                  <Button asChild variant="outline" className="w-full sm:w-auto min-w-[200px] h-11 border-white/10 bg-white/5 hover:bg-white/10 text-white rounded-none">
+                    <Link to="/waitlist">Join Waitlist</Link>
+                  </Button>
                 </div>
               </div>
             </motion.div>
