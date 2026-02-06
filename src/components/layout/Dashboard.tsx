@@ -87,6 +87,14 @@ export function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [settlementRate, setSettlementRate] = useState<number | null>(null);
+  const [dashboardMetrics, setDashboardMetrics] = useState<{
+    today: number;
+    todayGrowth: number;
+    thisWeek: number;
+    thisWeekGrowth: number;
+    thisMonth: number;
+    thisMonthGrowth: number;
+  } | null>(null);
   const [isActivityExpanded, setIsActivityExpanded] = useState<boolean>(true);
   const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
   const [showSyncModal, setShowSyncModal] = useState<boolean>(false);
@@ -593,6 +601,7 @@ export function Dashboard() {
         //   setNextPaymentDate(null);
         // }
         if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
+        if (d.dashboard) setDashboardMetrics(d.dashboard);
         setLastUpdated(new Date().toLocaleTimeString());
       }
     }
@@ -765,12 +774,26 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                {/* Performance Analytics Badges */}
                 <div className="hidden xl:flex items-center gap-10">
                   {[
-                    { label: 'RECENT_RETURNS', value: 1242.00, growth: 12.5, trend: 'up' },
-                    { label: '7D_RECOVERED', value: 8432.50, growth: 8.2, trend: 'up' },
-                    { label: '30D_TOTAL', value: 34210.00, growth: 15.4, trend: 'up' }
+                    {
+                      label: 'Today',
+                      value: dashboardMetrics?.today || 0,
+                      growth: dashboardMetrics?.todayGrowth || 0,
+                      trend: (dashboardMetrics?.todayGrowth || 0) >= 0 ? 'up' : 'down'
+                    },
+                    {
+                      label: 'This Week',
+                      value: dashboardMetrics?.thisWeek || 0,
+                      growth: dashboardMetrics?.thisWeekGrowth || 0,
+                      trend: (dashboardMetrics?.thisWeekGrowth || 0) >= 0 ? 'up' : 'down'
+                    },
+                    {
+                      label: 'This Month',
+                      value: dashboardMetrics?.thisMonth || 0,
+                      growth: dashboardMetrics?.thisMonthGrowth || 0,
+                      trend: (dashboardMetrics?.thisMonthGrowth || 0) >= 0 ? 'up' : 'down'
+                    }
                   ].map((metric, idx) => (
                     <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
                       <span className="text-[9px] font-mono font-bold text-white/20 tracking-[0.2em] uppercase">{metric.label}</span>
@@ -782,7 +805,7 @@ export function Dashboard() {
                           "px-2 py-0.5 rounded-sm text-[9px] font-mono font-bold",
                           metric.trend === 'up' ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
                         )}>
-                          {metric.trend === 'up' ? '+' : '-'}{metric.growth}%
+                          {metric.trend === 'up' ? '+' : '-'}{Math.abs(metric.growth)}%
                         </div>
                       </div>
                     </div>
