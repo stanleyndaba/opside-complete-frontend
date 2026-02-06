@@ -427,8 +427,8 @@ const Index = () => {
                   </div>
                 </div>
 
-                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-5xl">
-                  The <span className="font-merriweather bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Financial Infrastructure</span> <br className="hidden lg:block" />
+                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
+                  Financial Infrastructure <br className="hidden lg:block" />
                   for Amazon FBA
                 </h1>
 

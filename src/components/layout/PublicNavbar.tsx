@@ -89,12 +89,12 @@ export const PublicNavbar = () => {
                             <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-none p-1 min-w-[160px]">
                                 <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
                                     <Link to="/pricing" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Pricing</span>
+                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Pricing</span>
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
                                     <Link to="/contact" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Talk to Sales</span>
+                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Talk to Sales</span>
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -164,13 +164,13 @@ export const PublicNavbar = () => {
                                                 <Link
                                                     to="/pricing"
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors font-montserrat">
+                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
                                                     Pricing
                                                 </Link>
                                                 <Link
                                                     to="/contact"
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white/50 hover:text-white transition-colors font-montserrat">
+                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
                                                     Talk to Sales
                                                 </Link>
                                             </div>
