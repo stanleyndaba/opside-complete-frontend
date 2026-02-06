@@ -376,7 +376,7 @@ const Index = () => {
       <PublicNavbar />
       <div className="relative z-10" style={{ background: '#050505' }}>
         <main className="flex-1 relative z-10" style={{ background: '#050505' }}>
-          <section className="relative w-full pt-24 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
+          <section className="relative w-full pt-32 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
             {/* Premium Dual-Layer Background */}
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
               {/* Layer 1: Radial Mesh Gradients */}

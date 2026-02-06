@@ -257,16 +257,20 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       "flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-0",
       isFullWidth ? "w-full" : "w-auto"
     )}>
-      <div className="flex-1 sm:flex-none sm:min-w-[180px]">
+      <div className="w-[140px] sm:w-auto sm:min-w-[180px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-black border border-white/10 sm:border-none text-white font-bold focus:ring-0 transition-all px-4 rounded-xl sm:rounded-none h-12 sm:h-11 text-xs sm:text-[11px]",
+              "w-full bg-black border border-white/10 sm:border-none text-white font-bold focus:ring-0 transition-all px-3 rounded-xl sm:rounded-none h-12 sm:h-11 text-xs sm:text-[11px]",
               buttonClassName
             )}>
-            <SelectValue placeholder="Select Marketplace" />
+            <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+              <span className="truncate">
+                <SelectValue placeholder="Region" />
+              </span>
+            </div>
           </SelectTrigger>
-          <SelectContent className="bg-black border-white/10 shadow-2xl rounded-xl sm:rounded-none text-white">
+          <SelectContent className="bg-black border-white/10 shadow-2xl rounded-xl sm:rounded-none text-white min-w-[200px]">
             {marketplaces.map((mp) => (
               <SelectItem key={mp.id} value={mp.id} className="text-sm font-normal py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
                 {mp.name}
