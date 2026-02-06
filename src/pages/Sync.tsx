@@ -1387,14 +1387,14 @@ export default function Sync() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="relative z-10 max-w-6xl mx-auto space-y-8">
+        <div className="relative z-10 max-w-6xl mx-auto space-y-8 pt-12 md:pt-16">
           {/* Page Header - Screenshot Redesign - Aligned with Activity Log */}
           <div className="mb-12 max-w-4xl mx-auto md:mx-auto lg:mx-auto">
             <div className="flex items-start justify-between">
               <div className="space-y-6">
                 <div>
-                  <h1 className="text-2xl font-bold text-white tracking-tight uppercase font-mono">Financial Audit Engine</h1>
-                  <p className="text-[13px] text-white/40 mt-1 font-normal uppercase tracking-widest font-mono">Powered by Amazon SP-API</p>
+                  <h1 className="text-2xl font-bold text-white tracking-tight font-merriweather">Financial Audit Engine</h1>
+                  <p className="text-[13px] text-white/40 mt-1 font-normal font-montserrat">Powered by Amazon SP-API</p>
                 </div>
               </div>
 
@@ -1485,7 +1485,7 @@ export default function Sync() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[15px] font-bold text-white uppercase tracking-[0.2em] font-mono">Activity Log</h4>
+                    <h4 className="text-[15px] font-bold text-white tracking-tight font-merriweather">Activity Log</h4>
                     <TooltipProvider>
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger asChild>
@@ -1509,7 +1509,7 @@ export default function Sync() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <span className="text-[11px] text-white/20 font-mono uppercase tracking-[0.2em] font-bold">{filteredLogs.length} ENTRIES</span>
+                  <span className="text-[11px] text-white/20 font-mono tracking-widest font-bold">{filteredLogs.length} ENTRIES</span>
                 </div>
 
                 {/* Filter Toggles & Export */}
@@ -1521,7 +1521,7 @@ export default function Sync() {
                         ? 'text-white'
                         : 'text-white/20 hover:text-white/40'
                         }`}>
-                      All_Events
+                      All Events
                       {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                     <button
@@ -1558,7 +1558,7 @@ export default function Sync() {
               </div>
 
               {/* Search Bar - Clean minimal design */}
-              <div className="relative">
+              <div className="relative overscroll-contain">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-white/20" />
                 <Input
                   type="text"
@@ -1579,7 +1579,7 @@ export default function Sync() {
 
                 <div
                   ref={logContainerRef}
-                  className="bg-[#050505] rounded-none pt-14 pb-6 px-5 font-normal text-[13px] h-96 overflow-y-auto scroll-smooth border border-white/5 shadow-2xl relative leading-relaxed tracking-tight text-white/40">
+                  className="bg-[#050505] rounded-none pt-14 pb-6 px-5 font-normal text-[13px] h-[500px] overflow-y-auto overscroll-contain scroll-smooth border border-white/5 shadow-2xl relative leading-relaxed tracking-tight text-white/40">
                   {/* Simplified subtle gradient */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none rounded-lg"></div>
 
