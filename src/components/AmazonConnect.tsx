@@ -253,12 +253,12 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const buttonClassName = className?.split(' ').filter(c => !c.startsWith('h-')).join(' ');
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-      <div className="w-full sm:w-[180px]">
+    <div className="flex flex-row items-center gap-2 w-auto">
+      <div className="min-w-[140px] sm:min-w-[180px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-black border-none text-white font-normal focus:ring-0 transition-all px-4 rounded-none",
+              "w-full bg-black border-none text-white font-normal focus:ring-0 transition-all px-3 sm:px-4 rounded-none",
               heightClass,
               buttonClassName // Inherit font-size and other text mods
             )}>
@@ -278,8 +278,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
-          "w-full sm:w-auto flex-1 sm:flex-none",
-          "justify-center font-semibold transition-all active:scale-95 px-6 shrink-0 border-none items-center gap-1.5 rounded-none",
+          "flex-1 sm:flex-none",
+          "justify-center font-semibold transition-all active:scale-95 px-4 sm:px-6 shrink-0 border-none items-center gap-1.5 rounded-none",
           "bg-white text-black hover:bg-white/90",
           heightClass,
           connecting && 'opacity-80',
