@@ -247,14 +247,14 @@ export default function TransactionHistory() {
         doc.text('Period:', rightColX, 25);
         doc.setFont('helvetica', 'bold');
         const periodText = filteredTransactions.length > 0
-            ? `${format(new Date(filteredTransactions[filteredTransactions.length - 1].date), 'MMM dd')} - ${format(new Date(filteredTransactions[0].date), 'MMM dd, yyyy')}`
-            : displayDate;
+            ? `${format(new Date(filteredTransactions[filteredTransactions.length - 1].date), 'yyyy-MM-dd')} - ${format(new Date(filteredTransactions[0].date), 'yyyy-MM-dd')}`
+            : format(new Date(), 'yyyy-MM-dd');
         doc.text(periodText, valX, 25, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Generated:', rightColX, 30);
         doc.setFont('courier', 'normal');
-        doc.text(format(new Date(), 'MMM dd, yyyy HH:mm'), valX, 30, { align: 'right' });
+        doc.text(format(new Date(), 'yyyy-MM-dd HH:mm'), valX, 30, { align: 'right' });
 
         // Divider Line (1px equivalent)
         doc.setDrawColor(0);
