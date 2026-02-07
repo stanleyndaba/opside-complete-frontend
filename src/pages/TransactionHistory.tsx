@@ -37,6 +37,7 @@ import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useTenant } from '@/contexts/TenantContext';
 
 interface Transaction {
     id: string;
@@ -54,6 +55,7 @@ interface Transaction {
 
 export default function TransactionHistory() {
     const { toast } = useToast();
+    const { tenant } = useTenant();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -198,7 +200,8 @@ export default function TransactionHistory() {
                 reader.onloadend = () => {
                     if (reader.result) {
                         try {
-                            doc.addImage(reader.result as string, 'PNG', 14, 12, 18, 9);
+                            // Logo: Small and sharp, centered vertically with the first data line
+                            doc.addImage(reader.result as string, 'PNG', 14, 12, 12, 6);
                             logoLoaded = true;
                         } catch (e) {
                             console.warn('Could not add logo to PDF:', e);
@@ -212,47 +215,55 @@ export default function TransactionHistory() {
             console.warn('Could not load logo:', e);
         }
 
-        // Header Section
+        // Header Section (Authority)
         doc.setTextColor(RICH_BLACK);
 
-        // MARGIN Logo Text
-        doc.setFontSize(12);
+        // MARGIN Label (Under logo)
+        doc.setFontSize(8);
         doc.setFont('times', 'bold');
-        doc.text('MARGIN', 14, 18);
+        doc.text('MARGIN', 14, 22);
 
-        doc.setFontSize(8); // Match blueprint: 8pt caps
+        doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT & RECOVERY DIVISION', 14, 22.5);
+        doc.text('AUDIT & RECOVERY DIVISION', 14, 25.5);
 
         // Right Data Block (Grid)
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
-        const rightColX = pageWidth - 60;
+        const rightColX = pageWidth - 65;
+        const valX = pageWidth - 14;
 
         doc.text('Statement ID:', rightColX, 15);
         doc.setFont('courier', 'bold');
-        doc.text(`#ST-${statementDate}`, pageWidth - 14, 15, { align: 'right' });
+        doc.text(`#ST-${statementDate}`, valX, 15, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Account ID:', rightColX, 20);
         doc.setFont('helvetica', 'bold');
-        // Use dynamic tenant name if available
-        const clientNameResult = (typeof tenant !== 'undefined' && tenant?.name) ? tenant.name.toUpperCase() : 'MAR-CLIENT-001';
-        doc.text(clientNameResult, pageWidth - 14, 20, { align: 'right' });
+        const clientName = (typeof tenant !== 'undefined' && tenant?.name) ? tenant.name.toUpperCase() : 'MAR-CLIENT-001';
+        doc.text(clientName, valX, 20, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Period:', rightColX, 25);
         doc.setFont('helvetica', 'bold');
-        doc.text(displayDate, pageWidth - 14, 25, { align: 'right' });
+        const periodText = filteredTransactions.length > 0
+            ? `${format(new Date(filteredTransactions[filteredTransactions.length - 1].date), 'MMM dd')} - ${format(new Date(filteredTransactions[0].date), 'MMM dd, yyyy')}`
+            : displayDate;
+        doc.text(periodText, valX, 25, { align: 'right' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.text('Generated:', rightColX, 30);
+        doc.setFont('courier', 'normal');
+        doc.text(format(new Date(), 'MMM dd, yyyy HH:mm'), valX, 30, { align: 'right' });
 
         // Divider Line (1px equivalent)
         doc.setDrawColor(0);
         doc.setLineWidth(0.3); // Sharp hairline
-        doc.line(14, 30, pageWidth - 14, 30);
+        doc.line(14, 35, pageWidth - 14, 35);
 
         // Summary KPI Bar
         doc.setFillColor(SUMMARY_BG);
-        doc.rect(14, 40, pageWidth - 28, 20, 'F');
+        doc.rect(14, 45, pageWidth - 28, 22, 'F');
 
         const colWidth = (pageWidth - 28) / 3;
 
@@ -260,31 +271,31 @@ export default function TransactionHistory() {
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        doc.text('TOTAL DISCREPANCIES FOUND', 18, 48);
+        doc.text('TOTAL DISCREPANCIES FOUND', 18, 53);
         doc.setFontSize(10);
         doc.setFont('courier', 'bold');
         doc.setTextColor(RICH_BLACK);
-        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18, 54);
+        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18, 60);
 
-        // Column 2: Audit Success Fee
+        // Column 2: Audit Success Fee (20%)
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, 48);
+        doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, 53);
         doc.setFontSize(10);
         doc.setFont('courier', 'bold');
         doc.setTextColor('#CC0000'); // Forensic red
-        doc.text(`($${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })})`, 18 + colWidth, 54);
+        doc.text(`($${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })})`, 18 + colWidth, 60);
 
         // Column 3: Net Capital Restored
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, 48);
-        doc.setFontSize(11);
+        doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, 53);
+        doc.setFontSize(13);
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
-        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18 + colWidth * 2, 54);
+        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18 + colWidth * 2, 60);
 
         // Transaction Table
         const tableData = filteredTransactions.map(t => [
@@ -297,22 +308,22 @@ export default function TransactionHistory() {
         ]);
 
         autoTable(doc, {
-            startY: 70,
+            startY: 75,
             head: [['Timestamp', 'Reference / Case ID', 'Settlement Token', 'Gross Credit', 'Margin Capture', 'Net Liquidity']],
             body: tableData,
             theme: 'plain',
             headStyles: {
                 fillColor: [255, 255, 255],
                 textColor: [17, 17, 17],
-                fontSize: 7,
+                fontSize: 7.5,
                 fontStyle: 'bold',
                 lineWidth: 0,
-                cellPadding: { bottom: 4, top: 4 }
+                cellPadding: { bottom: 3, top: 4 }
             },
             bodyStyles: {
-                fontSize: 7.5, // Increased density
+                fontSize: 7.5,
                 font: 'courier',
-                cellPadding: 4, // More compact
+                cellPadding: 4,
                 textColor: [17, 17, 17]
             },
             columnStyles: {
@@ -325,22 +336,24 @@ export default function TransactionHistory() {
             },
             didDrawCell: (data) => {
                 if (data.section === 'body') {
-                    doc.setDrawColor(229, 229, 229); // #E5E5E5 (Hairline)
-                    doc.setLineWidth(0.05); // ultra-thin hairline
+                    doc.setDrawColor(229, 229, 229); // #E5E5E5 (Subtle Divider)
+                    doc.setLineWidth(0.15); // 0.5px equivalent
                     doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
                 }
             },
             margin: { left: 14, right: 14 }
         });
 
-        // Legal Footer
+        // Legal Footer (Trust)
         const finalY = (doc as any).lastAutoTable.finalY || 150;
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        const footerText = 'This document serves as a formal record of capital recovery generated by the Margin Audit Engine. All values are reconciled against Amazon Seller Central Ledger records. Confidential Financial Record.';
+        const ledgerId = `LG-${statementDate}-X92`;
+        const footerText = `This document serves as a formal record of capital recovery generated by the Margin Audit Engine. All values are reconciled against Amazon Seller Central Ledger [${ledgerId}]. Confidential Financial Record.`;
         const splitFooter = doc.splitTextToSize(footerText, pageWidth - 28);
         doc.text(splitFooter, 14, finalY + 15);
+        doc.text(`Page 1 of 1`, valX, finalY + 25, { align: 'right' });
 
         // Save the PDF
         doc.save(`margin-statement-${statementDate}.pdf`);
