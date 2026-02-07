@@ -220,9 +220,9 @@ export default function TransactionHistory() {
         doc.setFont('times', 'bold');
         doc.text('MARGIN', 14, 18);
 
-        doc.setFontSize(7);
+        doc.setFontSize(8); // Match blueprint: 8pt caps
         doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT & RECOVERY DIVISION', 14, 22);
+        doc.text('AUDIT & RECOVERY DIVISION', 14, 22.5);
 
         // Right Data Block (Grid)
         doc.setFont('helvetica', 'normal');
@@ -236,16 +236,18 @@ export default function TransactionHistory() {
         doc.setFont('helvetica', 'normal');
         doc.text('Account ID:', rightColX, 20);
         doc.setFont('helvetica', 'bold');
-        doc.text('MAR-CLIENT-001', pageWidth - 14, 20, { align: 'right' });
+        // Use dynamic tenant name if available
+        const clientNameResult = (typeof tenant !== 'undefined' && tenant?.name) ? tenant.name.toUpperCase() : 'MAR-CLIENT-001';
+        doc.text(clientNameResult, pageWidth - 14, 20, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Period:', rightColX, 25);
         doc.setFont('helvetica', 'bold');
         doc.text(displayDate, pageWidth - 14, 25, { align: 'right' });
 
-        // Divider Line
+        // Divider Line (1px equivalent)
         doc.setDrawColor(0);
-        doc.setLineWidth(0.5);
+        doc.setLineWidth(0.3); // Sharp hairline
         doc.line(14, 30, pageWidth - 14, 30);
 
         // Summary KPI Bar
@@ -308,9 +310,9 @@ export default function TransactionHistory() {
                 cellPadding: { bottom: 4, top: 4 }
             },
             bodyStyles: {
-                fontSize: 8,
+                fontSize: 7.5, // Increased density
                 font: 'courier',
-                cellPadding: 6,
+                cellPadding: 4, // More compact
                 textColor: [17, 17, 17]
             },
             columnStyles: {
@@ -323,8 +325,8 @@ export default function TransactionHistory() {
             },
             didDrawCell: (data) => {
                 if (data.section === 'body') {
-                    doc.setDrawColor(229, 229, 229); // #E5E5E5
-                    doc.setLineWidth(0.1);
+                    doc.setDrawColor(229, 229, 229); // #E5E5E5 (Hairline)
+                    doc.setLineWidth(0.05); // ultra-thin hairline
                     doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
                 }
             },
