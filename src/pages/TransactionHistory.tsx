@@ -179,8 +179,14 @@ export default function TransactionHistory() {
     const exportStatement = async () => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
-        const today = format(new Date(), 'MMMM dd, yyyy');
         const statementDate = format(new Date(), 'yyyy-MM-dd');
+        const displayDate = format(new Date(), 'MMMM dd, yyyy');
+
+        // Design Tokens
+        const RICH_BLACK = '#111111';
+        const SOFT_GREY = '#666666';
+        const HAIRLINE = '#E5E5E5';
+        const SUMMARY_BG = '#F5F5F5';
 
         // Load logo image
         let logoLoaded = false;
@@ -192,7 +198,7 @@ export default function TransactionHistory() {
                 reader.onloadend = () => {
                     if (reader.result) {
                         try {
-                            doc.addImage(reader.result as string, 'PNG', 14, 12, 25, 12);
+                            doc.addImage(reader.result as string, 'PNG', 14, 12, 18, 9);
                             logoLoaded = true;
                         } catch (e) {
                             console.warn('Could not add logo to PDF:', e);
@@ -206,92 +212,138 @@ export default function TransactionHistory() {
             console.warn('Could not load logo:', e);
         }
 
-        // Header text (positioned after logo or at start if no logo)
-        const headerTextX = logoLoaded ? 42 : 14;
-        doc.setFontSize(16);
+        // Header Section
+        doc.setTextColor(RICH_BLACK);
+
+        // MARGIN Logo Text
+        doc.setFontSize(12);
+        doc.setFont('times', 'bold');
+        doc.text('MARGIN', 14, 18);
+
+        doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0);
-        doc.text('MARGIN', headerTextX, 18);
+        doc.text('AUDIT & RECOVERY DIVISION', 14, 22);
 
-        doc.setFontSize(10);
+        // Right Data Block (Grid)
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(100);
-        doc.text('Recovery Statement', headerTextX, 24);
+        doc.setFontSize(8);
+        const rightColX = pageWidth - 60;
 
-        // Statement info (right side)
-        doc.setTextColor(0);
+        doc.text('Statement ID:', rightColX, 15);
+        doc.setFont('courier', 'bold');
+        doc.text(`#ST-${statementDate}`, pageWidth - 14, 15, { align: 'right' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.text('Account ID:', rightColX, 20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('MAR-CLIENT-001', pageWidth - 14, 20, { align: 'right' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.text('Period:', rightColX, 25);
+        doc.setFont('helvetica', 'bold');
+        doc.text(displayDate, pageWidth - 14, 25, { align: 'right' });
+
+        // Divider Line
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.5);
+        doc.line(14, 30, pageWidth - 14, 30);
+
+        // Summary KPI Bar
+        doc.setFillColor(SUMMARY_BG);
+        doc.rect(14, 40, pageWidth - 28, 20, 'F');
+
+        const colWidth = (pageWidth - 28) / 3;
+
+        // Column 1: Total Discrepancies
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('TOTAL DISCREPANCIES FOUND', 18, 48);
         doc.setFontSize(10);
-        doc.text(`Statement Date: ${today}`, pageWidth - 14, 15, { align: 'right' });
-        doc.text(`Transactions: ${filteredTransactions.length}`, pageWidth - 14, 22, { align: 'right' });
+        doc.setFont('courier', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18, 54);
 
-        // Summary section
+        // Column 2: Audit Success Fee
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, 48);
+        doc.setFontSize(10);
+        doc.setFont('courier', 'bold');
+        doc.setTextColor('#CC0000'); // Forensic red
+        doc.text(`($${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })})`, 18 + colWidth, 54);
+
+        // Column 3: Net Capital Restored
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, 48);
         doc.setFontSize(11);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Summary', 14, 42);
+        doc.setFont('times', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18 + colWidth * 2, 54);
 
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`Total Recovered:`, 14, 52);
-        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 52);
-
-        doc.text(`Platform Fee (20%):`, 14, 59);
-        doc.text(`-$${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 59);
-
-        doc.setFont('helvetica', 'bold');
-        doc.text(`Net Profit:`, 14, 69);
-        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 70, 69);
-
-        // Horizontal line
-        doc.setDrawColor(200);
-        doc.line(14, 77, pageWidth - 14, 77);
-
-        // Transaction table
+        // Transaction Table
         const tableData = filteredTransactions.map(t => [
-            format(new Date(t.date), 'MMM dd, yyyy'),
+            format(new Date(t.date), 'yyyy-MM-dd HH:mm'),
             t.caseId,
             t.reimbursementId,
             `$${t.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
             `-$${t.feeAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-            `$${(t.recoveredAmount - t.feeAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-            t.status.charAt(0).toUpperCase() + t.status.slice(1)
+            `$${(t.recoveredAmount - t.feeAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
         ]);
 
         autoTable(doc, {
-            startY: 85,
-            head: [['Date', 'Case ID', 'Reimb ID', 'Recovered', 'Fee', 'Net', 'Status']],
+            startY: 70,
+            head: [['Timestamp', 'Reference / Case ID', 'Settlement Token', 'Gross Credit', 'Margin Capture', 'Net Liquidity']],
             body: tableData,
-            theme: 'striped',
+            theme: 'plain',
             headStyles: {
-                fillColor: [30, 30, 30],
-                textColor: [255, 255, 255],
-                fontSize: 9,
-                fontStyle: 'bold'
+                fillColor: [255, 255, 255],
+                textColor: [17, 17, 17],
+                fontSize: 7,
+                fontStyle: 'bold',
+                lineWidth: 0,
+                cellPadding: { bottom: 4, top: 4 }
             },
             bodyStyles: {
-                fontSize: 9
+                fontSize: 8,
+                font: 'courier',
+                cellPadding: 6,
+                textColor: [17, 17, 17]
             },
             columnStyles: {
-                0: { cellWidth: 28 },
-                1: { cellWidth: 30 },
-                2: { cellWidth: 28 },
+                0: { cellWidth: 35 },
+                1: { cellWidth: 35 },
+                2: { cellWidth: 30 },
                 3: { cellWidth: 25, halign: 'right' },
-                4: { cellWidth: 22, halign: 'right' },
-                5: { cellWidth: 25, halign: 'right' },
-                6: { cellWidth: 22 }
+                4: { cellWidth: 25, halign: 'right' },
+                5: { cellWidth: 32, halign: 'right', fontStyle: 'bold' }
+            },
+            didDrawCell: (data) => {
+                if (data.section === 'body') {
+                    doc.setDrawColor(229, 229, 229); // #E5E5E5
+                    doc.setLineWidth(0.1);
+                    doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+                }
             },
             margin: { left: 14, right: 14 }
         });
 
-        // Footer
+        // Legal Footer
         const finalY = (doc as any).lastAutoTable.finalY || 150;
-        doc.setFontSize(8);
-        doc.setTextColor(150);
-        doc.text('Generated by Margin • support@margin.ai', pageWidth / 2, finalY + 15, { align: 'center' });
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        const footerText = 'This document serves as a formal record of capital recovery generated by the Margin Audit Engine. All values are reconciled against Amazon Seller Central Ledger records. Confidential Financial Record.';
+        const splitFooter = doc.splitTextToSize(footerText, pageWidth - 28);
+        doc.text(splitFooter, 14, finalY + 15);
 
         // Save the PDF
         doc.save(`margin-statement-${statementDate}.pdf`);
 
-        toast({ title: 'Statement Downloaded', description: 'Your PDF statement has been generated.' });
+        toast({ title: 'Statement Generated', description: 'Institutional recovery statement has been downloaded.' });
     };
 
     const getStatusBadge = (status: Transaction['status']) => {
