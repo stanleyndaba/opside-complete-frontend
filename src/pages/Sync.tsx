@@ -1558,7 +1558,7 @@ export default function Sync() {
               </div>
 
               {/* Search Bar - Clean minimal design */}
-              <div className="relative overscroll-contain">
+              <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-white/20" />
                 <Input
                   type="text"
@@ -1579,6 +1579,7 @@ export default function Sync() {
 
                 <div
                   ref={logContainerRef}
+                  data-lenis-prevent
                   className="bg-[#050505] rounded-none pt-14 pb-6 px-5 font-normal text-[13px] h-[500px] overflow-y-auto overscroll-contain scroll-smooth border border-white/5 shadow-2xl relative leading-relaxed tracking-tight text-white/40">
                   {/* Simplified subtle gradient */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none rounded-lg"></div>
