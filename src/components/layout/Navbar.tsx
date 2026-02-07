@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { tenantRoute } from '@/lib/routes';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -40,6 +41,7 @@ export function Navbar({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -127,17 +129,17 @@ export function Navbar({
 
     // Search in Evidence Locker for documents
     if (query.toLowerCase().includes('invoice') || query.toLowerCase().includes('doc') || query.toLowerCase().includes('receipt')) {
-      navigate(`/evidence-locker?q=${encodeURIComponent(query)}`);
+      navigate(tenantRoute(tenantSlug || 'default', `/evidence-locker?q=${encodeURIComponent(query)}`));
     }
     // Search in Recoveries for claims
     else if (query.toLowerCase().includes('claim') || query.toLowerCase().includes('recovery') || query.toLowerCase().includes('fba')) {
-      navigate(`/recoveries?q=${encodeURIComponent(query)}`);
+      navigate(tenantRoute(tenantSlug || 'default', `/recoveries?q=${encodeURIComponent(query)}`));
     }
     // Default: search in Recoveries (main page for searching claims)
     else {
-      navigate(`/recoveries?q=${encodeURIComponent(query)}`);
+      navigate(tenantRoute(tenantSlug || 'default', `/recoveries?q=${encodeURIComponent(query)}`));
     }
-  }, [navigate, recentSearches]);
+  }, [navigate, recentSearches, tenantSlug]);
 
   // Handle keyboard events
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -246,7 +248,7 @@ export function Navbar({
                           key={link.id}
                           onClick={() => {
                             setIsSearchFocused(false);
-                            navigate(link.path);
+                            navigate(tenantRoute(tenantSlug || 'default', link.path));
                           }}
                           className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-mono uppercase tracking-tight group">
                           <link.icon className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
@@ -324,7 +326,7 @@ export function Navbar({
                 <HoverCard openDelay={100} closeDelay={200}>
                   <HoverCardTrigger asChild>
                     <button
-                      onClick={() => navigate('/integrations-hub')}
+                      onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
                       className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                       aria-label="Store connections">
                       <Store className="h-4.5 w-4.5" />
@@ -351,7 +353,7 @@ export function Navbar({
                         <Button
                           variant="ghost"
                           onClick={() => {
-                            navigate('/integrations-hub');
+                            navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'));
                           }}
                           className="w-full h-10 border border-emerald-500/20 bg-emerald-500/[0.02] hover:bg-emerald-500/10 hover:border-emerald-500/50 text-emerald-500 text-[10px] font-mono font-bold uppercase tracking-widest transition-all rounded-xl">
                           Manage connections

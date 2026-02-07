@@ -13,7 +13,9 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 
 interface RecoveryClaim {
   id: string;
@@ -41,6 +43,9 @@ function formatCurrency(amount: number, currency: string = 'USD') {
 export default function UpcomingPayments() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
   const [claims, setClaims] = useState<RecoveryClaim[]>([]);
   const [disputeCases, setDisputeCases] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -450,7 +455,7 @@ export default function UpcomingPayments() {
                             variant="ghost"
                             className="h-8 px-4 border border-white/5 bg-white/[0.02] text-[10px] font-mono font-bold uppercase tracking-widest hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all"
                           >
-                            <Link to="/recoveries?tab=cases">VIEW DETAILS</Link>
+                            <Link to={tenantRoute(activeTenantSlug, '/recoveries?tab=cases')}>VIEW DETAILS</Link>
                           </Button>
                         </TableCell>
                       </TableRow>

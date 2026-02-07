@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -60,7 +62,9 @@ const PERMISSION_MAPPING: Record<string, { title: string; desc: string }> = {
 };
 
 export default function ReconnectProvider() {
-  const { provider = 'amazon' } = useParams<{ provider: string }>();
+  const { provider = 'amazon', tenantSlug } = useParams<{ provider: string, tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -124,7 +128,7 @@ export default function ReconnectProvider() {
         >
           {/* Back Navigation */}
           <div className="mb-12">
-            <Link to="/integrations-hub" className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-mono text-white/30 hover:text-white transition-all cursor-pointer">
+            <Link to={tenantRoute(activeTenantSlug, '/integrations-hub')} className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-mono text-white/30 hover:text-white transition-all cursor-pointer">
               <div className="p-2 border border-white/10 group-hover:border-white/30 transition-all rounded-sm">
                 <ArrowLeft className="h-3 w-3" />
               </div>
@@ -204,7 +208,7 @@ export default function ReconnectProvider() {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => navigate('/integrations-hub')}
+                  onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
                   className="w-full sm:w-auto h-14 px-8 text-white/40 hover:text-white hover:bg-white/5 rounded-sm font-bold text-[10px] uppercase tracking-[0.2em] transition-all"
                 >
                   Terminate

@@ -20,6 +20,8 @@ import {
 import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
+import { tenantRoute } from '@/lib/routes';
+import { useTenant } from '@/contexts/TenantContext';
 
 // ... (existing constants)
 
@@ -27,6 +29,8 @@ export default function IntegrationsHub() {
   const navigate = useNavigate();
   const location = useLocation();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug || 'default';
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
@@ -299,11 +303,7 @@ export default function IntegrationsHub() {
 
       // Auto-redirect to sync page after 2-3 seconds to show the live dialogue logs
       setTimeout(() => {
-        if (tenantSlug) {
-          navigate(`/app/${tenantSlug}/sync`);
-        } else {
-          navigate('/sync');
-        }
+        navigate(tenantRoute(tenantSlug || 'default', '/sync'));
       }, 2500);
       return; // Exit early to avoid processing other providers
     }
@@ -770,7 +770,7 @@ export default function IntegrationsHub() {
                     <Button
                       onClick={() => {
                         toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon SP-API Authorization...' });
-                        navigate('/integrations/reconnect/amazon');
+                        navigate(tenantRoute(tenantSlug || 'default', '/integrations/reconnect/amazon'));
                       }}
                       className="h-12 bg-white text-black font-mono uppercase tracking-[0.2em] text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
                     >
@@ -1203,7 +1203,7 @@ export default function IntegrationsHub() {
             </div>
 
             <div className="flex items-center gap-6">
-              <button onClick={() => navigate('/evidence-locker')} className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-emerald-500 transition-colors">
+              <button onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/evidence-locker'))} className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-emerald-500 transition-colors">
                 Evidence Locker
               </button>
               <div className="h-4 w-px bg-white/5" />

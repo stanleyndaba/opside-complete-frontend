@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,16 +45,11 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
 
 export default function DocumentDetail() {
-  const { id, documentId } = useParams();
+  const { id, documentId, tenantSlug } = useParams();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
   const docId = (documentId as string) || (id as string) || '';
-
-  const [documentData, setDocumentData] = useState<any | null>(null);
-  const [parsedData, setParsedData] = useState<any | null>(null);
-  const [matchedClaims, setMatchedClaims] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [triggeringParse, setTriggeringParse] = useState(false);
-  const [summaryOpen, setSummaryOpen] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const location = useLocation();
@@ -199,7 +196,7 @@ export default function DocumentDetail() {
                   <AlertCircle className="w-12 h-12 mx-auto text-rose-500/20 mb-6" />
                   <div className="text-sm font-mono font-bold text-rose-500 uppercase tracking-widest mb-4">LOAD_FAILURE</div>
                   <div className="text-xs text-rose-500/40 mb-8 font-mono">{error}</div>
-                  <Link to="/evidence-locker">
+                  <Link to={tenantRoute(activeTenantSlug, '/evidence-locker')}>
                     <Button variant="ghost" className="text-[11px] font-mono font-bold text-white/40 hover:text-white border border-white/5 hover:border-white/10">
                       <ArrowLeft className="w-4 h-4 mr-2" />
                       RETURN_TO_DOCUMENTS
@@ -230,7 +227,7 @@ export default function DocumentDetail() {
               {/* Analysis Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex items-center gap-6">
-                  <Link to="/evidence-locker">
+                  <Link to={tenantRoute(activeTenantSlug, '/evidence-locker')}>
                     <Button variant="ghost" size="sm" className="h-10 w-10 p-0 text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all">
                       <ArrowLeft className="h-4 w-4" />
                     </Button>
@@ -491,7 +488,7 @@ export default function DocumentDetail() {
                                 </div>
                               </div>
 
-                              <Link to={`/case/${match.claim_id}`}>
+                              <Link to={tenantRoute(activeTenantSlug, `/recoveries/${match.claim_id}`)}>
                                 <Button variant="ghost" className="h-12 px-6 text-[11px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all uppercase tracking-[0.2em] group/btn">
                                   VIEW_CLAIM
                                   <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />

@@ -8,6 +8,7 @@ import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProg
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronUp, ChevronRight, ExternalLink, Download, Wifi, WifiOff, Info } from 'lucide-react';
 const GmailIcon = '/gmailicon.png';
 const OutlookIcon = '/outlookicon.webp';
@@ -246,14 +247,14 @@ export default function Sync() {
 
     // Define story configurations
     const storyConfig: Record<string, { title: string; linkTo?: string }> = {
-      'inventory': { title: 'Inventory Scan', linkTo: '/recoveries' },
-      'orders': { title: 'Order Ledger Check', linkTo: '/recoveries' },
-      'shipments': { title: 'Shipment Verification', linkTo: '/recoveries' },
-      'returns': { title: 'Returns Analysis', linkTo: '/recoveries' },
-      'settlements': { title: 'Settlement Reconciliation', linkTo: '/upcoming-payments' },
-      'fees': { title: 'Fee Audit', linkTo: '/recoveries' },
-      'claims': { title: 'Claim Detection', linkTo: '/recoveries' },
-      'detection': { title: 'Opportunity Detection', linkTo: '/recoveries' },
+      'inventory': { title: 'Inventory Scan', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
+      'orders': { title: 'Order Ledger Check', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
+      'shipments': { title: 'Shipment Verification', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
+      'returns': { title: 'Returns Analysis', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
+      'settlements': { title: 'Settlement Reconciliation', linkTo: tenantRoute(currentTenantSlug, '/upcoming-payments') },
+      'fees': { title: 'Fee Audit', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
+      'claims': { title: 'Claim Detection', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
+      'detection': { title: 'Opportunity Detection', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
       'system': { title: 'System', linkTo: undefined },
     };
 

@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
+import { tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -145,13 +146,13 @@ export function Sidebar({
   const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
 
   const primaryItems: NavItem[] = [
-    { title: 'Overview', icon: LayoutDashboard, href: `/app/${currentTenantSlug}` },
-    { title: 'Claims', icon: ShieldCheck, href: `/app/${currentTenantSlug}/recoveries` },
-    { title: 'Documents and Files', icon: FileText, href: `/app/${currentTenantSlug}/evidence-locker` },
-    // { title: 'Reports', icon: BarChart3, href: `/app/${currentTenantSlug}/reports` },
-    { title: 'Refund Recoveries', icon: Plug, href: `/app/${currentTenantSlug}/upcoming-payments` },
-    { title: 'Transaction History', icon: BarChart3, href: `/app/${currentTenantSlug}/transaction-history` },
-    { title: 'Integrations', icon: Box, href: `/app/${currentTenantSlug}/integrations-hub` }
+    { title: 'Overview', icon: LayoutDashboard, href: tenantRoute(currentTenantSlug, '') },
+    { title: 'Claims', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
+    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+    // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
+    { title: 'Refund Recoveries', icon: Plug, href: tenantRoute(currentTenantSlug, '/upcoming-payments') },
+    { title: 'Transaction History', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/transaction-history') },
+    { title: 'Integrations', icon: Box, href: tenantRoute(currentTenantSlug, '/integrations-hub') }
   ];
 
   const secondaryItems: NavItem[] = []; // Moved to "More" menu
@@ -338,13 +339,13 @@ export function Sidebar({
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
             <DropdownMenuItem
-              onClick={() => navigate(`/app/${currentTenantSlug}/help`)}
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate(`/app/${currentTenantSlug}/notifications`)}
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
               className="flex items-center justify-between px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -415,13 +416,13 @@ export function Sidebar({
               </HoverCard>
             </DropdownMenuItem> */}
             <DropdownMenuItem
-              onClick={() => navigate(`/app/${currentTenantSlug}/billing`)}
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <CreditCard className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Billing</span>
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate(`/app/${currentTenantSlug}/settings`)}
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-serif uppercase tracking-widest">
               <Settings2 className="h-4 w-4 text-white/20" strokeWidth={1.5} />
               <span>Settings</span>

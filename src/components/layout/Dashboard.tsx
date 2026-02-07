@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { tenantRoute } from '@/lib/routes';
+import { useTenant } from '@/contexts/TenantContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -57,6 +59,9 @@ const stripEmojis = (text: any) => {
 
 export function Dashboard() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug || 'default';
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -235,10 +240,10 @@ export function Dashboard() {
       });
       // Redirect to integrations hub after a short delay to show the success message
       setTimeout(() => {
-        navigate('/integrations-hub?amazon_connected=true', { replace: true });
+        navigate(tenantRoute(activeSlug, '/integrations-hub?amazon_connected=true'), { replace: true });
       }, 2000);
     }
-  }, [searchParams, navigate, toast]);
+  }, [searchParams, navigate, toast, activeSlug]);
 
   // Fetch evidence status and detection statistics
   useEffect(() => {
@@ -741,7 +746,7 @@ export function Dashboard() {
         syncCheckTimeoutRef.current = null;
       }
     };
-  }, [toast, navigate, updateUpcomingMetrics]);
+  }, [toast, navigate, updateUpcomingMetrics, activeSlug]);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
@@ -836,7 +841,7 @@ export function Dashboard() {
                       </div>
                       {submittedClaimsCount != null && submittedClaimsCount > 0 && (
                         <button
-                          onClick={() => navigate('/recoveries')}
+                          onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                           className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all group rounded-lg"
                         >
                           <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active_Claims</span>
@@ -1032,7 +1037,7 @@ export function Dashboard() {
                           variant="ghost"
                           size="sm"
                           className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
-                          onClick={() => navigate('/recoveries', { state: { filter: 'detected' } })}>
+                          onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'), { state: { filter: 'detected' } })}>
                           View_All
                         </Button>
                       </div>
@@ -1090,7 +1095,7 @@ export function Dashboard() {
                                 if (actionId === 'connect_evidence') setShowSourcesModal(true);
                                 else if (actionId === 'invite_teammate') setInviteOpen(true);
                                 else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Ingest_Protocol_Started' }));
-                                else navigate(`/${actionId.replace(/_/g, '-')}`);
+                                else navigate(tenantRoute(activeSlug, `/${actionId.replace(/_/g, '-')}`));
                               }}
                               className="group flex flex-col p-8 hover:bg-white/[0.02] transition-all text-left border-b border-white/5 relative overflow-hidden">
                               <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -1166,7 +1171,7 @@ export function Dashboard() {
                                           "group relative px-6 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-white/[0.03]",
                                           isUnread ? "bg-emerald-500/[0.02]" : "bg-transparent"
                                         )}
-                                        onClick={() => navigate('/recoveries')}>
+                                        onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}>
 
                                         {/* Hover Glow Bar */}
                                         <div className="absolute left-[-2px] top-3 bottom-3 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />

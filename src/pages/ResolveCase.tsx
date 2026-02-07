@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +19,7 @@ type ResolutionChoice = 'submit' | 'resubmit' | 'review' | 'park';
 const stableHash = (s: string): number => {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-  return (h>>> 0);
+  return (h >>> 0);
 };
 const deriveConfidence = (id: string): number => {
   const v = stableHash(id) % 4900; // 0..4899
@@ -27,17 +29,19 @@ const deriveConfidence = (id: string): number => {
 };
 const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
   const v = stableHash(id) % 100;
-  if (v>= 70) return 'Ready';
-  if (v>= 40) return 'Needs Docs';
+  if (v >= 70) return 'Ready';
+  if (v >= 40) return 'Needs Docs';
   return 'Collecting';
 };
 
 export default function ResolveCase() {
-  const { caseId } = useParams<{ caseId: string }>();
+  const { caseId, tenantSlug } = useParams<{ caseId: string, tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
+  const navigate = useNavigate();
   const location = useLocation() as any;
   const passedClaim = (location && location.state && (location.state as any).claim) || null;
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(true);
@@ -124,7 +128,7 @@ export default function ResolveCase() {
       } else {
         toast({ title: 'Parked', description: 'Case parked until more data is available.' });
       }
-      navigate(`/recoveries/${encodeURIComponent(caseId)}`);
+      navigate(tenantRoute(activeTenantSlug, `/recoveries/${encodeURIComponent(caseId)}`));
     } catch (e: any) {
       toast({ title: 'Action failed', description: e?.message || 'Please try again.' });
     } finally {
@@ -141,7 +145,7 @@ export default function ResolveCase() {
           <div className="relative container mx-auto px-6 pt-6 pb-10 space-y-6">
             <div className="flex items-center gap-4">
               <Button asChild variant="ghost" size="sm" className="text-gray-900 hover:bg-gray-100">
-                <Link to="/recoveries"><ArrowLeft className="h-4 w-4 mr-2" /> Back to Cases</Link>
+                <Link to={tenantRoute(activeTenantSlug, '/recoveries')}><ArrowLeft className="h-4 w-4 mr-2" /> Back to Cases</Link>
               </Button>
               <h1 ref={headingRef} tabIndex={-1} className="sr-only">Resolve Case {effectiveCase?.id}</h1>
             </div>
@@ -203,7 +207,7 @@ export default function ResolveCase() {
                       />
                       <div id="doc-help" className="text-xs text-gray-600 mt-1">You can also drag and drop into this field.</div>
                     </div>
-                    {attachedDocs.length> 0 && (
+                    {attachedDocs.length > 0 && (
                       <div>
                         <Label className="text-sm text-gray-600">Attached</Label>
                         <ul className="mt-1 space-y-1 text-sm">
@@ -251,7 +255,7 @@ export default function ResolveCase() {
                         {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />} Resolve Case
                       </Button>
                       <Button variant="ghost" asChild className="text-gray-900 hover:bg-gray-100">
-                        <Link to={`/recoveries/${encodeURIComponent(effectiveCase?.id)}`}>View case details</Link>
+                        <Link to={tenantRoute(activeTenantSlug, `/recoveries/${encodeURIComponent(effectiveCase?.id)}`)}>View case details</Link>
                       </Button>
                     </div>
                     <div role="status" aria-live="polite" className="sr-only">{statusText}</div>

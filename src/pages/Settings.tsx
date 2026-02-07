@@ -17,15 +17,20 @@ import {
   RefreshCw, XCircle, Store, Box, BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/lib/api';
+import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 
 type SettingsSection = 'business' | 'team' | 'billing' | 'integrations' | 'notifications' | 'security' | 'api' | 'careers';
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
   const { toast } = useToast();
   const [activeSection, setActiveSection] = useState<SettingsSection>('business');
 
@@ -416,7 +421,7 @@ const Settings = () => {
                   <div className="flex flex-col gap-3">
                     <Button
                       className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                      onClick={() => navigate('/integrations-hub')}
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
                     >
                       Manage Profile
                     </Button>
@@ -463,7 +468,7 @@ const Settings = () => {
                   <Button
                     variant="outline"
                     className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
-                    onClick={() => navigate('/help')}
+                    onClick={() => navigate(tenantRoute(activeTenantSlug, '/help'))}
                   >
                     Open Support Channel
                   </Button>
@@ -530,7 +535,7 @@ const Settings = () => {
                   <div className="flex flex-col gap-3">
                     <Button
                       className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                      onClick={() => navigate('/app/default/upcoming-payments')}
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/upcoming-payments'))}
                     >
                       View Documents
                     </Button>
@@ -624,7 +629,7 @@ const Settings = () => {
                   <div className="flex flex-col gap-3">
                     <Button
                       className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                      onClick={() => navigate('/api-access')}
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/api-access'))}
                     >
                       Enter Vault
                     </Button>
@@ -719,7 +724,7 @@ const Settings = () => {
                   <div className="flex flex-col gap-3">
                     <Button
                       className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                      onClick={() => navigate('/integrations-hub')}
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
                     >
                       Configure Feeds
                     </Button>
@@ -754,7 +759,7 @@ const Settings = () => {
                   <Button
                     variant="outline"
                     className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
-                    onClick={() => navigate('/help')}
+                    onClick={() => navigate(tenantRoute(activeTenantSlug, '/help'))}
                   >
                     Request Custom Bridge
                   </Button>
