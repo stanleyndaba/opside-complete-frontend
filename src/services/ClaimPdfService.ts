@@ -49,16 +49,20 @@ export const ClaimPdfService = {
 
         // --- PAGE 1: THE EXECUTIVE DEMAND ---
 
-        // Header (Authority)
+        // Header Branding (Standardized)
+        doc.setFillColor(RICH_BLACK);
+        doc.rect(MARGIN, 12, 3, 8, 'F');
+        doc.rect(MARGIN + 4, 12, 3, 8, 'F');
+
         doc.setTextColor(RICH_BLACK);
-        doc.setFontSize(8);
+        doc.setFontSize(10);
         doc.setFont('times', 'bold');
-        doc.text('MARGIN', MARGIN, 18);
+        doc.text('MARGIN', MARGIN + 9, 17.5);
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT & RECOVERY DIVISION', MARGIN, 21.5);
+        doc.text('AUDIT & RECOVERY DIVISION', MARGIN + 9, 21);
 
-        // Right Data Block
+        // Right Data Block (ISO Standard)
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         const rightColX = pageWidth - 65;
@@ -71,7 +75,7 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'normal');
         doc.text('Generated:', rightColX, 20);
         doc.setFont('courier', 'normal');
-        doc.text(new Date().toISOString().replace('T', ' ').slice(0, 16), valX, 20, { align: 'right' });
+        doc.text(new Date().toISOString().split('T')[0], valX, 20, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Status:', rightColX, 25);
@@ -82,8 +86,14 @@ export const ClaimPdfService = {
         doc.setLineWidth(0.3);
         doc.line(MARGIN, 30, pageWidth - MARGIN, 30);
 
+        // Formal Title
+        yPos = 38;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('NOTICE OF DEFICIENCY // FORENSIC CLAIM RECORD', MARGIN, yPos);
+
         // Verdict Strip (Hero Section)
-        yPos = 40;
+        yPos = 45;
         doc.setFillColor(SUMMARY_BG);
         doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 22, 'F');
 
@@ -98,18 +108,11 @@ export const ClaimPdfService = {
         doc.setTextColor(RICH_BLACK);
         doc.text(`$${Number(data.guaranteedAmount || data.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`, MARGIN + 5, yPos + 16);
 
-        doc.setFontSize(7);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
         doc.text('PRIMARY DISCREPANCY', MARGIN + colWidth, yPos + 8);
         doc.setFontSize(9);
-        doc.setFont('courier', 'bold');
-        doc.setTextColor(RICH_BLACK);
         doc.text(sanitize(data.case_type || 'INBOUND_VARIANCE').toUpperCase(), MARGIN + colWidth, yPos + 16);
 
         doc.setFontSize(7);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
         doc.text('CONFIDENCE SCORE', MARGIN + (colWidth * 2), yPos + 8);
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
@@ -117,7 +120,7 @@ export const ClaimPdfService = {
         doc.text(`${Math.round((data.confidence || 0.998) * 1000) / 10}% MATCH`, MARGIN + (colWidth * 2), yPos + 16);
 
         // Forensic Narrative (2.0)
-        yPos = 75;
+        yPos = 80;
         doc.setTextColor(RICH_BLACK);
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
@@ -136,11 +139,39 @@ export const ClaimPdfService = {
         const splitNarrative = doc.splitTextToSize(narrative, pageWidth - (MARGIN * 2));
         doc.text(splitNarrative, MARGIN, yPos);
 
-        // Audit Certification (3.0)
-        yPos = 130;
+        // 3.0 CLAIM ABSTRACT (Whitespace Liquidation)
+        yPos = 120;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3.0 AUDIT CERTIFICATION', MARGIN, yPos);
+        doc.text('3.0 CLAIM ABSTRACT', MARGIN, yPos);
+        doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
+
+        yPos += 6;
+        const abstractData = [
+            ['FACILITY', 'CARRIER', 'TOTAL WEIGHT', 'TRACING ID'],
+            [
+                sanitize(data.facility, 'FTW1 (Fort Worth)'),
+                sanitize(data.carrier, 'Amazon Partnered').toUpperCase(),
+                sanitize(data.weight, '1.20 LBS'),
+                sanitize(data.case_id || data.id, 'bbb82...d0d4')
+            ]
+        ];
+
+        autoTable(doc, {
+            startY: yPos,
+            head: abstractData.slice(0, 1),
+            body: abstractData.slice(1),
+            theme: 'grid',
+            headStyles: { fillColor: SUMMARY_BG, textColor: SOFT_GREY, fontSize: 7, fontStyle: 'bold' },
+            bodyStyles: { fontSize: 8, font: 'courier', textColor: RICH_BLACK },
+            margin: { left: MARGIN }
+        });
+
+        // Audit Certification (4.0)
+        yPos = (doc as any).lastAutoTable.finalY + 15;
+        doc.setFont('times', 'bold');
+        doc.setFontSize(10);
+        doc.text('4.0 AUDIT CERTIFICATION', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 8;
@@ -182,61 +213,58 @@ export const ClaimPdfService = {
         yPos = 20;
 
         // Appendix Header
-        doc.setFontSize(8);
+        doc.setFillColor(RICH_BLACK);
+        doc.rect(MARGIN, 12, 3, 8, 'F');
+        doc.rect(MARGIN + 4, 12, 3, 8, 'F');
+        doc.setTextColor(RICH_BLACK);
+        doc.setFontSize(10);
         doc.setFont('times', 'bold');
-        doc.text('MARGIN', MARGIN, 18);
+        doc.text('MARGIN', MARGIN + 9, 17.5);
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('APPENDIX: RAW LEDGER DATA [EXHIBIT A]', MARGIN, 21.5);
+        doc.text('APPENDIX: RAW LEDGER DATA [EXHIBIT A]', MARGIN + 9, 21);
         doc.setLineWidth(0.3);
         doc.line(MARGIN, 25, pageWidth - MARGIN, 25);
 
-        // Asset Intelligence (4.0)
+        // Asset Intelligence (5.0)
         yPos = 40;
         doc.setFontSize(10);
         doc.setFont('times', 'bold');
-        doc.text('4.0 ASSET SPECIFICATIONS', MARGIN, yPos);
+        doc.text('5.0 ASSET SPECIFICATIONS', MARGIN, yPos);
         doc.setLineWidth(0.15);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 6;
-        const assetDetails = [
-            ['PRODUCT IDENTITY', sanitize(data.productName, 'UNIDENTIFIED INBOUND ASSET')],
-            ['ASIN / SKU', `${sanitize(data.asin)} / ${sanitize(data.sku)}`],
-            ['PHYSICAL MASS', sanitize(data.weight, '1.20 LBS')],
-            ['DIMENSIONAL CLASS', sanitize(data.dimensions, 'STANDARD-SIZE')],
-            ['LOGISTIC FACILITY', sanitize(data.facility, 'FTW1')],
-            ['CARRIER PROTOCOL', sanitize(data.carrier, 'AMAZON_PARTNERED').toUpperCase()]
+        const assetGrid = [
+            ['PRODUCT NAME', 'SKU / ASIN'],
+            [sanitize(data.productName, 'UNIDENTIFIED ASSET'), `${sanitize(data.sku, '[PENDING INDEX]')} / ${sanitize(data.asin)}`],
+            ['DIMENSIONS', 'WEIGHT'],
+            [sanitize(data.dimensions, 'STANDARD-SIZE'), sanitize(data.weight, '1.20 LBS')]
         ];
 
         autoTable(doc, {
             startY: yPos,
-            body: assetDetails,
-            theme: 'plain',
+            body: assetGrid,
+            theme: 'grid',
             styles: { fontSize: 8, cellPadding: 2.5 },
             columnStyles: {
-                0: { fontStyle: 'bold', cellWidth: 50, textColor: SOFT_GREY },
+                0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 45, textColor: SOFT_GREY },
                 1: { font: 'courier', textColor: RICH_BLACK }
-            },
-            didDrawCell: (d) => {
-                doc.setDrawColor(HAIRLINE);
-                doc.setLineWidth(0.15);
-                doc.line(d.cell.x, d.cell.y + d.cell.height, d.cell.x + d.cell.width, d.cell.y + d.cell.height);
             },
             margin: { left: MARGIN }
         });
 
         yPos = (doc as any).lastAutoTable.finalY + 15;
 
-        // Financial Reconciliation (5.0)
+        // Financial Reconciliation (6.0)
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('5.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
+        doc.text('6.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 8;
         const unitVal = (data.unitCost || (data.guaranteedAmount / unitsLost)).toLocaleString('en-US', { minimumFractionDigits: 2 });
-        const financialData = [
+        const financialGrid = [
             ['UNIT VALUE (RECOVERY CAPTURE)', `$${unitVal}`],
             ['CLAIM QUANTITY', `${unitsLost} UNITS`],
             ['TOTAL GROSS INDEMNITY', `$${Number(data.guaranteedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`]
@@ -244,27 +272,22 @@ export const ClaimPdfService = {
 
         autoTable(doc, {
             startY: yPos,
-            body: financialData,
-            theme: 'plain',
+            body: financialGrid,
+            theme: 'grid',
             styles: { fontSize: 8, cellPadding: 2.5 },
             columnStyles: {
-                0: { fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GREY },
+                0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GREY },
                 1: { font: 'courier', textColor: RICH_BLACK }
-            },
-            didDrawCell: (d) => {
-                doc.setDrawColor(HAIRLINE);
-                doc.setLineWidth(0.15);
-                doc.line(d.cell.x, d.cell.y + d.cell.height, d.cell.x + d.cell.width, d.cell.y + d.cell.height);
             },
             margin: { left: MARGIN }
         });
 
         yPos = (doc as any).lastAutoTable.finalY + 15;
 
-        // Trace ID Logs (6.0)
+        // Trace ID Logs (7.0)
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('6.0 FORENSIC TRACE LOGS', MARGIN, yPos);
+        doc.text('7.0 FORENSIC TRACE LOGS', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 6;
@@ -288,6 +311,6 @@ export const ClaimPdfService = {
         doc.text(`PAGE 2 OF 2 | ${statementDate}`, pageWidth - MARGIN, footerY + 8, { align: 'right' });
 
         // Save
-        doc.save(`CLAIM_DOSSIER_${data.case_id || 'RECORD'}_${statementDate}.pdf`);
+        doc.save(`NOTICE_OF_DEFICIENCY_${data.case_id || 'RECORD'}_${statementDate}.pdf`);
     }
 };
