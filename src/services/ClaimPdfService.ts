@@ -24,7 +24,7 @@ const FORMAT = {
 };
 
 export const ClaimPdfService = {
-    generate: (data: any) => {
+    generate: async (data: any) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
@@ -47,20 +47,46 @@ export const ClaimPdfService = {
             return String(val);
         };
 
+        // Load Logo Image
+        let logoLoaded = false;
+        try {
+            const response = await fetch('/logoimagetwo.png');
+            const blob = await response.blob();
+            const reader = new FileReader();
+            await new Promise<void>((resolve) => {
+                reader.onloadend = () => {
+                    if (reader.result) {
+                        try {
+                            doc.addImage(reader.result as string, 'PNG', MARGIN, 12, 12, 6);
+                            logoLoaded = true;
+                        } catch (e) {
+                            console.warn('Could not add logo to PDF:', e);
+                        }
+                    }
+                    resolve();
+                };
+                reader.readAsDataURL(blob);
+            });
+        } catch (e) {
+            console.warn('Could not load logo:', e);
+        }
+
         // --- PAGE 1: THE EXECUTIVE DEMAND ---
 
-        // Header Branding (Standardized)
-        doc.setFillColor(RICH_BLACK);
-        doc.rect(MARGIN, 12, 3, 8, 'F');
-        doc.rect(MARGIN + 4, 12, 3, 8, 'F');
+        // Header Branding (Standardized to Transaction PDF)
+        if (!logoLoaded) {
+            doc.setFillColor(RICH_BLACK);
+            doc.rect(MARGIN, 12, 3, 8, 'F');
+            doc.rect(MARGIN + 4, 12, 3, 8, 'F');
+        }
 
         doc.setTextColor(RICH_BLACK);
-        doc.setFontSize(10);
+        doc.setFontSize(8);
         doc.setFont('times', 'bold');
-        doc.text('MARGIN', MARGIN + 9, 17.5);
+        doc.text('MARGIN', MARGIN, 22);
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT & RECOVERY DIVISION', MARGIN + 9, 21);
+        doc.text('AUDIT & RECOVERY DIVISION', MARGIN, 25.5);
 
         // Right Data Block (ISO Standard)
         doc.setFont('helvetica', 'normal');
@@ -70,7 +96,7 @@ export const ClaimPdfService = {
 
         doc.text('Reference ID:', rightColX, 15);
         doc.setFont('courier', 'bold');
-        doc.text(sanitize(data.case_id, 'CASE-PENDING'), valX, 15, { align: 'right' });
+        doc.text(sanitize(data.case_id || data.id, 'CASE-PENDING'), valX, 15, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Generated:', rightColX, 20);
@@ -86,13 +112,13 @@ export const ClaimPdfService = {
         doc.setLineWidth(0.3);
         doc.line(MARGIN, 30, pageWidth - MARGIN, 30);
 
-        // Formal Title
+        // Formal Title (The Scary One)
         yPos = 38;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
         doc.text('NOTICE OF DEFICIENCY // FORENSIC CLAIM RECORD', MARGIN, yPos);
 
-        // Verdict Strip (Hero Section)
+        // 1.0 Verdict Strip (Hero Section)
         yPos = 45;
         doc.setFillColor(SUMMARY_BG);
         doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 22, 'F');
@@ -106,11 +132,12 @@ export const ClaimPdfService = {
         doc.setFontSize(12);
         doc.setFont('courier', 'bold');
         doc.setTextColor(RICH_BLACK);
-        doc.text(`$${Number(data.guaranteedAmount || data.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`, MARGIN + 5, yPos + 16);
+        const amount = Number(data.guaranteedAmount || data.amount || 0);
+        doc.text(`$${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, MARGIN + 5, yPos + 16);
 
         doc.text('PRIMARY DISCREPANCY', MARGIN + colWidth, yPos + 8);
         doc.setFontSize(9);
-        doc.text(sanitize(data.case_type || 'INBOUND_VARIANCE').toUpperCase(), MARGIN + colWidth, yPos + 16);
+        doc.text(sanitize(data.case_type || data.anomaly_type || 'INBOUND_VARIANCE').toUpperCase(), MARGIN + colWidth, yPos + 16);
 
         doc.setFontSize(7);
         doc.text('CONFIDENCE SCORE', MARGIN + (colWidth * 2), yPos + 8);
@@ -119,7 +146,7 @@ export const ClaimPdfService = {
         doc.setTextColor('#10B981');
         doc.text(`${Math.round((data.confidence || 0.998) * 1000) / 10}% MATCH`, MARGIN + (colWidth * 2), yPos + 16);
 
-        // Forensic Narrative (2.0)
+        // 2.0 Forensic Narrative
         yPos = 80;
         doc.setTextColor(RICH_BLACK);
         doc.setFont('times', 'bold');
@@ -134,13 +161,13 @@ export const ClaimPdfService = {
         doc.setFontSize(9);
         doc.setTextColor(RICH_BLACK);
 
-        const unitsLost = Math.abs(data.unitsLost || 3);
+        const unitsLost = Math.abs(data.unitsLost || data.units_lost || 3);
         const narrative = `On ${statementDate}, the Margin Audit Engine detected a variance of ${unitsLost} units at ${sanitize(data.facility, 'FTW1')}. Cross-reference with Inventory Ledger confirms units were lost post-receiving scan. This constitutes a formal demand for reimbursement under FBA policy. Margin requests an immediate physical bin check to reconcile 'ghost' inventory.`;
         const splitNarrative = doc.splitTextToSize(narrative, pageWidth - (MARGIN * 2));
         doc.text(splitNarrative, MARGIN, yPos);
 
         // 3.0 CLAIM ABSTRACT (Whitespace Liquidation)
-        yPos = 120;
+        yPos = 115;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.text('3.0 CLAIM ABSTRACT', MARGIN, yPos);
@@ -153,7 +180,7 @@ export const ClaimPdfService = {
                 sanitize(data.facility, 'FTW1 (Fort Worth)'),
                 sanitize(data.carrier, 'Amazon Partnered').toUpperCase(),
                 sanitize(data.weight, '1.20 LBS'),
-                sanitize(data.case_id || data.id, 'bbb82...d0d4')
+                sanitize(data.case_id || data.id, 'PENDING').slice(0, 16)
             ]
         ];
 
@@ -162,13 +189,13 @@ export const ClaimPdfService = {
             head: abstractData.slice(0, 1),
             body: abstractData.slice(1),
             theme: 'grid',
-            headStyles: { fillColor: SUMMARY_BG, textColor: SOFT_GREY, fontSize: 7, fontStyle: 'bold' },
-            bodyStyles: { fontSize: 8, font: 'courier', textColor: RICH_BLACK },
+            headStyles: { fillColor: SUMMARY_BG, textColor: SOFT_GREY, fontSize: 7, fontStyle: 'bold', lineWidth: 0.1 },
+            bodyStyles: { fontSize: 8, font: 'courier', textColor: RICH_BLACK, lineWidth: 0.1 },
             margin: { left: MARGIN }
         });
 
-        // Audit Certification (4.0)
-        yPos = (doc as any).lastAutoTable.finalY + 15;
+        // 4.0 Audit Certification
+        yPos = (doc as any).lastAutoTable.finalY + 12;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.text('4.0 AUDIT CERTIFICATION', MARGIN, yPos);
@@ -189,7 +216,7 @@ export const ClaimPdfService = {
         doc.text(splitCert, MARGIN + 4, yPos + 12);
 
         // Page 1 Anchor
-        yPos = pageHeight - 40;
+        yPos = pageHeight - 35;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(SOFT_GREY);
@@ -212,21 +239,35 @@ export const ClaimPdfService = {
         doc.addPage();
         yPos = 20;
 
-        // Appendix Header
-        doc.setFillColor(RICH_BLACK);
-        doc.rect(MARGIN, 12, 3, 8, 'F');
-        doc.rect(MARGIN + 4, 12, 3, 8, 'F');
+        // Appendix Header (Synchronized to Page 1 Branding)
+        if (logoLoaded) {
+            try {
+                const logoRes = await fetch('/logoimagetwo.png');
+                const logoBlob = await logoRes.blob();
+                const logoReader = new FileReader();
+                await new Promise<void>((res) => {
+                    logoReader.onloadend = () => {
+                        if (logoReader.result) doc.addImage(logoReader.result as string, 'PNG', MARGIN, 12, 12, 6);
+                        res();
+                    };
+                    logoReader.readAsDataURL(logoBlob);
+                });
+            } catch { }
+        }
+
         doc.setTextColor(RICH_BLACK);
-        doc.setFontSize(10);
+        doc.setFontSize(8);
         doc.setFont('times', 'bold');
-        doc.text('MARGIN', MARGIN + 9, 17.5);
+        doc.text('MARGIN', MARGIN, 22);
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('APPENDIX: RAW LEDGER DATA [EXHIBIT A]', MARGIN + 9, 21);
-        doc.setLineWidth(0.3);
-        doc.line(MARGIN, 25, pageWidth - MARGIN, 25);
+        doc.text('APPENDIX: RAW LEDGER DATA [EXHIBIT A]', MARGIN, 25.5);
 
-        // Asset Intelligence (5.0)
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.3);
+        doc.line(MARGIN, 30, pageWidth - MARGIN, 30);
+
+        // 5.0 Asset Intelligence (Rigid Grid)
         yPos = 40;
         doc.setFontSize(10);
         doc.setFont('times', 'bold');
@@ -246,9 +287,9 @@ export const ClaimPdfService = {
             startY: yPos,
             body: assetGrid,
             theme: 'grid',
-            styles: { fontSize: 8, cellPadding: 2.5 },
+            styles: { fontSize: 8, cellPadding: 3, lineWidth: 0.1, lineColor: HAIRLINE },
             columnStyles: {
-                0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 45, textColor: SOFT_GREY },
+                0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 50, textColor: SOFT_GREY },
                 1: { font: 'courier', textColor: RICH_BLACK }
             },
             margin: { left: MARGIN }
@@ -256,25 +297,25 @@ export const ClaimPdfService = {
 
         yPos = (doc as any).lastAutoTable.finalY + 15;
 
-        // Financial Reconciliation (6.0)
+        // 6.0 Financial Reconciliation (Rigid Grid)
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.text('6.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 8;
-        const unitVal = (data.unitCost || (data.guaranteedAmount / unitsLost)).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const unitVal = (data.unitCost || (amount / unitsLost)).toLocaleString('en-US', { minimumFractionDigits: 2 });
         const financialGrid = [
             ['UNIT VALUE (RECOVERY CAPTURE)', `$${unitVal}`],
             ['CLAIM QUANTITY', `${unitsLost} UNITS`],
-            ['TOTAL GROSS INDEMNITY', `$${Number(data.guaranteedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`]
+            ['TOTAL GROSS INDEMNITY', `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`]
         ];
 
         autoTable(doc, {
             startY: yPos,
             body: financialGrid,
             theme: 'grid',
-            styles: { fontSize: 8, cellPadding: 2.5 },
+            styles: { fontSize: 8, cellPadding: 3, lineWidth: 0.1, lineColor: HAIRLINE },
             columnStyles: {
                 0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GREY },
                 1: { font: 'courier', textColor: RICH_BLACK }
@@ -284,7 +325,7 @@ export const ClaimPdfService = {
 
         yPos = (doc as any).lastAutoTable.finalY + 15;
 
-        // Trace ID Logs (7.0)
+        // 7.0 Forensic Trace Logs
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.text('7.0 FORENSIC TRACE LOGS', MARGIN, yPos);

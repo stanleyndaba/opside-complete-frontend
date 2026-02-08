@@ -697,7 +697,7 @@ export default function CaseDetail() {
                   variant="outline"
                   size="sm"
                   className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
-                  onClick={() => ClaimPdfService.generate(effectiveCase)}
+                  onClick={async () => await ClaimPdfService.generate(effectiveCase)}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
                   Get PDF
