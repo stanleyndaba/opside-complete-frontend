@@ -96,7 +96,9 @@ export const ClaimPdfService = {
 
         doc.text('Reference ID:', rightColX, 15);
         doc.setFont('courier', 'bold');
-        doc.text(sanitize(data.case_id || data.id, 'CASE-PENDING'), valX, 15, { align: 'right' });
+        const caseId = sanitize(data.case_id || data.id, 'CASE-PENDING');
+        const displayId = caseId.length > 20 ? `${caseId.slice(0, 8)}...${caseId.slice(-8)}` : caseId;
+        doc.text(displayId, valX, 15, { align: 'right' });
 
         doc.setFont('helvetica', 'normal');
         doc.text('Generated:', rightColX, 20);
@@ -137,7 +139,8 @@ export const ClaimPdfService = {
 
         doc.text('PRIMARY DISCREPANCY', MARGIN + colWidth, yPos + 8);
         doc.setFontSize(9);
-        doc.text(sanitize(data.case_type || data.anomaly_type || 'INBOUND_VARIANCE').toUpperCase(), MARGIN + colWidth, yPos + 16);
+        const discrepancy = sanitize(data.case_type || data.anomaly_type || 'INBOUND_VARIANCE').replace(/_/g, ' ').toUpperCase();
+        doc.text(discrepancy, MARGIN + colWidth, yPos + 16);
 
         doc.setFontSize(7);
         doc.text('CONFIDENCE SCORE', MARGIN + (colWidth * 2), yPos + 8);
@@ -166,31 +169,30 @@ export const ClaimPdfService = {
         const splitNarrative = doc.splitTextToSize(narrative, pageWidth - (MARGIN * 2));
         doc.text(splitNarrative, MARGIN, yPos);
 
-        // 3.0 CLAIM ABSTRACT (Whitespace Liquidation)
+        // 3.0 FINANCIAL RECONCILIATION (Moved to Page 1)
         yPos = 115;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3.0 CLAIM ABSTRACT', MARGIN, yPos);
+        doc.text('3.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 6;
-        const abstractData = [
-            ['FACILITY', 'CARRIER', 'TOTAL WEIGHT', 'TRACING ID'],
-            [
-                sanitize(data.facility, 'FTW1 (Fort Worth)'),
-                sanitize(data.carrier, 'Amazon Partnered').toUpperCase(),
-                sanitize(data.weight, '1.20 LBS'),
-                sanitize(data.case_id || data.id, 'PENDING').slice(0, 16)
-            ]
+        const unitVal = (data.unitCost || (amount / unitsLost)).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const financialGrid = [
+            ['UNIT VALUE (RECOVERY CAPTURE)', `$${unitVal}`],
+            ['CLAIM QUANTITY', `${unitsLost} UNITS`],
+            ['TOTAL GROSS INDEMNITY', `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`]
         ];
 
         autoTable(doc, {
             startY: yPos,
-            head: abstractData.slice(0, 1),
-            body: abstractData.slice(1),
+            body: financialGrid,
             theme: 'grid',
-            headStyles: { fillColor: SUMMARY_BG, textColor: SOFT_GREY, fontSize: 7, fontStyle: 'bold', lineWidth: 0.1 },
-            bodyStyles: { fontSize: 8, font: 'courier', textColor: RICH_BLACK, lineWidth: 0.1 },
+            styles: { fontSize: 8, cellPadding: 3, lineWidth: 0.1, lineColor: HAIRLINE },
+            columnStyles: {
+                0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GREY },
+                1: { font: 'courier', textColor: RICH_BLACK }
+            },
             margin: { left: MARGIN }
         });
 
@@ -297,29 +299,30 @@ export const ClaimPdfService = {
 
         yPos = (doc as any).lastAutoTable.finalY + 15;
 
-        // 6.0 Financial Reconciliation (Rigid Grid)
+        // 6.0 CLAIM ABSTRACT (Moved to Page 2)
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('6.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
+        doc.text('6.0 CLAIM ABSTRACT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
-        yPos += 8;
-        const unitVal = (data.unitCost || (amount / unitsLost)).toLocaleString('en-US', { minimumFractionDigits: 2 });
-        const financialGrid = [
-            ['UNIT VALUE (RECOVERY CAPTURE)', `$${unitVal}`],
-            ['CLAIM QUANTITY', `${unitsLost} UNITS`],
-            ['TOTAL GROSS INDEMNITY', `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`]
+        yPos += 6;
+        const abstractData = [
+            ['FACILITY', 'CARRIER', 'TOTAL WEIGHT', 'TRACING ID'],
+            [
+                sanitize(data.facility, 'FTW1 (Fort Worth)'),
+                sanitize(data.carrier, 'Amazon Partnered').toUpperCase(),
+                sanitize(data.weight, '1.20 LBS'),
+                sanitize(data.case_id || data.id, 'PENDING').slice(0, 16)
+            ]
         ];
 
         autoTable(doc, {
             startY: yPos,
-            body: financialGrid,
+            head: abstractData.slice(0, 1),
+            body: abstractData.slice(1),
             theme: 'grid',
-            styles: { fontSize: 8, cellPadding: 3, lineWidth: 0.1, lineColor: HAIRLINE },
-            columnStyles: {
-                0: { fillColor: SUMMARY_BG, fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GREY },
-                1: { font: 'courier', textColor: RICH_BLACK }
-            },
+            headStyles: { fillColor: SUMMARY_BG, textColor: SOFT_GREY, fontSize: 7, fontStyle: 'bold', lineWidth: 0.1 },
+            bodyStyles: { fontSize: 8, font: 'courier', textColor: RICH_BLACK, lineWidth: 0.1 },
             margin: { left: MARGIN }
         });
 
