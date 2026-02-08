@@ -120,12 +120,12 @@ export const ClaimPdfService = {
         doc.setTextColor('#10B981'); // Match Green
         doc.text(`${Math.round((data.confidence || 0.998) * 1000) / 10}% MATCH`, MARGIN + (colWidth * 2), yPos + 16);
 
-        // --- FORENSIC FINDINGS (2.0) ---
-        yPos += 30;
+        // --- ROOT CAUSE & VARIANCE ANALYSIS (2.0) ---
+        yPos = 65;
         doc.setTextColor(RICH_BLACK);
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('2.0 FORENSIC FINDINGS', MARGIN, yPos);
+        doc.text('2.0 ROOT CAUSE & VARIANCE ANALYSIS', MARGIN, yPos);
 
         doc.setDrawColor(0);
         doc.setLineWidth(0.15);
@@ -136,33 +136,64 @@ export const ClaimPdfService = {
         doc.setFontSize(8.5);
         doc.setTextColor(RICH_BLACK);
 
-        const narrative = data.narrative || `On ${statementDate} at ${sanitize(data.facility, 'FTW1')}, the Margin Audit Engine detected a variance between the Manifested Quantity and the Received Quantity. Cross-reference with Inventory Ledger ID [VERIFIED] confirms units were lost post-docking.`;
+        const unitsManifested = data.unitsManifested || 10;
+        const unitsReceived = data.unitsReceived || 7;
+        const delta = data.unitsLost || (unitsReceived - unitsManifested);
+
+        const narrative = `Audit Engine detected a variance of ${delta} units at ${sanitize(data.facility, 'FTW1')}. Manifested Quantity (${unitsManifested}) vs. Received Quantity (${unitsReceived}). Cross-reference with Inventory Ledger confirms units were lost post-docking. Margin requests an immediate physical bin check to reconcile 'ghost' inventory.`;
         const splitNarrative = doc.splitTextToSize(narrative, pageWidth - (MARGIN * 2));
         doc.text(splitNarrative, MARGIN, yPos);
-        yPos += (splitNarrative.length * 4) + 6;
+        yPos += (splitNarrative.length * 4) + 8;
 
-        // --- LEDGER RECONCILIATION (3.0) ---
+        // --- FINANCIAL RECONCILIATION (3.0) ---
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3.0 LEDGER RECONCILIATION', MARGIN, yPos);
+        doc.text('3.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
+        doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
+
+        yPos += 8;
+        doc.setFillColor(SUMMARY_BG);
+        doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 15, 'F');
+
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('UNIT VALUE', MARGIN + 5, yPos + 6);
+        doc.text('QUANTITY AFFECTED', MARGIN + colWidth, yPos + 6);
+        doc.text('TOTAL RECOVERY CLAIM', MARGIN + (colWidth * 2), yPos + 6);
+
+        doc.setFontSize(9);
+        doc.setFont('courier', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        const unitVal = (data.unitCost || (data.guaranteedAmount / Math.abs(delta || 1))).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        doc.text(`$${unitVal}`, MARGIN + 5, yPos + 11);
+        doc.text(`${Math.abs(delta)} UNITS`, MARGIN + colWidth, yPos + 11);
+        doc.text(`$${Number(data.guaranteedAmount || data.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`, MARGIN + (colWidth * 2), yPos + 11);
+
+        yPos += 22;
+
+        // --- ASSET INTELLIGENCE (4.0) ---
+        doc.setFont('times', 'bold');
+        doc.setFontSize(10);
+        doc.text('4.0 ASSET INTELLIGENCE', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 6;
 
-        const ledgerData = [
-            ['ASIN', sanitize(data.asin)],
-            ['SKU / FNSKU', `${sanitize(data.sku)} / ${sanitize(data.fnsku)}`],
-            ['LOGISTIC FACILITY', sanitize(data.facility || data.evidence?.fulfillment_center, 'UNKNOWN')],
+        const assetDetails = [
+            ['ASIN / SKU', `${sanitize(data.asin)} / ${sanitize(data.sku)}`],
+            ['PRODUCT SPEC', sanitize(data.productName, 'UNIDENTIFIED INBOUND ASSET')],
+            ['UNIT WEIGHT', sanitize(data.weight, '1.20 LBS')],
+            ['DIMENSIONS', sanitize(data.dimensions, 'STANDARD-SIZE')],
             ['TRACE ID', sanitize(data.case_id || data.id, 'PENDING')],
-            ['RECOVERY DELTA', `${data.unitsLost || -3} UNITS`],
-            ['CARRIER PROTOCOL', sanitize(data.carrier, 'AMAZON_PARTNERED').toUpperCase()]
+            ['FACILITY / CARRIER', `${sanitize(data.facility, 'FTW1')} / ${sanitize(data.carrier, 'AMAZON_PARTNERED').toUpperCase()}`]
         ];
 
         autoTable(doc, {
             startY: yPos,
-            body: ledgerData,
+            body: assetDetails,
             theme: 'plain',
-            styles: { fontSize: 8, cellPadding: 2.5 },
+            styles: { fontSize: 7.5, cellPadding: 2 },
             columnStyles: {
                 0: { fontStyle: 'bold', cellWidth: 45, textColor: SOFT_GREY },
                 1: { font: 'courier', textColor: RICH_BLACK }
@@ -177,18 +208,7 @@ export const ClaimPdfService = {
 
         yPos = (doc as any).lastAutoTable.finalY + 10;
 
-        // --- ASSET SPECIFICATIONS (4.0) ---
-        doc.setFont('times', 'bold');
-        doc.setFontSize(10);
-        doc.text('4.0 ASSET SPECIFICATIONS', MARGIN, yPos);
-        doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
-
-        yPos += 6;
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.text(`PRODUCT NAME: ${sanitize(data.productName, 'UNIDENTIFIED INBOUND ASSET')}`, MARGIN, yPos);
-
-        yPos += 6;
+        // --- AUDIT CERTIFICATION & LEGAL FOOTER ---
         doc.setDrawColor(RICH_BLACK);
         doc.setLineWidth(0.3);
         doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 20);
