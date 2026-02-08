@@ -47,10 +47,10 @@ export const ClaimPdfService = {
             return String(val);
         };
 
+        // --- PAGE 1: THE EXECUTIVE DEMAND ---
+
         // Header (Authority)
         doc.setTextColor(RICH_BLACK);
-
-        // Logo & Branding
         doc.setFontSize(8);
         doc.setFont('times', 'bold');
         doc.text('MARGIN', MARGIN, 18);
@@ -58,7 +58,7 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'bold');
         doc.text('AUDIT & RECOVERY DIVISION', MARGIN, 21.5);
 
-        // Right Data Block (Grid)
+        // Right Data Block
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         const rightColX = pageWidth - 65;
@@ -78,166 +78,216 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'bold');
         doc.text('ACTION REQUIRED', valX, 25, { align: 'right' });
 
-        // Divider Line
         doc.setDrawColor(0);
         doc.setLineWidth(0.3);
         doc.line(MARGIN, 30, pageWidth - MARGIN, 30);
 
-        // --- VERDICT STRIP (Hero Section) ---
-        yPos = 38;
+        // Verdict Strip (Hero Section)
+        yPos = 40;
         doc.setFillColor(SUMMARY_BG);
         doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 22, 'F');
 
         const colWidth = (pageWidth - (MARGIN * 2)) / 3;
 
-        // Column 1: Claim Amount
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        doc.text('TOTAL CLAIM AMOUNT', MARGIN + 5, yPos + 8);
+        doc.text('TOTAL CLAIM VALUE', MARGIN + 5, yPos + 8);
         doc.setFontSize(12);
         doc.setFont('courier', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(`$${Number(data.guaranteedAmount || data.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`, MARGIN + 5, yPos + 16);
 
-        // Column 2: Discrepancy Type
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        doc.text('DISCREPANCIES DETECTED', MARGIN + colWidth, yPos + 8);
+        doc.text('PRIMARY DISCREPANCY', MARGIN + colWidth, yPos + 8);
         doc.setFontSize(9);
         doc.setFont('courier', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(sanitize(data.case_type || 'INBOUND_VARIANCE').toUpperCase(), MARGIN + colWidth, yPos + 16);
 
-        // Column 3: Confidence Score
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
-        doc.text('CONFIDENCE PROTOCOL', MARGIN + (colWidth * 2), yPos + 8);
+        doc.text('CONFIDENCE SCORE', MARGIN + (colWidth * 2), yPos + 8);
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor('#10B981'); // Match Green
+        doc.setTextColor('#10B981');
         doc.text(`${Math.round((data.confidence || 0.998) * 1000) / 10}% MATCH`, MARGIN + (colWidth * 2), yPos + 16);
 
-        // --- ROOT CAUSE & VARIANCE ANALYSIS (2.0) ---
-        yPos = 65;
+        // Forensic Narrative (2.0)
+        yPos = 75;
         doc.setTextColor(RICH_BLACK);
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.text('2.0 ROOT CAUSE & VARIANCE ANALYSIS', MARGIN, yPos);
-
         doc.setDrawColor(0);
         doc.setLineWidth(0.15);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
-        yPos += 8;
+        yPos += 10;
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8.5);
+        doc.setFontSize(9);
         doc.setTextColor(RICH_BLACK);
 
-        const unitsManifested = data.unitsManifested || 10;
-        const unitsReceived = data.unitsReceived || 7;
-        const delta = data.unitsLost || (unitsReceived - unitsManifested);
-
-        const narrative = `Audit Engine detected a variance of ${delta} units at ${sanitize(data.facility, 'FTW1')}. Manifested Quantity (${unitsManifested}) vs. Received Quantity (${unitsReceived}). Cross-reference with Inventory Ledger confirms units were lost post-docking. Margin requests an immediate physical bin check to reconcile 'ghost' inventory.`;
+        const unitsLost = Math.abs(data.unitsLost || 3);
+        const narrative = `On ${statementDate}, the Margin Audit Engine detected a variance of ${unitsLost} units at ${sanitize(data.facility, 'FTW1')}. Cross-reference with Inventory Ledger confirms units were lost post-receiving scan. This constitutes a formal demand for reimbursement under FBA policy. Margin requests an immediate physical bin check to reconcile 'ghost' inventory.`;
         const splitNarrative = doc.splitTextToSize(narrative, pageWidth - (MARGIN * 2));
         doc.text(splitNarrative, MARGIN, yPos);
-        yPos += (splitNarrative.length * 4) + 8;
 
-        // --- FINANCIAL RECONCILIATION (3.0) ---
+        // Audit Certification (3.0)
+        yPos = 130;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
+        doc.text('3.0 AUDIT CERTIFICATION', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 8;
-        doc.setFillColor(SUMMARY_BG);
-        doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 15, 'F');
+        doc.setDrawColor(RICH_BLACK);
+        doc.setLineWidth(0.3);
+        doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 22);
 
-        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text('CERTIFICATION STATEMENT:', MARGIN + 4, yPos + 7);
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
-        doc.text('UNIT VALUE', MARGIN + 5, yPos + 6);
-        doc.text('QUANTITY AFFECTED', MARGIN + colWidth, yPos + 6);
-        doc.text('TOTAL RECOVERY CLAIM', MARGIN + (colWidth * 2), yPos + 6);
+        doc.setFontSize(7.5);
+        const certText = "This claim is generated via automated forensic audit of Amazon Inventory Ledgers. Data is cross-matched against receiving logs, manifest quantities, and settlement reports. The discrepancy identified herein is verified as a non-reimbursed variance.";
+        const splitCert = doc.splitTextToSize(certText, pageWidth - (MARGIN * 2) - 8);
+        doc.text(splitCert, MARGIN + 4, yPos + 12);
 
+        // Page 1 Anchor
+        yPos = pageHeight - 40;
+        doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
-        doc.setFont('courier', 'bold');
-        doc.setTextColor(RICH_BLACK);
-        const unitVal = (data.unitCost || (data.guaranteedAmount / Math.abs(delta || 1))).toLocaleString('en-US', { minimumFractionDigits: 2 });
-        doc.text(`$${unitVal}`, MARGIN + 5, yPos + 11);
-        doc.text(`${Math.abs(delta)} UNITS`, MARGIN + colWidth, yPos + 11);
-        doc.text(`$${Number(data.guaranteedAmount || data.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`, MARGIN + (colWidth * 2), yPos + 11);
+        doc.setTextColor(SOFT_GREY);
+        doc.text('SEE ATTACHED EVIDENCE: EXHIBIT A [PAGE 2]', pageWidth / 2, yPos, { align: 'center' });
 
-        yPos += 22;
-
-        // --- ASSET INTELLIGENCE (4.0) ---
+        // Footer Page 1
+        const footerY = pageHeight - 15;
+        doc.setDrawColor(HAIRLINE);
+        doc.setLineWidth(0.15);
+        doc.line(MARGIN, footerY, pageWidth - MARGIN, footerY);
         doc.setFont('times', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(RICH_BLACK);
+        doc.text('MARGIN // FORENSIC AFFIDAVIT', MARGIN, footerY + 8);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        doc.text(`PAGE 1 OF 2 | ${statementDate}`, pageWidth - MARGIN, footerY + 8, { align: 'right' });
+
+        // --- PAGE 2: EXHIBIT A (THE PROOF) ---
+        doc.addPage();
+        yPos = 20;
+
+        // Appendix Header
+        doc.setFontSize(8);
+        doc.setFont('times', 'bold');
+        doc.text('MARGIN', MARGIN, 18);
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
+        doc.text('APPENDIX: RAW LEDGER DATA [EXHIBIT A]', MARGIN, 21.5);
+        doc.setLineWidth(0.3);
+        doc.line(MARGIN, 25, pageWidth - MARGIN, 25);
+
+        // Asset Intelligence (4.0)
+        yPos = 40;
         doc.setFontSize(10);
-        doc.text('4.0 ASSET INTELLIGENCE', MARGIN, yPos);
+        doc.setFont('times', 'bold');
+        doc.text('4.0 ASSET SPECIFICATIONS', MARGIN, yPos);
+        doc.setLineWidth(0.15);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         yPos += 6;
-
         const assetDetails = [
+            ['PRODUCT IDENTITY', sanitize(data.productName, 'UNIDENTIFIED INBOUND ASSET')],
             ['ASIN / SKU', `${sanitize(data.asin)} / ${sanitize(data.sku)}`],
-            ['PRODUCT SPEC', sanitize(data.productName, 'UNIDENTIFIED INBOUND ASSET')],
-            ['UNIT WEIGHT', sanitize(data.weight, '1.20 LBS')],
-            ['DIMENSIONS', sanitize(data.dimensions, 'STANDARD-SIZE')],
-            ['TRACE ID', sanitize(data.case_id || data.id, 'PENDING')],
-            ['FACILITY / CARRIER', `${sanitize(data.facility, 'FTW1')} / ${sanitize(data.carrier, 'AMAZON_PARTNERED').toUpperCase()}`]
+            ['PHYSICAL MASS', sanitize(data.weight, '1.20 LBS')],
+            ['DIMENSIONAL CLASS', sanitize(data.dimensions, 'STANDARD-SIZE')],
+            ['LOGISTIC FACILITY', sanitize(data.facility, 'FTW1')],
+            ['CARRIER PROTOCOL', sanitize(data.carrier, 'AMAZON_PARTNERED').toUpperCase()]
         ];
 
         autoTable(doc, {
             startY: yPos,
             body: assetDetails,
             theme: 'plain',
-            styles: { fontSize: 7.5, cellPadding: 2 },
+            styles: { fontSize: 8, cellPadding: 2.5 },
             columnStyles: {
-                0: { fontStyle: 'bold', cellWidth: 45, textColor: SOFT_GREY },
+                0: { fontStyle: 'bold', cellWidth: 50, textColor: SOFT_GREY },
                 1: { font: 'courier', textColor: RICH_BLACK }
             },
-            didDrawCell: (data) => {
+            didDrawCell: (d) => {
                 doc.setDrawColor(HAIRLINE);
                 doc.setLineWidth(0.15);
-                doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+                doc.line(d.cell.x, d.cell.y + d.cell.height, d.cell.x + d.cell.width, d.cell.y + d.cell.height);
             },
             margin: { left: MARGIN }
         });
 
-        yPos = (doc as any).lastAutoTable.finalY + 10;
+        yPos = (doc as any).lastAutoTable.finalY + 15;
 
-        // --- AUDIT CERTIFICATION & LEGAL FOOTER ---
-        doc.setDrawColor(RICH_BLACK);
-        doc.setLineWidth(0.3);
-        doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 20);
+        // Financial Reconciliation (5.0)
+        doc.setFont('times', 'bold');
+        doc.setFontSize(10);
+        doc.text('5.0 FINANCIAL RECONCILIATION', MARGIN, yPos);
+        doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
-        doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT CERTIFICATION:', MARGIN + 4, yPos + 7);
-        doc.setFont('helvetica', 'normal');
+        yPos += 8;
+        const unitVal = (data.unitCost || (data.guaranteedAmount / unitsLost)).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const financialData = [
+            ['UNIT VALUE (RECOVERY CAPTURE)', `$${unitVal}`],
+            ['CLAIM QUANTITY', `${unitsLost} UNITS`],
+            ['TOTAL GROSS INDEMNITY', `$${Number(data.guaranteedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`]
+        ];
+
+        autoTable(doc, {
+            startY: yPos,
+            body: financialData,
+            theme: 'plain',
+            styles: { fontSize: 8, cellPadding: 2.5 },
+            columnStyles: {
+                0: { fontStyle: 'bold', cellWidth: 55, textColor: SOFT_GREY },
+                1: { font: 'courier', textColor: RICH_BLACK }
+            },
+            didDrawCell: (d) => {
+                doc.setDrawColor(HAIRLINE);
+                doc.setLineWidth(0.15);
+                doc.line(d.cell.x, d.cell.y + d.cell.height, d.cell.x + d.cell.width, d.cell.y + d.cell.height);
+            },
+            margin: { left: MARGIN }
+        });
+
+        yPos = (doc as any).lastAutoTable.finalY + 15;
+
+        // Trace ID Logs (6.0)
+        doc.setFont('times', 'bold');
+        doc.setFontSize(10);
+        doc.text('6.0 FORENSIC TRACE LOGS', MARGIN, yPos);
+        doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
+
+        yPos += 6;
+        doc.setFont('courier', 'normal');
         doc.setFontSize(7.5);
-        const certText = "This claim is generated via algorithmic audit of Amazon Inventory Ledgers. The data herein constitutes a formal request for reimbursement under FBA Lost and Damaged Inventory Reimbursement Policy. All timestamps are UTC. Discrepancy confirmed via cross-matching Settlement Reports & Receiving Scans.";
-        const splitCert = doc.splitTextToSize(certText, pageWidth - (MARGIN * 2) - 8);
-        doc.text(splitCert, MARGIN + 4, yPos + 12);
+        doc.setTextColor(RICH_BLACK);
+        doc.text(`TRACE_ID: ${sanitize(data.case_id || data.id, 'PENDING')}`, MARGIN, yPos + 5);
+        doc.text(`LEDGER_TS: ${new Date().toISOString()}`, MARGIN, yPos + 10);
+        doc.text(`AUDIT_ENG: v4.2.0-FORENSIC`, MARGIN, yPos + 15);
 
-        // --- FOOTER ---
-        const footerY = pageHeight - 15;
+        // Footer Page 2
         doc.setDrawColor(HAIRLINE);
         doc.setLineWidth(0.15);
         doc.line(MARGIN, footerY, pageWidth - MARGIN, footerY);
-
         doc.setFont('times', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(RICH_BLACK);
-        doc.text('MARGIN // FORENSIC AFFIDAVIT', MARGIN, footerY + 8);
-
+        doc.text('MARGIN // EXHIBIT A', MARGIN, footerY + 8);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
-        doc.setTextColor(SOFT_GREY);
-        doc.text(`PAGE 1 OF 1 | ${statementDate} | CONFIDENTIAL FINANCIAL RECORD`, pageWidth - MARGIN, footerY + 8, { align: 'right' });
+        doc.text(`PAGE 2 OF 2 | ${statementDate}`, pageWidth - MARGIN, footerY + 8, { align: 'right' });
 
         // Save
-        doc.save(`CLAIM_AFFIDAVIT_${data.case_id || 'RECORD'}_${statementDate}.pdf`);
+        doc.save(`CLAIM_DOSSIER_${data.case_id || 'RECORD'}_${statementDate}.pdf`);
     }
 };
