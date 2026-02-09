@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store, Box } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -362,6 +362,15 @@ export function Navbar({
                     </div>
                   </HoverCardContent>
                 </HoverCard>
+
+                {/* Integrations Icon */}
+                <button
+                  onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
+                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+                  aria-label="Integrations Hub"
+                  title="Integrations">
+                  <Box className="h-4.5 w-4.5" />
+                </button>
               </div>
             </div>
           </div>
