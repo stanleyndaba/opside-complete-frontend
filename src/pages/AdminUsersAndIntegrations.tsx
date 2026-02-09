@@ -8,9 +8,19 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { api } from '@/lib/api';
-import { Users, Mail, Clock, Star } from 'lucide-react';
+import { Users, Mail, Clock, Star, DollarSign, Plug, Briefcase } from 'lucide-react';
 
-interface UserRow { id: string; email: string; role: 'user' | 'admin'; status: 'active' | 'locked'; }
+interface UserRow {
+  id: string;
+  email: string;
+  role: 'user' | 'admin';
+  status: 'active' | 'locked';
+  created_at?: string;
+  last_login?: string;
+  integrations_count?: number;
+  cases_count?: number;
+  total_recovered?: number;
+}
 interface ProviderStatus { connected: boolean; lastSync?: string; tokenAgeDays?: number; }
 interface WaitlistEntry {
   id: string;
@@ -224,62 +234,102 @@ export default function AdminUsersAndIntegrations() {
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-white border-gray-200 shadow-sm">
-                <CardHeader>
+            {/* Users Section - Full Width */}
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center">
                       <Users className="h-4 w-4 text-blue-600" />
                     </div>
                     <div>
-                      <CardTitle className="text-base font-normal text-gray-700">Users and Access</CardTitle>
-                      <CardDescription className="text-gray-500">Manage roles and lock or impersonate users.</CardDescription>
+                      <CardTitle className="text-base font-normal text-gray-700">All Users</CardTitle>
+                      <CardDescription className="text-gray-500">
+                        {filtered.length} users • Manage roles, integrations, and access
+                      </CardDescription>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="userFilter" className="text-gray-600">Search users</Label>
-                    <Input id="userFilter" placeholder="email@company.com" value={filter} onChange={e => setFilter(e.target.value)} className="bg-white border-gray-200 text-gray-700" />
-                  </div>
-                  {usersLoading ? (
-                    <div className="py-8 text-center text-gray-500">Loading users...</div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full text-sm">
-                        <thead className="text-left text-gray-500 border-b border-gray-200">
-                          <tr>
-                            <th className="py-2 pr-4 font-normal">Email</th>
-                            <th className="py-2 pr-4 font-normal">Role</th>
-                            <th className="py-2 pr-4 font-normal">Status</th>
-                            <th className="py-2 font-normal">Actions</th>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="userFilter" className="text-gray-600">Search users</Label>
+                  <Input id="userFilter" placeholder="email@company.com" value={filter} onChange={e => setFilter(e.target.value)} className="bg-white border-gray-200 text-gray-700" />
+                </div>
+                {usersLoading ? (
+                  <div className="py-8 text-center text-gray-500">Loading users...</div>
+                ) : filtered.length === 0 ? (
+                  <div className="py-8 text-center text-gray-500">No users found</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead className="text-left text-gray-500 border-b border-gray-200">
+                        <tr>
+                          <th className="py-2 pr-4 font-normal">Email</th>
+                          <th className="py-2 pr-4 font-normal">Joined</th>
+                          <th className="py-2 pr-4 font-normal">Integrations</th>
+                          <th className="py-2 pr-4 font-normal">Cases</th>
+                          <th className="py-2 pr-4 font-normal">Recovered</th>
+                          <th className="py-2 pr-4 font-normal">Role</th>
+                          <th className="py-2 pr-4 font-normal">Status</th>
+                          <th className="py-2 font-normal">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filtered.map(u => (
+                          <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-3 pr-4">
+                              <div className="text-gray-700 font-medium">{u.email}</div>
+                              {u.last_login && (
+                                <div className="text-gray-400 text-xs">Last login: {formatDate(u.last_login)}</div>
+                              )}
+                            </td>
+                            <td className="py-3 pr-4 text-gray-500 text-xs">
+                              {u.created_at ? formatDate(u.created_at) : '—'}
+                            </td>
+                            <td className="py-3 pr-4">
+                              <span className="flex items-center gap-1 text-gray-600">
+                                <Plug className="h-3 w-3" />
+                                {u.integrations_count || 0}
+                              </span>
+                            </td>
+                            <td className="py-3 pr-4">
+                              <span className="flex items-center gap-1 text-gray-600">
+                                <Briefcase className="h-3 w-3" />
+                                {u.cases_count || 0}
+                              </span>
+                            </td>
+                            <td className="py-3 pr-4">
+                              <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                                <DollarSign className="h-3 w-3" />
+                                {(u.total_recovered || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                              </span>
+                            </td>
+                            <td className="py-3 pr-4">
+                              <select className="bg-white border-gray-200 text-gray-700 rounded px-2 py-1 text-sm" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as UserRow['role'] })}>
+                                <option value="user">user</option>
+                                <option value="admin">admin</option>
+                              </select>
+                            </td>
+                            <td className="py-3 pr-4">
+                              <Badge className={u.status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-gray-100 text-gray-500 border-gray-200'}>
+                                {u.status}
+                              </Badge>
+                            </td>
+                            <td className="py-3 flex gap-2">
+                              <Button size="sm" variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => handleImpersonate(u.id)}>Impersonate</Button>
+                              <Button size="sm" className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" onClick={() => toggleUserStatus(u)}>{u.status === 'active' ? 'Lock' : 'Unlock'}</Button>
+                            </td>
                           </tr>
-                        </thead>
-                        <tbody>
-                          {filtered.map(u => (
-                            <tr key={u.id} className="border-b border-gray-100">
-                              <td className="py-2 pr-4 text-gray-600">{u.email}</td>
-                              <td className="py-2 pr-4">
-                                <select className="bg-white border-gray-200 text-gray-700 rounded px-2 py-1 text-sm" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as UserRow['role'] })}>
-                                  <option value="user">user</option>
-                                  <option value="admin">admin</option>
-                                </select>
-                              </td>
-                              <td className="py-2 pr-4">
-                                <span className={`px-2 py-0.5 rounded text-xs ${u.status === 'active' ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-500'}`}>{u.status}</span>
-                              </td>
-                              <td className="py-2 flex gap-2">
-                                <Button size="sm" variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => handleImpersonate(u.id)}>Impersonate</Button>
-                                <Button size="sm" className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" onClick={() => toggleUserStatus(u)}>{u.status === 'active' ? 'Lock' : 'Unlock'}</Button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
 
               <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
