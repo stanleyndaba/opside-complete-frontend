@@ -6,16 +6,35 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 import { api } from '@/lib/api';
+import { Users, Mail, Clock, Star } from 'lucide-react';
 
 interface UserRow { id: string; email: string; role: 'user' | 'admin'; status: 'active' | 'locked'; }
 interface ProviderStatus { connected: boolean; lastSync?: string; tokenAgeDays?: number; }
+interface WaitlistEntry {
+  id: string;
+  email: string;
+  user_type?: string;
+  annual_revenue?: string;
+  primary_goal?: string;
+  contact_handle?: string;
+  status: string;
+  created_at: string;
+  metadata?: { is_whale?: boolean; priority?: string };
+}
 
 export default function AdminUsersAndIntegrations() {
   // Users - fetched from backend
   const [users, setUsers] = useState<UserRow[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
   const [filter, setFilter] = useState('');
+
+  // Waitlist
+  const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
+  const [waitlistLoading, setWaitlistLoading] = useState(true);
+  const [waitlistFilter, setWaitlistFilter] = useState('');
+  const [waitlistTotal, setWaitlistTotal] = useState(0);
 
   // Integrations summary
   const [status, setStatus] = useState<{
@@ -52,6 +71,22 @@ export default function AdminUsersAndIntegrations() {
       }
     })();
 
+    // Fetch waitlist
+    (async () => {
+      setWaitlistLoading(true);
+      try {
+        const waitlistRes = await api.getWaitlist(100, 0);
+        if (waitlistRes.ok && waitlistRes.data?.entries) {
+          setWaitlist(waitlistRes.data.entries);
+          setWaitlistTotal(waitlistRes.data.total);
+        }
+      } catch (err) {
+        console.error('Failed to load waitlist:', err);
+      } finally {
+        setWaitlistLoading(false);
+      }
+    })();
+
     (async () => {
       const s = await api.getIntegrationsStatus();
       if (s.ok) setStatus(s.data);
@@ -65,6 +100,10 @@ export default function AdminUsersAndIntegrations() {
   }, []);
 
   const filtered = useMemo(() => users.filter(u => u.email.toLowerCase().includes(filter.toLowerCase())), [users, filter]);
+  const filteredWaitlist = useMemo(() => waitlist.filter(w =>
+    w.email.toLowerCase().includes(waitlistFilter.toLowerCase()) ||
+    (w.user_type || '').toLowerCase().includes(waitlistFilter.toLowerCase())
+  ), [waitlist, waitlistFilter]);
 
   const updateUser = async (id: string, updates: Partial<UserRow>) => {
     // Optimistically update UI
@@ -98,16 +137,105 @@ export default function AdminUsersAndIntegrations() {
     };
   };
 
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
   return (
     <AdminOnly>
       <PageLayout title="Admin · Users & Integrations">
         <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
-          <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6">
+          <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6 space-y-6">
+            {/* Waitlist Section */}
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-emerald-50 flex items-center justify-center">
+                      <Mail className="h-4 w-4 text-emerald-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base font-normal text-gray-700">Waitlist</CardTitle>
+                      <CardDescription className="text-gray-500">
+                        {waitlistTotal} signups • Priority leads are marked
+                      </CardDescription>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="waitlistFilter" className="text-gray-600">Search waitlist</Label>
+                  <Input
+                    id="waitlistFilter"
+                    placeholder="Search by email or user type..."
+                    value={waitlistFilter}
+                    onChange={e => setWaitlistFilter(e.target.value)}
+                    className="bg-white border-gray-200 text-gray-700"
+                  />
+                </div>
+                {waitlistLoading ? (
+                  <div className="py-8 text-center text-gray-500">Loading waitlist...</div>
+                ) : filteredWaitlist.length === 0 ? (
+                  <div className="py-8 text-center text-gray-500">No waitlist entries yet</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead className="text-left text-gray-500 border-b border-gray-200">
+                        <tr>
+                          <th className="py-2 pr-4 font-normal">Email</th>
+                          <th className="py-2 pr-4 font-normal">Type</th>
+                          <th className="py-2 pr-4 font-normal">Revenue</th>
+                          <th className="py-2 pr-4 font-normal">Contact</th>
+                          <th className="py-2 pr-4 font-normal">Signed Up</th>
+                          <th className="py-2 font-normal">Priority</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredWaitlist.map(entry => (
+                          <tr key={entry.id} className="border-b border-gray-100">
+                            <td className="py-2 pr-4 text-gray-700">{entry.email}</td>
+                            <td className="py-2 pr-4 text-gray-600 capitalize">{entry.user_type || '—'}</td>
+                            <td className="py-2 pr-4 text-gray-600">{entry.annual_revenue || '—'}</td>
+                            <td className="py-2 pr-4 text-gray-600">{entry.contact_handle || '—'}</td>
+                            <td className="py-2 pr-4 text-gray-500 text-xs">
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {formatDate(entry.created_at)}
+                              </span>
+                            </td>
+                            <td className="py-2">
+                              {entry.metadata?.is_whale ? (
+                                <Badge className="bg-amber-100 text-amber-800 border-amber-200 flex items-center gap-1 w-fit">
+                                  <Star className="h-3 w-3" />
+                                  Whale
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-gray-500 border-gray-200">Standard</Badge>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-base font-normal text-gray-700">Users and Access</CardTitle>
-                  <CardDescription className="text-gray-500">Manage roles and lock or impersonate users.</CardDescription>
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center">
+                      <Users className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base font-normal text-gray-700">Users and Access</CardTitle>
+                      <CardDescription className="text-gray-500">Manage roles and lock or impersonate users.</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -200,3 +328,4 @@ export default function AdminUsersAndIntegrations() {
     </AdminOnly>
   );
 }
+

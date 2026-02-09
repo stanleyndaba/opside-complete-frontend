@@ -294,6 +294,11 @@ export const api = {
     body: JSON.stringify(data)
   }),
 
+  // Get waitlist entries (admin only)
+  getWaitlist: (limit = 100, offset = 0) =>
+    requestJson<{ success: boolean; entries: any[]; total: number }>(`/api/waitlist?limit=${limit}&offset=${offset}`),
+
+
   // Export buildApiUrl for use in other modules
   buildApiUrl,
 
