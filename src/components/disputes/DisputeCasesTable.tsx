@@ -604,10 +604,8 @@ export function DisputeCasesTable() {
                         variant="ghost"
                         className="h-9 px-4 text-emerald-500/40 hover:text-emerald-500 hover:bg-emerald-500/5 rounded-xl text-[9px] font-mono font-bold uppercase tracking-widest group/pdf"
                       >
-                        {downloadingBrief.has(caseItem.id) ? (
+                        {downloadingBrief.has(caseItem.id) && (
                           <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
-                        ) : (
-                          <DollarSign className="w-3.5 h-3.5 mr-2 group-hover/pdf:scale-110 transition-transform" />
                         )}
                         GET_PDF
                       </Button>
