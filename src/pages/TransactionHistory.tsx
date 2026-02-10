@@ -279,14 +279,14 @@ export default function TransactionHistory() {
         }
 
         // --- HEADER SECTION (JURISDICTION) ---
-        doc.setFillColor(0, 0, 0); // Pure Black
+        doc.setFillColor(229, 229, 229); // Premium Soft Grey (#E5E5E5)
         doc.rect(14, 10, pageWidth - 28, 6, 'F');
 
-        doc.setTextColor(255, 255, 255); // White text on black bar
+        doc.setTextColor(17, 17, 17); // Black text on grey bar
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('CLASSIFICATION: CONFIDENTIAL FINANCIAL RECORD', pageWidth - 14, 14, { align: 'right' });
-        doc.text('MARGIN AUDIT SYSTEMS', 16, 14);
+        doc.text('Classification: Confidential Statement', pageWidth - 14, 14, { align: 'right' });
+        doc.text('Margin Audit System', 16, 14);
 
         // Logo: Reduced and strictly positioned
         doc.setTextColor(RICH_BLACK);
