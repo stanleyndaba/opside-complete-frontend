@@ -2424,7 +2424,7 @@ export default function Recoveries() {
                     className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
                     <div className="flex items-center justify-center gap-2">
                       <Hexagon className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-                      Claims_Ledger
+                      Claims
                       {tabCounts.claimsCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.claimsCount}
@@ -2438,7 +2438,7 @@ export default function Recoveries() {
                     className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
                     <div className="flex items-center justify-center gap-2">
                       <Sparkles className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-                      Evidence_Matrix
+                      Document Match
                       {tabCounts.evidenceMatchingCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.evidenceMatchingCount}
@@ -2452,7 +2452,7 @@ export default function Recoveries() {
                     className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
                     <div className="flex items-center justify-center gap-2">
                       <FileSearch className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-                      Dispute_Vectors
+                      Ready Dispute Cases
                       {tabCounts.disputeCasesCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.disputeCasesCount}
