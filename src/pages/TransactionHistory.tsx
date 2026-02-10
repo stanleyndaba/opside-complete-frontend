@@ -354,8 +354,32 @@ export default function TransactionHistory() {
         doc.setTextColor(RICH_BLACK);
         doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18 + colWidth * 2, 60);
 
-        // --- Category Summary (Audit Breakdown) ---
+        // --- Workload & Timeline Analytics (NOW AT TOP) ---
         let currentY = 75;
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'bold');
+        doc.text('WORKLOAD & RESOLUTION ANALYTICS', 14, currentY);
+        currentY += 5;
+
+        doc.setFillColor(SUMMARY_BG);
+        doc.rect(14, currentY, pageWidth - 28, 15, 'F');
+
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('CLAIMS IN PROGRESS', 18, currentY + 6);
+        doc.text('CLAIMS DENIED/APPEALING', 18 + colWidth, currentY + 6);
+        doc.text('AVG. DAYS TO RESOLVE', 18 + colWidth * 2, currentY + 6);
+
+        doc.setFont('courier', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text(`${summary.inProgressCount} cases ($${summary.inProgressAmount.toLocaleString()})`, 18, currentY + 11);
+        doc.text(`${summary.deniedCount} cases ($${summary.deniedAmount.toLocaleString()})`, 18 + colWidth, currentY + 11);
+        doc.text(`122 Days (Target: <180)`, 18 + colWidth * 2, currentY + 11);
+
+        currentY += 25;
+
+        // --- Category Summary (Audit Breakdown) ---
         doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
         doc.text('AUDIT DISCOVERY BY ISSUE CATEGORY', 14, currentY);
@@ -433,32 +457,7 @@ export default function TransactionHistory() {
             margin: { left: 14, right: 14 }
         });
 
-        // --- Workload & Timeline Analytics ---
         currentY = (doc as any).lastAutoTable.finalY + 15;
-        if (currentY > 260) { doc.addPage(); currentY = 20; }
-
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'bold');
-        doc.text('WORKLOAD & RESOLUTION ANALYTICS', 14, currentY);
-        currentY += 5;
-
-        doc.setFillColor(SUMMARY_BG);
-        doc.rect(14, currentY, pageWidth - 28, 15, 'F');
-
-        doc.setFontSize(7);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
-        doc.text('CLAIMS IN PROGRESS', 18, currentY + 6);
-        doc.text('CLAIMS DENIED/APPEALING', 18 + colWidth, currentY + 6);
-        doc.text('AVG. DAYS TO RESOLVE', 18 + colWidth * 2, currentY + 6);
-
-        doc.setFont('courier', 'bold');
-        doc.setTextColor(RICH_BLACK);
-        doc.text(`${summary.inProgressCount} cases ($${summary.inProgressAmount.toLocaleString()})`, 18, currentY + 11);
-        doc.text(`${summary.deniedCount} cases ($${summary.deniedAmount.toLocaleString()})`, 18 + colWidth, currentY + 11);
-        doc.text(`122 Days (Target: <180)`, 18 + colWidth * 2, currentY + 11);
-
-        currentY += 25;
 
         // Legal Footer (Trust)
         const finalY = currentY > 270 ? 20 : currentY;
