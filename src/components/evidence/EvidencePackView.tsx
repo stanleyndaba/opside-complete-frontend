@@ -612,174 +612,193 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white">
-        <DialogHeader className="border-b border-gray-200 pb-3">
-          <DialogTitle className="text-base font-semibold text-gray-900">
-            Evidence Documentation Package
-          </DialogTitle>
-          <DialogDescription className="text-xs text-gray-600 mt-1">
-            Claim Reference: {claim.claim_number || claim.id.slice(0, 12)}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0">
+        <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-[14px] font-mono font-bold text-white uppercase tracking-[0.3em]">
+              EVIDENCE_DOCUMENTATION_PACKAGE
+            </DialogTitle>
+            <DialogDescription className="text-[10px] font-mono text-white/40 uppercase tracking-tight">
+              CLAIM_REF: {claim.claim_number || claim.id.slice(0, 12)}
+            </DialogDescription>
+          </DialogHeader>
+        </div>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-8 p-8">
           {/* Summary Information */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700">Claim Summary</h4>
+          <div className="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.01]">
+            <div className="bg-white/5 border-b border-white/5 px-6 py-3">
+              <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">CLAIM_SUMMARY_MATRIX</h4>
             </div>
-            <div className="bg-white">
-              <div className="divide-y divide-gray-100">
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Claim Type</span>
-                  <span className="text-xs font-medium text-gray-900">{claimType}</span>
+            <div className="bg-transparent">
+              <div className="divide-y divide-white/5">
+                <div className="flex justify-between items-center px-6 py-3.5">
+                  <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">CLAIM_TYPE</span>
+                  <span className="text-[10px] font-mono font-bold text-white/60 uppercase">{claimType}</span>
                 </div>
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Status</span>
-                  <span className="text-xs font-medium text-gray-900">{claim.status}</span>
+                <div className="flex justify-between items-center px-6 py-3.5">
+                  <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">NODE_STATUS</span>
+                  <div className={cn(
+                    "px-2 py-0.5 rounded border text-[9px] font-mono font-bold uppercase tracking-widest",
+                    claim.status === 'Submitted' ? "bg-blue-500/10 border-blue-500/20 text-blue-400" :
+                      claim.status === 'Reimbursed' ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
+                        claim.status === 'Denied' ? "bg-red-500/10 border-red-500/20 text-red-400" :
+                          "bg-white/5 border-white/10 text-white/40"
+                  )}>
+                    {claim.status}
+                  </div>
                 </div>
-                <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-gray-600">Amount</span>
-                  <span className="text-xs font-semibold text-gray-900">{formatCurrency(amount)}</span>
+                <div className="flex justify-between items-center px-6 py-3.5">
+                  <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">RECOVERY_VALUE</span>
+                  <span className="text-sm font-serif italic text-white tracking-tighter">{formatCurrency(amount)}</span>
                 </div>
                 {claimDate && (
-                  <div className="flex justify-between items-center px-4 py-2.5">
-                    <span className="text-xs text-gray-600">Discovery Date</span>
-                    <span className="text-xs font-medium text-gray-900">{format(new Date(claimDate), 'MMM dd, yyyy')}</span>
+                  <div className="flex justify-between items-center px-6 py-3.5">
+                    <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">DISCOVERY_WINDOW</span>
+                    <span className="text-[10px] font-mono text-white/60 uppercase">{format(new Date(claimDate), 'dd_MMM_yyyy')}</span>
                   </div>
                 )}
                 {claim.sku && (
-                  <div className="flex justify-between items-center px-4 py-2.5">
-                    <span className="text-xs text-gray-600">SKU</span>
-                    <span className="text-xs font-mono text-gray-900">{claim.sku}</span>
+                  <div className="flex justify-between items-center px-6 py-3.5">
+                    <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">SKU_IDENTIFIER</span>
+                    <span className="text-[10px] font-mono font-bold text-white/60 uppercase">{claim.sku}</span>
                   </div>
                 )}
                 {claim.asin && (
-                  <div className="flex justify-between items-center px-4 py-2.5">
-                    <span className="text-xs text-gray-600">ASIN</span>
-                    <span className="text-xs font-mono text-gray-900">{claim.asin}</span>
+                  <div className="flex justify-between items-center px-6 py-3.5">
+                    <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">ASIN_MAPPING</span>
+                    <span className="text-[10px] font-mono font-bold text-white/60 uppercase">{claim.asin}</span>
                   </div>
                 )}
               </div>
 
               {claim.details && (
-                <div className="border-t border-gray-100 px-4 py-3 bg-gray-50">
-                  <div className="text-xs text-gray-600 font-medium mb-1">Details</div>
-                  <p className="text-xs text-gray-700">{claim.details}</p>
+                <div className="border-t border-white/5 px-6 py-4 bg-white/[0.02]">
+                  <div className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest mb-2">TELEMETRY_DETAILS</div>
+                  <p className="text-[10px] font-mono text-white/40 leading-relaxed uppercase tracking-tight">{claim.details}</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Order & Inventory Evidence */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700">Order & Inventory Evidence</h4>
+          <div className="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.01]">
+            <div className="bg-white/5 border-b border-white/5 px-6 py-3">
+              <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">ORDER_INVENTORY_AFFIDAVITS</h4>
             </div>
-            <div className="bg-white">
+            <div className="bg-transparent">
               {organizedDocs.orderDocs.length > 0 ? (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-white/5">
                   {organizedDocs.orderDocs.map((doc, i) => (
-                    <div key={doc.id || i} className="px-4 py-3">
+                    <div key={doc.id || i} className="px-6 py-4 hover:bg-white/[0.02] transition-all group">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-900">{doc.name}</div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            {doc.supplier && <span>Supplier: {doc.supplier} • </span>}
-                            {doc.invoice && <span>Invoice: {doc.invoice} • </span>}
-                            {doc.amount && <span>{formatCurrency(doc.amount)}</span>}
+                          <div className="text-[11px] font-mono font-bold text-white/80 group-hover:text-white transition-colors uppercase tracking-tight">{doc.name}</div>
+                          <div className="flex items-center gap-3 mt-2 text-[9px] font-mono text-white/20 uppercase">
+                            {doc.supplier && <span>SUPPLIER: {doc.supplier}</span>}
+                            {doc.supplier && <div className="h-1 w-1 rounded-full bg-white/5" />}
+                            {doc.invoice && <span>INVOICE: #{doc.invoice}</span>}
+                            {doc.invoice && <div className="h-1 w-1 rounded-full bg-white/5" />}
+                            {doc.amount && <span className="text-emerald-500/60 font-bold">{formatCurrency(doc.amount)}</span>}
                           </div>
                           {doc.extracted?.order_ids && doc.extracted.order_ids.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2">
+                            <div className="flex flex-wrap gap-2 mt-3">
                               {doc.extracted.order_ids.map((id, j) => (
-                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                                  Order #{id}
+                                <span key={j} className="px-2 py-0.5 bg-white/5 border border-white/10 text-white/40 rounded-full text-[8px] font-mono font-bold uppercase">
+                                  ORDER_IDENT: {id}
                                 </span>
                               ))}
                             </div>
                           )}
                         </div>
-                        <span className="text-xs text-gray-600 ml-3">
-                          {Math.round((doc.confidence || 0) * 100)}% match
-                        </span>
+                        <div className="text-[10px] font-mono font-bold text-emerald-500/40 uppercase tracking-widest ml-4 bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">
+                          {Math.round((doc.confidence || 0) * 100)}%_MATCH
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-gray-500 text-center py-6">No order documents matched yet</p>
+                <div className="text-center py-10">
+                  <span className="text-[10px] font-mono text-white/10 uppercase tracking-[0.2em]">ZERO_ORDER_DOCUMENTS_SYNCED</span>
+                </div>
               )}
             </div>
           </div>
 
           {/* Shipment & Delivery Evidence */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-              <h4 className="text-xs font-semibold text-gray-700">Shipment & Delivery Evidence</h4>
+          <div className="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.01]">
+            <div className="bg-white/5 border-b border-white/5 px-6 py-3">
+              <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">LOGISTICS_DELIVERY_VECTORS</h4>
             </div>
-            <div className="bg-white">
+            <div className="bg-transparent">
               {organizedDocs.shipmentDocs.length > 0 ? (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-white/5">
                   {organizedDocs.shipmentDocs.map((doc, i) => (
-                    <div key={doc.id || i} className="px-4 py-3">
+                    <div key={doc.id || i} className="px-6 py-4 hover:bg-white/[0.02] transition-all group">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="text-xs font-medium text-gray-900">{doc.name}</div>
+                          <div className="text-[11px] font-mono font-bold text-white/80 group-hover:text-white transition-colors uppercase tracking-tight">{doc.name}</div>
                           {doc.extracted?.tracking_numbers && doc.extracted.tracking_numbers.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-2">
+                            <div className="flex flex-wrap gap-2 mt-3">
                               {doc.extracted.tracking_numbers.map((t, j) => (
-                                <span key={j} className="px-1.5 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                                  {t}
+                                <span key={j} className="px-2 py-0.5 bg-white/5 border border-white/10 text-white/40 rounded-full text-[8px] font-mono font-bold uppercase">
+                                  TRACK_NODE: {t}
                                 </span>
                               ))}
                             </div>
                           )}
                         </div>
-                        <span className="text-xs text-gray-600 ml-3">
-                          {Math.round((doc.confidence || 0) * 100)}% match
-                        </span>
+                        <div className="text-[10px] font-mono font-bold text-emerald-500/40 uppercase tracking-widest ml-4 bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">
+                          {Math.round((doc.confidence || 0) * 100)}%_MATCH
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-gray-500 text-center py-6">No shipment documents matched yet</p>
+                <div className="text-center py-10">
+                  <span className="text-[10px] font-mono text-white/10 uppercase tracking-[0.2em]">ZERO_LOGISTICS_DOCUMENTS_SYNCED</span>
+                </div>
               )}
             </div>
           </div>
 
           {/* Policy Reference & Legal Argument */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-gray-700">Policy Reference & Argument</h4>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded ${policyArgument.withinWindow ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600'}`}>
-                {policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}
+          <div className="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.01]">
+            <div className="bg-white/5 border-b border-white/5 px-6 py-3 flex items-center justify-between">
+              <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">FBA_POLICY_PROTOCOL_ALIGNMENT</h4>
+              <span className={cn(
+                "text-[9px] font-mono font-bold px-3 py-1 rounded-full border uppercase tracking-widest",
+                policyArgument.withinWindow ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-white/5 border-white/10 text-white/20'
+              )}>
+                {policyArgument.withinWindow ? 'PROTOCOL_WITHIN_WINDOW' : 'PROTOCOL_WINDOW_EXPIRED'}
               </span>
             </div>
-            <div className="bg-white">
+            <div className="bg-transparent">
               {/* Policy Details */}
-              <div className="divide-y divide-gray-100">
-                <div className="px-4 py-3">
-                  <div className="text-xs font-semibold text-gray-900 mb-1">{policy.name}</div>
-                  <p className="text-xs text-gray-600 leading-relaxed">{policy.excerpt}</p>
+              <div className="divide-y divide-white/5">
+                <div className="px-6 py-5">
+                  <div className="text-[11px] font-mono font-bold text-white/80 mb-2 uppercase tracking-tight">{policy.name}</div>
+                  <p className="text-[10px] font-mono text-white/40 leading-relaxed uppercase tracking-tight">{policy.excerpt}</p>
                 </div>
-                <div className="flex px-4 py-2.5">
-                  <div className="flex-1">
-                    <span className="text-xs text-gray-500">Filing Deadline</span>
-                    <div className="text-xs font-medium text-gray-900">{policy.deadline}</div>
+                <div className="flex divide-x divide-white/5">
+                  <div className="flex-1 px-6 py-4">
+                    <span className="text-[9px] font-mono font-bold text-white/10 uppercase tracking-widest block mb-1">FILING_DEADLINE</span>
+                    <div className="text-[10px] font-mono font-bold text-white/60 uppercase">{policy.deadline}</div>
                   </div>
-                  <div className="flex-1">
-                    <span className="text-xs text-gray-500">Claim Age</span>
-                    <div className="text-xs font-medium text-gray-900">{policyArgument.daysOld} days</div>
+                  <div className="flex-1 px-6 py-4">
+                    <span className="text-[9px] font-mono font-bold text-white/10 uppercase tracking-widest block mb-1">CLAIM_AGE_NODES</span>
+                    <div className="text-[10px] font-mono font-bold text-white/60 uppercase">{policyArgument.daysOld}_DAYS</div>
                   </div>
                 </div>
               </div>
 
               {/* Legal Argument */}
-              <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
-                <div className="text-xs text-gray-500 font-medium mb-2">Reimbursement Argument</div>
-                <div className="bg-white border border-gray-200 rounded p-3">
-                  <p className="text-xs text-gray-700 leading-relaxed">
+              <div className="border-t border-white/5 px-6 py-5 bg-white/[0.02]">
+                <div className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest mb-3">REIMBURSEMENT_NARRATIVE_VECTOR</div>
+                <div className="bg-black/40 border border-white/5 rounded-xl p-5 shadow-inner">
+                  <p className="text-[11px] font-mono text-white/60 leading-relaxed italic uppercase tracking-tight">
                     "{policyArgument.argument}"
                   </p>
                 </div>
@@ -789,18 +808,16 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
 
           {/* Other Documents */}
           {organizedDocs.otherDocs.length > 0 && (
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                <h4 className="text-xs font-semibold text-gray-700">Additional Supporting Documents</h4>
+            <div className="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.01]">
+              <div className="bg-white/5 border-b border-white/5 px-6 py-3">
+                <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">SUPPORTING_DOCUMENT_NODES</h4>
               </div>
-              <div className="bg-white">
-                <div className="divide-y divide-gray-100">
+              <div className="bg-transparent">
+                <div className="divide-y divide-white/5">
                   {organizedDocs.otherDocs.map((doc, i) => (
-                    <div key={doc.id || i} className="px-4 py-3 flex items-center justify-between">
-                      <span className="text-xs font-medium text-gray-900">{doc.name}</span>
-                      <span className="text-xs text-gray-600">
-                        {Math.round((doc.confidence || 0) * 100)}% match
-                      </span>
+                    <div key={doc.id || i} className="px-6 py-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors group">
+                      <span className="text-[11px] font-mono font-bold text-white/60 group-hover:text-white transition-colors uppercase tracking-tight">{doc.name}</span>
+                      <div className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest border border-white/5 px-3 py-1 rounded-full group-hover:border-white/10 transition-all">NODE_IDENTIFIED</div>
                     </div>
                   ))}
                 </div>
@@ -815,169 +832,24 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           <EvidenceAuditTrail claimId={claim.id} compact={false} />
         </div>
 
-        {/* Actions */}
-        <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
+        {/* Footer Actions */}
+        <div className="px-8 py-6 border-t border-white/5 bg-white/[0.02] flex items-center justify-between">
           <Button
-            variant="outline"
-            size="sm"
+            variant="ghost"
             onClick={onClose}
-            className="h-8 text-xs text-gray-600 border-gray-200 hover:bg-gray-100 rounded-sm">
-            Close
+            className="text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-widest px-6 h-12 rounded-xl transition-all">
+            TERMINATE_VIEW
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              try {
-                toast({ title: 'Generating PDF...', description: 'Creating your evidence pack.' });
 
-                // Initialize jsPDF
-                const doc = new jsPDF('p', 'pt', 'letter');
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const margin = 50;
-                let yPos = margin;
-
-                // Colors - Institutional Banking Style
-                const slateBlack = '#0f172a';
-                const slateDark = '#1e293b';
-                const slateMed = '#64748b';
-                const slateLight = '#94a3b8';
-                const border = '#e2e8f0';
-
-                // Helper
-                const addText = (text: string, x: number, y: number, fontSize: number, color: string, fontStyle: 'normal' | 'bold' = 'normal') => {
-                  doc.setFontSize(fontSize);
-                  doc.setTextColor(color);
-                  doc.setFont('helvetica', fontStyle);
-                  doc.text(text, x, y);
-                };
-
-                // === HEADER ===
-                addText('MARGIN', margin, yPos, 14, slateBlack, 'bold');
-                yPos += 14;
-                addText('EVIDENCE DOCUMENTATION PACKAGE', margin, yPos, 8, slateMed, 'normal');
-
-                // Right-aligned reference
-                doc.setFontSize(9);
-                doc.setTextColor(slateMed);
-                doc.text(`REF: ${(claim.claim_number || claim.id.slice(0, 12)).toUpperCase()}`, pageWidth - margin, margin, { align: 'right' });
-                doc.setFontSize(8);
-                doc.setTextColor(slateLight);
-                doc.text(`Generated ${format(new Date(), 'MMMM dd, yyyy')}`, pageWidth - margin, margin + 12, { align: 'right' });
-
-                yPos += 24;
-                doc.setDrawColor(border);
-                doc.line(margin, yPos, pageWidth - margin, yPos);
-                yPos += 24;
-
-                // === CLAIM SUMMARY ===
-                const claimDate = claim.created || claim.created_at || claim.discovery_date || new Date().toISOString();
-                const claimType = (claim.anomaly_type || claim.type || 'Recovery Claim').replace(/_/g, ' ').toUpperCase();
-                const amount = claim.guaranteedAmount || claim.amount || 0;
-                const totalDocs = claim.matchedDocs?.length || claim.matchedCount || 0;
-
-                addText('CLAIM SUMMARY', margin, yPos, 9, slateMed, 'bold');
-                yPos += 16;
-
-                const summaryData = [
-                  ['Claim Type', claimType],
-                  ['Status', (claim.status || 'Pending').toUpperCase()],
-                  ['Claim Amount', formatCurrency(amount)],
-                  ['Discovery Date', format(new Date(claimDate), 'MMMM dd, yyyy')],
-                ];
-                if (claim.sku) summaryData.push(['SKU', claim.sku]);
-                if (claim.asin) summaryData.push(['ASIN', claim.asin]);
-                summaryData.push(['Documents Matched', `${totalDocs}`]);
-
-                autoTable(doc, {
-                  startY: yPos,
-                  body: summaryData,
-                  theme: 'plain',
-                  margin: { left: margin, right: margin },
-                  styles: { fontSize: 9, cellPadding: 6, textColor: slateDark },
-                  columnStyles: {
-                    0: { cellWidth: 120, fontStyle: 'bold', textColor: slateMed },
-                    1: { fontStyle: 'normal' }
-                  }
-                });
-                yPos = (doc as any).lastAutoTable.finalY + 24;
-
-                // === MATCHED DOCUMENTS ===
-                addText('MATCHED EVIDENCE DOCUMENTS', margin, yPos, 9, slateMed, 'bold');
-                yPos += 16;
-
-                if (totalDocs > 0 && claim.matchedDocs && claim.matchedDocs.length > 0) {
-                  const docsData = claim.matchedDocs.map((d: MatchedDocument) => [
-                    d.name || 'Document',
-                    (d.type || 'Document').replace(/_/g, ' '),
-                    [
-                      d.extracted?.invoice_numbers?.[0] ? `Inv: ${d.extracted.invoice_numbers[0]}` : '',
-                      d.extracted?.order_ids?.[0] ? `Order: ${d.extracted.order_ids[0]}` : '',
-                    ].filter(Boolean).join(', ') || '—',
-                    `${Math.round((d.confidence || 0) * 100)}%`
-                  ]);
-
-                  autoTable(doc, {
-                    startY: yPos,
-                    head: [['Document', 'Type', 'Extracted Data', 'Match']],
-                    body: docsData,
-                    theme: 'grid',
-                    margin: { left: margin, right: margin },
-                    headStyles: { fillColor: '#f8fafc', textColor: slateMed, fontStyle: 'bold', fontSize: 8 },
-                    styles: { fontSize: 8, cellPadding: 6, textColor: slateDark }
-                  });
-                  yPos = (doc as any).lastAutoTable.finalY + 24;
-                } else {
-                  doc.setFontSize(9);
-                  doc.setTextColor(slateLight);
-                  doc.text('No matched documents available', margin, yPos);
-                  yPos += 24;
-                }
-
-                // === POLICY REFERENCE ===
-                addText('POLICY REFERENCE', margin, yPos, 9, slateMed, 'bold');
-                yPos += 16;
-
-                doc.setFillColor('#f8fafc');
-                doc.setDrawColor(border);
-                doc.rect(margin, yPos - 4, pageWidth - 2 * margin, 70, 'FD');
-
-                addText(policy.name, margin + 12, yPos + 10, 10, slateDark, 'bold');
-                doc.setFontSize(9);
-                doc.setTextColor(slateMed);
-                const splitExcerpt = doc.splitTextToSize(policy.excerpt, pageWidth - 2 * margin - 24);
-                doc.text(splitExcerpt.slice(0, 2), margin + 12, yPos + 26);
-                addText(`Deadline: ${policy.deadline}  |  Claim Age: ${policyArgument.daysOld} days  |  ${policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}`, margin + 12, yPos + 56, 8, slateLight, 'normal');
-
-                yPos += 90;
-
-                // === FOOTER ===
-                doc.setDrawColor(border);
-                doc.line(margin, yPos, pageWidth - margin, yPos);
-                yPos += 16;
-                doc.setFontSize(8);
-                doc.setTextColor(slateLight);
-                doc.text('Margin Recovery Platform — Confidential', pageWidth / 2, yPos, { align: 'center' });
-
-                // Save
-                doc.save(`Evidence_Pack_${claim.claim_number || claim.id.slice(0, 8)}.pdf`);
-                toast({ title: 'PDF Downloaded', description: 'Evidence pack saved successfully.' });
-              } catch (error: any) {
-                console.error('PDF error:', error);
-                toast({ title: 'PDF Failed', description: error?.message || 'Try Export as PDF instead.', variant: 'destructive' });
-              }
-            }}
-            className="h-8 text-xs text-gray-700 border-gray-200 hover:bg-gray-100 rounded-sm">
-            <Package className="h-3.5 w-3.5 mr-1.5" />
-            Download PDF
-          </Button>
-          <Button
-            size="sm"
-            onClick={exportAsPdf}
-            className="h-8 text-xs bg-gray-900 hover:bg-gray-800 text-white rounded-sm">
-            <Download className="h-3.5 w-3.5 mr-1.5" />
-            Export as PDF
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={exportAsPdf}
+              className="h-12 bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10 px-6 font-mono text-[10px] uppercase tracking-widest rounded-xl transition-all gap-3 border border-transparent hover:border-white/10 shadow-xl">
+              <Download className="w-4 h-4 text-emerald-500/40" />
+              EXPORT_INSTITUTIONAL_DOSSIER
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
