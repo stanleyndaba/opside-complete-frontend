@@ -301,7 +301,7 @@ export default function TransactionHistory() {
         doc.setFontSize(10);
         doc.setFont('times', 'bold');
         doc.text('OFFICIAL STATEMENT OF RECOVERY', 14, 25);
-        doc.setLineWidth(0.5);
+        doc.setLineWidth(0.2); // Reduced thickness by 60%
         doc.line(14, 27, pageWidth - 14, 27);
 
         // --- METADATA GRID (FORENSIC AUDIT) ---
@@ -351,7 +351,7 @@ export default function TransactionHistory() {
         // --- FINANCIAL SUMMARY (THE KILL BOX) ---
         const summaryY = gridY + gridHeight + 12;
         doc.setDrawColor(0);
-        doc.setLineWidth(0.8); // ~2px thick top/bottom borders
+        doc.setLineWidth(0.2); // Razor-sharp 1px hairline
         doc.line(14, summaryY, pageWidth - 14, summaryY);
         doc.line(14, summaryY + 22, pageWidth - 14, summaryY + 22);
 
@@ -367,7 +367,7 @@ export default function TransactionHistory() {
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
         doc.text('TOTAL DISCREPANCIES IDENTIFIED', 18, summaryY + 6);
-        doc.setFontSize(14);
+        doc.setFontSize(11); // Reduced from 14
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(formatUSD(summary.totalRecovered), 18, summaryY + 16);
@@ -377,7 +377,7 @@ export default function TransactionHistory() {
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
         doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, summaryY + 6);
-        doc.setFontSize(14);
+        doc.setFontSize(11); // Reduced from 14
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(`(${formatUSD(summary.totalFees)})`, 18 + colWidth, summaryY + 16);
@@ -387,7 +387,7 @@ export default function TransactionHistory() {
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
         doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, summaryY + 6);
-        doc.setFontSize(18);
+        doc.setFontSize(14); // Reduced from 18
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(formatUSD(summary.netProfit), 18 + colWidth * 2, summaryY + 16);
