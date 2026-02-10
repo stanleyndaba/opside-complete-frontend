@@ -279,10 +279,10 @@ export default function TransactionHistory() {
         }
 
         // --- HEADER SECTION (JURISDICTION) ---
-        doc.setFillColor(0); // Pure Black
+        doc.setFillColor(0, 0, 0); // Pure Black
         doc.rect(14, 10, pageWidth - 28, 6, 'F');
 
-        doc.setTextColor(255); // White text on black bar
+        doc.setTextColor(255, 255, 255); // White text on black bar
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
         doc.text('CLASSIFICATION: CONFIDENTIAL FINANCIAL RECORD', pageWidth - 14, 14, { align: 'right' });
@@ -346,7 +346,6 @@ export default function TransactionHistory() {
         doc.text(format(new Date(), 'yyyy-MM-dd HH:mm:ss'), pageWidth / 2 + 30, gridY + 11.5);
 
         doc.setLineWidth(0.3);
-        doc.line(14, gridY + gridHeight + 5, pageWidth - 14, gridY + gridHeight + 5);
 
         // --- FINANCIAL SUMMARY (THE KILL BOX) ---
         const summaryY = gridY + gridHeight + 12;
@@ -622,7 +621,7 @@ export default function TransactionHistory() {
                                         stat.color,
                                         stat.glow && "drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]"
                                     )}>
-                                        {(stat.prefix || '')}{stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}{(stat.suffix || '')}
+                                        {(stat as any).prefix || ''}{stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}{(stat as any).suffix || ''}
                                     </div>
 
                                     {stat.count !== undefined && (
