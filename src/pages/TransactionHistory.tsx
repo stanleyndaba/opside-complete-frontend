@@ -622,12 +622,14 @@ export default function TransactionHistory() {
                                             {stat.label === 'TOTAL_DISCOVERY' && (
                                                 <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                                                     <div className="text-[8px] text-gray-600 uppercase mb-1">By Issue Type Breakdown:</div>
-                                                    {Object.entries(summary.categoryTotals).sort((a, b) => b[1].amount - a[1].amount).map(([cat, data], ci) => (
-                                                        <div key={ci} className="flex justify-between items-center text-[9px] font-mono">
-                                                            <span className="text-white/60">{cat.replace(/[\[\]]/g, '')}:</span>
-                                                            <span className="text-white">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} ({data.percentage.toFixed(0)}%)</span>
-                                                        </div>
-                                                    ))}
+                                                    {Object.entries(summary.categoryTotals)
+                                                        .filter(([cat]) => cat !== '[LOST_INV]')
+                                                        .sort((a, b) => b[1].amount - a[1].amount).map(([cat, data], ci) => (
+                                                            <div key={ci} className="flex justify-between items-center text-[9px] font-mono">
+                                                                <span className="text-white/60">{cat.replace(/[\[\]]/g, '')}:</span>
+                                                                <span className="text-white">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} ({data.percentage.toFixed(0)}%)</span>
+                                                            </div>
+                                                        ))}
                                                 </div>
                                             )}
                                         </div>
@@ -640,22 +642,24 @@ export default function TransactionHistory() {
 
                     {/* Category Summary Breakdown */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-                        {Object.entries(summary.categoryTotals).map(([cat, data], i) => (
-                            <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-[10px] font-mono text-gray-500">[{cat}]</span>
-                                    <span className="text-xs font-bold text-white">{data.percentage.toFixed(0)}%</span>
+                        {Object.entries(summary.categoryTotals)
+                            .filter(([cat]) => cat !== '[LOST_INV]')
+                            .map(([cat, data], i) => (
+                                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className="text-[10px] font-mono text-gray-500">[{cat.replace(/[\[\]]/g, '')}]</span>
+                                        <span className="text-xs font-bold text-white">{data.percentage.toFixed(0)}%</span>
+                                    </div>
+                                    <div className="text-lg font-mono text-white mb-1">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                                    <div className="text-[10px] text-gray-500">{data.count} recoveries matched</div>
+                                    <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-emerald-500 rounded-full"
+                                            style={{ width: `${data.percentage}%` }}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="text-lg font-mono text-white mb-1">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                                <div className="text-[10px] text-gray-500">{data.count} recoveries matched</div>
-                                <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                                    <div
-                                        className="h-full bg-emerald-500 rounded-full"
-                                        style={{ width: `${data.percentage}%` }}
-                                    />
-                                </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
 
                     {/* Filters & Actions */}
