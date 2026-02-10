@@ -165,8 +165,11 @@ const getStatusColor = (status: string) => {
 };
 
 // Format currency
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+const formatCurrency = (amount: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency
+  }).format(amount);
 };
 
 export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
@@ -619,7 +622,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
             Evidence Documentation Package
           </DialogTitle>
           <DialogDescription className="text-xs text-white/60 mt-1">
-            Claim Reference: {claim.claim_number || claim.id.slice(0, 12)}
+            Claim Reference: {claim.claim_number || (claim.id && typeof claim.id === 'string' ? claim.id.slice(0, 12) : 'N/A')}
           </DialogDescription>
         </DialogHeader>
 
@@ -790,16 +793,16 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
 
           {/* Other Documents */}
           {organizedDocs.otherDocs.length > 0 && (
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
-                <h4 className="text-xs font-semibold text-gray-700">Additional Supporting Documents</h4>
+            <div className="border border-white/10 rounded-lg overflow-hidden">
+              <div className="bg-white/5 border-b border-white/10 px-4 py-2">
+                <h4 className="text-xs font-semibold text-white/80">Additional Supporting Documents</h4>
               </div>
-              <div className="bg-white">
-                <div className="divide-y divide-gray-100">
+              <div className="bg-transparent">
+                <div className="divide-y divide-white/10">
                   {organizedDocs.otherDocs.map((doc, i) => (
                     <div key={doc.id || i} className="px-4 py-3 flex items-center justify-between">
-                      <span className="text-xs font-medium text-gray-900">{doc.name}</span>
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs font-medium text-white">{doc.name}</span>
+                      <span className="text-xs text-white/40">
                         {Math.round((doc.confidence || 0) * 100)}% match
                       </span>
                     </div>
@@ -961,7 +964,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                 doc.text('Margin Recovery Platform — Confidential', pageWidth / 2, yPos, { align: 'center' });
 
                 // Save
-                doc.save(`Evidence_Pack_${claim.claim_number || claim.id.slice(0, 8)}.pdf`);
+                doc.save(`Evidence_Pack_${claim.claim_number || (claim.id && typeof claim.id === 'string' ? claim.id.slice(0, 8) : 'export')}.pdf`);
                 toast({ title: 'PDF Downloaded', description: 'Evidence pack saved successfully.' });
               } catch (error: any) {
                 console.error('PDF error:', error);

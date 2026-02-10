@@ -138,8 +138,8 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
 
     if (loading) {
         return (
-            <div className="flex items-center gap-2 p-4 text-gray-500">
-                <Clock className="h-4 w-4 animate-pulse" />
+            <div className="flex items-center gap-2 p-4 text-white/40">
+                <Clock className="h-4 w-4 animate-pulse text-white/20" />
                 Loading audit trail...
             </div>
         );
@@ -156,7 +156,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
 
     if (timeline.length === 0) {
         return (
-            <div className="p-4 bg-gray-50 rounded-lg text-gray-500 text-sm">
+            <div className="p-4 bg-white/5 rounded-lg text-white/40 text-sm">
                 No audit events recorded for this evidence.
             </div>
         );
@@ -167,13 +167,13 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
         return (
             <Collapsible open={expanded} onOpenChange={setExpanded}>
                 <CollapsibleTrigger asChild>
-                    <button className="flex items-center gap-2 w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-left hover:bg-slate-100 transition-colors">
-                        <Shield className="h-4 w-4 text-slate-600" />
-                        <span className="text-sm font-medium text-slate-700">Evidence Audit Trail</span>
-                        <Badge className="bg-slate-200 text-slate-600 border-slate-300 text-xs ml-2">
+                    <button className="flex items-center gap-2 w-full p-3 bg-white/5 border border-white/10 rounded-lg text-left hover:bg-white/10 transition-colors">
+                        <Shield className="h-4 w-4 text-white/60" />
+                        <span className="text-sm font-medium text-white/80">Evidence Audit Trail</span>
+                        <Badge className="bg-white/10 text-white/60 border-white/5 text-xs ml-2">
                             {timeline.length} events
                         </Badge>
-                        <ChevronRight className="h-4 w-4 text-slate-400 ml-auto" />
+                        <ChevronRight className="h-4 w-4 text-white/20 ml-auto" />
                     </button>
                 </CollapsibleTrigger>
             </Collapsible>
@@ -181,22 +181,22 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
     }
 
     return (
-        <Card className="border-slate-200">
+        <Card className="border-white/10 bg-transparent">
             <Collapsible open={expanded} onOpenChange={setExpanded}>
                 <CardHeader className="pb-2">
                     <CollapsibleTrigger asChild>
                         <button className="flex items-center gap-2 w-full text-left">
-                            <Shield className="h-5 w-5 text-slate-600" />
-                            <CardTitle className="text-base font-semibold text-gray-900">
+                            <Shield className="h-5 w-5 text-white/60" />
+                            <CardTitle className="text-base font-semibold text-white">
                                 Evidence Audit Trail
                             </CardTitle>
-                            <Badge className="bg-slate-100 text-slate-600 border-slate-200 text-xs ml-2">
+                            <Badge className="bg-white/5 text-white/60 border-white/10 text-xs ml-2">
                                 {timeline.length} events • {documents.length} document{documents.length !== 1 ? 's' : ''}
                             </Badge>
                             {expanded ? (
-                                <ChevronDown className="h-4 w-4 text-slate-400 ml-auto" />
+                                <ChevronDown className="h-4 w-4 text-white/20 ml-auto" />
                             ) : (
-                                <ChevronRight className="h-4 w-4 text-slate-400 ml-auto" />
+                                <ChevronRight className="h-4 w-4 text-white/20 ml-auto" />
                             )}
                         </button>
                     </CollapsibleTrigger>
@@ -206,8 +206,8 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                     <CardContent className="pt-0">
                         {/* Narrative Summary */}
                         {narrativeSummary && (
-                            <div className="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                                <p className="text-sm text-blue-800 font-mono leading-relaxed">
+                            <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                                <p className="text-sm text-blue-400 font-mono leading-relaxed">
                                     {narrativeSummary}
                                 </p>
                             </div>
@@ -216,7 +216,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                         {/* Timeline */}
                         <div className="relative">
                             {/* Timeline line */}
-                            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+                            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-white/10" />
 
                             <div className="space-y-4">
                                 {timeline.map((event, index) => (
@@ -231,13 +231,13 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                                             <div className="flex items-start justify-between">
                                                 <div>
                                                     {event.documentFilename && (
-                                                        <span className="text-xs font-medium text-gray-500 block mb-1">
+                                                        <span className="text-xs font-medium text-white/40 block mb-1">
                                                             {event.documentFilename}
                                                         </span>
                                                     )}
-                                                    <p className="text-sm text-gray-900">{event.narrative}</p>
+                                                    <p className="text-sm text-white/80">{event.narrative}</p>
                                                 </div>
-                                                <span className="text-xs text-gray-400 whitespace-nowrap ml-4">
+                                                <span className="text-xs text-white/20 whitespace-nowrap ml-4">
                                                     {format(new Date(event.timestamp), 'MMM dd, yyyy h:mm a')}
                                                 </span>
                                             </div>
@@ -255,7 +255,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                                                             {Math.round(event.details.confidence * 100)}% confidence
                                                         </Badge>
                                                     )}
-                                                    {event.details.extractedFields && event.details.extractedFields.length> 0 && (
+                                                    {event.details.extractedFields && event.details.extractedFields.length > 0 && (
                                                         <Badge variant="outline" className="text-xs">
                                                             {event.details.extractedFields.join(', ')}
                                                         </Badge>
@@ -265,14 +265,14 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
 
                                             {/* Edit details */}
                                             {event.eventType === 'edited' && event.details.fieldName && (
-                                                <div className="mt-2 text-xs bg-amber-50 p-2 rounded border border-amber-100">
-                                                    <span className="font-medium text-amber-700">{event.details.fieldName}:</span>
+                                                <div className="mt-2 text-xs bg-amber-500/10 p-2 rounded border border-amber-500/20">
+                                                    <span className="font-medium text-amber-500/80">{event.details.fieldName}:</span>
                                                     {event.details.oldValue && (
-                                                        <span className="text-red-600 line-through mx-1">{event.details.oldValue}</span>
+                                                        <span className="text-red-400/60 line-through mx-1">{event.details.oldValue}</span>
                                                     )}
-                                                    <span className="text-green-600">→ {event.details.newValue}</span>
+                                                    <span className="text-green-400/80">→ {event.details.newValue}</span>
                                                     {event.actor && event.actor !== 'system' && (
-                                                        <span className="text-gray-500 ml-2">by {event.actor}</span>
+                                                        <span className="text-white/20 ml-2">by {event.actor}</span>
                                                     )}
                                                 </div>
                                             )}
@@ -283,19 +283,19 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                         </div>
 
                         {/* Document summaries */}
-                        {documents.length> 0 && (
-                            <div className="mt-6 pt-4 border-t border-gray-200">
-                                <h4 className="text-sm font-medium text-gray-700 mb-3">Document Summaries</h4>
+                        {documents.length > 0 && (
+                            <div className="mt-6 pt-4 border-t border-white/10">
+                                <h4 className="text-sm font-medium text-white/60 mb-3">Document Summaries</h4>
                                 <div className="space-y-2">
                                     {documents.map((doc) => (
-                                        <div key={doc.documentId} className="p-3 bg-gray-50 rounded-lg text-sm">
+                                        <div key={doc.documentId} className="p-3 bg-white/5 rounded-lg text-sm">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-medium text-gray-900">{doc.filename}</span>
-                                                <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs">
+                                                <span className="font-medium text-white/80">{doc.filename}</span>
+                                                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
                                                     {doc.summary.linkedClaims} claim{doc.summary.linkedClaims !== 1 ? 's' : ''}
                                                 </Badge>
                                             </div>
-                                            <div className="text-xs text-gray-500 mt-1 flex flex-wrap gap-x-3">
+                                            <div className="text-xs text-white/40 mt-1 flex flex-wrap gap-x-3">
                                                 {doc.summary.ingestedFrom && (
                                                     <span>Source: {doc.summary.ingestedFrom.replace(/_/g, ' ')}</span>
                                                 )}
@@ -313,7 +313,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                         )}
 
                         {/* Footer */}
-                        <div className="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-400 text-center">
+                        <div className="mt-4 pt-3 border-t border-white/5 text-xs text-white/20 text-center">
                             <Shield className="h-3 w-3 inline mr-1" />
                             Legal-grade audit trail • All events are immutable and timestamped
                         </div>
