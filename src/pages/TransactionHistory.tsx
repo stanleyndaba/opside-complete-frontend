@@ -597,19 +597,37 @@ export default function TransactionHistory() {
                             },
                             { label: 'PLATFORM_FEES', value: summary.totalFees, prefix: '-', color: 'text-white/40' },
                             { label: 'NET_REVENUE', value: summary.netProfit, prefix: '$', color: 'text-emerald-400', glow: true },
-                            { label: 'RECOVERY_RATE', value: summary.totalRecovered > 0 ? (summary.totalRecovered / (summary.totalRecovered + summary.deniedAmount)) * 100 : 100, suffix: '%', color: 'text-white' }
+                            {
+                                label: 'RECOVERY',
+                                value: summary.categoryTotals['[RECOVERY]']?.amount || 0,
+                                prefix: '$',
+                                color: 'text-white',
+                                percentage: summary.categoryTotals['[RECOVERY]']?.percentage,
+                                count: summary.categoryTotals['[RECOVERY]']?.count
+                            }
                         ].map((stat, i) => (
                             <div key={i} className="group relative">
                                 <div className="absolute inset-0 bg-white/[0.02] rounded-2xl blur-xl group-hover:bg-white/[0.05] transition-all duration-500" />
                                 <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden">
-                                    <div className="text-[10px] font-mono text-gray-500 mb-3 tracking-widest">{stat.label}</div>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <div className="text-[10px] font-mono text-gray-500 tracking-widest">{stat.label}</div>
+                                        {stat.percentage !== undefined && (
+                                            <div className="text-xs font-bold text-white font-mono">{stat.percentage.toFixed(0)}%</div>
+                                        )}
+                                    </div>
                                     <div className={cn(
                                         "text-2xl font-mono tracking-tighter",
                                         stat.color,
                                         stat.glow && "drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]"
                                     )}>
-                                        {(stat.prefix || '')}{stat.label === 'TX_COUNT' || stat.label === 'RECOVERY_RATE' ? stat.value.toLocaleString('en-US', { maximumFractionDigits: 1 }) : stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}{(stat.suffix || '')}
+                                        {(stat.prefix || '')}{stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}{(stat.suffix || '')}
                                     </div>
+
+                                    {stat.count !== undefined && (
+                                        <div className="text-[10px] text-gray-500 mt-2 font-mono">
+                                            {stat.count} recoveries matched
+                                        </div>
+                                    )}
 
                                     {stat.breakdown && (
                                         <div className="mt-3 space-y-1 border-t border-white/5 pt-3">
@@ -623,7 +641,7 @@ export default function TransactionHistory() {
                                                 <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                                                     <div className="text-[8px] text-gray-600 uppercase mb-1">By Issue Type Breakdown:</div>
                                                     {Object.entries(summary.categoryTotals)
-                                                        .filter(([cat]) => cat !== '[LOST_INV]')
+                                                        .filter(([cat]) => cat !== '[LOST_INV]' && cat !== '[RECOVERY]')
                                                         .sort((a, b) => b[1].amount - a[1].amount).map(([cat, data], ci) => (
                                                             <div key={ci} className="flex justify-between items-center text-[9px] font-mono">
                                                                 <span className="text-white/60">{cat.replace(/[\[\]]/g, '')}:</span>
@@ -643,7 +661,7 @@ export default function TransactionHistory() {
                     {/* Category Summary Breakdown */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
                         {Object.entries(summary.categoryTotals)
-                            .filter(([cat]) => cat !== '[LOST_INV]')
+                            .filter(([cat]) => cat !== '[LOST_INV]' && cat !== '[RECOVERY]')
                             .map(([cat, data], i) => (
                                 <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
                                     <div className="flex justify-between items-start mb-2">
