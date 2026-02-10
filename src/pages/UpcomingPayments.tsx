@@ -11,7 +11,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { api } from '@/lib/api';
+import { api, buildApiUrl } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
@@ -217,8 +217,8 @@ export default function UpcomingPayments() {
   const exportPdf = async () => {
     setDownloading(true);
     try {
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${baseUrl}/api/disputes/payments/report`, {
+      const url = buildApiUrl('/api/disputes/payments/report');
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
