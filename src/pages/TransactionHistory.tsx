@@ -251,6 +251,7 @@ export default function TransactionHistory() {
         const HAIRLINE = '#E5E5E5';
         const SUMMARY_BG = '#F5F5F5';
         const colWidth = (pageWidth - 28) / 3;
+        const valX = pageWidth - 14;
 
         // Load logo image
         let logoLoaded = false;
