@@ -212,22 +212,57 @@ export default function UpcomingPayments() {
     return { ...stages, totalInPipeline };
   }, [claims]);
 
-  const exportCsv = () => {
-    const rows = upcomingGroups.map(g => ({
-      payoutDate: g.label,
-      claims: g.count,
-      gross: g.gross.toFixed(2),
-      commission: g.commission.toFixed(2),
-      net: g.net.toFixed(2),
-    }));
-    const header = ['Payout Date', 'Claims', 'Gross', 'Commission', 'Net'];
-    const csv = [header.join(','), ...rows.map(r => `${r.payoutDate},${r.claims},${r.gross},${r.commission},${r.net}`)].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'upcoming-payments.csv'; a.click();
-    URL.revokeObjectURL(url);
-    toast({ title: 'Exported', description: 'upcoming-payments.csv downloaded.' });
+  const [downloading, setDownloading] = useState(false);
+
+  const exportPdf = async () => {
+    setDownloading(true);
+    try {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${baseUrl}/api/disputes/payments/report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': localStorage.getItem('user_id') || 'demo-user',
+          'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
+        },
+        body: JSON.stringify({
+          groups: upcomingGroups.map(g => ({
+            label: g.label,
+            count: g.count,
+            gross: g.gross,
+            commission: g.commission,
+            net: g.net,
+          })),
+          pipeline: pipelineStages,
+          monthTotals,
+          currency,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate report');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'upcoming-payments-report.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({ title: 'Report Downloaded', description: 'upcoming-payments-report.pdf has been saved.' });
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Download Failed',
+        description: err.message || 'Unable to generate payment report',
+      });
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -318,10 +353,15 @@ export default function UpcomingPayments() {
                   </div>
                   <div className="h-10 w-[1px] bg-white/5" />
                   <button
-                    onClick={exportCsv}
-                    className="p-3 bg-white/[0.03] border border-white/5 rounded-xl hover:border-emerald-500/30 transition-all text-white/40 hover:text-emerald-500"
+                    onClick={exportPdf}
+                    disabled={downloading}
+                    className="p-3 bg-white/[0.03] border border-white/5 rounded-xl hover:border-emerald-500/30 transition-all text-white/40 hover:text-emerald-500 disabled:opacity-50"
                   >
-                    <Download className="h-4 w-4" />
+                    {downloading ? (
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
