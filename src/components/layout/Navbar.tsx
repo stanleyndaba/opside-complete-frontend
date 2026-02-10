@@ -95,7 +95,7 @@ export function Navbar({
   const [isSavingNote, setIsSavingNote] = useState(false);
   const noteIconRef = useRef<HTMLButtonElement>(null);
 
-  // Fetch notes from backend on load
+  /* Fetch notes from backend on load
   useEffect(() => {
     const fetchNotes = async () => {
       try {
@@ -112,7 +112,7 @@ export function Navbar({
       }
     };
     fetchNotes();
-  }, []);
+  }, []); */
 
 
   // Handle search submission
@@ -279,7 +279,7 @@ export function Navbar({
                   iconClassName="h-4.5 w-4.5"
                 />
 
-                {/* Notes */}
+                {/* Notes Icon - Commented out for V1 noise reduction
                 <div className="relative">
                   <button
                     ref={noteIconRef}
@@ -294,7 +294,6 @@ export function Navbar({
                     )}
                   </button>
 
-                  {/* Hover tooltip showing recent notes */}
                   <AnimatePresence>
                     {isNoteHovered && notes.length > 0 && (
                       <motion.div
@@ -321,7 +320,7 @@ export function Navbar({
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </div> */}
                 {/* Store Connection */}
                 <HoverCard openDelay={100} closeDelay={200}>
                   <HoverCardTrigger asChild>
@@ -439,162 +438,10 @@ export function Navbar({
       </header>
 
 
-      {/* Notes Modal - Institutional Style */}
+      {/* Notes Modal - Commented out for V1 noise reduction
       <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
-        <DialogContent className="max-w-[520px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-3xl rounded-2xl backdrop-blur-3xl flex flex-col max-h-[85vh]">
-          {/* Header - Institutional Dark */}
-          <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01]">
-            <h3 className="text-[14px] font-serif font-bold text-white uppercase tracking-[0.2em]">
-              Notes
-            </h3>
-            <p className="text-[10px] text-white/20 mt-2 font-mono uppercase tracking-[0.1em]">
-              Private records and manual entries
-            </p>
-          </div>
-
-          <div className="p-8 space-y-8 overflow-y-auto flex-1 scrollbar-hide">
-            {/* Add new note - Technical Command Input */}
-            <div className="space-y-4">
-              <label className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Command_Payload</label>
-              <textarea
-                value={currentNote}
-                onChange={(e) => setCurrentNote(e.target.value)}
-                placeholder="PROMPT: Input manual audit data, transaction anomalies, or case notes..."
-                className="w-full h-32 bg-white/[0.03] border-white/10 rounded-xl p-5 text-[12px] text-white/60 placeholder:text-white/10 focus:ring-0 focus:border-emerald-500/30 transition-all font-serif resize-none leading-relaxed"
-              />
-              <Button
-                onClick={async () => {
-                  if (!currentNote.trim() || isSavingNote) return;
-                  setIsSavingNote(true);
-                  try {
-                    const response = await api.createNote(currentNote.trim());
-                    if (response.ok && response.data?.success) {
-                      const newNote = {
-                        id: response.data.data.id,
-                        text: response.data.data.content,
-                        createdAt: response.data.data.created_at
-                      };
-                      setNotes([newNote, ...notes]);
-                      setCurrentNote('');
-                    }
-                  } catch (error) {
-                    console.error('Failed to save note:', error);
-                  } finally {
-                    setIsSavingNote(false);
-                  }
-                }}
-                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black text-[10px] font-serif font-bold h-11 transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)]"
-                disabled={!currentNote.trim() || isSavingNote}>
-                {isSavingNote ? 'Saving...' : 'Save Note'}
-              </Button>
-            </div>
-
-            {/* Notes list - High Density Records */}
-            {notes.length > 0 && (
-              <div className="border-t border-white/5 pt-8">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Saved notes</span>
-                  <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">Items: {notes.length}</span>
-                </div>
-                <div className="space-y-4">
-                  {notes.map((note) => (
-                    <div key={note.id} className="group relative p-6 bg-white/[0.01] border border-white/5 rounded-xl transition-all hover:bg-white/[0.03] hover:border-white/10">
-                      <div className="absolute left-0 top-4 bottom-4 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                      {editingNoteId === note.id ? (
-                        <div className="space-y-4">
-                          <textarea
-                            value={editingNoteContent}
-                            onChange={(e) => setEditingNoteContent(e.target.value)}
-                            className="w-full h-28 p-4 bg-white/[0.04] border border-white/10 rounded-lg text-[12px] text-white/80 focus:outline-none focus:border-emerald-500/30 font-serif leading-relaxed"
-                            autoFocus
-                          />
-                          <div className="flex justify-end gap-4">
-                            <button
-                              onClick={() => setEditingNoteId(null)}
-                              className="text-[10px] font-mono text-white/20 hover:text-white uppercase tracking-widest transition-colors">
-                              Discard
-                            </button>
-                            <button
-                              onClick={async () => {
-                                if (!editingNoteContent.trim() || editingNoteContent === note.text || isSavingNote) {
-                                  if (!isSavingNote) setEditingNoteId(null);
-                                  return;
-                                }
-                                setIsSavingNote(true);
-                                try {
-                                  const response = await api.updateNote(note.id, editingNoteContent.trim());
-                                  if (response.ok && response.data?.success) {
-                                    setNotes(notes.map(n => n.id === note.id ? {
-                                      ...n,
-                                      text: response.data.data.content,
-                                      createdAt: response.data.data.updated_at
-                                    } : n));
-                                    setEditingNoteId(null);
-                                  }
-                                } catch (error) {
-                                  console.error('Failed to update note:', error);
-                                } finally {
-                                  setIsSavingNote(false);
-                                }
-                              }}
-                              className="text-[10px] font-serif font-bold text-emerald-500 hover:text-emerald-400 uppercase tracking-widest transition-colors disabled:opacity-50"
-                              disabled={isSavingNote}>
-                              {isSavingNote ? 'Syncing...' : 'Save Changes'}
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <div className="h-1 w-1 rounded-full bg-emerald-500/50 group-hover:bg-emerald-500" />
-                              <span className="text-[10px] text-white/20 font-mono uppercase tracking-tighter">REC_ID.{note.id.substring(0, 8).toUpperCase()}</span>
-                            </div>
-                            <span className="text-[9px] text-white/20 font-mono uppercase">{new Date(note.createdAt).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })}</span>
-                          </div>
-                          <p className="text-[11px] text-white/60 font-serif italic leading-relaxed group-hover:text-white/80 transition-colors">{note.text}</p>
-                          <div className="flex items-center justify-end gap-6 mt-4 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                            <button
-                              onClick={() => {
-                                setEditingNoteId(note.id);
-                                setEditingNoteContent(note.text);
-                              }}
-                              className="text-[10px] font-mono text-white/20 hover:text-white uppercase tracking-widest">
-                              Edit
-                            </button>
-                            <button
-                              onClick={async () => {
-                                try {
-                                  const response = await api.deleteNote(note.id);
-                                  if (response.ok) {
-                                    setNotes(notes.filter(n => n.id !== note.id));
-                                  }
-                                } catch (error) {
-                                  console.error('Failed to delete note:', error);
-                                }
-                              }}
-                              className="text-[10px] font-mono text-white/10 hover:text-rose-500 uppercase tracking-widest">
-                              Delete
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {notes.length === 0 && !isSavingNote && (
-              <div className="text-center py-12 border border-dashed border-white/5 rounded-2xl">
-                <NotebookPen className="h-10 w-10 text-white/10 mx-auto mb-4" />
-                <p className="text-[11px] text-white/20 font-serif italic">"No manual artefacts detected in local memory."</p>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+        ...
+      </Dialog> */}
 
       {/* Sign Out Confirmation Modal */}
       <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
