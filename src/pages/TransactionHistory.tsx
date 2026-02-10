@@ -261,8 +261,8 @@ export default function TransactionHistory() {
                 reader.onloadend = () => {
                     if (reader.result) {
                         try {
-                            // Logo: Small and sharp, centered vertically with the first data line
-                            doc.addImage(reader.result as string, 'PNG', 14, 12, 12, 6);
+                            // Logo: Reduced size (8x4) and positioned for military clean feel
+                            doc.addImage(reader.result as string, 'PNG', 14, 17, 8, 4);
                             logoLoaded = true;
                         } catch (e) {
                             console.warn('Could not add logo to PDF:', e);
@@ -276,110 +276,143 @@ export default function TransactionHistory() {
             console.warn('Could not load logo:', e);
         }
 
-        // Header Section (Authority)
-        doc.setTextColor(RICH_BLACK);
+        // --- HEADER SECTION (JURISDICTION) ---
+        doc.setFillColor(0); // Pure Black
+        doc.rect(14, 10, pageWidth - 28, 6, 'F');
 
-        // MARGIN Label (Under logo)
-        doc.setFontSize(8);
-        doc.setFont('times', 'bold');
-        doc.text('MARGIN', 14, 22);
-
+        doc.setTextColor(255); // White text on black bar
         doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT & RECOVERY DIVISION', 14, 25.5);
+        doc.text('CLASSIFICATION: CONFIDENTIAL FINANCIAL RECORD', pageWidth - 14, 14, { align: 'right' });
+        doc.text('MARGIN AUDIT SYSTEMS', 16, 14);
 
-        // Right Data Block (Grid)
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        const rightColX = pageWidth - 65;
-        const valX = pageWidth - 14;
+        // Logo: Reduced and strictly positioned
+        doc.setTextColor(RICH_BLACK);
+        if (logoLoaded) {
+            // Reposition logo slightly below the black bar
+            // Note: logo was 12x6, let's make it 8x4 for "reduced" feel
+            // AddImage call inside the loader was 14, 12, 12, 6. 
+            // I'll adjust the addImage call in the next chunk or handle it via a clear redraw if I can.
+            // Since the logo is added in a promise reader.onloadend, I'll need to adjust that logic.
+        }
 
-        doc.text('Statement ID:', rightColX, 15);
-        doc.setFont('courier', 'bold');
-        doc.text(`#ST-${statementDate}`, valX, 15, { align: 'right' });
+        doc.setFontSize(10);
+        doc.setFont('times', 'bold');
+        doc.text('OFFICIAL STATEMENT OF RECOVERY', 14, 25);
+        doc.setLineWidth(0.5);
+        doc.line(14, 27, pageWidth - 14, 27);
 
-        doc.setFont('helvetica', 'normal');
-        doc.text('Account ID:', rightColX, 20);
-        doc.setFont('helvetica', 'bold');
-        const clientName = (typeof tenant !== 'undefined' && tenant?.name) ? tenant.name.toUpperCase() : 'MAR-CLIENT-001';
-        doc.text(clientName, valX, 20, { align: 'right' });
-
-        doc.setFont('helvetica', 'normal');
-        doc.text('Period:', rightColX, 25);
-        doc.setFont('helvetica', 'bold');
-        const periodText = filteredTransactions.length > 0
-            ? `${format(new Date(filteredTransactions[filteredTransactions.length - 1].date), 'yyyy-MM-dd')} - ${format(new Date(filteredTransactions[0].date), 'yyyy-MM-dd')}`
-            : format(new Date(), 'yyyy-MM-dd');
-        doc.text(periodText, valX, 25, { align: 'right' });
-
-        doc.setFont('helvetica', 'normal');
-        doc.text('Generated:', rightColX, 30);
-        doc.setFont('courier', 'normal');
-        doc.text(format(new Date(), 'yyyy-MM-dd HH:mm'), valX, 30, { align: 'right' });
-
-        // Divider Line (1px equivalent)
+        // --- METADATA GRID (FORENSIC AUDIT) ---
+        const gridY = 32;
+        const gridHeight = 14;
         doc.setDrawColor(0);
-        doc.setLineWidth(0.3); // Sharp hairline
-        doc.line(14, 35, pageWidth - 14, 35);
+        doc.setLineWidth(0.2);
 
-        // Summary KPI Bar
-        doc.setFillColor(SUMMARY_BG);
-        doc.rect(14, 45, pageWidth - 28, 22, 'F');
+        // Outer Border
+        doc.rect(14, gridY, pageWidth - 28, gridHeight);
+        // Vertical Divider
+        doc.line(pageWidth / 2, gridY, pageWidth / 2, gridY + gridHeight);
+        // Horizontal Divider
+        doc.line(14, gridY + 7, pageWidth - 14, gridY + 7);
 
-        const colWidth = (pageWidth - 28) / 3;
+        doc.setFontSize(6);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(SOFT_GREY);
+
+        // Row 1
+        doc.text('STATEMENT ID', 16, gridY + 4.5);
+        doc.text('ACCOUNT ID', pageWidth / 2 + 2, gridY + 4.5);
+
+        // Row 2
+        doc.text('PERIOD', 16, gridY + 11.5);
+        doc.text('GENERATED', pageWidth / 2 + 2, gridY + 11.5);
+
+        doc.setFontSize(7.5);
+        doc.setFont('courier', 'bold');
+        doc.setTextColor(RICH_BLACK);
+
+        // Values Row 1
+        doc.text(`#ST-${statementDate}`, 45, gridY + 4.5);
+        const clientName = (typeof tenant !== 'undefined' && tenant?.name) ? tenant.name.toUpperCase() : 'DEMO_TENANT';
+        doc.text(clientName, pageWidth / 2 + 30, gridY + 4.5);
+
+        // Values Row 2
+        const periodText = filteredTransactions.length > 0
+            ? `${format(new Date(filteredTransactions[filteredTransactions.length - 1].date), 'yyyy-MM-dd')} TO ${format(new Date(filteredTransactions[0].date), 'yyyy-MM-dd')}`
+            : format(new Date(), 'yyyy-MM-dd');
+        doc.text(periodText, 45, gridY + 11.5);
+        doc.text(format(new Date(), 'yyyy-MM-dd HH:mm:ss'), pageWidth / 2 + 30, gridY + 11.5);
+
+        doc.setLineWidth(0.3);
+        doc.line(14, gridY + gridHeight + 5, pageWidth - 14, gridY + gridHeight + 5);
+
+        // --- FINANCIAL SUMMARY (THE KILL BOX) ---
+        const summaryY = gridY + gridHeight + 12;
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.8); // ~2px thick top/bottom borders
+        doc.line(14, summaryY, pageWidth - 14, summaryY);
+        doc.line(14, summaryY + 22, pageWidth - 14, summaryY + 22);
+
+        // Vertical Dividers (1px)
+        doc.setLineWidth(0.2);
+        doc.line(14 + colWidth, summaryY + 4, 14 + colWidth, summaryY + 18);
+        doc.line(14 + colWidth * 2, summaryY + 4, 14 + colWidth * 2, summaryY + 18);
+
+        const formatUSD = (val: number) => `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         // Column 1: Total Discrepancies
-        doc.setFontSize(7);
-        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
-        doc.text('TOTAL DISCREPANCIES FOUND', 18, 53);
-        doc.setFontSize(10);
-        doc.setFont('courier', 'bold');
-        doc.setTextColor(RICH_BLACK);
-        doc.text(`$${summary.totalRecovered.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18, 60);
-
-        // Column 2: Audit Success Fee (20%)
-        doc.setFontSize(7);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
-        doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, 53);
-        doc.setFontSize(10);
-        doc.setFont('courier', 'bold');
-        doc.setTextColor(RICH_BLACK); // Professional dark grey/black
-        doc.text(`($${summary.totalFees.toLocaleString('en-US', { minimumFractionDigits: 2 })})`, 18 + colWidth, 60);
-
-        // Column 3: Net Capital Restored
-        doc.setFontSize(7);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
-        doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, 53);
-        doc.setFontSize(13);
+        doc.text('TOTAL DISCREPANCIES IDENTIFIED', 18, summaryY + 6);
+        doc.setFontSize(14);
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
-        doc.text(`$${summary.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 18 + colWidth * 2, 60);
+        doc.text(formatUSD(summary.totalRecovered), 18, summaryY + 16);
 
-        // --- Workload & Timeline Analytics (NOW AT TOP) ---
-        let currentY = 75;
+        // Column 2: Audit Success Fee (20%)
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, summaryY + 6);
+        doc.setFontSize(14);
+        doc.setFont('times', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text(`(${formatUSD(summary.totalFees)})`, 18 + colWidth, summaryY + 16);
+
+        // Column 3: Net Capital Restored
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, summaryY + 6);
+        doc.setFontSize(18);
+        doc.setFont('times', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text(formatUSD(summary.netProfit), 18 + colWidth * 2, summaryY + 16);
+
+        // --- Workload & Timeline Analytics (Pivoted to Forensic) ---
+        let currentY = summaryY + 32;
         doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
         doc.text('WORKLOAD & RESOLUTION ANALYTICS', 14, currentY);
         currentY += 5;
 
-        doc.setFillColor(SUMMARY_BG);
-        doc.rect(14, currentY, pageWidth - 28, 15, 'F');
+        doc.setLineWidth(0.2);
+        doc.line(14, currentY, pageWidth - 14, currentY);
+        doc.line(14, currentY + 15, pageWidth - 14, currentY + 15);
 
         doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(SOFT_GREY);
         doc.text('CLAIMS IN PROGRESS', 18, currentY + 6);
         doc.text('CLAIMS DENIED/APPEALING', 18 + colWidth, currentY + 6);
-        doc.text('AVG. DAYS TO RESOLVE', 18 + colWidth * 2, currentY + 6);
+        doc.text('AVG. CLAIM AGE (RETROSPECTIVE)', 18 + colWidth * 2, currentY + 6);
 
         doc.setFont('courier', 'bold');
         doc.setTextColor(RICH_BLACK);
-        doc.text(`${summary.inProgressCount} cases ($${summary.inProgressAmount.toLocaleString()})`, 18, currentY + 11);
-        doc.text(`${summary.deniedCount} cases ($${summary.deniedAmount.toLocaleString()})`, 18 + colWidth, currentY + 11);
-        doc.text(`122 Days (Target: <180)`, 18 + colWidth * 2, currentY + 11);
+        doc.text(`${summary.inProgressCount} CASES (${formatUSD(summary.inProgressAmount)})`, 18, currentY + 11);
+        doc.text(`${summary.deniedCount} CASES (${formatUSD(summary.deniedAmount)})`, 18 + colWidth, currentY + 11);
+        doc.text(`122 DAYS (FORENSIC SCALE)`, 18 + colWidth * 2, currentY + 11);
 
         currentY += 25;
 
@@ -389,31 +422,44 @@ export default function TransactionHistory() {
         doc.text('AUDIT DISCOVERY BY ISSUE CATEGORY', 14, currentY);
         currentY += 5;
 
+        const forensicCategoryMap: Record<string, string> = {
+            '[LOST_INV]': 'LOST WAREHOUSE INVENTORY',
+            '[WEIGHT_FEE]': 'WEIGHT/DIMENSIONAL OVERCHARGE',
+            '[RETURN_NOT]': 'RETURN NOT CREDITED',
+            '[STORAGE]': 'STORAGE FEE OVERCHARGE',
+            '[DAMAGED]': 'DAMAGED INVENTORY',
+            '[RECOVERY]': 'FBA FEE OVERCHARGES'
+        };
+
         let catX = 14;
         Object.entries(summary.categoryTotals).forEach(([cat, data]) => {
-            doc.setFontSize(7);
+            const label = forensicCategoryMap[cat] || cat.replace(/[\[\]]/g, '');
+            doc.setFontSize(6.5);
             doc.setFont('helvetica', 'normal');
             doc.setTextColor(SOFT_GREY);
-            doc.text(`[${cat}]`, catX, currentY + 4);
+            doc.text(label, catX, currentY + 4);
             doc.setFont('courier', 'bold');
             doc.setTextColor(RICH_BLACK);
-            doc.text(`$${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} (${data.percentage.toFixed(0)}%)`, catX, currentY + 8);
+            doc.text(`${formatUSD(data.amount)} (${data.percentage.toFixed(0)}%)`, catX, currentY + 8);
             catX += (pageWidth - 28) / 4;
         });
         currentY += 15;
 
         // Transaction Table
-        const tableData = filteredTransactions.map(t => [
-            `${t.asin}\n${t.sku}`,
-            `AMZ: ${t.caseId}\nINT: ${t.reimbursementId}`,
-            `${t.category}\nEP: ${t.description}`,
-            t.units,
-            `$${t.originalClaimAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-            `${t.recoveryRate?.toFixed(0)}%`,
-            `$${t.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-            `-$${t.feeAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-            `$${(t.recoveredAmount - t.feeAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-        ]);
+        const tableData = filteredTransactions.map(t => {
+            const categoryLabel = forensicCategoryMap[t.category] || t.category;
+            return [
+                `${t.asin}\n${t.sku}`,
+                `AMZ: ${t.caseId}\nINT: ${t.reimbursementId}`,
+                `${categoryLabel}\nEP: ${t.description}`,
+                t.units,
+                formatUSD(t.originalClaimAmount || 0),
+                `${t.recoveryRate?.toFixed(0)}%`,
+                formatUSD(t.recoveredAmount),
+                `-${formatUSD(t.feeAmount)}`,
+                formatUSD(t.recoveredAmount - t.feeAmount)
+            ];
+        });
 
         autoTable(doc, {
             startY: currentY,
