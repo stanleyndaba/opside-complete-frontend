@@ -217,8 +217,8 @@ export default function UpcomingPayments() {
   const exportPdf = async () => {
     setDownloading(true);
     try {
-      const url = api.buildApiUrl('/api/disputes/payments/report');
-      const response = await fetch(url, {
+      const apiUrl = api.buildApiUrl('/api/disputes/payments/report');
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
