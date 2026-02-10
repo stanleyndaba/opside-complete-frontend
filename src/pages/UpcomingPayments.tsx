@@ -11,7 +11,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { api, buildApiUrl } from '@/lib/api';
+import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
@@ -217,7 +217,7 @@ export default function UpcomingPayments() {
   const exportPdf = async () => {
     setDownloading(true);
     try {
-      const url = buildApiUrl('/api/disputes/payments/report');
+      const url = api.buildApiUrl('/api/disputes/payments/report');
       const response = await fetch(url, {
         method: 'POST',
         headers: {
