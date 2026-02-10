@@ -162,7 +162,9 @@ export default function TransactionHistory() {
 
     // Calculate summary statistics from REAL data
     const summary = useMemo(() => {
+        const paidCount = transactions.filter(t => t.status === 'paid' || t.status === 'approved').length;
         const totalRecovered = transactions.reduce((sum, t) => sum + (t.status === 'paid' || t.status === 'approved' ? t.recoveredAmount : 0), 0);
+        const totalDiscovery = transactions.reduce((sum, t) => sum + t.recoveredAmount, 0);
         const totalFees = transactions.reduce((sum, t) => sum + (t.status === 'paid' || t.status === 'approved' ? t.feeAmount : 0), 0);
         const netProfit = totalRecovered - totalFees;
         const transactionCount = transactions.length;
@@ -173,24 +175,34 @@ export default function TransactionHistory() {
         const deniedCount = transactions.filter(t => t.status === 'disputed').length;
         const deniedAmount = transactions.filter(t => t.status === 'disputed').reduce((sum, t) => sum + t.recoveredAmount, 0);
 
-        // Category Totals
-        const categoryTotals: Record<string, { amount: number; count: number; percentage: number }> = {};
+        // Efficiency Metrics
+        const efficiencyRatio = totalRecovered > 0 ? (totalDiscovery / totalRecovered) * 100 : 0;
+        const avgRecovery = paidCount > 0 ? totalRecovered / paidCount : 0;
+        const successRate = (paidCount + deniedCount) > 0 ? (paidCount / (paidCount + deniedCount)) * 100 : 100;
+        const portfolioCoverage = new Set(transactions.map(t => t.asin).filter(Boolean)).size;
+
+        // Category Totals based on TOTAL DISCOVERY (Paid + Pending + Denied)
+        const categoryTotals: Record<string, { amount: number; count: number; percentage: number; recovered: number; recoveredCount: number }> = {};
         transactions.forEach(t => {
-            const cat = t.category || 'RECOVERY';
-            if (!categoryTotals[cat]) categoryTotals[cat] = { amount: 0, count: 0, percentage: 0 };
+            const cat = t.category || '[RECOVERY]';
+            if (!categoryTotals[cat]) categoryTotals[cat] = { amount: 0, count: 0, percentage: 0, recovered: 0, recoveredCount: 0 };
             categoryTotals[cat].amount += t.recoveredAmount;
             categoryTotals[cat].count += 1;
+            if (t.status === 'paid' || t.status === 'approved') {
+                categoryTotals[cat].recovered += t.recoveredAmount;
+                categoryTotals[cat].recoveredCount += 1;
+            }
         });
 
-        // Calculate percentages
+        // Calculate percentages relative to TOTAL DISCOVERY
         Object.keys(categoryTotals).forEach(cat => {
-            categoryTotals[cat].percentage = totalRecovered > 0 ? (categoryTotals[cat].amount / totalRecovered) * 100 : 0;
+            categoryTotals[cat].percentage = totalDiscovery > 0 ? (categoryTotals[cat].amount / totalDiscovery) * 100 : 0;
         });
 
         return {
-            totalRecovered, totalFees, netProfit, transactionCount,
+            totalRecovered, totalDiscovery, totalFees, netProfit, transactionCount,
             inProgressCount, inProgressAmount, deniedCount, deniedAmount,
-            categoryTotals
+            categoryTotals, efficiencyRatio, avgRecovery, successRate, portfolioCoverage
         };
     }, [transactions]);
 
@@ -361,22 +373,22 @@ export default function TransactionHistory() {
 
         const formatUSD = (val: number) => `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-        // Column 1: Total Discrepancies
+        // Column 1: Total Discovery
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
-        doc.text('TOTAL DISCREPANCIES IDENTIFIED', 18, summaryY + 6);
-        doc.setFontSize(11); // Reduced from 14
+        doc.text('TOTAL AUDIT DISCOVERY', 18, summaryY + 6);
+        doc.setFontSize(11);
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
-        doc.text(formatUSD(summary.totalRecovered), 18, summaryY + 16);
+        doc.text(formatUSD(summary.totalDiscovery), 18, summaryY + 16);
 
         // Column 2: Audit Success Fee (20%)
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
         doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, summaryY + 6);
-        doc.setFontSize(11); // Reduced from 14
+        doc.setFontSize(11);
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(`(${formatUSD(summary.totalFees)})`, 18 + colWidth, summaryY + 16);
@@ -386,64 +398,96 @@ export default function TransactionHistory() {
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
         doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, summaryY + 6);
-        doc.setFontSize(14); // Reduced from 18
+        doc.setFontSize(14);
         doc.setFont('times', 'bold');
         doc.setTextColor(RICH_BLACK);
         doc.text(formatUSD(summary.netProfit), 18 + colWidth * 2, summaryY + 16);
 
-        // --- Workload & Timeline Analytics (Pivoted to Forensic) ---
+        // --- AUDIT DISCOVERY BY ISSUE CATEGORY (REDESIGN) ---
         let currentY = summaryY + 32;
+        doc.setFontSize(10);
+        doc.setFont('times', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text('AUDIT DISCOVERY BY ISSUE CATEGORY', 14, currentY);
+        currentY += 8;
+
+        // Portfolio Performance Ratio
         doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
-        doc.text('WORKLOAD & RESOLUTION ANALYTICS', 14, currentY);
-        currentY += 5;
+        doc.text('PORTFOLIO PERFORMANCE RATIO', 14, currentY);
+        currentY += 4;
+        doc.setFontSize(12);
+        doc.setTextColor(17, 17, 17);
+        doc.text(`${summary.efficiencyRatio.toFixed(0)}% Recovery Efficiency`, 14, currentY + 6);
+        doc.setFontSize(7.5);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(SOFT_GREY);
+        const ratioExplanation = `We identified ${formatUSD(summary.totalDiscovery)} in claimable discrepancies and successfully recovered ${formatUSD(summary.totalRecovered)} (${((summary.totalRecovered / (summary.totalDiscovery || 1)) * 100).toFixed(0)}% of total discovery value to date).`;
+        doc.text(ratioExplanation, 14, currentY + 11);
+        currentY += 18;
+
+        // BREAKDOWN BY ISSUE TYPE Table
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text('BREAKDOWN BY ISSUE TYPE', 14, currentY);
+        currentY += 4;
+
+        const forensicCategoryMap: Record<string, string> = {
+            '[LOST_INV]': 'Lost Warehouse Inventory',
+            '[WEIGHT_FEE]': 'FBA Fee Overcharges (Weight/Dim)',
+            '[RETURN_NOT]': 'Customer Returns',
+            '[STORAGE]': 'Storage Fee Errors',
+            '[DAMAGED]': 'Damaged Inventory',
+            '[RECOVERY]': 'FBA Fee Overcharges'
+        };
+
+        const breakdownData = Object.entries(summary.categoryTotals).map(([cat, data]) => {
+            const label = forensicCategoryMap[cat] || cat.replace(/[\[\]]/g, '');
+            const recoveryRate = data.amount > 0 ? (data.recovered / data.amount) * 100 : 0;
+            return [
+                label,
+                formatUSD(data.amount),
+                `${data.percentage.toFixed(1)}%`,
+                data.recovered > 0 ? `${recoveryRate.toFixed(0)}%` : '—',
+                data.recoveredCount > 0 ? `${data.recoveredCount} cases recovered` : 'In progress'
+            ];
+        });
+
+        autoTable(doc, {
+            startY: currentY,
+            head: [['Category', 'Identified Value', '% of Portfolio', 'Recovery Rate', 'Status']],
+            body: breakdownData,
+            theme: 'plain',
+            headStyles: { fontSize: 7, fontStyle: 'bold', textColor: [SOFT_GREY[0], SOFT_GREY[1], SOFT_GREY[2]] },
+            bodyStyles: { fontSize: 7.5, font: 'courier' },
+            margin: { left: 14, right: 14 }
+        });
+
+        currentY = (doc as any).lastAutoTable.finalY + 12;
+
+        // EFFICIENCY METRICS
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text('EFFICIENCY METRICS', 14, currentY);
+        currentY += 6;
 
         doc.setLineWidth(0.2);
         doc.line(14, currentY, pageWidth - 14, currentY);
-        doc.line(14, currentY + 15, pageWidth - 14, currentY + 15);
+        currentY += 6;
 
-        doc.setFontSize(7);
+        doc.setFontSize(7.5);
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(SOFT_GREY);
-        doc.text('CLAIMS IN PROGRESS', 18, currentY + 6);
-        doc.text('CLAIMS DENIED/APPEALING', 18 + colWidth, currentY + 6);
-        doc.text('AVG. CLAIM AGE (RETROSPECTIVE)', 18 + colWidth * 2, currentY + 6);
-
-        doc.setFont('courier', 'bold');
-        doc.setTextColor(RICH_BLACK);
-        doc.text(`${summary.inProgressCount} CASES (${formatUSD(summary.inProgressAmount)})`, 18, currentY + 11);
-        doc.text(`${summary.deniedCount} CASES (${formatUSD(summary.deniedAmount)})`, 18 + colWidth, currentY + 11);
-        doc.text(`122 DAYS (FORENSIC SCALE)`, 18 + colWidth * 2, currentY + 11);
-
-        currentY += 25;
-
-        // --- Category Summary (Audit Breakdown) ---
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'bold');
-        doc.text('AUDIT DISCOVERY BY ISSUE CATEGORY', 14, currentY);
+        doc.setTextColor(17, 17, 17);
+        doc.text(`Discovery-to-Recovery Ratio: ${summary.efficiencyRatio.toFixed(0)}% (For every $1,000 audited, we found $${(summary.efficiencyRatio * 10).toFixed(0)} in claimable errors)`, 14, currentY);
         currentY += 5;
+        doc.text(`Average Recovery per Claim: ${formatUSD(summary.avgRecovery)}`, 14, currentY);
+        currentY += 5;
+        doc.text(`Success Rate on Filed Claims: ${summary.successRate.toFixed(0)}% (${summary.deniedCount === 0 ? '0 denials' : `${summary.deniedCount} contested`})`, 14, currentY);
+        currentY += 5;
+        doc.text(`Portfolio Coverage: ${summary.portfolioCoverage} ASINs analyzed in current forensic scan`, 14, currentY);
 
-        const forensicCategoryMap: Record<string, string> = {
-            '[LOST_INV]': 'LOST WAREHOUSE INVENTORY',
-            '[WEIGHT_FEE]': 'WEIGHT/DIMENSIONAL OVERCHARGE',
-            '[RETURN_NOT]': 'RETURN NOT CREDITED',
-            '[STORAGE]': 'STORAGE FEE OVERCHARGE',
-            '[DAMAGED]': 'DAMAGED INVENTORY',
-            '[RECOVERY]': 'FBA FEE OVERCHARGES'
-        };
-
-        let catX = 14;
-        Object.entries(summary.categoryTotals).forEach(([cat, data]) => {
-            const label = forensicCategoryMap[cat] || cat.replace(/[\[\]]/g, '');
-            doc.setFontSize(6.5);
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(SOFT_GREY);
-            doc.text(label, catX, currentY + 4);
-            doc.setFont('courier', 'bold');
-            doc.setTextColor(RICH_BLACK);
-            doc.text(`${formatUSD(data.amount)} (${data.percentage.toFixed(0)}%)`, catX, currentY + 8);
-            catX += (pageWidth - 28) / 4;
-        });
         currentY += 15;
 
         // Transaction Table
