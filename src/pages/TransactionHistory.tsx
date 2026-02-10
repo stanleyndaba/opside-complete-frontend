@@ -250,6 +250,7 @@ export default function TransactionHistory() {
         const SOFT_GREY = '#666666';
         const HAIRLINE = '#E5E5E5';
         const SUMMARY_BG = '#F5F5F5';
+        const colWidth = (pageWidth - 28) / 3;
 
         // Load logo image
         let logoLoaded = false;
