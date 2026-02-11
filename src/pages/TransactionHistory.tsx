@@ -347,49 +347,45 @@ export default function TransactionHistory() {
 
         doc.setLineWidth(0.3);
 
-        // --- FINANCIAL SUMMARY (THE KILL BOX) ---
+        // --- FINANCIAL SUMMARY (REFINED LIST) ---
         const summaryY = gridY + gridHeight + 12;
-        doc.setDrawColor(0);
-        doc.setLineWidth(0.2); // Razor-sharp 1px hairline
-        doc.line(14, summaryY, pageWidth - 14, summaryY);
-        doc.line(14, summaryY + 22, pageWidth - 14, summaryY + 22);
-
-        // Vertical Dividers (1px)
-        doc.setLineWidth(0.2);
-        doc.line(14 + colWidth, summaryY + 4, 14 + colWidth, summaryY + 18);
-        doc.line(14 + colWidth * 2, summaryY + 4, 14 + colWidth * 2, summaryY + 18);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(RICH_BLACK);
+        doc.text('FINANCIAL SUMMARY', 14, summaryY);
 
         const formatUSD = (val: number) => `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-        // Column 1: Total Discrepancies
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
-        doc.text('TOTAL DISCREPANCIES IDENTIFIED', 18, summaryY + 6);
-        doc.setFontSize(11); // Reduced from 14
-        doc.setFont('times', 'bold');
-        doc.setTextColor(RICH_BLACK);
-        doc.text(formatUSD(summary.totalRecovered), 18, summaryY + 16);
 
-        // Column 2: Audit Success Fee (20%)
-        doc.setFontSize(6.5);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(SOFT_GREY);
-        doc.text('AUDIT SUCCESS FEE (20%)', 18 + colWidth, summaryY + 6);
-        doc.setFontSize(11); // Reduced from 14
+        // Row 1: Total Discrepancies
+        doc.text('TOTAL DISCREPANCIES IDENTIFIED -', 14, summaryY + 8);
         doc.setFont('times', 'bold');
+        doc.setFontSize(9);
         doc.setTextColor(RICH_BLACK);
-        doc.text(`(${formatUSD(summary.totalFees)})`, 18 + colWidth, summaryY + 16);
+        doc.text(formatUSD(summary.totalRecovered), 60, summaryY + 8);
 
-        // Column 3: Net Capital Restored
+        // Row 2: Audit Success Fee (20%)
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
-        doc.text('NET CAPITAL RESTORED', 18 + colWidth * 2, summaryY + 6);
-        doc.setFontSize(14); // Reduced from 18
+        doc.text('AUDIT SUCCESS FEE (20%) -', 14, summaryY + 15);
         doc.setFont('times', 'bold');
+        doc.setFontSize(9);
         doc.setTextColor(RICH_BLACK);
-        doc.text(formatUSD(summary.netProfit), 18 + colWidth * 2, summaryY + 16);
+        doc.text(`(${formatUSD(summary.totalFees)})`, 60, summaryY + 15);
+
+        // Row 3: Net Capital Restored
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(SOFT_GREY);
+        doc.text('NET CAPITAL RESTORED -', 14, summaryY + 22);
+        doc.setFont('times', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(RICH_BLACK);
+        doc.text(formatUSD(summary.netProfit), 60, summaryY + 22);
 
         // --- Workload & Timeline Analytics (Pivoted to Forensic) ---
         let currentY = summaryY + 32;
