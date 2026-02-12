@@ -254,20 +254,19 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   return (
     <div className={cn(
-      "flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-[20px] sm:rounded-full p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.1)]",
-      isFullWidth ? "w-full" : "w-auto min-w-[320px]"
+      "flex flex-row items-center bg-white rounded-full p-1 shadow-[0_10px_30px_rgba(0,0,0,0.1)]",
+      isFullWidth ? "w-full" : "w-auto min-w-[280px]"
     )}>
       {/* Marketplace Selector - Transparent Background */}
-      <div className="flex-1 min-w-[140px]">
+      <div className="flex-1 min-w-[100px] sm:min-w-[140px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-transparent border-none text-black font-semibold focus:ring-0 transition-all px-4 h-11 text-xs tracking-tight",
+              "w-full bg-transparent border-none text-black font-semibold focus:ring-0 transition-all px-3 sm:px-4 h-10 sm:h-11 text-[10px] sm:text-xs tracking-tight",
               buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
             )}>
-            <div className="flex items-center justify-between w-full gap-2 px-1">
+            <div className="flex items-center justify-between w-full gap-1 sm:gap-2 px-1">
               <SelectValue placeholder="Marketplace" />
-              <ChevronDown className="h-3.5 w-3.5 opacity-30" />
             </div>
           </SelectTrigger>
           <SelectContent className="bg-white border-gray-100 shadow-2xl rounded-xl text-black min-w-[200px]">
@@ -285,16 +284,17 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
-          "w-full sm:w-auto",
-          "justify-center font-bold transition-all active:scale-95 px-8 shrink-0 items-center rounded-[14px] sm:rounded-full h-11 sm:h-auto py-3 text-xs",
+          "w-auto",
+          "justify-center font-bold transition-all active:scale-95 px-4 sm:px-8 shrink-0 items-center rounded-full h-10 sm:h-auto py-2.5 sm:py-3 text-[10px] sm:text-xs",
           "bg-black text-white hover:bg-black/90",
           connecting && 'opacity-80',
           buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
         )}>
         {connecting ? (
           <>
-            <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-            Wait...
+            <Loader2 className="mr-2 h-3 w-3 sm:h-3.5 sm:w-3.5 animate-spin" />
+            <span className="hidden sm:inline">Waiting...</span>
+            <span className="sm:hidden">Wait</span>
           </>
         ) : (
           "Connect Account"
