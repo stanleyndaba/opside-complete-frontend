@@ -429,23 +429,19 @@ const Index = () => {
 
                 {/* Infinite Logo Carousel */}
                 <div className="w-full mt-4 overflow-hidden relative">
-                  {/* Subtle edge fades for that premium "fade into the dark" effect */}
-                  <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
-                  <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
-
                   <div className="flex relative">
                     <motion.div
-                      className="flex items-center gap-16 md:gap-24 whitespace-nowrap"
-                      animate={{ x: [0, -1035] }} // Adjusting based on calculated width of logo set
+                      className="flex items-center gap-20 md:gap-32 whitespace-nowrap"
+                      animate={{ x: ["0%", "-33.33%"] }}
                       transition={{
-                        duration: 40,
+                        duration: 30,
                         repeat: Infinity,
                         ease: "linear",
                         repeatType: "loop"
                       }}
                     >
                       {[...Array(3)].map((_, outerIndex) => (
-                        <div key={outerIndex} className="flex items-center gap-16 md:gap-24 pr-16 md:pr-24">
+                        <div key={outerIndex} className="flex items-center gap-20 md:gap-32 pr-20 md:pr-32">
                           <img src="/Amazon-logo.png" alt="Amazon" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
                           <img src="/gmailicon.png" alt="Gmail" className="h-[18px] md:h-[26px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
                           <img src="/outlookicon.webp" alt="Outlook" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
