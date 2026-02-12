@@ -30,7 +30,17 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
     <div className="relative z-10 w-full bg-[#050505]">
       <footer id="core-footer" className="relative bg-[#050505] text-white w-full border-t border-white/5" style={{ width: '100%', maxWidth: '100%' }}>
         <div className="container mx-auto px-6 pt-12 pb-14 space-y-8">
-          <div className="space-y-4">
+          <div className="space-y-6">
+            <Link to="/" className="inline-flex items-center gap-2.5 transition-colors hover:opacity-80">
+              <img
+                src="/logoimagetwo.png"
+                alt="Margin"
+                width="24"
+                height="24"
+                className="h-6 w-auto object-contain invert brightness-0"
+              />
+              <span className="font-merriweather font-bold text-white text-xl tracking-tight">Margin</span>
+            </Link>
             <p className="font-montserrat text-sm text-white/40 leading-relaxed max-w-sm">
               Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,
               and a finance-ready audit trail—no agency overhead.
