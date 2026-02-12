@@ -399,33 +399,7 @@ const Index = () => {
               {/* Text content - left aligned on mobile, centered on desktop */}
               <div className="flex flex-col items-start md:items-center space-y-6 w-full">
 
-                {/* Institutional Trust Badge */}
-                <div className="relative inline-flex items-center gap-3 md:gap-5 rounded-[22px] md:rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 md:px-6 md:py-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.4),0_1px_2px_rgba(255,255,255,0.05)_inset] overflow-hidden group transition-all duration-500 hover:bg-white/10">
-
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <span className="relative flex items-center gap-1.5 md:gap-2">
-                    <span className="relative h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-500">
-                      <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
-                    </span>
-                  </span>
-                  <div className="relative flex items-center gap-2 md:gap-4 text-[10px] md:text-xs font-bold text-white tracking-tight">
-                    <span className="opacity-40 uppercase tracking-widest font-mono">Links seamlessly with</span>
-                    <span className="inline-flex items-center gap-2 md:gap-4">
-                      {[
-                        { src: '/gmailicon.png', alt: 'Gmail' },
-                        { src: '/outlookicon.webp', alt: 'Outlook' }
-                      ].map((icon, i) => (
-                        <div key={i} className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/10 border border-white/10 shadow-sm flex items-center justify-center overflow-hidden">
-                          <img src={icon.src} alt={icon.alt} className="h-full w-full object-contain" />
-                        </div>
-                      ))}
-                      <span className="text-emerald-500 font-bold text-sm md:text-base">+</span>
-                      <div className="relative h-5 w-5 md:h-6 md:w-6 p-0.5 rounded-md bg-white/10 border border-white/10 shadow-sm flex items-center justify-center overflow-hidden">
-                        <img src="/gd.png" alt="Google Drive" className="h-full w-full object-contain" />
-                      </div>
-                    </span>
-                  </div>
-                </div>
+                {/* Institutional Trust Badge hidden as per request */}
 
                 <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
                   Financial Infrastructure <br className="hidden lg:block" />
@@ -472,11 +446,11 @@ const Index = () => {
                     >
                       {[...Array(3)].map((_, outerIndex) => (
                         <div key={outerIndex} className="flex items-center gap-16 md:gap-24 pr-16 md:pr-24">
-                          <img src="/Amazon-logo.png" alt="Amazon" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
-                          <img src="/gmailicon.png" alt="Gmail" className="h-4 md:h-6 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
-                          <img src="/outlookicon.webp" alt="Outlook" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
-                          <img src="/Dropbox_Icon.svg.png" alt="Dropbox" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
-                          <img src="/gd.png" alt="Google Drive" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/Amazon-logo.png" alt="Amazon" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/gmailicon.png" alt="Gmail" className="h-[18px] md:h-[26px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/outlookicon.webp" alt="Outlook" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/Dropbox_Icon.svg.png" alt="Dropbox" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/gd.png" alt="Google Drive" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
                         </div>
                       ))}
                     </motion.div>
