@@ -444,8 +444,17 @@ const Index = () => {
                   <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" />
                 </div>
 
+                {/* Integrations Separator */}
+                <div className="w-full flex items-center justify-center gap-4 mt-20 mb-10 px-6">
+                  <div className="h-[1px] flex-1 max-w-[300px] bg-white/10" />
+                  <div className="px-5 py-2 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-md">
+                    <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Integrations</span>
+                  </div>
+                  <div className="h-[1px] flex-1 max-w-[300px] bg-white/10" />
+                </div>
+
                 {/* Infinite Logo Carousel */}
-                <div className="w-full mt-16 md:mt-24 overflow-hidden relative">
+                <div className="w-full mt-4 overflow-hidden relative">
                   {/* Subtle edge fades for that premium "fade into the dark" effect */}
                   <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
                   <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
