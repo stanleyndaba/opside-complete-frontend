@@ -255,7 +255,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   return (
     <div className={cn(
       "flex flex-row items-center bg-white rounded-full p-1 shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden",
-      isFullWidth ? "w-full" : "w-screen max-w-[340px] sm:w-auto sm:min-w-[280px]"
+      isFullWidth ? "w-full" : "w-full max-w-[320px] sm:w-auto sm:min-w-[280px]"
     )}>
       {/* Marketplace Selector - Transparent Background */}
       <div className="flex-[1.2] min-w-[80px] sm:min-w-[140px]">
