@@ -247,13 +247,13 @@ export default function UpcomingPayments() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'upcoming-payments-report.pdf';
+      a.download = 'settlement-and-forecast.pdf';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast({ title: 'Report Downloaded', description: 'upcoming-payments-report.pdf has been saved.' });
+      toast({ title: 'Statement Downloaded', description: 'settlement-and-forecast.pdf has been saved.' });
     } catch (err: any) {
       toast({
         variant: 'destructive',
