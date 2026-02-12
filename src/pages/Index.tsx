@@ -431,17 +431,18 @@ const Index = () => {
                 <div className="w-full mt-4 overflow-hidden relative">
                   <div className="flex relative">
                     <motion.div
-                      className="flex items-center gap-20 md:gap-32 whitespace-nowrap"
-                      animate={{ x: ["0%", "-33.33%"] }}
+                      className="flex items-center whitespace-nowrap"
+                      style={{ willChange: "transform" }}
+                      animate={{ x: ["0%", "-50%"] }}
                       transition={{
-                        duration: 30,
+                        duration: 20,
                         repeat: Infinity,
                         ease: "linear",
                         repeatType: "loop"
                       }}
                     >
-                      {[...Array(3)].map((_, outerIndex) => (
-                        <div key={outerIndex} className="flex items-center gap-20 md:gap-32 pr-20 md:pr-32">
+                      {[...Array(2)].map((_, outerIndex) => (
+                        <div key={outerIndex} className="flex items-center gap-16 md:gap-32 pr-16 md:pr-32">
                           <img src="/Amazon-logo.png" alt="Amazon" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
                           <img src="/gmailicon.png" alt="Gmail" className="h-[18px] md:h-[26px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
                           <img src="/outlookicon.webp" alt="Outlook" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
