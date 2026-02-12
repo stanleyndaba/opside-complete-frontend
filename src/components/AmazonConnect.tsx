@@ -254,15 +254,15 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   return (
     <div className={cn(
-      "flex flex-row items-center bg-white rounded-full p-1 shadow-[0_10px_30px_rgba(0,0,0,0.1)]",
-      isFullWidth ? "w-full" : "w-auto min-w-[280px]"
+      "flex flex-row items-center bg-white rounded-full p-1 shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden",
+      isFullWidth ? "w-full" : "w-screen max-w-[340px] sm:w-auto sm:min-w-[280px]"
     )}>
       {/* Marketplace Selector - Transparent Background */}
-      <div className="flex-1 min-w-[100px] sm:min-w-[140px]">
+      <div className="flex-[1.2] min-w-[80px] sm:min-w-[140px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-transparent border-none text-black font-semibold focus:ring-0 transition-all px-3 sm:px-4 h-10 sm:h-11 text-[10px] sm:text-xs tracking-tight",
+              "w-full bg-transparent border-none text-black font-semibold focus:ring-0 transition-all px-2 sm:px-4 h-10 sm:h-11 text-[9px] sm:text-xs tracking-tight",
               buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
             )}>
             <div className="flex items-center justify-between w-full gap-1 sm:gap-2 px-1">
@@ -284,8 +284,8 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
-          "w-auto",
-          "justify-center font-bold transition-all active:scale-95 px-4 sm:px-8 shrink-0 items-center rounded-full h-10 sm:h-auto py-2.5 sm:py-3 text-[10px] sm:text-xs",
+          "w-auto flex-1 min-w-[110px] sm:min-w-[0]",
+          "justify-center font-bold transition-all active:scale-95 px-3 sm:px-8 shrink-0 items-center rounded-full h-10 sm:h-auto py-2.5 sm:py-3 text-[9px] sm:text-xs",
           "bg-black text-white hover:bg-black/90",
           connecting && 'opacity-80',
           buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
