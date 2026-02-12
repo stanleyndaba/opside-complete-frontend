@@ -254,25 +254,25 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   return (
     <div className={cn(
-      "flex flex-col sm:flex-row items-stretch sm:items-center bg-black sm:bg-white rounded-2xl sm:rounded-full border border-white/10 sm:border-none overflow-hidden p-1 sm:p-0",
+      "flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-[20px] sm:rounded-full p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.1)]",
       isFullWidth ? "w-full" : "w-auto min-w-[320px]"
     )}>
-      {/* Marketplace Selector */}
+      {/* Marketplace Selector - Transparent Background */}
       <div className="flex-1 min-w-[140px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
-              "w-full bg-transparent border-none text-white sm:text-black font-bold focus:ring-0 transition-all px-4 h-12 sm:h-11 text-xs tracking-tight",
+              "w-full bg-transparent border-none text-black font-semibold focus:ring-0 transition-all px-4 h-11 text-xs tracking-tight",
               buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
             )}>
-            <div className="flex items-center justify-between w-full gap-2">
+            <div className="flex items-center justify-between w-full gap-2 px-1">
               <SelectValue placeholder="Marketplace" />
-              <ChevronDown className="h-4 w-4 opacity-50" />
+              <ChevronDown className="h-3.5 w-3.5 opacity-30" />
             </div>
           </SelectTrigger>
-          <SelectContent className="bg-black border-white/10 shadow-2xl rounded-xl text-white min-w-[200px]">
+          <SelectContent className="bg-white border-gray-100 shadow-2xl rounded-xl text-black min-w-[200px]">
             {marketplaces.map((mp) => (
-              <SelectItem key={mp.id} value={mp.id} className="text-sm font-normal py-3 border-b border-gray-800 last:border-0 hover:bg-gray-900 transition-colors">
+              <SelectItem key={mp.id} value={mp.id} className="text-sm font-normal py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
                 {mp.name}
               </SelectItem>
             ))}
@@ -280,14 +280,14 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         </Select>
       </div>
 
-      {/* Connect Button */}
+      {/* Connect Button - Inset In Black */}
       <Button
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
           "w-full sm:w-auto",
-          "justify-center font-bold transition-all active:scale-95 px-8 shrink-0 items-center gap-2 rounded-xl sm:rounded-none h-12 sm:h-11 text-xs",
-          "bg-white sm:bg-black text-black sm:text-white hover:bg-white/90 sm:hover:bg-black/90",
+          "justify-center font-bold transition-all active:scale-95 px-8 shrink-0 items-center rounded-[14px] sm:rounded-full h-11 sm:h-auto py-3 text-xs",
+          "bg-black text-white hover:bg-black/90",
           connecting && 'opacity-80',
           buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
         )}>
