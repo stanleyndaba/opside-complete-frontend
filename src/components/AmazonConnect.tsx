@@ -247,23 +247,26 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
   // Check if className includes w-full to make buttons full width
   const isFullWidth = className?.includes('w-full');
-  // Check if className includes h- for height, otherwise default to h-11
-  const heightClass = className?.split(' ').find(c => c.startsWith('h-')) || 'h-11';
-  // Remove height from button className since we handle it explicitly on the container/trigger
-  const buttonClassName = className?.split(' ').filter(c => !c.startsWith('h-')).join(' ');
+
+  // Filter out layout-specific classes that should only apply to the container
+  const buttonClassName = className?.split(' ')
+    .filter(c => !c.startsWith('h-') && !c.startsWith('w-') && !c.startsWith('min-w-') && !c.startsWith('px-') && !c.startsWith('py-') && !c.startsWith('rounded-'))
+    .join(' ');
 
   return (
     <div className={cn(
       "flex flex-row items-center bg-white rounded-full p-0.5 sm:p-1 shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden",
-      isFullWidth ? "w-full max-w-[310px] sm:max-w-none" : "w-full max-w-[310px] sm:w-auto sm:min-w-[280px]"
+      isFullWidth ? "w-full max-w-[310px] sm:max-w-none" : "w-full max-w-[310px] sm:w-auto sm:min-w-[280px]",
+      // Apply original layout classes ONLY to the container
+      className?.split(' ').filter(c => c.startsWith('w-') || c.startsWith('min-w-') || c.startsWith('mt-') || c.startsWith('mb-')).join(' ')
     )}>
       {/* Marketplace Selector - Transparent Background */}
-      <div className="flex-[1.1] min-w-[70px] sm:min-w-[140px]">
+      <div className="flex-[1] min-w-[70px] sm:min-w-[140px]">
         <Select value={selectedMarketplace} onValueChange={setSelectedMarketplace} disabled={connecting}>
           <SelectTrigger
             className={cn(
               "w-full bg-transparent border-none text-black font-semibold focus:ring-0 transition-all px-2 sm:px-4 h-9 sm:h-11 text-[9px] sm:text-xs tracking-tight",
-              buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
+              buttonClassName
             )}>
             <div className="flex items-center justify-between w-full gap-1 sm:gap-2 px-0.5 sm:px-1">
               <SelectValue placeholder="Marketplace" />
@@ -284,11 +287,11 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
         onClick={handleConnect}
         disabled={connecting}
         className={cn(
-          "w-auto flex-1 min-w-[100px] sm:min-w-[0]",
+          "w-auto flex-[1.4] min-w-[110px] sm:min-w-[0]",
           "justify-center font-bold transition-all active:scale-95 px-3 sm:px-8 shrink-0 items-center rounded-full h-9 sm:h-auto py-2 sm:py-3 text-[9px] sm:text-xs",
           "bg-black text-white hover:bg-black/90",
           connecting && 'opacity-80',
-          buttonClassName?.replace('rounded-xl', '').replace('rounded-none', '')
+          buttonClassName
         )}>
         {connecting ? (
           <>
