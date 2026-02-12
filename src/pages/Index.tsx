@@ -443,6 +443,36 @@ const Index = () => {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto">
                   <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" />
                 </div>
+
+                {/* Infinite Logo Carousel */}
+                <div className="w-full mt-16 md:mt-24 overflow-hidden relative">
+                  {/* Subtle edge fades for that premium "fade into the dark" effect */}
+                  <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
+                  <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
+
+                  <div className="flex relative">
+                    <motion.div
+                      className="flex items-center gap-16 md:gap-24 whitespace-nowrap"
+                      animate={{ x: [0, -1035] }} // Adjusting based on calculated width of logo set
+                      transition={{
+                        duration: 40,
+                        repeat: Infinity,
+                        ease: "linear",
+                        repeatType: "loop"
+                      }}
+                    >
+                      {[...Array(3)].map((_, outerIndex) => (
+                        <div key={outerIndex} className="flex items-center gap-16 md:gap-24 pr-16 md:pr-24">
+                          <img src="/Amazon-logo.png" alt="Amazon" className="h-5 md:h-7 w-auto opacity-20 brightness-0 invert transition-all duration-700 hover:opacity-90 cursor-default" />
+                          <img src="/gmailicon.png" alt="Gmail" className="h-4 md:h-6 w-auto opacity-20 grayscale brightness-0 invert transition-all duration-700 hover:opacity-90 hover:grayscale-0 cursor-default" />
+                          <img src="/outlookicon.webp" alt="Outlook" className="h-5 md:h-7 w-auto opacity-20 grayscale brightness-0 invert transition-all duration-700 hover:opacity-90 hover:grayscale-0 cursor-default" />
+                          <img src="/Dropbox_Icon.svg.png" alt="Dropbox" className="h-5 md:h-7 w-auto opacity-20 brightness-0 invert transition-all duration-700 hover:opacity-90 cursor-default" />
+                          <img src="/gd.png" alt="Google Drive" className="h-5 md:h-7 w-auto opacity-20 grayscale brightness-0 invert transition-all duration-700 hover:opacity-90 hover:grayscale-0 cursor-default" />
+                        </div>
+                      ))}
+                    </motion.div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </section>
