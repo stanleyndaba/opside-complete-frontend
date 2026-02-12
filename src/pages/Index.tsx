@@ -463,11 +463,11 @@ const Index = () => {
                     >
                       {[...Array(3)].map((_, outerIndex) => (
                         <div key={outerIndex} className="flex items-center gap-16 md:gap-24 pr-16 md:pr-24">
-                          <img src="/Amazon-logo.png" alt="Amazon" className="h-5 md:h-7 w-auto opacity-20 brightness-0 invert transition-all duration-700 hover:opacity-90 cursor-default" />
-                          <img src="/gmailicon.png" alt="Gmail" className="h-4 md:h-6 w-auto opacity-20 grayscale brightness-0 invert transition-all duration-700 hover:opacity-90 hover:grayscale-0 cursor-default" />
-                          <img src="/outlookicon.webp" alt="Outlook" className="h-5 md:h-7 w-auto opacity-20 grayscale brightness-0 invert transition-all duration-700 hover:opacity-90 hover:grayscale-0 cursor-default" />
-                          <img src="/Dropbox_Icon.svg.png" alt="Dropbox" className="h-5 md:h-7 w-auto opacity-20 brightness-0 invert transition-all duration-700 hover:opacity-90 cursor-default" />
-                          <img src="/gd.png" alt="Google Drive" className="h-5 md:h-7 w-auto opacity-20 grayscale brightness-0 invert transition-all duration-700 hover:opacity-90 hover:grayscale-0 cursor-default" />
+                          <img src="/Amazon-logo.png" alt="Amazon" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/gmailicon.png" alt="Gmail" className="h-4 md:h-6 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/outlookicon.webp" alt="Outlook" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/Dropbox_Icon.svg.png" alt="Dropbox" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
+                          <img src="/gd.png" alt="Google Drive" className="h-5 md:h-7 w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default" />
                         </div>
                       ))}
                     </motion.div>
