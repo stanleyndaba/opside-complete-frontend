@@ -68,6 +68,7 @@ const Waitlist = lazy(() => import("./pages/Waitlist"));
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
 const EvidenceSearch = lazy(() => import("./pages/EvidenceSearch"));
 const MarginBoard = lazy(() => import("./pages/MarginBoard"));
+const Branding = lazy(() => import("./pages/Branding"));
 
 // Shock & Awe Flow Pages
 const AmazonSandbox = lazy(() => import("./pages/AmazonSandbox"));
@@ -131,6 +132,7 @@ const App = () => (
                     <Route path="/pricing" element={<Pricing />} />
                     <Route path="/waitlist" element={<Waitlist />} />
                     <Route path="/developer-api" element={<ApiLanding />} />
+                    <Route path="/branding" element={<Branding />} />
 
                     {/* ============================================ */}
                     {/* AUTH & OAUTH ROUTES - No tenant required */}
