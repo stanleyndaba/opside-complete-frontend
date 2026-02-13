@@ -35,9 +35,9 @@ const Branding = () => {
                         <motion.img
                             src="/logoimagetwo.png"
                             alt="Margin Logo"
-                            className="h-16 w-auto object-contain invert brightness-0"
-                            initial={{ filter: 'invert(1) brightness(0) blur(10px)', opacity: 0 }}
-                            animate={{ filter: 'invert(1) brightness(0) blur(0px)', opacity: 1 }}
+                            className="h-16 w-auto object-contain invert"
+                            initial={{ filter: 'invert(1) blur(10px)', opacity: 0 }}
+                            animate={{ filter: 'invert(1) blur(0px)', opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
                         />
 
@@ -52,11 +52,6 @@ const Branding = () => {
 
                     {/* Metadata / Tagline */}
                     <div className="space-y-4">
-                        <div className="inline-flex items-center gap-4 px-4 py-2 bg-white/5 border border-white/10 rounded-none">
-                            <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">
-                                Institutional Brand Asset
-                            </span>
-                        </div>
                         <p className="text-white/20 font-mono text-[10px] uppercase tracking-[0.5em] font-bold">
                             High Fidelity Capital Protection
                         </p>
