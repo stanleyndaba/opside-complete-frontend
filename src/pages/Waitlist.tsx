@@ -388,5 +388,3 @@ const Waitlist = () => {
 };
 
 export default Waitlist;
-
-export default Waitlist;
