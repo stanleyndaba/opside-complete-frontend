@@ -891,9 +891,9 @@ export function Dashboard() {
                         <div className="flex items-center gap-4">
                           <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                           <div>
-                            <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">PERFORMANCE</h2>
+                            <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">Performance</h2>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Total_Recovered</span>
+                              <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Total Recovered</span>
                               <Shield className="h-3 w-3 text-emerald-500/50" />
                             </div>
                           </div>
@@ -903,7 +903,7 @@ export function Dashboard() {
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all group rounded-lg"
                           >
-                            <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active_Claims</span>
+                            <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active Claims</span>
                             <ArrowRight className="h-3 w-3 text-emerald-500/30 group-hover:text-emerald-500" />
                           </button>
                         )}
@@ -930,7 +930,7 @@ export function Dashboard() {
                                 <div className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full w-fit">
                                   <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                                   <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
-                                    {reconciledCount} Verified_Records
+                                    {reconciledCount} Verified Records
                                   </span>
                                 </div>
                               )}
@@ -939,7 +939,7 @@ export function Dashboard() {
                             <div className="flex flex-col gap-6 py-2">
                               <div className="flex items-center gap-3 text-emerald-500">
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]">System_Scanning_Assets</span>
+                                <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]">Scanning Account</span>
                               </div>
                               <div className="text-5xl font-mono font-bold text-white/5 tracking-tighter select-none">
                                 $0,000.00
@@ -955,7 +955,7 @@ export function Dashboard() {
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <span className="cursor-help flex items-center gap-2 hover:text-white/40 transition-colors uppercase tracking-widest">
-                                    Margin_Protection: <span className="text-emerald-500">2.3% EST</span>
+                                    Margin Protection: <span className="text-emerald-500">2.3% EST</span>
                                   </span>
                                 </TooltipTrigger>
                                 <TooltipContent side="bottom" className="bg-[#0c0c0c] border-white/10 text-[10px] font-mono text-white/60">
@@ -963,7 +963,7 @@ export function Dashboard() {
                                 </TooltipContent>
                               </Tooltip>
                               <span className="text-white/5">|</span>
-                              <span className="uppercase tracking-widest">System_Integrity: <span className="text-emerald-500">SECURE</span></span>
+                              <span className="uppercase tracking-widest">System Status: <span className="text-emerald-500">Secure</span></span>
                             </div>
                             <span className="uppercase tracking-widest">REF_ID: <span className="text-white/40">SYS_REC_09112</span></span>
                           </div>
@@ -975,7 +975,7 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">ESTIMATED_PAYOUT</div>
+                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">Estimated Payout</div>
                               <div className="text-2xl font-mono font-bold text-white tracking-tight">
                                 {nextPaymentAmount === null && !upcomingPaymentsLoadedRef.current ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
@@ -998,7 +998,7 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">PAYOUT_DETAILS</h4>
+                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">Payout Details</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-serif">
                                 Capital currently verified and queued for the primary settlement ledger. Disbursement typically occurs within the standard 14-day protocol.
@@ -1010,7 +1010,7 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">PENDING_RECOVERY</div>
+                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">Pending Recovery</div>
                               <div className="text-2xl font-mono font-bold text-white tracking-tight">
                                 {pendingRecoveryAmount === null && !upcomingPaymentsLoadedRef.current ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
@@ -1021,7 +1021,7 @@ export function Dashboard() {
                               <div className="mt-4 flex items-center gap-2">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                 <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
-                                  {effectivePendingClaims} CLAIMS_IN_PROGRESS
+                                  {effectivePendingClaims} Claims In Progress
                                 </span>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
@@ -1031,7 +1031,7 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">ENGAGEMENT_LOG</h4>
+                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">Activity Log</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-serif">
                                 High-probability discrepancies currently undergoing active forensic verification across the global marketplace nodes.
@@ -1043,7 +1043,7 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">SUCCESS_RATE</div>
+                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">Success Rate</div>
                               <div className="flex items-baseline gap-3">
                                 <div className="text-2xl font-mono font-bold text-white tracking-tight">
                                   {settlementRate === null ? (
@@ -1055,7 +1055,7 @@ export function Dashboard() {
                                 <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500 shadow-emerald-500/50' : (settlementRate ?? 0) >= 50 ? 'bg-amber-500 shadow-amber-500/50' : 'bg-white/10'}`} />
                               </div>
                               <div className="mt-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
-                                RECOVERY_EFFICIENCY
+                                Recovery Efficiency
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
                             </div>
@@ -1064,7 +1064,7 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">SUCCESS_METRICS</h4>
+                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">Success Metrics</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-serif">
                                 The ratio of successfully closed settlement cycles relative to initiated recovery protocols.
@@ -1078,7 +1078,7 @@ export function Dashboard() {
                       <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                         <p className="text-[9px] text-white/20 font-mono uppercase tracking-[0.4em]">
-                          Store_Monitoring Active
+                          Store Monitoring Active
                         </p>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                       </div>
@@ -1090,31 +1090,31 @@ export function Dashboard() {
                         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                           <div className="flex items-center gap-3">
                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-                            <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">DETECTION_EVENTS</h2>
+                            <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Recent Events</h2>
                           </div>
                           <Button
                             variant="ghost"
                             size="sm"
                             className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
                             onClick={() => setActiveTab('discrepancies')}>
-                            View_All
+                            View All
                           </Button>
                         </div>
                         <div className="grid grid-cols-4 divide-x divide-white/5">
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Total_Claims</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Total Claims</div>
                             <div className="text-xl font-mono font-bold text-white">{detectionStats?.totalDetections || detectionTotal}</div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Estimated_Results</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Estimated Results</div>
                             <div className="text-xl font-mono font-bold text-emerald-500">{(detectionStats?.estimatedRecovery || detectionResults.reduce((acc, curr) => acc + curr.estimated_value, 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Verified_Nodes</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Verified Data</div>
                             <div className="text-xl font-mono font-bold text-white">{detectionStats?.highConfidence || detectionResults.filter(r => r.confidence_score >= 0.8).length}</div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Confidence_Prob</div>
+                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Confidence Level</div>
                             <div className="text-xl font-mono font-bold text-white">{(detectionStats?.averageConfidence || 92.4).toFixed(1)}%</div>
                           </div>
                         </div>
@@ -1126,7 +1126,7 @@ export function Dashboard() {
                       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                         <div className="flex items-center gap-3">
                           <Terminal className="h-3 w-3 text-emerald-500/50" />
-                          <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">EXECUTION_OVERRIDE_TERMINAL</h2>
+                          <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Quick Actions</h2>
                         </div>
                         <button
                           aria-label="Customize quick actions"
@@ -1153,7 +1153,7 @@ export function Dashboard() {
                                 onClick={() => {
                                   if (actionId === 'connect_evidence') setShowSourcesModal(true);
                                   else if (actionId === 'invite_teammate') setInviteOpen(true);
-                                  else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Ingest_Protocol_Started' }));
+                                  else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Processing Data...' }));
                                   else navigate(tenantRoute(activeSlug, `/${actionId.replace(/_/g, '-')}`));
                                 }}
                                 className="group flex flex-col p-8 hover:bg-white/[0.02] transition-all text-left border-b border-white/5 relative overflow-hidden">
@@ -1162,8 +1162,8 @@ export function Dashboard() {
                                   <IconComp className="h-4 w-4" />
                                   <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
                                 </div>
-                                <span className="text-[11px] text-white font-bold mb-1 tracking-tight uppercase group-hover:text-emerald-500/80 transition-colors">{action.label.replace(' ', '_')}</span>
-                                <span className="text-[9px] text-white/20 font-mono uppercase tracking-[0.1em]">{action.subtitle.replace(' ', '_')}</span>
+                                <span className="text-[11px] text-white font-bold mb-1 tracking-tight uppercase group-hover:text-emerald-500/80 transition-colors">{action.label.replace('_', ' ')}</span>
+                                <span className="text-[9px] text-white/20 font-mono uppercase tracking-[0.1em]">{action.subtitle.replace('_', ' ')}</span>
                               </button>
                             );
                           })}
@@ -1182,7 +1182,7 @@ export function Dashboard() {
                         className="px-6 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full hover:bg-white/[0.04] transition-all group">
                         <div className="flex items-center gap-4">
                           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
-                          <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">AUDIT_REGISTRY_v4.2</h3>
+                          <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">Activity Log</h3>
                           {unreadCount > 0 && (
                             <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
                               <span className="text-[9px] font-mono font-bold text-emerald-500 tabular-nums">
@@ -1203,7 +1203,7 @@ export function Dashboard() {
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
                                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500/40"></span>
                                 </div>
-                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">NO_LOG_ANOMALIES_DETECTED</p>
+                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">No recent activity</p>
                                 <p className="text-[10px] text-white/10 mt-2 font-serif italic">Operational baseline maintained.</p>
                               </div>
                             ) : (
@@ -1217,10 +1217,10 @@ export function Dashboard() {
                                     : 'just_now';
 
                                   let statusText = '';
-                                  if (notification.type === 'funds_deposited') statusText = 'SETTLED';
-                                  else if (notification.type === 'case_filed') statusText = 'ENGAGED';
-                                  else if (notification.type === 'claim_detected') statusText = 'IDENTIFIED';
-                                  else statusText = 'SYSTEM_LOG';
+                                  if (notification.type === 'funds_deposited') statusText = 'Settled';
+                                  else if (notification.type === 'case_filed') statusText = 'Active';
+                                  else if (notification.type === 'claim_detected') statusText = 'Identified';
+                                  else statusText = 'Log';
 
                                   return (
                                     <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
@@ -1243,7 +1243,7 @@ export function Dashboard() {
                                               )}>
                                                 {(() => {
                                                   const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
-                                                  return label.replace(' ', '_') || enrichNotificationTitle(notification.title).replace(' ', '_');
+                                                  return label.replace('_', ' ') || enrichNotificationTitle(notification.title).replace('_', ' ');
                                                 })()}
                                               </p>
 
@@ -1666,8 +1666,8 @@ export function Dashboard() {
                   }}
                 />
                 <div className="flex flex-col">
-                  <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace(' ', '_')}</span>
-                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-widest">{a.subtitle.replace(' ', '_')}</span>
+                  <span className="text-[11px] font-mono font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">{a.label.replace('_', ' ')}</span>
+                  <span className="text-[9px] text-white/20 font-mono uppercase tracking-widest">{a.subtitle.replace('_', ' ')}</span>
                 </div>
               </label>
             ))}
@@ -1736,7 +1736,7 @@ export function Dashboard() {
                   <div className="flex items-center gap-3">
                     <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">FORENSIC_DISCREPANCY_LOG</span>
                   </div>
-                  <h2 className="text-xl font-serif font-medium text-white uppercase tracking-tight">{activeDiscrepancy.reason?.replace(' ', '_') || 'DISCREPANCY_RECORD'}</h2>
+                  <h2 className="text-xl font-serif font-medium text-white uppercase tracking-tight">{activeDiscrepancy.reason?.replace('_', ' ') || 'DISCREPANCY_RECORD'}</h2>
                   <div className="flex items-center gap-4 mt-2">
                     <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">
                       ID: {activeDiscrepancy.id?.substring(0, 12) || 'N/A'}
