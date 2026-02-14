@@ -443,11 +443,11 @@ const Index = () => {
                     >
                       {[...Array(2)].map((_, outerIndex) => (
                         <div key={outerIndex} className="flex flex-none items-center">
-                          <img src="/AMZN.png" alt="Amazon" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
-                          <img src="/gmailicon.png" alt="Gmail" className="h-[18px] md:h-[26px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
-                          <img src="/outlookicon.webp" alt="Outlook" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
-                          <img src="/DPP.png" alt="Dropbox" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
-                          <img src="/Driveboy.png" alt="Google Drive" className="h-[22px] md:h-[30px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
+                          <img src="/AMZN.png" alt="Amazon" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
+                          <img src="/gmailicon.png" alt="Gmail" className="h-[28px] md:h-[40px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
+                          <img src="/outlookicon.webp" alt="Outlook" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
+                          <img src="/DPP.png" alt="Dropbox" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
+                          <img src="/Driveboy.png" alt="Google Drive" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-32 md:mr-56 pointer-events-none" />
                         </div>
                       ))}
                     </motion.div>
