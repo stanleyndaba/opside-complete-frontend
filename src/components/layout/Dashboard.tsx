@@ -803,8 +803,8 @@ export function Dashboard() {
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-8 text-slate-900">
               {/* Command Center Header */}
-              <div className="flex items-center justify-between mb-10">
-                <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-center mb-10">
+                <div className="flex flex-col items-center gap-1">
                   <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">Monitoring Active</span>
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-4">
@@ -834,8 +834,6 @@ export function Dashboard() {
                     )} />
                   </div>
                 </div>
-
-
               </div>
 
               {activeTab === 'overview' ? (
