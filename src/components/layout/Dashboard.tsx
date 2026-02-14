@@ -835,45 +835,7 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                {/* {activeTab === 'overview' && (
-                  <div className="hidden xl:flex items-center gap-10">
-                    {[
-                      {
-                        label: 'Today',
-                        value: dashboardMetrics?.today || 0,
-                        growth: dashboardMetrics?.todayGrowth || 0,
-                        trend: (dashboardMetrics?.todayGrowth || 0) >= 0 ? 'up' : 'down'
-                      },
-                      {
-                        label: 'This Week',
-                        value: dashboardMetrics?.thisWeek || 0,
-                        growth: dashboardMetrics?.thisWeekGrowth || 0,
-                        trend: (dashboardMetrics?.thisWeekGrowth || 0) >= 0 ? 'up' : 'down'
-                      },
-                      {
-                        label: 'This Month',
-                        value: dashboardMetrics?.thisMonth || 0,
-                        growth: dashboardMetrics?.thisMonthGrowth || 0,
-                        trend: (dashboardMetrics?.thisMonthGrowth || 0) >= 0 ? 'up' : 'down'
-                      }
-                    ].map((metric, idx) => (
-                      <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
-                        <span className="text-[9px] font-mono font-bold text-white/20 tracking-[0.2em] uppercase">{metric.label}</span>
-                        <div className="flex items-center gap-4">
-                          <span className="text-lg font-mono font-bold text-white tracking-tight">
-                            ${metric.value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                          </span>
-                          <div className={cn(
-                            "px-2 py-0.5 rounded-sm text-[9px] font-mono font-bold",
-                            metric.trend === 'up' ? "text-emerald-500 bg-emerald-500/10 border border-emerald-500/20" : "text-rose-500 bg-rose-500/10 border border-rose-500/20"
-                          )}>
-                            {metric.trend === 'up' ? '+' : '-'}{Math.abs(metric.growth)}%
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )} */}
+
               </div>
 
               {activeTab === 'overview' ? (
