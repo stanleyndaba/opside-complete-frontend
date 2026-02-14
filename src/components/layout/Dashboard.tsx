@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X } from 'lucide-react';
+import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X, AlertTriangle } from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -1407,10 +1407,10 @@ export function Dashboard() {
                                 <td className="py-4">
                                   <div className="flex flex-col">
                                     <span className="text-[11px] font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">
-                                      {result.anomaly_type.replace(/_/g, ' ')}
+                                      {result.anomaly_type?.replace(/_/g, ' ') || 'UNKNOWN_ANOMALY'}
                                     </span>
                                     <span className="text-[9px] font-mono text-white/20 uppercase">
-                                      ID: {result.id.substring(0, 8)}
+                                      ID: {result.id?.substring(0, 8) || 'N/A'}
                                     </span>
                                   </div>
                                 </td>
@@ -1629,10 +1629,10 @@ export function Dashboard() {
                   <div className="flex items-center gap-3">
                     <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">FORENSIC_DISCREPANCY_LOG</span>
                   </div>
-                  <h2 className="text-xl font-serif font-medium text-white uppercase tracking-tight">{activeDiscrepancy.reason.replace(' ', '_')}</h2>
+                  <h2 className="text-xl font-serif font-medium text-white uppercase tracking-tight">{activeDiscrepancy.reason?.replace(' ', '_') || 'DISCREPANCY_RECORD'}</h2>
                   <div className="flex items-center gap-4 mt-2">
                     <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">
-                      ID: {activeDiscrepancy.id.substring(0, 12)}
+                      ID: {activeDiscrepancy.id?.substring(0, 12) || 'N/A'}
                     </div>
                     <div className="px-3 py-1 bg-emerald-500/5 border border-emerald-500/10 rounded-full text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
                       PROBABILITY: 94.2%
@@ -1647,7 +1647,7 @@ export function Dashboard() {
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">INCIDENT_TIMESTAMP</span>
-                    <span className="text-[13px] font-mono text-white/60 uppercase">{new Date(activeDiscrepancy.occurrenceDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    <span className="text-[13px] font-mono text-white/60 uppercase">{activeDiscrepancy.occurrenceDate ? new Date(activeDiscrepancy.occurrenceDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'TBD'}</span>
                   </div>
                 </div>
 
