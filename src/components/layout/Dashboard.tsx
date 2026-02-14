@@ -222,7 +222,7 @@ export function Dashboard() {
       return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['ingest_now', 'invite_teammate'];
     } catch { return ['ingest_now', 'invite_teammate']; }
   });
-  const QUICK_ACTIONS: Array<{ id: string; label: string; subtitle: string }> = [
+  const QUICK_ActionS: Array<{ id: string; label: string; subtitle: string }> = [
     { id: 'connect_evidence', label: 'Connect sources', subtitle: 'Sync evidence sources' },
     { id: 'review_high_conf', label: 'High confidence', subtitle: 'Audit verified claims' },
     { id: 'resolve_new', label: 'New opportunities', subtitle: 'Start new recoveries' },
@@ -805,7 +805,7 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">SYSTEM_NODE</span>
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">Monitoring Active</span>
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-4">
                       <button
@@ -825,7 +825,7 @@ export function Dashboard() {
                           activeTab === 'discrepancies' ? "text-white" : "text-white/20 hover:text-white/40"
                         )}
                       >
-                        Detected Discrepancies
+                        Discrepancies
                       </button>
                     </div>
                     <div className={cn(
@@ -1078,7 +1078,7 @@ export function Dashboard() {
                       <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                         <p className="text-[9px] text-white/20 font-mono uppercase tracking-[0.4em]">
-                          Store_Monitoring_Active
+                          Store_Monitoring Active
                         </p>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                       </div>
@@ -1138,7 +1138,7 @@ export function Dashboard() {
                       <div className="divide-y divide-white/5">
                         <div className="grid grid-cols-2 lg:grid-cols-3 divide-x divide-white/5">
                           {selectedQuickActions.slice(0, 6).map((actionId) => {
-                            const action = QUICK_ACTIONS.find(a => a.id === actionId);
+                            const action = QUICK_ActionS.find(a => a.id === actionId);
                             if (!action) return null;
 
                             let IconComp = FileText;
@@ -1361,9 +1361,9 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         <div>
-                          <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">FORENSIC_ANOMALY_LEDGER</h2>
+                          <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">Anomaly Ledger</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Index_Verified_Discrepancies</span>
+                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Found potential reimbursements</span>
                             <AlertTriangle className="h-3 w-3 text-emerald-500/50" />
                           </div>
                         </div>
@@ -1403,7 +1403,7 @@ export function Dashboard() {
                     {loadingDetections ? (
                       <div className="py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
-                        <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em] animate-pulse">Syncing_Forensic_Data_Nodes...</span>
+                        <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em] animate-pulse">Syncing Database...</span>
                       </div>
                     ) : detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved').length === 0 ? (
                       <div className="py-24 flex flex-col items-center justify-center text-center">
@@ -1415,10 +1415,10 @@ export function Dashboard() {
                             <Shield className="h-8 w-8 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
                           </div>
                         </div>
-                        <h3 className="text-sm font-mono font-bold text-white uppercase tracking-[0.3em]">SYSTEM_STATUS: <span className="text-emerald-500">SECURE</span></h3>
+                        <h3 className="text-sm font-mono font-bold text-white uppercase tracking-[0.3em]">Status: <span className="text-emerald-500">All Clear</span></h3>
                         <p className="text-[10px] text-white/30 mt-3 font-serif max-w-sm mx-auto leading-relaxed">
-                          No new anomalies detected in the last 24 hours.<br />
-                          Monitoring real-time ledger for operational integrity.
+                          No new errors found in the last 24 hours.<br />
+                          We are monitoring your account in real-time.
                         </p>
                         <button
                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
@@ -1434,7 +1434,7 @@ export function Dashboard() {
                       <div className="overflow-x-auto">
                         <div className="flex items-center justify-end mb-4 gap-4">
                           <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
-                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Show_Processed</span>
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Show Processed</span>
                             <button
                               onClick={() => setShowProcessed(!showProcessed)}
                               className={cn(
@@ -1452,12 +1452,12 @@ export function Dashboard() {
                         <table className="w-full text-left">
                           <thead>
                             <tr className="border-b border-white/5">
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">ANOMALY_TYPE</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">DISCOVERY_DATE</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">EST_VALUE</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-center">CONFIDENCE</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">STATUS</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">ACTION</th>
+                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Type</th>
+                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Found On</th>
+                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">Estimated Value</th>
+                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-center">Certainty</th>
+                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Status</th>
+                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">Action</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
@@ -1513,7 +1513,7 @@ export function Dashboard() {
                                             result.status === 'detected' || result.status === 'pending' ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
                                               "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                                         )}>
-                                          {isProcessed ? "CONVERTED_TO_CLAIM" : result.status}
+                                          {isProcessed ? "Converted To Claim" : result.status}
                                         </span>
                                       </div>
                                     </td>
@@ -1525,7 +1525,7 @@ export function Dashboard() {
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                                           className="text-[9px] font-mono font-bold text-emerald-500/40 hover:text-emerald-500 pointer-events-auto"
                                         >
-                                          VIEW_CASE
+                                          View Case
                                         </Button>
                                       ) : (
                                         <Button
@@ -1542,7 +1542,7 @@ export function Dashboard() {
                                             setShowDiscrepancyModal(true);
                                           }}
                                         >
-                                          AUDIT_RECOVERY
+                                          Start Recovering
                                         </Button>
                                       )}
                                     </td>
@@ -1558,20 +1558,20 @@ export function Dashboard() {
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                               <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                                ENGINE_STATUS: <span className="text-emerald-500">MONITORING</span>
+                                ENGINE_Status: <span className="text-emerald-500">MONITORING</span>
                               </span>
                             </div>
                             <span className="text-white/5 font-mono">|</span>
                             <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                              LAST_SCAN: <span className="text-white/40">{lastUpdated || 'JUST NOW'}</span>
+                              Last Updated: <span className="text-white/40">{lastUpdated || 'Just Now'}</span>
                             </div>
                             <span className="text-white/5 font-mono">|</span>
                             <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                              NODES_PROTECTED: <span className="text-white/40">GLOBAL_FBA</span>
+                              Account Shielded: <span className="text-white/40">Global FBA</span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/10 uppercase tracking-[0.2em]">
-                            FORENSIC_KERNEL_V4.2
+                            Audit Engine v4.2
                           </div>
                         </div>
                       </div>
@@ -1587,17 +1587,17 @@ export function Dashboard() {
       <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
         <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
           <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
-            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">CONNECT_DOCUMENT_SOURCES</DialogTitle>
-            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Authorize automated forensic ingestion protocols.</DialogDescription>
+            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">Connect Evidence Sources</DialogTitle>
+            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Link your accounts to automatically collect evidence.</DialogDescription>
           </DialogHeader>
 
           <div className="p-8">
             <div className="grid grid-cols-2 gap-4">
               {[
-                { id: 'gmail', label: 'Gmail_Vault', icon: GmailIcon, color: 'hover:border-red-500/30 hover:bg-red-500/5' },
-                { id: 'outlook', label: 'Outlook_Portal', icon: OutlookIcon, color: 'hover:border-blue-500/30 hover:bg-blue-500/5' },
-                { id: 'gdrive', label: 'Drive_Archive', icon: GoogleDriveIcon, color: 'hover:border-emerald-500/30 hover:bg-emerald-500/5' },
-                { id: 'dropbox', label: 'Dropbox_Node', icon: DropboxIcon, color: 'hover:border-indigo-500/30 hover:bg-indigo-500/5' }
+                { id: 'gmail', label: 'Gmail', icon: GmailIcon, color: 'hover:border-red-500/30 hover:bg-red-500/5' },
+                { id: 'outlook', label: 'Outlook', icon: OutlookIcon, color: 'hover:border-blue-500/30 hover:bg-blue-500/5' },
+                { id: 'gdrive', label: 'Google Drive', icon: GoogleDriveIcon, color: 'hover:border-emerald-500/30 hover:bg-emerald-500/5' },
+                { id: 'dropbox', label: 'Dropbox', icon: DropboxIcon, color: 'hover:border-indigo-500/30 hover:bg-indigo-500/5' }
               ].map((provider) => (
                 <button
                   key={provider.id}
@@ -1639,7 +1639,7 @@ export function Dashboard() {
               onClick={() => setShowSourcesModal(false)}
               className="text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-[0.2em] transition-colors"
             >
-              SKIP_SECURE_AUTH
+              Cancel
             </button>
           </div>
         </DialogContent>
@@ -1652,7 +1652,7 @@ export function Dashboard() {
             <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Select active operational modules for the command grid.</DialogDescription>
           </DialogHeader>
           <div className="p-6 max-h-[400px] overflow-y-auto space-y-2">
-            {QUICK_ACTIONS.map((a) => (
+            {QUICK_ActionS.map((a) => (
               <label key={a.id} className="flex items-center gap-4 p-4 hover:bg-white/[0.03] transition-colors cursor-pointer group rounded-lg border border-transparent hover:border-white/5">
                 <Checkbox
                   className="border-white/20 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none"
