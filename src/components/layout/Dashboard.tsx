@@ -139,6 +139,8 @@ export function Dashboard() {
     highConfidence: number;
     averageConfidence: number;
   } | null>(null);
+  const [detectionResults, setDetectionResults] = useState<any[]>([]);
+  const [loadingDetections, setLoadingDetections] = useState<boolean>(false);
   const [detectionTotal, setDetectionTotal] = useState<number>(0);
   const [showProcessed, setShowProcessed] = useState<boolean>(false);
 
