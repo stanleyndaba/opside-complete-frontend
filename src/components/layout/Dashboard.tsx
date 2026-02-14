@@ -835,7 +835,7 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                {activeTab === 'overview' && (
+                {/* {activeTab === 'overview' && (
                   <div className="hidden xl:flex items-center gap-10">
                     {[
                       {
@@ -873,7 +873,7 @@ export function Dashboard() {
                       </div>
                     ))}
                   </div>
-                )}
+                )} */}
               </div>
 
               {activeTab === 'overview' ? (
