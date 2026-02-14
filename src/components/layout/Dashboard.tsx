@@ -139,9 +139,8 @@ export function Dashboard() {
     highConfidence: number;
     averageConfidence: number;
   } | null>(null);
-  const [detectionResults, setDetectionResults] = useState<any[]>([]);
-  const [loadingDetections, setLoadingDetections] = useState<boolean>(false);
   const [detectionTotal, setDetectionTotal] = useState<number>(0);
+  const [showProcessed, setShowProcessed] = useState<boolean>(false);
 
   // Generate synthetic notifications if real ones are missing but we have recovery data
   // This ensures the "System Activity" panel matches the "Recovered Funds" reality
@@ -1368,9 +1367,33 @@ export function Dashboard() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <div className="flex flex-col items-end">
-                          <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">TOTAL_DETECTED</span>
-                          <span className="text-lg font-mono font-bold text-white">{detectionTotal}</span>
+                        <div className="flex items-center gap-12">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">DISCREPANCIES</span>
+                            <span className="text-lg font-mono font-bold text-white leading-none mt-1">
+                              {detectionResults.filter(r => r.status === 'detected').length}
+                            </span>
+                          </div>
+
+                          <button
+                            onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
+                            className="flex flex-col transition-colors group text-left"
+                          >
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest group-hover:text-emerald-500/50">CLAIMS</span>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-lg font-mono font-bold text-white leading-none group-hover:text-emerald-500">
+                                {submittedClaimsCount || effectivePendingClaims || 0}
+                              </span>
+                              <ArrowRight className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
+                            </div>
+                          </button>
+
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">RECOVERED</span>
+                            <span className="text-lg font-mono font-bold text-emerald-500 leading-none mt-1">
+                              {formatCurrencyWithSelection(recoveredTotal || 0, recoveredCurrency)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1380,16 +1403,50 @@ export function Dashboard() {
                         <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
                         <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em] animate-pulse">Syncing_Forensic_Data_Nodes...</span>
                       </div>
-                    ) : detectionResults.length === 0 ? (
-                      <div className="py-20 flex flex-col items-center justify-center text-center">
-                        <div className="h-12 w-12 rounded-full border border-white/5 flex items-center justify-center mb-6">
-                          <Shield className="h-6 w-6 text-white/10" />
+                    ) : detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved').length === 0 ? (
+                      <div className="py-24 flex flex-col items-center justify-center text-center">
+                        <div className="relative mb-8">
+                          {/* Pulsing Radar Effect */}
+                          <div className="absolute inset-0 bg-emerald-500/10 rounded-full animate-ping scale-150 opacity-20" />
+                          <div className="absolute inset-0 bg-emerald-500/20 rounded-full animate-pulse scale-125 opacity-30" />
+                          <div className="relative h-16 w-16 rounded-full border border-emerald-500/20 flex items-center justify-center bg-emerald-500/5 backdrop-blur-sm">
+                            <Shield className="h-8 w-8 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
+                          </div>
                         </div>
-                        <h3 className="text-xs font-mono font-bold text-white/40 uppercase tracking-[0.2em]">NO_DISCREPANCIES_DETECTED</h3>
-                        <p className="text-[10px] text-white/10 mt-2 font-serif italic">Operational integrity remains within baseline parameters.</p>
+                        <h3 className="text-sm font-mono font-bold text-white uppercase tracking-[0.3em]">SYSTEM_STATUS: <span className="text-emerald-500">SECURE</span></h3>
+                        <p className="text-[10px] text-white/30 mt-3 font-serif max-w-sm mx-auto leading-relaxed">
+                          No new anomalies detected in the last 24 hours.<br />
+                          Monitoring real-time ledger for operational integrity.
+                        </p>
+                        <button
+                          onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
+                          className="mt-8 flex items-center gap-3 px-6 py-2 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all rounded-lg group"
+                        >
+                          <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
+                            View {submittedClaimsCount || 0} Active Claims in Recovery
+                          </span>
+                          <ArrowRight className="h-3 w-3 text-emerald-500/40 group-hover:translate-x-1 transition-transform" />
+                        </button>
                       </div>
                     ) : (
                       <div className="overflow-x-auto">
+                        <div className="flex items-center justify-end mb-4 gap-4">
+                          <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
+                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Show_Processed</span>
+                            <button
+                              onClick={() => setShowProcessed(!showProcessed)}
+                              className={cn(
+                                "w-8 h-4 rounded-full relative transition-colors duration-300",
+                                showProcessed ? "bg-emerald-500" : "bg-white/10"
+                              )}
+                            >
+                              <div className={cn(
+                                "absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform duration-300",
+                                showProcessed ? "translate-x-4" : "translate-x-0"
+                              )} />
+                            </button>
+                          </div>
+                        </div>
                         <table className="w-full text-left">
                           <thead>
                             <tr className="border-b border-white/5">
@@ -1402,71 +1459,119 @@ export function Dashboard() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
-                            {detectionResults.map((result) => (
-                              <tr key={result.id} className="group hover:bg-white/[0.01] transition-colors">
-                                <td className="py-4">
-                                  <div className="flex flex-col">
-                                    <span className="text-[11px] font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">
-                                      {result.anomaly_type?.replace(/_/g, ' ') || 'UNKNOWN_ANOMALY'}
-                                    </span>
-                                    <span className="text-[9px] font-mono text-white/20 uppercase">
-                                      ID: {result.id?.substring(0, 8) || 'N/A'}
-                                    </span>
-                                  </div>
-                                </td>
-                                <td className="py-4 text-[10px] font-mono text-white/40 uppercase">
-                                  {new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                </td>
-                                <td className="py-4 text-[11px] font-mono font-bold text-white text-right">
-                                  {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
-                                </td>
-                                <td className="py-4">
-                                  <div className="flex items-center justify-center gap-2">
-                                    <div className="w-12 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                      <div
-                                        className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                                        style={{ width: `${result.confidence_score * 100}%` }}
-                                      />
-                                    </div>
-                                    <span className="text-[10px] font-mono font-bold text-emerald-500/60">
-                                      {(result.confidence_score * 100).toFixed(0)}%
-                                    </span>
-                                  </div>
-                                </td>
-                                <td className="py-4">
-                                  <div className="flex gap-2">
-                                    <span className={cn(
-                                      "px-2 py-0.5 rounded-sm text-[8px] font-mono font-bold uppercase tracking-widest",
-                                      result.status === 'detected' ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
-                                        result.status === 'filed' ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" :
-                                          "bg-white/5 text-white/40 border border-white/10"
-                                    )}>
-                                      {result.status}
-                                    </span>
-                                  </div>
-                                </td>
-                                <td className="py-4 text-right">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-7 px-3 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
-                                    onClick={() => {
-                                      setActiveDiscrepancy({
-                                        id: result.id,
-                                        reason: result.anomaly_type,
-                                        estimatedRecovery: result.estimated_value,
-                                        occurrenceDate: result.discovery_date
-                                      });
-                                      setShowDiscrepancyModal(true);
-                                    }}
+                            {detectionResults
+                              .filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed')
+                              .map((result) => {
+                                const isProcessed = result.status === 'filed' || result.status === 'resolved' || result.status === 'converted';
+                                return (
+                                  <tr
+                                    key={result.id}
+                                    className={cn(
+                                      "group transition-colors",
+                                      isProcessed ? "opacity-30 grayscale pointer-events-none" : "hover:bg-white/[0.01]"
+                                    )}
                                   >
-                                    AUDIT_RECOVERY
-                                  </Button>
-                                </td>
-                              </tr>
-                            ))}
+                                    <td className="py-4">
+                                      <div className="flex flex-col">
+                                        <span className="text-[11px] font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">
+                                          {result.anomaly_type?.replace(/_/g, ' ') || 'UNKNOWN_ANOMALY'}
+                                        </span>
+                                        <span className="text-[9px] font-mono text-white/20 uppercase">
+                                          ID: {result.id?.substring(0, 8) || 'N/A'}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td className="py-4 text-[10px] font-mono text-white/40 uppercase">
+                                      {result.discovery_date
+                                        ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                        : 'N/A'
+                                      }
+                                    </td>
+                                    <td className="py-4 text-[11px] font-mono font-bold text-white text-right">
+                                      {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
+                                    </td>
+                                    <td className="py-4">
+                                      <div className="flex items-center justify-center gap-2">
+                                        <div className="w-12 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                          <div
+                                            className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                                            style={{ width: `${(result.confidence_score || 0) * 100}%` }}
+                                          />
+                                        </div>
+                                        <span className="text-[10px] font-mono font-bold text-emerald-500/60">
+                                          {((result.confidence_score || 0) * 100).toFixed(0)}%
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td className="py-4">
+                                      <div className="flex gap-2">
+                                        <span className={cn(
+                                          "px-2 py-0.5 rounded-sm text-[8px] font-mono font-bold uppercase tracking-widest",
+                                          isProcessed ? "bg-white/5 text-white/40 border border-white/10" :
+                                            result.status === 'detected' || result.status === 'pending' ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
+                                              "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                                        )}>
+                                          {isProcessed ? "CONVERTED_TO_CLAIM" : result.status}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td className="py-4 text-right">
+                                      {isProcessed ? (
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
+                                          className="text-[9px] font-mono font-bold text-emerald-500/40 hover:text-emerald-500 pointer-events-auto"
+                                        >
+                                          VIEW_CASE
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-7 px-3 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
+                                          onClick={() => {
+                                            setActiveDiscrepancy({
+                                              id: result.id,
+                                              reason: result.anomaly_type,
+                                              estimatedRecovery: result.estimated_value,
+                                              occurrenceDate: result.discovery_date
+                                            });
+                                            setShowDiscrepancyModal(true);
+                                          }}
+                                        >
+                                          AUDIT_RECOVERY
+                                        </Button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                           </tbody>
                         </table>
+
+                        {/* Heartbeat / Audit Log Footer */}
+                        <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+                          <div className="flex items-center gap-6">
+                            <div className="flex items-center gap-2">
+                              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+                              <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
+                                ENGINE_STATUS: <span className="text-emerald-500">MONITORING</span>
+                              </span>
+                            </div>
+                            <span className="text-white/5 font-mono">|</span>
+                            <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
+                              LAST_SCAN: <span className="text-white/40">{lastUpdated || 'JUST NOW'}</span>
+                            </div>
+                            <span className="text-white/5 font-mono">|</span>
+                            <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
+                              NODES_PROTECTED: <span className="text-white/40">GLOBAL_FBA</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/10 uppercase tracking-[0.2em]">
+                            FORENSIC_KERNEL_V4.2
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>
