@@ -920,23 +920,7 @@ export function Dashboard() {
                             </div>
                           )}
 
-                          <div className="mt-12 flex items-center justify-between text-[10px] font-mono font-bold text-white/20 border-t border-white/5 pt-6">
-                            <div className="flex items-center gap-4">
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="cursor-help flex items-center gap-2 hover:text-white/40 transition-colors uppercase tracking-widest">
-                                    Margin Protection: <span className="text-emerald-500">2.3% EST</span>
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent side="bottom" className="bg-[#0c0c0c] border-white/10 text-[10px] font-mono text-white/60">
-                                  <p>Operational yield recovered through audit-verified reimbursements.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                              <span className="text-white/5">|</span>
-                              <span className="uppercase tracking-widest">System Status: <span className="text-emerald-500">Secure</span></span>
-                            </div>
-                            <span className="uppercase tracking-widest">REF_ID: <span className="text-white/40">SYS_REC_09112</span></span>
-                          </div>
+
                         </div>
                       </div>
 
