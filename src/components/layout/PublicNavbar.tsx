@@ -27,7 +27,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import { ChevronDown } from 'lucide-react';
+import { SolutionsMegaMenu } from '@/components/landing/SolutionsMegaMenu';
+import { ChevronDown, Truck, Zap, TrendingUp, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const PublicNavbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -82,33 +83,7 @@ export const PublicNavbar = () => {
                             <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Ultra Beta</span>
                             <span className="px-1.5 py-0.5 bg-emerald-500 text-[8px] font-bold text-white rounded-none leading-none">NEW</span>
                         </Link>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
-                                Solutions <ChevronDown className="h-3 w-3 opacity-30" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-none p-1 min-w-[180px]">
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
-                                    <Link to="/products/fba-reimbursements" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">FBA Recoveries</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
-                                    <Link to="/products/inbound-variance-monitor" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Inbound Audits</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
-                                    <Link to="/products/fee-forensics" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Fee Forensics</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
-                                    <Link to="/products/evidence-vault" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Evidence Engine</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <SolutionsMegaMenu />
 
                         <DropdownMenu>
                             <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
@@ -187,32 +162,74 @@ export const PublicNavbar = () => {
                                         <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
                                             Solutions
                                         </AccordionTrigger>
-                                        <AccordionContent className="pt-2 pb-2 px-2">
-                                            <div className="grid gap-1">
-                                                <Link
-                                                    to="/products/fba-reimbursements"
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
-                                                    FBA Recoveries
-                                                </Link>
-                                                <Link
-                                                    to="/products/inbound-variance-monitor"
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
-                                                    Inbound Audits
-                                                </Link>
-                                                <Link
-                                                    to="/products/fee-forensics"
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
-                                                    Fee Forensics
-                                                </Link>
-                                                <Link
-                                                    to="/products/evidence-vault"
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
-                                                    Evidence Engine
-                                                </Link>
+                                        <AccordionContent className="pt-2 pb-4 px-2 space-y-6">
+                                            {/* Recovery Vectors */}
+                                            <div className="space-y-3">
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-1">By Recovery Vector</h5>
+                                                <div className="grid gap-1">
+                                                    <MobileNavItem
+                                                        icon={Search}
+                                                        title="Inbound Variance"
+                                                        href="/products/inbound-variance-monitor"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={ShieldCheck}
+                                                        title="Inventory Reconciliation"
+                                                        href="/products/fba-reimbursements"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={BoxSelect}
+                                                        title="Dimensional Weight Audit"
+                                                        href="/products/fee-forensics"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={ArrowLeft}
+                                                        title="Return Logistics"
+                                                        href="/products/return-audits"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={Truck}
+                                                        title="Transfer & Operations"
+                                                        href="/products/transfer-audits"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={Sparkles}
+                                                        title="Full Forensic Audit"
+                                                        href="/ultra-beta"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                        highlight
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Profiles */}
+                                            <div className="space-y-3">
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-1">By Profile</h5>
+                                                <div className="grid gap-1">
+                                                    <MobileNavItem
+                                                        icon={Briefcase}
+                                                        title="Private Label ($1M - $10M)"
+                                                        href="/contact"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={TrendingUp}
+                                                        title="Institutional ($10M+)"
+                                                        href="/contact"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                    <MobileNavItem
+                                                        icon={Zap}
+                                                        title="Enterprise"
+                                                        href="/sales"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    />
+                                                </div>
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
@@ -332,3 +349,41 @@ export const PublicNavbar = () => {
         </header>
     );
 };
+
+function MobileNavItem({
+    icon: Icon,
+    title,
+    href,
+    onClick,
+    highlight = false
+}: {
+    icon: any,
+    title: string,
+    href: string,
+    onClick: () => void,
+    highlight?: boolean
+}) {
+    return (
+        <Link
+            to={href}
+            onClick={onClick}
+            className={cn(
+                "flex items-center gap-3 p-2 rounded-lg transition-colors",
+                highlight ? "bg-emerald-500/5 border border-emerald-500/10" : "hover:bg-white/5"
+            )}
+        >
+            <div className={cn(
+                "p-1.5 rounded-lg border",
+                highlight ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/60 border-white/10"
+            )}>
+                <Icon className="h-3.5 w-3.5" />
+            </div>
+            <span className={cn(
+                "text-[12px] font-medium",
+                highlight ? "text-emerald-400" : "text-white/80"
+            )}>
+                {title}
+            </span>
+        </Link>
+    );
+}
