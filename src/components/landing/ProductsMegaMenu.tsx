@@ -38,53 +38,53 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[900px] lg:w-[1300px] xl:w-[1440px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10 lg:-translate-x-[450px] relative z-[100]">
+                        <div className="lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10 relative z-[100]">
 
                             {/* Column 1: Audit Vectors */}
-                            <div className="flex-[1.4] p-6 lg:p-7 border-r border-white/5">
-                                <div className="mb-5 flex items-center justify-between">
-                                    <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em]">
+                            <div className="flex-[1.4] p-4 lg:p-5 border-r border-white/5">
+                                <div className="mb-3 flex items-center justify-between">
+                                    <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em]">
                                         Audit Vectors
                                     </h4>
-                                    <span className="text-[8px] font-bold text-emerald-500/50 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10 uppercase tracking-tighter rounded">
+                                    <span className="text-[7px] font-bold text-emerald-500/50 bg-emerald-500/5 px-1.5 py-0.5 border border-emerald-500/10 uppercase tracking-tighter rounded">
                                         Core Engine
                                     </span>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
                                     <NavItem
                                         icon={Search}
                                         title="Inbound Variance"
-                                        description="Reconcile shipping plan vs. ledger receipts"
+                                        description="Reconcile shipping plan/ledger"
                                         href="/products/inbound-variance-monitor"
                                     />
                                     <NavItem
                                         icon={ShieldCheck}
-                                        title="Inventory Reconciliation"
-                                        description="Lost, damaged, and destroyed unit recovery"
+                                        title="Inventory"
+                                        description="Lost & destroyed unit recovery"
                                         href="/products/fba-reimbursements"
                                     />
                                     <NavItem
                                         icon={BoxSelect}
-                                        title="Dimensional Weight Audit"
-                                        description="Correct Cubiscan errors & fee overcharges"
+                                        title="Dim Weight"
+                                        description="Correct Cubiscan errors"
                                         href="/products/fee-forensics"
                                     />
                                     <NavItem
                                         icon={ArrowLeft}
                                         title="Return Logistics"
-                                        description="Unreturned inventory & customer concession"
+                                        description="Unreturned inventory tracking"
                                         href="/products/return-audits"
                                     />
                                     <NavItem
                                         icon={Truck}
-                                        title="Transfer & Operations"
-                                        description="Inter-fulfillment center loss tracking"
+                                        title="Operations"
+                                        description="Inter-fulfillment center loss"
                                         href="/products/transfer-audits"
                                     />
                                     <NavItem
                                         icon={Sparkles}
                                         title="Full Forensic Audit"
-                                        description="Deploy all 26 agents for total recovery"
+                                        description="Deploy all 26 agents"
                                         href="/ultra-beta"
                                         highlight
                                     />
@@ -92,77 +92,77 @@ export function ProductsMegaMenu() {
                             </div>
 
                             {/* Column 2: Governance & Scale */}
-                            <div className="flex-1 p-6 lg:p-7 border-r border-white/5 bg-white/[0.01]">
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
+                            <div className="flex-1 p-4 lg:p-5 border-r border-white/5 bg-white/[0.01]">
+                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] mb-3">
                                     Governance & Scale
                                 </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
                                     <NavItem
                                         icon={Layers}
-                                        title="Inbound Fee Governance"
-                                        description="Line-by-line proof for every claim filed"
+                                        title="Fee Governance"
+                                        description="Line-by-line proof"
                                         href="/products/inbound-fee-governance"
                                     />
                                     <NavItem
                                         icon={Briefcase}
-                                        title="Agency Portfolio Manager"
-                                        description="Multi-account reconciliation for agencies"
+                                        title="Agency Portfolio"
+                                        description="Multi-account reconciliation"
                                         href="/products/agency-manager"
                                     />
                                     <NavItem
                                         icon={BadgePercent}
-                                        title="Commission Rate Audit"
-                                        description="Detect referral fee overcharges & errors"
+                                        title="Commission Rate"
+                                        description="Detect overcharges & errors"
                                         href="/products/commission-rate-governance"
                                     />
                                     <NavItem
                                         icon={FileText}
-                                        title="Auto-Invoice Sync"
-                                        description="Zero-touch Gmail integration for evidence"
+                                        title="Auto-Invoice"
+                                        description="Gmail integration for evidence"
                                         href="/products/evidence-vault"
                                     />
                                 </div>
                             </div>
 
                             {/* Column 3: By Profile */}
-                            <div className="flex-[0.9] p-6 lg:p-7 bg-white/[0.02]">
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
+                            <div className="flex-[0.8] p-4 lg:p-5 bg-white/[0.02]">
+                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] mb-3">
                                     By Profile
                                 </h4>
-                                <div className="flex flex-col gap-2">
+                                <div className="grid grid-cols-1 gap-1">
                                     <NavItem
                                         icon={Activity}
-                                        title="Growth ($0 - $1M)"
-                                        description="Automated recovery for emerging brands"
+                                        title="Growth"
+                                        description="Automated emerging brands"
                                         href="/contact"
                                     />
                                     <NavItem
                                         icon={TrendingUp}
-                                        title="High Volume ($1M - $10M)"
-                                        description="Deep-dive forensic audit for scale"
+                                        title="High Volume"
+                                        description="Forensic audit for scale"
                                         href="/sales"
                                     />
                                     <NavItem
                                         icon={Layers}
-                                        title="Institutional ($10M+)"
-                                        description="Aggregator & PE Infrastructure"
+                                        title="Institutional"
+                                        description="Aggregator Infrastructure"
                                         href="/sales"
                                     />
                                 </div>
 
-                                <div className="mt-8 p-5 rounded-xl border border-white/10 bg-emerald-500/[0.02] group/banner relative overflow-hidden transition-all hover:border-emerald-500/20">
-                                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/banner:opacity-40 transition-opacity">
-                                        <Sparkles className="h-10 w-10 text-emerald-500" />
+                                <div className="mt-4 p-3.5 rounded-xl border border-white/10 bg-emerald-500/[0.02] group/banner relative overflow-hidden transition-all hover:border-emerald-500/20">
+                                    <div className="absolute top-0 right-0 p-2 opacity-10 group-hover/banner:opacity-40 transition-opacity">
+                                        <Sparkles className="h-6 w-6 text-emerald-500" />
                                     </div>
-                                    <h5 className="text-[11px] font-bold text-white mb-1.5">Custom Solutions</h5>
-                                    <p className="text-[9px] text-white/40 leading-relaxed mb-4 line-clamp-2">
-                                        Our engineering team can build custom API integrations for multi-channel recovery.
+                                    <h5 className="text-[10px] font-bold text-white mb-0.5">Custom Solutions</h5>
+                                    <p className="text-[8px] text-white/40 leading-relaxed mb-2 line-clamp-1">
+                                        Engineering for multi-channel recovery.
                                     </p>
                                     <Link
                                         to="/contact"
-                                        className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 uppercase tracking-[0.15em]"
+                                        className="text-[9px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 uppercase tracking-[0.15em]"
                                     >
-                                        Talk to Engineering <ArrowRight className="h-3 w-3" />
+                                        Talk to Engineering <ArrowRight className="h-2 w-2" />
                                     </Link>
                                 </div>
                             </div>
@@ -191,29 +191,29 @@ function NavItem({
         <Link
             to={href}
             className={cn(
-                "group block p-3.5 rounded-xl transition-all duration-300 border border-transparent",
+                "group block p-2 rounded-lg transition-all duration-200 border border-transparent",
                 highlight
                     ? "bg-emerald-500/[0.03] border-emerald-500/10 hover:bg-emerald-500/10 hover:border-emerald-500/20"
-                    : "hover:bg-white/[0.05] hover:border-white/5 active:scale-[0.98]"
+                    : "hover:bg-white/[0.05] active:scale-[0.98]"
             )}
         >
-            <div className="flex items-start gap-3.5">
+            <div className="flex items-center gap-2.5">
                 <div className={cn(
-                    "p-2.5 rounded-xl border transition-all shrink-0",
+                    "p-1.5 rounded-lg border transition-all shrink-0",
                     highlight
-                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                        : "bg-white/5 text-white/40 border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:text-white"
+                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                        : "bg-white/5 text-white/40 border-white/10 group-hover:text-white"
                 )}>
-                    <Icon className="h-4.5 w-4.5" />
+                    <Icon className="h-3.5 w-3.5" />
                 </div>
                 <div className="min-w-0">
                     <span className={cn(
-                        "text-[11px] font-bold tracking-tight block truncate",
-                        highlight ? "text-emerald-400 group-hover:text-emerald-300" : "text-white/90 group-hover:text-white"
+                        "text-[10px] font-bold tracking-tight block truncate",
+                        highlight ? "text-emerald-400" : "text-white/90"
                     )}>
                         {title}
                     </span>
-                    <p className="text-[9px] text-white/30 mt-1 leading-normal group-hover:text-white/50 transition-colors line-clamp-2">
+                    <p className="text-[8px] text-white/20 mt-0.5 leading-none group-hover:text-white/40 truncate">
                         {description}
                     </p>
                 </div>
