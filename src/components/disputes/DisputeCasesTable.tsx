@@ -267,7 +267,6 @@ export function DisputeCasesTable() {
     } else if (statusLower === 'pending' || statusLower === 'submitted') {
       return (
         <span className={cn(baseClass, "text-amber-500")}>
-          <Clock className="w-3 h-3" />
           {status.replace(/ /g, '_')}
         </span>
       );
@@ -376,8 +375,7 @@ export function DisputeCasesTable() {
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 text-red-600 cursor-help">
-                <AlertTriangle className="w-3 h-3" />
-                <span className="text-xs font-mono font-medium">FAILED</span>
+                <span className={baseClass}>FAILED</span>
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" className="max-w-[300px] bg-white text-gray-900 border-gray-200 shadow-xl rounded-none">
@@ -582,7 +580,7 @@ export function DisputeCasesTable() {
                         {caseItem.retry_count && caseItem.retry_count > 0 && (
                           <>
                             <div className="h-1 w-1 rounded-full bg-white/10" />
-                            <span className="text-amber-500/50">{caseItem.retry_count}_ATTEMPTS</span>
+                            <span className="text-amber-500/50">{caseItem.retry_count} Attempts</span>
                           </>
                         )}
                       </div>
