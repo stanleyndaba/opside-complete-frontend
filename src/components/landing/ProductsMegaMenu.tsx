@@ -38,11 +38,11 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[850px] lg:w-[1100px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10 lg:-translate-x-[120px] relative z-[100]">
+                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[900px] lg:w-[1300px] xl:w-[1440px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10 lg:-translate-x-[450px] relative z-[100]">
 
                             {/* Column 1: Audit Vectors */}
-                            <div className="flex-[1.2] p-8 lg:p-10 border-r border-white/5">
-                                <div className="mb-8 flex items-center justify-between">
+                            <div className="flex-[1.4] p-6 lg:p-7 border-r border-white/5">
+                                <div className="mb-5 flex items-center justify-between">
                                     <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em]">
                                         Audit Vectors
                                     </h4>
@@ -50,7 +50,7 @@ export function ProductsMegaMenu() {
                                         Core Engine
                                     </span>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                                     <NavItem
                                         icon={Search}
                                         title="Inbound Variance"
@@ -92,11 +92,11 @@ export function ProductsMegaMenu() {
                             </div>
 
                             {/* Column 2: Governance & Scale */}
-                            <div className="flex-1 p-8 lg:p-10 border-r border-white/5 bg-white/[0.01]">
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-8">
+                            <div className="flex-1 p-6 lg:p-7 border-r border-white/5 bg-white/[0.01]">
+                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
                                     Governance & Scale
                                 </h4>
-                                <div className="flex flex-col gap-3">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                     <NavItem
                                         icon={Layers}
                                         title="Inbound Fee Governance"
@@ -125,11 +125,11 @@ export function ProductsMegaMenu() {
                             </div>
 
                             {/* Column 3: By Profile */}
-                            <div className="flex-[0.8] p-8 lg:p-10 bg-white/[0.02]">
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-8">
+                            <div className="flex-[0.9] p-6 lg:p-7 bg-white/[0.02]">
+                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
                                     By Profile
                                 </h4>
-                                <div className="flex flex-col gap-3">
+                                <div className="flex flex-col gap-2">
                                     <NavItem
                                         icon={Activity}
                                         title="Growth ($0 - $1M)"
@@ -150,12 +150,12 @@ export function ProductsMegaMenu() {
                                     />
                                 </div>
 
-                                <div className="mt-12 p-6 rounded-xl border border-white/10 bg-emerald-500/[0.02] group/banner relative overflow-hidden transition-all hover:border-emerald-500/20">
+                                <div className="mt-8 p-5 rounded-xl border border-white/10 bg-emerald-500/[0.02] group/banner relative overflow-hidden transition-all hover:border-emerald-500/20">
                                     <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/banner:opacity-40 transition-opacity">
                                         <Sparkles className="h-10 w-10 text-emerald-500" />
                                     </div>
-                                    <h5 className="text-[11px] font-bold text-white mb-2">Custom Solutions</h5>
-                                    <p className="text-[10px] text-white/40 leading-relaxed mb-5">
+                                    <h5 className="text-[11px] font-bold text-white mb-1.5">Custom Solutions</h5>
+                                    <p className="text-[9px] text-white/40 leading-relaxed mb-4 line-clamp-2">
                                         Our engineering team can build custom API integrations for multi-channel recovery.
                                     </p>
                                     <Link
