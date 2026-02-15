@@ -613,7 +613,7 @@ export function DisputeCasesTable() {
                         to={`/recoveries/${caseItem.claim_id}`}
                         className="flex items-center gap-2.5 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-widest"
                       >
-                        DATA_NODE
+                        MORE
                         <ArrowRight className="w-3.5 h-3.5 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
                       </Link>
                     </div>
