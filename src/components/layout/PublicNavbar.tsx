@@ -178,26 +178,15 @@ export const PublicNavbar = () => {
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
-                                </Accordion>
 
-                                <Link
-                                    to="/about"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
-                                    About Us
-                                </Link>
-                                <Link
-                                    to="/sales"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
-                                    Enterprise
-                                </Link>
-                                <Accordion type="single" collapsible className="w-full">
+                                    {/* About Us & Enterprise shifted inside for consistent menu feel or kept separate? 
+                                        Keeping them as links but merged into the same flow */}
+
                                     <AccordionItem value="products" className="border-none">
                                         <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
                                             Products
                                         </AccordionTrigger>
-                                        <AccordionContent className="pt-2 pb-6 px-1 max-h-[60vh] overflow-y-auto space-y-8 scrollbar-hide border-none">
+                                        <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
                                             {/* Audit Vectors */}
                                             <div className="space-y-3">
                                                 <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">Audit Vectors</h5>
@@ -215,7 +204,7 @@ export const PublicNavbar = () => {
                                             <div className="space-y-3">
                                                 <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">Governance & Scale</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={Search} title="Inbound Fee Governance" description="Line-by-line proof" />
+                                                    <MobileNavItem icon={Layers} title="Inbound Fee Governance" description="Line-by-line proof" />
                                                     <MobileNavItem icon={Briefcase} title="Agency Portfolio Manager" description="Multi-account reconciliation" />
                                                     <MobileNavItem icon={BadgePercent} title="Commission Rate Audit" description="Detect overcharges & errors" />
                                                     <MobileNavItem icon={FileText} title="Auto-Invoice Sync" description="Gmail integration for evidence" />
@@ -226,14 +215,27 @@ export const PublicNavbar = () => {
                                             <div className="space-y-3">
                                                 <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">By Profile</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={TrendingUp} title="Growth ($0 - $1M)" description="Automated recovery for emerging brands" />
-                                                    <MobileNavItem icon={Zap} title="High Volume ($1M - $10M)" description="Deep-dive forensic audit for scale" />
-                                                    <MobileNavItem icon={ShieldAlert} title="Institutional ($10M+)" description="Aggregator & PE Infrastructure" />
+                                                    <MobileNavItem icon={Activity} title="Growth ($0 - $1M)" description="Automated recovery for emerging brands" />
+                                                    <MobileNavItem icon={TrendingUp} title="High Volume ($1M - $10M)" description="Deep-dive forensic audit for scale" />
+                                                    <MobileNavItem icon={Layers} title="Institutional ($10M+)" description="Aggregator & PE Infrastructure" />
                                                 </div>
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
                                 </Accordion>
+
+                                <Link
+                                    to="/about"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
+                                    About Us
+                                </Link>
+                                <Link
+                                    to="/sales"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
+                                    Enterprise
+                                </Link>
                                 <Link
                                     to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
