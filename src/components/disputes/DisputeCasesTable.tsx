@@ -427,13 +427,12 @@ export function DisputeCasesTable() {
         <Button
           onClick={() => handleApproveFiling(caseItem)}
           disabled={isProcessing}
-          className="h-9 px-4 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/20 text-[9px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+          variant="ghost"
+          className="h-9 px-4 text-amber-500 hover:text-amber-600 font-mono text-[9px] font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-transparent border-none shadow-none">
           {isProcessing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
-          ) : (
-            <CheckCircle2 className="w-3.5 h-3.5 mr-2" />
-          )}
-          APPROVE_RELAY
+          ) : null}
+          Approve
         </Button>
       );
     }
@@ -443,13 +442,12 @@ export function DisputeCasesTable() {
         <Button
           onClick={() => handleRetryFiling(caseItem)}
           disabled={isProcessing}
-          className="h-9 px-4 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 text-[9px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+          variant="ghost"
+          className="h-9 px-4 text-red-500 hover:text-red-600 font-mono text-[9px] font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-transparent border-none shadow-none">
           {isProcessing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
-          ) : (
-            <RotateCcw className="w-3.5 h-3.5 mr-2" />
-          )}
-          RETRY_VECT
+          ) : null}
+          Retry
         </Button>
       );
     }
@@ -459,13 +457,12 @@ export function DisputeCasesTable() {
         <Button
           onClick={() => handleFileNow(caseItem)}
           disabled={isProcessing}
-          className="h-9 px-4 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[9px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+          variant="ghost"
+          className="h-9 px-4 text-emerald-500 hover:text-emerald-600 font-mono text-[9px] font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-transparent border-none shadow-none">
           {isProcessing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
-          ) : (
-            <Send className="w-3.5 h-3.5 mr-2" />
-          )}
-          EXECUTE_SUBMIT
+          ) : null}
+          File
         </Button>
       );
     }
