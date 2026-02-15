@@ -151,7 +151,7 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/ultra-beta"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
+                                    className="rounded-lg px-3 py-2.5 text-[10px] font-mono font-bold text-white uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <span>Private Beta</span>
                                         <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
@@ -159,7 +159,7 @@ export const PublicNavbar = () => {
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="finance" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                                             Finance
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-2 px-2">
@@ -167,13 +167,13 @@ export const PublicNavbar = () => {
                                                 <Link
                                                     to="/pricing"
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
+                                                    className="px-3 py-2 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
                                                     Pricing
                                                 </Link>
                                                 <Link
                                                     to="/contact"
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
+                                                    className="px-3 py-2 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
                                                     Talk to Sales
                                                 </Link>
                                             </div>
@@ -184,7 +184,7 @@ export const PublicNavbar = () => {
                                         Keeping them as links but merged into the same flow */}
 
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
@@ -228,19 +228,19 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/about"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
+                                    className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
                                     About Us
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white transition-colors font-montserrat">
+                                    className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[13px] font-bold text-center tracking-widest uppercase font-montserrat">
+                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[10px] font-mono font-bold text-center tracking-widest uppercase">
                                     Join Waitlist
                                 </Link>
                             </div>
