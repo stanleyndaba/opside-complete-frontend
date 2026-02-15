@@ -851,7 +851,7 @@ export function Dashboard() {
                         <div className="flex items-center gap-4">
                           <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                           <div>
-                            <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">Performance</h2>
+                            <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase">REIMBURSEMENT OVERVIEW</h2>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Total Recovered</span>
                               <Shield className="h-3 w-3 text-emerald-500/50" />
@@ -861,7 +861,7 @@ export function Dashboard() {
                         {submittedClaimsCount != null && submittedClaimsCount > 0 && (
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                            className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all group rounded-lg"
+                            className="flex items-center gap-3 transition-all group"
                           >
                             <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active Claims</span>
                             <ArrowRight className="h-3 w-3 text-emerald-500/30 group-hover:text-emerald-500" />
@@ -887,7 +887,7 @@ export function Dashboard() {
                                 <span className="text-sm font-mono text-emerald-500 animate-pulse">_</span>
                               </div>
                               {reconciledCount != null && reconciledCount > 0 && (
-                                <div className="flex items-center gap-3 px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full w-fit">
+                                <div className="flex items-center gap-3 w-fit">
                                   <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                                   <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
                                     {reconciledCount} Verified Records
@@ -1142,7 +1142,7 @@ export function Dashboard() {
                         className="px-6 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full hover:bg-white/[0.04] transition-all group">
                         <div className="flex items-center gap-4">
                           <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
-                          <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">Activity Log</h3>
+                          <h3 className="text-[10px] font-mono font-bold text-white uppercase">Activity Log</h3>
                           {unreadCount > 0 && (
                             <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
                               <span className="text-[9px] font-mono font-bold text-emerald-500 tabular-nums">
@@ -1228,13 +1228,13 @@ export function Dashboard() {
                                             <div className="flex items-center justify-between">
                                               <div className="flex items-center gap-2">
                                                 <span className={cn(
-                                                  "text-[9px] font-mono font-bold tracking-[0.1em]",
+                                                  "text-[9px] font-mono font-bold",
                                                   isUnread ? "text-emerald-500/60" : "text-white/10"
                                                 )}>
                                                   {statusText}
                                                 </span>
                                                 <span className="text-white/5 h-2 w-[1px] bg-white/10" />
-                                                <span className="text-[9px] text-white/10 font-mono tracking-widest uppercase">
+                                                <span className="text-[9px] text-white/10 font-mono uppercase">
                                                   ID_{notification.id.substring(0, 4)}
                                                 </span>
                                               </div>

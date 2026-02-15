@@ -2320,7 +2320,7 @@ export default function Recoveries() {
                     )}
                   </div>
                   <div className="flex items-baseline gap-4">
-                    <div className="text-6xl font-serif italic text-white tracking-tighter shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
+                    <div className="text-6xl font-mono font-bold text-white tracking-tighter shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
                       {recoveredTotal != null && recoveredTotal > 0 ? (
                         formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)
                       ) : (
