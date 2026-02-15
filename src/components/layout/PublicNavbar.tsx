@@ -27,7 +27,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import { ChevronDown, Truck, Zap, TrendingUp, ShieldCheck, Sparkles } from 'lucide-react';
+import { ChevronDown, Truck, Zap, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
 
 export const PublicNavbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -207,7 +207,7 @@ export const PublicNavbar = () => {
                                                     <MobileNavItem icon={BoxSelect} title="Dimensional Weight Audit" description="Correct Cubiscan errors" />
                                                     <MobileNavItem icon={ArrowLeft} title="Return Logistics" description="Unreturned inventory tracking" />
                                                     <MobileNavItem icon={Truck} title="Transfer & Operations" description="Inter-fulfillment center loss" />
-                                                    <MobileNavItem icon={Sparkles} title="Full Forensic Audit" description="Deploy all 26 agents" highlight />
+                                                    <MobileNavItem icon={BarChart3} title="Full Forensic Audit" description="Deploy all 26 agents" highlight />
                                                 </div>
                                             </div>
 
