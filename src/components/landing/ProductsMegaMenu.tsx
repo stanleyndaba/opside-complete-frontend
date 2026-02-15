@@ -38,7 +38,7 @@ export function ProductsMegaMenu() {
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[850px] lg:w-[1100px] bg-[#050505]/95 [backdrop-filter:blur(48px)_saturate(200%)] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)] border border-white/10">
+                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[850px] lg:w-[1100px] bg-[#020202] [backdrop-filter:blur(24px)_saturate(150%)] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.9)] border border-white/10 lg:-translate-x-[250px]">
 
                             {/* Column 1: Audit Vectors */}
                             <div className="flex-[1.2] p-8 lg:p-10 border-r border-white/5">
