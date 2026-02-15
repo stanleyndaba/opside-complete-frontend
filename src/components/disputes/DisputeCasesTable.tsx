@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
 import { Link } from 'react-router-dom';
-import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search, ShieldAlert, Ban, DollarSign, FileWarning } from 'lucide-react';
+import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search, ShieldAlert, Ban, DollarSign, FileWarning, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -601,10 +601,12 @@ export function DisputeCasesTable() {
                         variant="ghost"
                         className="h-9 px-4 text-emerald-500/40 hover:text-emerald-500 hover:bg-emerald-500/5 rounded-xl text-[9px] font-mono font-bold uppercase tracking-widest group/pdf"
                       >
-                        {downloadingBrief.has(caseItem.id) && (
+                        {downloadingBrief.has(caseItem.id) ? (
                           <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                        ) : (
+                          <Download className="w-3.5 h-3.5 mr-2 text-emerald-500" />
                         )}
-                        GET_PDF
+                        PDF
                       </Button>
 
                       <Link
