@@ -808,35 +808,39 @@ export function Dashboard() {
                 <div className="flex flex-col gap-1">
                   <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">Monitoring Active</span>
                   <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleTabChange('overview')}
                         className={cn(
-                          "text-xl font-serif font-medium tracking-tight uppercase transition-all duration-300",
-                          activeTab === 'overview' ? "text-white" : "text-white/20 hover:text-white/40"
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider",
+                          activeTab === 'overview'
+                            ? "text-white bg-white/[0.08]"
+                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
                         Dashboard
                       </button>
-                      <span className="text-white/10 font-mono text-lg">|</span>
                       <button
                         onClick={() => handleTabChange('discrepancies')}
                         className={cn(
-                          "text-xl font-serif font-medium tracking-tight uppercase transition-all duration-300",
-                          activeTab === 'discrepancies' ? "text-white" : "text-white/20 hover:text-white/40"
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider",
+                          activeTab === 'discrepancies'
+                            ? "text-white bg-white/[0.08]"
+                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
                         Discrepancies
                       </button>
-                      <span className="text-white/10 font-mono text-lg">|</span>
                       <button
                         onClick={() => handleTabChange('disputes')}
                         className={cn(
-                          "text-xl font-serif font-medium tracking-tight uppercase transition-all duration-300",
-                          activeTab === 'disputes' ? "text-white" : "text-white/20 hover:text-white/40"
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider",
+                          activeTab === 'disputes'
+                            ? "text-white bg-white/[0.08]"
+                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
-                        Filed Disputes
+                        Docket Case
                       </button>
                     </div>
                     <div className={cn(
