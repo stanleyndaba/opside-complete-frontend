@@ -84,6 +84,34 @@ export const PublicNavbar = () => {
                         </Link>
                         <DropdownMenu>
                             <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
+                                Solutions <ChevronDown className="h-3 w-3 opacity-30" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-none p-1 min-w-[180px]">
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
+                                    <Link to="/products/fba-reimbursements" className="flex items-center gap-2 w-full">
+                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">FBA Recoveries</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
+                                    <Link to="/products/inbound-variance-monitor" className="flex items-center gap-2 w-full">
+                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Inbound Audits</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
+                                    <Link to="/products/fee-forensics" className="flex items-center gap-2 w-full">
+                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Fee Forensics</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
+                                    <Link to="/products/evidence-vault" className="flex items-center gap-2 w-full">
+                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Evidence Engine</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
                                 Finance <ChevronDown className="h-3 w-3 opacity-30" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-none p-1 min-w-[160px]">
@@ -155,6 +183,39 @@ export const PublicNavbar = () => {
                                     </div>
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full">
+                                    <AccordionItem value="solutions" className="border-none">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
+                                            Solutions
+                                        </AccordionTrigger>
+                                        <AccordionContent className="pt-2 pb-2 px-2">
+                                            <div className="grid gap-1">
+                                                <Link
+                                                    to="/products/fba-reimbursements"
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
+                                                    FBA Recoveries
+                                                </Link>
+                                                <Link
+                                                    to="/products/inbound-variance-monitor"
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
+                                                    Inbound Audits
+                                                </Link>
+                                                <Link
+                                                    to="/products/fee-forensics"
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
+                                                    Fee Forensics
+                                                </Link>
+                                                <Link
+                                                    to="/products/evidence-vault"
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className="px-3 py-2 text-sm text-white hover:text-white transition-colors font-montserrat">
+                                                    Evidence Engine
+                                                </Link>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
                                     <AccordionItem value="finance" className="border-none">
                                         <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
                                             Finance
