@@ -818,7 +818,7 @@ export function Dashboard() {
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
-                        Dashboard
+                        Overview
                       </button>
                       <button
                         onClick={() => handleTabChange('discrepancies')}
@@ -829,7 +829,7 @@ export function Dashboard() {
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
-                        Discrepancies
+                        Audits
                       </button>
                       <button
                         onClick={() => handleTabChange('disputes')}
@@ -840,7 +840,7 @@ export function Dashboard() {
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
-                        Docket Case
+                        Dispute Claims
                       </button>
                     </div>
                     <div className={cn(
