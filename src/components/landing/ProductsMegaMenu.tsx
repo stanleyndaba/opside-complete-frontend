@@ -21,7 +21,10 @@ import {
     Sparkles,
     Zap,
     ShieldCheck,
-    ArrowLeft
+    ArrowLeft,
+    Layers,
+    BarChart3,
+    Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
@@ -31,18 +34,23 @@ export function ProductsMegaMenu() {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-white/5 text-white/60 hover:text-white data-[state=open]:!bg-white/5 data-[state=open]:!text-white h-auto py-2 px-3 text-[10px] font-mono font-bold uppercase tracking-widest outline-none">
+                    <NavigationMenuTrigger className="bg-transparent hover:bg-white/5 text-white/60 hover:text-white data-[state=open]:!bg-white/5 data-[state=open]:!text-white h-auto py-2 px-3 text-[10px] font-mono font-bold uppercase tracking-widest outline-none transition-all">
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[700px] lg:w-[940px] bg-[#050505]/95 [backdrop-filter:blur(32px)_saturate(180%)] rounded-xl overflow-hidden shadow-2xl shadow-black/80 max-h-[85vh] overflow-y-auto scrollbar-hide border border-white/10">
+                        <div className="flex flex-col lg:flex-row w-[calc(100vw-2rem)] md:w-[850px] lg:w-[1100px] bg-[#050505]/95 [backdrop-filter:blur(48px)_saturate(200%)] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.8)] border border-white/10">
 
-                            {/* Section 1: Audit Vectors (Core Recovery) */}
-                            <div className="flex-[1.5] p-6 lg:p-8 border-r border-white/5">
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-2 mb-6">
-                                    Audit Vectors
-                                </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            {/* Column 1: Audit Vectors */}
+                            <div className="flex-[1.2] p-8 lg:p-10 border-r border-white/5">
+                                <div className="mb-8 flex items-center justify-between">
+                                    <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em]">
+                                        Audit Vectors
+                                    </h4>
+                                    <span className="text-[8px] font-bold text-emerald-500/50 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10 uppercase tracking-tighter rounded">
+                                        Core Engine
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <NavItem
                                         icon={Search}
                                         title="Inbound Variance"
@@ -81,16 +89,16 @@ export function ProductsMegaMenu() {
                                         highlight
                                     />
                                 </div>
+                            </div>
 
-                                <div className="h-px bg-white/5 my-8 w-full" />
-
-                                {/* Section 2: Governance & Scale */}
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-2 mb-6">
+                            {/* Column 2: Governance & Scale */}
+                            <div className="flex-1 p-8 lg:p-10 border-r border-white/5 bg-white/[0.01]">
+                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-8">
                                     Governance & Scale
                                 </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                                <div className="flex flex-col gap-3">
                                     <NavItem
-                                        icon={ShieldAlert}
+                                        icon={Layers}
                                         title="Inbound Fee Governance"
                                         description="Line-by-line proof for every claim filed"
                                         href="/products/inbound-fee-governance"
@@ -98,7 +106,7 @@ export function ProductsMegaMenu() {
                                     <NavItem
                                         icon={Briefcase}
                                         title="Agency Portfolio Manager"
-                                        description="Multi-account reconciliation for high-volume"
+                                        description="Multi-account reconciliation for agencies"
                                         href="/products/agency-manager"
                                     />
                                     <NavItem
@@ -116,43 +124,43 @@ export function ProductsMegaMenu() {
                                 </div>
                             </div>
 
-                            {/* Section 3: By Profile (Updated) */}
-                            <div className="flex-1 p-6 lg:p-8 bg-white/[0.02]">
-                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-2 mb-6">
+                            {/* Column 3: By Profile */}
+                            <div className="flex-[0.8] p-8 lg:p-10 bg-white/[0.02]">
+                                <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mb-8">
                                     By Profile
                                 </h4>
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-3">
                                     <NavItem
-                                        icon={TrendingUp}
+                                        icon={Activity}
                                         title="Growth ($0 - $1M)"
                                         description="Automated recovery for emerging brands"
                                         href="/contact"
                                     />
                                     <NavItem
-                                        icon={Zap}
+                                        icon={TrendingUp}
                                         title="High Volume ($1M - $10M)"
                                         description="Deep-dive forensic audit for scale"
                                         href="/sales"
                                     />
                                     <NavItem
-                                        icon={ShieldAlert}
+                                        icon={Layers}
                                         title="Institutional ($10M+)"
-                                        description="Aggregator & Private Equity Infrastructure"
+                                        description="Aggregator & PE Infrastructure"
                                         href="/sales"
                                     />
                                 </div>
 
-                                <div className="mt-12 p-6 rounded-xl border border-white/5 bg-white/[0.02] group/banner relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/banner:opacity-20 transition-opacity">
-                                        <Sparkles className="h-8 w-8 text-emerald-500" />
+                                <div className="mt-12 p-6 rounded-xl border border-white/10 bg-emerald-500/[0.02] group/banner relative overflow-hidden transition-all hover:border-emerald-500/20">
+                                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover/banner:opacity-40 transition-opacity">
+                                        <Sparkles className="h-10 w-10 text-emerald-500" />
                                     </div>
-                                    <h5 className="text-[11px] font-bold text-white mb-2">Need a Custom Solution?</h5>
-                                    <p className="text-[10px] text-white/40 leading-relaxed mb-4">
+                                    <h5 className="text-[11px] font-bold text-white mb-2">Custom Solutions</h5>
+                                    <p className="text-[10px] text-white/40 leading-relaxed mb-5">
                                         Our engineering team can build custom API integrations for multi-channel recovery.
                                     </p>
                                     <Link
                                         to="/contact"
-                                        className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 uppercase tracking-wider"
+                                        className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 uppercase tracking-[0.15em]"
                                     >
                                         Talk to Engineering <ArrowRight className="h-3 w-3" />
                                     </Link>
@@ -183,27 +191,29 @@ function NavItem({
         <Link
             to={href}
             className={cn(
-                "group block p-3 rounded-lg transition-all duration-300",
-                highlight ? "bg-emerald-500/[0.03] border border-emerald-500/10 hover:bg-emerald-500/10 hover:border-emerald-500/20" : "hover:bg-white/5"
+                "group block p-3.5 rounded-xl transition-all duration-300 border border-transparent",
+                highlight
+                    ? "bg-emerald-500/[0.03] border-emerald-500/10 hover:bg-emerald-500/10 hover:border-emerald-500/20"
+                    : "hover:bg-white/[0.05] hover:border-white/5 active:scale-[0.98]"
             )}
         >
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3.5">
                 <div className={cn(
-                    "p-2 rounded-lg border transition-all shrink-0",
+                    "p-2.5 rounded-xl border transition-all shrink-0",
                     highlight
-                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                         : "bg-white/5 text-white/40 border-white/10 group-hover:border-white/20 group-hover:bg-white/10 group-hover:text-white"
                 )}>
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4.5 w-4.5" />
                 </div>
-                <div>
+                <div className="min-w-0">
                     <span className={cn(
-                        "text-[11px] font-bold tracking-tight block",
+                        "text-[11px] font-bold tracking-tight block truncate",
                         highlight ? "text-emerald-400 group-hover:text-emerald-300" : "text-white/90 group-hover:text-white"
                     )}>
                         {title}
                     </span>
-                    <p className="text-[9px] text-white/30 mt-0.5 leading-tight group-hover:text-white/50 transition-colors">
+                    <p className="text-[9px] text-white/30 mt-1 leading-normal group-hover:text-white/50 transition-colors line-clamp-2">
                         {description}
                     </p>
                 </div>
