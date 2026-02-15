@@ -132,20 +132,20 @@ export function ProductsMegaMenu() {
                                 <div className="grid grid-cols-1 gap-1">
                                     <NavItem
                                         icon={Activity}
-                                        title="Growth"
-                                        description="Automated emerging brands"
+                                        title="Growth ($0 - $1M)"
+                                        description="Automated recovery for emerging brands"
                                         href="/contact"
                                     />
                                     <NavItem
                                         icon={TrendingUp}
-                                        title="High Volume"
-                                        description="Forensic audit for scale"
+                                        title="High Volume ($1M - $10M)"
+                                        description="Deep-dive forensic audit for scale"
                                         href="/sales"
                                     />
                                     <NavItem
                                         icon={Layers}
-                                        title="Institutional"
-                                        description="Aggregator Infrastructure"
+                                        title="Institutional ($10M+)"
+                                        description="Aggregator & Private Equity Infrastructure"
                                         href="/sales"
                                     />
                                 </div>
