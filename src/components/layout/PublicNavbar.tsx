@@ -27,7 +27,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
-import { ChevronDown, Truck, Zap, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
+import { ChevronDown, Truck, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
 
 export const PublicNavbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
