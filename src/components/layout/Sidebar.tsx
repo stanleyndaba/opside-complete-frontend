@@ -314,7 +314,7 @@ export function Sidebar({
           "text-[9px] font-mono text-white/20 uppercase tracking-[0.2em]",
           isCollapsed ? "block" : ""
         )}>
-          {isCollapsed ? "v1" : "v1.0.0-GOLD // PROD"}
+          {isCollapsed ? "v1" : "v1.0.0-GOLD"}
         </span>
       </div>
 
@@ -333,7 +333,7 @@ export function Sidebar({
                   : "gap-3 px-6 py-3 text-left hover:bg-white/[0.02] text-white/50 hover:text-white"
               )}>
               <Menu className={cn("h-4.5 w-4.5 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[11px] font-serif uppercase tracking-[0.2em]">More_System</span>}
+              {!isCollapsed && <span className="text-[11px] font-serif uppercase tracking-[0.2em]">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
