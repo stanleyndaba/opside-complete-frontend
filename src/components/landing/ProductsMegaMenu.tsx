@@ -43,10 +43,10 @@ export function ProductsMegaMenu() {
                             {/* Column 1: Audit Vectors */}
                             <div className="flex-[1.4] p-6 lg:p-7 border-r border-white/5">
                                 <div className="mb-5 flex items-center justify-between">
-                                    <h4 className="text-[11px] font-bold text-white/30 uppercase tracking-[0.25em]">
+                                    <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em]">
                                         Audit Vectors
                                     </h4>
-                                    <span className="text-[8px] font-bold text-emerald-500/50 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10 uppercase tracking-tighter rounded">
+                                    <span className="text-[7px] font-bold text-emerald-500/50 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10 uppercase tracking-tighter rounded">
                                         Core Engine
                                     </span>
                                 </div>
@@ -87,7 +87,7 @@ export function ProductsMegaMenu() {
 
                             {/* Column 2: Governance & Scale */}
                             <div className="flex-1 p-6 lg:p-7 border-r border-white/5 bg-white/[0.01]">
-                                <h4 className="text-[11px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
+                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
                                     Governance & Scale
                                 </h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
@@ -116,7 +116,7 @@ export function ProductsMegaMenu() {
 
                             {/* Column 3: By Profile */}
                             <div className="flex-[0.8] p-6 lg:p-7 bg-white/[0.02]">
-                                <h4 className="text-[11px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
+                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
                                     By Profile
                                 </h4>
                                 <div className="grid grid-cols-1 gap-2.5">
@@ -137,13 +137,13 @@ export function ProductsMegaMenu() {
                                     />
                                 </div>
 
-                                <div className="mt-6 p-5 rounded-xl border border-white/10 bg-emerald-500/[0.02] relative overflow-hidden">
-                                    <h5 className="text-[11px] font-bold text-white mb-1">Custom Solutions</h5>
-                                    <p className="text-[10px] text-white/40 leading-relaxed mb-3 line-clamp-1">
+                                <div className="mt-6 p-5 rounded-xl border border-transparent bg-emerald-500/[0.02] relative overflow-hidden">
+                                    <h5 className="text-[9px] font-bold text-white mb-1">Custom Solutions</h5>
+                                    <p className="text-[8px] text-white/40 leading-relaxed mb-3 line-clamp-1">
                                         Engineering for multi-channel recovery.
                                     </p>
-                                    <div className="text-[10px] font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-[0.15em] cursor-default">
-                                        Proprietary Architecture <ArrowRight className="h-3 w-3" />
+                                    <div className="text-[8px] font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-[0.15em] cursor-default">
+                                        Proprietary Architecture <ArrowRight className="h-2.5 w-2.5" />
                                     </div>
                                 </div>
                             </div>
@@ -177,21 +177,21 @@ function NavItem({
         >
             <div className="flex items-center gap-3.5">
                 <div className={cn(
-                    "p-2 rounded-lg border transition-all shrink-0",
+                    "p-2 rounded-lg border border-transparent transition-all shrink-0",
                     highlight
                         ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                        : "bg-white/5 text-white/40 border-white/10"
+                        : "bg-white/5 text-white/40"
                 )}>
                     <Icon className="h-4.5 w-4.5" />
                 </div>
                 <div className="min-w-0">
                     <span className={cn(
-                        "text-[12px] font-bold tracking-tight block truncate text-xs",
+                        "text-[10px] font-bold tracking-tight block truncate",
                         highlight ? "text-emerald-400" : "text-white/90"
                     )}>
                         {title}
                     </span>
-                    <p className="text-[10px] text-white/20 mt-1 leading-none truncate">
+                    <p className="text-[8px] text-white/20 mt-1 leading-none truncate">
                         {description}
                     </p>
                 </div>
