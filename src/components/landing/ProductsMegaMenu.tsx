@@ -41,7 +41,7 @@ export function ProductsMegaMenu() {
                         <div className="lg:fixed lg:left-1/2 lg:-translate-x-1/2 lg:top-[85px] flex flex-col lg:flex-row w-[calc(100vw-2rem)] lg:w-[95vw] lg:max-w-[1440px] bg-[#050505] rounded-xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,1)] border border-white/10 relative z-[100]">
 
                             {/* Column 1: Audit Vectors */}
-                            <div className="flex-[1.4] p-6 lg:p-7 border-r border-white/5">
+                            <div className="flex-[1.6] p-6 lg:p-7 border-r border-white/5">
                                 <div className="mb-5 flex items-center justify-between">
                                     <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em]">
                                         Audit Vectors
@@ -186,12 +186,12 @@ function NavItem({
                 </div>
                 <div className="min-w-0">
                     <span className={cn(
-                        "text-[10px] font-bold tracking-tight block truncate",
+                        "text-[9.5px] font-bold tracking-tight block whitespace-nowrap",
                         highlight ? "text-emerald-400" : "text-white/90"
                     )}>
                         {title}
                     </span>
-                    <p className="text-[8px] text-white/20 mt-1 leading-none truncate">
+                    <p className="text-[8px] text-white/20 mt-1 leading-none">
                         {description}
                     </p>
                 </div>
