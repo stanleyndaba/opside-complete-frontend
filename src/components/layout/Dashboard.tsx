@@ -806,7 +806,6 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">Monitoring Active</span>
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
                       <button
@@ -843,10 +842,6 @@ export function Dashboard() {
                         Dispute Claims
                       </button>
                     </div>
-                    <div className={cn(
-                      "h-1 w-1 rounded-full bg-emerald-500 transition-all duration-500",
-                      activeTab === 'overview' ? "animate-pulse" : "opacity-50"
-                    )} />
                   </div>
                 </div>
               </div>
