@@ -87,12 +87,6 @@ export const PublicNavbar = () => {
                             <ProductsMegaMenu />
                         </div>
 
-                        <Link
-                            to="/about"
-                            className="hidden md:flex items-center gap-2 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">About Us</span>
-                        </Link>
-
                         <DropdownMenu>
                             <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
                                 Finance <ChevronDown className="h-3 w-3 opacity-30" />
@@ -110,6 +104,12 @@ export const PublicNavbar = () => {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
+
+                        <Link
+                            to="/about"
+                            className="hidden md:flex items-center gap-2 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
+                            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">About Us</span>
+                        </Link>
                     </div>
 
                     <nav className="hidden md:flex items-center gap-4">
