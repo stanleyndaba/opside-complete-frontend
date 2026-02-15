@@ -32,6 +32,7 @@ import { SyncLogModal } from '@/components/modals/SyncLogModal';
 import { formatDistanceToNow } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 
 // Icon imports for document sources
 const GmailIcon = '/G.png';
@@ -58,7 +59,7 @@ const stripEmojis = (text: any) => {
 };
 
 export function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes'>('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
@@ -71,7 +72,7 @@ export function Dashboard() {
     setIsSidebarCollapsed(prev => !prev);
   }, []);
 
-  const handleTabChange = (tab: 'overview' | 'discrepancies') => {
+  const handleTabChange = (tab: 'overview' | 'discrepancies' | 'disputes') => {
     setActiveTab(tab);
   };
 
@@ -827,6 +828,16 @@ export function Dashboard() {
                       >
                         Discrepancies
                       </button>
+                      <span className="text-white/10 font-mono text-lg">|</span>
+                      <button
+                        onClick={() => handleTabChange('disputes')}
+                        className={cn(
+                          "text-xl font-serif font-medium tracking-tight uppercase transition-all duration-300",
+                          activeTab === 'disputes' ? "text-white" : "text-white/20 hover:text-white/40"
+                        )}
+                      >
+                        Filed Disputes
+                      </button>
                     </div>
                     <div className={cn(
                       "h-1 w-1 rounded-full bg-emerald-500 transition-all duration-500",
@@ -1313,7 +1324,7 @@ export function Dashboard() {
                     </div>
                   </div>
                 </div>
-              ) : (
+              ) : activeTab === 'discrepancies' ? (
                 <div className="space-y-6">
                   {/* Detected Discrepancies View */}
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
@@ -1536,6 +1547,12 @@ export function Dashboard() {
                         </div>
                       </div>
                     )}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                    <DisputeCasesTable />
                   </div>
                 </div>
               )}
