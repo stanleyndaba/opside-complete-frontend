@@ -55,37 +55,31 @@ export function ProductsMegaMenu() {
                                         icon={Search}
                                         title="Inbound Variance"
                                         description="Reconcile shipping plan/ledger"
-                                        href="/products/inbound-variance-monitor"
                                     />
                                     <NavItem
                                         icon={ShieldCheck}
                                         title="Inventory"
                                         description="Lost & destroyed unit recovery"
-                                        href="/products/fba-reimbursements"
                                     />
                                     <NavItem
                                         icon={BoxSelect}
                                         title="Dim Weight"
                                         description="Correct Cubiscan errors"
-                                        href="/products/fee-forensics"
                                     />
                                     <NavItem
                                         icon={ArrowLeft}
                                         title="Return Logistics"
                                         description="Unreturned inventory tracking"
-                                        href="/products/return-audits"
                                     />
                                     <NavItem
                                         icon={Truck}
                                         title="Operations"
                                         description="Inter-fulfillment center loss"
-                                        href="/products/transfer-audits"
                                     />
                                     <NavItem
                                         icon={Sparkles}
                                         title="Full Forensic Audit"
                                         description="Deploy all 26 agents"
-                                        href="/ultra-beta"
                                         highlight
                                     />
                                 </div>
@@ -101,25 +95,21 @@ export function ProductsMegaMenu() {
                                         icon={Layers}
                                         title="Fee Governance"
                                         description="Line-by-line proof"
-                                        href="/products/inbound-fee-governance"
                                     />
                                     <NavItem
                                         icon={Briefcase}
                                         title="Agency Portfolio"
                                         description="Multi-account reconciliation"
-                                        href="/products/agency-manager"
                                     />
                                     <NavItem
                                         icon={BadgePercent}
                                         title="Commission Rate"
                                         description="Detect overcharges & errors"
-                                        href="/products/commission-rate-governance"
                                     />
                                     <NavItem
                                         icon={FileText}
                                         title="Auto-Invoice"
                                         description="Gmail integration for evidence"
-                                        href="/products/evidence-vault"
                                     />
                                 </div>
                             </div>
@@ -134,36 +124,30 @@ export function ProductsMegaMenu() {
                                         icon={Activity}
                                         title="Growth ($0 - $1M)"
                                         description="Automated recovery for emerging brands"
-                                        href="/contact"
                                     />
                                     <NavItem
                                         icon={TrendingUp}
                                         title="High Volume ($1M - $10M)"
                                         description="Deep-dive forensic audit for scale"
-                                        href="/sales"
                                     />
                                     <NavItem
                                         icon={Layers}
                                         title="Institutional ($10M+)"
                                         description="Aggregator & Private Equity Infrastructure"
-                                        href="/sales"
                                     />
                                 </div>
 
-                                <div className="mt-4 p-3.5 rounded-xl border border-white/10 bg-emerald-500/[0.02] group/banner relative overflow-hidden transition-all hover:border-emerald-500/20">
-                                    <div className="absolute top-0 right-0 p-2 opacity-10 group-hover/banner:opacity-40 transition-opacity">
+                                <div className="mt-4 p-3.5 rounded-xl border border-white/10 bg-emerald-500/[0.02] relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-2 opacity-10">
                                         <Sparkles className="h-6 w-6 text-emerald-500" />
                                     </div>
                                     <h5 className="text-[10px] font-bold text-white mb-0.5">Custom Solutions</h5>
                                     <p className="text-[8px] text-white/40 leading-relaxed mb-2 line-clamp-1">
                                         Engineering for multi-channel recovery.
                                     </p>
-                                    <Link
-                                        to="/contact"
-                                        className="text-[9px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 uppercase tracking-[0.15em]"
-                                    >
-                                        Talk to Engineering <ArrowRight className="h-2 w-2" />
-                                    </Link>
+                                    <div className="text-[9px] font-bold text-emerald-400 flex items-center gap-1 uppercase tracking-[0.15em] cursor-default">
+                                        Proprietary Architecture <ArrowRight className="h-2 w-2" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,23 +162,20 @@ function NavItem({
     icon: Icon,
     title,
     description,
-    href,
     highlight = false
 }: {
     icon: any,
     title: string,
     description: string,
-    href: string,
     highlight?: boolean
 }) {
     return (
-        <Link
-            to={href}
+        <div
             className={cn(
-                "group block p-2 rounded-lg transition-all duration-200 border border-transparent",
+                "group block p-2 rounded-lg border border-transparent cursor-default",
                 highlight
-                    ? "bg-emerald-500/[0.03] border-emerald-500/10 hover:bg-emerald-500/10 hover:border-emerald-500/20"
-                    : "hover:bg-white/[0.05] active:scale-[0.98]"
+                    ? "bg-emerald-500/[0.03] border-emerald-500/10"
+                    : "bg-transparent"
             )}
         >
             <div className="flex items-center gap-2.5">
@@ -202,7 +183,7 @@ function NavItem({
                     "p-1.5 rounded-lg border transition-all shrink-0",
                     highlight
                         ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                        : "bg-white/5 text-white/40 border-white/10 group-hover:text-white"
+                        : "bg-white/5 text-white/40 border-white/10"
                 )}>
                     <Icon className="h-3.5 w-3.5" />
                 </div>
@@ -213,11 +194,11 @@ function NavItem({
                     )}>
                         {title}
                     </span>
-                    <p className="text-[8px] text-white/20 mt-0.5 leading-none group-hover:text-white/40 truncate">
+                    <p className="text-[8px] text-white/20 mt-0.5 leading-none truncate">
                         {description}
                     </p>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }
