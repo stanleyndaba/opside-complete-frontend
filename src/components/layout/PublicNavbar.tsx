@@ -83,7 +83,9 @@ export const PublicNavbar = () => {
                             <span className="px-1.5 py-0.5 bg-emerald-500 text-[8px] font-bold text-white rounded-none leading-none">NEW</span>
                         </Link>
 
-                        <ProductsMegaMenu />
+                        <div className="hidden lg:block">
+                            <ProductsMegaMenu />
+                        </div>
 
                         <Link
                             to="/about"
@@ -195,38 +197,38 @@ export const PublicNavbar = () => {
                                         <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white transition-colors hover:no-underline font-montserrat">
                                             Products
                                         </AccordionTrigger>
-                                        <AccordionContent className="pt-2 pb-6 px-2 max-h-[60vh] overflow-y-auto space-y-8 scrollbar-hide">
+                                        <AccordionContent className="pt-2 pb-6 px-1 max-h-[60vh] overflow-y-auto space-y-8 scrollbar-hide border-none">
                                             {/* Audit Vectors */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[10px] font-semibold text-white/20 uppercase tracking-[0.2em] pl-1">Audit Vectors</h5>
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">Audit Vectors</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={Search} title="Inbound Variance" href="/products/inbound-variance-monitor" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={ShieldCheck} title="Inventory Reconciliation" href="/products/fba-reimbursements" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={BoxSelect} title="Dimensional Weight Audit" href="/products/fee-forensics" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={ArrowLeft} title="Return Logistics" href="/products/return-audits" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={Truck} title="Transfer & Operations" href="/products/transfer-audits" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={Sparkles} title="Full Forensic Audit" href="/ultra-beta" highlight onClick={() => setMobileMenuOpen(false)} />
+                                                    <MobileNavItem icon={Search} title="Inbound Variance" description="Reconcile shipping plan/ledger" />
+                                                    <MobileNavItem icon={ShieldCheck} title="Inventory Reconciliation" description="Lost & destroyed unit recovery" />
+                                                    <MobileNavItem icon={BoxSelect} title="Dimensional Weight Audit" description="Correct Cubiscan errors" />
+                                                    <MobileNavItem icon={ArrowLeft} title="Return Logistics" description="Unreturned inventory tracking" />
+                                                    <MobileNavItem icon={Truck} title="Transfer & Operations" description="Inter-fulfillment center loss" />
+                                                    <MobileNavItem icon={Sparkles} title="Full Forensic Audit" description="Deploy all 26 agents" highlight />
                                                 </div>
                                             </div>
 
                                             {/* Governance */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[10px] font-semibold text-white/20 uppercase tracking-[0.2em] pl-1">Governance & Scale</h5>
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">Governance & Scale</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={Search} title="Inbound Fee Governance" href="/products/inbound-fee-governance" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={Briefcase} title="Agency Portfolio Manager" href="/products/agency-manager" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={BadgePercent} title="Commission Rate Audit" href="/products/commission-rate-governance" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={FileText} title="Auto-Invoice Sync" href="/products/evidence-vault" onClick={() => setMobileMenuOpen(false)} />
+                                                    <MobileNavItem icon={Search} title="Inbound Fee Governance" description="Line-by-line proof" />
+                                                    <MobileNavItem icon={Briefcase} title="Agency Portfolio Manager" description="Multi-account reconciliation" />
+                                                    <MobileNavItem icon={BadgePercent} title="Commission Rate Audit" description="Detect overcharges & errors" />
+                                                    <MobileNavItem icon={FileText} title="Auto-Invoice Sync" description="Gmail integration for evidence" />
                                                 </div>
                                             </div>
 
                                             {/* By Profile */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[10px] font-semibold text-white/20 uppercase tracking-[0.2em] pl-1">By Profile</h5>
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">By Profile</h5>
                                                 <div className="grid gap-1">
-                                                    <MobileNavItem icon={TrendingUp} title="Growth ($0 - $1M)" href="/contact" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={Zap} title="High Volume ($1M - $10M)" href="/sales" onClick={() => setMobileMenuOpen(false)} />
-                                                    <MobileNavItem icon={ShieldAlert} title="Institutional ($10M+)" href="/sales" onClick={() => setMobileMenuOpen(false)} />
+                                                    <MobileNavItem icon={TrendingUp} title="Growth ($0 - $1M)" description="Automated recovery for emerging brands" />
+                                                    <MobileNavItem icon={Zap} title="High Volume ($1M - $10M)" description="Deep-dive forensic audit for scale" />
+                                                    <MobileNavItem icon={ShieldAlert} title="Institutional ($10M+)" description="Aggregator & PE Infrastructure" />
                                                 </div>
                                             </div>
                                         </AccordionContent>
@@ -250,37 +252,42 @@ export const PublicNavbar = () => {
 function MobileNavItem({
     icon: Icon,
     title,
-    href,
-    onClick,
+    description,
     highlight = false
 }: {
     icon: any,
     title: string,
-    href: string,
-    onClick: () => void,
+    description?: string,
     highlight?: boolean
 }) {
     return (
-        <Link
-            to={href}
-            onClick={onClick}
+        <div
             className={cn(
-                "flex items-center gap-3 p-2 rounded-lg transition-colors",
-                highlight ? "bg-emerald-500/5 border border-emerald-500/10" : "hover:bg-white/5"
+                "flex flex-col gap-1 p-3 rounded-lg border border-transparent cursor-default",
+                highlight ? "bg-emerald-500/[0.03] border-emerald-500/10" : ""
             )}
         >
-            <div className={cn(
-                "p-1.5 rounded-lg border",
-                highlight ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/60 border-white/10"
-            )}>
-                <Icon className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-3">
+                <div className={cn(
+                    "p-1.5 rounded-lg border border-transparent shrink-0",
+                    highlight ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/40"
+                )}>
+                    <Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                    <span className={cn(
+                        "text-[10px] font-bold tracking-tight block truncate",
+                        highlight ? "text-emerald-400" : "text-white/90"
+                    )}>
+                        {title}
+                    </span>
+                    {description && (
+                        <p className="text-[8px] text-white/20 mt-0.5 leading-none truncate">
+                            {description}
+                        </p>
+                    )}
+                </div>
             </div>
-            <span className={cn(
-                "text-[12px] font-medium",
-                highlight ? "text-emerald-400" : "text-white/80"
-            )}>
-                {title}
-            </span>
-        </Link>
+        </div>
     );
 }
