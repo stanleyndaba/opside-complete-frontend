@@ -916,79 +916,83 @@ export default function IntegrationsHub() {
               </div>
             </motion.div>
 
-            {(['gmail', 'outlook', 'gdrive', 'dropbox'] as const).map((p) => {
-              const providerMeta = {
-                gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
-                outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
-                gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
-                dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
-              } as const;
+            <div className="lg:col-span-12 flex gap-6 overflow-x-auto pb-6 -mx-4 px-4 no-scrollbar scroll-smooth">
 
-              const isConnected = () => {
-                if (status?.providerIngest?.[p]?.connected === true) return true;
-                const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                if (status?.providerIngest?.[capitalized]?.connected === true) return true;
-                if (status?.providers?.[p] === true) return true;
-                if (status?.providers?.[capitalized] === true) return true;
-                const providerConnectedKey = `${p}_connected` as keyof typeof status;
-                if (status && (status as any)[providerConnectedKey] === true) return true;
-                if (evidenceSources.some(s => s.provider === p && s.status === 'connected')) return true;
-                return false;
-              };
+              {(['gmail', 'outlook', 'gdrive', 'dropbox', 'slack'] as const).map((p) => {
+                const providerMeta = {
+                  gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
+                  outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
+                  gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+                  dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
+                  slack: { name: 'Slack', icon: '/slack2.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
+                } as const;
 
-              const connected = isConnected();
-              const meta = providerMeta[p];
+                const isConnected = () => {
+                  if (status?.providerIngest?.[p]?.connected === true) return true;
+                  const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                  if (status?.providerIngest?.[capitalized]?.connected === true) return true;
+                  if (status?.providers?.[p] === true) return true;
+                  if (status?.providers?.[capitalized] === true) return true;
+                  const providerConnectedKey = `${p}_connected` as keyof typeof status;
+                  if (status && (status as any)[providerConnectedKey] === true) return true;
+                  if (evidenceSources.some(s => s.provider === p && s.status === 'connected')) return true;
+                  return false;
+                };
 
-              return (
-                <motion.div key={p} variants={itemVariants} className="lg:col-span-12 xl:col-span-3">
-                  <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-emerald-500/20' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
-                    <div className="flex items-start justify-between mb-6">
-                      <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
-                        <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
+                const connected = isConnected();
+                const meta = providerMeta[p];
+
+                return (
+                  <motion.div key={p} variants={itemVariants} className="flex-shrink-0 w-[300px]">
+                    <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-emerald-500/20' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
+                      <div className="flex items-start justify-between mb-6">
+                        <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                          <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
+                        </div>
+                        <div className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gray-700'}`} />
                       </div>
-                      <div className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gray-700'}`} />
-                    </div>
 
-                    <h4 className="text-lg font-serif text-white tracking-tight mb-1">{meta.name}</h4>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-6">Evidence Repository</p>
+                      <h4 className="text-lg font-serif text-white tracking-tight mb-1">{meta.name}</h4>
+                      <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-6">Evidence Repository</p>
 
-                    <div className="flex-1">
-                      {connected ? (
-                        <div className="space-y-4">
-                          <div className="bg-black/40 rounded-lg p-3 border border-white/5">
-                            <span className="text-[9px] font-mono text-gray-500 uppercase block mb-1">Target Account</span>
-                            <span className="text-xs text-gray-300 truncate block">
-                              {evidenceSources.find(s => s.provider === p)?.account_email || 'Active Stream'}
-                            </span>
+                      <div className="flex-1">
+                        {connected ? (
+                          <div className="space-y-4">
+                            <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+                              <span className="text-[9px] font-mono text-gray-500 uppercase block mb-1">Target Account</span>
+                              <span className="text-xs text-gray-300 truncate block">
+                                {evidenceSources.find(s => s.provider === p)?.account_email || 'Active Stream'}
+                              </span>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-mono uppercase tracking-widest"
+                              onClick={() => handleConnectDocSource(p)} // Simplified for UI demonstration, actual logic uses disconnect
+                            >
+                              Decommission
+                            </Button>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-mono uppercase tracking-widest"
-                            onClick={() => handleConnectDocSource(p)} // Simplified for UI demonstration, actual logic uses disconnect
-                          >
-                            Decommission
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <p className="text-xs text-gray-500 leading-relaxed mb-4">
-                            Establish persistent monitoring of this repository for financial artifacts.
-                          </p>
-                          <Button
-                            className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest gap-2"
-                            onClick={() => handleConnectDocSource(p)}
-                            disabled={providerLoading === p}
-                          >
-                            {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-emerald-500" /> Connect</>}
-                          </Button>
-                        </div>
-                      )}
+                        ) : (
+                          <div className="space-y-4">
+                            <p className="text-xs text-gray-500 leading-relaxed mb-4">
+                              Establish persistent monitoring of this repository for financial artifacts.
+                            </p>
+                            <Button
+                              className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest gap-2"
+                              onClick={() => handleConnectDocSource(p)}
+                              disabled={providerLoading === p}
+                            >
+                              {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-emerald-500" /> Connect</>}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                  </motion.div>
+                );
+              })}
+            </div>
 
             {/* Logic Overrides Section */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
