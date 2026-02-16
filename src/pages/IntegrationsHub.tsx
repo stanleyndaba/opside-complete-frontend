@@ -924,7 +924,7 @@ export default function IntegrationsHub() {
                   outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
                   gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
                   dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
-                  slack: { name: 'Slack', icon: '/slack-icon-2019.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
+                  slack: { name: 'Slack', icon: 'inline-slack', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
                 } as const;
 
                 const isConnected = () => {
@@ -947,7 +947,16 @@ export default function IntegrationsHub() {
                     <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-emerald-500/20' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
                       <div className="flex items-start justify-between mb-6">
                         <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
-                          <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
+                          {meta.icon === 'inline-slack' ? (
+                            <svg viewBox="0 0 127 127" className="h-6 w-6" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M27.2 80a13.6 13.6 0 0 1-13.6 13.6A13.6 13.6 0 0 1 0 80a13.6 13.6 0 0 1 13.6-13.6h13.6V80zm6.8 0a13.6 13.6 0 0 1 13.6-13.6 13.6 13.6 0 0 1 13.6 13.6v34a13.6 13.6 0 0 1-13.6 13.6A13.6 13.6 0 0 1 34 114V80z" fill="#E01E5A" />
+                              <path d="M47.6 27.2A13.6 13.6 0 0 1 34 13.6 13.6 13.6 0 0 1 47.6 0a13.6 13.6 0 0 1 13.6 13.6v13.6H47.6zm0 6.8a13.6 13.6 0 0 1 13.6 13.6 13.6 13.6 0 0 1-13.6 13.6H13.6A13.6 13.6 0 0 1 0 47.6 13.6 13.6 0 0 1 13.6 34h34z" fill="#36C5F0" />
+                              <path d="M99.8 47.6a13.6 13.6 0 0 1 13.6-13.6 13.6 13.6 0 0 1 13.6 13.6 13.6 13.6 0 0 1-13.6 13.6H99.8V47.6zm-6.8 0a13.6 13.6 0 0 1-13.6 13.6A13.6 13.6 0 0 1 65.8 47.6v-34A13.6 13.6 0 0 1 79.4 0 13.6 13.6 0 0 1 93 13.6v34z" fill="#2EB67D" />
+                              <path d="M79.4 99.8a13.6 13.6 0 0 1 13.6 13.6 13.6 13.6 0 0 1-13.6 13.6A13.6 13.6 0 0 1 65.8 113.4V99.8h13.6zm0-6.8a13.6 13.6 0 0 1-13.6-13.6A13.6 13.6 0 0 1 79.4 65.8h34a13.6 13.6 0 0 1 13.6 13.6A13.6 13.6 0 0 1 113.4 93h-34z" fill="#ECB22E" />
+                            </svg>
+                          ) : (
+                            <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
+                          )}
                         </div>
                         <div className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gray-700'}`} />
                       </div>
