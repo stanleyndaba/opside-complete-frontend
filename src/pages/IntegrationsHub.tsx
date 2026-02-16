@@ -924,7 +924,7 @@ export default function IntegrationsHub() {
                   outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
                   gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
                   dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
-                  slack: { name: 'Slack', icon: '/slack2.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
+                  slack: { name: 'Slack', icon: '/slack-icon-2019.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
                 } as const;
 
                 const isConnected = () => {
