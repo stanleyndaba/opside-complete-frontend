@@ -284,9 +284,9 @@ export function Dashboard() {
         setLoadingDetections(true);
         try {
           const res = await detectionApi.getDetectionResults({ limit: 50 });
-          if (res && res.results) {
-            setDetectionResults(res.results);
-            setDetectionTotal(res.total);
+          if (res.ok && res.data?.results) {
+            setDetectionResults(res.data.results);
+            setDetectionTotal(res.data.total);
           }
         } catch (error) {
           console.error('Failed to fetch detections:', error);
