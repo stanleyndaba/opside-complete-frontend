@@ -576,15 +576,18 @@ export const api = {
   // Disputes
   getDisputeBrief: (id: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief`),
 
-  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox', tenantSlug?: string) => {
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack', tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for connectDocs");
     const frontendUrl = getFrontendUrl();
     const slug = tenantSlug;
     if (!slug) throw new Error("Tenant slug required for scoped API call");
     const redirectUri = `${frontendUrl}/app/${slug}/auth/callback`;
 
+    // Providers mapping if needed (e.g. gdrive vs google-drive)
+    const backendProvider = provider === 'gdrive' ? 'gdrive' : provider;
+
     return requestJson<{ success?: boolean; authUrl?: string; auth_url?: string; state?: string; message?: string; sandbox?: boolean }>(
-      `/api/v1/integrations/docs/${encodeURIComponent(provider)}/auth/start?frontend_url=${encodeURIComponent(frontendUrl)}&redirect_uri=${encodeURIComponent(redirectUri)}&tenantSlug=${slug}`,
+      `/api/v1/integrations/${encodeURIComponent(backendProvider)}/auth?frontend_url=${encodeURIComponent(frontendUrl)}&redirect_uri=${encodeURIComponent(redirectUri)}&tenant_slug=${slug}`,
       { method: 'GET' }
     ).then(response => {
       if (response.ok && response.data) {
