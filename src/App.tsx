@@ -169,7 +169,9 @@ const App = () => (
                     <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
                     <Route path="/app/:tenantSlug/history" element={<TransactionHistory />} />
                     <Route path="/app/:tenantSlug/documents" element={<EvidenceLocker />} />
+                    <Route path="/app/:tenantSlug/evidence-locker" element={<EvidenceLocker />} />
                     <Route path="/app/:tenantSlug/documents/:id" element={<DocumentDetail />} />
+                    <Route path="/app/:tenantSlug/notifications" element={<NotificationHub />} />
                     <Route path="/app/:tenantSlug/settings" element={<Settings />} />
                     <Route path="/app/:tenantSlug/upcoming-payments" element={<UpcomingPayments />} />
                     <Route path="/app/:tenantSlug/reconnect-amazon" element={<ReconnectProvider />} />
