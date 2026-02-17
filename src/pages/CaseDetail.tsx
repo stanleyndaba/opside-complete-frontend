@@ -376,7 +376,14 @@ const generateNarrative = (claim: any): string => {
 };
 
 export default function CaseDetail() {
-  const { caseId } = useParams<{ caseId: string }>();
+  const { caseId, tenantSlug } = useParams<{ caseId: string; tenantSlug: string }>();
+  const { tenant, isReady } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug;
+
+  if (!activeSlug && isReady) {
+    throw new Error("tenantSlug required for CaseDetail");
+  }
+
   const location = useLocation() as any;
   const passedClaim = (location && location.state && (location.state as any).claim) || null;
   const [loading, setLoading] = useState(false);
@@ -427,7 +434,7 @@ export default function CaseDetail() {
       if (!caseId) return;
       setLoading(true);
       // Try primary detail endpoint
-      const res = await api.getRecoveryDetail(caseId);
+      const res = await api.getRecoveryDetail(caseId, activeSlug);
       if (!cancelled) {
         if (res.ok && res.data) {
           // Merge API data with existing data, preserving derived fields
@@ -484,7 +491,7 @@ export default function CaseDetail() {
         } else {
           // Fallback: look up claim from list, then synthesize details (do not clear existing data)
           try {
-            const list = await recoveryApi.getRecoveries().catch(() => [] as any);
+            const list = await recoveryApi.getRecoveries(activeSlug).catch(() => [] as any);
             const row = Array.isArray(list) ? (list as any[]).find((x) => x.id === caseId) : null;
             if (row) {
               const estimatedValue = row.guaranteedAmount || row.estimated_value || 100;
@@ -531,7 +538,7 @@ export default function CaseDetail() {
     // Real-time status via SSE with polling fallback
     let es: EventSource | null = null;
     try {
-      es = new EventSource(`/api/sse/case/${encodeURIComponent(caseId!)}`);
+      es = new EventSource(`/api/sse/case/${encodeURIComponent(caseId!)}?tenantSlug=${activeSlug}`);
       es.onmessage = (e) => {
         try {
           const data = JSON.parse(e.data);
@@ -548,7 +555,7 @@ export default function CaseDetail() {
     } catch { }
     const interval = setInterval(async () => {
       if (!caseId) return;
-      const statusRes = await api.getRecoveryStatus(caseId);
+      const statusRes = await api.getRecoveryStatus(caseId, activeSlug);
       if (statusRes.ok && statusRes.data) {
         setCaseData((prev: any) => ({
           ...(prev || {}),
@@ -561,7 +568,7 @@ export default function CaseDetail() {
       }
     }, 15000);
     return () => { cancelled = true; if (es) es.close(); clearInterval(interval); };
-  }, [caseId]);
+  }, [caseId, activeSlug]);
 
   // Attempt to fetch matched documents for this case
   useEffect(() => {
@@ -574,7 +581,7 @@ export default function CaseDetail() {
 
         if (docIdFromCase) {
           // Fetch the specific matched document by ID
-          const docRes = await api.getDocument(docIdFromCase);
+          const docRes = await api.getDocument(docIdFromCase, activeSlug);
           if (!cancelled && docRes.ok && docRes.data) {
             // Add match info from the case's evidence_attachments
             const docWithMatchInfo = {
@@ -590,7 +597,7 @@ export default function CaseDetail() {
         }
 
         // Fallback: try to find documents from getDocuments list
-        const docsRes = await api.getDocuments();
+        const docsRes = await api.getDocuments(activeSlug);
         const docs = Array.isArray(docsRes) ? docsRes : (docsRes as any)?.data;
         if (!cancelled && Array.isArray(docs)) {
           const list = docs.filter((d: any) => {
@@ -604,7 +611,7 @@ export default function CaseDetail() {
       } catch { }
     })();
     return () => { cancelled = true; };
-  }, [caseId, caseData?.evidence_attachments?.document_id]);
+  }, [caseId, caseData?.evidence_attachments?.document_id, activeSlug]);
 
   // Compute effectiveCase BEFORE any early returns (React hooks rule)
   const effectiveCase = caseData || (mockCaseData as any)[caseId || ''] || passedClaim;
@@ -630,7 +637,7 @@ export default function CaseDetail() {
         <div className="text-center py-12">
           <h2 className="text-xl font-semibold mb-4">Case not found</h2>
           <Button asChild>
-            <Link to="/recoveries">
+            <Link to={`/app/${activeSlug}/recoveries`}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Cases
             </Link>
@@ -663,7 +670,7 @@ export default function CaseDetail() {
             <p className="text-white/40 mb-6 font-mono">Case ID: {caseId}</p>
             {error && <p className="text-red-400 mb-4">{error}</p>}
             <Button asChild className="bg-white/10 border border-white/10 hover:bg-white/20 text-white">
-              <Link to="/recoveries">
+              <Link to={`/app/${activeSlug}/recoveries`}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Cases
               </Link>
@@ -682,7 +689,7 @@ export default function CaseDetail() {
             {/* Header - Case Information */}
             <div className="mb-10 flex items-center justify-between border-b border-white/10 pb-8">
               <div className="flex items-center gap-6">
-                <Link to="/recoveries" className="h-10 w-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-colors rounded-lg">
+                <Link to={`/app/${activeSlug}/recoveries`} className="h-10 w-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-colors rounded-lg">
                   <ArrowLeft className="h-4 w-4 text-white/40" />
                 </Link>
                 <div>

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
@@ -22,6 +24,8 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   const [loading, setLoading] = useState(true);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const activeSlug = tenantSlug || 'beta';
 
   useEffect(() => {
     if (documentId) {
@@ -41,7 +45,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   const fetchParsingStatus = async () => {
     try {
       setLoading(true);
-      const res = await api.getDocumentWithParsedData(documentId);
+      const res = await api.getDocumentWithParsedData(documentId, activeSlug);
       if (res.ok && res.data) {
         const data = res.data;
         const status = data.parser_status || data.processing_status || 'pending';

@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const handleReAuthenticate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,7 +45,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
 
             if (!email) {
                 // If we don't have the email, we need a full login
-                window.location.href = '/login';
+                navigate('/login');
                 return;
             }
 
@@ -73,7 +75,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
     };
 
     const handleLogout = () => {
-        window.location.href = '/login';
+        navigate('/login');
     };
 
     return (

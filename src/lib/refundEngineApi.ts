@@ -40,9 +40,11 @@ function buildRefundEngineUrl(path: string, query?: Record<string, unknown>): st
   return url.toString();
 }
 
-async function requestJson<T>(path: string, init?: RequestInit, query?: Record<string, unknown>): Promise<ApiResponse<T>> {
+async function requestJson<T>(path: string, tenantSlug?: string, init?: RequestInit, query?: Record<string, unknown>): Promise<ApiResponse<T>> {
+  if (!tenantSlug) throw new Error("tenantSlug required for refund engine request");
   try {
-    const url = buildRefundEngineUrl(path, query);
+    const fullQuery = { ...query, tenantSlug };
+    const url = buildRefundEngineUrl(path, fullQuery);
     const token = getRefundEngineAuthToken();
     const response = await fetch(url, {
       credentials: 'include',
@@ -76,12 +78,12 @@ async function requestJson<T>(path: string, init?: RequestInit, query?: Record<s
 
 export const refundEngineApi = {
   // Base
-  health: () => requestJson('/health', { method: 'GET' }),
-  apiHealth: () => requestJson('/api/health', { method: 'GET' }),
-  root: () => requestJson('/', { method: 'GET' }),
+  health: (tenantSlug?: string) => requestJson('/health', tenantSlug, { method: 'GET' }),
+  apiHealth: (tenantSlug?: string) => requestJson('/api/health', tenantSlug, { method: 'GET' }),
+  root: (tenantSlug?: string) => requestJson('/', tenantSlug, { method: 'GET' }),
 
   // Claims
-  createClaim: (body: any) => requestJson('/api/v1/claims', { method: 'POST', body: JSON.stringify(body) }),
+  createClaim: (body: any, tenantSlug?: string) => requestJson('/api/v1/claims', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
   listClaims: (params?: {
     status?: string;
     product_category?: string;
@@ -89,24 +91,24 @@ export const refundEngineApi = {
     offset?: number;
     sort_by?: string;
     sort_order?: 'asc' | 'desc';
-  }) => requestJson('/api/v1/claims', { method: 'GET' }, params),
-  getClaimStats: () => requestJson('/api/v1/claims/stats', { method: 'GET' }),
-  searchClaims: (params: { q: string; limit?: number }) => requestJson('/api/v1/claims/search', { method: 'GET' }, params),
-  getClaimById: (id: string) => requestJson(`/api/v1/claims/${encodeURIComponent(id)}`, { method: 'GET' }),
-  getClaimByCaseNumber: (caseNumber: string) => requestJson(`/api/v1/claims/case/${encodeURIComponent(caseNumber)}`, { method: 'GET' }),
-  updateClaim: (id: string, body: any) => requestJson(`/api/v1/claims/${encodeURIComponent(id)}`, { method: 'PUT', body: JSON.stringify(body) }),
-  deleteClaim: (id: string) => requestJson(`/api/v1/claims/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-  flagInvoiceAnomalies: (body: { case_number: string; claim_amount: number; invoice_text: string; actor_id: string }) => requestJson('/api/v1/claims/flag', { method: 'POST', body: JSON.stringify(body) }),
-  flagAndScore: (body: { case_number: string; claim_amount: number; invoice_text: string; actor_id: string }) => requestJson('/api/v1/claims/flag+score', { method: 'POST', body: JSON.stringify(body) }),
-  getProofBundle: (id: string) => requestJson(`/api/v1/proofs/${encodeURIComponent(id)}`, { method: 'GET' }),
+  }, tenantSlug?: string) => requestJson('/api/v1/claims', tenantSlug, { method: 'GET' }, params),
+  getClaimStats: (tenantSlug?: string) => requestJson('/api/v1/claims/stats', tenantSlug, { method: 'GET' }),
+  searchClaims: (params: { q: string; limit?: number }, tenantSlug?: string) => requestJson('/api/v1/claims/search', tenantSlug, { method: 'GET' }, params),
+  getClaimById: (id: string, tenantSlug?: string) => requestJson(`/api/v1/claims/${encodeURIComponent(id)}`, tenantSlug, { method: 'GET' }),
+  getClaimByCaseNumber: (caseNumber: string, tenantSlug?: string) => requestJson(`/api/v1/claims/case/${encodeURIComponent(caseNumber)}`, tenantSlug, { method: 'GET' }),
+  updateClaim: (id: string, body: any, tenantSlug?: string) => requestJson(`/api/v1/claims/${encodeURIComponent(id)}`, tenantSlug, { method: 'PUT', body: JSON.stringify(body) }),
+  deleteClaim: (id: string, tenantSlug?: string) => requestJson(`/api/v1/claims/${encodeURIComponent(id)}`, tenantSlug, { method: 'DELETE' }),
+  flagInvoiceAnomalies: (body: { case_number: string; claim_amount: number; invoice_text: string; actor_id: string }, tenantSlug?: string) => requestJson('/api/v1/claims/flag', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  flagAndScore: (body: { case_number: string; claim_amount: number; invoice_text: string; actor_id: string }, tenantSlug?: string) => requestJson('/api/v1/claims/flag+score', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  getProofBundle: (id: string, tenantSlug?: string) => requestJson(`/api/v1/proofs/${encodeURIComponent(id)}`, tenantSlug, { method: 'GET' }),
 
   // Claim Risk (mounted under /api/v1/claims)
-  scoreClaim: (body: any) => requestJson('/api/v1/claims/score', { method: 'POST', body: JSON.stringify(body) }),
-  batchScore: (body: { claims: any[] }) => requestJson('/api/v1/claims/batch-score', { method: 'POST', body: JSON.stringify(body) }),
-  trainModels: (body: { n_samples: number }) => requestJson('/api/v1/claims/train-models', { method: 'POST', body: JSON.stringify(body) }),
-  getModelInfo: () => requestJson('/api/v1/claims/model-info', { method: 'GET' }),
-  checkEnvironment: () => requestJson('/api/v1/claims/check-environment', { method: 'GET' }),
-  getSampleClaim: () => requestJson('/api/v1/claims/sample', { method: 'GET' }),
+  scoreClaim: (body: any, tenantSlug?: string) => requestJson('/api/v1/claims/score', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  batchScore: (body: { claims: any[] }, tenantSlug?: string) => requestJson('/api/v1/claims/batch-score', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  trainModels: (body: { n_samples: number }, tenantSlug?: string) => requestJson('/api/v1/claims/train-models', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  getModelInfo: (tenantSlug?: string) => requestJson('/api/v1/claims/model-info', tenantSlug, { method: 'GET' }),
+  checkEnvironment: (tenantSlug?: string) => requestJson('/api/v1/claims/check-environment', tenantSlug, { method: 'GET' }),
+  getSampleClaim: (tenantSlug?: string) => requestJson('/api/v1/claims/sample', tenantSlug, { method: 'GET' }),
 
   // Discrepancies
   listDiscrepancies: (params?: {
@@ -117,12 +119,12 @@ export const refundEngineApi = {
     date_to?: string;
     limit?: number;
     offset?: number;
-  }) => requestJson('/api/v1/discrepancies', { method: 'GET' }, params),
-  getDiscrepancyStats: () => requestJson('/api/v1/discrepancies/stats', { method: 'GET' }),
-  getDiscrepancyTrends: (params: { period: '7d' | '30d' | '90d' }) => requestJson('/api/v1/discrepancies/trends', { method: 'GET' }, params),
-  getMlHealth: () => requestJson('/api/v1/discrepancies/ml-health', { method: 'GET' }),
-  batchPredict: (body: { case_ids: string[] }) => requestJson('/api/v1/discrepancies/batch-predict', { method: 'POST', body: JSON.stringify(body) }),
-  getCaseAnalysis: (caseId: string) => requestJson(`/api/v1/discrepancies/case/${encodeURIComponent(caseId)}`, { method: 'GET' }),
+  }, tenantSlug?: string) => requestJson('/api/v1/discrepancies', tenantSlug, { method: 'GET' }, params),
+  getDiscrepancyStats: (tenantSlug?: string) => requestJson('/api/v1/discrepancies/stats', tenantSlug, { method: 'GET' }),
+  getDiscrepancyTrends: (params: { period: '7d' | '30d' | '90d' }, tenantSlug?: string) => requestJson('/api/v1/discrepancies/trends', tenantSlug, { method: 'GET' }, params),
+  getMlHealth: (tenantSlug?: string) => requestJson('/api/v1/discrepancies/ml-health', tenantSlug, { method: 'GET' }),
+  batchPredict: (body: { case_ids: string[] }, tenantSlug?: string) => requestJson('/api/v1/discrepancies/batch-predict', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  getCaseAnalysis: (caseId: string, tenantSlug?: string) => requestJson(`/api/v1/discrepancies/case/${encodeURIComponent(caseId)}`, tenantSlug, { method: 'GET' }),
 
   // Ledger
   listLedger: (params?: {
@@ -135,8 +137,8 @@ export const refundEngineApi = {
     offset?: number;
     sort_by?: string;
     sort_order?: 'asc' | 'desc';
-  }) => requestJson('/api/v1/ledger', { method: 'GET' }, params),
-  getLedgerStats: (params?: { date_from?: string; date_to?: string }) => requestJson('/api/v1/ledger/stats', { method: 'GET' }, params),
+  }, tenantSlug?: string) => requestJson('/api/v1/ledger', tenantSlug, { method: 'GET' }, params),
+  getLedgerStats: (params?: { date_from?: string; date_to?: string }, tenantSlug?: string) => requestJson('/api/v1/ledger/stats', tenantSlug, { method: 'GET' }, params),
   getLedgerWithCases: (params?: {
     status?: string;
     entry_type?: string;
@@ -147,15 +149,15 @@ export const refundEngineApi = {
     offset?: number;
     sort_by?: string;
     sort_order?: 'asc' | 'desc';
-  }) => requestJson('/api/v1/ledger/with-cases', { method: 'GET' }, params),
-  searchLedger: (params: { q: string; limit?: number }) => requestJson('/api/v1/ledger/search', { method: 'GET' }, params),
-  createLedgerEntry: (body: { case_id: string; entry_type: string; amount: number; description?: string; status?: 'pending' | 'completed' | 'failed' }) => requestJson('/api/v1/ledger', { method: 'POST', body: JSON.stringify(body) }),
-  getLedgerEntry: (id: string) => requestJson(`/api/v1/ledger/${encodeURIComponent(id)}`, { method: 'GET' }),
-  updateLedgerEntryStatus: (id: string, body: { status: 'pending' | 'completed' | 'failed' }) => requestJson(`/api/v1/ledger/${encodeURIComponent(id)}/status`, { method: 'PUT', body: JSON.stringify(body) }),
-  getLedgerEntriesForCase: (caseId: string) => requestJson(`/api/v1/ledger/case/${encodeURIComponent(caseId)}`, { method: 'GET' }),
+  }, tenantSlug?: string) => requestJson('/api/v1/ledger/with-cases', tenantSlug, { method: 'GET' }, params),
+  searchLedger: (params: { q: string; limit?: number }, tenantSlug?: string) => requestJson('/api/v1/ledger/search', tenantSlug, { method: 'GET' }, params),
+  createLedgerEntry: (body: { case_id: string; entry_type: string; amount: number; description?: string; status?: 'pending' | 'completed' | 'failed' }, tenantSlug?: string) => requestJson('/api/v1/ledger', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  getLedgerEntry: (id: string, tenantSlug?: string) => requestJson(`/api/v1/ledger/${encodeURIComponent(id)}`, tenantSlug, { method: 'GET' }),
+  updateLedgerEntryStatus: (id: string, body: { status: 'pending' | 'completed' | 'failed' }, tenantSlug?: string) => requestJson(`/api/v1/ledger/${encodeURIComponent(id)}/status`, tenantSlug, { method: 'PUT', body: JSON.stringify(body) }),
+  getLedgerEntriesForCase: (caseId: string, tenantSlug?: string) => requestJson(`/api/v1/ledger/case/${encodeURIComponent(caseId)}`, tenantSlug, { method: 'GET' }),
 
   // Amazon Submissions (feature-gated on backend)
-  getAmazonSubmissionsHealth: () => requestJson('/api/v1/amazon-submissions/health', { method: 'GET' }),
-  getAmazonSubmissionMetrics: () => requestJson('/api/v1/amazon-submissions/metrics', { method: 'GET' }),
-  getAmazonSubmissionsInProgress: () => requestJson('/api/v1/amazon-submissions/in-progress', { method: 'GET' }),
+  getAmazonSubmissionsHealth: (tenantSlug?: string) => requestJson('/api/v1/amazon-submissions/health', tenantSlug, { method: 'GET' }),
+  getAmazonSubmissionMetrics: (tenantSlug?: string) => requestJson('/api/v1/amazon-submissions/metrics', tenantSlug, { method: 'GET' }),
+  getAmazonSubmissionsInProgress: (tenantSlug?: string) => requestJson('/api/v1/amazon-submissions/in-progress', tenantSlug, { method: 'GET' }),
 };

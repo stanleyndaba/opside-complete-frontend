@@ -1,7 +1,9 @@
 import { api } from '@/lib/api';
 
-async function json<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(api.buildApiUrl(path), {
+async function json<T>(path: string, tenantSlug?: string, init?: RequestInit): Promise<T> {
+  if (!tenantSlug) throw new Error("tenantSlug required for automation request");
+  const fullPath = path.includes('?') ? `${path}&tenantSlug=${tenantSlug}` : `${path}?tenantSlug=${tenantSlug}`;
+  const res = await fetch(api.buildApiUrl(fullPath), {
     credentials: 'include',
     headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) },
     ...init,
@@ -12,15 +14,15 @@ async function json<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const automationApi = {
   // Automation Rules
-  createRule: (body: any) => json('/api/automation-rules', { method: 'POST', body: JSON.stringify(body) }),
-  listRules: () => json('/api/automation-rules'),
+  createRule: (body: any, tenantSlug?: string) => json('/api/automation-rules', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
+  listRules: (tenantSlug?: string) => json('/api/automation-rules', tenantSlug),
 
   // Thresholds
-  getThresholds: () => json('/api/thresholds'),
-  setThresholds: (body: any) => json('/api/thresholds', { method: 'POST', body: JSON.stringify(body) }),
+  getThresholds: (tenantSlug?: string) => json('/api/thresholds', tenantSlug),
+  setThresholds: (body: any, tenantSlug?: string) => json('/api/thresholds', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
 
   // Whitelist
-  getWhitelist: () => json('/api/whitelist'),
-  updateWhitelist: (body: any) => json('/api/whitelist', { method: 'POST', body: JSON.stringify(body) }),
+  getWhitelist: (tenantSlug?: string) => json('/api/whitelist', tenantSlug),
+  updateWhitelist: (body: any, tenantSlug?: string) => json('/api/whitelist', tenantSlug, { method: 'POST', body: JSON.stringify(body) }),
 };
 

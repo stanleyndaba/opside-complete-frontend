@@ -82,8 +82,10 @@ export interface SyncStatisticsResponse {
 }
 
 // Individual exports for Sync.tsx
-export const startSync = async (): Promise<{ syncId: string; status: string; message: string }> => {
-  const response = await api.post('/api/sync/start');
+export const startSync = async (tenantSlug?: string): Promise<{ syncId: string; status: string; message: string }> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for startSync");
+  const slug = tenantSlug;
+  const response = await api.post(`/api/sync/start?tenantSlug=${slug}`);
   if (!response.ok) {
     throw new Error(response.error || 'Failed to start sync');
   }
@@ -91,8 +93,10 @@ export const startSync = async (): Promise<{ syncId: string; status: string; mes
 };
 
 // Get active sync status (without syncId) - GET /api/sync/status
-export const getActiveSyncStatus = async (): Promise<ActiveSyncStatusResponse> => {
-  const response = await api.get<ActiveSyncStatusResponse>('/api/sync/status');
+export const getActiveSyncStatus = async (tenantSlug?: string): Promise<ActiveSyncStatusResponse> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for getActiveSyncStatus");
+  const slug = tenantSlug;
+  const response = await api.get<ActiveSyncStatusResponse>(`/api/sync/status?tenantSlug=${slug}`);
   if (!response.ok) {
     throw new Error(response.error || 'Failed to get active sync status');
   }
@@ -100,8 +104,10 @@ export const getActiveSyncStatus = async (): Promise<ActiveSyncStatusResponse> =
 };
 
 // Get sync status by ID - GET /api/sync/status/:syncId
-export const getSyncStatus = async (syncId: string): Promise<SyncStatusResponse> => {
-  const response = await api.get<SyncStatusResponse>(`/api/sync/status/${syncId}`);
+export const getSyncStatus = async (syncId: string, tenantSlug?: string): Promise<SyncStatusResponse> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for getSyncStatus");
+  const slug = tenantSlug;
+  const response = await api.get<SyncStatusResponse>(`/api/sync/status/${syncId}?tenantSlug=${slug}`);
   if (!response.ok) {
     // Check if it's a "not found" error
     if (response.status === 404 || response.error?.includes('not found') || response.error?.includes('Sync not found')) {
@@ -128,8 +134,10 @@ export const getSyncStatus = async (syncId: string): Promise<SyncStatusResponse>
 };
 
 // Cancel sync - POST /api/sync/cancel/:syncId
-export const cancelSync = async (syncId: string): Promise<{ success: boolean; message: string }> => {
-  const response = await api.post<{ success: boolean; message: string }>(`/api/sync/cancel/${syncId}`);
+export const cancelSync = async (syncId: string, tenantSlug?: string): Promise<{ success: boolean; message: string }> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for cancelSync");
+  const slug = tenantSlug;
+  const response = await api.post<{ success: boolean; message: string }>(`/api/sync/cancel/${syncId}?tenantSlug=${slug}`);
   if (!response.ok) {
     throw new Error(response.error || 'Failed to cancel sync');
   }
@@ -137,8 +145,10 @@ export const cancelSync = async (syncId: string): Promise<{ success: boolean; me
 };
 
 // Force clear stuck syncs - POST /api/sync/force-clear
-export const forceClearSync = async (): Promise<{ success: boolean; message: string; clearedCount: number }> => {
-  const response = await api.post<{ success: boolean; message: string; clearedCount: number }>('/api/sync/force-clear');
+export const forceClearSync = async (tenantSlug?: string): Promise<{ success: boolean; message: string; clearedCount: number }> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for forceClearSync");
+  const slug = tenantSlug;
+  const response = await api.post<{ success: boolean; message: string; clearedCount: number }>(`/api/sync/force-clear?tenantSlug=${slug}`);
   if (!response.ok) {
     throw new Error(response.error || 'Failed to clear stuck syncs');
   }
@@ -146,8 +156,10 @@ export const forceClearSync = async (): Promise<{ success: boolean; message: str
 };
 
 // Get sync history - GET /api/sync/history
-export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistoryResponse> => {
-  const response = await api.get<any>(`/api/sync/history?limit=${limit}&offset=${offset}`);
+export const getSyncHistory = async (limit = 20, offset = 0, tenantSlug?: string): Promise<SyncHistoryResponse> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for getSyncHistory");
+  const slug = tenantSlug;
+  const response = await api.get<any>(`/api/sync/history?limit=${limit}&offset=${offset}&tenantSlug=${slug}`);
 
   // Debug logging
   console.log('[getSyncHistory] API Response:', response);
@@ -196,8 +208,10 @@ export const getSyncHistory = async (limit = 20, offset = 0): Promise<SyncHistor
 };
 
 // Get sync statistics - GET /api/v1/integrations/sync/statistics
-export const getSyncStatistics = async (): Promise<SyncStatisticsResponse> => {
-  const response = await api.get<SyncStatisticsResponse>('/api/v1/integrations/sync/statistics');
+export const getSyncStatistics = async (tenantSlug?: string): Promise<SyncStatisticsResponse> => {
+  if (!tenantSlug) throw new Error("tenantSlug required for getSyncStatistics");
+  const slug = tenantSlug;
+  const response = await api.get<SyncStatisticsResponse>(`/api/v1/integrations/sync/statistics?tenantSlug=${slug}`);
   if (!response.ok) {
     throw new Error(response.error || 'Failed to fetch sync statistics');
   }
@@ -212,9 +226,12 @@ export type SSEConnectionState = 'connecting' | 'connected' | 'disconnected' | '
 export const subscribeSyncProgress = (
   syncId: string,
   onUpdate: (data: any) => void,
-  onConnectionChange?: (state: SSEConnectionState) => void
+  onConnectionChange?: (state: SSEConnectionState) => void,
+  tenantSlug?: string
 ) => {
-  const url = api.buildApiUrl(`/api/sse/sync-progress/${syncId}`);
+  if (!tenantSlug) throw new Error("tenantSlug required for subscribeSyncProgress");
+  const slug = tenantSlug;
+  const url = api.buildApiUrl(`/api/sse/sync-progress/${syncId}?tenantSlug=${slug}`);
 
   // Report connecting state
   onConnectionChange?.('connecting');

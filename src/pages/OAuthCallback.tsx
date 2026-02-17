@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,8 @@ import { CheckCircle, AlertTriangle, RefreshCw, ExternalLink } from 'lucide-reac
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { startSync } from '@/lib/inventoryApi';
+import { tenantRoute } from '@/lib/routes';
+import { useTenant } from '@/contexts/TenantContext';
 
 function useQueryParams() {
   const { search } = useLocation();
@@ -16,11 +18,13 @@ function useQueryParams() {
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const query = useQueryParams();
   const [statusMessage, setStatusMessage] = useState<string>('Finalizing connection...');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [provider, setProvider] = useState<string | null>(null);
   const { toast } = useToast();
+  const { isReady } = useTenant();
 
   useEffect(() => {
     const p = query.get('provider') || 'amazon';
@@ -57,11 +61,12 @@ export default function OAuthCallback() {
   }, [query, toast]);
 
   useEffect(() => {
+    if (!isReady) return;
     let cancelled = false;
     (async () => {
       // Poll backend status briefly to reflect connection
       for (let i = 0; i < 5; i++) {
-        const res = await api.getIntegrationsStatus();
+        const res = await api.getIntegrationsStatus(tenantSlug);
         if (!res.ok) break;
         if (res.data?.amazon_connected || res.data?.docs_connected) {
           if (!cancelled) {
@@ -71,18 +76,19 @@ export default function OAuthCallback() {
             if (res.data?.amazon_connected && provider === 'amazon') {
               try {
                 // Check if backend has already started sync (check sync status)
-                const syncStatusRes = await api.getSyncStatus();
+                const syncStatusRes = await api.getSyncStatus(undefined, tenantSlug);
                 const hasActiveSync = syncStatusRes.ok && syncStatusRes.data?.hasActiveSync;
 
                 // If backend hasn't started sync automatically, trigger it from frontend
                 if (!hasActiveSync) {
                   try {
                     console.log('[OAuthCallback] Backend didn\'t auto-start sync, triggering from frontend...');
-                    const syncRes = await startSync();
+                    const syncRes = await startSync(tenantSlug);
                     if (syncRes?.syncId) {
                       console.log('[OAuthCallback] Sync started successfully:', syncRes.syncId);
+                      console.log('[OAuthCallback] Sync started successfully:', syncRes.syncId);
                       // Redirect to sync page to show progress
-                      navigate(`/sync?id=${syncRes.syncId}`);
+                      navigate(tenantRoute(tenantSlug || 'beta', `/sync?id=${syncRes.syncId}`));
                       return;
                     }
                   } catch (syncErr: unknown) {
@@ -92,10 +98,10 @@ export default function OAuthCallback() {
                 }
 
                 // Try to get recovery data for the reveal
-                const recoveryRes = await api.getAmazonRecoveries();
+                const recoveryRes = await api.getAmazonRecoveries(tenantSlug);
                 if (recoveryRes.ok && recoveryRes.data?.totalAmount) {
                   // Redirect with recovery data for the "shock and awe" reveal
-                  navigate(`/auth/success?status=ok&provider=amazon&amazon_connected=true&recovery_amount=${recoveryRes.data.totalAmount}&currency=${recoveryRes.data.currency || 'USD'}&claim_count=${recoveryRes.data.claimCount || 0}`);
+                  navigate(tenantRoute(tenantSlug || 'beta', `/auth/success?status=ok&provider=amazon&amazon_connected=true&recovery_amount=${recoveryRes.data.totalAmount}&currency=${recoveryRes.data.currency || 'USD'}&claim_count=${recoveryRes.data.claimCount || 0}`));
                   return;
                 }
               } catch (err) {
@@ -108,7 +114,7 @@ export default function OAuthCallback() {
         await new Promise(r => setTimeout(r, 600));
       }
       if (!cancelled) {
-        setTimeout(() => navigate('/auth/success?status=ok&provider=amazon&amazon_connected=true'), 600);
+        setTimeout(() => navigate(tenantRoute(tenantSlug || 'beta', '/auth/success?status=ok&provider=amazon&amazon_connected=true')), 600);
       }
     })();
     return () => { cancelled = true };
@@ -148,7 +154,7 @@ export default function OAuthCallback() {
                       You can safely close this page. We’ll take you back to Integrations.
                     </div>
                     <div>
-                      <Button onClick={() => navigate('/integrations-hub')} className="gap-2">
+                      <Button onClick={() => navigate(tenantRoute(tenantSlug || 'beta', '/integrations-hub'))} className="gap-2">
                         <ExternalLink className="h-4 w-4" />
                         Go to Integrations Hub
                       </Button>
@@ -164,14 +170,14 @@ export default function OAuthCallback() {
                       Access was denied or failed. You can retry connecting with the correct account and read-only permissions.
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" onClick={() => navigate('/integrations-hub')} className="gap-2">
+                      <Button variant="outline" onClick={() => navigate(tenantRoute(tenantSlug || 'beta', '/integrations-hub'))} className="gap-2">
                         Back to Integrations
                       </Button>
                       {provider && (
                         <Button onClick={async () => {
                           const p = provider as 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
-                          const res = await api.connectDocs(p);
-                          if (res.ok && res.data?.redirect_url) window.location.href = res.data.redirect_url;
+                          const res = await api.connectDocs(p, tenantSlug);
+                          if (res.ok && res.data?.auth_url) window.location.href = res.data.auth_url;
                         }} className="gap-2">
                           <RefreshCw className="h-4 w-4" />
                           Try Again

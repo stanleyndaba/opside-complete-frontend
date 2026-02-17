@@ -9,9 +9,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { tenantRoute } from '@/lib/routes';
+import { useTenant } from '@/contexts/TenantContext';
 
 interface StoreEntity {
     id: string;
@@ -21,6 +24,11 @@ interface StoreEntity {
 }
 
 export function StoreSelector() {
+    const { tenantSlug } = useParams();
+    const { isReady, tenant } = useTenant();
+    const navigate = useNavigate();
+    const currentTenantSlug = tenantSlug || tenant?.slug || 'beta';
+
     const [stores, setStores] = useState<StoreEntity[]>([]);
     const [activeStoreId, setActiveStoreId] = useState<string | null>(
         localStorage.getItem('active_store_id')
@@ -30,9 +38,10 @@ export function StoreSelector() {
     const activeStore = stores.find(s => s.id === activeStoreId) || stores[0];
 
     useEffect(() => {
+        if (!isReady) return;
         async function loadStores() {
             try {
-                const response = await api.getStores();
+                const response = await api.getStores(currentTenantSlug);
                 if (response.ok && response.data?.stores) {
                     setStores(response.data.stores);
 
@@ -49,12 +58,14 @@ export function StoreSelector() {
         }
 
         loadStores();
-    }, []);
+    }, [isReady, currentTenantSlug]);
 
     const handleSwitchStore = (storeId: string) => {
         localStorage.setItem('active_store_id', storeId);
         setActiveStoreId(storeId);
         // Refresh the page to reset all contexts and data planes
+        // In Option A, we'd ideally also change the tenantSlug if stores mapped to tenants
+        // For now, keep hard reload but consider updating the URL if needed
         window.location.reload();
     };
 
@@ -129,7 +140,7 @@ export function StoreSelector() {
 
                 <DropdownMenuSeparator className="bg-white/5 mx-2" />
                 <DropdownMenuItem
-                    onClick={() => window.location.href = '/integrations-hub'}
+                    onClick={() => navigate(tenantRoute(currentTenantSlug, '/integrations-hub'))}
                     className="px-3 py-3 rounded-lg cursor-pointer text-white/60 hover:bg-emerald-500/10 hover:text-emerald-500 font-serif font-medium text-[12px] flex items-center gap-3 uppercase tracking-widest transition-all"
                 >
                     <div className="h-9 w-9 rounded-lg bg-white/5 flex items-center justify-center text-white/20 group-hover:text-emerald-500">

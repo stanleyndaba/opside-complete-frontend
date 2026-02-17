@@ -54,7 +54,7 @@ export interface Phase3SyncFailedEvent {
   timestamp: string;
 }
 
-export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent) => void) => {
+export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent) => void, tenantSlug?: string) => {
   const [lastEvent, setLastEvent] = useState<Phase3NotificationEvent | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<number | null>(null);
@@ -76,7 +76,9 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     }
 
     try {
-      const url = api.buildApiUrl('/api/sse/notifications');
+      const slug = tenantSlug;
+      if (!slug) return;
+      const url = api.buildApiUrl(`/api/sse/notifications?tenantSlug=${slug}`);
       const eventSource = new EventSource(url, { withCredentials: true } as any);
 
       eventSource.onopen = () => {
@@ -248,7 +250,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     } catch (error) {
       console.error('[Phase3 Notifications] Failed to create EventSource:', error);
     }
-  }, [onEvent]);
+  }, [onEvent, tenantSlug]);
 
   useEffect(() => {
     connect();

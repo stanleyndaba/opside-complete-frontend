@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, ChevronDown, ChevronRight } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
+import { tenantRoute } from '@/lib/routes';
+import { useTenant } from '@/contexts/TenantContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface AmazonConnectProps {
@@ -15,6 +18,11 @@ interface AmazonConnectProps {
 }
 
 export function AmazonConnect({ onConnectionStart, onConnectionComplete, className, showUseExisting = true, label = "Connect Account" }: AmazonConnectProps) {
+  const { tenantSlug } = useParams();
+  const { tenant } = useTenant();
+  const navigate = useNavigate();
+  const currentTenantSlug = tenantSlug || tenant?.slug || 'beta';
+
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
   const [selectedMarketplace, setSelectedMarketplace] = useState<string>(''); // No default to show placeholder
@@ -52,13 +60,13 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       }
 
       // ✅ CORRECT: Start OAuth flow with selected marketplace
-      const response = await api.connectAmazon(selectedMarketplace);
+      const response = await api.connectAmazon(selectedMarketplace, false, currentTenantSlug);
 
       if (!response.ok) {
         console.error('[AmazonConnect] Failed to get OAuth URL:', response.error);
 
         // Check if backend returned authUrl in error response (backwards compatibility)
-        const errorData = typeof response.error === 'object' ? response.error : {};
+        const errorData = (typeof response.error === 'object' ? response.error : {}) as any;
         const authUrl = errorData.authUrl || errorData.auth_url || errorData.redirectTo;
 
         if (authUrl) {
@@ -77,8 +85,9 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       }
 
       // Handle both auth_url and authUrl (backend may return either)
-      const authUrl = response.data?.auth_url || response.data?.authUrl;
-      const stateParam = response.data?.state;
+      const data = response.data as any;
+      const authUrl = data?.auth_url || data?.authUrl;
+      const stateParam = data?.state;
 
       if (stateParam) {
         try {
@@ -149,7 +158,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           console.log('[AmazonConnect] ✅ Amazon already connected, starting sync...');
           setConnecting(false);
           setUsingExisting(false);
-          window.location.href = '/sync';
+          navigate(tenantRoute(currentTenantSlug, '/sync'));
           return;
         } else {
           console.log('[AmazonConnect] ⚠️ Amazon not connected yet, attempting bypass...');
@@ -161,7 +170,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
 
       // If not connected, try the bypass endpoint with a shorter timeout
       // Use a promise race to timeout faster if backend is slow
-      const bypassPromise = api.useExistingAmazonConnection();
+      const bypassPromise = api.useExistingAmazonConnection(undefined, currentTenantSlug);
       const timeoutPromise = new Promise<Awaited<typeof bypassPromise>>((_, reject) => {
         setTimeout(() => reject(new Error('Connection check timed out. The backend may be sleeping. Please try again in a moment.')), 15000); // 15s timeout instead of 45s
       });
@@ -176,7 +185,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           console.log('[AmazonConnect] Redirect URL:', response.data.redirectUrl);
 
           // Handle bypass response according to Phase 1 requirements
-          const data = response.data;
+          const data = response.data as any;
           if (data.sandboxMode && !data.connectionVerified) {
             // In sandbox mode with mock data
             toast({
@@ -193,7 +202,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           }
 
           // Redirect to sync page to show the live dialogue logs
-          window.location.href = '/sync';
+          navigate(tenantRoute(currentTenantSlug, '/sync'));
           return;
         }
 
@@ -204,7 +213,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
           description: 'Please connect your Amazon account first.',
           duration: 3000,
         });
-        window.location.href = '/sync';
+        navigate(tenantRoute(currentTenantSlug, '/sync'));
         return;
 
         console.log('[AmazonConnect] ❌ Bypass failed: No redirect URL or OAuth URL returned');

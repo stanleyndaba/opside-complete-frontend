@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { TrendingUp, Clock, CheckCircle, DollarSign } from 'lucide-react';
+import { useTenant } from '@/contexts/TenantContext';
 
 interface FinancialMetrics {
     totalFound: number;
@@ -24,6 +25,9 @@ interface FinancialMetricsBannerProps {
 }
 
 export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetricsBannerProps) {
+    const { tenant, isReady } = useTenant();
+    const activeTenantSlug = tenant?.slug || 'beta';
+
     const [metrics, setMetrics] = useState<FinancialMetrics>({
         totalFound: 0,
         totalPending: 0,
@@ -36,10 +40,11 @@ export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetr
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!isReady) return;
         // Fetch initial metrics
         const fetchMetrics = async () => {
             try {
-                const response = await fetch(`/api/metrics/financial/${userId || 'demo-user'}`);
+                const response = await fetch(`/api/metrics/financial/${userId || 'demo-user'}?tenantSlug=${activeTenantSlug}`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
@@ -56,7 +61,7 @@ export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetr
         fetchMetrics();
 
         // Listen for real-time updates via SSE
-        const eventSource = new EventSource('/api/sse/stream');
+        const eventSource = new EventSource(`/api/sse/stream?tenantSlug=${activeTenantSlug}`);
 
         eventSource.addEventListener('metrics', (event) => {
             try {
@@ -90,7 +95,7 @@ export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetr
         return () => {
             eventSource.close();
         };
-    }, [userId]);
+    }, [userId, isReady, activeTenantSlug]);
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', {

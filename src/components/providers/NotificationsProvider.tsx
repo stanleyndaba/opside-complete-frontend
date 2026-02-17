@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { useStatusStream } from '@/hooks/use-status-stream';
 import { usePhase3Notifications } from '@/hooks/use-phase3-notifications';
 import { api } from '@/lib/api';
+import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 
 export interface Notification {
@@ -31,13 +32,17 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
+  const { tenant } = useTenant();
+  const activeSlug = tenant?.slug || 'beta';
+
   // Initialize SSE streams
-  const { close: closeStatusStream } = useStatusStream();
-  const { close: closePhase3Notifications, lastEvent } = usePhase3Notifications();
+  const { close: closeStatusStream } = useStatusStream(undefined, activeSlug);
+  const { close: closePhase3Notifications, lastEvent } = usePhase3Notifications(undefined, activeSlug);
 
   const fetchNotifications = useCallback(async () => {
+    if (!activeSlug) return;
     try {
-      const response = await api.getNotifications({ limit: 50 });
+      const response = await api.getNotifications({ limit: 50 }, activeSlug);
       if (response.ok && response.data) {
         const responseData = response.data as any;
         const items = responseData.data || responseData.notifications || [];
@@ -84,7 +89,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
         n.id === id ? { ...n, status: 'read' as const } : n
       ));
 
-      await (api as any).markNotificationsRead([id]);
+      await (api as any).markNotificationRead(id, activeSlug);
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
       // Revert on error (optional, but good practice)
@@ -104,7 +109,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
       setNotifications(prev => prev.map(n => ({ ...n, status: 'read' as const })));
 
       // Use the new markAllNotificationsRead endpoint
-      await api.markAllNotificationsRead();
+      await api.markAllNotificationsRead(activeSlug);
     } catch (error) {
       console.error('Failed to mark all as read:', error);
       fetchNotifications();

@@ -5,9 +5,18 @@
  * Handles tenant resolution, switching, and permission checks.
  */
 
-import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode, useMemo } from 'react';
 import { api } from '@/lib/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { tenantRoute } from '@/lib/routes';
+
+/**
+ * Get the stored tenant slug from localStorage
+ */
+export const getStoredTenantSlug = (): string | null => {
+    return localStorage.getItem('active_tenant_slug');
+};
 
 /**
  * Tenant information
@@ -53,6 +62,7 @@ interface TenantContextType {
     canWrite: boolean;
     isOwner: boolean;
     isAdmin: boolean;
+    isReady: boolean;
     hasRole: (roles: Array<'owner' | 'admin' | 'member' | 'viewer'>) => boolean;
 
     // Plan limits
@@ -86,10 +96,20 @@ export function TenantProvider({ children }: TenantProviderProps) {
     const [tenants, setTenants] = useState<Tenant[]>([]);
     const [planLimits, setPlanLimits] = useState<PlanLimits | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isReady, setIsReady] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { tenantSlug } = useParams<{ tenantSlug?: string }>();
+    const location = useLocation();
+    const { tenantSlug: paramsSlug } = useParams<{ tenantSlug?: string }>();
+
+    // Fallback: Parse slug from URL if useParams is empty (occurs if provider is outside Routes)
+    const tenantSlug = useMemo(() => {
+        if (paramsSlug) return paramsSlug;
+        const match = location.pathname.match(/^\/app\/([^\/]+)/);
+        return match ? match[1] : null;
+    }, [paramsSlug, location.pathname]);
 
     /**
      * Load current tenant context
@@ -99,13 +119,20 @@ export function TenantProvider({ children }: TenantProviderProps) {
             setIsLoading(true);
             setError(null);
 
-            // Get current tenant
-            const currentResponse = await api.get('/api/tenant/current');
+            // Fetch tenant info. If tenantSlug is in URL, fetch that specific one.
+            // Otherwise, get current based on session/storage.
+            const url = tenantSlug ? `/api/tenant/current?slug=${tenantSlug}` : '/api/tenant/current';
+            const currentResponse = await api.get(url);
+
             if (currentResponse.data.success && currentResponse.data.tenant) {
-                setTenant(currentResponse.data.tenant);
+                const fetchedTenant = currentResponse.data.tenant;
+                setTenant(fetchedTenant);
                 // Persist to localStorage for API header usage
-                localStorage.setItem('active_tenant_id', currentResponse.data.tenant.id);
-                localStorage.setItem('active_tenant_slug', currentResponse.data.tenant.slug);
+                localStorage.setItem('active_tenant_id', fetchedTenant.id);
+                localStorage.setItem('active_tenant_slug', fetchedTenant.slug);
+            } else if (tenantSlug) {
+                // If specific slug requested but not found/accessible
+                setError('Workspace not found or access denied');
             }
 
             // Get all user's tenants
@@ -124,18 +151,19 @@ export function TenantProvider({ children }: TenantProviderProps) {
             setError(err.response?.data?.error || 'Failed to load workspace');
         } finally {
             setIsLoading(false);
+            setIsReady(true);
         }
-    }, []);
+    }, [tenantSlug]);
 
     /**
      * Handle URL-based tenant switching
      */
     useEffect(() => {
-        if (tenantSlug && tenant && tenant.slug !== tenantSlug) {
+        if (isReady && tenantSlug && tenant && tenant.slug !== tenantSlug) {
             // URL has different tenant than current - switch
             switchTenant(tenantSlug);
         }
-    }, [tenantSlug, tenant]);
+    }, [tenantSlug, tenant, isReady]);
 
     /**
      * Initial load
@@ -182,6 +210,9 @@ export function TenantProvider({ children }: TenantProviderProps) {
                 if (planResponse.data.success) {
                     setPlanLimits(planResponse.data.limits);
                 }
+
+                // Invalidate all queries to ensure cache isolation
+                await queryClient.invalidateQueries();
             }
         } catch (err: any) {
             console.error('Failed to switch tenant:', err);
@@ -189,8 +220,9 @@ export function TenantProvider({ children }: TenantProviderProps) {
             throw err;
         } finally {
             setIsLoading(false);
+            setIsReady(true);
         }
-    }, [navigate]);
+    }, [navigate, queryClient]);
 
     /**
      * Refresh tenant data
@@ -241,7 +273,8 @@ export function TenantProvider({ children }: TenantProviderProps) {
         isAdmin,
         hasRole,
         planLimits: planLimits || DEFAULT_LIMITS,
-        isUnlimited
+        isUnlimited,
+        isReady
     };
 
     return (

@@ -9,8 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { 
-  CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw, 
+import {
+  CheckCircle, AlertTriangle, Truck, Warehouse, ShoppingCart, RotateCcw,
   Loader2, RefreshCw, Search, Download, Calendar, Package, DollarSign,
   XCircle, Clock, ArrowUpDown, ArrowRight
 } from 'lucide-react';
@@ -19,9 +19,10 @@ import { api } from '@/lib/api';
 import { SyncHistory } from '@/components/SyncHistory';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MockDataIndicator } from '@/components/MockDataIndicator';
 import { ConnectionStatusBadge } from '@/components/ConnectionStatusBadge';
+import { useTenant } from '@/contexts/TenantContext';
 
 // TypeScript interfaces based on PHASE2_FRONTEND_GUIDE.md
 interface OrderItem {
@@ -162,6 +163,12 @@ type DataTab = 'claims' | 'inventory' | 'orders' | 'shipments' | 'returns' | 'se
 
 export default function SmartInventorySync() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant, isReady } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug;
+  if (!activeSlug && isReady) {
+    throw new Error("tenantSlug required for SmartInventorySync");
+  }
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<DataTab>('claims');
   const [syncStatus, setSyncStatus] = useState<SyncStatus>({ status: 'idle' });
@@ -177,20 +184,20 @@ export default function SmartInventorySync() {
     icon: string;
     description: string;
   }> = [
-    { id: 'gmail', name: 'Gmail', icon: '/gmailicon.png', description: 'Best for invoices & receipts' },
-    { id: 'outlook', name: 'Outlook', icon: '/outlookicon.webp', description: 'Connect Microsoft 365 mailboxes' },
-    { id: 'gdrive', name: 'Google Drive', icon: '/gd.png', description: 'Pull PDFs from shared drives' },
-    { id: 'dropbox', name: 'Dropbox', icon: '/db.png', description: 'Scan folders for shipping docs' },
-  ];
+      { id: 'gmail', name: 'Gmail', icon: '/gmailicon.png', description: 'Best for invoices & receipts' },
+      { id: 'outlook', name: 'Outlook', icon: '/outlookicon.webp', description: 'Connect Microsoft 365 mailboxes' },
+      { id: 'gdrive', name: 'Google Drive', icon: '/gd.png', description: 'Pull PDFs from shared drives' },
+      { id: 'dropbox', name: 'Dropbox', icon: '/db.png', description: 'Scan folders for shipping docs' },
+    ];
 
   const connectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
     const providerName = provider === 'gdrive' ? 'Google Drive'
       : provider === 'gmail' ? 'Gmail'
-      : provider === 'dropbox' ? 'Dropbox'
-      : 'Outlook';
+        : provider === 'dropbox' ? 'Dropbox'
+          : 'Outlook';
     try {
       setDocPromptLoading(provider);
-      const r = await api.connectDocs(provider);
+      const r = await api.connectDocs(provider, activeSlug);
       if (r.ok && r.data?.auth_url) {
         window.location.href = r.data.auth_url;
       } else {
@@ -223,7 +230,7 @@ export default function SmartInventorySync() {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [returns, setReturns] = useState<Return[]>([]);
   const [settlements, setSettlements] = useState<Settlement[]>([]);
-  
+
   // Phase 1: Mock data indicators
   const [claimsIsMock, setClaimsIsMock] = useState(false);
   const [claimsMockScenario, setClaimsMockScenario] = useState<string | null>(null);
@@ -247,6 +254,7 @@ export default function SmartInventorySync() {
 
   // Get user ID and check Amazon connection status
   useEffect(() => {
+    if (!isReady) return;
     (async () => {
       try {
         const res = await api.getMe();
@@ -265,24 +273,24 @@ export default function SmartInventorySync() {
 
       // Check Amazon connection status
       try {
-        const statusRes = await api.getAmazonConnectionStatus();
+        const statusRes = await api.getAmazonConnectionStatus(activeSlug);
         if (statusRes.ok && statusRes.data) {
           setAmazonConnected(statusRes.data.connected || false);
         }
       } catch (e) {
         console.error('Error checking Amazon connection:', e);
       }
-      
+
       // Load claims and inventory immediately on mount (default tab is 'claims')
       // This ensures data is loaded even if the tab hasn't changed
       // Backend should return generated mock data automatically
       try {
         console.log('[Initial Load] Fetching claims and inventory on page mount...');
         const [claimsRes, inventoryRes] = await Promise.all([
-          api.getAmazonClaims(),
-          api.getAmazonInventory()
+          api.getAmazonClaims(activeSlug),
+          api.getAmazonInventory(activeSlug)
         ]);
-        
+
         console.log('[Initial Load] Claims response:', {
           ok: claimsRes.ok,
           status: claimsRes.status,
@@ -294,7 +302,7 @@ export default function SmartInventorySync() {
           mockScenario: claimsRes.data?.mockScenario,
           fullResponse: claimsRes.data
         });
-        
+
         console.log('[Initial Load] Inventory response:', {
           ok: inventoryRes.ok,
           status: inventoryRes.status,
@@ -306,13 +314,13 @@ export default function SmartInventorySync() {
           mockScenario: inventoryRes.data?.mockScenario,
           fullResponse: inventoryRes.data
         });
-        
+
         // Process claims
         if (claimsRes.ok && claimsRes.data) {
           // Check if backend returned success: true (or success is not explicitly false)
           // Backend might return success: true or omit success field (treat as success)
           const isSuccess = claimsRes.data.success !== false;
-          
+
           if (isSuccess) {
             // Handle multiple response formats: { claims: [...] }, { data: [...] }, or direct array
             let claimsData: any[] = [];
@@ -326,14 +334,14 @@ export default function SmartInventorySync() {
               claimsData = claimsRes.data;
               console.log('[Initial Load] Found claims as direct array:', claimsData.length);
             }
-            
+
             console.log('[Initial Load] Setting claims:', {
               count: claimsData.length,
               isMock: claimsRes.data.isMock || false,
               mockScenario: claimsRes.data.mockScenario || null,
               sampleClaim: claimsData[0] || null
             });
-            
+
             setClaims(claimsData);
             setClaimsIsMock(claimsRes.data.isMock || false);
             setClaimsMockScenario(claimsRes.data.mockScenario || null);
@@ -353,11 +361,11 @@ export default function SmartInventorySync() {
             error: claimsRes.error
           });
         }
-        
+
         // Process inventory
         if (inventoryRes.ok && inventoryRes.data) {
           const isSuccess = inventoryRes.data.success !== false;
-          
+
           if (isSuccess) {
             let inventoryData: any[] = [];
             if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
@@ -370,14 +378,14 @@ export default function SmartInventorySync() {
               inventoryData = inventoryRes.data;
               console.log('[Initial Load] Found inventory as direct array:', inventoryData.length);
             }
-            
+
             console.log('[Initial Load] Setting inventory:', {
               count: inventoryData.length,
               isMock: inventoryRes.data.isMock || false,
               mockScenario: inventoryRes.data.mockScenario || null,
               sampleItem: inventoryData[0] || null
             });
-            
+
             setInventory(Array.isArray(inventoryData) ? inventoryData : []);
             setInventoryIsMock(inventoryRes.data.isMock || false);
             setInventoryMockScenario(inventoryRes.data.mockScenario || null);
@@ -413,7 +421,7 @@ export default function SmartInventorySync() {
           // Check if any evidence sources are connected
           (async () => {
             try {
-              const s = await api.getIntegrationsStatus();
+              const s = await api.getIntegrationsStatus(activeSlug);
               if (s.ok) {
                 const prov = (s.data as any)?.providerIngest || {};
                 const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
@@ -440,25 +448,26 @@ export default function SmartInventorySync() {
 
   // Load sync status and poll if running
   useEffect(() => {
+    if (!isReady) return;
     const loadSyncStatus = async () => {
       try {
         // Use syncId from ref if available for more accurate status polling
         // Using ref avoids dependency issues in useEffect
         // Don't poll with 'unknown' syncId - wait for a real syncId
         const syncIdParam = currentSyncIdRef.current && currentSyncIdRef.current !== 'unknown'
-          ? { syncId: currentSyncIdRef.current } 
+          ? { syncId: currentSyncIdRef.current }
           : undefined;
-        
+
         // Try the general sync status endpoint first (doesn't require userId)
         // Pass syncId if we have one for more accurate polling
-        const res = await api.getSyncStatus(syncIdParam);
+        const res = await api.getSyncStatus(syncIdParam, activeSlug);
         if (res.ok && res.data) {
           const statusData = res.data;
-          
+
           // Check if we have a syncId from a previous 409 response but status shows no active sync
           // This might mean the sync completed but status endpoint doesn't show it
-          if (currentSyncIdRef.current && currentSyncIdRef.current !== 'unknown' && 
-              !statusData.hasActiveSync && !statusData.lastSync) {
+          if (currentSyncIdRef.current && currentSyncIdRef.current !== 'unknown' &&
+            !statusData.hasActiveSync && !statusData.lastSync) {
             // Try to get detailed status for this specific syncId
             // Note: This endpoint may not be implemented (404), so we handle it gracefully
             // Skip if we already know the endpoint doesn't exist
@@ -468,10 +477,10 @@ export default function SmartInventorySync() {
               if (syncCompletedRef.current !== currentSyncIdRef.current && currentSyncIdRef.current) {
                 try {
                   const [claimsRes, inventoryRes] = await Promise.all([
-                    api.getAmazonClaims(),
-                    api.getAmazonInventory()
+                    api.getAmazonClaims(activeSlug),
+                    api.getAmazonInventory(activeSlug)
                   ]);
-                  
+
                   let hasData = false;
                   if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                     let claimsData: any[] = [];
@@ -482,7 +491,7 @@ export default function SmartInventorySync() {
                     } else if (Array.isArray(claimsRes.data)) {
                       claimsData = claimsRes.data;
                     }
-                    if (claimsData.length> 0) {
+                    if (claimsData.length > 0) {
                       hasData = true;
                       setClaims(claimsData);
                       setClaimsIsMock(claimsRes.data.isMock || false);
@@ -494,7 +503,7 @@ export default function SmartInventorySync() {
                       setClaimsMockScenario(claimsRes.data.mockScenario || null);
                     }
                   }
-                  
+
                   if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false) {
                     let inventoryData: any[] = [];
                     if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
@@ -504,7 +513,7 @@ export default function SmartInventorySync() {
                     } else if (Array.isArray(inventoryRes.data)) {
                       inventoryData = inventoryRes.data;
                     }
-                    if (inventoryData.length> 0) {
+                    if (inventoryData.length > 0) {
                       hasData = true;
                       setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                       setInventoryIsMock(inventoryRes.data.isMock || false);
@@ -516,20 +525,20 @@ export default function SmartInventorySync() {
                       setInventoryMockScenario(inventoryRes.data.mockScenario || null);
                     }
                   }
-                  
+
                   // Mark as checked to prevent infinite loop, even if no data found
                   syncCompletedRef.current = currentSyncIdRef.current;
-                  
+
                   if (hasData) {
-                    setSyncStatus({ 
-                      status: 'completed', 
+                    setSyncStatus({
+                      status: 'completed',
                       syncId: currentSyncIdRef.current,
                       progress: 100
                     });
                   } else {
                     // No data found, but sync is checked - set to idle
-                    setSyncStatus({ 
-                      status: 'idle', 
+                    setSyncStatus({
+                      status: 'idle',
                       syncId: currentSyncIdRef.current
                     });
                   }
@@ -543,34 +552,34 @@ export default function SmartInventorySync() {
               }
               return; // Skip detailed status call
             }
-            
+
             console.log('[Sync Status] No active sync in general status, checking detailed status for:', currentSyncIdRef.current);
             try {
-              const detailedRes = await api.getSyncStatusDetailed({ syncId: currentSyncIdRef.current });
+              const detailedRes = await api.getSyncStatusDetailed({ syncId: currentSyncIdRef.current }, activeSlug);
               if (detailedRes.ok && detailedRes.data) {
                 // Endpoint exists and returned data
                 detailedStatusEndpointAvailableRef.current = true;
                 const detailed = detailedRes.data;
                 // Map backend status values to frontend status
                 // Backend may return "in_progress" or "running"
-                const mappedStatus = detailed.status === 'completed' ? 'completed' : 
-                                     (detailed.status === 'in_progress' || detailed.status === 'running') ? 'running' : 
-                                     detailed.status === 'failed' ? 'failed' : 'idle';
-                
+                const mappedStatus = detailed.status === 'completed' ? 'completed' :
+                  (detailed.status === 'in_progress' || detailed.status === 'running') ? 'running' :
+                    detailed.status === 'failed' ? 'failed' : 'idle';
+
                 setSyncStatus({
                   status: mappedStatus,
                   syncId: detailed.syncId,
                   progress: detailed.progress || 0,
                   lastSync: detailed.completedAt || detailed.startedAt,
                 });
-                
+
                 // If sync completed, refresh claims
                 if (detailed.status === 'completed' && detailed.syncId && syncCompletedRef.current !== detailed.syncId) {
                   syncCompletedRef.current = detailed.syncId;
                   console.log('[Sync Status] Sync completed (from detailed status), refreshing claims...');
                   // Refresh claims after sync completion
                   try {
-                    const claimsRes = await api.getAmazonClaims();
+                    const claimsRes = await api.getAmazonClaims(activeSlug);
                     if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                       let claimsData: any[] = [];
                       if ('claims' in claimsRes.data && Array.isArray(claimsRes.data.claims)) {
@@ -600,10 +609,10 @@ export default function SmartInventorySync() {
                 if (syncCompletedRef.current !== currentSyncIdRef.current && currentSyncIdRef.current) {
                   try {
                     const [claimsRes, inventoryRes] = await Promise.all([
-                      api.getAmazonClaims(),
-                      api.getAmazonInventory()
+                      api.getAmazonClaims(activeSlug),
+                      api.getAmazonInventory(activeSlug)
                     ]);
-                    
+
                     // If we get data, assume sync completed
                     let hasData = false;
                     if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
@@ -615,7 +624,7 @@ export default function SmartInventorySync() {
                       } else if (Array.isArray(claimsRes.data)) {
                         claimsData = claimsRes.data;
                       }
-                      if (claimsData.length> 0) {
+                      if (claimsData.length > 0) {
                         hasData = true;
                         setClaims(claimsData);
                         setClaimsIsMock(claimsRes.data.isMock || false);
@@ -627,7 +636,7 @@ export default function SmartInventorySync() {
                         setClaimsMockScenario(claimsRes.data.mockScenario || null);
                       }
                     }
-                    
+
                     if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false) {
                       let inventoryData: any[] = [];
                       if ('inventory' in inventoryRes.data && Array.isArray(inventoryRes.data.inventory)) {
@@ -637,7 +646,7 @@ export default function SmartInventorySync() {
                       } else if (Array.isArray(inventoryRes.data)) {
                         inventoryData = inventoryRes.data;
                       }
-                      if (inventoryData.length> 0) {
+                      if (inventoryData.length > 0) {
                         hasData = true;
                         setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                         setInventoryIsMock(inventoryRes.data.isMock || false);
@@ -649,13 +658,13 @@ export default function SmartInventorySync() {
                         setInventoryMockScenario(inventoryRes.data.mockScenario || null);
                       }
                     }
-                    
+
                     // Mark as checked to prevent infinite loop, even if no data found
                     syncCompletedRef.current = currentSyncIdRef.current;
-                    
+
                     if (hasData) {
-                      setSyncStatus({ 
-                        status: 'completed', 
+                      setSyncStatus({
+                        status: 'completed',
                         syncId: currentSyncIdRef.current,
                         progress: 100
                       });
@@ -666,8 +675,8 @@ export default function SmartInventorySync() {
                       });
                     } else {
                       // No data found, but sync is checked - set to idle
-                      setSyncStatus({ 
-                        status: 'idle', 
+                      setSyncStatus({
+                        status: 'idle',
                         syncId: currentSyncIdRef.current
                       });
                     }
@@ -689,45 +698,45 @@ export default function SmartInventorySync() {
               console.log('[Sync Status] Detailed status check failed (endpoint may not be implemented):', e instanceof Error ? e.message : 'Unknown error');
             }
           }
-          
+
           if (statusData.hasActiveSync && statusData.lastSync) {
             const lastSync = statusData.lastSync;
             // Map backend status values to frontend status
             // Backend may return "in_progress" which maps to "running"
-            const mappedStatus = lastSync.status === 'completed' ? 'completed' : 
-                                 lastSync.status === 'in_progress' || lastSync.status === 'running' ? 'running' : 
-                                 lastSync.status === 'failed' ? 'failed' : 'idle';
-            
+            const mappedStatus = lastSync.status === 'completed' ? 'completed' :
+              lastSync.status === 'in_progress' || lastSync.status === 'running' ? 'running' :
+                lastSync.status === 'failed' ? 'failed' : 'idle';
+
             const syncId = lastSync.syncId;
             if (syncId) {
               currentSyncIdRef.current = syncId; // Update ref when we get syncId from status
             }
-            
+
             setSyncStatus({
               status: mappedStatus,
               syncId: syncId,
               progress: lastSync.progress || 0,
               lastSync: lastSync.completedAt || lastSync.startedAt,
             });
-            
+
             // If sync just completed, refresh data for the active tab (only once per syncId)
             if (lastSync.status === 'completed' && lastSync.syncId && syncCompletedRef.current !== lastSync.syncId) {
               syncCompletedRef.current = lastSync.syncId;
-              
+
               // Show completion toast
               toast({
                 title: 'Sync Complete',
                 description: 'Complete successfully. See dashboard.',
                 duration: 3000,
               });
-              
+
               // Always refresh claims and inventory after sync completes (regardless of active tab)
               // This ensures data is available when user switches tabs
               try {
                 // Fetch claims
                 try {
                   console.log('[Sync] Fetching claims after sync completion...');
-                  const claimsRes = await api.getAmazonClaims();
+                  const claimsRes = await api.getAmazonClaims(activeSlug);
                   console.log('[Sync] Claims API response:', {
                     ok: claimsRes.ok,
                     status: claimsRes.status,
@@ -735,7 +744,7 @@ export default function SmartInventorySync() {
                     hasData: !!claimsRes.data,
                     dataKeys: claimsRes.data ? Object.keys(claimsRes.data) : []
                   });
-                  
+
                   if (claimsRes.ok && claimsRes.data) {
                     // Check if backend returned success: true
                     if (claimsRes.data.success !== false) {
@@ -748,13 +757,13 @@ export default function SmartInventorySync() {
                       } else if (Array.isArray(claimsRes.data)) {
                         claimsData = claimsRes.data;
                       }
-                      
+
                       console.log('[Sync] Refreshed claims data:', {
                         count: claimsData.length,
                         isMock: claimsRes.data.isMock || false,
                         mockScenario: claimsRes.data.mockScenario || null
                       });
-                      
+
                       setClaims(claimsData);
                       setClaimsIsMock(claimsRes.data.isMock || false);
                       setClaimsMockScenario(claimsRes.data.mockScenario || null);
@@ -775,10 +784,10 @@ export default function SmartInventorySync() {
                 } catch (e) {
                   console.error('[Sync] Exception fetching claims after sync:', e);
                 }
-                
+
                 // Fetch inventory
                 try {
-                  const inventoryRes = await api.getAmazonInventory();
+                  const inventoryRes = await api.getAmazonInventory(activeSlug);
                   if (inventoryRes.ok && inventoryRes.data) {
                     // Check if backend returned success: true
                     if (inventoryRes.data.success !== false) {
@@ -818,14 +827,14 @@ export default function SmartInventorySync() {
           // Fallback to detailed status if available (but handle 404 gracefully)
           if (userId) {
             try {
-              const detailedRes = await api.getSyncStatusDetailed({ userId });
+              const detailedRes = await api.getSyncStatusDetailed({ userId }, activeSlug);
               if (detailedRes.ok && detailedRes.data) {
                 const detailed = detailedRes.data;
                 // Map backend status to frontend SyncStatus type
-                const mappedStatus = detailed.status === 'completed' ? 'completed' : 
-                                     (detailed.status === 'in_progress' || detailed.status === 'running') ? 'running' : 
-                                     detailed.status === 'failed' ? 'failed' : 'idle';
-                
+                const mappedStatus = detailed.status === 'completed' ? 'completed' :
+                  (detailed.status === 'in_progress' || detailed.status === 'running') ? 'running' :
+                    detailed.status === 'failed' ? 'failed' : 'idle';
+
                 setSyncStatus({
                   status: mappedStatus,
                   syncId: detailed.syncId,
@@ -841,7 +850,7 @@ export default function SmartInventorySync() {
                 console.log('[Sync Status] Detailed status endpoint not available (404)');
                 setSyncStatus({ status: 'idle' });
               } else {
-          setSyncStatus({ status: 'idle' });
+                setSyncStatus({ status: 'idle' });
               }
             } catch (e) {
               // Silently handle errors - detailed status endpoint may not be implemented
@@ -858,12 +867,12 @@ export default function SmartInventorySync() {
     };
 
     loadSyncStatus();
-    
+
     // Poll sync status every 5 seconds if running
     const interval = setInterval(() => {
       loadSyncStatus();
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, [userId, activeTab]);
 
@@ -880,10 +889,10 @@ export default function SmartInventorySync() {
 
     const loadData = async () => {
       if (cancelled) return;
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
         switch (activeTab) {
           case 'claims':
@@ -892,7 +901,7 @@ export default function SmartInventorySync() {
             const claimsRes = await api.getAmazonClaims({
               startDate: memoizedDateRange.startDate || undefined,
               endDate: memoizedDateRange.endDate || undefined,
-            });
+            }, activeSlug);
             console.log('[Claims] API response:', {
               ok: claimsRes.ok,
               status: claimsRes.status,
@@ -901,7 +910,7 @@ export default function SmartInventorySync() {
               dataKeys: claimsRes.data ? Object.keys(claimsRes.data) : [],
               dataStructure: claimsRes.data
             });
-            
+
             if (!cancelled && claimsRes.ok && claimsRes.data) {
               // Check if backend returned success: true
               if (claimsRes.data.success !== false) {
@@ -914,14 +923,14 @@ export default function SmartInventorySync() {
                 } else if (Array.isArray(claimsRes.data)) {
                   claimsData = claimsRes.data;
                 }
-                
+
                 console.log('[Claims] Parsed claims data:', {
                   count: claimsData.length,
                   isMock: claimsRes.data.isMock || false,
                   mockScenario: claimsRes.data.mockScenario || null,
                   sampleClaim: claimsData[0] || null
                 });
-                
+
                 setClaims(claimsData);
                 setClaimsIsMock(claimsRes.data.isMock || false);
                 setClaimsMockScenario(claimsRes.data.mockScenario || null);
@@ -949,7 +958,7 @@ export default function SmartInventorySync() {
             break;
           case 'inventory':
             // Inventory endpoint doesn't require userId - uses session auth
-            const inventoryRes = await api.getAmazonInventory();
+            const inventoryRes = await api.getAmazonInventory(activeSlug);
             if (!cancelled && inventoryRes.ok && inventoryRes.data) {
               // Check if backend returned success: true
               if (inventoryRes.data.success !== false) {
@@ -997,15 +1006,15 @@ export default function SmartInventorySync() {
               endDate: memoizedDateRange.endDate || undefined,
               limit: ordersPagination.limit,
               offset: ordersPagination.offset,
-            });
+            }, activeSlug);
             if (!cancelled && ordersRes.ok && ordersRes.data) {
               const data = ordersRes.data.data || ordersRes.data;
               const ordersArray = Array.isArray(data) ? data : [];
               // Client-side search filter
-              const filteredOrders = memoizedOrdersFilters.search 
-                ? ordersArray.filter((order: Order) => 
-                    order?.order_id?.toLowerCase().includes(memoizedOrdersFilters.search.toLowerCase())
-                  )
+              const filteredOrders = memoizedOrdersFilters.search
+                ? ordersArray.filter((order: Order) =>
+                  order?.order_id?.toLowerCase().includes(memoizedOrdersFilters.search.toLowerCase())
+                )
                 : ordersArray;
               setOrders(filteredOrders);
               if (ordersRes.data.pagination) {
@@ -1027,14 +1036,14 @@ export default function SmartInventorySync() {
               endDate: memoizedDateRange.endDate || undefined,
               limit: shipmentsPagination.limit,
               offset: shipmentsPagination.offset,
-            });
+            }, activeSlug);
             if (!cancelled && shipmentsRes.ok && shipmentsRes.data) {
               const data = shipmentsRes.data.data || shipmentsRes.data;
               const shipmentsArray = Array.isArray(data) ? data : [];
               const filteredShipments = memoizedShipmentsFilters.search
                 ? shipmentsArray.filter((shipment: Shipment) =>
-                    shipment?.shipment_id?.toLowerCase().includes(memoizedShipmentsFilters.search.toLowerCase())
-                  )
+                  shipment?.shipment_id?.toLowerCase().includes(memoizedShipmentsFilters.search.toLowerCase())
+                )
                 : shipmentsArray;
               setShipments(filteredShipments);
               if (shipmentsRes.data.pagination) {
@@ -1056,14 +1065,14 @@ export default function SmartInventorySync() {
               endDate: memoizedDateRange.endDate || undefined,
               limit: returnsPagination.limit,
               offset: returnsPagination.offset,
-            });
+            }, activeSlug);
             if (!cancelled && returnsRes.ok && returnsRes.data) {
               const data = returnsRes.data.data || returnsRes.data;
               const returnsArray = Array.isArray(data) ? data : [];
               const filteredReturns = memoizedReturnsFilters.search
                 ? returnsArray.filter((ret: Return) =>
-                    ret?.return_id?.toLowerCase().includes(memoizedReturnsFilters.search.toLowerCase())
-                  )
+                  ret?.return_id?.toLowerCase().includes(memoizedReturnsFilters.search.toLowerCase())
+                )
                 : returnsArray;
               setReturns(filteredReturns);
               if (returnsRes.data.pagination) {
@@ -1085,14 +1094,14 @@ export default function SmartInventorySync() {
               endDate: memoizedDateRange.endDate || undefined,
               limit: settlementsPagination.limit,
               offset: settlementsPagination.offset,
-            });
+            }, activeSlug);
             if (!cancelled && settlementsRes.ok && settlementsRes.data) {
               const data = settlementsRes.data.data || settlementsRes.data;
               const settlementsArray = Array.isArray(data) ? data : [];
               const filteredSettlements = memoizedSettlementsFilters.search
                 ? settlementsArray.filter((settlement: Settlement) =>
-                    settlement?.settlement_id?.toLowerCase().includes(memoizedSettlementsFilters.search.toLowerCase())
-                  )
+                  settlement?.settlement_id?.toLowerCase().includes(memoizedSettlementsFilters.search.toLowerCase())
+                )
                 : settlementsArray;
               setSettlements(filteredSettlements);
               if (settlementsRes.data.pagination) {
@@ -1132,8 +1141,8 @@ export default function SmartInventorySync() {
   const handleSync = async () => {
     // Check if Amazon is connected first
     if (!amazonConnected) {
-      toast({ 
-        title: 'Not Connected', 
+      toast({
+        title: 'Not Connected',
         description: 'Please connect your Amazon account first to sync data.',
         variant: 'destructive'
       });
@@ -1144,30 +1153,30 @@ export default function SmartInventorySync() {
     try {
       // Use the Phase 1 sync endpoint: POST /api/v1/integrations/amazon/sync
       // According to Phase 1 requirements, this should work with empty body (uses session auth)
-      const res = await api.triggerSync();
+      const res = await api.triggerSync(activeSlug);
       if (res.ok && res.data) {
         const syncId = res.data.syncId;
-        toast({ 
-          title: 'Sync Started', 
-          description: res.data.message || 'Sync initiated successfully' 
+        toast({
+          title: 'Sync Started',
+          description: res.data.message || 'Sync initiated successfully'
         });
         // Backend returns status: "in_progress", map to 'running' for internal state
         const backendStatus = res.data.status;
         const actualSyncId = syncId || 'unknown';
         currentSyncIdRef.current = actualSyncId; // Update ref for polling
-        setSyncStatus({ 
-          status: backendStatus === 'in_progress' || backendStatus === 'running' ? 'running' : 
-                  backendStatus === 'completed' ? 'completed' : 
-                  backendStatus === 'failed' ? 'failed' : 'running',
-          syncId: actualSyncId, 
-          progress: 0 
+        setSyncStatus({
+          status: backendStatus === 'in_progress' || backendStatus === 'running' ? 'running' :
+            backendStatus === 'completed' ? 'completed' :
+              backendStatus === 'failed' ? 'failed' : 'running',
+          syncId: actualSyncId,
+          progress: 0
         });
         // Refresh connection status after sync starts
-        const statusRes = await api.getAmazonConnectionStatus();
+        const statusRes = await api.getAmazonConnectionStatus(activeSlug);
         if (statusRes.ok && statusRes.data) {
           setAmazonConnected(statusRes.data.connected || false);
         }
-        
+
         // Start polling for sync completion
         // The useEffect will handle polling and data refresh
       } else {
@@ -1182,19 +1191,19 @@ export default function SmartInventorySync() {
           data: errorData,
           fullResponse: res
         });
-        
+
         // Handle 409 Conflict - Sync already in progress
         if (res.status === 409 || errorCode === 'sync_in_progress') {
           // Try to get existingSyncId from response data (check multiple possible locations)
           // Backend might return it at: res.data.existingSyncId, res.data.data.existingSyncId, or errorData.existingSyncId
-          const existingSyncId = 
-            res.data?.existingSyncId || 
+          const existingSyncId =
+            res.data?.existingSyncId ||
             (res.data as any)?.data?.existingSyncId ||
-            errorData?.existingSyncId || 
+            errorData?.existingSyncId ||
             errorData?.data?.existingSyncId ||
             (errorData as any)?.syncId || // Sometimes backend returns syncId instead
             'unknown';
-          
+
           console.log('[Sync] 409 Conflict - Existing sync found:', {
             existingSyncId: existingSyncId,
             responseData: res.data,
@@ -1202,29 +1211,29 @@ export default function SmartInventorySync() {
             allKeys: res.data ? Object.keys(res.data) : [],
             errorDataKeys: errorData ? Object.keys(errorData) : []
           });
-          
+
           if (existingSyncId && existingSyncId !== 'unknown') {
             currentSyncIdRef.current = existingSyncId; // Update ref for polling
-            setSyncStatus({ 
-              status: 'running', 
-              syncId: existingSyncId, 
-              progress: 0 
+            setSyncStatus({
+              status: 'running',
+              syncId: existingSyncId,
+              progress: 0
             });
-            toast({ 
-              title: 'Sync Already Running', 
+            toast({
+              title: 'Sync Already Running',
               description: `Sync is already in progress (${existingSyncId}). Checking status and refreshing data...`,
               duration: 5000
             });
-            
+
             // Immediately try to refresh data in case the sync already completed
             // The sync might have finished very quickly
             try {
               console.log('[Sync] 409 received - immediately refreshing data in case sync completed...');
               const [claimsRes, inventoryRes] = await Promise.all([
-                api.getAmazonClaims(),
-                api.getAmazonInventory()
+                api.getAmazonClaims(activeSlug),
+                api.getAmazonInventory(activeSlug)
               ]);
-              
+
               // Refresh claims if available
               if (claimsRes.ok && claimsRes.data && claimsRes.data.success !== false) {
                 let claimsData: any[] = [];
@@ -1235,7 +1244,7 @@ export default function SmartInventorySync() {
                 } else if (Array.isArray(claimsRes.data)) {
                   claimsData = claimsRes.data;
                 }
-                if (claimsData.length> 0) {
+                if (claimsData.length > 0) {
                   console.log('[Sync] Found', claimsData.length, 'claims after 409 - sync may have completed');
                   setClaims(claimsData);
                   setClaimsIsMock(claimsRes.data.isMock || false);
@@ -1246,7 +1255,7 @@ export default function SmartInventorySync() {
                   setClaimsMockScenario(claimsRes.data.mockScenario || null);
                 }
               }
-              
+
               // Refresh inventory if available
               if (inventoryRes.ok && inventoryRes.data && inventoryRes.data.success !== false) {
                 let inventoryData: any[] = [];
@@ -1257,7 +1266,7 @@ export default function SmartInventorySync() {
                 } else if (Array.isArray(inventoryRes.data)) {
                   inventoryData = inventoryRes.data;
                 }
-                if (inventoryData.length> 0) {
+                if (inventoryData.length > 0) {
                   console.log('[Sync] Found', inventoryData.length, 'inventory items after 409 - sync may have completed');
                   setInventory(Array.isArray(inventoryData) ? inventoryData : []);
                   setInventoryIsMock(inventoryRes.data.isMock || false);
@@ -1274,67 +1283,67 @@ export default function SmartInventorySync() {
           } else {
             // If we can't get the syncId, still show the message and try to check general sync status
             console.warn('[Sync] 409 received but could not extract existingSyncId. Checking general sync status...');
-            toast({ 
-              title: 'Sync Already Running', 
+            toast({
+              title: 'Sync Already Running',
               description: errorMsg || 'A sync is already in progress. Please wait for it to complete.',
               duration: 5000
             });
-            
+
             // Try to check general sync status to see if we can find the active sync
             try {
-              const statusRes = await api.getSyncStatus();
+              const statusRes = await api.getSyncStatus(undefined, activeSlug);
               if (statusRes.ok && statusRes.data) {
                 const statusData = statusRes.data as any;
                 if (statusData.hasActiveSync && statusData.syncId) {
                   console.log('[Sync] Found active sync from general status:', statusData.syncId);
                   currentSyncIdRef.current = statusData.syncId;
-                  setSyncStatus({ 
-                    status: 'running', 
-                    syncId: statusData.syncId, 
-                    progress: 0 
+                  setSyncStatus({
+                    status: 'running',
+                    syncId: statusData.syncId,
+                    progress: 0
                   });
                 } else if (statusData.lastSync?.syncId) {
                   // Use last sync ID if available
                   console.log('[Sync] Using last sync ID from general status:', statusData.lastSync.syncId);
                   currentSyncIdRef.current = statusData.lastSync.syncId;
-                  setSyncStatus({ 
-                    status: 'running', 
-                    syncId: statusData.lastSync.syncId, 
-                    progress: 0 
+                  setSyncStatus({
+                    status: 'running',
+                    syncId: statusData.lastSync.syncId,
+                    progress: 0
                   });
                 } else {
                   // Set status to running even without syncId - polling will handle it
-                  setSyncStatus({ 
-                    status: 'running', 
-                    syncId: 'unknown', 
-                    progress: 0 
+                  setSyncStatus({
+                    status: 'running',
+                    syncId: 'unknown',
+                    progress: 0
                   });
                 }
               } else {
                 // Set status to running even without syncId - polling will handle it
-                setSyncStatus({ 
-                  status: 'running', 
-                  syncId: 'unknown', 
-                  progress: 0 
+                setSyncStatus({
+                  status: 'running',
+                  syncId: 'unknown',
+                  progress: 0
                 });
               }
             } catch (e) {
               console.error('[Sync] Error checking general sync status after 409:', e);
               // Set status to running even without syncId - polling will handle it
-              setSyncStatus({ 
-                status: 'running', 
-                syncId: 'unknown', 
-                progress: 0 
+              setSyncStatus({
+                status: 'running',
+                syncId: 'unknown',
+                progress: 0
               });
             }
           }
           return; // Don't show error toast, just inform user
         }
-        
+
         // Provide more helpful error message based on status code
         let userMessage = errorMsg;
         let title = 'Sync Failed';
-        
+
         if (res.status === 500 || errorCode === 'internal_server_error') {
           userMessage = 'Backend server error. The sync endpoint may not be fully implemented yet. Please check backend logs.';
         } else if (res.status === 401 || errorCode === 'unauthorized') {
@@ -1344,9 +1353,9 @@ export default function SmartInventorySync() {
           title = 'Amazon Not Connected';
           userMessage = errorMsg || 'Amazon account not connected. Please connect your Amazon account first.';
         }
-        
-        toast({ 
-          title: title, 
+
+        toast({
+          title: title,
           description: userMessage,
           variant: 'destructive',
           duration: 6000
@@ -1354,8 +1363,8 @@ export default function SmartInventorySync() {
       }
     } catch (e: any) {
       console.error('[Sync] Exception:', e);
-      toast({ 
-        title: 'Sync Failed', 
+      toast({
+        title: 'Sync Failed',
         description: e?.message || 'Failed to start sync. Please try again.',
         variant: 'destructive'
       });
@@ -1380,9 +1389,9 @@ export default function SmartInventorySync() {
     if (!dateString) return '—';
     try {
       const date = new Date(dateString);
-      return date.toLocaleString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
         day: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
@@ -1433,7 +1442,7 @@ export default function SmartInventorySync() {
     try {
       return {
         total: Array.isArray(shipments) ? shipments.length : 0,
-        missingItems: Array.isArray(shipments) ? shipments.filter(s => (s?.missing_quantity || 0)> 0).length : 0,
+        missingItems: Array.isArray(shipments) ? shipments.filter(s => (s?.missing_quantity || 0) > 0).length : 0,
         byStatus: Array.isArray(shipments) ? shipments.reduce((acc, shipment) => {
           const status = shipment?.status || 'Unknown';
           acc[status] = (acc[status] || 0) + 1;
@@ -1540,8 +1549,8 @@ export default function SmartInventorySync() {
                   )}
                 </div>
               </div>
-              <Button 
-                onClick={handleSync} 
+              <Button
+                onClick={handleSync}
                 disabled={syncing || syncStatus.status === 'running' || !amazonConnected}
                 className="bg-emerald-500 hover:bg-emerald-400 text-white disabled:opacity-50 disabled:cursor-not-allowed">
                 {syncing || syncStatus.status === 'running' ? (
@@ -1579,57 +1588,57 @@ export default function SmartInventorySync() {
         {/* Main Data Tabs */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as DataTab)} className="space-y-6">
           <TabsList className="bg-white/10 backdrop-blur-xl border-white/10 rounded-lg p-1">
-            <TabsTrigger 
-              value="claims" 
+            <TabsTrigger
+              value="claims"
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <DollarSign className="h-4 w-4 mr-2" />
               Claims
-              {claims.length> 0 && (
+              {claims.length > 0 && (
                 <Badge variant="secondary" className="ml-2">{claims.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger 
-              value="inventory" 
+            <TabsTrigger
+              value="inventory"
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <Warehouse className="h-4 w-4 mr-2" />
               Inventory
-              {inventory.length> 0 && (
+              {inventory.length > 0 && (
                 <Badge variant="secondary" className="ml-2">{inventory.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger 
-              value="orders" 
+            <TabsTrigger
+              value="orders"
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Orders
-              {ordersSummary.total> 0 && (
+              {ordersSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{ordersSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger 
-              value="shipments" 
+            <TabsTrigger
+              value="shipments"
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <Truck className="h-4 w-4 mr-2" />
               Shipments
-              {shipmentsSummary.total> 0 && (
+              {shipmentsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{shipmentsSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger 
-              value="returns" 
+            <TabsTrigger
+              value="returns"
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <RotateCcw className="h-4 w-4 mr-2" />
               Returns
-              {returnsSummary.total> 0 && (
+              {returnsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{returnsSummary.total}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger 
-              value="settlements" 
+            <TabsTrigger
+              value="settlements"
               className="data-[state=active]:bg-white/20 data-[state=active]:text-emerald-500 text-white hover:text-emerald-500 transition-colors">
               <DollarSign className="h-4 w-4 mr-2" />
               Settlements
-              {settlementsSummary.total> 0 && (
+              {settlementsSummary.total > 0 && (
                 <Badge variant="secondary" className="ml-2">{settlementsSummary.total}</Badge>
               )}
             </TabsTrigger>
@@ -1980,23 +1989,23 @@ export default function SmartInventorySync() {
                       </TableHeader>
                       <TableBody>
                         {shipments.map((shipment) => (
-                            <TableRow key={shipment.id}>
-                              <TableCell className="font-mono text-sm">{shipment.shipment_id}</TableCell>
-                              <TableCell className="font-mono text-sm">{shipment.order_id || '—'}</TableCell>
-                              <TableCell>{getStatusBadge(shipment.status)}</TableCell>
-                              <TableCell>{shipment.expected_quantity}</TableCell>
-                              <TableCell>{shipment.received_quantity ?? '—'}</TableCell>
-                              <TableCell>
-                                {shipment.missing_quantity> 0 ? (
-                                  <span className="text-red-400 font-semibold">{shipment.missing_quantity}</span>
-                                ) : (
-                                  <span className="text-green-400">0</span>
-                                )}
-                              </TableCell>
-                              <TableCell>{formatDate(shipment.shipped_date)}</TableCell>
-                              <TableCell>{formatDate(shipment.received_date)}</TableCell>
-                            </TableRow>
-                          ))}
+                          <TableRow key={shipment.id}>
+                            <TableCell className="font-mono text-sm">{shipment.shipment_id}</TableCell>
+                            <TableCell className="font-mono text-sm">{shipment.order_id || '—'}</TableCell>
+                            <TableCell>{getStatusBadge(shipment.status)}</TableCell>
+                            <TableCell>{shipment.expected_quantity}</TableCell>
+                            <TableCell>{shipment.received_quantity ?? '—'}</TableCell>
+                            <TableCell>
+                              {shipment.missing_quantity > 0 ? (
+                                <span className="text-red-400 font-semibold">{shipment.missing_quantity}</span>
+                              ) : (
+                                <span className="text-green-400">0</span>
+                              )}
+                            </TableCell>
+                            <TableCell>{formatDate(shipment.shipped_date)}</TableCell>
+                            <TableCell>{formatDate(shipment.received_date)}</TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </div>
@@ -2094,22 +2103,22 @@ export default function SmartInventorySync() {
                       </TableHeader>
                       <TableBody>
                         {returns.map((ret) => (
-                            <TableRow key={ret.id}>
-                              <TableCell className="font-mono text-sm">{ret.return_id}</TableCell>
-                              <TableCell className="font-mono text-sm">{ret.order_id || '—'}</TableCell>
-                              <TableCell>{ret.reason}</TableCell>
-                              <TableCell>{getStatusBadge(ret.status)}</TableCell>
-                              <TableCell>{formatCurrency(ret.refund_amount, ret.currency)}</TableCell>
-                              <TableCell>
-                                {ret.is_partial ? (
-                                  <Badge variant="secondary">Partial</Badge>
-                                ) : (
-                                  <Badge variant="outline">Full</Badge>
-                                )}
-                              </TableCell>
-                              <TableCell>{formatDate(ret.returned_date)}</TableCell>
-                            </TableRow>
-                          ))}
+                          <TableRow key={ret.id}>
+                            <TableCell className="font-mono text-sm">{ret.return_id}</TableCell>
+                            <TableCell className="font-mono text-sm">{ret.order_id || '—'}</TableCell>
+                            <TableCell>{ret.reason}</TableCell>
+                            <TableCell>{getStatusBadge(ret.status)}</TableCell>
+                            <TableCell>{formatCurrency(ret.refund_amount, ret.currency)}</TableCell>
+                            <TableCell>
+                              {ret.is_partial ? (
+                                <Badge variant="secondary">Partial</Badge>
+                              ) : (
+                                <Badge variant="outline">Full</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell>{formatDate(ret.returned_date)}</TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </div>
@@ -2208,18 +2217,18 @@ export default function SmartInventorySync() {
                       </TableHeader>
                       <TableBody>
                         {settlements.map((settlement) => (
-                            <TableRow key={settlement.id}>
-                              <TableCell className="font-mono text-sm">{settlement.settlement_id}</TableCell>
-                              <TableCell className="font-mono text-sm">{settlement.order_id || '—'}</TableCell>
-                              <TableCell>
-                                <Badge variant="outline">{settlement.transaction_type}</Badge>
-                              </TableCell>
-                              <TableCell>{formatCurrency(settlement.amount, settlement.currency)}</TableCell>
-                              <TableCell>{formatCurrency(settlement.fees, settlement.currency)}</TableCell>
-                              <TableCell>{settlement.currency}</TableCell>
-                              <TableCell>{formatDate(settlement.settlement_date)}</TableCell>
-                            </TableRow>
-                          ))}
+                          <TableRow key={settlement.id}>
+                            <TableCell className="font-mono text-sm">{settlement.settlement_id}</TableCell>
+                            <TableCell className="font-mono text-sm">{settlement.order_id || '—'}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{settlement.transaction_type}</Badge>
+                            </TableCell>
+                            <TableCell>{formatCurrency(settlement.amount, settlement.currency)}</TableCell>
+                            <TableCell>{formatCurrency(settlement.fees, settlement.currency)}</TableCell>
+                            <TableCell>{settlement.currency}</TableCell>
+                            <TableCell>{formatDate(settlement.settlement_date)}</TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </div>
@@ -2236,55 +2245,55 @@ export default function SmartInventorySync() {
       </div>
 
       {/* Evidence Connections Prompt */}
-        <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
-          <DialogContent className="max-w-md bg-white backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.25)] rounded-2xl p-0 overflow-hidden">
-            <DialogHeader className="px-5 pt-5 pb-2">
-              <DialogTitle className="text-base font-semibold text-slate-900">
-                Connect Doc Sources
-              </DialogTitle>
-              <DialogDescription className="text-sm text-slate-500">
-                Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
-                <span className="block mt-1 text-xs text-slate-500/90">
-                  Read-only access. No writing or sending permissions.
-                </span>
-              </DialogDescription>
-            </DialogHeader>
-            <div className="px-5 pb-4">
-              <div className="rounded-2xl border border-slate-200 divide-y divide-slate-200 overflow-hidden bg-white/70">
-                {docSourceOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition disabled:cursor-not-allowed"
-                    onClick={() => connectDocSource(option.id)}
-                    disabled={docPromptLoading === option.id}>
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                        <img src={option.icon} alt={option.name} className="h-5 w-5 object-contain" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{option.name}</p>
-                        <p className="text-xs text-slate-500">{option.description}</p>
-                      </div>
+      <Dialog open={showEvidencePrompt} onOpenChange={setShowEvidencePrompt}>
+        <DialogContent className="max-w-md bg-white backdrop-blur-md border border-gray-200 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.25)] rounded-2xl p-0 overflow-hidden">
+          <DialogHeader className="px-5 pt-5 pb-2">
+            <DialogTitle className="text-base font-semibold text-slate-900">
+              Connect Doc Sources
+            </DialogTitle>
+            <DialogDescription className="text-sm text-slate-500">
+              Link your email and cloud storage to automatically collect invoices, receipts, and shipping documents.
+              <span className="block mt-1 text-xs text-slate-500/90">
+                Read-only access. No writing or sending permissions.
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="px-5 pb-4">
+            <div className="rounded-2xl border border-slate-200 divide-y divide-slate-200 overflow-hidden bg-white/70">
+              {docSourceOptions.map((option) => (
+                <button
+                  key={option.id}
+                  className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50 transition disabled:cursor-not-allowed"
+                  onClick={() => connectDocSource(option.id)}
+                  disabled={docPromptLoading === option.id}>
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                      <img src={option.icon} alt={option.name} className="h-5 w-5 object-contain" />
                     </div>
-                    {docPromptLoading === option.id ? (
-                      <RefreshCw className="h-4 w-4 animate-spin text-slate-400" />
-                    ) : (
-                      <span className="text-xs font-medium text-slate-500">Connect</span>
-                    )}
-                  </button>
-                ))}
-              </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{option.name}</p>
+                      <p className="text-xs text-slate-500">{option.description}</p>
+                    </div>
+                  </div>
+                  {docPromptLoading === option.id ? (
+                    <RefreshCw className="h-4 w-4 animate-spin text-slate-400" />
+                  ) : (
+                    <span className="text-xs font-medium text-slate-500">Connect</span>
+                  )}
+                </button>
+              ))}
             </div>
-            <DialogFooter className="px-5 pb-5">
-              <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch {} }}>
-                Not now
-              </Button>
-              <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
-                <ArrowRight className="h-4 w-4" /> Continue
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          </div>
+          <DialogFooter className="px-5 pb-5">
+            <Button variant="ghost" className="text-slate-500 hover:text-slate-700" onClick={() => { setShowEvidencePrompt(false); try { localStorage.setItem('clario.evidencePromptDismissed', 'true'); } catch { } }}>
+              Not now
+            </Button>
+            <Button onClick={() => setShowEvidencePrompt(false)} className="gap-2 bg-slate-900 hover:bg-slate-800 text-white">
+              <ArrowRight className="h-4 w-4" /> Continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }

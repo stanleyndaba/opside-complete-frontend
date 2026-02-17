@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link, useParams } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { tenantRoute } from '@/lib/routes';
 
 export default function OAuthSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const [loading, setLoading] = useState(false);
 
   const params = useMemo(() => {
@@ -15,19 +17,15 @@ export default function OAuthSuccess() {
   }, [location.search]);
 
   const provider = params.get('provider') || 'amazon';
-  const tenant_slug = params.get('tenant_slug') || params.get('tenant') || '';
+  const resolvedSlug = tenantSlug || params.get('tenant_slug') || params.get('tenant') || 'beta';
 
   useEffect(() => {
-    api.trackEvent && (api as any).trackEvent('oauth_success_view', { provider, status: 'ok', tenant_slug });
-  }, [provider, tenant_slug]);
+    api.trackEvent && (api as any).trackEvent('oauth_success_view', { provider, status: 'ok', tenant_slug: resolvedSlug });
+  }, [provider, resolvedSlug]);
 
   const handleStartSync = async () => {
     setLoading(true);
-    if (tenant_slug) {
-      navigate(`/app/${tenant_slug}/sync`);
-    } else {
-      navigate('/sync');
-    }
+    navigate(tenantRoute(resolvedSlug, '/sync'));
   };
 
   return (

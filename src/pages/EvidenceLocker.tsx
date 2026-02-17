@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
@@ -130,6 +131,9 @@ export default function EvidenceLocker() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { isReady } = useTenant();
+  const activeSlug = tenantSlug || 'beta';
   const toggleSidebar = useCallback(() => setIsSidebarCollapsed(prev => !prev), []);
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
@@ -260,8 +264,8 @@ export default function EvidenceLocker() {
     try {
       setLoading(true);
       const uploadUrls = [
-        api.buildApiUrl('/api/documents/upload'),
-        api.buildApiUrl('/api/evidence/upload')
+        api.buildApiUrl(`/api/documents/upload?tenantSlug=${activeSlug}`),
+        api.buildApiUrl(`/api/evidence/upload?tenantSlug=${activeSlug}`)
       ];
 
       let lastError: Error | null = null;
@@ -294,7 +298,7 @@ export default function EvidenceLocker() {
         description: `${files.length} document(s) uploaded. Scanning for details...`,
       });
 
-      const refresh = await api.getDocuments();
+      const refresh = await api.getDocuments(activeSlug);
       if (refresh.ok && Array.isArray(refresh.data)) {
         const previousCount = documents.length;
         setDocuments(refresh.data);
@@ -304,7 +308,7 @@ export default function EvidenceLocker() {
         }
       }
 
-      const statusRes = await api.getEvidenceStatus();
+      const statusRes = await api.getEvidenceStatus(activeSlug);
       if (statusRes.ok && statusRes.data) setEvidenceStatus(statusRes.data);
     } catch (err: any) {
       addDocLog({ type: 'error', category: 'upload', message: `Upload error: ${err?.message || 'Unknown error'}` }, 0);
@@ -389,11 +393,12 @@ export default function EvidenceLocker() {
 
     // Fetch documents and evidence status
     (async () => {
+      if (!isReady) return;
       setLoading(true);
       const [docRes, statusRes, gmailRes] = await Promise.all([
-        api.getDocuments(),
-        api.getEvidenceStatus(),
-        api.getGmailStatus(),
+        api.getDocuments(activeSlug),
+        api.getEvidenceStatus(activeSlug),
+        api.getGmailStatus(activeSlug),
       ]);
 
       if (!cancelled) {
@@ -405,7 +410,7 @@ export default function EvidenceLocker() {
 
               // Try to get parsed data for each document
               try {
-                const parsedRes = await api.getDocumentWithParsedData(doc.id);
+                const parsedRes = await api.getDocumentWithParsedData(doc.id, activeSlug);
                 if (parsedRes.ok && parsedRes.data) {
                   enhancedDoc = {
                     ...enhancedDoc,
@@ -422,7 +427,7 @@ export default function EvidenceLocker() {
 
               // Try to get matching results for each document
               try {
-                const matchRes = await api.getDocumentMatchingResults(doc.id);
+                const matchRes = await api.getDocumentMatchingResults(doc.id, activeSlug);
                 if (matchRes.ok && matchRes.data?.results) {
                   const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
                   const highestConfidence = matchRes.data.results.length > 0
@@ -466,8 +471,9 @@ export default function EvidenceLocker() {
 
     // SSE for ingest updates
     let es: EventSource | null = null;
+    if (!isReady) return;
     try {
-      es = new EventSource('/api/sse/status');
+      es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);
@@ -476,7 +482,7 @@ export default function EvidenceLocker() {
             addDocLog({ type: 'success', category: 'system', message: 'New documents found in Gmail', storyMessage: story.story, claimsAffected: story.claims }, 500);
             toast({ title: 'Scan complete', description: 'New documents have been added.' });
             // Refresh documents
-            api.getDocuments().then(res => {
+            api.getDocuments(activeSlug).then(res => {
               if (res.ok && Array.isArray(res.data)) {
                 setDocuments(res.data);
               }
@@ -488,7 +494,7 @@ export default function EvidenceLocker() {
             addDocLog({ type: 'thinking', category: 'match', message: 'Connecting to claims...', storyMessage: '🔍 Looking for matching claims...' }, 900);
             // Refresh document with parsed data
             if (evt?.document_id) {
-              api.getDocumentWithParsedData(evt.document_id).then(res => {
+              api.getDocumentWithParsedData(evt.document_id, activeSlug).then(res => {
                 if (res.ok && res.data) {
                   const confidence = res.data.parser_confidence ? `${(res.data.parser_confidence * 100).toFixed(0)}%` : 'N/A';
                   addDocLog({ type: 'info', category: 'parse', message: `Extraction confidence: ${confidence}` }, 800);
@@ -502,7 +508,7 @@ export default function EvidenceLocker() {
 
               // Auto-trigger evidence matching after parsing completes
               addDocLog({ type: 'progress', category: 'match', message: 'Running evidence matching...', thinkingDuration: 2 }, 1200);
-              api.runEvidenceMatching().then(matchRes => {
+              api.runEvidenceMatching(undefined, activeSlug).then(matchRes => {
                 if (matchRes.ok) {
                   addDocLog({ type: 'info', category: 'match', message: 'Matching engine analyzing document-claim correlations...' }, 1500);
                   toast({
@@ -539,13 +545,13 @@ export default function EvidenceLocker() {
             }
 
             // Refresh documents to show updated matched claims
-            api.getDocuments().then(res => {
+            api.getDocuments(activeSlug).then(res => {
               if (res.ok && Array.isArray(res.data)) {
                 // Fetch matching results for each document to populate matchedClaims
                 Promise.all(
                   res.data.map(async (doc: any) => {
                     try {
-                      const matchRes = await api.getDocumentMatchingResults(doc.id);
+                      const matchRes = await api.getDocumentMatchingResults(doc.id, activeSlug);
                       if (matchRes.ok && matchRes.data?.results) {
                         const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
                         const highestConfidence = matchRes.data.results.length > 0
@@ -609,13 +615,13 @@ export default function EvidenceLocker() {
             }
 
             // Refresh documents to show updated matched claims
-            api.getDocuments().then(res => {
+            api.getDocuments(activeSlug).then(res => {
               if (res.ok && Array.isArray(res.data)) {
                 // Fetch matching results for each document to populate matchedClaims
                 Promise.all(
                   res.data.map(async (doc: any) => {
                     try {
-                      const matchRes = await api.getDocumentMatchingResults(doc.id);
+                      const matchRes = await api.getDocumentMatchingResults(doc.id, activeSlug);
                       if (matchRes.ok && matchRes.data?.results) {
                         const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
                         const highestConfidence = matchRes.data.results.length > 0
@@ -644,7 +650,7 @@ export default function EvidenceLocker() {
     } catch { }
 
     return () => { cancelled = true; if (es) es.close(); };
-  }, []);
+  }, [activeSlug, isReady]);
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'verified':
@@ -768,7 +774,7 @@ export default function EvidenceLocker() {
 
   const downloadDoc = async (id: string) => {
     try {
-      const response = await api.getDocumentDownload(id);
+      const response = await api.getDocumentDownload(id, activeSlug);
       if (response.ok && response.data?.url) {
         // Open the signed URL directly to download the file
         window.open(response.data.url, '_blank');
@@ -796,7 +802,7 @@ export default function EvidenceLocker() {
 
     try {
       addDocLog({ type: 'progress', category: 'system', message: `Deleting document: ${docName}...` }, 0);
-      const res = await api.deleteDocument(docId);
+      const res = await api.deleteDocument(docId, activeSlug);
       if (res.ok) {
         setDocuments(prev => prev.filter(d => d.id !== docId));
         addDocLog({ type: 'success', category: 'system', message: `Document deleted: ${docName}` }, 400);
@@ -818,7 +824,7 @@ export default function EvidenceLocker() {
 
     try {
       addDocLog({ type: 'progress', category: 'system', message: `Deleting all ${documents.length} documents...` }, 0);
-      const res = await api.deleteAllDocuments();
+      const res = await api.deleteAllDocuments(activeSlug);
       if (res.ok) {
         setDocuments([]);
         addDocLog({ type: 'success', category: 'system', message: `Deleted ${res.data?.deletedCount || documents.length} document(s)` }, 400);
@@ -888,7 +894,7 @@ export default function EvidenceLocker() {
                           setDocuments(res.data);
                         }
                       });
-                      api.getEvidenceStatus().then(res => {
+                      api.getEvidenceStatus(activeSlug).then(res => {
                         if (res.ok && res.data) {
                           setEvidenceStatus(res.data);
                         }
@@ -1211,7 +1217,7 @@ export default function EvidenceLocker() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-3xl backdrop-blur-3xl p-2 animate-in fade-in slide-in-from-top-1">
                                   <DropdownMenuItem asChild className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest">
-                                    <Link to={`/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
+                                    <Link to={`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
                                       <Eye className="w-3.5 h-3.5" />
                                       View Details
                                     </Link>

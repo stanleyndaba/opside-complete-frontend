@@ -322,11 +322,13 @@ export const api = {
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),
 
   // Helper for OAuth connection endpoints that need redirect_uri
-  connectIntegration: (provider: string) => {
+  connectIntegration(provider: string, tenantSlug?: string) {
+    if (!tenantSlug) throw new Error("tenantSlug required for connectIntegration");
     const frontendUrl = getFrontendUrl();
-    const redirectUri = `${frontendUrl}/auth/callback`;
-    return requestJson<{ auth_url?: string; redirect_url?: string }>(
-      `/api/v1/integrations/${encodeURIComponent(provider)}/connect?redirect_uri=${encodeURIComponent(redirectUri)}`,
+    const slug = tenantSlug;
+    const redirectUri = `${frontendUrl}/app/${slug}/auth/callback`;
+    return requestJson<{ auth_url: string }>(
+      `/api/v1/integrations/${provider}/connect?redirect_uri=${encodeURIComponent(redirectUri)}`,
       { method: 'POST' }
     );
   },
@@ -348,76 +350,47 @@ export const api = {
   postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
-  connectAmazon: async (marketplaceId?: string, bypassOAuth = false) => {
-    // Step 1: Call /auth/start to get OAuth URL
-    // Get current frontend URL and pass it to backend for OAuth redirect configuration
-    // Backend needs this to know where to redirect after OAuth completes
-    // This handles Vercel preview deployments where the URL changes each deploy
+  connectAmazon(marketplaceId?: string, bypassOAuth = false, tenantSlug?: string) {
+    if (!tenantSlug) throw new Error("tenantSlug required for connectAmazon");
     const frontendUrl = getFrontendUrl();
-    const bypassParam = bypassOAuth ? '&bypass=true' : '';
-    const marketplaceParam = marketplaceId && typeof marketplaceId === 'string' ? `&marketplaceId=${marketplaceId}` : '';
+    const slug = tenantSlug;
+    const redirectUri = `${frontendUrl}/app/${slug}/auth/callback`;
 
-    const response = await requestJson<{
+    const params = new URLSearchParams({
+      redirect_uri: redirectUri,
+      frontend_url: frontendUrl,
+      ...(bypassOAuth ? { bypass: 'true' } : {}),
+      ...(marketplaceId ? { marketplaceId } : {}),
+      tenantSlug: slug
+    });
+
+    return requestJson<{
       auth_url?: string;
       authUrl?: string;
-      state?: string;
-      success?: boolean;
-      message?: string;
-    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}${bypassParam}${marketplaceParam}`);
-
-    if (response.ok && response.data) {
-      const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
-
-      if (normalizedAuthUrl) {
-        response.data = {
-          ...response.data,
-          auth_url: normalizedAuthUrl,
-          authUrl: normalizedAuthUrl,
-        };
-      }
-    }
-
-    // Step 2: Redirect user to Amazon (DO NOT call callback directly!)
-    // Step 3: Amazon will automatically redirect to /auth/callback?code=...
-    // (This happens automatically - frontend shouldn't call this)
-    return response;
+    }>(`/api/v1/integrations/amazon/auth/start?${params.toString()}`);
   },
 
-  // Use existing Amazon connection (bypass OAuth if refresh token exists)
-  useExistingAmazonConnection: async (marketplaceId?: string) => {
-    // Call the OAuth start endpoint with bypass=true to use existing refresh token
+  useExistingAmazonConnection(marketplaceId?: string, tenantSlug?: string) {
+    if (!tenantSlug) throw new Error("tenantSlug required for useExistingAmazonConnection");
     const frontendUrl = getFrontendUrl();
-    const marketplaceParam = marketplaceId && typeof marketplaceId === 'string' ? `&marketplaceId=${marketplaceId}` : '';
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    const redirectUri = `${frontendUrl}/app/${slug}/auth/callback`;
 
-    const response = await requestJson<{
+    const params = new URLSearchParams({
+      redirect_uri: redirectUri,
+      frontend_url: frontendUrl,
+      bypass: 'true',
+      ...(marketplaceId ? { marketplaceId } : {}),
+      tenantSlug: slug
+    });
+
+    return requestJson<{
       auth_url?: string;
       authUrl?: string;
-      state?: string;
-      success?: boolean;
-      message?: string;
       bypassed?: boolean;
       redirectUrl?: string;
-    }>(`/api/v1/integrations/amazon/auth/start?redirect_uri=${encodeURIComponent(frontendUrl)}/auth/callback&frontend_url=${encodeURIComponent(frontendUrl)}&bypass=true${marketplaceParam}`);
-
-    // If bypass worked, backend returns JSON with bypassed: true and redirectUrl
-    // If not, we'll get the OAuth URL as fallback
-    if (response.ok && response.data) {
-      // Handle bypass response
-      if (response.data.bypassed && response.data.redirectUrl) {
-        return response;
-      }
-
-      // Handle OAuth URL fallback
-      const normalizedAuthUrl = response.data.auth_url ?? response.data.authUrl;
-      if (normalizedAuthUrl) {
-        response.data = {
-          ...response.data,
-          auth_url: normalizedAuthUrl,
-          authUrl: normalizedAuthUrl,
-        };
-      }
-    }
-    return response;
+    }>(`/api/v1/integrations/amazon/auth/start?${params.toString()}`);
   },
   completeAmazonSandboxAuth: (state: string) => {
     console.log('[API] completeAmazonSandboxAuth called with state:', state);
@@ -438,15 +411,13 @@ export const api = {
       }
     );
   },
-  getAmazonRecoveries: async () => {
+  getAmazonRecoveries: async (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getAmazonRecoveries");
     const startTime = performance.now();
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
 
     // Check if we're in sandbox mode FIRST (for faster response)
-    // Sandbox mode is detected if:
-    // 1. We're on localhost
-    // 2. VITE_SANDBOX env var is set to 'true'
-    // 3. We're in development mode
-    // 4. We came from sandbox auth flow (check sessionStorage/localStorage)
     const isSandbox =
       (typeof window !== 'undefined' && (
         window.location.hostname.includes('localhost') ||
@@ -460,7 +431,7 @@ export const api = {
         import.meta.env.DEV === true
       ));
 
-    console.log(`[API] getAmazonRecoveries - Sandbox mode: ${isSandbox}, Time: ${performance.now() - startTime}ms`);
+    console.log(`[API] getAmazonRecoveries - Sandbox mode: ${isSandbox}, Tenant: ${slug}, Time: ${performance.now() - startTime}ms`);
 
     // In sandbox mode, try backend but don't wait too long - use mock data quickly
     if (isSandbox) {
@@ -474,14 +445,14 @@ export const api = {
         );
 
         console.log(`[API] Starting backend request at ${backendStartTime}ms`);
-        console.log(`[API] Backend URL: ${buildApiUrl('/api/v1/integrations/amazon/recoveries')}`);
-        const backendPromise = requestJson<{ totalAmount: number; currency: string; claimCount: number }>('/api/v1/integrations/amazon/recoveries');
+        const endpoint = `/api/v1/integrations/amazon/recoveries?tenantSlug=${slug}`;
+        console.log(`[API] Backend URL: ${buildApiUrl(endpoint)}`);
+        const backendPromise = requestJson<{ totalAmount: number; currency: string; claimCount: number }>(endpoint);
 
         let response: any;
         try {
           response = await Promise.race([backendPromise, timeoutPromise]);
         } catch (raceError: any) {
-          // Promise.race will reject if timeoutPromise rejects first
           if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Backend timeout')) {
             throw new Error('Backend timeout - using mock data');
           }
@@ -491,23 +462,13 @@ export const api = {
         const backendDuration = backendEndTime - backendStartTime;
 
         console.log(`[API] Backend request completed in ${backendDuration}ms`);
-        console.log(`[API] Backend response:`, response);
 
-        // Backend returns {success: true, recoveries: {...}} - extract recoveries
-        // Handle both structures: {recoveries: {...}} or direct {...}
         let recoveryData = response?.data;
         if (recoveryData?.recoveries) {
-          // Backend wraps data in 'recoveries' object
           recoveryData = recoveryData.recoveries;
-          console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
         }
 
-        // Always use backend data if available, even if zeros (to show sync messages)
-        // Only fall back to mock data if backend request failed
         if (response?.ok && recoveryData) {
-          console.log(`[API] ✅ USING REAL BACKEND DATA (${backendDuration}ms):`, recoveryData);
-          console.log(`[API] 📊 Source: ${recoveryData.source || recoveryData.dataSource || 'SP-API Sandbox Backend'}`);
-          // Pass through all fields from backend (including message, needsSync, syncTriggered, source, dataSource)
           return {
             ...response,
             data: {
@@ -526,59 +487,13 @@ export const api = {
           };
         }
       } catch (error: any) {
-        const backendEndTime = performance.now();
-        const backendDuration = backendEndTime - backendStartTime;
-        console.error(`[API] ❌ Backend request FAILED in sandbox mode (took ${backendDuration}ms)`);
-        console.error(`[API] Error details:`, {
-          message: error?.message,
-          name: error?.name,
-          stack: error?.stack,
-          response: error?.response,
-          status: error?.status,
-          statusText: error?.statusText
-        });
-        console.error(`[API] Full error object:`, error);
-
-        // If it's a timeout, show that clearly
-        if (error?.message?.includes('timeout')) {
-          console.error(`[API] ⏱️ BACKEND TIMEOUT: Backend took longer than 3 seconds to respond`);
-          console.error(`[API] 💡 SOLUTION: Backend needs to respond faster or increase timeout`);
-        }
-
-        // If it's a network error
-        if (error?.name === 'TypeError' || error?.message?.includes('fetch')) {
-          console.error(`[API] 🌐 NETWORK ERROR: Cannot reach backend`);
-          console.error(`[API] 💡 SOLUTION: Check backend URL and CORS configuration`);
-        }
-
-        // If it's a 401
-        if (error?.status === 401 || error?.response?.status === 401) {
-          console.error(`[API] 🔒 AUTH ERROR: Backend returned 401 Unauthorized`);
-          console.error(`[API] 💡 SOLUTION: Check authentication cookie/session`);
-        }
-
-        // If it's a 404
-        if (error?.status === 404 || error?.response?.status === 404) {
-          console.error(`[API] 📍 NOT FOUND: Endpoint /api/v1/integrations/amazon/recoveries doesn't exist`);
-          console.error(`[API] 💡 SOLUTION: Backend needs to implement this endpoint`);
-        }
-
-        // If it's a 500
-        if (error?.status === 500 || error?.response?.status === 500) {
-          console.error(`[API] 💥 SERVER ERROR: Backend returned 500 Internal Server Error`);
-          console.error(`[API] 💡 SOLUTION: Check backend logs for error details`);
-        }
+        console.error(`[API] ❌ Backend request FAILED in sandbox mode`);
       }
 
-      // Only use mock data if backend request completely failed (not just zeros)
-      // If backend returned zeros with sync info, we should show that instead
+      // Fallback to mock data
       const mockStartTime = performance.now();
-      console.log('[API] 🎭 Backend request failed or timed out - Using MOCK DATA for Amazon recoveries (sandbox mode)');
       const { mockAmazonApi } = await import('./mockApi');
       const mockData = mockAmazonApi.getRecoveries();
-      const totalTime = performance.now() - startTime;
-      console.log(`[API] Mock data loaded in ${performance.now() - mockStartTime}ms, total time: ${totalTime}ms`);
-      console.log(`[API] 📊 Mock data values:`, mockData);
       return {
         ok: true,
         status: 200,
@@ -593,9 +508,7 @@ export const api = {
       };
     }
 
-    // Production mode: try backend normally with timing
-    const prodStartTime = performance.now();
-    console.log('[API] Production mode - calling backend');
+    // Production mode: try backend normally
     const response = await requestJson<{
       totalAmount: number;
       currency: string;
@@ -617,22 +530,14 @@ export const api = {
         needsSync?: boolean;
         syncTriggered?: boolean;
       };
-    }>('/api/v1/integrations/amazon/recoveries');
-    const prodDuration = performance.now() - prodStartTime;
-    console.log(`[API] Production backend request took ${prodDuration}ms`);
+    }>(`/api/v1/integrations/amazon/recoveries?tenantSlug=${slug}`);
 
-    // Backend returns {success: true, recoveries: {...}} - extract recoveries
-    // Handle both structures: {recoveries: {...}} or direct {...}
     let recoveryData = response?.data;
     if (recoveryData?.recoveries) {
-      // Backend wraps data in 'recoveries' object
       recoveryData = recoveryData.recoveries;
-      console.log(`[API] Extracted recoveries from nested structure:`, recoveryData);
     }
 
-    // Always return backend data if available (even if zeros), to show sync messages
     if (response.ok && recoveryData) {
-      // Pass through all fields from backend (including message, needsSync, syncTriggered, source, dataSource)
       return {
         ...response,
         data: {
@@ -649,9 +554,7 @@ export const api = {
       };
     }
 
-    // Return the original response (even if it failed or returned zeros)
     if (recoveryData && recoveryData !== response.data) {
-      // We extracted recoveries, normalize the response with all fields
       return {
         ...response,
         data: {
@@ -673,16 +576,17 @@ export const api = {
   // Disputes
   getDisputeBrief: (id: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief`),
 
-  // Auth-adjacent helpers for flows
-  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
-    // Use the /auth endpoint for OAuth initiation
-    // Backend routes: /api/v1/integrations/{provider}/auth returns { authUrl, state }
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox', tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for connectDocs");
     const frontendUrl = getFrontendUrl();
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    const redirectUri = `${frontendUrl}/app/${slug}/auth/callback`;
+
     return requestJson<{ success?: boolean; authUrl?: string; auth_url?: string; state?: string; message?: string; sandbox?: boolean }>(
-      `/api/v1/integrations/${encodeURIComponent(provider)}/auth?frontend_url=${encodeURIComponent(frontendUrl)}`,
+      `/api/v1/integrations/docs/${encodeURIComponent(provider)}/auth/start?frontend_url=${encodeURIComponent(frontendUrl)}&redirect_uri=${encodeURIComponent(redirectUri)}&tenantSlug=${slug}`,
       { method: 'GET' }
     ).then(response => {
-      // Normalize auth_url to authUrl for consistency
       if (response.ok && response.data) {
         const authUrl = response.data.authUrl || response.data.auth_url;
         return {
@@ -693,19 +597,35 @@ export const api = {
       return response;
     });
   },
-  startAmazonSync: () => requestJson<{
-    syncId?: string;
-    sync_id?: string;
-    status?: string;
-    message?: string;
-  }>('/api/sync/start', { method: 'POST' }),
+  startAmazonSync: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for startAmazonSync");
+    return requestJson<{
+      syncId?: string;
+      sync_id?: string;
+      status?: string;
+      message?: string;
+    }>(`/api/sync/start?tenantSlug=${tenantSlug}`, { method: 'POST' });
+  },
   trackEvent: (name: string, payload?: Record<string, any>) =>
     requestJson<any>('/api/metrics/track', { method: 'POST', body: JSON.stringify({ name, payload }) }),
 
-  getDashboardAggregates: (window?: '7d' | '30d' | '90d') => requestJson<any>(
-    `/api/metrics/dashboard${window ? `?window=${encodeURIComponent(window)}` : ''}`
-  ),
-  getRecoveriesMetrics: (tenantSlug?: string) => requestJson<any>(`/api/metrics/recoveries${tenantSlug ? `?tenant=${encodeURIComponent(tenantSlug)}` : ''}`),
+  getDashboardAggregates: (window?: '7d' | '30d' | '90d', tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDashboardAggregates");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<any>(
+      `/api/metrics/dashboard?${new URLSearchParams({
+        ...(window ? { window } : {}),
+        tenantSlug: slug
+      }).toString()}`
+    );
+  },
+  getRecoveriesMetrics: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getRecoveriesMetrics");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<any>(`/api/metrics/recoveries?tenantSlug=${slug}`);
+  },
   setAutoClaimEnabled: (enabled: boolean) => requestJson<any>('/api/recoveries/auto-claim', { method: 'POST', body: JSON.stringify({ enabled }) }),
 
   // Refund Engine endpoints
@@ -717,11 +637,31 @@ export const api = {
   getDocumentViewUrl: (docId: string) => buildApiUrl(`/api/documents/${encodeURIComponent(docId)}/view`),
 
   // Evidence/documents
-  getDocuments: () => requestJson<any[]>('/api/documents'),
-  getDocument: (id: string) => requestJson<any>(`/api/documents/${encodeURIComponent(id)}`),
+  getDocuments: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocuments");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<any[]>('/api/documents?tenantSlug=' + slug);
+  },
+  getDocument: (id: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocument");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<any>(`/api/documents/${encodeURIComponent(id)}?tenantSlug=${slug}`);
+  },
   getDocumentDownloadUrl: (id: string) => buildApiUrl(`/api/documents/${encodeURIComponent(id)}/download`),
-  getDocumentDownload: (id: string) => requestJson<{ success: boolean; url: string; filename: string }>(`/api/documents/${encodeURIComponent(id)}/download`),
-  reparseDocument: (id: string) => requestJson<{ success: boolean; message: string }>(`/api/documents/${encodeURIComponent(id)}/reparse`, { method: 'POST' }),
+  getDocumentDownload: (id: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocumentDownload");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<{ url: string }>(`/api/documents/${encodeURIComponent(id)}/download?tenantSlug=${slug}`);
+  },
+  reparseDocument: (id: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for reparseDocument");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<any>(`/api/documents/${encodeURIComponent(id)}/reparse?tenantSlug=${slug}`, { method: 'POST' });
+  },
 
   // PHASE4: Evidence ingestion endpoints (Node.js backend)
   // Gmail ingestion
@@ -815,26 +755,34 @@ export const api = {
         folderPath: options?.folderPath,
       }),
     }),
-  getEvidenceStatus: () => requestJson<{
-    hasConnectedSource: boolean;
-    lastIngestion?: string;
-    documentsCount: number;
-    processingCount: number;
-  }>('/api/evidence/status'),
+  getEvidenceStatus: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getEvidenceStatus");
+    return requestJson<{
+      hasConnectedSource: boolean;
+      lastIngestion?: string;
+      documentsCount: number;
+      processingCount: number;
+    }>(`/api/evidence/status?tenantSlug=${tenantSlug}`);
+  },
   // Evidence source management
-  getEvidenceSources: () => requestJson<{
-    success: boolean;
-    sources: Array<{
-      id: string;
-      provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
-      account_email: string;
-      status: 'connected' | 'disconnected' | 'error';
-      last_sync_at: string | null;
-      created_at: string;
-      metadata: Record<string, any>;
-    }>;
-    count: number;
-  }>('/api/evidence/sources'),
+  getEvidenceSources: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getEvidenceSources");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<{
+      success: boolean;
+      sources: Array<{
+        id: string;
+        provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+        account_email: string;
+        status: 'connected' | 'disconnected' | 'error';
+        last_sync_at: string | null;
+        created_at: string;
+        metadata: Record<string, any>;
+      }>;
+      count: number;
+    }>(`/api/evidence/sources?tenantSlug=${slug}`);
+  },
   getEvidenceSource: (id: string) => requestJson<{
     success: boolean;
     source: {
@@ -881,11 +829,16 @@ export const api = {
     }>(`/api/evidence/matching/metrics${days ? `?days=${days}` : ''}`),
 
   // PHASE3: Gmail integration endpoints
-  getGmailStatus: () => requestJson<{
-    connected: boolean;
-    lastSync?: string;
-    email?: string;
-  }>('/api/v1/integrations/gmail/status'),
+  getGmailStatus: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getGmailStatus");
+    return requestJson<{
+      connected: boolean;
+      email: string | null;
+      last_sync_at: string | null;
+      error?: string;
+      scopes?: string[];
+    }>(`/api/evidence/status/gmail?tenantSlug=${tenantSlug}`);
+  },
   disconnectGmail: () => requestJson<any>('/api/v1/integrations/gmail/disconnect', { method: 'DELETE' }),
 
   // PHASE3: Document parsing endpoints (Python API)
@@ -915,8 +868,9 @@ export const api = {
     }>;
     total: number;
   }>('/api/v1/evidence/parse/jobs'),
-  getDocumentWithParsedData: (documentId: string) =>
-    requestJson<{
+  getDocumentWithParsedData: (documentId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocumentWithParsedData");
+    return requestJson<{
       id: string;
       filename: string;
       processing_status: 'pending' | 'processing' | 'completed' | 'failed';
@@ -950,23 +904,28 @@ export const api = {
         extracted_at?: string;
       };
       raw_text_preview?: string;
-    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}`),
+    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}?tenantSlug=${tenantSlug}`);
+  },
 
   // Delete a single document
-  deleteDocument: (documentId: string) =>
-    requestJson<{
+  deleteDocument: (documentId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for deleteDocument");
+    return requestJson<{
       success: boolean;
       message: string;
       documentId: string;
-    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}`, { method: 'DELETE' }),
+    }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}?tenantSlug=${tenantSlug}`, { method: 'DELETE' });
+  },
 
   // Delete all documents for the current user
-  deleteAllDocuments: () =>
-    requestJson<{
+  deleteAllDocuments: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for deleteAllDocuments");
+    return requestJson<{
       success: boolean;
       message: string;
       deletedCount: number;
-    }>('/api/v1/evidence/documents', { method: 'DELETE' }),
+    }>(`/api/v1/evidence/documents?tenantSlug=${tenantSlug}`, { method: 'DELETE' });
+  },
 
   searchDocuments: (filters?: {
     supplier_name?: string;
@@ -975,7 +934,8 @@ export const api = {
     date_to?: string;
     min_amount?: number;
     max_amount?: number;
-  }) => {
+  }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for searchDocuments");
     const params = new URLSearchParams();
     if (filters?.supplier_name) params.append('supplier_name', filters.supplier_name);
     if (filters?.invoice_number) params.append('invoice_number', filters.invoice_number);
@@ -983,37 +943,49 @@ export const api = {
     if (filters?.date_to) params.append('date_to', filters.date_to);
     if (filters?.min_amount) params.append('min_amount', filters.min_amount.toString());
     if (filters?.max_amount) params.append('max_amount', filters.max_amount.toString());
+    params.append('tenantSlug', tenantSlug);
     return requestJson<any[]>(`/api/v1/evidence/documents/search?${params.toString()}`);
   },
 
   // Integrations & Evidence ingestion controls
-  getIntegrationsStatus: () => requestJson<{
-    amazon_connected: boolean;
-    docs_connected: boolean;
-    lastSync?: string;
-    lastIngest?: string;
-    providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }>;
-  }>('/api/v1/integrations/status'),
+  getIntegrationsStatus: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getIntegrationsStatus");
+    const slug = tenantSlug;
+    return requestJson<{
+      amazon_connected: boolean;
+      docs_connected: boolean;
+      lastSync?: string;
+      lastIngest?: string;
+      providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }>;
+    }>(`/api/v1/integrations/status?tenantSlug=${slug}`);
+  },
 
   // Phase 1: Amazon connection status check
-  getAmazonConnectionStatus: () => requestJson<{
-    connected: boolean;
-    sandboxMode?: boolean;
-    useMockGenerator?: boolean;
-    useMockData?: boolean;
-    lastSync?: string;
-    connectionVerified?: boolean;
-  }>('/api/v1/integrations/amazon/status'),
+  getAmazonConnectionStatus: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getAmazonConnectionStatus");
+    const slug = tenantSlug;
+    return requestJson<{
+      connected: boolean;
+      sandboxMode?: boolean;
+      useMockGenerator?: boolean;
+      useMockData?: boolean;
+      lastSync?: string;
+      connectionVerified?: boolean;
+    }>(`/api/v1/integrations/amazon/status?tenantSlug=${slug}`);
+  },
 
   // Phase 1: Fetch Claims (Financial Events)
   // Backend returns: { success: true, claims: [...], isMock?: boolean, mockScenario?: string, message?: string, ... }
   getAmazonClaims: (params?: {
     startDate?: string;
     endDate?: string;
-  }) => {
+  }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getAmazonClaims");
     const queryParams = new URLSearchParams();
     if (params?.startDate) queryParams.append('startDate', params.startDate);
     if (params?.endDate) queryParams.append('endDate', params.endDate);
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1053,42 +1025,46 @@ export const api = {
 
   // Phase 1: Fetch Inventory
   // Backend returns: { success: true, inventory: [...], isMock?: boolean, mockScenario?: string, message?: string, ... }
-  getAmazonInventory: () => requestJson<{
-    success: boolean;
-    inventory: Array<{
-      sku: string;
-      asin?: string;
-      fnsku?: string;
-      productName?: string;
-      quantityAvailable?: number;
-      quantityReserved?: number;
-      quantityInbound?: number;
-      quantityTotal?: number;
-      condition?: string;
-      warehouseLocation?: string;
+  getAmazonInventory: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getAmazonInventory");
+    const slug = tenantSlug;
+    return requestJson<{
+      success: boolean;
+      inventory: Array<{
+        sku: string;
+        asin?: string;
+        fnsku?: string;
+        productName?: string;
+        quantityAvailable?: number;
+        quantityReserved?: number;
+        quantityInbound?: number;
+        quantityTotal?: number;
+        condition?: string;
+        warehouseLocation?: string;
+        isMock?: boolean;
+        mockScenario?: string;
+      }>;
+      // Also support legacy 'data' format for backward compatibility
+      data?: Array<{
+        sku: string;
+        asin?: string;
+        fnsku?: string;
+        productName?: string;
+        quantityAvailable?: number;
+        quantityReserved?: number;
+        quantityInbound?: number;
+        quantityTotal?: number;
+        condition?: string;
+        warehouseLocation?: string;
+        isMock?: boolean;
+        mockScenario?: string;
+      }>;
       isMock?: boolean;
       mockScenario?: string;
-    }>;
-    // Also support legacy 'data' format for backward compatibility
-    data?: Array<{
-      sku: string;
-      asin?: string;
-      fnsku?: string;
-      productName?: string;
-      quantityAvailable?: number;
-      quantityReserved?: number;
-      quantityInbound?: number;
-      quantityTotal?: number;
-      condition?: string;
-      warehouseLocation?: string;
-      isMock?: boolean;
-      mockScenario?: string;
-    }>;
-    isMock?: boolean;
-    mockScenario?: string;
-    message?: string;
-    dataType?: string;
-  }>('/api/v1/integrations/amazon/inventory'),
+      message?: string;
+      dataType?: string;
+    }>(`/api/v1/integrations/amazon/inventory?tenantSlug=${slug}`);
+  },
 
   // Phase 1: Fetch Orders (already exists but adding for consistency)
   // Note: getOrders already exists above, but this is the Phase 1 specific endpoint
@@ -1137,48 +1113,62 @@ export const api = {
   getEvidenceSummary: () => requestJson<any>('/api/evidence/summary'),
 
   // Inventory/Sync summary endpoints (non-id based)
-  getSyncStatus: (params?: { syncId?: string }) => {
+  getSyncStatus: (params?: { syncId?: string }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getSyncStatus");
     const queryParams = new URLSearchParams();
     if (params?.syncId) queryParams.append('syncId', params.syncId);
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<any>(`/api/sync/status${query ? `?${query}` : ''}`);
   },
   getSyncActivity: () => requestJson<any>('/api/sync/activity'),
 
   // Agent 3: Claim Detection endpoints
-  runClaimDetection: (syncId?: string) => requestJson<{
-    success: boolean;
-    detectionId?: string;
-    detection_id?: string;
-    message?: string;
-  }>('/api/detections/run', {
-    method: 'POST',
-    body: syncId ? JSON.stringify({ syncId }) : undefined,
-  }),
-  getDetectionStatus: (detectionId: string) => requestJson<{
-    success: boolean;
-    status: 'in_progress' | 'complete' | 'failed';
-    detection_id: string;
-    total_detected?: number;
-    summary?: any;
-  }>(`/api/detections/status/${encodeURIComponent(detectionId)}`),
+  runClaimDetection: (syncId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for runClaimDetection");
+    return requestJson<{
+      success: boolean;
+      detectionId?: string;
+      detection_id?: string;
+      message?: string;
+    }>(`/api/detections/run?tenantSlug=${tenantSlug}`, {
+      method: 'POST',
+      body: syncId ? JSON.stringify({ syncId }) : undefined,
+    });
+  },
+  getDetectionStatus: (detectionId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionStatus");
+    return requestJson<{
+      success: boolean;
+      status: 'in_progress' | 'complete' | 'failed';
+      detection_id: string;
+      total_detected?: number;
+      summary?: any;
+    }>(`/api/detections/status/${encodeURIComponent(detectionId)}?tenantSlug=${tenantSlug}`);
+  },
 
   // Agent 6: Evidence Matching endpoints
-  runEvidenceMatching: (userId?: string) => requestJson<{
-    success: boolean;
-    jobId?: string;
-    matches?: number;
-    message?: string;
-  }>('/api/evidence/matching/run', {
-    method: 'POST',
-    body: userId ? JSON.stringify({ userId }) : undefined,
-  }),
-  getMatchingResults: (params?: { userId?: string; claimId?: string; limit?: number; offset?: number }) => {
+  runEvidenceMatching: (userId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for runEvidenceMatching");
+    return requestJson<{
+      success: boolean;
+      jobId?: string;
+      matches?: number;
+      message?: string;
+    }>('/api/evidence/matching/run', {
+      method: 'POST',
+      body: JSON.stringify({ userId, tenantSlug }),
+    });
+  },
+  getMatchingResults: (params?: { userId?: string; claimId?: string; limit?: number; offset?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getMatchingResults");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.claimId) queryParams.append('claimId', params.claimId);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1196,22 +1186,15 @@ export const api = {
       total: number;
     }>(`/api/evidence/matching/results${query ? `?${query}` : ''}`);
   },
-  getDocumentMatchingResults: (documentId: string) => {
+  getDocumentMatchingResults: (documentId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocumentMatchingResults");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
     return requestJson<{
       success: boolean;
-      results: Array<{
-        id: string;
-        claim_id: string;
-        document_id: string;
-        confidence_score: number;
-        match_type: string;
-        action_taken: string;
-        matched_fields?: string[];
-        reasoning?: string;
-        created_at?: string;
-      }>;
+      results: Array<any>;
       document_id: string;
-    }>(`/api/evidence/matching/results/by-document/${encodeURIComponent(documentId)}`);
+    }>(`/api/evidence/matching/documents/${encodeURIComponent(documentId)}?tenantSlug=${slug}`);
   },
   getMatchingStatus: (jobId: string) => requestJson<{
     success: boolean;
@@ -1279,7 +1262,8 @@ export const api = {
   }),
 
   // Agent 7: Refund Filing endpoints (dispute cases)
-  getDisputeCases: (params?: { userId?: string; status?: string; limit?: number }) => {
+  getDisputeCases: (params?: { userId?: string; status?: string; limit?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDisputeCases");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.status) queryParams.append('status', params.status);
@@ -1299,7 +1283,7 @@ export const api = {
         expectedPayoutDate?: string;
       }>;
       total: number;
-    }>(`/api/disputes${query ? `?${query}` : ''}`);
+    }>(`/api/disputes?tenantSlug=${tenantSlug}${query ? `&${query}` : ''}`);
   },
   getDisputeCase: (caseId: string) => requestJson<{
     success: boolean;
@@ -1316,7 +1300,8 @@ export const api = {
   }>(`/api/disputes/${encodeURIComponent(caseId)}`),
 
   // Agent 8: Recoveries endpoints (additional methods)
-  getRecoveryRecords: (params?: { userId?: string; status?: string; limit?: number }) => {
+  getRecoveryRecords: (params?: { userId?: string; status?: string; limit?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getRecoveryRecords");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.status) queryParams.append('status', params.status);
@@ -1333,7 +1318,7 @@ export const api = {
         detected_at: string;
       }>;
       total: number;
-    }>(`/api/recoveries/records${query ? `?${query}` : ''}`);
+    }>(`/api/recoveries/records?tenantSlug=${tenantSlug}${query ? `&${query}` : ''}`);
   },
   getReconciliationStatus: (recoveryId: string) => requestJson<{
     success: boolean;
@@ -1344,7 +1329,8 @@ export const api = {
   }>(`/api/recoveries/${encodeURIComponent(recoveryId)}/reconciliation`),
 
   // Agent 9: Billing endpoints
-  getBillingTransactions: (params?: { userId?: string; status?: string; limit?: number }) => {
+  getBillingTransactions: (params?: { userId?: string; status?: string; limit?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getBillingTransactions");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.status) queryParams.append('status', params.status);
@@ -1362,12 +1348,14 @@ export const api = {
         created_at: string;
       }>;
       total: number;
-    }>(`/api/billing/transactions${query ? `?${query}` : ''}`);
+    }>(`/api/billing/transactions?tenantSlug=${tenantSlug}${query ? `&${query}` : ''}`);
   },
-  getBillingInvoices: (params?: { userId?: string; limit?: number }) => {
+  getBillingInvoices: (params?: { userId?: string; limit?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getBillingInvoices");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1421,11 +1409,13 @@ export const api = {
   },
 
   // Agent 10: Notifications endpoints
-  getNotifications: (params?: { userId?: string; unreadOnly?: boolean; limit?: number }) => {
+  getNotifications: (params?: { userId?: string; unreadOnly?: boolean; limit?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getNotifications");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.unreadOnly) queryParams.append('unreadOnly', 'true');
     if (params?.limit) queryParams.append('limit', params.limit.toString());
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1438,26 +1428,35 @@ export const api = {
         created_at: string;
       }>;
       total: number;
-    }>(`/api/notifications${query ? `?${query}` : ''}`);
+    }>(`/api/notifications?${query}`);
   },
-  markNotificationRead: (notificationId: string) => requestJson<{
-    success: boolean;
-    message: string;
-  }>('/api/notifications/mark-read', {
-    method: 'POST',
-    body: JSON.stringify({ notificationIds: notificationId })
-  }),
-  markAllNotificationsRead: () => requestJson<{
-    success: boolean;
-    message: string;
-    meta: { count: number };
-  }>('/api/notifications/mark-all-read', { method: 'POST' }),
-  getUnreadCount: (userId?: string) => {
-    const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
+  markNotificationRead: (notificationId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for markNotificationRead");
+    return requestJson<{
+      success: boolean;
+      message: string;
+    }>(`/api/notifications/mark-read?tenantSlug=${tenantSlug}`, {
+      method: 'POST',
+      body: JSON.stringify({ notificationIds: notificationId })
+    });
+  },
+  markAllNotificationsRead: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for markAllNotificationsRead");
+    return requestJson<{
+      success: boolean;
+      message: string;
+      meta: { count: number };
+    }>(`/api/notifications/mark-all-read?tenantSlug=${tenantSlug}`, { method: 'POST' });
+  },
+  getUnreadCount: (userId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getUnreadCount");
+    const queryParams = new URLSearchParams();
+    if (userId) queryParams.append('userId', userId);
+    queryParams.append('tenantSlug', tenantSlug);
     return requestJson<{
       success: boolean;
       count: number;
-    }>(`/api/notifications/unread${query}`);
+    }>(`/api/notifications/unread?${queryParams.toString()}`);
   },
   getNotificationPreferences: () => requestJson<{
     success: boolean;
@@ -1536,7 +1535,7 @@ export const api = {
     fulfillmentChannel?: 'FBA' | 'FBM';
     limit?: number;
     offset?: number;
-  }) => {
+  }, tenantSlug?: string) => {
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.startDate) queryParams.append('startDate', params.startDate);
@@ -1545,6 +1544,9 @@ export const api = {
     if (params?.fulfillmentChannel) queryParams.append('fulfillmentChannel', params.fulfillmentChannel);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
+    if (!tenantSlug) throw new Error("tenantSlug required for getOrders");
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<any>(`/api/v1/integrations/amazon/orders${query ? `?${query}` : ''}`);
   },
@@ -1557,7 +1559,7 @@ export const api = {
     endDate?: string;
     limit?: number;
     offset?: number;
-  }) => {
+  }, tenantSlug?: string) => {
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.orderId) queryParams.append('orderId', params.orderId);
@@ -1566,6 +1568,9 @@ export const api = {
     if (params?.endDate) queryParams.append('endDate', params.endDate);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
+    if (!tenantSlug) throw new Error("tenantSlug required for getShipments");
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<any>(`/api/v1/integrations/amazon/shipments${query ? `?${query}` : ''}`);
   },
@@ -1578,7 +1583,7 @@ export const api = {
     endDate?: string;
     limit?: number;
     offset?: number;
-  }) => {
+  }, tenantSlug?: string) => {
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.orderId) queryParams.append('orderId', params.orderId);
@@ -1587,6 +1592,9 @@ export const api = {
     if (params?.endDate) queryParams.append('endDate', params.endDate);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
+    if (!tenantSlug) throw new Error("tenantSlug required for getReturns");
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<any>(`/api/v1/integrations/amazon/returns${query ? `?${query}` : ''}`);
   },
@@ -1599,7 +1607,7 @@ export const api = {
     endDate?: string;
     limit?: number;
     offset?: number;
-  }) => {
+  }, tenantSlug?: string) => {
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.orderId) queryParams.append('orderId', params.orderId);
@@ -1608,6 +1616,9 @@ export const api = {
     if (params?.endDate) queryParams.append('endDate', params.endDate);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
+    if (!tenantSlug) throw new Error("tenantSlug required for getSettlements");
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<any>(`/api/v1/integrations/amazon/settlements${query ? `?${query}` : ''}`);
   },
@@ -1616,18 +1627,17 @@ export const api = {
   triggerSync: (params?: {
     userId?: string;
     syncTypes?: Array<'orders' | 'shipments' | 'returns' | 'settlements'>;
-  }) => {
-    // Phase 1 endpoint: POST /api/v1/integrations/amazon/sync
-    // According to Phase 1 requirements (line 151-164), this should work with NO body
-    // Uses session-based authentication via cookies
-    // If backend requires body, we'll send minimal body
+  }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for triggerSync");
+    const slug = tenantSlug;
     const hasParams = params?.userId || params?.syncTypes;
     const body = hasParams
       ? JSON.stringify({
         ...(params?.userId && { userId: params.userId }),
         ...(params?.syncTypes && { syncTypes: params.syncTypes }),
+        tenantSlug: slug
       })
-      : JSON.stringify({}); // Send empty body as per Phase 1 requirements
+      : JSON.stringify({ tenantSlug: slug }); // Send tenantSlug in body
 
     return requestJson<{
       success: boolean;
@@ -1637,17 +1647,20 @@ export const api = {
       estimatedDuration?: string;
       error?: string;
       existingSyncId?: string;
-    }>('/api/v1/integrations/amazon/sync', {
+    }>(`/api/v1/integrations/amazon/sync?tenantSlug=${slug}`, {
       method: 'POST',
       body: body,
     });
   },
 
   // Get detailed sync status
-  getSyncStatusDetailed: (params?: { userId?: string; syncId?: string }) => {
+  getSyncStatusDetailed: (params?: { userId?: string; syncId?: string }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getSyncStatusDetailed");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.syncId) queryParams.append('syncId', params.syncId);
+    const slug = tenantSlug;
+    queryParams.append('tenantSlug', slug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1697,12 +1710,14 @@ export const api = {
 // Phase 3: Detection/Claims API methods
 export const detectionApi = {
   // Get all detection results
-  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }) => {
+  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionResults");
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append('status', params.status);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
     if (params?.userId) queryParams.append('userId', params.userId);
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1726,9 +1741,11 @@ export const detectionApi = {
   },
 
   // Get detection statistics (full format from Phase 3 guide)
-  getDetectionStatistics: async (userId?: string) => {
+  getDetectionStatistics: async (userId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionStatistics");
     const queryParams = new URLSearchParams();
     if (userId) queryParams.append('userId', userId);
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1759,9 +1776,11 @@ export const detectionApi = {
   },
 
   // Get confidence distribution
-  getConfidenceDistribution: async (userId?: string) => {
+  getConfidenceDistribution: async (userId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getConfidenceDistribution");
     const queryParams = new URLSearchParams();
     if (userId) queryParams.append('userId', userId);
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1831,11 +1850,13 @@ export const detectionApi = {
   },
 
   // Get claims approaching deadline
-  getClaimsApproachingDeadline: async (params?: { userId?: string; days?: number }) => {
+  getClaimsApproachingDeadline: async (params?: { userId?: string; days?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getClaimsApproachingDeadline");
     const queryParams = new URLSearchParams();
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.days) queryParams.append('days', params.days.toString());
     else queryParams.append('days', '7'); // Default to 7 days
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
       success: boolean;
@@ -1854,11 +1875,13 @@ export const detectionApi = {
   },
 
   // Notifications
-  getNotifications: (params?: { unread_only?: boolean; limit?: number; offset?: number }) => {
+  getNotifications: (params?: { unread_only?: boolean; limit?: number; offset?: number }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getNotifications");
     const query = new URLSearchParams();
     if (params?.unread_only) query.append('unread_only', 'true');
     if (params?.limit) query.append('limit', params.limit.toString());
     if (params?.offset) query.append('offset', params.offset.toString());
+    query.append('tenantSlug', tenantSlug);
     return requestJson<{ success: boolean; data: any[]; meta: any }>(`/api/notifications?${query.toString()}`);
   },
   markNotificationsRead: (notificationIds: string[]) =>
@@ -1919,7 +1942,10 @@ export const detectionApi = {
     message: string;
   }>(`/api/admin/users/${encodeURIComponent(userId)}/impersonate`, { method: 'POST' }),
   // Store Management
-  getStores: () => requestJson<{ success: boolean; stores: any[] }>('/api/v1/stores'),
+  getStores: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getStores");
+    return requestJson<{ success: boolean; stores: any[] }>(`/api/v1/stores?tenantSlug=${tenantSlug}`);
+  },
   createStore: (data: { name: string; marketplace: string; seller_id?: string }) =>
     requestJson<{ success: boolean; store: any }>('/api/v1/stores', {
       method: 'POST',

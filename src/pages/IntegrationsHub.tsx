@@ -29,8 +29,8 @@ export default function IntegrationsHub() {
   const navigate = useNavigate();
   const location = useLocation();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
-  const { tenant } = useTenant();
-  const activeSlug = tenantSlug || tenant?.slug || 'default';
+  const { isReady, tenant } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug || 'beta';
   const { toast } = useToast();
   const [lastSyncTime, setLastSyncTime] = useState('Just now');
   const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
@@ -153,11 +153,12 @@ export default function IntegrationsHub() {
 
   // Check if we just connected Amazon and should show the reveal
   useEffect(() => {
+    if (!isReady) return;
     const amazonConnected = searchParams.get('amazon_connected');
 
     if (amazonConnected === 'true' && !showRecoveryReveal) {
       // Fetch the actual recovery data
-      api.getAmazonRecoveries().then(response => {
+      api.getAmazonRecoveries(activeSlug).then(response => {
         if (response.ok && response.data) {
           setRecoveryData(response.data);
           setShowRecoveryReveal(true);
@@ -169,7 +170,7 @@ export default function IntegrationsHub() {
         }
       });
     }
-  }, [searchParams, showRecoveryReveal]);
+  }, [searchParams, showRecoveryReveal, activeSlug, isReady]);
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
@@ -193,7 +194,7 @@ export default function IntegrationsHub() {
           : 'Outlook';
     try {
       setProviderLoading(provider);
-      const r = await api.connectDocs(provider);
+      const r = await api.connectDocs(provider, activeSlug);
       if (r.ok && r.data?.auth_url) {
         toast({
           title: `Connecting ${providerName}`,
@@ -231,9 +232,10 @@ export default function IntegrationsHub() {
 
   // SSE for live ingest/detection events
   useEffect(() => {
+    if (!isReady) return;
     let es: EventSource | null = null;
     try {
-      es = new EventSource('/api/sse/status');
+      es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);
@@ -244,7 +246,7 @@ export default function IntegrationsHub() {
                 description: evt.message || 'Evidence ingestion has completed. Documents are available in Evidence Locker.'
               });
               // Refresh status to update lastIngest and provider status
-              api.getIntegrationsStatus().then(res => {
+              api.getIntegrationsStatus(activeSlug).then(res => {
                 if (res.ok && res.data) {
                   setStatus(res.data);
                 }
@@ -266,7 +268,7 @@ export default function IntegrationsHub() {
       };
     } catch { }
     return () => { if (es) es.close(); };
-  }, [toast]);
+  }, [toast, isReady, activeSlug]);
 
 
   // Handle OAuth callback query parameters
@@ -291,7 +293,7 @@ export default function IntegrationsHub() {
       });
 
       // Refresh integration status to update UI
-      api.getIntegrationsStatus().then(res => {
+      api.getIntegrationsStatus(activeSlug).then(res => {
         if (res.ok && res.data) {
           setStatus(res.data);
         }
@@ -336,14 +338,14 @@ export default function IntegrationsHub() {
       });
 
       // Refresh integration status to update UI
-      api.getIntegrationsStatus().then(res => {
+      api.getIntegrationsStatus(activeSlug).then(res => {
         if (res.ok && res.data) {
           setStatus(res.data);
         }
       });
 
       // Refresh evidence sources
-      api.getEvidenceSources().then(res => {
+      api.getEvidenceSources(activeSlug).then(res => {
         if (res.ok && res.data) {
           setEvidenceSources(res.data.sources || []);
         }
@@ -375,7 +377,7 @@ export default function IntegrationsHub() {
       });
 
       // Refresh integration status
-      api.getIntegrationsStatus().then(res => {
+      api.getIntegrationsStatus(activeSlug).then(res => {
         if (res.ok && res.data) {
           setStatus(res.data);
         }
@@ -388,9 +390,10 @@ export default function IntegrationsHub() {
   }, [location.search, navigate, toast]);
 
   useEffect(() => {
+    if (!isReady) return;
     let cancelled = false;
     (async () => {
-      const res = await api.getIntegrationsStatus();
+      const res = await api.getIntegrationsStatus(activeSlug);
       if (!cancelled) {
         if (res.ok && res.data) {
           setStatus(res.data);
@@ -401,14 +404,15 @@ export default function IntegrationsHub() {
       }
     })();
     return () => { cancelled = true };
-  }, []);
+  }, [isReady, activeSlug]);
 
   // Load evidence sources
   useEffect(() => {
+    if (!isReady) return;
     let cancelled = false;
     (async () => {
       try {
-        const res = await api.getEvidenceSources();
+        const res = await api.getEvidenceSources(activeSlug);
         if (!cancelled && res.ok && res.data) {
           setEvidenceSources(res.data.sources || []);
         }
@@ -417,14 +421,15 @@ export default function IntegrationsHub() {
       }
     })();
     return () => { cancelled = true };
-  }, []);
+  }, [isReady, activeSlug]);
 
   // Load stores
   useEffect(() => {
+    if (!isReady) return;
     const fetchStores = async () => {
       try {
         setLoadingStores(true);
-        const res = await api.getStores();
+        const res = await api.getStores(activeSlug);
         if (res.ok && res.data?.stores) {
           setStores(res.data.stores);
         }
@@ -435,7 +440,7 @@ export default function IntegrationsHub() {
       }
     };
     fetchStores();
-  }, []);
+  }, [isReady, activeSlug]);
 
   const handleAddStore = async () => {
     if (!newStoreData.name) {
@@ -444,7 +449,7 @@ export default function IntegrationsHub() {
     }
     try {
       setAddingStore(true);
-      const res = await api.createStore(newStoreData);
+      const res = await api.createStore(newStoreData, activeSlug);
       if (res.ok) {
         setStores([...stores, res.data.store]);
         setShowAddStore(false);
@@ -464,7 +469,7 @@ export default function IntegrationsHub() {
     if (!confirm("Are you sure you want to remove this store?")) return;
     try {
       setDeletingStore(id);
-      const res = await api.deleteStore(id);
+      const res = await api.deleteStore(id, activeSlug);
       if (res.ok) {
         setStores(stores.filter(s => s.id !== id));
         toast({ title: "Store Removed", description: "Store removed successfully." });

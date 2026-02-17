@@ -36,7 +36,10 @@ const ApiAccess = lazy(() => import("./pages/ApiAccess"));
 const ApiLanding = lazy(() => import("./pages/ApiLanding"));
 const Help = lazy(() => import("./pages/Help"));
 const WhatsNew = lazy(() => import("./pages/WhatsNew"));
-const ReconnectProvider = lazy(() => import("./pages/ReconnectProvider"));
+const ReconnectProvider = lazy(() => import('./pages/ReconnectProvider'));
+const TenantRedirect = lazy(() => import('./components/navigation/TenantRedirect').then(module => ({ default: module.TenantRedirect })));
+
+// Analytics injection
 const OAuthProviderSandbox = lazy(() => import("./pages/OAuthProviderSandbox"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthCallbackRedirect = lazy(() => import("./pages/OAuthCallbackRedirect"));
@@ -63,6 +66,7 @@ const Sales = lazy(() => import("./pages/Sales"));
 const UltraBeta = lazy(() => import("./pages/UltraBeta"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
+
 
 // New Evidence Pages
 const EvidenceOnboarding = lazy(() => import("./pages/EvidenceOnboarding"));
@@ -114,8 +118,6 @@ const App = () => (
               <NotificationsProvider>
                 <Suspense fallback={<RouteSkeleton />}>
                   <Routes>
-                    {/* ... routes ... */}
-                    {/* (I'll use a shorter target/replacement to be safe) */}
                     {/* ============================================ */}
                     {/* PUBLIC ROUTES - No tenant required */}
                     {/* ============================================ */}
@@ -137,7 +139,8 @@ const App = () => (
                     {/* ============================================ */}
                     {/* AUTH & OAUTH ROUTES - No tenant required */}
                     {/* ============================================ */}
-                    <Route path="/auth/callback" element={<OAuthCallback />} />
+                    {/* These routes are now tenant-scoped or handled by TenantRedirect */}
+                    {/* <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
                     <Route path="/auth/success" element={<OAuthSuccess />} />
                     <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
@@ -147,33 +150,30 @@ const App = () => (
                     <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
                     <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
                     <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
-                    <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
+                    <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} /> */}
 
                     {/* ============================================ */}
-                    {/* TENANT-SCOPED ROUTES - /app/:tenantSlug/* */}
-                    {/* Professional SaaS URL pattern (Slack, Linear, Notion) */}
+                    {/* ROOT REDIRECTS - Guide users to tenant scope */}
                     {/* ============================================ */}
+                    <Route path="/dashboard" element={<TenantRedirect />} />
+                    <Route path="/app" element={<TenantRedirect />} />
+                    <Route path="/stripe/callback" element={<StripeCallback />} />
+
+                    {/* Tenant-Scoped Routes (Option A: Canonical Scoping) */}
                     <Route path="/app/:tenantSlug" element={<Dashboard />} />
                     <Route path="/app/:tenantSlug/dashboard" element={<Dashboard />} />
                     <Route path="/app/:tenantSlug/sync" element={<Sync />} />
-                    <Route path="/app/:tenantSlug/settings" element={<Settings />} />
+                    <Route path="/app/:tenantSlug/auth/callback" element={<OAuthCallback />} />
+                    <Route path="/app/:tenantSlug/auth/success" element={<OAuthSuccess />} />
                     <Route path="/app/:tenantSlug/integrations-hub" element={<IntegrationsHub />} />
-                    <Route path="/app/:tenantSlug/integrations/reconnect/:provider" element={<ReconnectProvider />} />
-                    <Route path="/app/:tenantSlug/reports" element={<Reports />} />
-                    <Route path="/app/:tenantSlug/upcoming-payments" element={<UpcomingPayments />} />
-                    <Route path="/app/:tenantSlug/transaction-history" element={<TransactionHistory />} />
                     <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
-                    <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
-                    <Route path="/app/:tenantSlug/recoveries/:caseId/resolve" element={<ResolveCase />} />
-                    <Route path="/app/:tenantSlug/smart-inventory-sync" element={<SmartInventorySync />} />
-                    <Route path="/app/:tenantSlug/evidence-locker" element={<EvidenceLocker />} />
+                    <Route path="/app/:tenantSlug/history" element={<TransactionHistory />} />
+                    <Route path="/app/:tenantSlug/documents" element={<EvidenceLocker />} />
                     <Route path="/app/:tenantSlug/documents/:id" element={<DocumentDetail />} />
+                    <Route path="/app/:tenantSlug/settings" element={<Settings />} />
+                    <Route path="/app/:tenantSlug/upcoming-payments" element={<UpcomingPayments />} />
+                    <Route path="/app/:tenantSlug/reconnect-amazon" element={<ReconnectProvider />} />
                     <Route path="/app/:tenantSlug/billing" element={<Billing />} />
-                    <Route path="/app/:tenantSlug/billing/invoice/:id" element={<InvoiceDetail />} />
-                    <Route path="/app/:tenantSlug/team" element={<TeamManagement />} />
-                    <Route path="/app/:tenantSlug/export-center" element={<ExportCenter />} />
-                    <Route path="/app/:tenantSlug/notifications" element={<NotificationHub />} />
-                    <Route path="/app/:tenantSlug/learning-insights" element={<LearningInsights />} />
                     <Route path="/app/:tenantSlug/api-access" element={<ApiAccess />} />
                     <Route path="/app/:tenantSlug/help" element={<Help />} />
                     <Route path="/app/:tenantSlug/whats-new" element={<WhatsNew />} />
@@ -189,14 +189,16 @@ const App = () => (
                     <Route path="/app/:tenantSlug/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
                     <Route path="/app/:tenantSlug/admin/revenue" element={<AdminOnly><AdminRevenue /></AdminOnly>} />
                     <Route path="/app/:tenantSlug/admin/queue" element={<AdminOnly><QueueDashboard /></AdminOnly>} />
+                    <Route path="/app/:tenantSlug/admin/team" element={<AdminOnly><TeamManagement /></AdminOnly>} />
 
-                    {/* ============================================ */}
-                    {/* LEGACY REDIRECTS - For backwards compatibility */}
-                    {/* Redirect old routes to tenant-scoped versions */}
-                    {/* TODO: These will redirect to default tenant once user is logged in */}
-                    {/* ============================================ */}
-                    <Route path="/app" element={<Navigate to="/" replace />} />
-                    <Route path="/dashboard" element={<Navigate to="/" replace />} />
+                    {/* Catch all old app paths and try to redirect to tenant */}
+                    <Route path="/integrations-hub" element={<TenantRedirect />} />
+                    <Route path="/recoveries" element={<TenantRedirect />} />
+                    <Route path="/sync" element={<TenantRedirect />} />
+                    <Route path="/settings" element={<TenantRedirect />} />
+                    <Route path="/reconnect-amazon" element={<TenantRedirect />} />
+                    <Route path="/billing" element={<TenantRedirect />} />
+                    <Route path="/upcoming-payments" element={<TenantRedirect />} />
 
                     {/* 404 Catch All */}
                     <Route path="*" element={<NotFound />} />

@@ -461,7 +461,7 @@ export function Navbar({
               onClick={async () => {
                 setShowSignOutModal(false);
                 try { await api.logout(); } catch (_) { }
-                window.location.href = '/';
+                navigate('/');
               }}
               className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-serif font-bold transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.1)]">
               SIGN OUT

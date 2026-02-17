@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { tenantRoute } from '@/lib/routes';
 
 export default function StripeCallback() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  // Enforce strict URL authority for callback context
+  const currentTenantSlug = tenantSlug || 'beta';
 
   useEffect(() => {
     let isCancelled = false;
@@ -19,8 +23,8 @@ export default function StripeCallback() {
             return;
           }
         }
-      } catch (_) {}
-      if (!isCancelled) navigate('/billing');
+      } catch (_) { }
+      if (!isCancelled) navigate(tenantRoute(currentTenantSlug, '/billing'));
     })();
     return () => { isCancelled = true };
   }, [navigate]);

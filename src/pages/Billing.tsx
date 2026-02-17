@@ -25,9 +25,11 @@ import {
   ArrowUpRight,
   Scale
 } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
+import { tenantRoute } from '@/lib/routes';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface InvoiceRecord {
@@ -55,9 +57,12 @@ const getStatusStyles = (status: InvoiceRecord['status']) => {
 
 export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { isReady } = useTenant();
+  const activeSlug = tenantSlug || 'beta';
   const [exportOpen, setExportOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,12 +83,13 @@ export default function Billing() {
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.getBillingInvoices({ limit: 100 });
+        const response = await api.getBillingInvoices({ limit: 100 }, activeSlug);
         if (!cancelled) {
           if (response.ok && response.data?.invoices) {
             const mappedInvoices: InvoiceRecord[] = response.data.invoices.map((inv: any) => {
@@ -122,7 +128,7 @@ export default function Billing() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [isReady, activeSlug]);
 
   const saveBillingSettings = () => {
     localStorage.setItem('clario.billing', JSON.stringify({ recipients: invoiceRecipients, taxId }));
@@ -281,7 +287,7 @@ export default function Billing() {
                       Save changes
                     </Button>
                     <Button
-                      onClick={() => window.location.href = '/stripe/callback'}
+                      onClick={() => navigate('/stripe/callback')}
                       variant="outline"
                       className="border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 rounded-xl font-mono uppercase text-[9px] tracking-[0.2em] h-12 px-6"
                     >

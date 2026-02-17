@@ -15,7 +15,8 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { format, subDays, startOfYear, startOfQuarter } from 'date-fns';
 import { CalendarIcon, Search, MoreHorizontal, FileText, Eye, RefreshCw, Info, AlertTriangle, X, CheckCircle2, Clock, ExternalLink, ChevronDown, ChevronUp, ArrowUpFromLine, Upload, Mail, Hexagon, ArrowRight, Loader2, Sparkles, FileSearch } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
@@ -1132,6 +1133,12 @@ const getTypeDisplay = (type: string | undefined, anomalyType?: string): { name:
 
 
 export default function Recoveries() {
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { isReady } = useTenant();
+  const activeSlug = tenantSlug;
+  if (!activeSlug && isReady) {
+    throw new Error("tenantSlug required for Recoveries");
+  }
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClaimTypes, setSelectedClaimTypes] = useState<string[]>([]);
@@ -1442,11 +1449,25 @@ export default function Recoveries() {
     setMergedRecoveries(merged);
   }, []);
 
+  // Reset state on tenant switch to prevent flicker
+  useEffect(() => {
+    setClaims([]);
+    setDetectionResults([]);
+    setMergedRecoveries(null);
+    setDetectionStats(null);
+    setMetrics(null);
+    setMetricsLoaded(false);
+    setRecoveredTotal(null);
+    setAmazonClaimCount(null);
+    setSelectedIds(new Set());
+  }, [activeSlug]);
+
   // Fetch detection statistics
   useEffect(() => {
+    if (!isReady) return;
     let cancelled = false;
     (async () => {
-      const statsRes = await detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null }));
+      const statsRes = await detectionApi.getDetectionStatistics(undefined, activeSlug).catch(() => ({ ok: false, data: null }));
       if (!cancelled) {
         if (statsRes.ok && statsRes.data?.statistics) {
           setDetectionStats(statsRes.data.statistics);
@@ -1454,17 +1475,18 @@ export default function Recoveries() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [isReady, activeSlug]);
 
   useEffect(() => {
+    if (!isReady) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
       const [resData, metricsRes, amazonRecoveriesRes, detectionRes] = await Promise.all([
-        recoveryApi.getRecoveries().catch(() => null),
-        api.getRecoveriesMetrics(),
-        api.getAmazonRecoveries().catch(() => null),
-        detectionApi.getDetectionResults({ limit: 100, offset: 0 }).catch((err) => {
+        recoveryApi.getRecoveries(activeSlug).catch(() => null),
+        api.getRecoveriesMetrics(activeSlug),
+        api.getAmazonRecoveries(activeSlug).catch(() => null),
+        detectionApi.getDetectionResults({ limit: 100, offset: 0 }, activeSlug).catch((err) => {
           console.warn('Failed to fetch detection results:', err);
           return { ok: false, data: null };
         }),
@@ -1613,7 +1635,7 @@ export default function Recoveries() {
 
           try {
             // Check if there's an active sync
-            const syncStatusRes = await api.getSyncStatus();
+            const syncStatusRes = await api.getSyncStatus(undefined, activeSlug);
             if (syncStatusRes.ok && syncStatusRes.data) {
               const syncStatus = syncStatusRes.data as any;
 
@@ -1627,7 +1649,7 @@ export default function Recoveries() {
               } else if (syncStatus.lastSync?.status === 'complete') {
                 // Sync completed, refresh data
                 const [newRecoveriesRes] = await Promise.all([
-                  api.getAmazonRecoveries().catch(() => null),
+                  api.getAmazonRecoveries(activeSlug).catch(() => null),
                 ]);
                 if (newRecoveriesRes?.ok && newRecoveriesRes.data) {
                   const newData = newRecoveriesRes.data as any;
@@ -1685,13 +1707,13 @@ export default function Recoveries() {
 
             try {
               const { getSyncStatus } = await import('@/lib/inventoryApi');
-              const status = await getSyncStatus(syncId);
+              const status = await getSyncStatus(syncId, activeSlug);
 
               if (status.status === 'complete') {
                 // Sync completed, refresh data
                 const [newRecoveriesRes, newClaimsRes] = await Promise.all([
-                  api.getAmazonRecoveries().catch(() => null),
-                  recoveryApi.getRecoveries().catch(() => null),
+                  api.getAmazonRecoveries(activeSlug).catch(() => null),
+                  recoveryApi.getRecoveries(activeSlug).catch(() => null),
                 ]);
 
                 if (newRecoveriesRes?.ok && newRecoveriesRes.data) {
@@ -1814,7 +1836,7 @@ export default function Recoveries() {
       }
 
       // Refresh claims list to show new recoveries
-      recoveryApi.getRecoveries().then(res => {
+      recoveryApi.getRecoveries(activeSlug).then(res => {
         if (Array.isArray(res)) {
           const newClaims = res as any[];
           const currentClaimIds = new Set(newClaims.map(c => c.id));
@@ -1836,7 +1858,7 @@ export default function Recoveries() {
 
     // Refresh Amazon recoveries when sync/detection events occur
     if (evt.type === 'sync' || evt.type === 'detection') {
-      api.getAmazonRecoveries().then(res => {
+      api.getAmazonRecoveries(activeSlug).then(res => {
         if (res.ok && res.data) {
           const data = res.data as any;
           const previousTotal = previousRecoveredTotalRef.current;
@@ -2275,7 +2297,7 @@ export default function Recoveries() {
                       const ids = Array.from(selectedIds);
                       for (const id of ids) {
                         try {
-                          await recoveryApi.submitClaim(id);
+                          await recoveryApi.submitClaim(id, activeSlug);
                           toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
                           setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
                         } catch (e: any) {

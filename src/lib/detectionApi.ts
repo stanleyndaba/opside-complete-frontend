@@ -4,37 +4,41 @@ export const detectionApi = {
   /**
    * Run claim detection (Agent 3)
    */
-  runDetection: async () => {
-    const res = await api.runClaimDetection();
+  runDetection: async (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for runDetection");
+    const res = await api.runClaimDetection(undefined, tenantSlug);
     if (!res.ok) throw new Error(res.error || 'Failed to start detection');
     return res.data as { detection_id: string; detectionId?: string; message?: string };
   },
-  
+
   /**
    * Get detection job status
    */
-  getStatus: async (detectionId: string) => {
-    const res = await api.getDetectionStatus(detectionId);
+  getStatus: async (detectionId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getStatus");
+    const res = await api.getDetectionStatus(detectionId, tenantSlug);
     if (!res.ok) throw new Error(res.error || 'Failed to get detection status');
-    return res.data as { 
-      status: 'in_progress' | 'complete' | 'failed'; 
+    return res.data as {
+      status: 'in_progress' | 'complete' | 'failed';
       detection_id: string;
       total_detected?: number;
       summary?: any;
     };
   },
-  
+
   /**
    * Get all detection results
    */
-  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }) => {
+  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionResults");
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append('status', params.status);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
     if (params?.userId) queryParams.append('userId', params.userId);
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
-    
+
     const res = await api.get<{
       success: boolean;
       results: Array<{
@@ -54,19 +58,21 @@ export const detectionApi = {
       }>;
       total: number;
     }>(`/api/detections/results${query ? `?${query}` : ''}`);
-    
+
     if (!res.ok) throw new Error(res.error || 'Failed to get detection results');
     return res.data;
   },
-  
+
   /**
    * Get detection statistics
    */
-  getDetectionStatistics: async (userId?: string) => {
+  getDetectionStatistics: async (userId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionStatistics");
     const queryParams = new URLSearchParams();
     if (userId) queryParams.append('userId', userId);
+    queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
-    
+
     const res = await api.get<{
       success: boolean;
       statistics: {
@@ -84,7 +90,7 @@ export const detectionApi = {
         averageConfidence?: number;
       };
     }>(`/api/detections/statistics${query ? `?${query}` : ''}`);
-    
+
     if (!res.ok) throw new Error(res.error || 'Failed to get detection statistics');
     return res.data;
   },

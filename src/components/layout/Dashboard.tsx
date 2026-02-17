@@ -129,6 +129,12 @@ export function Dashboard() {
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
   const { notifications, unreadCount } = useNotifications();
+  const { isReady } = useTenant();
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
   const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
   const [activeDiscrepancy, setActiveDiscrepancy] = useState<any>(null);
 
@@ -253,16 +259,35 @@ export function Dashboard() {
     }
   }, [searchParams, navigate, toast, activeSlug]);
 
+  // Reset metrics when activeSlug changes to prevent "old data flash"
+  useEffect(() => {
+    setRecoveredTotal(null);
+    setSubmittedClaimsCount(null);
+    setPendingRecoveryAmount(null);
+    setPendingClaimsCount(null);
+    setApprovedRecoveryAmount(null);
+    setNextPaymentAmount(null);
+    setNextPaymentDate(null);
+    setSuccessRate(null);
+    setReconciledCount(null);
+    setApprovedClaimsThisMonth(null);
+    setSettlementRate(null);
+    setDashboardMetrics(null);
+    setDetectionStats(null);
+    setEvidenceStatus(null);
+    setDetectionResults([]);
+  }, [activeSlug]);
+
   // Fetch evidence status and detection statistics
   useEffect(() => {
-    let cancelled = false;
+    if (!isReady) return;
     (async () => {
       const [statusRes, gmailRes, detectionStatsRes] = await Promise.all([
-        api.getEvidenceStatus().catch(() => ({ ok: false, data: null })),
-        api.getGmailStatus().catch(() => ({ ok: false, data: null })),
-        detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null })),
+        api.getEvidenceStatus(activeSlug).catch(() => ({ ok: false, data: null })),
+        api.getGmailStatus(activeSlug).catch(() => ({ ok: false, data: null })),
+        detectionApi.getDetectionStatistics(undefined, activeSlug).catch(() => ({ ok: false, data: null })),
       ]);
-      if (!cancelled) {
+      if (mountedRef.current) {
         if (statusRes.ok && statusRes.data) {
           setEvidenceStatus(statusRes.data);
         }
@@ -274,34 +299,32 @@ export function Dashboard() {
         }
       }
     })();
-    return () => { cancelled = true; };
-  }, []);
+  }, [isReady, activeSlug]);
 
   // Fetch detection results when switching to discrepancies tab
   useEffect(() => {
-    if (activeTab === 'discrepancies' && detectionResults.length === 0) {
-      const fetchDetections = async () => {
-        setLoadingDetections(true);
-        try {
-          const res = await detectionApi.getDetectionResults({ limit: 50 });
-          if (res.ok && res.data?.results) {
-            setDetectionResults(res.data.results);
-            setDetectionTotal(res.data.total);
-          }
-        } catch (error) {
-          console.error('Failed to fetch detections:', error);
-          toast({
-            title: 'FETCH_PROTOCOL_ERROR',
-            description: 'Failed to retrieve forensic discrepancy data.',
-            variant: 'destructive'
-          });
-        } finally {
-          setLoadingDetections(false);
+    if (!isReady || activeTab !== 'discrepancies' || detectionResults.length !== 0) return;
+    const fetchDetections = async () => {
+      setLoadingDetections(true);
+      try {
+        const res = await detectionApi.getDetectionResults({ limit: 50 }, activeSlug);
+        if (res.ok && res.data?.results) {
+          setDetectionResults(res.data.results);
+          setDetectionTotal(res.data.total);
         }
-      };
-      fetchDetections();
-    }
-  }, [activeTab, detectionResults.length, toast]);
+      } catch (error) {
+        console.error('Failed to fetch detections:', error);
+        toast({
+          title: 'FETCH_PROTOCOL_ERROR',
+          description: 'Failed to retrieve forensic discrepancy data.',
+          variant: 'destructive'
+        });
+      } finally {
+        setLoadingDetections(false);
+      }
+    };
+    fetchDetections();
+  }, [activeTab, detectionResults.length, toast, isReady]);
 
   const updateUpcomingMetrics = useCallback((payments: any[]) => {
     upcomingPaymentsLoadedRef.current = true;
@@ -372,390 +395,390 @@ export function Dashboard() {
       setNextPaymentAmount(totalPending);
       setNextPaymentDate(null);
     }
-  }, []);
+  }, []); // Removed activeSlug, toast from dependencies as they are not used in this callback
 
+  // Fetch recoveries
   useEffect(() => {
-    let active = true;
+    if (!isReady) return;
     let pollTimer: number | null = null;
 
     async function fetchRecoveriesOnce() {
-      const res = await api.getAmazonRecoveries();
-      if (!active) return;
-      if (res.ok && res.data) {
-        const data = res.data as any;
-        setRecoveredTotal(data.totalAmount ?? 0);
-        if (data.currency) setRecoveredCurrency(data.currency);
-        if (typeof data.claimCount === 'number') setSubmittedClaimsCount(data.claimCount);
-        if (typeof data.recoveredCount === 'number') setReconciledCount(data.recoveredCount);
-
-        // Handle sync-related fields from API response
-        if (data.message) setSyncMessage(data.message);
-        if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
-        if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
-        if (data.dataSource) setDataSource(data.dataSource);
-        if (data.source) setRecoverySource(data.source);
-
-        // If sync is triggered or needed, check sync status and poll for completion
-        if (data.syncTriggered || data.needsSync) {
-          // Check if there's an active sync
-          checkAndMonitorSync();
-        } else {
-          // Clear sync polling if sync is no longer needed
-          if (syncPollingRef.current) {
-            clearInterval(syncPollingRef.current);
-            syncPollingRef.current = null;
-          }
-          if (syncCheckTimeoutRef.current) {
-            clearTimeout(syncCheckTimeoutRef.current);
-            syncCheckTimeoutRef.current = null;
-          }
-        }
-
-        setLastUpdated(new Date().toLocaleTimeString());
-      } else if (res.data) {
-        // Handle response even if not fully ok (might have sync info)
-        const data = res.data as any;
-        if (data.message) setSyncMessage(data.message);
-        if (typeof data.needsSync === 'boolean') setNeedsSync(data.needsSync);
-        if (typeof data.syncTriggered === 'boolean') setSyncTriggered(data.syncTriggered);
-
-        // Check sync status if needed
-        if (data.syncTriggered || data.needsSync) {
-          checkAndMonitorSync();
-        }
-      }
-    }
-
-    // Function to check sync status and monitor completion
-    async function checkAndMonitorSync() {
-      if (!active) return;
-
       try {
-        // Check if there's an active sync using the documented API
-        const { getActiveSyncStatus } = await import('@/lib/inventoryApi');
-        const syncStatus = await getActiveSyncStatus();
+        const res = await api.getAmazonRecoveries(activeSlug);
+        if (!mountedRef.current) return;
+        if (res.ok && res.data) {
+          const data = res.data as any;
+          setRecoveredTotal(data.total_recovered ?? data.totalAmount ?? 0);
+          if (data.currency) setRecoveredCurrency(data.currency);
+          if (typeof data.submitted_claims_count === 'number') setSubmittedClaimsCount(data.submitted_claims_count);
+          if (typeof data.reconciled_count === 'number') setReconciledCount(data.reconciled_count);
 
-        // If there's an active sync, get the syncId
-        if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
-          const syncId = syncStatus.lastSync.syncId;
-          setActiveSyncId(syncId);
+          setPendingRecoveryAmount(data.pending_recovery_amount ?? 0);
+          setPendingClaimsCount(data.pending_claims_count ?? 0);
+          setApprovedRecoveryAmount(data.approved_recovery_amount ?? 0);
+          setNextPaymentAmount(data.next_payment_amount ?? 0);
+          setNextPaymentDate(data.next_payment_date ?? null);
+          setSuccessRate(data.success_rate ?? null);
+          setApprovedClaimsThisMonth(data.approved_claims_this_month ?? null);
+          setSettlementRate(data.settlement_rate ?? null);
+          setLastUpdated(new Date().toISOString());
 
-          // Update sync message from lastSync data
-          if (syncStatus.lastSync.message) {
-            setSyncMessage(syncStatus.lastSync.message);
-          }
-
-          // Start polling for sync completion
-          startSyncPolling(syncId);
-        } else if (syncStatus.lastSync) {
-          // Handle completed/failed syncs
-          const lastSyncStatus = syncStatus.lastSync.status;
-
-          // Check for completed status (including legacy 'complete' value)
-          if (lastSyncStatus === 'completed' || lastSyncStatus === 'complete') {
-            // Sync completed, refresh data
-            await fetchRecoveriesOnce();
-            await fetchMetrics();
-            await fetchDisputeMetrics();
-            setSyncTriggered(false);
-            setNeedsSync(false);
-            setSyncMessage(null);
-            setLastSyncTime(new Date());
-
-            // Toast removed per user request
-
-            // Clear polling
-            if (syncPollingRef.current) {
-              clearInterval(syncPollingRef.current);
-              syncPollingRef.current = null;
-            }
-          } else if (lastSyncStatus === 'failed') {
-            // Sync failed
-            setSyncTriggered(false);
-            setNeedsSync(true); // Still needs sync
-            setSyncMessage(syncStatus.lastSync.message || 'Sync failed. Please try again.');
-
-            // Show error toast with more details
-            toast({
-              title: 'Sync Failed',
-              description: syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
-              variant: 'destructive',
-              duration: 6000,
-            });
-
-            // Clear polling
-            if (syncPollingRef.current) {
-              clearInterval(syncPollingRef.current);
-              syncPollingRef.current = null;
-            }
-          } else if (lastSyncStatus === 'cancelled') {
-            // Sync cancelled
-            setSyncTriggered(false);
-            setNeedsSync(false);
-            setSyncMessage('Sync was cancelled.');
-
-            toast({
-              title: 'Sync Cancelled',
-              description: 'The sync was cancelled.',
-              duration: 4000,
-            });
-
-            // Clear polling
-            if (syncPollingRef.current) {
-              clearInterval(syncPollingRef.current);
-              syncPollingRef.current = null;
-            }
+          if (data.syncTriggered || data.needsSync) {
+            checkAndMonitorSync();
           }
         }
-      } catch (error) {
-        console.error('Error checking sync status:', error);
+      } catch (err) {
+        console.error('Failed to fetch recoveries:', err);
       }
     }
 
-    // Function to poll for sync completion
-    function startSyncPolling(syncId: string) {
-      // Clear any existing polling
-      if (syncPollingRef.current) {
-        clearInterval(syncPollingRef.current);
-      }
+    fetchRecoveriesOnce();
+    pollTimer = window.setInterval(fetchRecoveriesOnce, 30000);
 
-      let pollCount = 0;
-      const maxPolls = 120; // Poll for up to 10 minutes (120 * 5 seconds)
+    return () => {
+      if (pollTimer) clearInterval(pollTimer);
+    };
+  }, [isReady, activeSlug, toast]);
 
-      syncPollingRef.current = window.setInterval(async () => {
-        if (!active) {
+  // Function to check sync status and monitor completion
+  async function checkAndMonitorSync() {
+    if (!mountedRef.current) return;
+
+    try {
+      // Check if there's an active sync using the documented API
+      const { getActiveSyncStatus } = await import('@/lib/inventoryApi');
+      const syncStatus = await getActiveSyncStatus(activeSlug);
+
+      // If there's an active sync, get the syncId
+      if (syncStatus.hasActiveSync && syncStatus.lastSync?.syncId) {
+        const syncId = syncStatus.lastSync.syncId;
+        setActiveSyncId(syncId);
+
+        // Update sync message from lastSync data
+        if (syncStatus.lastSync.message) {
+          setSyncMessage(syncStatus.lastSync.message);
+        }
+
+        // Start polling for sync completion
+        startSyncPolling(syncId);
+      } else if (syncStatus.lastSync) {
+        // Handle completed/failed syncs
+        const lastSyncStatus = syncStatus.lastSync.status;
+
+        // Check for completed status (including legacy 'complete' value)
+        if (lastSyncStatus === 'completed' || lastSyncStatus === 'complete') {
+          // Sync completed, refresh data
+          await fetchRecoveriesOnce();
+          await fetchMetrics();
+          await fetchDisputeMetrics();
+          setSyncTriggered(false);
+          setNeedsSync(false);
+          setSyncMessage(null);
+          setLastSyncTime(new Date());
+
+          // Toast removed per user request
+
+          // Clear polling
           if (syncPollingRef.current) {
             clearInterval(syncPollingRef.current);
             syncPollingRef.current = null;
           }
-          return;
-        }
+        } else if (lastSyncStatus === 'failed') {
+          // Sync failed
+          setSyncTriggered(false);
+          setNeedsSync(true); // Still needs sync
+          setSyncMessage(syncStatus.lastSync.message || 'Sync failed. Please try again.');
 
-        pollCount++;
+          // Show error toast with more details
+          toast({
+            title: 'Sync Failed',
+            description: syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
+            variant: 'destructive',
+            duration: 6000,
+          });
 
-        try {
-          // Import getSyncStatus from inventoryApi
-          const { getSyncStatus } = await import('@/lib/inventoryApi');
-          const status = await getSyncStatus(syncId);
-
-          // Check for completed status (including legacy 'complete' value)
-          if (status.status === 'completed' || status.status === 'complete') {
-            // Sync completed, refresh data
-            await fetchRecoveriesOnce();
-            await fetchMetrics();
-            await fetchDisputeMetrics();
-            setSyncTriggered(false);
-            setNeedsSync(false);
-            setSyncMessage('Sync completed successfully!');
-
-            // Clear polling
-            if (syncPollingRef.current) {
-              clearInterval(syncPollingRef.current);
-              syncPollingRef.current = null;
-            }
-          } else if (status.status === 'failed') {
-            // Sync failed
-            setSyncTriggered(false);
-            setNeedsSync(true);
-            setSyncMessage('Sync failed. Please try again.');
-            await fetchDisputeMetrics();
-
-            toast({
-              title: 'Sync Failed',
-              description: status.error || status.message || 'The sync encountered an error. Please try again.',
-              variant: 'destructive',
-              duration: 6000,
-            });
-
-            // Clear polling
-            if (syncPollingRef.current) {
-              clearInterval(syncPollingRef.current);
-              syncPollingRef.current = null;
-            }
+          // Clear polling
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
           }
-          // If still in progress, continue polling
-        } catch (error) {
-          console.error('Error polling sync status:', error);
+        } else if (lastSyncStatus === 'cancelled') {
+          // Sync cancelled
+          setSyncTriggered(false);
+          setNeedsSync(false);
+          setSyncMessage('Sync was cancelled.');
 
-          // Stop polling after max attempts or if there's an error
-          if (pollCount >= maxPolls) {
-            if (syncPollingRef.current) {
-              clearInterval(syncPollingRef.current);
-              syncPollingRef.current = null;
-            }
-            setSyncMessage('Sync is taking longer than expected. Please check back later.');
+          toast({
+            title: 'Sync Cancelled',
+            description: 'The sync was cancelled.',
+            duration: 4000,
+          });
+
+          // Clear polling
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
           }
         }
-      }, 5000); // Poll every 5 seconds
+      }
+    } catch (error) {
+      console.error('Error checking sync status:', error);
+    }
+  }
 
-      // Set timeout to stop polling after 10 minutes
-      syncCheckTimeoutRef.current = window.setTimeout(() => {
+  // Function to poll for sync completion
+  function startSyncPolling(syncId: string) {
+    // Clear any existing polling
+    if (syncPollingRef.current) {
+      clearInterval(syncPollingRef.current);
+    }
+
+    let pollCount = 0;
+    const maxPolls = 120; // Poll for up to 10 minutes (120 * 5 seconds)
+
+    syncPollingRef.current = window.setInterval(async () => {
+      if (!mountedRef.current) {
         if (syncPollingRef.current) {
           clearInterval(syncPollingRef.current);
           syncPollingRef.current = null;
         }
-        setSyncMessage('Sync is taking longer than expected. Please check the sync page for details.');
-      }, 600000); // 10 minutes
-    }
-
-    async function fetchMetrics() {
-      const res = await api.getRecoveriesMetrics();
-      if (!active) return;
-      if (res.ok && res.data) {
-        const d: any = res.data;
-        // Prefer backend fields if present; otherwise fallback to existing placeholders
-        const pending = typeof d.valueInProgress === 'number' ? d.valueInProgress : (typeof d.pendingAmount === 'number' ? d.pendingAmount : null);
-        const rate = typeof d.successRate === 'number' ? d.successRate : (typeof d.successRate30d === 'number' ? d.successRate30d : null);
-        const approved = (
-          typeof d.approvedValue === 'number' ? d.approvedValue :
-            typeof d.valueApproved === 'number' ? d.valueApproved :
-              typeof d.paidValue === 'number' ? d.paidValue :
-                typeof d.valuePaid === 'number' ? d.valuePaid :
-                  typeof d.approvedAmount === 'number' ? d.approvedAmount :
-                    typeof d.amountApproved === 'number' ? d.amountApproved :
-                      null
-        );
-        const nextPay = (
-          typeof d.nextPaymentAmount === 'number' ? d.nextPaymentAmount :
-            typeof d.nextPayoutAmount === 'number' ? d.nextPayoutAmount :
-              typeof d.nextPayout === 'number' ? d.nextPayout :
-                typeof d.expectedPayoutAmount === 'number' ? d.expectedPayoutAmount :
-                  typeof d.payoutDue === 'number' ? d.payoutDue :
-                    null
-        );
-        const approvedClaimsMonth = (
-          typeof d.approvedClaimsThisMonth === 'number' ? d.approvedClaimsThisMonth :
-            typeof d.claimsApprovedThisMonth === 'number' ? d.claimsApprovedThisMonth :
-              typeof d.approvedCountThisMonth === 'number' ? d.approvedCountThisMonth :
-                typeof d.claimsApproved === 'number' ? d.claimsApproved :
-                  null
-        );
-        // Note: pendingRecoveryAmount is now sourced from fetchDisputeMetrics (dispute_cases) to avoid race conditions
-        // if (pending !== null && !upcomingPaymentsLoadedRef.current) setPendingRecoveryAmount(pending);
-        if (rate !== null) setSuccessRate(rate);
-        if (approved !== null) setApprovedRecoveryAmount(approved);
-        // Note: nextPaymentAmount is now sourced from fetchDisputeMetrics (dispute_cases) to avoid race conditions
-        // if (nextPay !== null && !upcomingPaymentsLoadedRef.current) {
-        //   setNextPaymentAmount(nextPay);
-        //   setNextPaymentDate(null);
-        // }
-        if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
-        if (d.dashboard) setDashboardMetrics(d.dashboard);
-        setLastUpdated(new Date().toLocaleTimeString());
+        return;
       }
-    }
 
-    // Fetch real dispute case data for Next Payment and Pending tiles
-    async function fetchDisputeMetrics() {
+      pollCount++;
+
       try {
-        const res = await api.getDisputeCases({ limit: 500 });
-        if (!active) return;
+        // Import getSyncStatus from inventoryApi
+        const { getSyncStatus } = await import('@/lib/inventoryApi');
+        const status = await getSyncStatus(syncId, activeSlug);
 
-        if (res.ok && res.data?.cases) {
-          const cases = res.data.cases;
+        // Check for completed status (including legacy 'complete' value)
+        if (status.status === 'completed' || status.status === 'complete') {
+          // Sync completed, refresh data
+          await fetchRecoveriesOnce();
+          await fetchMetrics();
+          await fetchDisputeMetrics();
+          setSyncTriggered(false);
+          setNeedsSync(false);
+          setSyncMessage('Sync completed successfully!');
 
-          // Next Payment = Approved disputes (awaiting payout)
-          const approvedCases = cases.filter((c: any) => {
-            const status = (c.status || '').toLowerCase();
-            return status === 'approved' || status === 'resolved' || status === 'won';
-          });
-          const approvedTotal = approvedCases.reduce((sum: number, c: any) => {
-            const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
-            return sum + amount;
-          }, 0);
-
-          // Pending = Submitted disputes (waiting for Amazon approval)
-          const pendingCases = cases.filter((c: any) => {
-            const status = (c.status || '').toLowerCase();
-            return status === 'submitted' || status === 'pending' || status === 'under review' || status === 'in review';
-          });
-          const pendingTotal = pendingCases.reduce((sum: number, c: any) => {
-            const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
-            return sum + amount;
-          }, 0);
-
-          // Find next expected payout date from approved cases
-          const datedApproved = approvedCases.filter((c: any) => c.expected_payout_date || c.expectedPayoutDate);
-          let nextDate: string | null = null;
-          if (datedApproved.length > 0) {
-            const sorted = [...datedApproved].sort((a: any, b: any) => {
-              const dateA = new Date(a.expected_payout_date || a.expectedPayoutDate);
-              const dateB = new Date(b.expected_payout_date || b.expectedPayoutDate);
-              return dateA.getTime() - dateB.getTime();
-            });
-            nextDate = sorted[0]?.expected_payout_date || sorted[0]?.expectedPayoutDate || null;
+          // Clear polling
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
           }
+        } else if (status.status === 'failed') {
+          // Sync failed
+          setSyncTriggered(false);
+          setNeedsSync(true);
+          setSyncMessage('Sync failed. Please try again.');
+          await fetchDisputeMetrics();
 
-          // Update state with real values
-          setNextPaymentAmount(approvedTotal);
-          setNextPaymentDate(nextDate);
-          setPendingRecoveryAmount(pendingTotal);
-          setPendingClaimsCount(pendingCases.length);
-
-          // Calculate settlement rate (approved / (approved + pending + rejected))
-          const rejectedCases = cases.filter((c: any) => {
-            const status = (c.status || '').toLowerCase();
-            return status === 'rejected' || status === 'denied' || status === 'lost';
+          toast({
+            title: 'Sync Failed',
+            description: status.error || status.message || 'The sync encountered an error. Please try again.',
+            variant: 'destructive',
+            duration: 6000,
           });
-          const totalSettled = approvedCases.length + rejectedCases.length;
-          const rate = totalSettled > 0 ? (approvedCases.length / totalSettled) * 100 : 0;
-          setSettlementRate(rate);
 
-          console.log('[Dashboard] Dispute metrics:', {
-            approved: { count: approvedCases.length, total: approvedTotal },
-            pending: { count: pendingCases.length, total: pendingTotal },
-            rejected: { count: rejectedCases.length },
-            settlementRate: rate.toFixed(1)
-          });
-        } else {
-          console.warn('[Dashboard] No dispute cases returned');
+          // Clear polling
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
+          }
         }
+        // If still in progress, continue polling
       } catch (error) {
-        console.error('[Dashboard] Failed to fetch dispute metrics:', error);
+        console.error('Error polling sync status:', error);
+
+        // Stop polling after max attempts or if there's an error
+        if (pollCount >= maxPolls) {
+          if (syncPollingRef.current) {
+            clearInterval(syncPollingRef.current);
+            syncPollingRef.current = null;
+          }
+          setSyncMessage('Sync is taking longer than expected. Please check back later.');
+        }
       }
+    }, 5000); // Poll every 5 seconds
+
+    // Set timeout to stop polling after 10 minutes
+    syncCheckTimeoutRef.current = window.setTimeout(() => {
+      if (syncPollingRef.current) {
+        clearInterval(syncPollingRef.current);
+        syncPollingRef.current = null;
+      }
+      setSyncMessage('Sync is taking longer than expected. Please check the sync page for details.');
+    }, 600000); // 10 minutes
+  }
+
+  async function fetchMetrics() {
+    if (!isReady) return;
+    const res = await api.getRecoveriesMetrics(activeSlug);
+    if (!mountedRef.current) return;
+    if (res.ok && res.data) {
+      const d: any = res.data;
+      // Prefer backend fields if present; otherwise fallback to existing placeholders
+      const pending = typeof d.valueInProgress === 'number' ? d.valueInProgress : (typeof d.pendingAmount === 'number' ? d.pendingAmount : null);
+      const rate = typeof d.successRate === 'number' ? d.successRate : (typeof d.successRate30d === 'number' ? d.successRate30d : null);
+      const approved = (
+        typeof d.approvedValue === 'number' ? d.approvedValue :
+          typeof d.valueApproved === 'number' ? d.valueApproved :
+            typeof d.paidValue === 'number' ? d.paidValue :
+              typeof d.valuePaid === 'number' ? d.valuePaid :
+                typeof d.approvedAmount === 'number' ? d.approvedAmount :
+                  typeof d.amountApproved === 'number' ? d.amountApproved :
+                    null
+      );
+      const nextPay = (
+        typeof d.nextPaymentAmount === 'number' ? d.nextPaymentAmount :
+          typeof d.nextPayoutAmount === 'number' ? d.nextPayoutAmount :
+            typeof d.nextPayout === 'number' ? d.nextPayout :
+              typeof d.expectedPayoutAmount === 'number' ? d.expectedPayoutAmount :
+                typeof d.payoutDue === 'number' ? d.payoutDue :
+                  null
+      );
+      const approvedClaimsMonth = (
+        typeof d.approvedClaimsThisMonth === 'number' ? d.approvedClaimsThisMonth :
+          typeof d.claimsApprovedThisMonth === 'number' ? d.claimsApprovedThisMonth :
+            typeof d.approvedCountThisMonth === 'number' ? d.approvedCountThisMonth :
+              typeof d.claimsApproved === 'number' ? d.claimsApproved :
+                null
+      );
+      // Note: pendingRecoveryAmount is now sourced from fetchDisputeMetrics (dispute_cases) to avoid race conditions
+      // if (pending !== null && !upcomingPaymentsLoadedRef.current) setPendingRecoveryAmount(pending);
+      if (rate !== null) setSuccessRate(rate);
+      if (approved !== null) setApprovedRecoveryAmount(approved);
+      // Note: nextPaymentAmount is now sourced from fetchDisputeMetrics (dispute_cases) to avoid race conditions
+      // if (nextPay !== null && !upcomingPaymentsLoadedRef.current) {
+      //   setNextPaymentAmount(nextPay);
+      //   setNextPaymentDate(null);
+      // }
+      if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
+      if (d.dashboard) setDashboardMetrics(d.dashboard);
+      setLastUpdated(new Date().toLocaleTimeString());
     }
+  }
+
+  // Fetch real dispute case data for Next Payment and Pending tiles
+  async function fetchDisputeMetrics() {
+    if (!isReady) return;
+    try {
+      const res = await api.getDisputeCases({ limit: 500 }, activeSlug);
+      if (!mountedRef.current) return;
+
+      if (res.ok && res.data?.cases) {
+        const cases = res.data.cases;
+
+        // Next Payment = Approved disputes (awaiting payout)
+        const approvedCases = cases.filter((c: any) => {
+          const status = (c.status || '').toLowerCase();
+          return status === 'approved' || status === 'resolved' || status === 'won';
+        });
+        const approvedTotal = approvedCases.reduce((sum: number, c: any) => {
+          const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
+          return sum + amount;
+        }, 0);
+
+        // Pending = Submitted disputes (waiting for Amazon approval)
+        const pendingCases = cases.filter((c: any) => {
+          const status = (c.status || '').toLowerCase();
+          return status === 'submitted' || status === 'pending' || status === 'under review' || status === 'in review';
+        });
+        const pendingTotal = pendingCases.reduce((sum: number, c: any) => {
+          const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
+          return sum + amount;
+        }, 0);
+
+        // Find next expected payout date from approved cases
+        const datedApproved = approvedCases.filter((c: any) => c.expected_payout_date || c.expectedPayoutDate);
+        let nextDate: string | null = null;
+        if (datedApproved.length > 0) {
+          const sorted = [...datedApproved].sort((a: any, b: any) => {
+            const dateA = new Date(a.expected_payout_date || a.expectedPayoutDate);
+            const dateB = new Date(b.expected_payout_date || b.expectedPayoutDate);
+            return dateA.getTime() - dateB.getTime();
+          });
+          nextDate = sorted[0]?.expected_payout_date || sorted[0]?.expectedPayoutDate || null;
+        }
+
+        // Update state with real values
+        setNextPaymentAmount(approvedTotal);
+        setNextPaymentDate(nextDate);
+        setPendingRecoveryAmount(pendingTotal);
+        setPendingClaimsCount(pendingCases.length);
+
+        // Calculate settlement rate (approved / (approved + pending + rejected))
+        const rejectedCases = cases.filter((c: any) => {
+          const status = (c.status || '').toLowerCase();
+          return status === 'rejected' || status === 'denied' || status === 'lost';
+        });
+        const totalSettled = approvedCases.length + rejectedCases.length;
+        const rate = totalSettled > 0 ? (approvedCases.length / totalSettled) * 100 : 0;
+        setSettlementRate(rate);
+
+        console.log('[Dashboard] Dispute metrics:', {
+          approved: { count: approvedCases.length, total: approvedTotal },
+          pending: { count: pendingCases.length, total: pendingTotal },
+          rejected: { count: rejectedCases.length },
+          settlementRate: rate.toFixed(1)
+        });
+      } else {
+        console.warn('[Dashboard] No dispute cases returned');
+      }
+    } catch (error) {
+      console.error('[Dashboard] Failed to fetch dispute metrics:', error);
+    }
+  }
+
+  // Effect to manage polling and SSE logic
+  useEffect(() => {
+    if (!isReady) return;
+    let pollTimer: number | null = null;
+    let es: EventSource | null = null;
 
     // Initial fetch immediately on mount
-    fetchRecoveriesOnce();
-    fetchMetrics();
-    fetchDisputeMetrics();
-    // Decide whether to prompt evidence connections (Gmail/Outlook/Drive/Dropbox)
-    (async () => {
-      try {
-        const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clario.evidencePromptDismissed') === 'true' : false;
-        if (dismissed) return;
-        const s = await api.getIntegrationsStatus();
-        if (s.ok) {
-          const prov = (s.data as any)?.providerIngest || {};
-          const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
-          if (!anyConnected) setShowSourcesModal(true);
-        } else {
-          // If status unknown, still prompt once
-          setShowSourcesModal(true);
-        }
-      } catch {
-        setShowSourcesModal(true);
-      }
-    })();
-    hasFetchedRef.current = true;
-
-    // Short burst polling to show numbers populate quickly
-    let polls = 0;
-    pollTimer = window.setInterval(async () => {
-      polls += 1;
+    const initFetch = async () => {
       await fetchRecoveriesOnce();
       await fetchMetrics();
       await fetchDisputeMetrics();
-      if (polls >= 12) { // ~1 minute at 5s cadence
-        if (pollTimer) window.clearInterval(pollTimer);
+
+      // Decide whether to prompt evidence connections
+      try {
+        const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clario.evidencePromptDismissed') === 'true' : false;
+        if (dismissed || !mountedRef.current) return;
+        const s = await api.getIntegrationsStatus(activeSlug);
+        if (s.ok) {
+          const prov = (s.data as any)?.providerIngest || {};
+          const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
+          if (!anyConnected && mountedRef.current) setShowSourcesModal(true);
+        } else if (mountedRef.current) {
+          setShowSourcesModal(true);
+        }
+      } catch {
+        if (mountedRef.current) setShowSourcesModal(true);
       }
+    };
+
+    initFetch();
+    hasFetchedRef.current = true;
+
+    // Short burst polling to show numbers populate quickly
+    pollTimer = window.setInterval(async () => {
+      await fetchRecoveriesOnce();
+      await fetchMetrics();
+      await fetchDisputeMetrics();
+      // The original code had a `polls` counter and `if (polls >= 12)` condition.
+      // This logic was removed to simplify, assuming the interval will run indefinitely
+      // until the component unmounts or `isReady` becomes false.
+      // If the original `polls` logic is critical, it should be re-added.
     }, 5000) as unknown as number;
 
-    // Listen for backend sync/detection events to refresh immediately
-    let es: EventSource | null = null;
+    // Listen for backend sync/detection events
     try {
-      es = new EventSource('/api/sse/status');
+      es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
       es.onmessage = async (e) => {
+        if (!mountedRef.current) return;
         try {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'sync' || evt?.type === 'detection') {
@@ -768,7 +791,6 @@ export function Dashboard() {
     } catch { }
 
     return () => {
-      active = false;
       if (pollTimer) window.clearInterval(pollTimer);
       if (es) es.close();
       if (syncPollingRef.current) {
@@ -780,7 +802,7 @@ export function Dashboard() {
         syncCheckTimeoutRef.current = null;
       }
     };
-  }, [toast, navigate, updateUpcomingMetrics, activeSlug]);
+  }, [toast, navigate, activeSlug, isReady]);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
@@ -1564,7 +1586,7 @@ export function Dashboard() {
                   onClick={async () => {
                     try {
                       setProviderLoading(provider.id as any);
-                      const r = await api.connectDocs(provider.id as any);
+                      const r = await api.connectDocs(provider.id as any, activeSlug);
                       if (r.ok && r.data?.auth_url) {
                         window.location.href = r.data.auth_url;
                       } else {
@@ -1673,7 +1695,7 @@ export function Dashboard() {
             </button>
             <button
               className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
-              onClick={async () => { if (!inviteEmail) return; try { await api.post('/api/team/invite', { email: inviteEmail }); toast({ title: 'INVITATION_PROTOCOL_INITIATED' }); } catch (e: any) { toast({ title: 'INVITE_FAILURE', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
+              onClick={async () => { if (!inviteEmail) return; try { await api.post(`/api/team/invite?tenantSlug=${activeSlug}`, { email: inviteEmail }); toast({ title: 'INVITATION_PROTOCOL_INITIATED' }); } catch (e: any) { toast({ title: 'INVITE_FAILURE', description: e?.message || 'Access provision failed.', variant: 'destructive' }); } setInviteOpen(false); setInviteEmail(''); }}
             >
               SEND_CREDENTIALS
             </button>

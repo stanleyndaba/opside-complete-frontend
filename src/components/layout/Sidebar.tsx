@@ -16,11 +16,14 @@ import { tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Lightweight prefetch using dynamic import hints matching route chunks
 const prefetchRoute = (path: string) => {
   try {
-    switch (path) {
-      case '/app':
+    // Extract base path by removing /app/:tenantSlug
+    const baseMatch = path.match(/^\/app\/[^/]+(.*)$/);
+    const basePath = baseMatch ? baseMatch[1] : path;
+
+    switch (basePath || '/') {
+      case '/':
         import('@/components/layout/Dashboard');
         break;
       case '/reports':
@@ -76,7 +79,7 @@ export function Sidebar({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
-  const { tenant } = useTenant();
+  const { tenant, isReady } = useTenant();
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
   const { unreadCount } = useNotifications();
@@ -109,17 +112,24 @@ export function Sidebar({
 
   const handleSignOut = async () => {
     try { await api.logout(); } catch (_) { }
-    window.location.href = '/';
+    navigate('/');
   };
 
   // Get tenant slug from URL or context
   const currentTenantSlug = tenantSlug || tenant?.slug || 'default';
 
+  // Reset state when tenant changes to prevent flicker
+  React.useEffect(() => {
+    setConnectedEmail(null);
+    setClaimCount(null);
+  }, [currentTenantSlug]);
+
   // Fetch connected email from evidence sources
   React.useEffect(() => {
+    if (!isReady) return;
     (async () => {
       try {
-        const r = await api.getEvidenceSources();
+        const r = await api.getEvidenceSources(currentTenantSlug);
         if (r.ok && r.data?.sources) {
           const gmailSource = r.data.sources.find((s: any) => s.provider === 'gmail' && s.status === 'connected');
           if (gmailSource?.account_email) {
@@ -128,10 +138,11 @@ export function Sidebar({
         }
       } catch { }
     })();
-  }, []);
+  }, [isReady, currentTenantSlug]);
 
   // Fetch claim count
   React.useEffect(() => {
+    if (!isReady) return;
     (async () => {
       try {
         const r = await api.getRecoveriesMetrics(currentTenantSlug);
@@ -140,10 +151,12 @@ export function Sidebar({
         }
       } catch { }
     })();
-  }, [currentTenantSlug]);
+  }, [currentTenantSlug, isReady]);
 
   // Check if we're on the Dashboard (Command Center) page
-  const isDashboard = location.pathname === '/dashboard' || location.pathname === '/app' || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/app');
+  const isDashboard = location.pathname.endsWith('/dashboard') ||
+    location.pathname === `/app/${currentTenantSlug}` ||
+    location.pathname === `/app/${currentTenantSlug}/`;
 
   const primaryItems: NavItem[] = [
     { title: 'Overview', icon: LayoutDashboard, href: tenantRoute(currentTenantSlug, '') },
@@ -151,7 +164,7 @@ export function Sidebar({
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
     { title: 'Refund Recoveries', icon: Plug, href: tenantRoute(currentTenantSlug, '/upcoming-payments') },
-    { title: 'Transaction History', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/transaction-history') }
+    { title: 'Transaction History', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/history') }
   ];
 
   const secondaryItems: NavItem[] = []; // Moved to "More" menu
@@ -163,26 +176,30 @@ export function Sidebar({
     const isActive = location.pathname === item.href;
     const handlePrefetch = useCallback(() => {
       prefetchRoute(item.href);
-      if (item.href === '/app') {
+
+      const baseMatch = item.href.match(/^\/app\/[^/]+(.*)$/);
+      const basePath = baseMatch ? baseMatch[1] : item.href;
+
+      if (basePath === '/' || basePath === '') {
         queryClient.prefetchQuery({
-          queryKey: ['dashboard-aggregates', '30d'], queryFn: async () => {
-            const r = await api.getDashboardAggregates('30d');
+          queryKey: ['dashboard-aggregates', currentTenantSlug, '30d'], queryFn: async () => {
+            const r = await api.getDashboardAggregates('30d', currentTenantSlug);
             if (!r.ok || !r.data) throw new Error('aggregate prefetch');
             return r.data;
           }
         });
         queryClient.prefetchQuery({
-          queryKey: ['recoveries-metrics'], queryFn: async () => {
-            const r = await api.getRecoveriesMetrics();
+          queryKey: ['recoveries-metrics', currentTenantSlug], queryFn: async () => {
+            const r = await api.getRecoveriesMetrics(currentTenantSlug);
             if (!r.ok || !r.data) throw new Error('metrics prefetch');
             return r.data;
           }
         });
       }
-      if (item.href === '/recoveries') {
+      if (basePath === '/recoveries') {
         queryClient.prefetchQuery({
-          queryKey: ['recoveries-metrics'], queryFn: async () => {
-            const r = await api.getRecoveriesMetrics();
+          queryKey: ['recoveries-metrics', currentTenantSlug], queryFn: async () => {
+            const r = await api.getRecoveriesMetrics(currentTenantSlug);
             if (!r.ok || !r.data) throw new Error('metrics prefetch');
             return r.data;
           }
@@ -577,7 +594,7 @@ export function Sidebar({
                 }
 
                 try {
-                  const response = await fetch(`${window.location.origin.includes('localhost') ? 'http://localhost:3001' : 'https://opside-node-api-woco.onrender.com'}/api/invites/send`, {
+                  const response = await fetch(`${window.location.origin.includes('localhost') ? 'http://localhost:3001' : 'https://opside-node-api-woco.onrender.com'}/api/invites/send?tenantSlug=${currentTenantSlug}`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -585,6 +602,7 @@ export function Sidebar({
                     },
                     body: JSON.stringify({
                       email: inviteEmail,
+                      tenantSlug: currentTenantSlug,
                       message: `Protocol: Invitation for institutional access generated. Link: ${referralLink}`
                     })
                   });

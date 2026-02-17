@@ -10,12 +10,15 @@ export type StatusEvent = {
 
 import { api } from '@/lib/api';
 
-export const useStatusStream = (onEvent?: (event: StatusEvent) => void) => {
+export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSlug?: string) => {
   const eventSourceRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
+    const slug = tenantSlug;
+    if (!slug) return;
+
     // Build SSE URL using API base URL
-    const sseUrl = api.buildApiUrl('/api/sse/status');
+    const sseUrl = api.buildApiUrl(`/api/sse/status?tenantSlug=${slug}`);
     const eventSource = new EventSource(sseUrl, { withCredentials: true } as any);
 
     eventSource.onmessage = (event) => {
@@ -69,7 +72,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void) => {
     return () => {
       eventSource.close();
     };
-  }, [onEvent]);
+  }, [onEvent, tenantSlug]);
 
   return {
     close: () => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
@@ -19,20 +20,25 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
   const [loading, setLoading] = useState(true);
   const [disconnecting, setDisconnecting] = useState(false);
   const { toast } = useToast();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { isReady } = useTenant();
+  const activeSlug = tenantSlug || 'beta';
 
   useEffect(() => {
-    fetchGmailStatus();
-  }, []);
+    if (isReady) {
+      fetchGmailStatus();
+    }
+  }, [isReady, activeSlug]);
 
   const fetchGmailStatus = async () => {
     try {
       setLoading(true);
 
       // Try getGmailStatus first (specific endpoint)
-      let gmailRes = await api.getGmailStatus();
+      let gmailRes = await api.getGmailStatus(activeSlug);
 
       // Also check getIntegrationsStatus as fallback (more comprehensive)
-      const integrationsRes = await api.getIntegrationsStatus();
+      const integrationsRes = await api.getIntegrationsStatus(activeSlug);
 
       // Helper function to determine if Gmail is connected - only return true when explicitly verified
       const isGmailConnected = (): boolean => {
@@ -59,15 +65,11 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       // Get email from either endpoint
       const email = gmailRes?.ok && gmailRes.data?.email
         ? gmailRes.data.email
-        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.email
-          ? integrationsRes.data.providerIngest['gmail'].email
-          : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.email
-            ? integrationsRes.data.providerIngest['Gmail'].email
-            : undefined;
+        : undefined;
 
       // Get lastSync from either endpoint
-      const lastSync = gmailRes?.ok && gmailRes.data?.lastSync
-        ? gmailRes.data.lastSync
+      const lastSync = gmailRes?.ok && gmailRes.data?.last_sync_at
+        ? gmailRes.data.last_sync_at
         : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.lastIngest
           ? integrationsRes.data.providerIngest['gmail'].lastIngest
           : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.lastIngest

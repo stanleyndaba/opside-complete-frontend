@@ -826,7 +826,7 @@ export default function Sync() {
 
           addLog({ type: 'info', category: 'system', message: 'Initializing sync...' }, 0);
 
-          const start = await startSync();
+          const start = await startSync(currentTenantSlug);
           if (cancelled) return;
           const newSyncId = start.syncId;
           setSyncId(newSyncId);
@@ -875,7 +875,7 @@ export default function Sync() {
         // Load existing sync status
         try {
           addLog({ type: 'info', category: 'system', message: `Loading sync status...` });
-          const s = await getSyncStatus(syncId);
+          const s = await getSyncStatus(syncId, currentTenantSlug);
           if (cancelled) return;
 
           console.log('[Sync] Received sync status:', s);
@@ -892,7 +892,7 @@ export default function Sync() {
             setProgress(0);
             setMessage('Sync not found. Please start a new sync.');
             setError(null);
-            navigate('/sync', { replace: true });
+            navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
 
             toast({
               title: 'Sync Not Found',
@@ -971,7 +971,7 @@ export default function Sync() {
         }, (connectionState) => {
           // SSE connection state callback
           setSseStatus(connectionState);
-        });
+        }, currentTenantSlug);
       } catch (err) {
         console.error('SSE connection failed, falling back to polling:', err);
       }
@@ -984,7 +984,7 @@ export default function Sync() {
     interval = setInterval(async () => {
       if (!syncId || cancelled) return;
       try {
-        const s = await getSyncStatus(syncId);
+        const s = await getSyncStatus(syncId, currentTenantSlug);
         if (cancelled) return;
         updateSyncState(s);
 
@@ -1026,7 +1026,7 @@ export default function Sync() {
         }
       }
     };
-  }, [syncId, navigate]);
+  }, [syncId, navigate, currentTenantSlug]);
 
   const handleCancelSync = async () => {
     if (!syncId || status !== 'running') return;
@@ -1034,7 +1034,7 @@ export default function Sync() {
     setIsCancelling(true);
     addLog({ type: 'warning', category: 'system', message: 'Cancelling sync...' });
     try {
-      await cancelSync(syncId);
+      await cancelSync(syncId, currentTenantSlug);
       setStatus('cancelled');
       setMessage('Sync cancelled');
       previousStatusRef.current = 'cancelled';
@@ -1046,7 +1046,7 @@ export default function Sync() {
         duration: 4000,
       });
 
-      const s = await getSyncStatus(syncId);
+      const s = await getSyncStatus(syncId, currentTenantSlug);
       updateSyncState(s);
     } catch (e: any) {
       setError(e?.message || 'Failed to cancel sync');
@@ -1097,7 +1097,7 @@ export default function Sync() {
     addLog({ type: 'info', category: 'system', message: 'Clearing stuck sync...' });
 
     try {
-      const result = await forceClearSync();
+      const result = await forceClearSync(currentTenantSlug);
 
       toast({
         title: 'Sync Cleared',
@@ -1116,7 +1116,7 @@ export default function Sync() {
 
       // Small delay then reload to start fresh sync
       setTimeout(() => {
-        window.location.href = '/sync';
+        navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
       }, 500);
     } catch (e: any) {
       const errorMsg = e?.message || 'Failed to clear stuck sync';
@@ -1919,7 +1919,7 @@ export default function Sync() {
                     onClick={async () => {
                       try {
                         setProviderLoading('gmail');
-                        const r = await api.connectDocs('gmail');
+                        const r = await api.connectDocs('gmail', currentTenantSlug);
                         if (r.ok && r.data?.auth_url) {
                           window.location.href = r.data.auth_url;
                         } else {
@@ -1953,7 +1953,7 @@ export default function Sync() {
                     onClick={async () => {
                       try {
                         setProviderLoading('outlook');
-                        const r = await api.connectDocs('outlook');
+                        const r = await api.connectDocs('outlook', currentTenantSlug);
                         if (r.ok && r.data?.auth_url) {
                           window.location.href = r.data.auth_url;
                         } else {
@@ -1987,7 +1987,7 @@ export default function Sync() {
                     onClick={async () => {
                       try {
                         setProviderLoading('gdrive');
-                        const r = await api.connectDocs('gdrive');
+                        const r = await api.connectDocs('gdrive', currentTenantSlug);
                         if (r.ok && r.data?.auth_url) {
                           window.location.href = r.data.auth_url;
                         } else {
@@ -2021,7 +2021,7 @@ export default function Sync() {
                     onClick={async () => {
                       try {
                         setProviderLoading('dropbox');
-                        const r = await api.connectDocs('dropbox');
+                        const r = await api.connectDocs('dropbox', currentTenantSlug);
                         if (r.ok && r.data?.auth_url) {
                           window.location.href = r.data.auth_url;
                         } else {

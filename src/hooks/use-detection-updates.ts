@@ -18,7 +18,8 @@ export interface DetectionUpdateEvent {
 
 export const useDetectionUpdates = (
   syncId: string | null,
-  onUpdate?: (event: DetectionUpdateEvent) => void
+  onUpdate?: (event: DetectionUpdateEvent) => void,
+  tenantSlug?: string
 ) => {
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<number | null>(null);
@@ -44,7 +45,9 @@ export const useDetectionUpdates = (
     }
 
     try {
-      const url = api.buildApiUrl(`/api/sse/detection-updates/${syncId}`);
+      const slug = tenantSlug;
+      if (!slug) return;
+      const url = api.buildApiUrl(`/api/sse/detection-updates/${syncId}?tenantSlug=${slug}`);
       const eventSource = new EventSource(url, { withCredentials: true } as any);
 
       eventSource.onopen = () => {
@@ -105,7 +108,7 @@ export const useDetectionUpdates = (
     } catch (error) {
       console.error('[Detection Updates] Failed to create EventSource:', error);
     }
-  }, [syncId, onUpdate]);
+  }, [syncId, onUpdate, tenantSlug]);
 
   useEffect(() => {
     if (syncId) {

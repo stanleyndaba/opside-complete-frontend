@@ -46,8 +46,11 @@ import { cn } from '@/lib/utils';
 
 export default function DocumentDetail() {
   const { id, documentId, tenantSlug } = useParams();
-  const { tenant } = useTenant();
-  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
+  const { tenant, isReady } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug;
+  if (!activeTenantSlug && isReady) {
+    throw new Error("tenantSlug required for DocumentDetail");
+  }
   const docId = (documentId as string) || (id as string) || '';
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -60,15 +63,23 @@ export default function DocumentDetail() {
     return isSidebarCollapsed ? 'ml-16' : 'ml-64';
   }, [isSidebarCollapsed]);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [documentData, setDocumentData] = useState<any>(null);
+  const [parsedData, setParsedData] = useState<any>(null);
+  const [matchedClaims, setMatchedClaims] = useState<any[]>([]);
+  const [triggeringParse, setTriggeringParse] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(true);
+
   useEffect(() => {
+    if (!isReady || !docId) return;
     let cancelled = false;
     (async () => {
-      if (!docId) return;
       setLoading(true);
       try {
         // Fetch document data (backend now returns all parsed data in one call)
         console.log('[DocumentDetail] Fetching document:', docId);
-        const docRes = await api.getDocument(docId);
+        const docRes = await api.getDocument(docId, activeTenantSlug);
 
         console.log('[DocumentDetail] Response:', docRes);
 
@@ -85,7 +96,7 @@ export default function DocumentDetail() {
 
           // Fetch matched claims for this document
           try {
-            const matchRes = await api.getDocumentMatchingResults(docId);
+            const matchRes = await api.getDocumentMatchingResults(docId, activeTenantSlug);
             if (matchRes.ok && matchRes.data?.results) {
               setMatchedClaims(matchRes.data.results);
             }
@@ -100,13 +111,13 @@ export default function DocumentDetail() {
       }
     })();
     return () => { cancelled = true };
-  }, [docId]);
+  }, [docId, isReady, activeTenantSlug]);
 
   const handleTriggerParsing = async () => {
     if (!docId) return;
     setTriggeringParse(true);
     try {
-      const res = await api.reparseDocument(docId);
+      const res = await api.reparseDocument(docId, activeTenantSlug);
       if (res.ok) {
         toast({
           title: 'Parsing Triggered',
@@ -262,7 +273,7 @@ export default function DocumentDetail() {
                     onClick={async () => {
                       if (!docId) return;
                       try {
-                        const response = await api.getDocumentDownload(docId);
+                        const response = await api.getDocumentDownload(docId, activeTenantSlug);
                         if (response.ok && response.data?.url) {
                           window.open(response.data.url, '_blank');
                         } else {
