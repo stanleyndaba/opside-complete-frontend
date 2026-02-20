@@ -139,18 +139,16 @@ const App = () => (
                     {/* ============================================ */}
                     {/* AUTH & OAUTH ROUTES - No tenant required */}
                     {/* ============================================ */}
-                    {/* These routes are now tenant-scoped or handled by TenantRedirect */}
-                    {/* <Route path="/auth/callback" element={<OAuthCallback />} />
+                    {/* Auth & OAuth routes - non-tenant-scoped for backend redirects */}
+                    <Route path="/auth/callback" element={<OAuthCallback />} />
                     <Route path="/auth/callback/integrations-hub" element={<OAuthCallbackRedirect />} />
                     <Route path="/auth/success" element={<OAuthSuccess />} />
                     <Route path="/api/v1/integrations/amazon/callback" element={<OAuthCallback />} />
-                    <Route path="/stripe/callback" element={<StripeCallback />} />
                     <Route path="/auth/amazon-sandbox" element={<AmazonSandbox />} />
-                    <Route path="/sync" element={<Sync />} />
                     <Route path="/auth/gmail-sandbox" element={<OAuthProviderSandbox />} />
                     <Route path="/auth/outlook-sandbox" element={<OAuthProviderSandbox />} />
                     <Route path="/auth/gdrive-sandbox" element={<OAuthProviderSandbox />} />
-                    <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} /> */}
+                    <Route path="/auth/dropbox-sandbox" element={<OAuthProviderSandbox />} />
 
                     {/* ============================================ */}
                     {/* ROOT REDIRECTS - Guide users to tenant scope */}
