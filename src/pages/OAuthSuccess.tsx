@@ -3,52 +3,50 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { tenantRoute } from '@/lib/routes';
 
-// Provider display config
-const PROVIDER_CONFIG: Record<string, { label: string; color: string; icon: string; redirect: string }> = {
+// Provider display config — icons match IntegrationsHub
+const PROVIDER_CONFIG: Record<string, { label: string; icon: string; redirect: string }> = {
   amazon: {
     label: 'Amazon Store',
-    color: '#FF9900',
-    icon: '📦',
+    icon: '/AMZN.png',
     redirect: '/sync'
   },
   gmail: {
     label: 'Gmail',
-    color: '#EA4335',
-    icon: '✉️',
+    icon: '/gmailicon.png',
     redirect: '/integrations-hub'
   },
   outlook: {
     label: 'Outlook',
-    color: '#0078D4',
-    icon: '📧',
+    icon: '/outlookicon.webp',
     redirect: '/integrations-hub'
   },
   gdrive: {
     label: 'Google Drive',
-    color: '#4285F4',
-    icon: '📁',
+    icon: '/gd.png',
     redirect: '/integrations-hub'
   },
   dropbox: {
     label: 'Dropbox',
-    color: '#0061FF',
-    icon: '💧',
+    icon: '/Dropbox_Icon.svg.png',
     redirect: '/integrations-hub'
   },
   stripe: {
     label: 'Stripe',
-    color: '#635BFF',
-    icon: '💳',
+    icon: '/stripe-icon.png',
     redirect: '/settings'
   }
 };
+
+// Platform emerald green
+const BRAND_COLOR = '#10B981';
+const BRAND_COLOR_DIM = 'rgba(16,185,129,0.3)';
 
 export default function OAuthSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const [countdown, setCountdown] = useState(4);
-  const [animPhase, setAnimPhase] = useState(0); // 0=circle, 1=check, 2=expand
+  const [animPhase, setAnimPhase] = useState(0);
 
   const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
 
@@ -60,8 +58,7 @@ export default function OAuthSuccess() {
 
   const config = PROVIDER_CONFIG[provider] || {
     label: provider.charAt(0).toUpperCase() + provider.slice(1),
-    color: '#10B981',
-    icon: '🔗',
+    icon: '',
     redirect: '/integrations-hub'
   };
 
@@ -80,7 +77,6 @@ export default function OAuthSuccess() {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Redirect to the provider's destination with a connection toast param
           const dest = config.redirect;
           navigate(tenantRoute(resolvedSlug, `${dest}?connected=${provider}`));
           return 0;
@@ -98,22 +94,21 @@ export default function OAuthSuccess() {
       <PageLayout title="Connection Failed" hideNavbar hideSidebar midnight hideLogo>
         <div className="min-h-[90vh] flex flex-col items-center justify-center relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-500/5 rounded-full blur-[120px] pointer-events-none" />
-          <div className="relative z-10 w-full max-w-lg bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-none p-12 text-center space-y-8 animate-in fade-in zoom-in duration-700">
-            {/* Error Icon */}
+          <div className="relative z-10 w-full max-w-md bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-2xl px-10 py-10 text-center space-y-6">
             <div className="flex justify-center">
-              <div className="w-20 h-20 rounded-full border-2 border-red-500/30 flex items-center justify-center">
-                <svg className="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-16 h-16 rounded-full border-2 border-red-500/30 flex items-center justify-center">
+                <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
             </div>
-            <div className="space-y-3">
-              <h1 className="text-2xl font-merriweather font-bold text-white">Connection Failed</h1>
+            <div className="space-y-2">
+              <h1 className="text-xl font-merriweather font-bold text-white">Connection Failed</h1>
               <p className="text-white/40 font-montserrat text-sm">{errorMsg}</p>
             </div>
             <button
               onClick={() => navigate(tenantRoute(resolvedSlug, '/integrations-hub'))}
-              className="bg-white hover:bg-white/90 text-black px-10 h-12 text-xs font-bold font-mono tracking-widest uppercase transition-all duration-300"
+              className="bg-white hover:bg-white/90 text-black px-10 h-11 text-xs font-bold font-mono tracking-widest uppercase transition-all duration-300 rounded-lg"
             >
               Try Again
             </button>
@@ -140,7 +135,7 @@ export default function OAuthSuccess() {
           100% { transform: scale(1.8); opacity: 0; }
         }
         @keyframes slideUp {
-          0% { opacity: 0; transform: translateY(20px); }
+          0% { opacity: 0; transform: translateY(16px); }
           100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
@@ -173,37 +168,37 @@ export default function OAuthSuccess() {
       `}</style>
 
       <div className="min-h-[90vh] flex flex-col items-center justify-center relative overflow-hidden">
-        {/* Background glow in provider color */}
+        {/* Background glow in brand green */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none transition-opacity duration-1000"
-          style={{ backgroundColor: `${config.color}08` }}
+          style={{ backgroundColor: 'rgba(16,185,129,0.06)' }}
         />
 
-        {/* Main Container */}
-        <div className="relative z-10 w-full max-w-lg bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-none p-12 text-center space-y-8">
+        {/* Main Card — compact rectangular shape */}
+        <div className="relative z-10 w-full max-w-md bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-2xl px-10 py-10 text-center space-y-6">
 
-          {/* Animated Checkmark */}
+          {/* Animated Checkmark — brand green */}
           <div className="flex justify-center">
-            <div className="relative w-24 h-24">
+            <div className="relative w-20 h-20">
               {/* Pulse ring */}
               <div
                 className="absolute inset-0 rounded-full pulse-ring"
-                style={{ border: `2px solid ${config.color}40` }}
+                style={{ border: `2px solid ${BRAND_COLOR_DIM}` }}
               />
               {/* SVG Circle + Check */}
-              <svg className="w-24 h-24" viewBox="0 0 100 100">
+              <svg className="w-20 h-20" viewBox="0 0 100 100">
                 <circle
                   cx="50" cy="50" r="45"
                   fill="none"
-                  stroke={animPhase >= 0 ? config.color : 'transparent'}
+                  stroke={BRAND_COLOR}
                   strokeWidth="2"
                   className="circle-draw"
-                  style={{ opacity: 0.3 }}
+                  style={{ opacity: 0.25 }}
                 />
                 <circle
                   cx="50" cy="50" r="45"
                   fill="none"
-                  stroke={config.color}
+                  stroke={BRAND_COLOR}
                   strokeWidth="2.5"
                   className="circle-draw"
                 />
@@ -211,7 +206,7 @@ export default function OAuthSuccess() {
                   <polyline
                     points="30,52 44,66 70,38"
                     fill="none"
-                    stroke={config.color}
+                    stroke={BRAND_COLOR}
                     strokeWidth="3.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -222,25 +217,34 @@ export default function OAuthSuccess() {
             </div>
           </div>
 
-          {/* Status badge */}
+          {/* CONNECTED badge */}
           <div className="slide-up-1">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="h-[1px] w-8" style={{ backgroundColor: `${config.color}30` }} />
+            <div className="flex items-center justify-center gap-2">
+              <div className="h-[1px] w-8" style={{ backgroundColor: BRAND_COLOR_DIM }} />
               <span
                 className="text-[10px] font-bold font-mono tracking-[0.3em] uppercase"
-                style={{ color: config.color }}
+                style={{ color: BRAND_COLOR }}
               >
                 CONNECTED
               </span>
-              <div className="h-[1px] w-8" style={{ backgroundColor: `${config.color}30` }} />
+              <div className="h-[1px] w-8" style={{ backgroundColor: BRAND_COLOR_DIM }} />
             </div>
           </div>
 
-          {/* Provider + Title */}
-          <div className="space-y-4 slide-up-2">
-            <h1 className="text-3xl font-merriweather font-bold tracking-tight text-white leading-tight">
-              {config.icon} {config.label}<br />
-              <span className="text-white/70">Connected Successfully</span>
+          {/* Provider Icon + "Connected Successfully" */}
+          <div className="space-y-3 slide-up-2">
+            {/* Provider icon from IntegrationsHub assets */}
+            {config.icon && (
+              <div className="flex justify-center mb-2">
+                <img
+                  src={config.icon}
+                  alt={config.label}
+                  className="h-10 w-auto object-contain"
+                />
+              </div>
+            )}
+            <h1 className="text-2xl font-merriweather font-bold tracking-tight text-white leading-tight">
+              Connected Successfully
             </h1>
             {email && (
               <p className="text-white/50 font-mono text-xs tracking-wide">
@@ -256,16 +260,15 @@ export default function OAuthSuccess() {
           </div>
 
           {/* Auto-redirect countdown */}
-          <div className="pt-4 slide-up-3">
+          <div className="pt-2 slide-up-3">
             <div className="flex items-center justify-center gap-3">
-              {/* Mini countdown circle */}
-              <div className="relative w-8 h-8">
-                <svg className="w-8 h-8 -rotate-90" viewBox="0 0 44 44">
+              <div className="relative w-7 h-7">
+                <svg className="w-7 h-7 -rotate-90" viewBox="0 0 44 44">
                   <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="2" />
                   <circle
                     cx="22" cy="22" r="20"
                     fill="none"
-                    stroke={config.color}
+                    stroke={BRAND_COLOR}
                     strokeWidth="2"
                     className="countdown-ring"
                     style={{ strokeDashoffset: ((4 - countdown) / 4) * 126 }}
@@ -285,7 +288,7 @@ export default function OAuthSuccess() {
           <div className="slide-up-4">
             <button
               onClick={() => navigate(tenantRoute(resolvedSlug, `${config.redirect}?connected=${provider}`))}
-              className="bg-white hover:bg-white/90 text-black px-12 h-14 rounded-none text-xs font-bold font-mono tracking-widest uppercase transition-all duration-300 shadow-2xl active:scale-95 cursor-pointer"
+              className="bg-white hover:bg-white/90 text-black px-12 h-12 rounded-lg text-xs font-bold font-mono tracking-widest uppercase transition-all duration-300 shadow-2xl active:scale-95 cursor-pointer"
             >
               {provider === 'amazon' ? 'See Findings' : 'Go to Integrations'}
             </button>
@@ -293,7 +296,7 @@ export default function OAuthSuccess() {
         </div>
 
         {/* Security footer */}
-        <div className="relative z-10 mt-12 fade-in-slow">
+        <div className="relative z-10 mt-10 fade-in-slow">
           <div className="flex items-center gap-2 text-white/15 text-[10px] font-mono tracking-wider">
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
