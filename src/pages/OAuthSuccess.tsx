@@ -167,7 +167,7 @@ export default function OAuthSuccess() {
         }
       `}</style>
 
-      <div className="min-h-[90vh] flex flex-col items-center justify-center relative overflow-hidden">
+      <div className="min-h-[90vh] flex flex-col items-center justify-center relative overflow-hidden pt-16 pb-8">
         {/* Background glow in brand green */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none transition-opacity duration-1000"
@@ -175,18 +175,18 @@ export default function OAuthSuccess() {
         />
 
         {/* Main Card — compact rectangular shape */}
-        <div className="relative z-10 w-full max-w-md bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-2xl px-10 py-10 text-center space-y-6">
+        <div className="relative z-10 w-full max-w-md bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] rounded-2xl px-10 py-7 text-center space-y-4">
 
           {/* Animated Checkmark — brand green */}
           <div className="flex justify-center">
-            <div className="relative w-20 h-20">
+            <div className="relative w-14 h-14">
               {/* Pulse ring */}
               <div
                 className="absolute inset-0 rounded-full pulse-ring"
                 style={{ border: `2px solid ${BRAND_COLOR_DIM}` }}
               />
               {/* SVG Circle + Check */}
-              <svg className="w-20 h-20" viewBox="0 0 100 100">
+              <svg className="w-14 h-14" viewBox="0 0 100 100">
                 <circle
                   cx="50" cy="50" r="45"
                   fill="none"
