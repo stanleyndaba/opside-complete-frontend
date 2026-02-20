@@ -448,7 +448,7 @@ const Index = () => {
                           <img src="/outlookicon.webp" alt="Outlook" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
                           <img src="/slack2.png" alt="Slack" className="h-[30px] md:h-[42px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
                           <img src="/DPP.png" alt="Dropbox" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/Driveboy.png" alt="Google Drive" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
+                          <img src="/gd.png" alt="Google Drive" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
                         </div>
                       ))}
                     </motion.div>
