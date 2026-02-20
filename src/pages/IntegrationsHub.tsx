@@ -172,6 +172,33 @@ export default function IntegrationsHub() {
     }
   }, [searchParams, showRecoveryReveal, activeSlug, isReady]);
 
+  // Show toast when redirected from OAuthSuccess page with ?connected=provider
+  useEffect(() => {
+    const connectedProvider = searchParams.get('connected');
+    if (connectedProvider) {
+      const labels: Record<string, string> = {
+        amazon: 'Amazon Store',
+        gmail: 'Gmail',
+        outlook: 'Outlook',
+        gdrive: 'Google Drive',
+        dropbox: 'Dropbox',
+        stripe: 'Stripe'
+      };
+      const label = labels[connectedProvider] || connectedProvider;
+      toast({
+        title: `${label} Connected ✓`,
+        description: `Your ${label} account has been securely linked and is ready to use.`,
+      });
+      // Clean up the URL param to prevent re-triggering
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete('connected');
+      const cleanUrl = newParams.toString()
+        ? `${location.pathname}?${newParams.toString()}`
+        : location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
+    }
+  }, [searchParams, toast, location.pathname]);
+
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
