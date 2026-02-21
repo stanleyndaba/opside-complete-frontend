@@ -840,7 +840,7 @@ export const api = {
       last_sync_at: string | null;
       error?: string;
       scopes?: string[];
-    }>(`/api/evidence/status/gmail?tenantSlug=${tenantSlug}`);
+    }>(`/api/v1/integrations/gmail/status?tenantSlug=${tenantSlug}`);
   },
   disconnectGmail: () => requestJson<any>('/api/v1/integrations/gmail/disconnect', { method: 'DELETE' }),
 

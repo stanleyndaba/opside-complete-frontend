@@ -67,14 +67,16 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
         ? gmailRes.data.email
         : undefined;
 
-      // Get lastSync from either endpoint
-      const lastSync = gmailRes?.ok && gmailRes.data?.last_sync_at
-        ? gmailRes.data.last_sync_at
-        : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.lastIngest
-          ? integrationsRes.data.providerIngest['gmail'].lastIngest
-          : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.lastIngest
-            ? integrationsRes.data.providerIngest['Gmail'].lastIngest
-            : undefined;
+      // Get lastSync from either endpoint — backend returns lastSync not last_sync_at
+      const lastSync = gmailRes?.ok && (gmailRes.data as any)?.lastSync
+        ? (gmailRes.data as any).lastSync
+        : gmailRes?.ok && gmailRes.data?.last_sync_at
+          ? gmailRes.data.last_sync_at
+          : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['gmail']?.lastIngest
+            ? integrationsRes.data.providerIngest['gmail'].lastIngest
+            : integrationsRes?.ok && integrationsRes.data?.providerIngest?.['Gmail']?.lastIngest
+              ? integrationsRes.data.providerIngest['Gmail'].lastIngest
+              : undefined;
 
       setStatus({
         connected,

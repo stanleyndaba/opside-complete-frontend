@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
@@ -30,6 +31,7 @@ interface EvidenceSource {
 }
 
 export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnected = false }: EvidenceIngestionProps) {
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const [ingesting, setIngesting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [sources, setSources] = useState<EvidenceSource[]>([]);
@@ -55,35 +57,42 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
       try {
         // Use api client to get sources from backend (handles correct URL routing)
         const res = await api.get<{ success: boolean; sources: EvidenceSource[] }>('/api/evidence/sources');
-        if (res.ok && res.data?.sources) {
+        if (res.ok && res.data?.sources && res.data.sources.filter((s: EvidenceSource) => s.status === 'connected').length > 0) {
           setSources(res.data.sources.filter((s: EvidenceSource) => s.status === 'connected'));
         } else {
-          console.warn('Failed to load evidence sources:', res.error);
-          // Fallback: Set demo source for UI testing
-          setSources([{
-            id: 'demo-gmail',
-            provider: 'gmail',
-            account_email: 'demo@gmail.com',
-            status: 'connected',
-            last_sync_at: new Date().toISOString()
-          }]);
+          // Fallback: check integrations status endpoint which also verifies token table
+          // This catches cases where Gmail is connected via OAuth (token in tokens table)
+          // but no row exists in evidence_sources table yet
+          try {
+            const intRes = await api.getIntegrationsStatus(tenantSlug || 'beta');
+            if (intRes.ok && intRes.data?.providerIngest) {
+              const connectedProviders: EvidenceSource[] = [];
+              const providers = intRes.data.providerIngest;
+              for (const [provider, info] of Object.entries(providers)) {
+                if (info && info.connected) {
+                  connectedProviders.push({
+                    id: `integration-${provider}`,
+                    provider: provider as 'gmail' | 'outlook' | 'gdrive' | 'dropbox',
+                    account_email: '',
+                    status: 'connected',
+                    last_sync_at: info.lastIngest || null,
+                  });
+                }
+              }
+              setSources(connectedProviders);
+            }
+          } catch (intError) {
+            console.warn('Integrations status fallback failed:', intError);
+          }
         }
       } catch (error) {
         console.error('Failed to load evidence sources:', error);
-        // Fallback: Set demo source for UI testing
-        setSources([{
-          id: 'demo-gmail',
-          provider: 'gmail',
-          account_email: 'demo@gmail.com',
-          status: 'connected',
-          last_sync_at: new Date().toISOString()
-        }]);
       } finally {
         setLoadingSources(false);
       }
     };
     loadSources();
-  }, []);
+  }, [tenantSlug]);
 
   const hasConnectedSources = sources.length > 0;
 
