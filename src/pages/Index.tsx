@@ -621,33 +621,7 @@ const Index = () => {
 
                     {showMoreFAQs && (
                       <>
-                        <AccordionItem value="comparison" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
-                            How is this different from GETIDA, Sellerise, or Helium 10?
-                          </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                            <p>
-                              Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
-                            </p>
-                            <p>
-                              Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
-                            </p>
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="onboarding" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
-                            What do I have to do to get started?
-                          </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                            <p>It takes about two minutes:</p>
-                            <ul className="list-disc space-y-2 pl-5 text-white/40">
-                              <li>Sign up for a Margin account.</li>
-                              <li>Securely connect your Amazon Seller Central account via the SP-API.</li>
-                              <li>(Optional) Grant read-only access to your email or Google Drive so our AI can gather invoices.</li>
-                            </ul>
-                            <p>That&apos;s it. Margin begins auditing immediately.</p>
-                          </AccordionContent>
-                        </AccordionItem>
+
                         <AccordionItem value="coexist" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
                           <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             What if I already use another reimbursement service?
