@@ -800,9 +800,19 @@ export default function IntegrationsHub() {
                     </Dialog>
 
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon SP-API Authorization...' });
-                        navigate(tenantRoute(tenantSlug || 'default', '/integrations/reconnect/amazon'));
+                        try {
+                          const res = await api.connectAmazon();
+                          const url = res.data?.auth_url || res.data?.authUrl;
+                          if (res.ok && url) {
+                            window.location.assign(url);
+                          } else {
+                            window.location.assign('/auth/amazon-sandbox');
+                          }
+                        } catch {
+                          window.location.assign('/auth/amazon-sandbox');
+                        }
                       }}
                       className="h-12 bg-white text-black font-mono uppercase tracking-[0.2em] text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
                     >

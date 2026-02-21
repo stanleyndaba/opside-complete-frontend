@@ -52,9 +52,12 @@ const PROVIDER_META: Record<string, { label: string; icon: React.ReactNode; colo
 };
 
 const PERMISSION_MAPPING: Record<string, { title: string; desc: string }> = {
-  'orders.read': { title: 'Order Forensics', desc: 'Deep-level sync of transaction logs for SKU mapping.' },
-  'inventory.read': { title: 'Drift Identification', desc: 'Real-time monitoring of warehouse inventory movement.' },
-  'transactions.read': { title: 'Financial Reconciliation', desc: 'Direct mapping of financial events to approved claims.' },
+  'notifications': { title: 'Notifications in Seller Central', desc: 'Receive alerts about account-level events and updates.' },
+  'fulfillment': { title: 'Amazon Fulfillment', desc: 'Access FBA shipment, inventory, and fulfillment data.' },
+  'insights': { title: 'Selling Partner Insights', desc: 'Performance metrics and business analytics access.' },
+  'finance': { title: 'Finance and Accounting', desc: 'Financial events, settlement reports, and transaction data.' },
+  'inventory': { title: 'Inventory and Order Tracking', desc: 'Real-time inventory levels and order lifecycle data.' },
+  'listings': { title: 'Product Listing', desc: 'Product catalog and listing information access.' },
   'mail.readonly': { title: 'Evidence Ingestion', desc: 'Passive scanning for refund and return confirmations.' },
   'mail.read': { title: 'Evidence Ingestion', desc: 'Passive scanning for refund and return confirmations.' },
   'drive.readonly': { title: 'Document Extraction', desc: 'Secure access to support documentation and proof.' },
@@ -69,7 +72,7 @@ export default function ReconnectProvider() {
   const [loading, setLoading] = useState(false);
 
   const meta = useMemo(() => PROVIDER_META[provider] || PROVIDER_META.amazon, [provider]);
-  const scopes = (provider === 'amazon' ? ['orders.read', 'inventory.read', 'transactions.read'] :
+  const scopes = (provider === 'amazon' ? ['notifications', 'fulfillment', 'insights', 'finance', 'inventory', 'listings'] :
     provider === 'gmail' ? ['mail.readonly'] :
       provider === 'outlook' ? ['mail.read'] :
         provider === 'gdrive' ? ['drive.readonly'] :
