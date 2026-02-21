@@ -114,6 +114,7 @@ export default function Billing() {
               };
             });
             setInvoices(mappedInvoices);
+          } else {
             setError(response.error || 'Failed to sync billing data.');
           }
         }
