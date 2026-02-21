@@ -38,6 +38,7 @@ import { api } from '@/lib/api';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useTenant } from '@/contexts/TenantContext';
+import { useParams } from 'react-router-dom';
 
 interface Transaction {
     id: string;
@@ -65,7 +66,9 @@ interface Transaction {
 
 export default function TransactionHistory() {
     const { toast } = useToast();
+    const { tenantSlug } = useParams<{ tenantSlug: string }>();
     const { tenant } = useTenant();
+    const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -81,7 +84,7 @@ export default function TransactionHistory() {
         (async () => {
             setLoading(true);
             try {
-                const res = await api.getDisputeCases({ limit: 500 });
+                const res = await api.getDisputeCases({ limit: 500 }, activeTenantSlug);
                 if (!cancelled && res.ok && res.data?.cases) {
                     // Filter to only show paid/approved/completed cases (real transactions)
                     const transactionCases = res.data.cases.filter((c: any) => {
@@ -158,7 +161,7 @@ export default function TransactionHistory() {
             }
         })();
         return () => { cancelled = true; };
-    }, [toast]);
+    }, [toast, activeTenantSlug]);
 
     // Calculate summary statistics from REAL data
     const summary = useMemo(() => {

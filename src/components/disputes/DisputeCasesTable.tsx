@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search, ShieldAlert, Ban, DollarSign, FileWarning, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -40,6 +41,9 @@ export function DisputeCasesTable() {
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const [downloadingBrief, setDownloadingBrief] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
 
   const fetchCases = async (status?: string) => {
     try {
@@ -49,7 +53,7 @@ export function DisputeCasesTable() {
       const response = await api.getDisputeCases({
         status: status && status !== 'all' ? status : undefined,
         limit: 100
-      });
+      }, activeTenantSlug);
 
       console.log('[DisputeCasesTable] API response:', response);
 
