@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { useToast } from '@/components/ui/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import {
@@ -59,8 +59,7 @@ export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
   const activeSlug = tenantSlug || 'beta';
-  const [exportOpen, setExportOpen] = useState(false);
-  const [exportFormat, setExportFormat] = useState<'csv' | 'pdf'>('csv');
+
   const { toast } = useToast();
   const navigate = useNavigate();
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
@@ -136,26 +135,48 @@ export default function Billing() {
     toast({ title: 'Settings Updated', description: 'Your billing preferences have been saved.' });
   };
 
-  const exportBillingCSV = () => {
-    const headers = ['Invoice ID', 'Date', 'Status', 'Total Recovered', 'Commission', 'Amount Charged'];
-    const rows = invoices.map(inv => [inv.id, inv.dateIssued, inv.status, inv.totalRecovered, inv.commission, inv.amountCharged].join(','));
-    const csvContent = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `billing-history-${Date.now()}.csv`;
-    a.click();
-    toast({ title: 'File Exported', description: 'Your billing history has been downloaded.' });
-  };
+  const exportBillingPDF = () => {
+    const rows = invoices.map(inv =>
+      `<tr>
+        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;font-family:monospace;font-size:11px;color:#999">${inv.id}</td>
+        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;font-size:12px;color:#888">${new Date(inv.dateIssued).toLocaleDateString()}</td>
+        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a"><span style="padding:2px 10px;border-radius:4px;font-size:10px;font-weight:600;${inv.status === 'SETTLED' ? 'background:#064e3b;color:#34d399' : inv.status === 'PENDING' ? 'background:#451a03;color:#fbbf24' : 'background:#4c0519;color:#fb7185'}">${inv.status}</span></td>
+        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;text-align:right;font-family:monospace;font-size:12px;color:#ccc">$${inv.totalRecovered.toLocaleString()}</td>
+        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;text-align:right;font-family:monospace;font-size:12px;color:#666">$${inv.commission.toLocaleString()}</td>
+        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;text-align:right;font-family:monospace;font-size:12px;font-weight:700;color:#fff">$${inv.amountCharged.toLocaleString()}</td>
+      </tr>`
+    ).join('');
 
-  const exportAction = () => {
-    if (exportFormat === 'csv') {
-      exportBillingCSV();
-    } else {
-      toast({ title: 'Protocol Notice', description: 'Institutional PDF generation requires secondary tunnel access.' });
+    const html = `<!DOCTYPE html><html><head><title>Billing History - Opside</title>
+      <style>
+        @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+        body { background:#050505; color:#fff; font-family:Georgia,serif; margin:0; padding:48px; }
+        h1 { font-size:28px; margin-bottom:4px; letter-spacing:-0.5px; }
+        .subtitle { color:#666; font-style:italic; font-size:14px; margin-bottom:32px; }
+        .meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid #1a1a1a; }
+        .meta span { font-family:monospace; font-size:10px; color:#444; text-transform:uppercase; letter-spacing:2px; }
+        table { width:100%; border-collapse:collapse; }
+        th { padding:12px 16px; text-align:left; font-family:monospace; font-size:9px; color:#555; text-transform:uppercase; letter-spacing:2px; border-bottom:1px solid #222; background:#0a0a0a; }
+        th:nth-child(4), th:nth-child(5), th:nth-child(6) { text-align:right; }
+        .footer { margin-top:48px; text-align:center; font-family:monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:3px; }
+      </style></head><body>
+      <h1>Billing History</h1>
+      <p class="subtitle">Complete log of all recoveries and payments.</p>
+      <div class="meta"><span>Generated: ${new Date().toLocaleDateString()}</span><span>Records: ${invoices.length}</span></div>
+      <table><thead><tr><th>Invoice ID</th><th>Date</th><th>Status</th><th>Recovered</th><th>Fee</th><th>Charged</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="6" style="padding:48px;text-align:center;color:#444;font-style:italic">No billing records found.</td></tr>'}</tbody></table>
+      <div class="footer">Opside &mdash; Billing System</div>
+    </body></html>`;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      setTimeout(() => {
+        printWindow.print();
+      }, 300);
     }
-    setExportOpen(false);
+    toast({ title: 'PDF Ready', description: 'Your billing history PDF is being generated.' });
   };
 
   const [invoiceSearch, setInvoiceSearch] = useState('');
@@ -325,7 +346,7 @@ export default function Billing() {
                 <Button
                   variant="outline"
                   className="h-11 border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 transition-all font-mono uppercase text-[10px] tracking-widest rounded-xl px-6"
-                  onClick={() => setExportOpen(true)}
+                  onClick={exportBillingPDF}
                 >
                   <Download className="h-3.5 w-3.5 mr-2 text-emerald-500" />
                   Download history
@@ -503,46 +524,7 @@ export default function Billing() {
           </div>
         </div>
 
-        {/* Export Modal Redesign */}
-        <Dialog open={exportOpen} onOpenChange={setExportOpen}>
-          <DialogContent className="sm:max-w-md bg-[#0c0c0c] border border-white/10 text-white rounded-3xl p-0 overflow-hidden backdrop-blur-3xl shadow-[0_0_100px_rgba(16,185,129,0.05)]">
-            <div className="p-8 space-y-8">
-              <div className="space-y-2">
-                <p className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-[0.4em]">Data Export</p>
-                <h3 className="text-2xl font-serif tracking-tight">Archive Ledger</h3>
-              </div>
 
-              <div className="space-y-4">
-                <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Transmission Format</label>
-                <Select value={exportFormat} onValueChange={(v) => setExportFormat(v as 'csv' | 'pdf')}>
-                  <SelectTrigger className="h-14 bg-white/5 border-white/10 text-white rounded-xl focus:ring-emerald-500/20">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#0c0c0c] border-white/10 text-white rounded-xl">
-                    <SelectItem value="csv" className="text-xs font-serif uppercase tracking-widest">Raw CSV Stream</SelectItem>
-                    <SelectItem value="pdf" className="text-xs font-serif uppercase tracking-widest">Institutional PDF</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <Button
-                  onClick={exportAction}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-black font-serif font-bold uppercase tracking-widest h-14 rounded-2xl"
-                >
-                  Confirm Transmission
-                </Button>
-                <Button
-                  onClick={() => setExportOpen(false)}
-                  variant="ghost"
-                  className="text-white/40 hover:text-white uppercase font-mono text-[10px] tracking-widest"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </PageLayout>
   );
