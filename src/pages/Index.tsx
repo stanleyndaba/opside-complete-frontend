@@ -402,12 +402,12 @@ const Index = () => {
                 {/* Institutional Trust Badge hidden as per request */}
 
                 <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
-                  Financial Infrastructure <br className="hidden lg:block" />
-                  for Amazon FBA
+                  The Autonomous <br className="hidden lg:block" />
+                  FBA Recovery Engine.
                 </h1>
 
                 <p className="font-montserrat text-base md:text-lg text-white/40 font-medium max-w-xl leading-[1.6]">
-                  Margin continuously audits 70+ FBA data streams and micro-transactions, builds policy‑ready claims, and automates reimbursements—turning messy data into immediate capital.
+                  Your inventory vanished at FTW1? Our 11-agent engine automatically detects these discrepancies, builds policy-proof claims with your exact documentation, and recovers your lost margins at machine speed.
                 </p>
                 <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest">
                   Automated detection within Amazon-approved policy windows.
