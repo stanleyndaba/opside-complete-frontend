@@ -565,40 +565,23 @@ const Index = () => {
                     </span>
                     <div className="h-[1px] w-8 bg-gray-200" />
                   </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold tracking-tight text-white leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
-                    Institutional Support <br className="hidden md:block" />
-                    & Fundamental Inquiry
+                  <h2 className="text-4xl md:text-5xl lg:text-5xl font-merriweather font-bold tracking-tight text-white leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
+                    Frequently Asked Questions
                   </h2>
+                  <p className="text-white/40 text-base md:text-lg font-montserrat max-w-2xl mx-auto leading-relaxed">
+                    Everything you need to know before we connect to your Seller Central account.
+                  </p>
                 </div>
 
                 <div className="space-y-4">
                   <Accordion type="single" collapsible className="w-full space-y-4">
-                    {/* Hidden for now
-                <AccordionItem value="safety" className="border border-gray-100 rounded-2xl bg-gray-50/30 px-6 py-1 transition-all hover:bg-gray-50/50 hover:border-gray-200 group">
-                  <AccordionTrigger className="font-montserrat text-left text-lg font-semibold text-gray-900 hover:no-underline py-6">
-                    Is this safe? Will linking my account get me suspended by Amazon?
-                  </AccordionTrigger>
-                  <AccordionContent className="font-montserrat pb-6 text-base text-gray-600 leading-relaxed space-y-4">
-                    <p>
-                      This is our most important priority. Yes, it is 100% safe. We are an officially-verified Amazon developer using the secure Selling Partner API (SP-API).
-                    </p>
-                    <p>
-                      We only perform actions that are fully compliant with Amazon&apos;s Terms of Service. Margin simply does the work of a manual audit, but 1,000x faster and with perfect accuracy.
-                    </p>
-                  </AccordionContent>
-                </AccordionItem>
-                */}
-
                     <AccordionItem value="data" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
                       <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         What data do you access? Do you look at my customer info or sales?
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          We never look at your customer&apos;s personal information (PII). Our access is limited strictly to the data required for reimbursements: inventory reports, shipment details, and transaction history.
-                        </p>
-                        <p>
-                          Our Evidence Engine can optionally scan your email or Google Drive, but only for invoice PDFs and proof-of-delivery documents. We don&apos;t care about your sales and we will never sell your data.
+                          No. Margin operates strictly on the SP-API endpoints related to inbound inventory, fee ledgers, and fulfillment reports. We have zero access to your customer data, messaging, or storefront. We operate with read-only access for discovery, and strictly restricted write-access just to file the reimbursement cases.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
@@ -609,37 +592,45 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          It&apos;s simple: We take a 20% commission on successfully recovered funds. There are no monthly fees, no setup fees, and no hidden costs. If you don&apos;t get paid, we don&apos;t get paid.
+                          Zero upfront, and zero monthly subscriptions. We take a flat 20% success fee only on the capital that actually clears into your Amazon settlement balance. If we scan your ledgers and find nothing, or if Amazon rejects the claim, you pay absolutely nothing.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
 
-                    <AccordionItem value="comparison" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                    <AccordionItem value="safety" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
                       <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
-                        How is this different from GETIDA, Sellerise, or Helium 10?
+                        Will using an automated tool get my Amazon account suspended?
                       </AccordionTrigger>
                       <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
+                          No. Margin is 100% compliant with Amazon&apos;s 2026 Terms of Service. We do not &quot;spam&quot; Seller Support with blind claims. Our 11-agent constellation only files a case when it has successfully matched a missing FNSKU to a verified, policy-proof document (like your stamped BOL and supplier invoice). We play exactly by Amazon&apos;s rules; we just do it faster.
                         </p>
+                      </AccordionContent>
+                    </AccordionItem>
+
+                    <AccordionItem value="invoices" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                        Do I have to manually upload my supplier invoices for every claim?
+                      </AccordionTrigger>
+                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
+                          No. That is what makes Margin autonomous. You connect your Google Drive or email during onboarding. Our neural agents autonomously locate the correct supplier invoice, match it line-by-line to the missing inventory, and attach it to the Amazon claim without you ever clicking a button.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
 
                     {showMoreFAQs && (
                       <>
-                        <AccordionItem value="roi" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
+                        <AccordionItem value="comparison" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
                           <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
-                            How much money will I actually get back?
+                            How is this different from GETIDA, Sellerise, or Helium 10?
                           </AccordionTrigger>
                           <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
-                              On average, FBA sellers lose 1–3% of annual revenue to “small” errors. For a seller doing $1M a year, that&apos;s $10,000 to $30,000 in lost profit.
+                              Those tools are dashboards or agencies. They identify problems, but you or their auditors still have to gather evidence and build the case. Margin is an autonomous AI agent.
                             </p>
                             <p>
-                              We can&apos;t guarantee an exact amount, but our AI audits 18 months of data to find every dollar Amazon owes you.
+                              Our Evidence Engine finds the error, locates the matching invoice from your email, builds the case, and files it for you. It&apos;s zero effort, not just less effort.
                             </p>
                           </AccordionContent>
                         </AccordionItem>
