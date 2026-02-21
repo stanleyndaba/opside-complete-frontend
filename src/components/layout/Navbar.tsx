@@ -271,13 +271,6 @@ export function Navbar({
 
               {/* Functional Icons Group - Compact Horizontal */}
               <div className="flex items-center gap-x-3 border-l border-white/5 pl-4 ml-3">
-                {/* Notifications */}
-                <NotificationBell
-                  label="Alert"
-                  showLabel={false}
-                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
-                  iconClassName="h-4.5 w-4.5"
-                />
 
                 {/* Notes Icon - Commented out for V1 noise reduction
                 <div className="relative">
@@ -375,7 +368,13 @@ export function Navbar({
           </div>
 
           {/* Right Group - Connect & Account */}
-          <div className="flex items-center gap-x-6 border-l border-white/5 pl-6 ml-6">
+          <div className="flex items-center gap-x-4 border-l border-white/5 pl-6 ml-6">
+            <NotificationBell
+              label="Alert"
+              showLabel={false}
+              className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
+              iconClassName="h-4.5 w-4.5"
+            />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
