@@ -862,8 +862,8 @@ const Index = () => {
               </div>
 
               <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-white leading-[1.1]">
-                Bring Your Ledger <br className="hidden md:block" />
-                to 100% Accuracy.
+                Bring Your Ledger. <br className="hidden md:block" />
+                Achieve 100% Accuracy.
               </h2>
 
               <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest mt-4">
