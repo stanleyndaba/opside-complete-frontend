@@ -186,7 +186,7 @@ export default function IntegrationsHub() {
       };
       const label = labels[connectedProvider] || connectedProvider;
       toast({
-        title: `${label} Connected ✓`,
+        title: `${label} Connected`,
         description: `Your ${label} account has been securely linked and is ready to use.`,
       });
       // Clean up the URL param to prevent re-triggering
