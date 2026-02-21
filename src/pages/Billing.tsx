@@ -210,9 +210,9 @@ export default function Billing() {
     const pageHeight = doc.internal.pageSize.getHeight();
     doc.setTextColor(60, 60, 60);
     doc.setFontSize(7);
-    doc.text('OPSIDE — BILLING SYSTEM', 148.5, pageHeight - 10, { align: 'center' });
+    doc.text('MARGIN — BILLING SYSTEM', 148.5, pageHeight - 10, { align: 'center' });
 
-    doc.save(`opside-billing-history-${new Date().toISOString().slice(0, 10)}.pdf`);
+    doc.save(`margin-billing-history-${new Date().toISOString().slice(0, 10)}.pdf`);
     toast({ title: 'PDF Downloaded', description: 'Your billing history has been saved.' });
   };
 
