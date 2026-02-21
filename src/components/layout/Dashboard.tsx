@@ -680,6 +680,16 @@ export function Dashboard() {
           return sum + amount;
         }, 0);
 
+        // Paid/Complete = Already settled disputes
+        const paidCases = cases.filter((c: any) => {
+          const status = (c.status || '').toLowerCase();
+          return status === 'paid' || status === 'complete' || status === 'completed';
+        });
+        const paidTotal = paidCases.reduce((sum: number, c: any) => {
+          const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
+          return sum + amount;
+        }, 0);
+
         // Pending = Submitted disputes (waiting for Amazon approval)
         const pendingCases = cases.filter((c: any) => {
           const status = (c.status || '').toLowerCase();
@@ -703,22 +713,27 @@ export function Dashboard() {
         }
 
         // Update state with real values
-        setNextPaymentAmount(approvedTotal);
+        // If there are approved cases awaiting payout, show that as estimated payout
+        // Otherwise, if all cases are already paid, show the paid total as "estimated payout" (next settlement cycle)
+        const estimatedPayout = approvedTotal > 0 ? approvedTotal : paidTotal;
+        setNextPaymentAmount(estimatedPayout);
         setNextPaymentDate(nextDate);
         setPendingRecoveryAmount(pendingTotal);
         setPendingClaimsCount(pendingCases.length);
 
-        // Calculate settlement rate (approved / (approved + pending + rejected))
+        // Calculate settlement rate: (approved + paid) / (approved + paid + pending + rejected)
         const rejectedCases = cases.filter((c: any) => {
           const status = (c.status || '').toLowerCase();
           return status === 'rejected' || status === 'denied' || status === 'lost';
         });
-        const totalSettled = approvedCases.length + rejectedCases.length;
-        const rate = totalSettled > 0 ? (approvedCases.length / totalSettled) * 100 : 0;
+        const successfulCount = approvedCases.length + paidCases.length;
+        const totalDecided = successfulCount + rejectedCases.length;
+        const rate = totalDecided > 0 ? (successfulCount / totalDecided) * 100 : (cases.length > 0 ? 100 : 0);
         setSettlementRate(rate);
 
         console.log('[Dashboard] Dispute metrics:', {
           approved: { count: approvedCases.length, total: approvedTotal },
+          paid: { count: paidCases.length, total: paidTotal },
           pending: { count: pendingCases.length, total: pendingTotal },
           rejected: { count: rejectedCases.length },
           settlementRate: rate.toFixed(1)
