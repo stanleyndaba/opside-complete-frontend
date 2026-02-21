@@ -59,7 +59,7 @@ export default function UpcomingPayments() {
       setLoading(true);
       try {
         // Fetch dispute cases as the PRIMARY data source - no fallbacks/mocks
-        const casesRes = await api.getDisputeCases({ limit: 500 });
+        const casesRes = await api.getDisputeCases({ limit: 500 }, activeTenantSlug);
 
         if (!cancelled) {
           if (casesRes.ok && casesRes.data?.cases && casesRes.data.cases.length > 0) {
@@ -115,7 +115,7 @@ export default function UpcomingPayments() {
       }
     })();
     return () => { cancelled = true; };
-  }, [toast, reloadToken]);
+  }, [toast, reloadToken, activeTenantSlug]);
 
   const upcomingGroups = useMemo(() => {
     const groups: Record<string, RecoveryClaim[]> = {};
