@@ -85,6 +85,31 @@ export function Navbar({
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const { selectedCurrency, setSelectedCurrency } = useCurrency();
 
+  // User profile state
+  const [userProfile, setUserProfile] = useState<{
+    id?: string;
+    email?: string;
+    name?: string;
+    amazon_connected?: boolean;
+    stripe_connected?: boolean;
+    created_at?: string;
+    last_login?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await api.getMe();
+        if (res.ok && res.data) {
+          setUserProfile(res.data);
+        }
+      } catch (e) {
+        console.error('Failed to fetch user profile:', e);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   // State for notes feature
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [notes, setNotes] = useState<{ id: string; text: string; createdAt: string }[]>([]);
@@ -384,15 +409,15 @@ export function Navbar({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
-                {/* Connection Status Header - Institutional */}
+                {/* Connection Status Header */}
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">Amazon Profile</h3>
+                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">{userProfile?.name || userProfile?.email || 'My Account'}</h3>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                      <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", userProfile?.amazon_connected ? "bg-emerald-400" : "bg-amber-400")}></span>
+                      <span className={cn("relative inline-flex rounded-full h-1.5 w-1.5", userProfile?.amazon_connected ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]")}></span>
                     </div>
-                    <p className="text-[10px] text-emerald-500/50 font-mono uppercase tracking-[0.2em]">Connected</p>
+                    <p className={cn("text-[10px] font-mono uppercase tracking-[0.2em]", userProfile?.amazon_connected ? "text-emerald-500/50" : "text-amber-500/50")}>{userProfile?.amazon_connected ? 'Amazon Connected' : 'Amazon Not Connected'}</p>
                   </div>
                 </div>
 
@@ -400,11 +425,11 @@ export function Navbar({
                   {/* Compact Data Grid */}
                   <div className="grid grid-cols-1 gap-y-4">
                     {[
-                      { label: 'Account ID', value: 'Not available' },
-                      { label: 'Primary System', value: 'Main Seller Account' },
-                      { label: 'Verified Status', value: 'ID_NOT_MAPPED' },
-                      { label: 'Monitoring', value: 'Active Monitoring' },
-                      { label: 'Support Channel', value: 'Opside Secure Support' }
+                      { label: 'Account ID', value: userProfile?.id ? userProfile.id.substring(0, 12) + '...' : 'Loading...' },
+                      { label: 'Email', value: userProfile?.email || 'Not available' },
+                      { label: 'Name', value: userProfile?.name || 'Not set' },
+                      { label: 'Amazon', value: userProfile?.amazon_connected ? 'Connected' : 'Not connected' },
+                      { label: 'Member Since', value: userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—' }
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-4 group/item">
                         <span className="text-[10px] font-mono font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-widest shrink-0">
@@ -412,7 +437,7 @@ export function Navbar({
                         </span>
                         <span className={cn(
                           "text-[10px] font-mono transition-colors text-right truncate uppercase tracking-tighter",
-                          item.value.includes('_') || item.value === 'Not available' ? "text-emerald-500/30" : "text-white/60 group-hover/item:text-white"
+                          !userProfile || item.value === 'Not available' || item.value === 'Not set' || item.value === 'Not connected' || item.value === 'Loading...' ? "text-emerald-500/30" : "text-white/60 group-hover/item:text-white"
                         )}>
                           {item.value}
                         </span>
