@@ -3,7 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { api } from '@/lib/api';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 import {
   Eye,
   RefreshCw,
@@ -58,12 +59,15 @@ export function EvidenceMatchingTable() {
   const [activeTab, setActiveTab] = useState('smart-prompts');
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
   const { toast } = useToast();
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
 
   const fetchMatchingResults = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.getMatchingResults({ limit: 100 });
+      const response = await api.getMatchingResults({ limit: 100 }, activeTenantSlug);
 
       if (response.ok && response.data?.results) {
         setMatchingResults(response.data.results as any);
@@ -281,7 +285,7 @@ export function EvidenceMatchingTable() {
 
   useEffect(() => {
     fetchMatchingResults();
-  }, []);
+  }, [activeTenantSlug]);
 
   // Filter results by action type
   const smartPrompts = useMemo(() =>
