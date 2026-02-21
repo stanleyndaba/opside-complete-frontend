@@ -135,48 +135,85 @@ export default function Billing() {
     toast({ title: 'Settings Updated', description: 'Your billing preferences have been saved.' });
   };
 
-  const exportBillingPDF = () => {
-    const rows = invoices.map(inv =>
-      `<tr>
-        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;font-family:monospace;font-size:11px;color:#999">${inv.id}</td>
-        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;font-size:12px;color:#888">${new Date(inv.dateIssued).toLocaleDateString()}</td>
-        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a"><span style="padding:2px 10px;border-radius:4px;font-size:10px;font-weight:600;${inv.status === 'SETTLED' ? 'background:#064e3b;color:#34d399' : inv.status === 'PENDING' ? 'background:#451a03;color:#fbbf24' : 'background:#4c0519;color:#fb7185'}">${inv.status}</span></td>
-        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;text-align:right;font-family:monospace;font-size:12px;color:#ccc">$${inv.totalRecovered.toLocaleString()}</td>
-        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;text-align:right;font-family:monospace;font-size:12px;color:#666">$${inv.commission.toLocaleString()}</td>
-        <td style="padding:12px 16px;border-bottom:1px solid #1a1a1a;text-align:right;font-family:monospace;font-size:12px;font-weight:700;color:#fff">$${inv.amountCharged.toLocaleString()}</td>
-      </tr>`
-    ).join('');
+  const exportBillingPDF = async () => {
+    const { default: jsPDF } = await import('jspdf');
+    const autoTable = (await import('jspdf-autotable')).default;
 
-    const html = `<!DOCTYPE html><html><head><title>Billing History - Opside</title>
-      <style>
-        @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-        body { background:#050505; color:#fff; font-family:Georgia,serif; margin:0; padding:48px; }
-        h1 { font-size:28px; margin-bottom:4px; letter-spacing:-0.5px; }
-        .subtitle { color:#666; font-style:italic; font-size:14px; margin-bottom:32px; }
-        .meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid #1a1a1a; }
-        .meta span { font-family:monospace; font-size:10px; color:#444; text-transform:uppercase; letter-spacing:2px; }
-        table { width:100%; border-collapse:collapse; }
-        th { padding:12px 16px; text-align:left; font-family:monospace; font-size:9px; color:#555; text-transform:uppercase; letter-spacing:2px; border-bottom:1px solid #222; background:#0a0a0a; }
-        th:nth-child(4), th:nth-child(5), th:nth-child(6) { text-align:right; }
-        .footer { margin-top:48px; text-align:center; font-family:monospace; font-size:9px; color:#333; text-transform:uppercase; letter-spacing:3px; }
-      </style></head><body>
-      <h1>Billing History</h1>
-      <p class="subtitle">Complete log of all recoveries and payments.</p>
-      <div class="meta"><span>Generated: ${new Date().toLocaleDateString()}</span><span>Records: ${invoices.length}</span></div>
-      <table><thead><tr><th>Invoice ID</th><th>Date</th><th>Status</th><th>Recovered</th><th>Fee</th><th>Charged</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="6" style="padding:48px;text-align:center;color:#444;font-style:italic">No billing records found.</td></tr>'}</tbody></table>
-      <div class="footer">Opside &mdash; Billing System</div>
-    </body></html>`;
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
 
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(html);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-      }, 300);
+    // Background
+    doc.setFillColor(10, 10, 10);
+    doc.rect(0, 0, 297, 210, 'F');
+
+    // Header
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.text('Billing History', 20, 25);
+
+    doc.setTextColor(120, 120, 120);
+    doc.setFontSize(10);
+    doc.text('Complete log of all recoveries and payments.', 20, 33);
+
+    // Meta line
+    doc.setDrawColor(40, 40, 40);
+    doc.line(20, 38, 277, 38);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 43);
+    doc.text(`Records: ${invoices.length}`, 250, 43);
+
+    // Table
+    const tableRows = invoices.map(inv => [
+      inv.id,
+      new Date(inv.dateIssued).toLocaleDateString(),
+      inv.status,
+      `$${inv.totalRecovered.toLocaleString()}`,
+      `$${inv.commission.toLocaleString()}`,
+      `$${inv.amountCharged.toLocaleString()}`
+    ]);
+
+    if (tableRows.length === 0) {
+      tableRows.push(['', '', '', 'No billing records found.', '', '']);
     }
-    toast({ title: 'PDF Ready', description: 'Your billing history PDF is being generated.' });
+
+    autoTable(doc, {
+      startY: 48,
+      head: [['Invoice ID', 'Date', 'Status', 'Recovered', 'Fee', 'Charged']],
+      body: tableRows,
+      theme: 'plain',
+      styles: {
+        fillColor: [15, 15, 15],
+        textColor: [180, 180, 180],
+        fontSize: 9,
+        cellPadding: 5,
+        lineColor: [30, 30, 30],
+        lineWidth: 0.1,
+      },
+      headStyles: {
+        fillColor: [20, 20, 20],
+        textColor: [100, 100, 100],
+        fontSize: 7,
+        fontStyle: 'bold',
+        cellPadding: 4,
+      },
+      columnStyles: {
+        3: { halign: 'right' },
+        4: { halign: 'right' },
+        5: { halign: 'right', textColor: [255, 255, 255], fontStyle: 'bold' },
+      },
+      alternateRowStyles: {
+        fillColor: [12, 12, 12],
+      },
+    });
+
+    // Footer
+    const pageHeight = doc.internal.pageSize.getHeight();
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(7);
+    doc.text('OPSIDE — BILLING SYSTEM', 148.5, pageHeight - 10, { align: 'center' });
+
+    doc.save(`opside-billing-history-${new Date().toISOString().slice(0, 10)}.pdf`);
+    toast({ title: 'PDF Downloaded', description: 'Your billing history has been saved.' });
   };
 
   const [invoiceSearch, setInvoiceSearch] = useState('');
