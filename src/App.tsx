@@ -173,6 +173,7 @@ const App = () => (
                     <Route path="/app/:tenantSlug/settings" element={<Settings />} />
                     <Route path="/app/:tenantSlug/upcoming-payments" element={<UpcomingPayments />} />
                     <Route path="/app/:tenantSlug/reconnect-amazon" element={<ReconnectProvider />} />
+                    <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={<ReconnectProvider />} />
                     <Route path="/app/:tenantSlug/billing" element={<Billing />} />
                     <Route path="/app/:tenantSlug/api-access" element={<ApiAccess />} />
                     <Route path="/app/:tenantSlug/help" element={<Help />} />
