@@ -82,13 +82,13 @@ export default function ReconnectProvider() {
     setLoading(true);
     try {
       if (provider === 'amazon') {
-        const res = await api.connectAmazon();
-        const url = res.data?.auth_url;
+        const res = await api.connectAmazon(undefined, false, activeTenantSlug);
+        const url = res.data?.auth_url || res.data?.authUrl;
         if ((res as any)?.ok && url) {
           window.location.assign(url as string);
           return;
         }
-        window.location.assign('/auth/amazon-sandbox');
+        navigate(tenantRoute(activeTenantSlug, '/integrations-hub'));
         return;
       }
 
@@ -98,7 +98,7 @@ export default function ReconnectProvider() {
           window.location.assign(r.data.auth_url);
           return;
         }
-        window.location.assign(`/auth/${provider}-sandbox`);
+        navigate(tenantRoute(activeTenantSlug, '/integrations-hub'));
         return;
       }
 
@@ -107,10 +107,10 @@ export default function ReconnectProvider() {
       if ((r as any)?.ok && url) {
         window.location.assign(url as string);
       } else {
-        window.location.assign(`/auth/${provider}-sandbox`);
+        navigate(tenantRoute(activeTenantSlug, '/integrations-hub'));
       }
     } catch {
-      window.location.assign(`/auth/${provider}-sandbox`);
+      navigate(tenantRoute(activeTenantSlug, '/integrations-hub'));
     } finally {
       setLoading(false);
     }

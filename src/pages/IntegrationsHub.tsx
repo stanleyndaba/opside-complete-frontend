@@ -801,17 +801,18 @@ export default function IntegrationsHub() {
 
                     <Button
                       onClick={async () => {
-                        toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon SP-API Authorization...' });
+                        toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon Seller Central Authorization...' });
                         try {
-                          const res = await api.connectAmazon();
+                          const res = await api.connectAmazon(undefined, false, tenantSlug || 'beta');
                           const url = res.data?.auth_url || res.data?.authUrl;
                           if (res.ok && url) {
                             window.location.assign(url);
                           } else {
-                            window.location.assign('/auth/amazon-sandbox');
+                            toast({ title: 'Connection Error', description: 'Could not retrieve Amazon authorization URL. Please try again.', variant: 'destructive' });
                           }
-                        } catch {
-                          window.location.assign('/auth/amazon-sandbox');
+                        } catch (err) {
+                          console.error('connectAmazon error:', err);
+                          toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                         }
                       }}
                       className="h-12 bg-white text-black font-mono uppercase tracking-[0.2em] text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
