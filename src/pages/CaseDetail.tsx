@@ -994,7 +994,12 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Days Since Detection</dt>
                           <dd className="text-xs font-mono font-bold text-white">
-                            {Math.floor((Date.now() - new Date(effectiveCase.created_at || effectiveCase.createdDate).getTime()) / (1000 * 60 * 60 * 24))} days
+                            {(() => {
+                              const created = effectiveCase.created_at || effectiveCase.createdDate;
+                              if (!created) return '—';
+                              const days = Math.floor((Date.now() - new Date(created).getTime()) / (1000 * 60 * 60 * 24));
+                              return isNaN(days) ? '—' : `${days} days`;
+                            })()}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1176,9 +1181,14 @@ export default function CaseDetail() {
                         <div className="p-6">
                           <div className="text-2xl font-bold text-white tabular-nums font-mono tracking-tighter">
                             {selectedMetric === 'payout' && (
-                              effectiveCase.expectedPayoutDate ? new Date(effectiveCase.expectedPayoutDate).toLocaleDateString('en-US', {
-                                month: 'short', day: 'numeric', year: 'numeric'
-                              }) : 'Pending'
+                              effectiveCase.expectedPayoutDate ? (
+                                (() => {
+                                  const d = new Date(effectiveCase.expectedPayoutDate);
+                                  return isNaN(d.getTime()) ? 'Pending' : d.toLocaleDateString('en-US', {
+                                    month: 'short', day: 'numeric', year: 'numeric'
+                                  });
+                                })()
+                              ) : 'Pending'
                             )}
                             {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
                             {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} units`}
@@ -1254,7 +1264,10 @@ export default function CaseDetail() {
                               <h4 className="text-[11px] font-bold text-white tracking-tight">{event.title}</h4>
                             </div>
                             <div className="text-[10px] font-mono text-white/30 mb-2">
-                              {new Date(event.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                              {(() => {
+                                const d = new Date(event.timestamp);
+                                return isNaN(d.getTime()) ? '—' : d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                              })()}
                             </div>
                             <p className="text-[11px] text-white/50 font-light leading-relaxed">{event.description}</p>
                           </div>
