@@ -52,28 +52,29 @@ export function Timeline({ claimId }: { claimId: string }) {
   if (events.length === 0) return <div className="text-xs text-gray-400">No events yet</div>;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {events.map((evt) => {
         const money = formatAmount(evt.amount, evt.currency);
         return (
-          <div key={evt.id} className="flex flex-col gap-1 text-sm border-l-2 border-gray-200 pl-4 py-1">
+          <div key={evt.id} className="flex flex-col gap-1 text-[11px] border-l-2 border-[whitesmoke]/10 pl-4 py-1.5 transition-colors hover:border-[whitesmoke]/30">
             <div className="flex items-center gap-2">
-              <div className="font-medium text-gray-800">
+              <div className="font-bold text-[whitesmoke] uppercase tracking-wider">
                 {evt.type}{evt.status ? ` • ${evt.status}` : ''}
               </div>
             </div>
-            <div className="text-xs text-gray-600">{new Date(evt.at).toLocaleString()}</div>
-            {evt.message && <div className="text-sm text-gray-700">{evt.message}</div>}
-            {money && <div className="text-sm text-gray-700">Amount: {money}</div>}
-            {Array.isArray(evt.docIds) && evt.docIds.length> 0 && (
-              <div className="text-sm text-gray-700">
-                Documents: {evt.docIds.slice(0, 3).map((id, i) => (
-                  <React.Fragment key={id}>
-                    <Link to={`/documents/${encodeURIComponent(id)}`} className="underline hover:text-gray-900">{id}</Link>
-                    {i < Math.min(evt.docIds!.length, 3) - 1 ? ', ' : ''}
-                  </React.Fragment>
-                ))}
-                {evt.docIds.length> 3 ? '…' : ''}
+            <div className="text-[whitesmoke]/40 font-mono italic">{new Date(evt.at).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+            {evt.message && <div className="text-[whitesmoke]/80 font-medium leading-relaxed">{evt.message}</div>}
+            {money && <div className="text-emerald-500 font-bold font-mono">Amount: {money}</div>}
+            {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (
+              <div className="text-[whitesmoke]/50 flex items-center gap-2 mt-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">Docs:</span>
+                <div className="flex gap-2">
+                  {evt.docIds.slice(0, 3).map((id) => (
+                    <Link key={id} to={`/app/${activeSlug}/documents/${encodeURIComponent(id)}`} className="text-indigo-400 underline hover:text-indigo-300 transition-colors">
+                      {id.slice(0, 8)}...
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
           </div>
