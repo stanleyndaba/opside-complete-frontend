@@ -45,7 +45,6 @@ const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthCallbackRedirect = lazy(() => import("./pages/OAuthCallbackRedirect"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
-const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -122,7 +121,6 @@ const App = () => (
                     {/* PUBLIC ROUTES - No tenant required */}
                     {/* ============================================ */}
                     <Route path="/" element={<Index />} />
-                    <Route path="/about" element={<About />} />
                     <Route path="/careers" element={<Careers />} />
                     <Route path="/docs" element={<Docs />} />
                     <Route path="/privacy" element={<Privacy />} />
