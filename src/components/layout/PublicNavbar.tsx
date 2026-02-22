@@ -142,7 +142,7 @@ export const PublicNavbar = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             className="mt-4 md:hidden relative z-50">
-                            <div className="flex flex-col gap-2 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
+                            <div className="flex flex-col gap-4 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
                                 <Link
                                     to="/ultra-beta"
                                     onClick={() => setMobileMenuOpen(false)}
@@ -154,7 +154,7 @@ export const PublicNavbar = () => {
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <AccordionItem value="finance" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                                             Finance
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-2 px-2">
@@ -179,7 +179,7 @@ export const PublicNavbar = () => {
                                         Keeping them as links but merged into the same flow */}
 
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
@@ -223,7 +223,7 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
+                                    className="px-3 py-4 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
                                     Enterprise
                                 </Link>
                                 <Link
