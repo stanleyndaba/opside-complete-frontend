@@ -152,7 +152,7 @@ export const PublicNavbar = () => {
                                         <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
                                     </div>
                                 </Link>
-                                <Accordion type="single" collapsible className="w-full">
+                                <Accordion type="single" collapsible className="w-full space-y-4">
                                     <AccordionItem value="finance" className="border-none">
                                         <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                                             Finance
