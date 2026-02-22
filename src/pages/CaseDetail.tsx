@@ -189,57 +189,6 @@ const classifyRejection = (status: string, notes?: string): RejectionReason => {
 };
 
 
-// Mock case data (fallback)
-const mockCaseData = {
-  'OPS-12345': {
-    id: 'OPS-12345',
-    title: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'Guaranteed' as const,
-    guaranteedAmount: 324.50,
-    expectedPayoutDate: '2025-01-15',
-    createdDate: '2025-01-08',
-    amazonCaseId: undefined,
-    sku: 'WH-PREM-001',
-    productName: 'Premium Wireless Headphones - Noise Cancelling',
-    facility: 'FTW1 - Fort Worth, TX',
-    confidence: 95,
-    unitsLost: 5,
-    unitCost: 64.90,
-    events: [
-      {
-        timestamp: '2025-01-08T12:05:00Z',
-        title: 'Discrepancy Detected',
-        description: 'Smart Inventory Sync detected 5 missing units of SKU WH-PREM-001 at FTW1 warehouse',
-        type: 'detection'
-      },
-      {
-        timestamp: '2025-01-08T12:05:30Z',
-        title: 'Evidence Located',
-        description: 'Evidence Engine found matching cost documentation (Invoice #INV-2024-582)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:06:15Z',
-        title: 'True Value Calculated',
-        description: 'True value calculated and verified: $324.50 (5 units × $64.90 per unit)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:07:22Z',
-        title: 'Claim Draft Generated',
-        description: 'Recovery Assistant generated comprehensive claim documentation with supporting evidence',
-        type: 'generation'
-      },
-      {
-        timestamp: '2025-01-08T12:10:45Z',
-        title: 'Ready for Submission',
-        description: 'Case marked as guaranteed and ready for Amazon submission pending user approval',
-        type: 'update'
-      }
-    ] as CaseEvent[]
-  }
-};
-
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'Guaranteed':
