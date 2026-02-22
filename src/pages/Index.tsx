@@ -675,11 +675,11 @@ const Index = () => {
                   <div className="flex items-center gap-3">
                     <div className="h-[1px] w-8 bg-emerald-500/50" />
                     <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">
-                      Forensic Briefs // Market Intelligence
+                      Case studies
                     </span>
                   </div>
                   <h2 className="text-4xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
-                    Capital Reclaimed.
+                    Capital Margin Restored
                   </h2>
                 </div>
                 <div className="md:text-right">
@@ -885,12 +885,6 @@ const Index = () => {
                     label="VERIFY MY INVENTORY"
                     className="min-w-[280px] h-12 text-[13px] transition-all duration-500 font-bold active:scale-95 px-8"
                   />
-                  <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
-                      Operational Ready // Phase_01_Init
-                    </p>
-                  </div>
                 </div>
               </div>
             </motion.div>
