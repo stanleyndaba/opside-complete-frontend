@@ -35,7 +35,7 @@ const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
 };
 
 export default function ResolveCase() {
-  const { caseId, tenantSlug } = useParams<{ caseId: string, tenantSlug: string }>();
+  const { id: caseId, tenantSlug } = useParams<{ id: string, tenantSlug: string }>();
   const { tenant } = useTenant();
   const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
   const navigate = useNavigate();
