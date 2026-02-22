@@ -553,6 +553,104 @@ const Index = () => {
             </motion.div>
           </section>
 
+          {/* Corporate Profile Section (Moved from About.tsx) */}
+          <section className="bg-[#050505] py-24 md:py-32 relative overflow-hidden">
+            <div className="container mx-auto px-6 max-w-7xl">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="space-y-8"
+                >
+                  <div className="space-y-4">
+                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.4em] uppercase">
+                      CORPORATE MANDATE
+                    </span>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold text-white tracking-tight leading-[1.1]">
+                      Corporate Profile & <br />
+                      <span className="text-white/40 italic">Operational Mandate</span>
+                    </h2>
+                  </div>
+                  <p className="max-w-md text-white/30 text-base md:text-lg font-montserrat leading-relaxed font-medium">
+                    To ensure institutional-grade forensic validation and priority API rate limits, Margin is strictly optimized for high-complexity FBA operations.
+                  </p>
+                </motion.div>
+
+                <div className="grid grid-cols-1 gap-8">
+                  {[
+                    {
+                      id: '01',
+                      title: 'Algorithmic Reconciliation',
+                      color: 'text-emerald-500',
+                      desc: 'Margin functions as a high-frequency forensic audit layer for Amazon FBA sellers. Unlike manual virtual assistants, our proprietary logic nodes continually monitor inventory ledgers against financial settlements.'
+                    },
+                    {
+                      id: '02',
+                      title: 'Data Sovereignty & Security',
+                      color: 'text-blue-500',
+                      desc: 'We treat seller data as a financial asset. Margin is built on an isolated, multi-tenant architecture that ensures strict data segregation and utilizes official SP-API protocols.'
+                    },
+                    {
+                      id: '03',
+                      title: 'Strict Policy Compliance',
+                      color: 'text-amber-500',
+                      desc: 'Margin is engineered to operate strictly within the bounds of Amazon’s Terms of Service. Our claim engine ensures that all reimbursement requests are validated before generation.'
+                    }
+                  ].map((item) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="group border-t border-white/10 py-8 first:border-0"
+                    >
+                      <div className="flex gap-8">
+                        <span className={`text-[10px] font-mono ${item.color.replace('text-', 'text-opacity-20 ')} mt-1.5 font-bold`}>{item.id}</span>
+                        <div className="space-y-2">
+                          <h3 className={`text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:${item.color} transition-colors`}>
+                            {item.title}
+                          </h3>
+                          <p className="text-white/40 text-[13px] font-montserrat leading-relaxed font-medium">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Infrastructure Metrics */}
+              <div className="border-t border-white/5 pt-24 mt-24">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12">
+                  <div className="space-y-6">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">THROUGHPUT CAPACITY</span>
+                    <div className="text-4xl md:text-5xl font-merriweather font-bold text-white tracking-tight">10k TPS</div>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                      Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
+                    </p>
+                  </div>
+                  <div className="space-y-6">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">AUDIT LATENCY</span>
+                    <div className="text-4xl md:text-5xl font-merriweather font-bold text-white tracking-tight">&lt; 200ms</div>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                      Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
+                    </p>
+                  </div>
+                  <div className="space-y-6">
+                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">SYSTEM UPTIME</span>
+                    <div className="text-4xl md:text-5xl font-merriweather font-bold text-white tracking-tight">99.99%</div>
+                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                      Redundant server clusters ensure your audit process never sleeps, even during surges.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
 
           <div className="relative z-10 w-full" style={{ background: '#050505' }}>
 

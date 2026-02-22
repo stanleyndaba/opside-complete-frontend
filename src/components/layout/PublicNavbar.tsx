@@ -106,11 +106,6 @@ export const PublicNavbar = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
 
-                        <Link
-                            to="/about"
-                            className="hidden md:flex items-center gap-2 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">About Us</span>
-                        </Link>
                     </div>
 
                     <nav className="hidden md:flex items-center gap-4">
@@ -225,12 +220,6 @@ export const PublicNavbar = () => {
                                     </AccordionItem>
                                 </Accordion>
 
-                                <Link
-                                    to="/about"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2.5 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
-                                    About Us
-                                </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
