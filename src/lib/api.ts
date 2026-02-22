@@ -634,8 +634,8 @@ export const api = {
   // Refund Engine endpoints
   submitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/submit`, { method: 'POST' }),
   resubmitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/resubmit`, { method: 'POST' }),
-  getRecoveryStatus: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status`),
-  getRecoveryDetail: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}`),
+  getRecoveryStatus: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
+  getRecoveryDetail: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
   getRecoveryDocumentUrl: (id: string) => buildApiUrl(`/api/recoveries/${encodeURIComponent(id)}/document`),
   getDocumentViewUrl: (docId: string) => buildApiUrl(`/api/documents/${encodeURIComponent(docId)}/view`),
 

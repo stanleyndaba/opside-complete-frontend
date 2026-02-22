@@ -34,4 +34,6 @@ export const ROUTES = {
     HELP: '/help',
     API: '/api-access',
     WHATS_NEW: '/whats-new',
+    CASE_DETAIL: '/recoveries/:caseId',
+    RESOLVE_CASE: '/resolve/:id',
 };

@@ -163,6 +163,8 @@ const App = () => (
                     <Route path="/app/:tenantSlug/auth/success" element={<OAuthSuccess />} />
                     <Route path="/app/:tenantSlug/integrations-hub" element={<IntegrationsHub />} />
                     <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
+                    <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
+                    <Route path="/app/:tenantSlug/resolve/:id" element={<ResolveCase />} />
                     <Route path="/app/:tenantSlug/history" element={<TransactionHistory />} />
                     <Route path="/app/:tenantSlug/documents" element={<EvidenceLocker />} />
                     <Route path="/app/:tenantSlug/evidence-locker" element={<EvidenceLocker />} />

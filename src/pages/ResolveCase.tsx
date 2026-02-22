@@ -68,7 +68,7 @@ export default function ResolveCase() {
     (async () => {
       if (!caseId) return;
       try {
-        const res = await api.getRecoveryDetail(caseId);
+        const res = await api.getRecoveryDetail(caseId, activeTenantSlug);
         if (!cancelled) {
           if (res.ok) {
             setCaseData(res.data as any);
