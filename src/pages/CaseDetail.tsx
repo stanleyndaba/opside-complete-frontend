@@ -11,7 +11,8 @@ import { Separator } from '@/components/ui/separator';
 import {
   ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle,
   Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown, ShieldCheck, Activity,
-  BarChart3, Database, History, ArrowRight, Upload, ChevronRight, Scale, Info
+  BarChart3, Database, History, ArrowRight, Upload, ChevronRight, Scale, Info,
+  Zap, ShieldAlert
 } from 'lucide-react';
 import {
   Dialog,
@@ -42,7 +43,7 @@ interface CaseEvent {
 }
 
 // Rejection reason classification
-type RejectionReason = 'missing_evidence' | 'wrong_category' | 'expired_window' | 'amount_disputed' | 'generic_denial' | 'duplicate_claim' | 'insufficient_info';
+type RejectionReason = 'missing_evidence' | 'wrong_category' | 'expired_window' | 'amount_disputed' | 'generic_denial' | 'duplicate_claim' | 'insufficient_info' | 'inbound_damage';
 
 const POLICY_MAP: Record<string, { code: string; title: string; link: string; clause?: string }> = {
   lost_warehouse: {
@@ -147,11 +148,18 @@ const escalationPlaybooks: Record<RejectionReason, EscalationPlaybook> = {
     description: 'Lacks required details.',
     actions: ['Add order IDs, SKUs, dates', 'Include FBA shipment IDs', 'Provide quantity/value breakdown'],
     autoTriggerable: true
+  },
+  inbound_damage: {
+    reason: 'inbound_damage',
+    label: 'Inbound Damage Dispute',
+    description: 'Amazon claims damage occurred prior to arrival at FC.',
+    actions: ['Retrieve carrier damage insurance records', 'Provide "Condition upon Loading" timestamped photos', 'Link FBA check-in logs showing delayed offloading'],
+    autoTriggerable: false
   }
 };
 
 // Mock case data (fallback)
-const mockCaseData = {
+const mockCaseData: Record<string, any> = {
   'OPS-12345': {
     id: 'OPS-12345',
     title: '5 units of Premium Wireless Headphones lost at FTW1',
@@ -167,6 +175,12 @@ const mockCaseData = {
     unitsLost: 5,
     unitCost: 64.90,
     anomaly_type: 'lost_warehouse',
+    safety_audit: {
+      score: 98,
+      last_90_days_filings: 12,
+      risk_of_warning: 'Very Low',
+      verified_by: 'Agent 2: Sync Signal'
+    },
     evidence: {
       total_receipts: 100,
       total_returns: 2,
@@ -177,7 +191,11 @@ const mockCaseData = {
       total_output: 100,
       calculated_stock: 5,
       ending_warehouse_balance: 0,
-      discrepancy: 5
+      discrepancy: 5,
+      snippets: [
+        { label: 'Carrier Receipt', text: 'Delivered: 2024-12-01 | Qty: 100', source: 'FedEx-8923' },
+        { label: 'Ledger Entry', text: 'Adjustment Code M | -5 Units', source: 'Amazon-ILR' }
+      ]
     },
     warehouse_history: {
       occurrence_count: 3,
@@ -216,6 +234,32 @@ const mockCaseData = {
         type: 'update'
       }
     ] as CaseEvent[]
+  },
+  'OPS-99999': {
+    id: 'OPS-99999',
+    title: 'Damaged Inbound Shipment (12 Units)',
+    status: 'Rejected' as const,
+    guaranteedAmount: 750.00,
+    createdDate: '2024-11-20',
+    amazonCaseId: '1482930411',
+    sku: 'EL-CAM-V3',
+    anomaly_type: 'damaged_warehouse',
+    rejection_reason: 'Amazon claims the items were damaged prior to arrival at the fulfillment center.',
+    rejection_code: 'inbound_damage',
+    events: [
+      {
+        timestamp: '2024-11-20T10:00:00Z',
+        title: 'Case Filed',
+        description: 'Agent 7 submitted claim to Amazon Seller Central',
+        type: 'update'
+      },
+      {
+        timestamp: '2024-11-22T15:30:00Z',
+        title: 'Claim Denied',
+        description: 'Amazon Investigator rejected the claim citing inadequate inbound photos',
+        type: 'update'
+      }
+    ]
   }
 };
 
@@ -851,20 +895,34 @@ export default function CaseDetail() {
               <div className="h-4 w-[1px] bg-white/10" />
 
               {POLICY_MAP[effectiveCase.anomaly_type] && (
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Legal Basis</span>
-                  <a
-                    href={POLICY_MAP[effectiveCase.anomaly_type].link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-colors"
-                  >
-                    <Scale className="h-3 w-3" />
-                    {POLICY_MAP[effectiveCase.anomaly_type].code}
-                    {POLICY_MAP[effectiveCase.anomaly_type].clause && (
-                      <span className="ml-1 opacity-60 font-medium">({POLICY_MAP[effectiveCase.anomaly_type].clause})</span>
-                    )}
-                  </a>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Legal Basis</span>
+                    <a
+                      href={POLICY_MAP[effectiveCase.anomaly_type].link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-colors"
+                    >
+                      <Scale className="h-3 w-3" />
+                      {POLICY_MAP[effectiveCase.anomaly_type].code}
+                      {POLICY_MAP[effectiveCase.anomaly_type].clause && (
+                        <span className="ml-1 opacity-60 font-medium">({POLICY_MAP[effectiveCase.anomaly_type].clause})</span>
+                      )}
+                    </a>
+                  </div>
+
+                  {effectiveCase.safety_audit && (
+                    <>
+                      <div className="h-4 w-[1px] bg-white/10" />
+                      <div className="flex items-center gap-2 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded group cursor-help transition-all hover:bg-emerald-500/20" title={`Safety Score: ${effectiveCase.safety_audit.score}%\nRisk of Warning: ${effectiveCase.safety_audit.risk_of_warning}\nVerified by: ${effectiveCase.safety_audit.verified_by}`}>
+                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                        <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
+                          Submission Safety Audit Passed
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -1390,6 +1448,19 @@ export default function CaseDetail() {
                                     View <ArrowRight className="h-2.5 w-2.5 ml-1" />
                                   </Button>
                                 </div>
+                                {effectiveCase.evidence?.snippets?.length > 0 && (
+                                  <div className="mt-3 ml-6 pr-4 py-2 bg-emerald-500/[0.03] rounded border border-emerald-500/10 space-y-1.5">
+                                    {effectiveCase.evidence.snippets.map((snippet: any, sIdx: number) => (
+                                      <div key={sIdx} className="flex justify-between items-center text-[10px]">
+                                        <div className="flex items-center gap-2">
+                                          <div className="w-1 h-1 bg-emerald-500/40 rounded-full" />
+                                          <span className="text-white/40 font-bold uppercase tracking-wide">{snippet.label}</span>
+                                        </div>
+                                        <span className="text-white/80 font-mono truncate max-w-[280px] italic bg-white/5 px-1.5 rounded">"{snippet.text}"</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
@@ -1568,6 +1639,50 @@ export default function CaseDetail() {
 
                         {/* Actions List */}
                         <div className="space-y-8">
+                          {/* Rejection Master / Escalation Playbook */}
+                          {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && effectiveCase.rejection_code && escalationPlaybooks[effectiveCase.rejection_code as RejectionReason] && (
+                            <div className="mb-10 p-6 bg-red-500/5 border border-red-500/20 rounded-xl relative overflow-hidden group">
+                              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <ShieldAlert className="h-24 w-24 text-red-500" />
+                              </div>
+                              <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <div className="p-2 bg-red-500/20 rounded-lg">
+                                    <Zap className="h-4 w-4 text-red-500" />
+                                  </div>
+                                  <div>
+                                    <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].label}</h4>
+                                    <p className="text-[10px] text-red-400 font-mono uppercase tracking-widest mt-0.5">Automated Recovery Strategy v2.4</p>
+                                  </div>
+                                </div>
+                                <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-lg">
+                                  {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].description} Amazon often uses boilerplate denials for this case type. Follow the steps below to force manual re-review.
+                                </p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  <div className="space-y-4">
+                                    <h5 className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Required Maneuver</h5>
+                                    <ul className="space-y-2.5">
+                                      {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].actions.map((action, aIdx) => (
+                                        <li key={aIdx} className="flex items-start gap-3">
+                                          <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
+                                          <span className="text-[11px] text-white/80 font-medium">{action}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                  <div className="flex flex-col justify-end gap-3">
+                                    <Button className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all">
+                                      {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
+                                    </Button>
+                                    <p className="text-[9px] text-white/30 text-center italic">
+                                      Escalation managed by {AGENT_NAMES['refund_filing']}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
                           <div className="space-y-6">
                             <h4 className="text-[10px] font-bold text-white/30 border-b border-white/10 pb-3 tracking-wider flex items-center gap-2">
                               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
