@@ -1529,226 +1529,248 @@ export default function CaseDetail() {
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="text-[10px] text-white/30 font-bold mb-4 flex items-center gap-2 tracking-wider">
-                        Seller Identity
-                        <div className="h-px flex-1 bg-white/10" />
-                      </div>
-
-                      <div className="flex items-center gap-3 mb-6 bg-white/5 p-3 border border-white/10 rounded-lg">
-                        <div className="p-2 bg-emerald-500 rounded-lg">
-                          <ShieldCheck className="h-4 w-4 text-white" />
-                        </div>
-                        <div>
-                          <h4 className="text-[11px] font-bold text-white tracking-tight">Identity verified</h4>
-                          <p className="text-[10px] text-white/30 font-mono">Standard verification</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Seller ID</dt>
-                          <dd className="text-xs font-mono font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
-                        </div>
-                        <div className="border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Store Name</dt>
-                          <dd className="text-xs font-bold text-white truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
-                        </div>
-                        <div className="border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">User ID</dt>
-                          <dd className="text-xs font-mono font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || 'Not mapped'}</dd>
-                        </div>
-                        <div className="border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Permission Status</dt>
-                          <dd className="text-xs font-bold text-emerald-500">Active</dd>
-                        </div>
-                        <div>
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Contact Method</dt>
-                          <dd className="text-xs font-bold text-white">Seller Central</dd>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="text-[10px] text-white/30 font-bold mb-4 flex items-center gap-2 tracking-wider">
-                        Reference Data
-                        <div className="h-px flex-1 bg-white/10" />
-                      </div>
-                      <div className="space-y-3">
-                        <div className="border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Amazon Case ID</dt>
-                          <dd className="text-xs font-mono font-bold text-emerald-500">
-                            {effectiveCase.amazonCaseId || <span className="text-white/30 font-normal italic">Not filed yet</span>}
-                          </dd>
-                        </div>
-                        <div className="border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Prior Case</dt>
-                          <dd className="text-xs font-bold text-white">{effectiveCase.prior_case_id || 'None'}</dd>
-                        </div>
-                        <div>
-                          <dt className="text-[11px] text-white/40 font-medium mb-1">Claim Reference</dt>
-                          <dd className="text-xs font-mono font-bold text-white">
-                            {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12)}
-                          </dd>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Row 3: Autonomous Strategy & Recovery Path */}
-                    <div className="p-8 bg-white/[0.02]">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-                        <div>
-                          <h3 className="text-sm font-bold text-white mb-1">Autonomous Strategy & Recovery Path</h3>
-                          <p className="text-[10px] text-white/30 font-mono uppercase tracking-[0.2em]">Patient Zero → Settlement Ledger v4.2</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                      <div className="space-y-4">
+                        <div className="text-[10px] text-white/30 font-bold mb-4 flex items-center gap-2 tracking-wider uppercase">
+                          Seller Identity
+                          <div className="h-px flex-1 bg-white/10" />
                         </div>
 
-                        {/* Active Council Icons */}
-                        <div className="flex items-center gap-2 bg-white/5 p-2 rounded-xl border border-white/5">
-                          <div className="px-2 border-r border-white/10 mr-1">
-                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-tighter">Active Council</span>
+                        <div className="flex items-center gap-3 mb-6 bg-white/5 p-3 border border-white/10 rounded-lg">
+                          <div className="p-2 bg-emerald-500 rounded-lg">
+                            <ShieldCheck className="h-4 w-4 text-white" />
                           </div>
-                          {(caseData?.playbook?.council || []).map((agent: any) => (
-                            <div key={agent.id} className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 border border-white/5 group hover:border-emerald-500/30 transition-all cursor-crosshair">
-                              <div className={cn(
-                                "w-1 h-1 rounded-full animate-pulse",
-                                agent.status === 'SETTLED' ? "bg-emerald-500" : "bg-amber-500"
-                              )} />
-                              <span className="text-[10px] font-bold text-white/60 font-mono">{agent.agent}</span>
+                          <div>
+                            <h4 className="text-[11px] font-bold text-white tracking-tight">Identity verified</h4>
+                            <p className="text-[10px] text-white/30 font-mono uppercase tracking-widest">Protocol v1.0</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="border-b border-white/5 pb-2">
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Seller ID</dt>
+                            <dd className="text-xs font-mono font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
+                          </div>
+                          <div className="border-b border-white/5 pb-2">
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Store Name</dt>
+                            <dd className="text-xs font-bold text-white truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
+                          </div>
+                          <div className="border-b border-white/5 pb-2">
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">User ID</dt>
+                            <dd className="text-xs font-mono font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || 'Not mapped'}</dd>
+                          </div>
+                          <div className="border-b border-white/5 pb-2">
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Permission Status</dt>
+                            <dd className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Active</dd>
+                          </div>
+                          <div>
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Contact Method</dt>
+                            <dd className="text-xs font-bold text-white uppercase tracking-widest">Seller Central</dd>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="text-[10px] text-white/30 font-bold mb-4 flex items-center gap-2 tracking-wider uppercase">
+                          Reference Data
+                          <div className="h-px flex-1 bg-white/10" />
+                        </div>
+                        <div className="space-y-3">
+                          <div className="border-b border-white/5 pb-2">
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Amazon Case ID</dt>
+                            <dd className="text-xs font-mono font-bold text-emerald-500">
+                              {effectiveCase.amazonCaseId || <span className="text-white/30 font-normal italic">Not filed yet</span>}
+                            </dd>
+                          </div>
+                          <div className="border-b border-white/5 pb-2">
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Prior Case</dt>
+                            <dd className="text-xs font-bold text-white font-mono uppercase tracking-widest">{effectiveCase.prior_case_id || 'None'}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-[11px] text-white/40 font-medium mb-1">Claim Reference</dt>
+                            <dd className="text-xs font-mono font-bold text-white uppercase tracking-widest">
+                              {effectiveCase.claim_number || effectiveCase.claim_id || effectiveCase.id?.slice(0, 12)}
+                            </dd>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="text-[10px] text-white/30 font-bold mb-4 flex items-center gap-2 tracking-wider uppercase">
+                          Autonomous Logic
+                          <div className="h-px flex-1 bg-white/10" />
+                        </div>
+                        <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
+                          <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 tracking-widest uppercase mb-2">
+                            <Activity className="h-3 w-3" /> System Health
+                          </div>
+                          <p className="text-[11px] text-white/70 leading-relaxed font-light italic">
+                            Agent 11 is primary observer. Audit cycle synchronization established. Continuous monitoring of FC records enabled.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Row 3: Autonomous Strategy & Recovery Path */}
+                <div className="p-8 bg-white/[0.02]">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                    <div>
+                      <h3 className="text-sm font-bold text-white mb-1">Autonomous Strategy & Recovery Path</h3>
+                      <p className="text-[10px] text-white/30 font-mono uppercase tracking-[0.2em]">Patient Zero → Settlement Ledger v4.2</p>
+                    </div>
+
+                    {/* Active Council Icons */}
+                    <div className="flex items-center gap-2 bg-white/5 p-2 rounded-xl border border-white/5">
+                      <div className="px-2 border-r border-white/10 mr-1">
+                        <span className="text-[9px] font-bold text-white/30 uppercase tracking-tighter">Active Council</span>
+                      </div>
+                      {(caseData?.playbook?.council || []).map((agent: any) => (
+                        <div key={agent.id} className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 border border-white/5 group hover:border-emerald-500/30 transition-all cursor-crosshair">
+                          <div className={cn(
+                            "w-1 h-1 rounded-full animate-pulse",
+                            agent.status === 'SETTLED' ? "bg-emerald-500" : "bg-amber-500"
+                          )} />
+                          <span className="text-[10px] font-bold text-white/60 font-mono">{agent.agent}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-12">
+                    {/* Rejection Master / Escalation Playbook */}
+                    {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && effectiveCase.rejection_code && escalationPlaybooks[effectiveCase.rejection_code as RejectionReason] && (
+                      <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                          <ShieldAlert className="h-24 w-24 text-red-500" />
+                        </div>
+                        <div className="relative z-10">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 bg-red-500/20 rounded-lg">
+                              <Zap className="h-4 w-4 text-red-500" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].label}</h4>
+                              <p className="text-[10px] text-red-400 font-mono uppercase tracking-widest mt-0.5">Automated Recovery Strategy v2.4</p>
+                            </div>
+                          </div>
+                          <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-lg">
+                            {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].description} Amazon often uses boilerplate denials for this case type. Follow the steps below to force manual re-review.
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                              <h5 className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Required Maneuver</h5>
+                              <ul className="space-y-2.5">
+                                {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].actions.map((action, aIdx) => (
+                                  <li key={aIdx} className="flex items-start gap-3">
+                                    <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
+                                    <span className="text-[11px] text-white/80 font-medium">{action}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="flex flex-col justify-end gap-3">
+                              <button
+                                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all rounded-lg"
+                                onClick={() => {
+                                  recoveryApi.resubmitClaim(effectiveCase.id, activeSlug).catch(() => { });
+                                }}
+                              >
+                                {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
+                              </button>
+                              <p className="text-[9px] text-white/30 text-center italic">
+                                Escalation managed by {AGENT_NAMES['refund_filing']}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TWO-COLUMN STRATEGY GRID */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                      {/* Left: Tactical Playbook */}
+                      <div className="space-y-8">
+                        <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                          <div className="p-2 bg-emerald-500/10 rounded-lg">
+                            <Activity className="h-4 w-4 text-emerald-500" />
+                          </div>
+                          <div>
+                            <h4 className="text-xs font-bold text-white tracking-tight uppercase">Tactical Playbook</h4>
+                            <p className="text-[9px] text-white/30 font-mono">Agent Logic Directives</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-6">
+                          {(caseData?.playbook?.steps || []).map((action: string, idx: number) => (
+                            <div key={idx} className="flex items-start gap-4 group">
+                              <div className="w-5 h-5 rounded bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-mono text-white/40 group-hover:border-emerald-500/30 group-hover:text-emerald-500 transition-all shrink-0 mt-0.5 italic">
+                                0{idx + 1}
+                              </div>
+                              <span className="text-xs text-white/70 leading-relaxed font-light">{action}</span>
                             </div>
                           ))}
+                          {(!caseData?.playbook?.steps || caseData.playbook.steps.length === 0) && (
+                            <div className="py-4 text-[11px] text-white/20 italic font-mono">Synchronizing strategy steps...</div>
+                          )}
+                        </div>
+
+                        <div className="pt-6 border-t border-white/5">
+                          <div className="flex items-center justify-between p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
+                            <div className="flex items-center gap-3">
+                              <DollarSign className="h-4 w-4 text-emerald-500" />
+                              <span className="text-xs font-bold text-white/60">Expected Recovery</span>
+                            </div>
+                            <span className="text-sm font-mono font-bold text-emerald-500">
+                              {Number(caseData?.guaranteedAmount || caseData?.estimated_value || 0).toLocaleString('en-US', { style: 'currency', currency: caseData?.currency || 'USD' })}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="space-y-12">
-                        {/* Rejection Master / Escalation Playbook */}
-                        {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && effectiveCase.rejection_code && escalationPlaybooks[effectiveCase.rejection_code as RejectionReason] && (
-                          <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                              <ShieldAlert className="h-24 w-24 text-red-500" />
-                            </div>
-                            <div className="relative z-10">
-                              <div className="flex items-center gap-3 mb-4">
-                                <div className="p-2 bg-red-500/20 rounded-lg">
-                                  <Zap className="h-4 w-4 text-red-500" />
-                                </div>
-                                <div>
-                                  <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].label}</h4>
-                                  <p className="text-[10px] text-red-400 font-mono uppercase tracking-widest mt-0.5">Automated Recovery Strategy v2.4</p>
-                                </div>
-                              </div>
-                              <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-lg">
-                                {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].description} Amazon often uses boilerplate denials for this case type. Follow the steps below to force manual re-review.
-                              </p>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-4">
-                                  <h5 className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Required Maneuver</h5>
-                                  <ul className="space-y-2.5">
-                                    {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].actions.map((action, aIdx) => (
-                                      <li key={aIdx} className="flex items-start gap-3">
-                                        <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
-                                        <span className="text-[11px] text-white/80 font-medium">{action}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                                <div className="flex flex-col justify-end gap-3">
-                                  <Button className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all" onClick={() => {
-                                    recoveryApi.resubmitClaim(effectiveCase.id, tenant?.slug).catch(() => { });
-                                  }}>
-                                    {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
-                                  </Button>
-                                  <p className="text-[9px] text-white/30 text-center italic">
-                                    Escalation managed by {AGENT_NAMES['refund_filing']}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
+                      {/* Right: Protection Protocols */}
+                      <div className="space-y-8">
+                        <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                          <div className="p-2 bg-blue-500/10 rounded-lg">
+                            <ShieldCheck className="h-4 w-4 text-blue-400" />
                           </div>
-                        )}
-
-                        {/* TWO-COLUMN STRATEGY GRID */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                          {/* Left: Tactical Playbook */}
-                          <div className="space-y-8">
-                            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
-                              <div className="p-2 bg-emerald-500/10 rounded-lg">
-                                <Activity className="h-4 w-4 text-emerald-500" />
-                              </div>
-                              <div>
-                                <h4 className="text-xs font-bold text-white tracking-tight uppercase">Tactical Playbook</h4>
-                                <p className="text-[9px] text-white/30 font-mono">Agent Logic Directives</p>
-                              </div>
-                            </div>
-
-                            <div className="space-y-6">
-                              {(caseData?.playbook?.steps || []).map((action: string, idx: number) => (
-                                <div key={idx} className="flex items-start gap-4 group">
-                                  <div className="w-5 h-5 rounded bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-mono text-white/40 group-hover:border-emerald-500/30 group-hover:text-emerald-500 transition-all shrink-0 mt-0.5 italic">
-                                    0{idx + 1}
-                                  </div>
-                                  <span className="text-xs text-white/70 leading-relaxed font-light">{action}</span>
-                                </div>
-                              ))}
-                              {(!caseData?.playbook?.steps || caseData.playbook.steps.length === 0) && (
-                                <div className="py-4 text-[11px] text-white/20 italic font-mono">Synchronizing strategy steps...</div>
-                              )}
-                            </div>
-
-                            <div className="pt-6 border-t border-white/5">
-                              <div className="flex items-center justify-between p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
-                                <div className="flex items-center gap-3">
-                                  <DollarSign className="h-4 w-4 text-emerald-500" />
-                                  <span className="text-xs font-bold text-white/60">Expected Recovery</span>
-                                </div>
-                                <span className="text-sm font-mono font-bold text-emerald-500">
-                                  {Number(caseData?.guaranteedAmount || caseData?.estimated_value || 0).toLocaleString('en-US', { style: 'currency', currency: caseData?.currency || 'USD' })}
-                                </span>
-                              </div>
-                            </div>
+                          <div>
+                            <h4 className="text-xs font-bold text-white tracking-tight uppercase">Continuous Protection</h4>
+                            <p className="text-[9px] text-white/30 font-mono">Agent 11 Prevention Protocol</p>
                           </div>
+                        </div>
 
-                          {/* Right: Protection Protocols */}
-                          <div className="space-y-8">
-                            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
-                              <div className="p-2 bg-blue-500/10 rounded-lg">
-                                <ShieldCheck className="h-4 w-4 text-blue-400" />
-                              </div>
-                              <div>
-                                <h4 className="text-xs font-bold text-white tracking-tight uppercase">Continuous Protection</h4>
-                                <p className="text-[9px] text-white/30 font-mono">Agent 11 Prevention Protocol</p>
-                              </div>
+                        <div className="space-y-6">
+                          {(caseData?.protection_protocol || []).map((measure: string, idx: number) => (
+                            <div key={idx} className="flex items-start gap-4 group">
+                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30 mt-1.5 ring-4 ring-blue-500/5" />
+                              <span className="text-xs text-white/70 leading-relaxed font-light">{measure}</span>
                             </div>
+                          ))}
+                          {(!caseData?.protection_protocol || caseData.protection_protocol.length === 0) && (
+                            <div className="py-4 text-[11px] text-white/20 italic font-mono">Calibrating protection rules...</div>
+                          )}
+                        </div>
 
-                            <div className="space-y-6">
-                              {(caseData?.protection_protocol || []).map((measure: string, idx: number) => (
-                                <div key={idx} className="flex items-start gap-4 group">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30 mt-1.5 ring-4 ring-blue-500/5" />
-                                  <span className="text-xs text-white/70 leading-relaxed font-light">{measure}</span>
-                                </div>
-                              ))}
-                              {(!caseData?.protection_protocol || caseData.protection_protocol.length === 0) && (
-                                <div className="py-4 text-[11px] text-white/20 italic font-mono">Calibrating protection rules...</div>
-                              )}
-                            </div>
-
-                            <div className="pt-6 border-t border-white/5">
-                              <div className="flex items-center gap-3 p-4 bg-blue-500/[0.03] border border-blue-500/10 rounded-xl">
-                                <CheckCircle className="h-4 w-4 text-blue-400" />
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-bold text-white/60 uppercase tracking-tighter">System Shielding Active</span>
-                                  <span className="text-[9px] text-white/30 font-mono uppercase">Predictive Loss Prevention Enabled</span>
-                                </div>
-                              </div>
+                        <div className="pt-6 border-t border-white/5">
+                          <div className="flex items-center gap-3 p-4 bg-blue-500/[0.03] border border-blue-500/10 rounded-xl">
+                            <CheckCircle className="h-4 w-4 text-blue-400" />
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-white/60 uppercase tracking-tighter">System Shielding Active</span>
+                              <span className="text-[9px] text-white/30 font-mono uppercase">Predictive Loss Prevention Enabled</span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-            )}
                 </div>
               </div>
+            )}
+          </div>
+        </div>
       </div>
-        </PageLayout>
-        );
+    </PageLayout>
+  );
 }
