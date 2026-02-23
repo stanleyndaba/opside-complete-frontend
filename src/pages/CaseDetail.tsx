@@ -811,7 +811,7 @@ export default function CaseDetail() {
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-light text-white tracking-tight font-mono">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                   </div>
-                  <p className="text-xs text-white/30 mt-1 font-mono tracking-tight">Case Details</p>
+                  <p className="text-xs text-white/30 mt-1 font-mono tracking-tight">Claim Details | <span className="text-emerald-500 font-bold">{derivedConfidencePct}% Confident</span></p>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
@@ -872,11 +872,6 @@ export default function CaseDetail() {
                   Get PDF
                 </Button>
                 <div className="text-right">
-                  <div className="text-xs text-white/30 font-bold">Verification</div>
-                  <div className="text-xs font-mono font-bold text-emerald-500 mt-0.5">{derivedConfidencePct}% confident</div>
-                </div>
-                <div className="h-8 w-[1px] bg-white/10" />
-                <div className="text-right">
                   <div className="text-xs text-white/30 font-bold">Resolution Progress</div>
                   <div className="text-xs font-mono font-bold text-white mt-0.5">{typeof effectiveCase.progress === 'number' ? Math.round(effectiveCase.progress) : 85}% completed</div>
                 </div>
@@ -884,14 +879,7 @@ export default function CaseDetail() {
             </div>
 
             {/* Trust Banner - Policy & Confidence */}
-            <div className="flex flex-wrap items-center gap-6 py-2 mb-8">
-              <div className="flex items-center gap-2">
-                <p className="text-[12px] font-mono text-white/20 tracking-wider">
-                  Verification Precision
-                </p>
-              </div>
-
-              <div className="h-4 w-[1px] bg-white/10" />
+            <div className="flex flex-wrap items-center gap-6 py-2 mb-8 lowercase">
 
               {POLICY_MAP[effectiveCase.anomaly_type] && (
                 <div className="flex items-center gap-4">
