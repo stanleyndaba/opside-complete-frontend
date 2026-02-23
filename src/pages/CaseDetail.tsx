@@ -1593,197 +1593,162 @@ export default function CaseDetail() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Row 3: Resolution Actions */}
-                <div className="p-8 bg-white/[0.02]">
-                  <div className="mb-8">
-                    <h3 className="text-sm font-bold text-white">What Happens Next</h3>
-                  </div>
+                    {/* Row 3: Autonomous Strategy & Recovery Path */}
+                    <div className="p-8 bg-white/[0.02]">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                        <div>
+                          <h3 className="text-sm font-bold text-white mb-1">Autonomous Strategy & Recovery Path</h3>
+                          <p className="text-[10px] text-white/30 font-mono uppercase tracking-[0.2em]">Patient Zero → Settlement Ledger v4.2</p>
+                        </div>
 
-                  {(() => {
-                    const caseType = (effectiveCase.anomaly_type || effectiveCase.claim_type || effectiveCase.case_type || '').toLowerCase();
-                    const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
-                    const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy');
-                    const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
-                    const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
-                    const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
-                    const asin = effectiveCase.asin || effectiveCase.evidence?.asin || '—';
-                    const sku = effectiveCase.sku || effectiveCase.evidence?.sku || '—';
-                    const facility = effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '—';
-                    const units = effectiveCase.unitsLost || effectiveCase.quantity || effectiveCase.units || '—';
-                    const amount = (effectiveCase.guaranteedAmount || effectiveCase.estimated_value || effectiveCase.claim_amount || 0);
-                    const orderId = effectiveCase.order_id || effectiveCase.evidence?.order_id || '—';
-                    const formattedAmount = `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-                    const immediateActions: string[] = [];
-                    const preventiveMeasures: string[] = [];
-
-                    if (isFeeCase) {
-                      immediateActions.push(`Review dimensional specs for ASIN ${asin}`);
-                      immediateActions.push(`Update measurements in catalog system`);
-                      preventiveMeasures.push(`Correct fee calculations for future shipments`);
-                      preventiveMeasures.push(`Ensure measurement accuracy for existing inventory`);
-                    } else if (isLostCase) {
-                      immediateActions.push(`Investigate inventory discrepancy at FC ${facility}`);
-                      immediateActions.push(`Confirm count discrepancy for ${units} units of SKU ${sku}`);
-                      preventiveMeasures.push(`Improve inventory tracking at fulfillment centers`);
-                      preventiveMeasures.push(`Implement regular reconciliation checks`);
-                    } else if (isDamagedCase) {
-                      immediateActions.push(`Review damage report for SKU ${sku}`);
-                      immediateActions.push(`Verify damage occurred during carrier handling`);
-                      preventiveMeasures.push(`Review handling procedures for product category`);
-                      preventiveMeasures.push(`Consider improved packaging requirements`);
-                    } else if (isRefundCase) {
-                      immediateActions.push(`Verify return status for Order ${orderId}`);
-                      immediateActions.push(`Confirm refund issued without valid return`);
-                      preventiveMeasures.push(`Monitor return compliance more closely`);
-                      preventiveMeasures.push(`Flag repeat offender customer accounts`);
-                    } else if (isChargebackCase) {
-                      immediateActions.push(`Review chargeback claim for Order ${orderId}`);
-                      immediateActions.push(`Provide proof of delivery and condition`);
-                      preventiveMeasures.push(`Enhance delivery confirmation tracking`);
-                      preventiveMeasures.push(`Document all communications with buyer`);
-                    } else {
-                      immediateActions.push(`Review case documentation and evidence`);
-                      immediateActions.push(`Verify discrepancy against enrollment records`);
-                      preventiveMeasures.push(`Implement monitoring for similar discrepancies`);
-                    }
-                    immediateActions.push(`Process reimbursement of ${formattedAmount}`);
-                    preventiveMeasures.push(`Provide confirmation of system updates`);
-
-                    return (
-                      <div className="space-y-10">
-                        {/* Missing Docs Prompt */}
-                        {effectiveCase?.missingDocumentPrompt && (
-                          <section className="rounded-lg border-l-4 border-amber-500 bg-amber-500/10 p-6">
-                            <div className="flex items-center gap-2 mb-4">
-                              <AlertCircle className="h-4 w-4 text-amber-500" />
-                              <h4 className="text-[11px] font-bold text-amber-400 tracking-tight">Action Required: Document Needed</h4>
+                        {/* Active Council Icons */}
+                        <div className="flex items-center gap-2 bg-white/5 p-2 rounded-xl border border-white/5">
+                          <div className="px-2 border-r border-white/10 mr-1">
+                            <span className="text-[9px] font-bold text-white/30 uppercase tracking-tighter">Active Council</span>
+                          </div>
+                          {(caseData?.playbook?.council || []).map((agent: any) => (
+                            <div key={agent.id} className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 border border-white/5 group hover:border-emerald-500/30 transition-all cursor-crosshair">
+                              <div className={cn(
+                                "w-1 h-1 rounded-full animate-pulse",
+                                agent.status === 'SETTLED' ? "bg-emerald-500" : "bg-amber-500"
+                              )} />
+                              <span className="text-[10px] font-bold text-white/60 font-mono">{agent.agent}</span>
                             </div>
-                            <p className="text-xs text-amber-300/70 mb-6 leading-relaxed font-medium">{effectiveCase.missingDocumentPrompt}</p>
+                          ))}
+                        </div>
+                      </div>
 
-                            <div className="flex flex-col md:flex-row gap-8">
-                              <div className="flex-1">
-                                {Array.isArray(effectiveCase.missingDocumentOptions) && (
-                                  <div className="flex flex-wrap gap-2 mb-4">
-                                    {effectiveCase.missingDocumentOptions.map((opt: string) => (
-                                      <button key={opt} className="px-4 py-2 bg-amber-500/20 border border-amber-500/30 text-amber-400 text-[11px] font-bold hover:bg-amber-500/30 transition-colors rounded-lg tracking-tight" onClick={() => {
-                                        recoveryApi.submitRecoveryAnswer(effectiveCase.id, { answer: opt }).catch(() => { });
-                                      }}>{opt}</button>
+                      <div className="space-y-12">
+                        {/* Rejection Master / Escalation Playbook */}
+                        {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && effectiveCase.rejection_code && escalationPlaybooks[effectiveCase.rejection_code as RejectionReason] && (
+                          <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                              <ShieldAlert className="h-24 w-24 text-red-500" />
+                            </div>
+                            <div className="relative z-10">
+                              <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-red-500/20 rounded-lg">
+                                  <Zap className="h-4 w-4 text-red-500" />
+                                </div>
+                                <div>
+                                  <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].label}</h4>
+                                  <p className="text-[10px] text-red-400 font-mono uppercase tracking-widest mt-0.5">Automated Recovery Strategy v2.4</p>
+                                </div>
+                              </div>
+                              <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-lg">
+                                {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].description} Amazon often uses boilerplate denials for this case type. Follow the steps below to force manual re-review.
+                              </p>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-4">
+                                  <h5 className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Required Maneuver</h5>
+                                  <ul className="space-y-2.5">
+                                    {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].actions.map((action, aIdx) => (
+                                      <li key={aIdx} className="flex items-start gap-3">
+                                        <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
+                                        <span className="text-[11px] text-white/80 font-medium">{action}</span>
+                                      </li>
                                     ))}
-                                  </div>
-                                )}
-                              </div>
-
-                              <div
-                                className="flex-1 h-32 border-2 border-dashed border-amber-500/30 bg-amber-500/5 flex flex-col items-center justify-center cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/50 transition-all rounded-lg"
-                                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                onDrop={async (e) => {
-                                  e.preventDefault();
-                                  const files = Array.from(e.dataTransfer.files || []);
-                                  if (!files.length) return;
-                                  await recoveryApi.uploadRecoveryDocuments(effectiveCase.id, files as any).catch(() => { });
-                                }}>
-                                <Upload className="h-5 w-5 text-amber-500/50 mb-2" />
-                                <p className="text-[10px] font-bold text-amber-400/70">Drag & Drop Files Here</p>
+                                  </ul>
+                                </div>
+                                <div className="flex flex-col justify-end gap-3">
+                                  <Button className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all" onClick={() => {
+                                    recoveryApi.resubmitClaim(effectiveCase.id, tenant?.slug).catch(() => { });
+                                  }}>
+                                    {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
+                                  </Button>
+                                  <p className="text-[9px] text-white/30 text-center italic">
+                                    Escalation managed by {AGENT_NAMES['refund_filing']}
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </section>
+                          </div>
                         )}
 
-                        {/* Actions List */}
-                        <div className="space-y-8">
-                          {/* Rejection Master / Escalation Playbook */}
-                          {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && effectiveCase.rejection_code && escalationPlaybooks[effectiveCase.rejection_code as RejectionReason] && (
-                            <div className="mb-10 p-6 bg-red-500/5 border border-red-500/20 rounded-xl relative overflow-hidden group">
-                              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                <ShieldAlert className="h-24 w-24 text-red-500" />
+                        {/* TWO-COLUMN STRATEGY GRID */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                          {/* Left: Tactical Playbook */}
+                          <div className="space-y-8">
+                            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                              <div className="p-2 bg-emerald-500/10 rounded-lg">
+                                <Activity className="h-4 w-4 text-emerald-500" />
                               </div>
-                              <div className="relative z-10">
-                                <div className="flex items-center gap-3 mb-4">
-                                  <div className="p-2 bg-red-500/20 rounded-lg">
-                                    <Zap className="h-4 w-4 text-red-500" />
-                                  </div>
-                                  <div>
-                                    <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].label}</h4>
-                                    <p className="text-[10px] text-red-400 font-mono uppercase tracking-widest mt-0.5">Automated Recovery Strategy v2.4</p>
-                                  </div>
-                                </div>
-                                <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-lg">
-                                  {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].description} Amazon often uses boilerplate denials for this case type. Follow the steps below to force manual re-review.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                  <div className="space-y-4">
-                                    <h5 className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Required Maneuver</h5>
-                                    <ul className="space-y-2.5">
-                                      {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].actions.map((action, aIdx) => (
-                                        <li key={aIdx} className="flex items-start gap-3">
-                                          <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
-                                          <span className="text-[11px] text-white/80 font-medium">{action}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                  <div className="flex flex-col justify-end gap-3">
-                                    <Button className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all">
-                                      {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
-                                    </Button>
-                                    <p className="text-[9px] text-white/30 text-center italic">
-                                      Escalation managed by {AGENT_NAMES['refund_filing']}
-                                    </p>
-                                  </div>
-                                </div>
+                              <div>
+                                <h4 className="text-xs font-bold text-white tracking-tight uppercase">Tactical Playbook</h4>
+                                <p className="text-[9px] text-white/30 font-mono">Agent Logic Directives</p>
                               </div>
                             </div>
-                          )}
 
-                          <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-white/30 border-b border-white/10 pb-3 tracking-wider flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                              Next Steps
-                            </h4>
-                            <ol className="space-y-4">
-                              {immediateActions.map((action, idx) => (
-                                <li key={idx} className="flex items-start gap-4 group">
-                                  <span className="text-white/20 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-white/40 transition-colors">{idx + 1}.</span>
-                                  <span className="text-[11px] text-white/60 leading-relaxed font-light">{action}</span>
-                                </li>
+                            <div className="space-y-6">
+                              {(caseData?.playbook?.steps || []).map((action: string, idx: number) => (
+                                <div key={idx} className="flex items-start gap-4 group">
+                                  <div className="w-5 h-5 rounded bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-mono text-white/40 group-hover:border-emerald-500/30 group-hover:text-emerald-500 transition-all shrink-0 mt-0.5 italic">
+                                    0{idx + 1}
+                                  </div>
+                                  <span className="text-xs text-white/70 leading-relaxed font-light">{action}</span>
+                                </div>
                               ))}
-                            </ol>
-                            <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-emerald-500 tracking-tight">
-                              <ArrowRight className="h-3.5 w-3.5" /> Expected Recovery: {formattedAmount}
+                              {(!caseData?.playbook?.steps || caseData.playbook.steps.length === 0) && (
+                                <div className="py-4 text-[11px] text-white/20 italic font-mono">Synchronizing strategy steps...</div>
+                              )}
+                            </div>
+
+                            <div className="pt-6 border-t border-white/5">
+                              <div className="flex items-center justify-between p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
+                                <div className="flex items-center gap-3">
+                                  <DollarSign className="h-4 w-4 text-emerald-500" />
+                                  <span className="text-xs font-bold text-white/60">Expected Recovery</span>
+                                </div>
+                                <span className="text-sm font-mono font-bold text-emerald-500">
+                                  {Number(caseData?.guaranteedAmount || caseData?.estimated_value || 0).toLocaleString('en-US', { style: 'currency', currency: caseData?.currency || 'USD' })}
+                                </span>
+                              </div>
                             </div>
                           </div>
 
-                          <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-white/30 border-b border-white/10 pb-3 tracking-wider flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                              Prevention Tips
-                            </h4>
-                            <ol className="space-y-4">
-                              {preventiveMeasures.map((measure, idx) => (
-                                <li key={idx} className="flex items-start gap-4 group">
-                                  <span className="text-white/20 font-mono text-[11px] mt-0.5 w-6 shrink-0 group-hover:text-white/40 transition-colors">{idx + 1}.</span>
-                                  <span className="text-[11px] text-white/60 leading-relaxed font-light">{measure}</span>
-                                </li>
+                          {/* Right: Protection Protocols */}
+                          <div className="space-y-8">
+                            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                              <div className="p-2 bg-blue-500/10 rounded-lg">
+                                <ShieldCheck className="h-4 w-4 text-blue-400" />
+                              </div>
+                              <div>
+                                <h4 className="text-xs font-bold text-white tracking-tight uppercase">Continuous Protection</h4>
+                                <p className="text-[9px] text-white/30 font-mono">Agent 11 Prevention Protocol</p>
+                              </div>
+                            </div>
+
+                            <div className="space-y-6">
+                              {(caseData?.protection_protocol || []).map((measure: string, idx: number) => (
+                                <div key={idx} className="flex items-start gap-4 group">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30 mt-1.5 ring-4 ring-blue-500/5" />
+                                  <span className="text-xs text-white/70 leading-relaxed font-light">{measure}</span>
+                                </div>
                               ))}
-                            </ol>
-                            <div className="pt-4 flex items-center gap-2 text-[11px] font-bold text-blue-400 tracking-tight">
-                              <ShieldCheck className="h-3.5 w-3.5" /> Protection Active
+                              {(!caseData?.protection_protocol || caseData.protection_protocol.length === 0) && (
+                                <div className="py-4 text-[11px] text-white/20 italic font-mono">Calibrating protection rules...</div>
+                              )}
+                            </div>
+
+                            <div className="pt-6 border-t border-white/5">
+                              <div className="flex items-center gap-3 p-4 bg-blue-500/[0.03] border border-blue-500/10 rounded-xl">
+                                <CheckCircle className="h-4 w-4 text-blue-400" />
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-bold text-white/60 uppercase tracking-tighter">System Shielding Active</span>
+                                  <span className="text-[9px] text-white/30 font-mono uppercase">Predictive Loss Prevention Enabled</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    );
-                  })()}
+                    </div>
+                  </div>
+            )}
                 </div>
               </div>
-            )}
-          </div>
-        </div>
       </div>
-    </PageLayout>
-  );
+        </PageLayout>
+        );
 }
