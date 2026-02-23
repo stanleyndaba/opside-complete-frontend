@@ -1322,16 +1322,16 @@ export default function CaseDetail() {
 
             {activeTab === 'PROTOCOL' && (
               <div className="flex flex-col gap-0 border border-white/10 divide-y divide-white/10 rounded-2xl overflow-hidden">
-                {/* Row 1: Resolution Timeline */}
-                <div className="p-8 bg-white/[0.02]">
-                  <div className="mb-8">
-                    <h3 className="text-sm font-bold text-white">Resolution Timeline</h3>
+                {/* Row 1: Case Progress */}
+                <div className="py-5 px-8 bg-white/[0.02]">
+                  <div className="mb-6">
+                    <h3 className="text-sm font-bold text-white">Case Progress</h3>
                   </div>
 
-                  <div className="space-y-10">
+                  <div className="space-y-6">
                     {/* Horizontal Progress bar */}
-                    <div className="relative pt-2 pb-6 px-4">
-                      <div className="absolute top-[21px] left-0 right-0 h-[1px] bg-white/10" />
+                    <div className="relative pt-2 pb-2 px-4">
+                      <div className="absolute top-[18px] left-0 right-0 h-[1px] bg-white/10" />
                       <div className="flex justify-between relative z-10">
                         {['Detected', 'Prepared', 'Submitted', 'Paid', 'Follow-up'].map((step, idx) => {
                           const status = (effectiveCase.status || '').toLowerCase();
@@ -1342,16 +1342,16 @@ export default function CaseDetail() {
                             (step === 'Follow-up' && ['denied', 'rejected', 'unresolved'].includes(status));
 
                           return (
-                            <div key={step} className="flex flex-col items-center gap-3">
+                            <div key={step} className="flex flex-col items-center gap-2">
                               <div className={cn(
-                                "w-[26px] h-[26px] rounded-full border-2 flex items-center justify-center text-[11px] font-bold transition-all shrink-0",
-                                active ? "bg-emerald-500 border-emerald-500 text-white" : "bg-[#0a0a0a] border-white/10 text-white/30"
+                                "w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all shrink-0",
+                                active ? "bg-white/70 border-white/70 text-[#0a0a0a]" : "bg-[#0a0a0a] border-white/10 text-white/30"
                               )}>
                                 {idx + 1}
                               </div>
                               <span className={cn(
-                                "text-[13px] font-normal tracking-wider",
-                                active ? "text-white" : "text-white/30"
+                                "text-[11px] font-normal tracking-widest uppercase",
+                                active ? "text-white/80" : "text-white/20"
                               )}>{step}</span>
                             </div>
                           );
