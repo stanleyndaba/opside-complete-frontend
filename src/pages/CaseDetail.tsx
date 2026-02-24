@@ -802,7 +802,7 @@ export default function CaseDetail() {
         <div className="relative w-full bg-[#050505] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
             {/* Header - Case Information */}
-            <div className="mb-10 flex items-center justify-between border-b border-white/10 pb-8">
+            <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-6">
                 <Link to={`/app/${activeSlug}/recoveries`} className="h-10 w-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-colors rounded-lg">
                   <ArrowLeft className="h-4 w-4 text-white/40" />
@@ -878,43 +878,44 @@ export default function CaseDetail() {
             </div>
 
             {/* Trust Banner - Policy & Confidence */}
-            <div className="flex flex-wrap items-center gap-6 py-2 mb-8 lowercase">
-
-              {POLICY_MAP[effectiveCase.anomaly_type] && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Legal Basis</span>
-                    <a
-                      href={POLICY_MAP[effectiveCase.anomaly_type].link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-colors"
-                    >
-                      <Scale className="h-3 w-3" />
-                      {POLICY_MAP[effectiveCase.anomaly_type].code}
-                      {POLICY_MAP[effectiveCase.anomaly_type].clause && (
-                        <span className="ml-1 opacity-60 font-medium">({POLICY_MAP[effectiveCase.anomaly_type].clause})</span>
-                      )}
-                    </a>
+            {(POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit) && (
+              <div className="flex flex-wrap items-center gap-6 py-2 mb-4 lowercase">
+                {POLICY_MAP[effectiveCase.anomaly_type] && (
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Legal Basis</span>
+                      <a
+                        href={POLICY_MAP[effectiveCase.anomaly_type].link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] font-bold text-indigo-400 hover:bg-indigo-500/20 transition-colors"
+                      >
+                        <Scale className="h-3 w-3" />
+                        {POLICY_MAP[effectiveCase.anomaly_type].code}
+                        {POLICY_MAP[effectiveCase.anomaly_type].clause && (
+                          <span className="ml-1 opacity-60 font-medium">({POLICY_MAP[effectiveCase.anomaly_type].clause})</span>
+                        )}
+                      </a>
+                    </div>
                   </div>
+                )}
 
-                  {effectiveCase.safety_audit && (
-                    <>
-                      <div className="h-4 w-[1px] bg-white/10" />
-                      <div className="flex items-center gap-2 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded group cursor-help transition-all hover:bg-emerald-500/20" title={`Safety Score: ${effectiveCase.safety_audit.score}%\nRisk of Warning: ${effectiveCase.safety_audit.risk_of_warning}\nVerified by: ${effectiveCase.safety_audit.verified_by}`}>
-                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                        <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
-                          Submission Safety Audit Passed
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
+                {effectiveCase.safety_audit && (
+                  <>
+                    <div className="h-4 w-[1px] bg-white/10" />
+                    <div className="flex items-center gap-2 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded group cursor-help transition-all hover:bg-emerald-500/20" title={`Safety Score: ${effectiveCase.safety_audit.score}%\nRisk of Warning: ${effectiveCase.safety_audit.risk_of_warning}\nVerified by: ${effectiveCase.safety_audit.verified_by}`}>
+                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                      <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
+                        Submission Safety Audit Passed
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Navigation Tabs */}
-            <div className="flex border-b border-white/10 mb-8">
+            <div className="flex border-b border-white/10 mb-4">
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
@@ -949,7 +950,7 @@ export default function CaseDetail() {
                     <h3 className="text-sm font-bold text-white">Case Summary</h3>
                   </div>
                   <div className="space-y-8">
-                    <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
+                    <p className="text-[15px] text-white/70 leading-relaxed font-light tracking-tight">
                       {generateNarrative(effectiveCase)}
                     </p>
 

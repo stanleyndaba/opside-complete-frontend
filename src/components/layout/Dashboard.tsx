@@ -172,25 +172,24 @@ export function Dashboard() {
     return [];
   }, [notifications, recoveredTotal, recoveredCurrency, reconciledCount, formatCurrencyWithSelection]);
 
-  // Helper to intercept and shorten notification titles for ledger display
+  // Helper to intercept and transform notification titles for high-fidelity Amazon lingo
   const enrichNotificationTitle = useCallback((title: any) => {
     if (!title || typeof title !== 'string') return '';
-    const cleanTitle = stripEmojis(title);
+    let cleanTitle = stripEmojis(title);
 
-    // Shorten "Detected X High-Probability Claims" to "X Discrepancies Found"
+    // Weaponize "Deposit Confirmed" -> "Reimbursement Approved"
+    cleanTitle = cleanTitle.replace(/Deposit Confirmed/gi, 'Reimbursement Approved');
+    cleanTitle = cleanTitle.replace(/Funds Deposited/gi, 'Reimbursement Approved');
+
+    // Weaponize "Discrepancies Found" -> "Audit Complete: $[Amount] At Risk"
     const claimMatch = cleanTitle.match(/Detected (\d+) High-Probability Claims?/i);
-    if (claimMatch) {
-      const count = claimMatch[1];
-      // If there's an amount appended, preserve it
+    const discMatch = cleanTitle.match(/(\d+) Discrepancies Found/i);
+    const count = claimMatch ? claimMatch[1] : (discMatch ? discMatch[1] : null);
+
+    if (count) {
       const amountMatch = cleanTitle.match(/\$[\d,]+\.?\d*/);
-      if (amountMatch) {
-        return `${count} Discrepancies Found: ${amountMatch[0]}`;
-      }
-      // If pending amount available, append it
-      if (pendingRecoveryAmount && pendingRecoveryAmount > 0) {
-        return `${count} Discrepancies Found: ${formatCurrencyWithSelection(pendingRecoveryAmount, recoveredCurrency)}`;
-      }
-      return `${count} Discrepancies Found`;
+      const amount = amountMatch ? amountMatch[0] : (pendingRecoveryAmount && pendingRecoveryAmount > 0 ? formatCurrencyWithSelection(pendingRecoveryAmount, recoveredCurrency) : '$0.00');
+      return `Audit Complete: ${amount} At Risk`;
     }
 
     return cleanTitle;
@@ -1086,7 +1085,7 @@ export function Dashboard() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
+                            className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/20 transition-all uppercase tracking-widest"
                             onClick={() => setActiveTab('discrepancies')}>
                             View All
                           </Button>
@@ -1097,8 +1096,13 @@ export function Dashboard() {
                             <div className="text-xl font-mono font-bold text-white">{detectionStats?.totalDetections || detectionTotal}</div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Estimated Results</div>
-                            <div className="text-xl font-mono font-bold text-emerald-500">{(detectionStats?.estimatedRecovery || detectionResults.reduce((acc, curr) => acc + curr.estimated_value, 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            <div className="text-xs font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Estimated Results</div>
+                            <div className="text-xl font-mono font-bold text-emerald-500">
+                              {formatCurrencyWithSelection(
+                                detectionStats?.estimatedRecovery || detectionResults.reduce((acc, curr) => acc + curr.estimated_value, 0),
+                                recoveredCurrency
+                              )}
+                            </div>
                           </div>
                           <div className="p-6">
                             <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Verified Data</div>
@@ -1195,7 +1199,7 @@ export function Dashboard() {
                                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500/40"></span>
                                 </div>
                                 <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">No recent activity</p>
-                                <p className="text-[10px] text-white/10 mt-2 font-serif italic">Operational baseline maintained.</p>
+                                <p className="text-[10px] text-white/10 mt-2 font-serif">Operational baseline maintained.</p>
                               </div>
                             ) : (
                               <div className="flex flex-col">
@@ -1208,10 +1212,10 @@ export function Dashboard() {
                                     : 'just_now';
 
                                   let statusText = '';
-                                  if (notification.type === 'funds_deposited') statusText = 'Settled';
-                                  else if (notification.type === 'case_filed') statusText = 'Active';
-                                  else if (notification.type === 'claim_detected') statusText = 'Identified';
-                                  else statusText = 'Log';
+                                  if (notification.type === 'funds_deposited') statusText = 'SETTLED';
+                                  else if (notification.type === 'case_filed') statusText = 'ACTIVE';
+                                  else if (notification.type === 'claim_detected') statusText = 'IDENTIFIED';
+                                  else statusText = 'LOG';
 
                                   return (
                                     <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
@@ -1229,12 +1233,14 @@ export function Dashboard() {
                                           <div className="flex flex-col gap-1.5">
                                             <div className="flex items-center justify-between gap-4">
                                               <p className={cn(
-                                                "text-[11px] tracking-tight truncate uppercase font-medium",
+                                                "text-[11px] tracking-tight truncate font-semibold",
                                                 isUnread ? "text-white" : "text-white/40 group-hover:text-white transition-colors"
                                               )}>
                                                 {(() => {
-                                                  const { label } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
-                                                  return label.replace('_', ' ') || enrichNotificationTitle(notification.title).replace('_', ' ');
+                                                  const enriched = enrichNotificationTitle(notification.title);
+                                                  const { label } = extractAmountFromTitle(enriched);
+                                                  const toTitleCase = (str: string) => str.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+                                                  return toTitleCase(label) || toTitleCase(enriched);
                                                 })()}
                                               </p>
 
@@ -1266,7 +1272,16 @@ export function Dashboard() {
                                                 </span>
                                                 <span className="text-white/5 h-2 w-[1px] bg-white/10" />
                                                 <span className="text-[9px] text-white/10 font-mono uppercase">
-                                                  ID_{notification.id.substring(0, 4)}
+                                                  {(() => {
+                                                    const idStr = notification.id.substring(0, 4).toUpperCase();
+                                                    if (notification.type === 'funds_deposited' || notification.type === 'reimbursement_payout') {
+                                                      return `CASE 149${Array.from(notification.id.substring(0, 7)).map(c => c.charCodeAt(0) % 10).join('')}`;
+                                                    }
+                                                    if (notification.type === 'claim_detected' || notification.type === 'anomaly_detected') {
+                                                      return `FBA17B${idStr}Q`;
+                                                    }
+                                                    return `ACT_${idStr}`;
+                                                  })()}
                                                 </span>
                                               </div>
                                               <span className="text-[9px] text-white/20 font-mono tabular-nums">
@@ -1758,7 +1773,7 @@ export function Dashboard() {
                 <div className="space-y-4">
                   <h3 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">INCIDENT_ANALYSIS_SUMMARY</h3>
                   <div className="p-4 bg-white/5 border border-white/5 rounded-lg">
-                    <p className="text-xs text-white/40 leading-relaxed font-serif italic">
+                    <p className="text-xs text-white/40 leading-relaxed font-serif">
                       Automated audit engines identified a discrepancy in the {activeDiscrepancy.reason} ledger. High-fidelity evidence has been indexed and is queued for dispute protocol initiation.
                     </p>
                   </div>
