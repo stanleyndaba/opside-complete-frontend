@@ -380,26 +380,27 @@ export function Navbar({
                   </HoverCardContent>
                 </HoverCard>
 
-                {/* Integrations Icon */}
-                <button
-                  onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
-                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
-                  aria-label="Integrations Hub"
-                  title="Integrations">
-                  <Box className="h-4.5 w-4.5" />
-                </button>
+                {/* Notification Bell moved here */}
+                <NotificationBell
+                  label="Alert"
+                  showLabel={false}
+                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
+                  iconClassName="h-4.5 w-4.5"
+                />
               </div>
             </div>
           </div>
 
           {/* Right Group - Connect & Account */}
           <div className="flex items-center gap-x-4 border-l border-white/5 pl-6 ml-6">
-            <NotificationBell
-              label="Alert"
-              showLabel={false}
-              className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
-              iconClassName="h-4.5 w-4.5"
-            />
+            {/* Integrations Icon moved here */}
+            <button
+              onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
+              className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+              aria-label="Integrations Hub"
+              title="Integrations">
+              <Box className="h-4.5 w-4.5" />
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">

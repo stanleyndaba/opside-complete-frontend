@@ -415,7 +415,17 @@ const Index = () => {
 
                 {/* Buttons - left aligned on mobile, centered on desktop */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto">
-                  <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" />
+                  <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
+                    <span className="text-[10px] font-mono font-bold text-emerald-500/80 uppercase tracking-widest">
+                      7 spots remaining
+                    </span>
+                    <button
+                      onClick={() => navigate('/waitlist')}
+                      className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-bold bg-white text-black hover:bg-white/90 rounded-full transition-all">
+                      Private Beta
+                    </button>
+                    {/* <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" /> */}
+                  </div>
                 </div>
 
                 {/* Integrations Separator */}
@@ -978,11 +988,19 @@ const Index = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-col items-center gap-4">
-                  <AmazonConnect
+                <div className="flex flex-col items-center gap-2 pt-4">
+                  <span className="text-[10px] font-mono font-bold text-emerald-500/80 uppercase tracking-widest">
+                    7 spots remaining
+                  </span>
+                  <button
+                    onClick={() => navigate('/waitlist')}
+                    className="min-w-[280px] h-12 text-[13px] transition-all duration-500 font-bold active:scale-95 px-8 bg-white text-black hover:bg-white/90 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.15)]">
+                    Private Beta
+                  </button>
+                  {/* <AmazonConnect
                     label="VERIFY MY INVENTORY"
                     className="min-w-[280px] h-12 text-[13px] transition-all duration-500 font-bold active:scale-95 px-8"
-                  />
+                  /> */}
                 </div>
               </div>
             </motion.div>

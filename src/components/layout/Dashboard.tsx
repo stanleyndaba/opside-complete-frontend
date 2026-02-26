@@ -1369,8 +1369,7 @@ export function Dashboard() {
                         <div>
                           <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">Anomaly Ledger</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Found potential reimbursements</span>
-                            <AlertTriangle className="h-3 w-3 text-emerald-500/50" />
+                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Found Discrepancies</span>
                           </div>
                         </div>
                       </div>
