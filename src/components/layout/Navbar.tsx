@@ -414,7 +414,7 @@ export function Navbar({
                   label="Alert"
                   showLabel={false}
                   className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all"
-                  iconClassName="h-4.5 w-4.5"
+                  iconClassName="h-5 w-5"
                 />
               </div>
             </div>
@@ -422,14 +422,34 @@ export function Navbar({
 
           {/* Right Group - Connect & Account */}
           <div className="flex items-center gap-x-4 border-l border-white/5 pl-6 ml-6">
-            {/* Integrations Icon moved here */}
-            <button
-              onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
-              className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
-              aria-label="Integrations Hub"
-              title="Integrations">
-              <Box className="h-4.5 w-4.5" />
-            </button>
+            {/* Integrations Icon */}
+            <HoverCard openDelay={100} closeDelay={200}>
+              <HoverCardTrigger asChild>
+                <button
+                  onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
+                  className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+                  aria-label="Integrations Hub">
+                  <Box className="h-4.5 w-4.5" />
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent
+                side="bottom"
+                align="center"
+                sideOffset={12}
+                className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                      <Box className="h-4 w-4 text-blue-500" />
+                    </div>
+                    <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Integrations Hub</span>
+                  </div>
+                  <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                    "Configure your document and data providers — connect Amazon, Gmail, and other marketplace sources."
+                  </p>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
