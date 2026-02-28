@@ -178,7 +178,7 @@ export function NotificationBell({
           size={isSidebarStyle ? 'default' : 'icon'}
           className={triggerClassNames}
           onClick={() => setIsOpen(true)}>
-          <IconComponent className={cn(
+          <IconComponent strokeWidth={1.5} className={cn(
             'h-4.5 w-4.5',
             iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-white/20' : 'text-white/40')
           )} />

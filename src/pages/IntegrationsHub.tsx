@@ -961,13 +961,15 @@ export default function IntegrationsHub() {
 
             <div className="lg:col-span-12 flex gap-6 overflow-x-auto pb-6 -mx-4 px-4 no-scrollbar scroll-smooth">
 
-              {(['gmail', 'outlook', 'gdrive', 'dropbox', 'slack'] as const).map((p) => {
+              {(['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'] as const).map((p) => {
                 const providerMeta = {
                   gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
                   outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
                   gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
                   dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
                   slack: { name: 'Slack', icon: '/slack-icon-2019.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
+                  adobe_sign: { name: 'Adobe Sign', icon: '/dobe.png', color: 'bg-red-600/10', border: 'border-red-600/20' },
+                  onedrive: { name: 'OneDrive', icon: '/onedriive.png', color: 'bg-sky-500/10', border: 'border-sky-500/20' },
                 } as const;
 
                 const isConnected = () => {
