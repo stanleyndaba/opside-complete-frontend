@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { LayoutDashboard, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -159,7 +159,7 @@ export function Sidebar({
     location.pathname === `/app/${currentTenantSlug}/`;
 
   const primaryItems: NavItem[] = [
-    { title: 'Overview', icon: LayoutDashboard, href: tenantRoute(currentTenantSlug, '') },
+    { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
     { title: 'Claims', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
@@ -295,7 +295,7 @@ export function Sidebar({
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-5" : "h-5", "w-auto object-contain invert brightness-0")}
+            className={cn(isCollapsed ? "h-3.5" : "h-3.5", "w-auto object-contain invert brightness-0")}
           />
         </div>
       </div>
