@@ -24,7 +24,7 @@ const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/Recoveries"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
 const ResolveCase = lazy(() => import("./pages/ResolveCase"));
-const SmartInventorySync = lazy(() => import("./pages/SmartInventorySync"));
+const DataUpload = lazy(() => import("./pages/DataUpload"));
 const EvidenceLocker = lazy(() => import("./pages/EvidenceLocker"));
 const DocumentDetail = lazy(() => import("./pages/DocumentDetail"));
 const Billing = lazy(() => import("./pages/Billing"));
@@ -181,6 +181,7 @@ const App = () => (
                     <Route path="/app/:tenantSlug/evidence-onboarding" element={<EvidenceOnboarding />} />
                     <Route path="/app/:tenantSlug/evidence-search" element={<EvidenceSearch />} />
                     <Route path="/app/:tenantSlug/margin-board" element={<MarginBoard />} />
+                    <Route path="/app/:tenantSlug/data-upload" element={<DataUpload />} />
 
                     {/* Admin routes - still tenant-scoped */}
                     <Route path="/app/:tenantSlug/admin" element={<Admin />} />
