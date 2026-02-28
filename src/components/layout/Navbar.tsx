@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store, Box } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store, Box, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -380,7 +380,36 @@ export function Navbar({
                   </HoverCardContent>
                 </HoverCard>
 
-                {/* Notification Bell moved here */}
+                {/* Upload Icon */}
+                <HoverCard openDelay={100} closeDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <button
+                      onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/data-upload'))}
+                      className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
+                      aria-label="Upload CSV">
+                      <Upload className="h-4.5 w-4.5" />
+                    </button>
+                  </HoverCardTrigger>
+                  <HoverCardContent
+                    side="bottom"
+                    align="center"
+                    sideOffset={12}
+                    className="w-64 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
+                    <div className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center border border-violet-500/20">
+                          <Upload className="h-4 w-4 text-violet-500" />
+                        </div>
+                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Data Upload</span>
+                      </div>
+                      <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                        "Upload Amazon Seller Central CSV reports to feed the detection pipeline."
+                      </p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+
+                {/* Notification Icon */}
                 <NotificationBell
                   label="Alert"
                   showLabel={false}

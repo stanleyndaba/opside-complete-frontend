@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   HoverCard,
@@ -123,7 +123,7 @@ export function NotificationBell({
     };
   });
 
-  const IconComponent = iconOverride ?? Bell;
+  const IconComponent = iconOverride ?? Mail;
   const isSidebarStyle = forceCountStyle === 'sidebar';
   const shouldShowLabel = isSidebarStyle && showLabel;
 
