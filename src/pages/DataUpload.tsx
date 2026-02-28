@@ -12,19 +12,19 @@ import { api } from '@/lib/api';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
     Package, Truck, RotateCcw, DollarSign, Archive, Target,
-    Zap, ChevronRight, Info, Sparkles
+    Zap, ChevronRight, Info, Coins
 } from 'lucide-react';
 
 // Supported CSV types
 const CSV_TYPES = [
-    { value: 'auto', label: 'Auto-Detect', icon: Sparkles, description: 'Let the system detect the type from headers', color: 'from-violet-500/20 to-purple-500/20' },
+    { value: 'auto', label: 'Auto-Detect', icon: Coins, description: 'Let the system detect the type from headers', color: 'from-violet-500/20 to-purple-500/20' },
     { value: 'orders', label: 'Orders', icon: Package, description: 'Amazon order data', color: 'from-blue-500/20 to-cyan-500/20' },
     { value: 'shipments', label: 'Shipments', icon: Truck, description: 'FBA inbound shipments', color: 'from-emerald-500/20 to-green-500/20' },
     { value: 'returns', label: 'Returns', icon: RotateCcw, description: 'Customer returns', color: 'from-amber-500/20 to-orange-500/20' },
-    { value: 'settlements', label: 'Settlements', icon: DollarSign, description: 'Payment/settlement reports', color: 'from-green-500/20 to-teal-500/20' },
+    { value: 'settlements', label: 'Settlements', icon: Coins, description: 'Payment/settlement reports', color: 'from-green-500/20 to-teal-500/20' },
     { value: 'inventory', label: 'Inventory', icon: Archive, description: 'FBA inventory data', color: 'from-indigo-500/20 to-blue-500/20' },
     { value: 'financial_events', label: 'Financial Events', icon: Target, description: 'Adjustments, liquidations', color: 'from-rose-500/20 to-pink-500/20' },
-    { value: 'fees', label: 'Fees', icon: DollarSign, description: 'FBA fee data', color: 'from-yellow-500/20 to-amber-500/20' },
+    { value: 'fees', label: 'Fees', icon: Coins, description: 'FBA fee data', color: 'from-yellow-500/20 to-amber-500/20' },
 ] as const;
 
 // File state
@@ -230,7 +230,7 @@ export default function DataUpload() {
                 {/* Ambient Glow */}
                 <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-violet-600/8 rounded-full blur-[120px] pointer-events-none" />
 
-                <div className="relative z-10 max-w-4xl mx-auto px-6 py-10">
+                <div className="relative z-10 w-full mx-auto px-6 lg:px-10 py-10">
                     {/* Header */}
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}

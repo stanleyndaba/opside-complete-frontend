@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -164,7 +164,8 @@ export function Sidebar({
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
     { title: 'Refund Recoveries', icon: Plug, href: tenantRoute(currentTenantSlug, '/upcoming-payments') },
-    { title: 'Transaction History', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/history') }
+    { title: 'Transaction History', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/history') },
+    { title: 'Upload', icon: Upload, href: tenantRoute(currentTenantSlug, '/data-upload') }
   ];
 
   const secondaryItems: NavItem[] = []; // Moved to "More" menu

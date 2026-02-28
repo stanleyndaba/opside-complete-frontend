@@ -70,9 +70,7 @@ export function StoreSelector() {
     };
 
     if (isLoading) {
-        return (
-            <div className="h-9 w-32 bg-slate-100 animate-pulse rounded-lg" />
-        );
+        return null;
     }
 
     // Handle case with no stores (e.g. new user)

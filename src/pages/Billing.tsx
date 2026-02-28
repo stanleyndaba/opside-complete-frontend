@@ -23,7 +23,11 @@ import {
   Mail,
   Receipt,
   ArrowUpRight,
-  Scale
+  Scale,
+  Plus,
+  Trash2,
+  X,
+  Star
 } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
@@ -42,6 +46,18 @@ interface InvoiceRecord {
   recoveryClaimIds?: string[];
 }
 
+interface PaymentMethod {
+  id: string;
+  card_brand: string;
+  card_last_four: string;
+  card_exp_month: number;
+  card_exp_year: number;
+  cardholder_name?: string;
+  billing_email?: string;
+  is_default: boolean;
+  status: string;
+}
+
 const getStatusStyles = (status: InvoiceRecord['status']) => {
   switch (status) {
     case 'SETTLED':
@@ -55,6 +71,13 @@ const getStatusStyles = (status: InvoiceRecord['status']) => {
   }
 };
 
+const BRAND_ICONS: Record<string, string> = {
+  visa: '💳',
+  mastercard: '💳',
+  amex: '💳',
+  discover: '💳',
+};
+
 export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
@@ -65,6 +88,19 @@ export default function Billing() {
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Payment methods state
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [loadingCards, setLoadingCards] = useState(true);
+  const [showAddCard, setShowAddCard] = useState(false);
+  const [addingCard, setAddingCard] = useState(false);
+
+  // Add card form
+  const [cardBrand, setCardBrand] = useState('visa');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardholderName, setCardholderName] = useState('');
+  const [billingEmail, setBillingEmail] = useState('');
 
   // Financial Registration
   const [invoiceRecipients, setInvoiceRecipients] = useState<string[]>([]);
@@ -81,6 +117,24 @@ export default function Billing() {
     } catch { }
   }, []);
 
+  // Fetch payment methods
+  useEffect(() => {
+    (async () => {
+      setLoadingCards(true);
+      try {
+        const res = await api.getPaymentMethods();
+        if (res.ok && res.data?.data) {
+          setPaymentMethods(res.data.data);
+        }
+      } catch (e) {
+        console.error('Failed to fetch payment methods:', e);
+      } finally {
+        setLoadingCards(false);
+      }
+    })();
+  }, []);
+
+  // Fetch invoices
   useEffect(() => {
     if (!isReady) return;
     let cancelled = false;
@@ -88,6 +142,29 @@ export default function Billing() {
       setLoading(true);
       setError(null);
       try {
+        // Try new revenue invoices first
+        const revenueRes = await api.getRevenueInvoices({ limit: 100 });
+        if (!cancelled && revenueRes.ok && revenueRes.data?.data?.invoices?.length > 0) {
+          const mapped: InvoiceRecord[] = revenueRes.data.data.invoices.map((inv: any) => {
+            let status: 'SETTLED' | 'PENDING' | 'BREACH' = 'PENDING';
+            const s = (inv.status || '').toLowerCase();
+            if (s === 'paid') status = 'SETTLED';
+            else if (s === 'void' || s === 'disputed') status = 'BREACH';
+
+            return {
+              id: inv.invoice_number || inv.id,
+              dateIssued: (inv.period_end || inv.created_at || '').split('T')[0],
+              status,
+              totalRecovered: Number(inv.total_reimbursements || 0),
+              commission: Number(inv.commission_amount || 0),
+              amountCharged: Number(inv.commission_amount || 0),
+            };
+          });
+          setInvoices(mapped);
+          return;
+        }
+
+        // Fallback to old billing API
         const response = await api.getBillingInvoices({ limit: 100 }, activeSlug);
         if (!cancelled) {
           if (response.ok && response.data?.invoices) {
@@ -133,6 +210,82 @@ export default function Billing() {
   const saveBillingSettings = () => {
     localStorage.setItem('clario.billing', JSON.stringify({ recipients: invoiceRecipients, taxId }));
     toast({ title: 'Settings Updated', description: 'Your billing preferences have been saved.' });
+  };
+
+  // Add card handler
+  const handleAddCard = async () => {
+    if (!cardNumber || cardNumber.length < 4 || !cardExpiry) {
+      toast({ title: 'Invalid Input', description: 'Please enter card number and expiry.', variant: 'destructive' });
+      return;
+    }
+
+    const lastFour = cardNumber.replace(/\s/g, '').slice(-4);
+    const [monthStr, yearStr] = cardExpiry.split('/');
+    const expMonth = parseInt(monthStr);
+    const expYear = parseInt(yearStr?.length === 2 ? `20${yearStr}` : yearStr);
+
+    if (!expMonth || !expYear || expMonth < 1 || expMonth > 12) {
+      toast({ title: 'Invalid Expiry', description: 'Please enter expiry as MM/YY.', variant: 'destructive' });
+      return;
+    }
+
+    setAddingCard(true);
+    try {
+      const res = await api.addPaymentMethod({
+        cardBrand: cardBrand,
+        cardLastFour: lastFour,
+        cardExpMonth: expMonth,
+        cardExpYear: expYear,
+        cardholderName: cardholderName || undefined,
+        billingEmail: billingEmail || undefined,
+        setDefault: paymentMethods.length === 0,
+      });
+
+      if (res.ok && res.data?.success) {
+        toast({ title: 'Card Added', description: `${cardBrand.toUpperCase()} ending in ${lastFour} has been added.` });
+        // Refresh payment methods
+        const refreshed = await api.getPaymentMethods();
+        if (refreshed.ok && refreshed.data?.data) setPaymentMethods(refreshed.data.data);
+        // Reset form
+        setShowAddCard(false);
+        setCardNumber('');
+        setCardExpiry('');
+        setCardholderName('');
+        setBillingEmail('');
+      } else {
+        toast({ title: 'Error', description: res.data?.error || 'Failed to add card.', variant: 'destructive' });
+      }
+    } catch (e: any) {
+      toast({ title: 'Error', description: e?.message || 'Failed to add card.', variant: 'destructive' });
+    } finally {
+      setAddingCard(false);
+    }
+  };
+
+  // Remove card
+  const handleRemoveCard = async (id: string) => {
+    try {
+      const res = await api.removePaymentMethod(id);
+      if (res.ok) {
+        setPaymentMethods(prev => prev.filter(p => p.id !== id));
+        toast({ title: 'Card Removed', description: 'Payment method has been removed.' });
+      }
+    } catch (e: any) {
+      toast({ title: 'Error', description: 'Failed to remove card.', variant: 'destructive' });
+    }
+  };
+
+  // Set default card
+  const handleSetDefault = async (id: string) => {
+    try {
+      const res = await api.setDefaultPaymentMethod(id);
+      if (res.ok) {
+        setPaymentMethods(prev => prev.map(p => ({ ...p, is_default: p.id === id })));
+        toast({ title: 'Default Updated', description: 'Default payment method updated.' });
+      }
+    } catch (e: any) {
+      toast({ title: 'Error', description: 'Failed to set default.', variant: 'destructive' });
+    }
   };
 
   const exportBillingPDF = async () => {
@@ -248,6 +401,9 @@ export default function Billing() {
     visible: { opacity: 1, y: 0 }
   };
 
+  // Default card for display
+  const defaultCard = paymentMethods.find(p => p.is_default) || paymentMethods[0];
+
   return (
     <PageLayout title="Billing" midnight>
       <div className="relative min-h-screen font-serif bg-[#050505]">
@@ -268,7 +424,7 @@ export default function Billing() {
                 </Badge>
               </div>
               <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Billing.</h1>
-              <p className="text-white/40 mt-3 font-serif italic text-lg max-w-2xl">View your billing history and managed payment settings.</p>
+              <p className="text-white/40 mt-3 font-serif italic text-lg max-w-2xl">View your billing history and manage payment settings.</p>
             </div>
           </motion.div>
 
@@ -277,33 +433,205 @@ export default function Billing() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="mb-16"
+            className="mb-16 space-y-6"
           >
-            {/* Financial Transit Card - Full Width */}
+            {/* Payment Methods Card */}
             <motion.div variants={itemVariants}>
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
                 <CardHeader className="p-8 pb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                        <CreditCard className="h-4 w-4 text-white/60" />
+                      </div>
+                      <CardTitle className="text-2xl font-serif tracking-tight">Payment Methods</CardTitle>
+                    </div>
+                    <Button
+                      onClick={() => setShowAddCard(!showAddCard)}
+                      variant="outline"
+                      className="h-9 px-4 border-white/10 hover:border-emerald-500/50 bg-transparent text-white hover:bg-emerald-500/10 font-mono text-[10px] uppercase tracking-widest rounded-xl"
+                    >
+                      <Plus className="h-3.5 w-3.5 mr-2" />
+                      Add card
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-8 pt-0 space-y-6">
+
+                  {/* Add Card Form */}
+                  <AnimatePresence>
+                    {showAddCard && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl space-y-5">
+                          <div className="flex items-center justify-between">
+                            <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">New payment method</p>
+                            <button onClick={() => setShowAddCard(false)} className="text-white/20 hover:text-white transition-colors">
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+
+                          {/* Card Brand Selector */}
+                          <div className="flex gap-3">
+                            {['visa', 'mastercard', 'amex', 'discover'].map(brand => (
+                              <button
+                                key={brand}
+                                onClick={() => setCardBrand(brand)}
+                                className={cn(
+                                  "px-4 py-2 rounded-lg border text-[10px] font-mono uppercase tracking-widest transition-all",
+                                  cardBrand === brand
+                                    ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
+                                    : "border-white/10 text-white/30 hover:border-white/20"
+                                )}
+                              >
+                                {brand}
+                              </button>
+                            ))}
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Card number</label>
+                              <Input
+                                placeholder="•••• •••• •••• 4242"
+                                value={cardNumber}
+                                onChange={(e) => setCardNumber(e.target.value)}
+                                maxLength={19}
+                                className="h-11 bg-white/5 border-white/10 text-xs font-mono text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Expiry</label>
+                              <Input
+                                placeholder="MM/YY"
+                                value={cardExpiry}
+                                onChange={(e) => setCardExpiry(e.target.value)}
+                                maxLength={5}
+                                className="h-11 bg-white/5 border-white/10 text-xs font-mono text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Cardholder name</label>
+                              <Input
+                                placeholder="Full name on card"
+                                value={cardholderName}
+                                onChange={(e) => setCardholderName(e.target.value)}
+                                className="h-11 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Billing email</label>
+                              <Input
+                                placeholder="billing@company.com"
+                                value={billingEmail}
+                                onChange={(e) => setBillingEmail(e.target.value)}
+                                className="h-11 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 pt-2">
+                            <Button
+                              onClick={handleAddCard}
+                              disabled={addingCard}
+                              className="bg-white text-black hover:bg-emerald-500 rounded-xl font-serif font-bold uppercase text-[10px] tracking-widest h-11 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
+                            >
+                              {addingCard ? 'Adding...' : 'Add payment method'}
+                            </Button>
+                            <div className="flex items-center gap-2 text-white/20">
+                              <Lock className="h-3 w-3" />
+                              <span className="text-[9px] font-mono uppercase tracking-widest">Encrypted & secure</span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Cards List */}
+                  {loadingCards ? (
+                    <div className="flex items-center gap-3 py-6">
+                      <div className="h-5 w-5 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+                      <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Fetching payment methods...</span>
+                    </div>
+                  ) : paymentMethods.length > 0 ? (
+                    <div className="space-y-3">
+                      {paymentMethods.map((pm) => (
+                        <div
+                          key={pm.id}
+                          className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl group/card hover:border-white/10 transition-all"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
+                              <CreditCard className="h-5 w-5 text-white/60" />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs font-mono font-bold uppercase tracking-widest">
+                                  {pm.card_brand} .... {pm.card_last_four}
+                                </p>
+                                {pm.is_default && (
+                                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[8px] px-2 font-mono">DEFAULT</Badge>
+                                )}
+                              </div>
+                              <p className="text-[10px] text-white/30 uppercase tracking-tighter">
+                                Exp {String(pm.card_exp_month).padStart(2, '0')} // {pm.card_exp_year}
+                                {pm.cardholder_name && ` · ${pm.cardholder_name}`}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            {!pm.is_default && (
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => handleSetDefault(pm.id)}
+                                className="h-8 w-8 text-white/20 hover:text-emerald-500"
+                                title="Set as default"
+                              >
+                                <Star className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleRemoveCard(pm.id)}
+                              className="h-8 w-8 text-white/20 hover:text-rose-500"
+                              title="Remove card"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center py-10 gap-3 opacity-30">
+                      <CreditCard className="h-8 w-8" />
+                      <p className="text-[10px] font-mono uppercase tracking-[0.2em]">No payment methods on file</p>
+                      <p className="text-xs italic font-serif">"Add a card to enable automatic commission settlement."</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Billing Settings Card */}
+            <motion.div variants={itemVariants}>
+              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full">
+                <CardHeader className="p-8 pb-4">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                      <CreditCard className="h-4 w-4 text-white/60" />
+                      <Receipt className="h-4 w-4 text-white/60" />
                     </div>
                   </div>
-                  <CardTitle className="text-2xl font-serif tracking-tight">Billing Settings</CardTitle>
+                  <CardTitle className="text-2xl font-serif tracking-tight">Invoice Settings</CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 pt-0 space-y-8">
-                  <div className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
-                        <Receipt className="h-5 w-5 text-white/60" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-mono font-bold uppercase tracking-widest">Visa .... 4242</p>
-                        <p className="text-[10px] text-white/30 uppercase tracking-tighter">Exp 12 // 2027</p>
-                      </div>
-                    </div>
-                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] px-3 font-mono">ACTIVE_PORT</Badge>
-                  </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Invoice recipients</label>
@@ -326,6 +654,18 @@ export default function Billing() {
                           Add
                         </Button>
                       </div>
+                      {invoiceRecipients.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {invoiceRecipients.map((r, i) => (
+                            <Badge key={i} variant="outline" className="text-[9px] font-mono text-white/40 border-white/10 px-3 py-1 gap-2">
+                              {r}
+                              <button onClick={() => setInvoiceRecipients(prev => prev.filter((_, idx) => idx !== i))} className="text-white/20 hover:text-rose-500">
+                                <X className="h-3 w-3" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-3">
                       <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Tax details</label>
@@ -338,19 +678,12 @@ export default function Billing() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
+                  <div className="pt-4 border-t border-white/5">
                     <Button
                       onClick={saveBillingSettings}
                       className="bg-white text-black hover:bg-emerald-500 rounded-xl font-serif font-bold uppercase text-[10px] tracking-widest h-12 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                     >
                       Save changes
-                    </Button>
-                    <Button
-                      onClick={() => navigate('/stripe/callback')}
-                      variant="outline"
-                      className="border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 rounded-xl font-mono uppercase text-[9px] tracking-[0.2em] h-12 px-6"
-                    >
-                      Connect payment method
                     </Button>
                   </div>
                 </CardContent>
@@ -436,9 +769,9 @@ export default function Billing() {
                               className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group"
                             >
                               <TableCell className="py-6 px-8">
-                                <Link to={`/app/${tenantSlug || 'default'}/billing/invoice/${invoice.id}`} className="text-[11px] font-mono text-white/60 group-hover:text-emerald-500 transition-colors">
+                                <span className="text-[11px] font-mono text-white/60 group-hover:text-emerald-500 transition-colors">
                                   {invoice.id}
-                                </Link>
+                                </span>
                               </TableCell>
                               <TableCell className="text-[10px] font-mono text-white/40 uppercase tracking-tight">
                                 {new Date(invoice.dateIssued).toLocaleDateString()}
@@ -538,7 +871,8 @@ export default function Billing() {
               {[
                 { q: "Execution Timelines", a: "Yield settlements are generated upon cycle completion and processed within seven standard verification intervals." },
                 { q: "Recovery Reversals", a: "In the rare event of asset reclamation by platform entities, counter-credits are autonomously applied to the subsequent ledger cycle." },
-                { q: "Sovereignty & Security", a: "All transactions route through Level 1 PCI-compliant corridors. Opside does not store core decryption keys for financial instruments." }
+                { q: "Sovereignty & Security", a: "All transactions route through Level 1 PCI-compliant corridors. Margin does not store raw card numbers — only masked references for display." },
+                { q: "Commission Rate", a: "Margin takes a 20% commission on Amazon reimbursements recovered through Margin-filed claims. You only pay when Amazon pays you." }
               ].map((item, i) => (
                 <AccordionItem key={i} value={`item-${i}`} className="border-white/5 bg-white/[0.01] rounded-2xl px-6 md:px-8 overflow-hidden">
                   <AccordionTrigger className="text-sm font-serif text-white/80 hover:text-white transition-colors py-6 uppercase tracking-widest hover:no-underline">
