@@ -417,7 +417,10 @@ export const api = {
     const slug = tenantSlug;
     if (!slug) throw new Error("Tenant slug required for scoped API call");
 
-    // Check if we're in sandbox mode FIRST (for faster response)
+    // DISABLED: Sandbox mode was causing mock data fallback, hiding real CSV data
+    // To re-enable mock data, uncomment the sandbox detection below
+    const isSandbox = false;
+    /* Original sandbox detection:
     const isSandbox =
       (typeof window !== 'undefined' && (
         window.location.hostname.includes('localhost') ||
@@ -430,6 +433,7 @@ export const api = {
         import.meta.env.MODE === 'development' ||
         import.meta.env.DEV === true
       ));
+    */
 
     console.log(`[API] getAmazonRecoveries - Sandbox mode: ${isSandbox}, Tenant: ${slug}, Time: ${performance.now() - startTime}ms`);
 

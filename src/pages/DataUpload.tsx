@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
@@ -455,12 +455,23 @@ export default function DataUpload() {
                                             </p>
 
                                             {batchResult.detectionTriggered && (
-                                                <div className="flex items-center gap-2 py-1.5 px-3 bg-violet-500/10 border border-violet-500/20 rounded-lg w-fit">
-                                                    <Target className="h-3.5 w-3.5 text-violet-400" />
-                                                    <span className="text-xs text-violet-300 font-mono">
-                                                        Agent 3 detection pipeline triggered
-                                                    </span>
-                                                    <ChevronRight className="h-3 w-3 text-violet-400/50" />
+                                                <div className="space-y-3 mt-4">
+                                                    <div className="flex items-center gap-2 py-1.5 px-3 bg-violet-500/10 border border-violet-500/20 rounded-lg w-fit">
+                                                        <Target className="h-3.5 w-3.5 text-violet-400" />
+                                                        <span className="text-xs text-violet-300 font-mono">
+                                                            Agent 3 detection pipeline triggered
+                                                        </span>
+                                                    </div>
+
+                                                    <Button
+                                                        asChild
+                                                        className="bg-violet-600 hover:bg-violet-500 text-white text-xs h-8 px-4"
+                                                    >
+                                                        <Link to="/dashboard">
+                                                            View Detection Results
+                                                            <ChevronRight className="ml-2 h-3.5 w-3.5" />
+                                                        </Link>
+                                                    </Button>
                                                 </div>
                                             )}
                                         </div>
