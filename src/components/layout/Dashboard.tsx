@@ -150,13 +150,58 @@ export function Dashboard() {
     }
   };
 
-  const handleRowExport = (id: string) => {
-    // Usually triggers a single PDF/CSV download.
+  const handleRowExport = async (id: string) => {
     toast({
       title: "DOCUMENT_EXPORT",
-      description: `Exporting evidence for claim ID: ${id.substring(0, 8)}`,
+      description: `Exporting evidence for claim ID: ${id.substring(0, 8)}...`,
     });
-    // In a full implementation, you'd call a PDF generator or a similar API endpoint for a single claim.
+
+    try {
+      // Query Supabase directly for the single claim's data
+      const { data: claim, error } = await supabase
+        .from('detection_results')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error || !claim) throw new Error(error?.message || 'Claim not found');
+
+      // Build a single-row CSV
+      const evidence = claim.evidence || {};
+      const headers = 'Amazon Order ID,FNSKU,Discrepancy Type,Estimated Owed (USD),Date of Event,Status,Confidence Score';
+      const row = [
+        evidence.order_id || claim.sync_id || '',
+        evidence.fnsku || claim.sku || '',
+        (claim.anomaly_type || '').replace(/_/g, ' ').toUpperCase(),
+        typeof claim.estimated_value === 'number' ? claim.estimated_value.toFixed(2) : '',
+        claim.discovery_date ? new Date(claim.discovery_date).toISOString().split('T')[0] : '',
+        (claim.status || '').toUpperCase(),
+        claim.confidence_score ? (claim.confidence_score * 100).toFixed(0) + '%' : ''
+      ].join(',');
+
+      const csvContent = headers + '\n' + row;
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Margin_Claim_${id.substring(0, 8)}_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "EXPORT_COMPLETE",
+        description: `Evidence for claim ${id.substring(0, 8)} downloaded.`,
+      });
+    } catch (err: any) {
+      console.error('[Row Export Error]', err);
+      toast({
+        title: "EXPORT_FAILED",
+        description: err.message || 'Failed to export claim evidence.',
+        variant: "destructive"
+      });
+    }
   };
 
   const openCaseIdModal = (id: string) => {
@@ -210,7 +255,7 @@ export function Dashboard() {
   };
 
   const handleMarkFalsePositive = async (id: string) => {
-    if (!window.confirm("Are you sure you want to mark this claim as a false positive?")) return;
+    if (!window.confirm("Are you sure you want to mark this claim as a false positive? This cannot be easily undone.")) return;
 
     try {
       toast({
@@ -218,20 +263,28 @@ export function Dashboard() {
         description: `Marking claim ${id.substring(0, 8)} as false positive...`,
       });
 
-      // Placeholder backend call
-      // await api.put(`/api/detections/${id}/status`, { status: 'false_positive' });
+      const { error } = await supabase
+        .from('detection_results')
+        .update({ status: 'false_positive' })
+        .eq('id', id);
+
+      if (error) throw error;
 
       toast({
-        title: "MARK_AS_FALSE_POSITIVE",
-        description: `Claim ${id.substring(0, 8)} marked as false positive. Verification required.`,
+        title: "CLAIM_DISMISSED",
+        description: `Claim ${id.substring(0, 8)} marked as false positive.`,
       });
 
-      // Re-fetch claims from backend
-      // fetchClaims();
+      // Optimistic UI update — remove from active list or mark as processed
+      setDetectionResults(prev => prev.map(claim =>
+        claim.id === id
+          ? { ...claim, status: 'false_positive' }
+          : claim
+      ));
     } catch (err: any) {
       toast({
         title: "UPDATE_FAILED",
-        description: "Failed to update claim status",
+        description: err.message || "Failed to update claim status",
         variant: "destructive"
       });
     }
