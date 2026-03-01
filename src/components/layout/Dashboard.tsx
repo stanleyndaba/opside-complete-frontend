@@ -12,17 +12,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import {
-  ArrowRight,
-  ChevronDown,
-  Clock,
-  Download,
-  Loader2,
-  Shield,
-  Link2,
-  AlertTriangle,
-  MoreVertical,
-  Plus,
-  Terminal
+  FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
+  ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
+  Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X, AlertTriangle,
+  ChevronDown, Clock, Terminal, MoreVertical
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
 import { supabase } from '@/lib/supabaseClient';
