@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import {
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
+import { supabase } from '@/lib/supabaseClient';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -154,28 +155,53 @@ export function Dashboard() {
     // In a full implementation, you'd call a PDF generator or a similar API endpoint for a single claim.
   };
 
-  const handleCaseIdUpdate = async (id: string) => {
-    const caseId = window.prompt("Enter Amazon Case ID for this claim:");
-    if (!caseId) return;
+  const openCaseIdModal = (id: string) => {
+    setActiveClaimIdForCase(id);
+    setCaseIdInput("");
+    setCaseIdModalOpen(true);
+  };
 
+  const handleCaseIdUpdate = async () => {
+    if (!caseIdInput.trim() || !activeClaimIdForCase) return;
+
+    setIsLinkingCase(true);
     try {
       toast({
         title: "LINKING_AMAZON_CASE",
-        description: `Linking Case ID ${caseId}...`,
+        description: `Linking Case ID ${caseIdInput}...`,
       });
-      // Placeholder backend call
-      // await api.put(`/api/detections/${id}`, { linked_case_id: caseId });
+
+      const { error } = await supabase
+        .from('detection_results')
+        .update({
+          amazon_case_id: caseIdInput,
+          status: 'pending' // Flagging claim under Amazon review
+        })
+        .eq('id', activeClaimIdForCase);
+
+      if (error) throw error;
 
       toast({
         title: "CASE_LINKED",
-        description: `Successfully linked Amazon Case ID: ${caseId}`,
+        description: `Successfully linked Amazon Case ID: ${caseIdInput}`,
       });
+
+      // Optimistic UI update
+      setDetectionResults(prev => prev.map(claim =>
+        claim.id === activeClaimIdForCase
+          ? { ...claim, amazon_case_id: caseIdInput, status: 'pending' }
+          : claim
+      ));
+
+      setCaseIdModalOpen(false);
     } catch (err: any) {
       toast({
         title: "LINK_FAILED",
-        description: "Failed to link Amazon Case ID",
+        description: err.message || "Failed to link Amazon Case ID",
         variant: "destructive"
       });
+    } finally {
+      setIsLinkingCase(false);
     }
   };
 
@@ -281,6 +307,12 @@ export function Dashboard() {
   const [loadingDetections, setLoadingDetections] = useState<boolean>(false);
   const [detectionTotal, setDetectionTotal] = useState<number>(0);
   const [showProcessed, setShowProcessed] = useState<boolean>(false);
+
+  // Case ID Linking State
+  const [caseIdModalOpen, setCaseIdModalOpen] = useState(false);
+  const [activeClaimIdForCase, setActiveClaimIdForCase] = useState<string | null>(null);
+  const [caseIdInput, setCaseIdInput] = useState("");
+  const [isLinkingCase, setIsLinkingCase] = useState(false);
 
   // Generate synthetic notifications if real ones are missing but we have recovery data
   // This ensures the "System Activity" panel matches the "Recovered Funds" reality
@@ -1716,7 +1748,7 @@ export function Dashboard() {
                                                 Download Claim Evidence
                                               </DropdownMenuItem>
                                               <DropdownMenuItem
-                                                onClick={() => handleCaseIdUpdate(result.id)}
+                                                onClick={() => openCaseIdModal(result.id)}
                                                 className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                               >
                                                 <Link2 className="h-3 w-3 mr-2" />
@@ -1987,6 +2019,55 @@ export function Dashboard() {
               </div>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Enter Amazon Case ID Modal */}
+      <Dialog open={caseIdModalOpen} onOpenChange={setCaseIdModalOpen}>
+        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-xl p-6 backdrop-blur-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-serif font-medium text-white uppercase tracking-tight">
+              Link Amazon Case ID
+            </DialogTitle>
+            <DialogDescription className="text-xs text-white/50 font-serif mt-2">
+              Enter the Case ID provided by Amazon Seller Support to track this claim.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="my-6">
+            <Input
+              value={caseIdInput}
+              onChange={(e) => setCaseIdInput(e.target.value)}
+              placeholder="e.g. CASE-123456789"
+              className="bg-white/5 border-white/10 text-white placeholder:text-white/20 font-mono h-12"
+              disabled={isLinkingCase}
+            />
+          </div>
+
+          <DialogFooter className="flex items-center justify-end gap-3 mt-4">
+            <Button
+              variant="outline"
+              onClick={() => setCaseIdModalOpen(false)}
+              className="px-4 py-2 bg-white/5 border-white/10 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-widest h-10"
+              disabled={isLinkingCase}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCaseIdUpdate}
+              disabled={!caseIdInput.trim() || isLinkingCase}
+              className="px-5 py-2 text-[10px] font-mono font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all uppercase tracking-widest rounded-lg flex items-center h-10"
+            >
+              {isLinkingCase ? (
+                <>
+                  <Loader2 className="h-3 w-3 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Case ID"
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
