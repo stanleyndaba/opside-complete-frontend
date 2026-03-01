@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-function buildApiUrl(path: string): string {
+export function buildApiUrl(path: string): string {
   // Normalize provided path
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 

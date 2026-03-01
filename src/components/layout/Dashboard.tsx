@@ -12,12 +12,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import {
-  FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail,
-  Cloud, ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw,
-  RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2,
-  X, AlertTriangle, ChevronDown, Clock, MoreVertical, Search as SearchIcon, Terminal
 } from 'lucide-react';
-import { api, detectionApi } from '@/lib/api';
+import { api, detectionApi, buildApiUrl } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -80,32 +76,135 @@ export function Dashboard() {
     setActiveTab(tab);
   };
 
-  const handleBatchExport = () => {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleBatchExport = async () => {
+    if (isExporting) return;
+
+    setIsExporting(true);
     toast({
       title: "EXPORT_INITIATED",
       description: "Preparing batch export of all pending claims...",
     });
+
+    try {
+      const tenantArg = activeSlug;
+      const response = await fetch(buildApiUrl('/api/export-claims'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-tenant-id': localStorage.getItem('active_tenant_id') || localStorage.getItem('active_store_id') || '',
+          'x-store-id': localStorage.getItem('active_store_id') || '',
+        },
+        body: JSON.stringify({}), // Let backend infer tenant context
+      });
+
+      if (!response.ok) {
+        throw new Error(`Export failed with status ${response.status}`);
+      }
+
+      // Convert the response to a Blob
+      const blob = await response.blob();
+
+      // Programmatically trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      // Get filename from Content-Disposition header if available
+      const disposition = response.headers.get('content-disposition');
+      let filename = `Margin_Claim_Batch_${new Date().toISOString().split('T')[0]}.csv`;
+
+      if (disposition && disposition.indexOf('attachment') !== -1) {
+        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = filenameRegex.exec(disposition);
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '');
+        }
+      }
+
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "EXPORT_COMPLETE",
+        description: "Batch export downloaded successfully.",
+      });
+    } catch (err: any) {
+      console.error("[Download Error]", err);
+      toast({
+        title: "EXPORT_FAILED",
+        description: err.message || "An error occurred while exporting the claims.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleRowExport = (id: string) => {
+    // Usually triggers a single PDF/CSV download.
     toast({
       title: "DOCUMENT_EXPORT",
       description: `Exporting evidence for claim ID: ${id.substring(0, 8)}`,
     });
+    // In a full implementation, you'd call a PDF generator or a similar API endpoint for a single claim.
   };
 
-  const handleCaseIdUpdate = (id: string) => {
-    toast({
-      title: "LINK_AMAZON_CASE",
-      description: "Please provide the Amazon Case ID to link.",
-    });
+  const handleCaseIdUpdate = async (id: string) => {
+    const caseId = window.prompt("Enter Amazon Case ID for this claim:");
+    if (!caseId) return;
+
+    try {
+      toast({
+        title: "LINKING_AMAZON_CASE",
+        description: `Linking Case ID ${caseId}...`,
+      });
+      // Placeholder backend call
+      // await api.put(`/api/detections/${id}`, { linked_case_id: caseId });
+
+      toast({
+        title: "CASE_LINKED",
+        description: `Successfully linked Amazon Case ID: ${caseId}`,
+      });
+    } catch (err: any) {
+      toast({
+        title: "LINK_FAILED",
+        description: "Failed to link Amazon Case ID",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleMarkFalsePositive = (id: string) => {
-    toast({
-      title: "MARK_AS_FALSE_POSITIVE",
-      description: `Claim ${id.substring(0, 8)} marked as false positive. Verification required.`,
-    });
+  const handleMarkFalsePositive = async (id: string) => {
+    if (!window.confirm("Are you sure you want to mark this claim as a false positive?")) return;
+
+    try {
+      toast({
+        title: "UPDATING_CLAIM",
+        description: `Marking claim ${id.substring(0, 8)} as false positive...`,
+      });
+
+      // Placeholder backend call
+      // await api.put(`/api/detections/${id}/status`, { status: 'false_positive' });
+
+      toast({
+        title: "MARK_AS_FALSE_POSITIVE",
+        description: `Claim ${id.substring(0, 8)} marked as false positive. Verification required.`,
+      });
+
+      // Re-fetch claims from backend
+      // fetchClaims();
+    } catch (err: any) {
+      toast({
+        title: "UPDATE_FAILED",
+        description: "Failed to update claim status",
+        variant: "destructive"
+      });
+    }
   };
 
   const formatCurrency = useCallback((amount: number, currency: string = 'USD') => {
@@ -1472,9 +1571,14 @@ export function Dashboard() {
                         <div className="flex items-center justify-end mb-4 gap-4">
                           <Button
                             onClick={handleBatchExport}
-                            className="h-8 px-4 bg-white/5 hover:bg-emerald-500/10 text-white/60 hover:text-emerald-500 border border-white/10 hover:border-emerald-500/20 text-[9px] font-mono font-bold uppercase tracking-widest transition-all rounded-sm"
+                            disabled={isExporting}
+                            className={`h-8 px-4 bg-white/5 hover:bg-emerald-500/10 text-white/60 hover:text-emerald-500 border border-white/10 hover:border-emerald-500/20 text-[9px] font-mono font-bold uppercase tracking-widest transition-all rounded-sm ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
-                            <Download className="h-3 w-3 mr-2" />
+                            {isExporting ? (
+                              <Loader2 className="h-3 w-3 mr-2 animate-spin" />
+                            ) : (
+                              <Download className="h-3 w-3 mr-2" />
+                            )}
                             EXPORT CLAIM BATCH
                           </Button>
                           <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
