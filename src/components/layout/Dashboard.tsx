@@ -11,7 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud, ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X, AlertTriangle } from 'lucide-react';
+import {
+  FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail,
+  Cloud, ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw,
+  RotateCcw, Download, Bell, Shield, TrendingDown, TrendingUp, Loader2,
+  X, AlertTriangle, ChevronDown, Clock, MoreVertical, Search as SearchIcon, Terminal
+} from 'lucide-react';
 import { api, detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -25,7 +30,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Clock, Search as SearchIcon, Terminal } from 'lucide-react';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
@@ -74,6 +78,34 @@ export function Dashboard() {
 
   const handleTabChange = (tab: 'overview' | 'discrepancies' | 'disputes') => {
     setActiveTab(tab);
+  };
+
+  const handleBatchExport = () => {
+    toast({
+      title: "EXPORT_INITIATED",
+      description: "Preparing batch export of all pending claims...",
+    });
+  };
+
+  const handleRowExport = (id: string) => {
+    toast({
+      title: "DOCUMENT_EXPORT",
+      description: `Exporting evidence for claim ID: ${id.substring(0, 8)}`,
+    });
+  };
+
+  const handleCaseIdUpdate = (id: string) => {
+    toast({
+      title: "LINK_AMAZON_CASE",
+      description: "Please provide the Amazon Case ID to link.",
+    });
+  };
+
+  const handleMarkFalsePositive = (id: string) => {
+    toast({
+      title: "MARK_AS_FALSE_POSITIVE",
+      description: `Claim ${id.substring(0, 8)} marked as false positive. Verification required.`,
+    });
   };
 
   const formatCurrency = useCallback((amount: number, currency: string = 'USD') => {
@@ -1438,6 +1470,13 @@ export function Dashboard() {
                     ) : (
                       <div className="overflow-x-auto">
                         <div className="flex items-center justify-end mb-4 gap-4">
+                          <Button
+                            onClick={handleBatchExport}
+                            className="h-8 px-4 bg-white/5 hover:bg-emerald-500/10 text-white/60 hover:text-emerald-500 border border-white/10 hover:border-emerald-500/20 text-[9px] font-mono font-bold uppercase tracking-widest transition-all rounded-sm"
+                          >
+                            <Download className="h-3 w-3 mr-2" />
+                            EXPORT CLAIM BATCH
+                          </Button>
                           <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
                             <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Show Processed</span>
                             <button
@@ -1533,22 +1572,63 @@ export function Dashboard() {
                                           View Case
                                         </Button>
                                       ) : (
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          className="h-7 px-3 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
-                                          onClick={() => {
-                                            setActiveDiscrepancy({
-                                              id: result.id,
-                                              reason: result.anomaly_type,
-                                              estimatedRecovery: result.estimated_value,
-                                              occurrenceDate: result.discovery_date
-                                            });
-                                            setShowDiscrepancyModal(true);
-                                          }}
-                                        >
-                                          Start Recovering
-                                        </Button>
+                                        <div className="flex items-center justify-end gap-4">
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 px-3 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
+                                            onClick={() => {
+                                              setActiveDiscrepancy({
+                                                id: result.id,
+                                                reason: result.anomaly_type,
+                                                estimatedRecovery: result.estimated_value,
+                                                occurrenceDate: result.discovery_date
+                                              });
+                                              setShowDiscrepancyModal(true);
+                                            }}
+                                          >
+                                            Start Recovering
+                                          </Button>
+
+                                          <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                              <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-7 w-7 text-white/10 hover:text-emerald-500 hover:bg-emerald-500/5 transition-all rounded-sm border border-transparent hover:border-emerald-500/20"
+                                              >
+                                                <MoreVertical className="h-3.5 w-3.5" />
+                                              </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent
+                                              align="end"
+                                              className="bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-3xl p-1 min-w-[180px]"
+                                            >
+                                              <DropdownMenuItem
+                                                onClick={() => handleRowExport(result.id)}
+                                                className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                              >
+                                                <Download className="h-3 w-3 mr-2" />
+                                                Download Claim Evidence
+                                              </DropdownMenuItem>
+                                              <DropdownMenuItem
+                                                onClick={() => handleCaseIdUpdate(result.id)}
+                                                className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                              >
+                                                <Link2 className="h-3 w-3 mr-2" />
+                                                Link Amazon Case ID
+                                              </DropdownMenuItem>
+                                              <DropdownMenuSeparator className="bg-white/5" />
+                                              <DropdownMenuItem
+                                                onClick={() => handleMarkFalsePositive(result.id)}
+                                                className="text-[9px] font-mono font-bold uppercase tracking-widest text-red-500/40 hover:text-red-500 focus:text-red-500 focus:bg-red-500/5 cursor-pointer py-2"
+                                              >
+                                                <AlertTriangle className="h-3 w-3 mr-2" />
+                                                Mark as False Positive
+                                              </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                          </DropdownMenu>
+                                        </div>
                                       )}
                                     </td>
                                   </tr>
