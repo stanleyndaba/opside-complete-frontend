@@ -85,6 +85,8 @@ async function requestJsonWithRetry<T>(
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
+        // Support standard JWT authentication
+        'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
         // Get user ID from localStorage (set by SessionContext) or fallback to demo-user
         // This allows API calls to work with the actual authenticated user
         'x-user-id': localStorage.getItem('user_id') || 'demo-user',
