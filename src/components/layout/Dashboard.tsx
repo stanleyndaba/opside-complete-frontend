@@ -12,6 +12,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import {
+  ArrowRight,
+  Download,
+  Loader2,
+  Shield,
+  Link2,
+  AlertTriangle,
+  MoreVertical,
+  Plus
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
 import { supabase } from '@/lib/supabaseClient';
