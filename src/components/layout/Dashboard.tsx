@@ -13,13 +13,16 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useToast } from '@/hooks/use-toast';
 import {
   ArrowRight,
+  ChevronDown,
+  Clock,
   Download,
   Loader2,
   Shield,
   Link2,
   AlertTriangle,
   MoreVertical,
-  Plus
+  Plus,
+  Terminal
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
 import { supabase } from '@/lib/supabaseClient';
