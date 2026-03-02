@@ -227,7 +227,7 @@ export function Sidebar({
                     className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
                   />
                 )}
-                <item.icon className="h-5 w-5" strokeWidth={isActive ? 2 : 1.5} />
+                <item.icon className="h-4.5 w-4.5" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-[#0c0c0c] border border-white/10 text-emerald-500 text-[10px] font-mono uppercase tracking-widest px-3 py-1.5 backdrop-blur-xl">
@@ -257,7 +257,7 @@ export function Sidebar({
         {!isActive && (
           <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4.5 w-4.5 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-white/20 group-hover:text-white")} />
+        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-white/20 group-hover:text-white")} />
         <span className={cn(
           "text-[11px] font-serif transition-colors tracking-[0.1em] uppercase",
           isActive ? "font-medium text-white" : "font-light"
@@ -349,7 +349,7 @@ export function Sidebar({
                   ? "justify-center p-3 rounded-xl hover:bg-white/5"
                   : "gap-3 px-6 py-3 text-left hover:bg-white/[0.02] text-white/50 hover:text-white"
               )}>
-              <Menu className={cn("h-4.5 w-4.5 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              <Menu className={cn("h-4 w-4 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
               {!isCollapsed && <span className="text-[11px] font-serif uppercase tracking-[0.2em]">More</span>}
             </button>
           </DropdownMenuTrigger>

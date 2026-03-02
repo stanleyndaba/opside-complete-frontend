@@ -306,7 +306,7 @@ export function Navbar({
                     onMouseLeave={() => setIsNoteHovered(false)}
                     className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                     aria-label="Notes">
-                    <NotebookPen className="h-4.5 w-4.5" />
+                    <NotebookPen className="h-5 w-5" />
                     {notes.length > 0 && (
                       <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                     )}
@@ -346,7 +346,7 @@ export function Navbar({
                       onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
                       className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                       aria-label="Store connections">
-                      <Store className="h-4.5 w-4.5" />
+                      <Store className="h-5 w-5" />
                       <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-emerald-500/30 rounded-full" />
                     </button>
                   </HoverCardTrigger>
@@ -387,7 +387,7 @@ export function Navbar({
                       onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/data-upload'))}
                       className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                       aria-label="Upload CSV">
-                      <Upload className="h-4.5 w-4.5" />
+                      <Upload className="h-5 w-5" />
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
@@ -429,7 +429,7 @@ export function Navbar({
                   onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'))}
                   className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                   aria-label="Integrations Hub">
-                  <Box className="h-4.5 w-4.5" />
+                  <Box className="h-5 w-5" />
                 </button>
               </HoverCardTrigger>
               <HoverCardContent
@@ -453,7 +453,7 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
-                  <User className="h-4 w-4 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
+                  <User className="h-5 w-5 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
                   <span className="hidden sm:inline font-medium">Account</span>
                   <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
                 </button>
