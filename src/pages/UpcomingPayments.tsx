@@ -344,12 +344,12 @@ export default function UpcomingPayments() {
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">
                   <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-[0.3em]">Pipeline Progress</span>
-                  <h2 className="text-lg font-serif font-medium text-white uppercase tracking-wider italic">Amount by Stage</h2>
+                  <h2 className="text-lg font-serif font-medium text-white uppercase tracking-wider">Amount by Stage</h2>
                 </div>
                 <div className="flex items-center gap-6">
                   <div className="text-right">
                     <div className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Total in pipeline</div>
-                    <div className="text-2xl font-mono font-bold text-white tracking-tighter italic">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                    <div className="text-2xl font-mono font-bold text-white tracking-tighter">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
                   </div>
                   <div className="h-10 w-[1px] bg-white/5" />
                   <button
