@@ -433,7 +433,7 @@ const Index = () => {
                       <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
                         <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
                       </div>
-                      <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-colors duration-500" />
+                      <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
                       <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
                         Private Beta
@@ -930,7 +930,7 @@ const Index = () => {
                 </div>
 
                 {/* Subtle Scroll Indicator - Hidden per user request */}
-                {/* 
+                {/*
                 <div className="mt-8 flex items-center gap-4">
                   <div className="h-[1px] flex-1 bg-white/5 relative">
                     <div className="absolute top-0 left-0 h-full w-1/6 bg-emerald-500/40" />
@@ -997,7 +997,7 @@ const Index = () => {
                     <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
                       <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
                     </div>
-                    <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
                     <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
                       Private Beta
