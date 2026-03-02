@@ -1390,24 +1390,13 @@ export function Dashboard() {
                     <div className="bg-[#0c0c0c]/80 border border-white/10 rounded-xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
 
-                      <button
-                        onClick={() => setIsActivityExpanded(!isActivityExpanded)}
-                        className="px-6 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full hover:bg-white/[0.04] transition-all group">
+                      <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full transition-all group">
                         <div className="flex items-center gap-4">
-                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
-                          <h3 className="text-[10px] font-mono font-bold text-white uppercase">Activity Log</h3>
-                          {unreadCount > 0 && (
-                            <div className="flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
-                              <span className="text-[9px] font-mono font-bold text-emerald-500 tabular-nums">
-                                {unreadCount > 50 ? '50+' : unreadCount}
-                              </span>
-                            </div>
-                          )}
+                          <h3 className="text-[12px] font-medium text-white tracking-wide">Margin Updates</h3>
                         </div>
-                        <ChevronDown className={cn("h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-transform duration-300", isActivityExpanded ? "" : "-rotate-180")} />
-                      </button>
+                      </div>
 
-                      {isActivityExpanded && (
+                      {true && (
                         <>
                           <div className="flex-1 max-h-[800px] overflow-y-auto scrollbar-hide divide-y divide-white/5">
                             {displayNotifications.length === 0 ? (
@@ -1440,7 +1429,7 @@ export function Dashboard() {
                                       <HoverCardTrigger asChild>
                                         <div
                                           className={cn(
-                                            "group relative px-6 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-white/[0.03]",
+                                            "group relative px-5 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-white/[0.03]",
                                             isUnread ? "bg-emerald-500/[0.02]" : "bg-transparent"
                                           )}
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}>
