@@ -562,7 +562,7 @@ export default function TransactionHistory() {
                                 <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                                 <span className="text-[10px] font-mono text-emerald-500/80 uppercase tracking-[0.2em]">Account Statement</span>
                             </div>
-                            <h1 className="text-4xl font-light text-white tracking-tight font-serif italic">Transaction <span className="text-white/40 not-italic">History</span></h1>
+                            <h1 className="text-4xl font-light text-white tracking-tight font-serif">Transaction <span className="text-white/40">History</span></h1>
                             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
                                 Real-time monitoring of recovery disbursements and matched financial repositories.
                             </p>

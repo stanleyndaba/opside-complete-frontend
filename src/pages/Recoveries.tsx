@@ -2277,7 +2277,7 @@ export default function Recoveries() {
                     <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">SYSTEM_BUFFER</span>
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   </div>
-                  <h1 className="text-4xl font-serif italic text-white mb-2 tracking-tight">Claims & Recoveries <span className="text-xs not-italic font-mono text-white/20 ml-2 uppercase tracking-widest border border-white/5 px-2 py-0.5 rounded-full">BETA</span></h1>
+                  <h1 className="text-4xl font-serif text-white mb-2 tracking-tight">Claims & Recoveries <span className="text-xs font-mono text-white/20 ml-2 uppercase tracking-widest border border-white/5 px-2 py-0.5 rounded-full">BETA</span></h1>
                   <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] max-w-md leading-relaxed">
                     Active auditing of detected discrepancies and financial reconciliation ledger
                   </p>

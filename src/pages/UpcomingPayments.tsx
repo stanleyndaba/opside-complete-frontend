@@ -276,7 +276,7 @@ export default function UpcomingPayments() {
           <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
             <div className="flex items-center gap-3">
               <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-              <h1 className="text-4xl font-light text-white tracking-tight font-serif italic">Payment <span className="text-white/40 not-italic">Summary</span></h1>
+              <h1 className="text-4xl font-light text-white tracking-tight font-serif">Payment <span className="text-white/40">Summary</span></h1>
             </div>
             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
               Estimated payments and payout projections.
