@@ -1105,7 +1105,7 @@ export function Dashboard() {
               {activeTab === 'overview' ? (
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                   {/* Main Content - 3 columns */}
-                  <div className="lg:col-span-3 space-y-6">
+                  <div className="lg:col-span-4 space-y-6">
 
                     {/* Institutional Instrument Panel */}
                     <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
@@ -1386,7 +1386,7 @@ export function Dashboard() {
                   </div>
 
                   {/* System Activity - Audit Registry Sidebar */}
-                  <div className="lg:col-span-1">
+                  <div className="hidden lg:col-span-1">
                     <div className="bg-[#0c0c0c]/80 border border-white/10 rounded-xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
 
@@ -1572,11 +1572,10 @@ export function Dashboard() {
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
                     <div className="flex items-center justify-between mb-8">
                       <div className="flex items-center gap-4">
-                        <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         <div>
                           <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">Anomaly Ledger</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Found Discrepancies</span>
+                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Discrepancies</span>
                           </div>
                         </div>
                       </div>
