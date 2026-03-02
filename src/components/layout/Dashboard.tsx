@@ -96,8 +96,11 @@ export function Dashboard() {
       const tenantArg = activeSlug;
       const response = await fetch(buildApiUrl('/api/export-claims'), {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
+          'x-user-id': localStorage.getItem('user_id') || '',
           'x-tenant-id': localStorage.getItem('active_tenant_id') || localStorage.getItem('active_store_id') || '',
           'x-store-id': localStorage.getItem('active_store_id') || '',
         },
