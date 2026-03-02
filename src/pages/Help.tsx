@@ -103,8 +103,8 @@ export default function Help() {
               <LifeBuoy className="h-5 w-5 text-emerald-500" />
               <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Support and Requests</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif text-white mb-6 italic">
-              How can we <span className="text-white/40 not-italic">help you today?</span>
+            <h1 className="text-4xl md:text-5xl font-serif text-white mb-6">
+              How can we <span className="text-white/40">help you today?</span>
             </h1>
             <p className="text-gray-400 max-w-2xl text-lg leading-relaxed font-light italic">
               Whether you have a question about your account or need help with a specific claim, our team is here to support your business.
