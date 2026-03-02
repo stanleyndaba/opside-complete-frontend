@@ -401,6 +401,15 @@ const Index = () => {
               <div className="flex flex-col items-start md:items-center space-y-6 w-full">
 
                 {/* Institutional Trust Badge hidden as per request */}
+                <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm mb-4">
+                  <div className="relative flex items-center justify-center">
+                    <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
+                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
+                  </div>
+                  <span className="text-[9px] font-mono font-medium text-white/70 uppercase tracking-widest">
+                    <span className="text-white font-bold">7</span> spots remaining
+                  </span>
+                </div>
 
                 <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
                   The Autonomous <br className="hidden lg:block" />
@@ -417,15 +426,6 @@ const Index = () => {
                 {/* Buttons - left aligned on mobile, centered on desktop */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto mt-6">
                   <div className="flex flex-col items-center gap-1 w-full sm:w-auto">
-                    <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm mb-3">
-                      <div className="relative flex items-center justify-center">
-                        <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
-                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
-                      </div>
-                      <span className="text-[9px] font-mono font-medium text-white/70 uppercase tracking-widest">
-                        <span className="text-white font-bold">7</span> spots remaining
-                      </span>
-                    </div>
                     <button
                       onClick={() => navigate('/waitlist')}
                       className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
@@ -524,7 +524,7 @@ const Index = () => {
                   {/* Video Demo Placeholder */}
                   <div className="w-full aspect-video relative bg-[#0a0a0a] group cursor-pointer">
                     {/* Thumbnail Image */}
-                    <img src="/thumbnailboy.png" alt="Product Demo Preview" className="absolute inset-0 w-full h-full object-cover" />
+                    <img src="/final_thumbnail.png" alt="Product Demo Preview" className="absolute inset-0 w-full h-full object-cover" />
                     {/* Dark overlay for play button visibility */}
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-500" />
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
