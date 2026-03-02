@@ -5,7 +5,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { api } from '@/lib/api';
 import { Link, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
-import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search, ShieldAlert, Ban, DollarSign, FileWarning, Download } from 'lucide-react';
+import { Eye, RefreshCw, CheckCircle2, XCircle, Clock, AlertCircle, ExternalLink, Send, RotateCcw, AlertTriangle, Loader2, Hexagon, ArrowRight, Search, ShieldAlert, Ban, DollarSign, FileWarning, Download, MoreHorizontal } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -429,12 +430,11 @@ export function DisputeCasesTable() {
         <Button
           onClick={() => handleApproveFiling(caseItem)}
           disabled={isProcessing}
-          variant="ghost"
-          className="h-9 px-4 text-amber-500 hover:text-amber-600 font-mono text-[9px] font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-transparent border-none shadow-none">
+          className="border border-amber-600/30 hover:bg-amber-600/10 text-amber-500 px-3 py-1 rounded text-[10px] tracking-widest font-mono uppercase bg-transparent transition-all h-8">
           {isProcessing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
           ) : null}
-          Approve
+          APPROVE
         </Button>
       );
     }
@@ -444,12 +444,11 @@ export function DisputeCasesTable() {
         <Button
           onClick={() => handleRetryFiling(caseItem)}
           disabled={isProcessing}
-          variant="ghost"
-          className="h-9 px-4 text-red-500 hover:text-red-600 font-mono text-[9px] font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-transparent border-none shadow-none">
+          className="border border-red-500/30 hover:bg-red-500/10 text-red-500 px-3 py-1 rounded text-[10px] tracking-widest font-mono uppercase bg-transparent transition-all h-8">
           {isProcessing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
           ) : null}
-          Retry
+          RETRY
         </Button>
       );
     }
@@ -459,12 +458,11 @@ export function DisputeCasesTable() {
         <Button
           onClick={() => handleFileNow(caseItem)}
           disabled={isProcessing}
-          variant="ghost"
-          className="h-9 px-4 text-emerald-500 hover:text-emerald-600 font-mono text-[9px] font-bold uppercase tracking-widest transition-all bg-transparent hover:bg-transparent border-none shadow-none">
+          className="border border-zinc-700 hover:bg-zinc-800 text-white px-3 py-1 rounded text-[10px] tracking-widest font-mono uppercase bg-transparent transition-all h-8">
           {isProcessing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
           ) : null}
-          File
+          FILE
         </Button>
       );
     }
@@ -537,6 +535,16 @@ export function DisputeCasesTable() {
 
       {/* Institutional List */}
       <div className="mt-0 divide-y divide-white/5 bg-white/5 border border-white/5 rounded-b-2xl overflow-hidden backdrop-blur-xl">
+        {cases.length > 0 && (
+          <div className="grid grid-cols-[1.5fr_1fr_1fr_1.5fr_1fr] gap-4 px-8 py-3 bg-white/[0.02] border-b border-white/5">
+            <div className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Case ID</div>
+            <div className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Status</div>
+            <div className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest text-right">Estimated Value</div>
+            <div className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Node Reference</div>
+            <div className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest text-right">Actions</div>
+          </div>
+        )}
+
         {cases.length === 0 ? (
           <div className="py-24 flex flex-col items-center justify-center space-y-6">
             <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
@@ -549,76 +557,95 @@ export function DisputeCasesTable() {
           </div>
         ) : (
           cases.map((caseItem) => (
-            <div key={caseItem.id || Math.random()} className="group relative hover:bg-white/[0.02] transition-colors duration-300">
+            <div key={caseItem.id || Math.random()} className="group relative hover:bg-zinc-800/50 border-b border-zinc-800 transition-colors duration-300">
               {/* Vertical Accent */}
               <div className="absolute left-0 top-0 bottom-0 w-px bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
 
-              <div className="flex items-center justify-between px-8 py-6">
-                <div className="flex items-center gap-6 min-w-0 flex-1">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center group-hover:border-emerald-500/30 group-hover:text-emerald-500 transition-all duration-300">
-                    <Hexagon className="w-5 h-5" strokeWidth={1.5} />
+              <div className="grid grid-cols-[1.5fr_1fr_1fr_1.5fr_1fr] gap-4 items-center px-8 py-4">
+                {/* 1. CASE ID Column */}
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-white/60 group-hover:border-emerald-500/30 group-hover:text-emerald-500 transition-all duration-300">
+                    <Hexagon className="w-4 h-4" strokeWidth={1.5} />
                   </div>
-
                   <div className="flex flex-col min-w-0">
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs font-mono font-bold text-white uppercase tracking-widest truncate">
-                        {caseItem.case_number || 'CASE_ID_PENDING'}
+                    <span className="text-sm font-mono font-medium text-zinc-200 uppercase tracking-widest truncate">
+                      {caseItem.case_number || 'CASE_ID_PENDING'}
+                    </span>
+                    {caseItem.amazon_case_id && (
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
+                        AMZ: {caseItem.amazon_case_id}
+                        <ExternalLink className="w-3 h-3 text-zinc-600" />
                       </span>
-                      {caseItem.amazon_case_id && (
-                        <span className="flex items-center gap-2 px-2.5 py-1 bg-white/5 border border-white/5 rounded-lg text-[9px] font-mono font-bold text-white/40 group-hover:text-white/60 transition-colors uppercase">
-                          AMZ_ID: {caseItem.amazon_case_id}
-                          <ExternalLink className="w-2.5 h-2.5" />
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-4 mt-2.5">
-                      <div className="flex items-center gap-3 text-[10px] font-mono font-bold text-white/20 uppercase tracking-tighter">
-                        {getStatusBadge(caseItem.status || 'unknown')}
-                        <div className="h-1 w-1 rounded-full bg-white/10" />
-                        {getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error, caseItem.metadata)}
-                        <div className="h-1 w-1 rounded-full bg-white/10" />
-                        <span className="text-white/60 tabular-nums tracking-normal">{formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}</span>
-                        <div className="h-1 w-1 rounded-full bg-white/10" />
-                        <span className="text-white/10 tracking-widest lowercase italic">node: {caseItem.claim_id?.substring(0, 8)}...</span>
-                        {caseItem.retry_count && caseItem.retry_count > 0 && (
-                          <>
-                            <div className="h-1 w-1 rounded-full bg-white/10" />
-                            <span className="text-amber-500/50">{caseItem.retry_count} Attempts</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6 ml-6">
+                {/* 2. STATUS Column */}
+                <div className="flex flex-col gap-1 items-start">
+                  {getStatusBadge(caseItem.status || 'unknown')}
+                  {getFilingStatusBadge(caseItem.filing_status, caseItem.filing_error, caseItem.metadata)}
+                  {caseItem.retry_count && caseItem.retry_count > 0 && (
+                    <span className="text-[9px] font-mono text-amber-500/60 tracking-widest uppercase bg-amber-500/10 px-1.5 py-0.5 rounded">Retry: {caseItem.retry_count}</span>
+                  )}
+                </div>
+
+                {/* 3. ESTIMATED VALUE Column */}
+                <div className="text-right">
+                  <span className="text-base font-mono font-semibold text-white tracking-widest tabular-nums font-bold">
+                    {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
+                  </span>
+                </div>
+
+                {/* 4. NODE REFERENCE Column */}
+                <div className="flex items-center text-sm font-mono text-zinc-500 truncate italic">
+                  ref: {caseItem.claim_id?.substring(0, 12)}...
+                </div>
+
+                {/* 5. ACTIONS Column */}
+                <div className="flex items-center justify-end gap-3 ml-auto">
                   {renderFilingActions(caseItem)}
 
                   {caseItem.claim_id && (
-                    <div className="flex items-center gap-6">
-                      <Button
-                        onClick={() => handleDownloadBrief(caseItem.id)}
-                        disabled={downloadingBrief.has(caseItem.id)}
-                        variant="ghost"
-                        className="h-9 px-4 text-emerald-500/40 hover:text-emerald-500 hover:bg-emerald-500/5 rounded-xl text-[9px] font-mono font-bold uppercase tracking-widest group/pdf"
-                      >
-                        {downloadingBrief.has(caseItem.id) ? (
-                          <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
-                        ) : (
-                          <Download className="w-3.5 h-3.5 mr-2 text-emerald-500" />
-                        )}
-                        PDF
-                      </Button>
+                    <>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              onClick={() => handleDownloadBrief(caseItem.id)}
+                              disabled={downloadingBrief.has(caseItem.id)}
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-emerald-500/60 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-all"
+                            >
+                              {downloadingBrief.has(caseItem.id) ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Download className="w-4 h-4" />
+                              )}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl">
+                            <span className="text-[10px] font-mono text-white/70 uppercase tracking-widest">Download Forensic Brief</span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
 
-                      <Link
-                        to={`/recoveries/${caseItem.claim_id}`}
-                        className="flex items-center gap-2.5 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-widest"
-                      >
-                        MORE
-                        <ArrowRight className="w-3.5 h-3.5 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
-                      </Link>
-                    </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-white/40 hover:text-white hover:bg-white/10 rounded-lg transition-all focus-visible:ring-0">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl font-mono text-[10px] uppercase tracking-widest p-1">
+                          <DropdownMenuItem asChild className="hover:bg-white/5 focus:bg-white/5 text-white/70 cursor-pointer rounded-lg px-3 py-2">
+                            <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2">
+                              <Eye className="w-3.5 h-3.5 text-white/50" />
+                              View Core Claim
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </>
                   )}
                 </div>
               </div>
