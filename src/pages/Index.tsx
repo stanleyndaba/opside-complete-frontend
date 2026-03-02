@@ -498,16 +498,16 @@ const Index = () => {
               </div>
 
               {/* Dark container for "Startup" feel */}
-              <div className="bg-[#050505] rounded-[24px] p-6 md:p-8 relative overflow-hidden shadow-2xl border border-white/5">
+              <div className="bg-[#050505] rounded-[24px] relative overflow-hidden shadow-2xl border border-white/5">
 
                 {/* Background Accents (Subtle) */}
                 <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
                 <div className="absolute bottom-0 left-0 w-[600px] h-[500px] bg-gradient-to-t from-emerald-500/5 to-blue-500/5 blur-[100px] pointer-events-none opacity-30" />
 
-                <div className="flex flex-col gap-6 items-center relative z-10 w-full mx-auto">
+                <div className="flex flex-col items-center relative z-10 w-full mx-auto">
 
                   {/* Video Demo Placeholder */}
-                  <div className="w-full aspect-video rounded-xl overflow-hidden relative bg-[#0a0a0a] border border-white/5 shadow-2xl group cursor-pointer">
+                  <div className="w-full aspect-video relative bg-[#0a0a0a] group cursor-pointer">
                     {/* Thumbnail Image */}
                     <img src="/thumbnailboy.png" alt="Product Demo Preview" className="absolute inset-0 w-full h-full object-cover" />
                     {/* Dark overlay for play button visibility */}
@@ -534,30 +534,6 @@ const Index = () => {
                     <div className="absolute top-4 right-4 h-4 w-4 border-t border-r border-white/20" />
                     <div className="absolute bottom-4 left-4 h-4 w-4 border-b border-l border-white/20" />
                     <div className="absolute bottom-4 right-4 h-4 w-4 border-b border-r border-white/20" />
-                  </div>
-
-                  {/* Real-time Status Bar */}
-                  <div className="w-full flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/5">
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-bold text-gray-500 font-mono tracking-widest uppercase">Live Audit Stream</span>
-                      </div>
-                      <div className="hidden sm:flex items-center gap-2">
-                        <span className="text-[10px] text-gray-600 font-mono uppercase">Engine Latency</span>
-                        <span className="text-[10px] font-bold text-emerald-400 font-mono">&lt; 10ms</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-6">
-                      <div className="hidden sm:flex items-center gap-2">
-                        <span className="text-[10px] text-gray-600 font-mono uppercase">Detection Models</span>
-                        <span className="text-[10px] font-bold text-white font-mono">26 Active</span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded">
-                        <span className="text-[10px] font-bold text-gray-400 font-mono tracking-wider uppercase">Node_Status: </span>
-                        <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-tight">OPERATIONAL</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
