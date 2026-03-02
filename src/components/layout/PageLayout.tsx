@@ -11,6 +11,7 @@ interface PageLayoutProps {
   plainBackground?: boolean;
   logoFontFamily?: string;
   hideLogo?: boolean;
+  noPadding?: boolean;
 }
 export function PageLayout({
   children,
@@ -21,7 +22,8 @@ export function PageLayout({
   midnight,
   plainBackground,
   logoFontFamily,
-  hideLogo
+  hideLogo,
+  noPadding
 }: PageLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const toggleSidebar = () => {
@@ -44,7 +46,7 @@ export function PageLayout({
       )}
 
       <main className={`flex-1 transition-all duration-300 ${mainIndent} overflow-hidden ${shouldShowMidnightBg ? 'bg-[#050505]' : ''}`}>
-        <div className={`w-full max-w-full mx-auto px-4 lg:px-6 pb-4 lg:pb-6 animate-fade-in overflow-x-hidden ${shouldShowMidnightBg ? 'bg-[#050505] min-h-screen' : ''}`}>
+        <div className={`w-full max-w-full mx-auto ${noPadding ? '' : 'px-4 lg:px-6 pb-4 lg:pb-6'} animate-fade-in overflow-x-hidden ${shouldShowMidnightBg ? 'bg-[#050505] min-h-screen' : ''}`}>
           {(hideNavbar && hideSidebar && !hideLogo) && (
             <div className="fixed top-4 left-5 z-50 pointer-events-none">
               <img
