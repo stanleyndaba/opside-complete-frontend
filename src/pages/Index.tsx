@@ -415,17 +415,32 @@ const Index = () => {
                 </p>
 
                 {/* Buttons - left aligned on mobile, centered on desktop */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto">
-                  <div className="flex flex-col items-center gap-2 w-full sm:w-auto">
-                    <span className="text-[10px] font-mono font-bold text-emerald-500/80 uppercase tracking-widest">
-                      7 spots remaining
-                    </span>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto mt-6">
+                  <div className="flex flex-col items-center gap-1 w-full sm:w-auto">
+                    <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm mb-3">
+                      <div className="relative flex items-center justify-center">
+                        <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
+                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
+                      </div>
+                      <span className="text-[9px] font-mono font-medium text-white/70 uppercase tracking-widest">
+                        <span className="text-white font-bold">7</span> spots remaining
+                      </span>
+                    </div>
                     <button
                       onClick={() => navigate('/waitlist')}
-                      className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-bold bg-white text-black hover:bg-white/90 rounded-full transition-all">
-                      Private Beta
+                      className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
+                      {/* Glass backdrop with glow */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
+                        <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
+                      </div>
+                      <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-colors duration-500" />
+
+                      <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
+                        Private Beta
+                        <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
+                      </span>
                     </button>
-                    {/* <AmazonConnect className="w-full sm:w-auto min-w-[200px] h-11 text-sm font-medium" /> */}
+                    {/* <AmazonConnect className="w-full sm:w-auto min-w-[220px] h-12 text-sm font-medium" /> */}
                   </div>
                 </div>
 
@@ -965,14 +980,29 @@ const Index = () => {
                   </p>
                 </div>
 
-                <div className="flex flex-col items-center gap-2 pt-4">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/80 uppercase tracking-widest">
-                    7 spots remaining
-                  </span>
+                <div className="flex flex-col items-center gap-1 pt-6">
+                  <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm mb-3">
+                    <div className="relative flex items-center justify-center">
+                      <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
+                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
+                    </div>
+                    <span className="text-[9px] font-mono font-medium text-white/70 uppercase tracking-widest">
+                      <span className="text-white font-bold">7</span> spots remaining
+                    </span>
+                  </div>
                   <button
                     onClick={() => navigate('/waitlist')}
-                    className="min-w-[280px] h-12 text-[13px] transition-all duration-500 font-bold active:scale-95 px-8 bg-white text-black hover:bg-white/90 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.15)]">
-                    Private Beta
+                    className="group relative inline-flex items-center justify-center min-w-[280px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                    {/* Glass backdrop with glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
+                      <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
+                    </div>
+                    <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-colors duration-500" />
+
+                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
+                      Private Beta
+                      <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
+                    </span>
                   </button>
                   {/* <AmazonConnect
                     label="VERIFY MY INVENTORY"
