@@ -504,7 +504,7 @@ export function DisputeCasesTable() {
         <div>
           <div className="flex items-center gap-3">
             <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-            <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">Dispute_Operational_Nodes</h3>
+            <h3 className="text-sm font-medium text-zinc-100">Auto-Built Dispute Claims</h3>
           </div>
           <p className="text-[9px] font-mono text-white/20 mt-2 uppercase tracking-tight">
             ACTIVE_SESSIONS: {cases.length} • AGENT_7_FILING_PROTOCOL
@@ -568,7 +568,7 @@ export function DisputeCasesTable() {
                     <Hexagon className="w-4 h-4" strokeWidth={1.5} />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-mono font-medium text-zinc-200 uppercase tracking-widest truncate">
+                    <span className="text-xs font-mono font-medium text-zinc-200 uppercase tracking-widest truncate">
                       {caseItem.case_number || 'CASE_ID_PENDING'}
                     </span>
                     {caseItem.amazon_case_id && (
@@ -591,7 +591,7 @@ export function DisputeCasesTable() {
 
                 {/* 3. ESTIMATED VALUE Column */}
                 <div className="text-right">
-                  <span className="text-base font-mono font-semibold text-white tracking-widest tabular-nums font-bold">
+                  <span className="text-sm font-mono font-semibold text-white tracking-widest tabular-nums font-bold">
                     {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                   </span>
                 </div>
