@@ -1115,12 +1115,10 @@ export function Dashboard() {
 
                       <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          <div className="w-1 h-3 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                           <div>
                             <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase">REIMBURSEMENT OVERVIEW</h2>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Total Recovered</span>
-                              <Shield className="h-3 w-3 text-emerald-500/50" />
+                              <span className="text-sm font-serif font-medium text-white tracking-tight">Recovered Margins</span>
                             </div>
                           </div>
                         </div>
