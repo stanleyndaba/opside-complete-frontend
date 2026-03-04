@@ -7,8 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { api } from '@/lib/api';
-import { Users, Mail, Clock, Star, DollarSign, Plug, Briefcase } from 'lucide-react';
+import { Users, Mail, Clock, Star, DollarSign, Plug, Briefcase, RefreshCw, Loader2 } from 'lucide-react';
 
 interface UserRow {
   id: string;
@@ -177,12 +178,12 @@ export default function AdminUsersAndIntegrations() {
                   </p>
                 </div>
                 <Button
-                  onClick={fetchData}
+                  onClick={() => window.location.reload()}
                   variant="outline"
                   size="sm"
                   className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-9 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all"
                 >
-                  <RefreshCw className={`h-3 w-3 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`h-3 w-3 mr-2 ${(usersLoading || waitlistLoading) ? 'animate-spin' : ''}`} />
                   Sync Directory
                 </Button>
               </div>
