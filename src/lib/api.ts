@@ -278,6 +278,9 @@ function getFrontendUrl(): string {
 }
 
 export const api = {
+  // Admin: Revenue analytics
+  getAdminRevenue: () => requestJson<any>('/api/admin/revenue'),
+
   // Waitlist
   joinWaitlist: (data: {
     email: string;
@@ -1923,9 +1926,6 @@ export const detectionApi = {
     method: 'POST',
     body: JSON.stringify({ schedule })
   }),
-
-  // Admin: Revenue analytics
-  getAdminRevenue: () => requestJson<any>('/api/admin/revenue'),
 
   // Admin: Users management
   getAdminUsers: () => requestJson<{
