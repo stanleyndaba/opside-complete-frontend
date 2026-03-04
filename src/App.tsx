@@ -189,6 +189,7 @@ const App = () => (
                     <Route path="/app/:tenantSlug/admin/amazon-auth-test" element={<AdminOnly><AmazonAuthTest /></AdminOnly>} />
                     <Route path="/app/:tenantSlug/test/agent1" element={<Agent1Test />} />
                     <Route path="/app/:tenantSlug/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
+                    <Route path="/app/:tenantSlug/admin/revenue-model" element={<AdminOnly><RevenueModel /></AdminOnly>} />
                     <Route path="/app/:tenantSlug/admin/revenue" element={<AdminOnly><AdminRevenue /></AdminOnly>} />
                     <Route path="/app/:tenantSlug/admin/queue" element={<AdminOnly><QueueDashboard /></AdminOnly>} />
                     <Route path="/app/:tenantSlug/admin/team" element={<AdminOnly><TeamManagement /></AdminOnly>} />

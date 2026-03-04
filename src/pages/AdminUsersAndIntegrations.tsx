@@ -485,7 +485,7 @@ export default function AdminUsersAndIntegrations() {
                   Revenue Analytics Terminal
                 </Button>
                 <Button
-                  onClick={() => navigate(`/app/${tenantSlug}/revenue-model`)}
+                  onClick={() => navigate(`/app/${tenantSlug}/admin/revenue-model`)}
                   variant="outline"
                   className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
                 >
