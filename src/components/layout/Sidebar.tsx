@@ -215,7 +215,7 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-12 h-12 transition-all duration-300 rounded-xl group",
+                  "relative flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-xl group",
                   isActive
                     ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
                     : "text-white/30 hover:bg-white/5 hover:text-white"
@@ -227,7 +227,7 @@ export function Sidebar({
                     className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
                   />
                 )}
-                <item.icon className="h-4.5 w-4.5" strokeWidth={isActive ? 2 : 1.5} />
+                <item.icon className="h-5 w-5" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-[#0c0c0c] border border-white/10 text-emerald-500 text-[10px] font-mono uppercase tracking-widest px-3 py-1.5 backdrop-blur-xl">
