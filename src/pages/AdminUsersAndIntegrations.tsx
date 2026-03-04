@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import AdminOnly from '@/components/routes/AdminOnly';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,7 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { api } from '@/lib/api';
-import { Users, Mail, Clock, Star, DollarSign, Plug, Briefcase, RefreshCw, Loader2 } from 'lucide-react';
+import { Users, Mail, Clock, Star, DollarSign, Plug, Briefcase, RefreshCw, Loader2, TrendingUp } from 'lucide-react';
 
 interface UserRow {
   id: string;
@@ -36,6 +37,8 @@ interface WaitlistEntry {
 }
 
 export default function AdminUsersAndIntegrations() {
+  const navigate = useNavigate();
+
   // Users - fetched from backend
   const [users, setUsers] = useState<UserRow[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -469,6 +472,27 @@ export default function AdminUsersAndIntegrations() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Navigation Links */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-white/5">
+                <Button
+                  onClick={() => navigate('/admin/revenue')}
+                  variant="outline"
+                  className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
+                >
+                  <DollarSign className="w-4 h-4 mr-3 text-emerald-500/70" />
+                  Revenue Analytics Terminal
+                </Button>
+                <Button
+                  onClick={() => navigate('/admin/revenue-model')}
+                  variant="outline"
+                  className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
+                >
+                  <TrendingUp className="w-4 h-4 mr-3 text-emerald-500/70" />
+                  Revenue Model Projection Builder
+                </Button>
+              </div>
+
             </div>
           </div>
         </div>

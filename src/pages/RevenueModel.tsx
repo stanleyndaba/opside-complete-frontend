@@ -129,85 +129,91 @@ export default function RevenueModel() {
   };
 
   return (
-    <PageLayout title="Revenue Model (2026)">
-      <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50/50">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
+    <PageLayout title="Revenue Model (2026)" midnight>
+      <div className="relative -m-4 lg:-m-6 min-h-screen bg-[#050505] overflow-hidden">
+        {/* Aesthetic Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
+        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+
+        <div className="relative z-10 container mx-auto px-4 md:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
 
             {/* INPUTS CARD */}
-            <Card className="xl:col-span-4 h-fit border-gray-200 shadow-sm bg-white">
-              <CardHeader className="border-b border-gray-200 pb-3">
+            <Card className="xl:col-span-4 h-fit bg-[#0c0c0c] border border-white/5 backdrop-blur-3xl shadow-none rounded-xl overflow-hidden relative group">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+              <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.02]">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-sm font-semibold text-gray-900">Model Inputs</CardTitle>
-                    <CardDescription className="text-xs text-gray-500 mt-0.5">Adjust funnel and economics</CardDescription>
+                    <CardTitle className="text-sm font-mono tracking-[0.2em] uppercase text-emerald-500/80">Model Inputs</CardTitle>
+                    <CardDescription className="text-xs text-white/40 mt-1 font-serif italic">Adjust funnel and economics</CardDescription>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={reset} title="Reset to defaults" className="h-7 w-7">
-                    <RefreshCw className="h-3.5 w-3.5 text-gray-400 hover:text-gray-700" />
+                  <Button variant="outline" size="icon" onClick={reset} title="Reset to defaults" className="h-8 w-8 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/50 hover:text-emerald-400">
+                    <RefreshCw className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-4 space-y-4">
+              <CardContent className="pt-6 space-y-6 relative z-10">
                 <Tabs defaultValue="growth" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 mb-4 h-8">
-                    <TabsTrigger value="growth" className="text-xs">Growth</TabsTrigger>
-                    <TabsTrigger value="funnel" className="text-xs">Funnel</TabsTrigger>
-                    <TabsTrigger value="economics" className="text-xs">Economics</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-3 mb-6 bg-white/[0.02] border border-white/5 rounded-lg p-1 h-10">
+                    <TabsTrigger value="growth" className="text-[10px] uppercase tracking-widest font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Growth</TabsTrigger>
+                    <TabsTrigger value="funnel" className="text-[10px] uppercase tracking-widest font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Funnel</TabsTrigger>
+                    <TabsTrigger value="economics" className="text-[10px] uppercase tracking-widest font-mono data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-none rounded-md transition-all">Economics</TabsTrigger>
                   </TabsList>
-
-                  {/* TAB 1: MARKET & GROWTH */}
                   <TabsContent value="growth" className="space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
-                        <Users className="h-3.5 w-3.5 text-gray-500" />
+                      <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono text-emerald-500/80 flex items-center gap-2 mb-4">
+                        <Users className="h-3.5 w-3.5" />
                         Market Dynamics
                       </h3>
 
-                      <div className="grid gap-4">
-                        <div className="space-y-1.5">
-                          <Label className="text-xs font-medium text-gray-500">Start Active Sellers</Label>
+                      <div className="grid gap-6">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Start Active Sellers</Label>
                           <Input
                             type="number"
                             value={startActiveSellers}
                             onChange={e => setStartActiveSellers(clamp(parseInt(e.target.value || '0', 10), 0, 200000))}
-                            className="font-mono"
+                            className="bg-white/[0.03] border-white/10 text-emerald-400 font-mono text-xs w-full h-10 rounded-lg focus:border-emerald-500/50"
                           />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <Label className="text-xs font-medium text-gray-500">Monthly Retention</Label>
-                            <span className="text-xs font-medium text-gray-900">{monthlyRetentionPct}%</span>
+                            <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Monthly Retention</Label>
+                            <span className="text-xs font-mono text-emerald-400">{monthlyRetentionPct}%</span>
                           </div>
                           <Slider
                             value={[monthlyRetentionPct]}
                             max={100}
                             step={1}
                             onValueChange={(vals) => setMonthlyRetentionPct(vals[0])}
-                          />
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <Label className="text-xs font-medium text-gray-500">Monthly Sessions</Label>
-                          <Input
-                            type="number"
-                            value={monthlySessions}
-                            onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))}
-                            className="font-mono"
+                            className="[&>span:first-child]:bg-white/10 [&_[role=slider]]:bg-emerald-500 [&_[role=slider]]:border-emerald-500 [&>span>span]:bg-emerald-500"
                           />
                         </div>
 
                         <div className="space-y-2">
+                          <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Monthly Sessions</Label>
+                          <Input
+                            type="number"
+                            value={monthlySessions}
+                            onChange={e => setMonthlySessions(clamp(parseInt(e.target.value || '0', 10), 0, 10_000_000))}
+                            className="bg-white/[0.03] border-white/10 text-emerald-400 font-mono text-xs w-full h-10 rounded-lg focus:border-emerald-500/50"
+                          />
+                        </div>
+
+                        <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <Label className="text-xs font-medium text-gray-500">Mo. Growth Rate</Label>
-                            <span className="text-xs font-medium text-gray-900">{monthlySessionsGrowthPct}%</span>
+                            <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Mo. Growth Rate</Label>
+                            <span className="text-xs font-mono text-emerald-400">{monthlySessionsGrowthPct}%</span>
                           </div>
                           <Slider
                             value={[monthlySessionsGrowthPct]}
                             max={50}
                             step={0.5}
                             onValueChange={(vals) => setMonthlySessionsGrowthPct(vals[0])}
+                            className="[&>span:first-child]:bg-white/10 [&_[role=slider]]:bg-emerald-500 [&_[role=slider]]:border-emerald-500 [&>span>span]:bg-emerald-500"
                           />
                         </div>
                       </div>
@@ -217,17 +223,17 @@ export default function RevenueModel() {
                   {/* TAB 2: FUNNEL */}
                   <TabsContent value="funnel" className="space-y-4">
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
-                          <TrendingUp className="h-3.5 w-3.5 text-gray-500" />
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono text-emerald-500/80 flex items-center gap-2">
+                          <TrendingUp className="h-3.5 w-3.5" />
                           Conversion Steps
                         </h3>
-                        <span className="text-xs font-medium text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
-                          Total: <span className="text-gray-900 ml-0.5 font-mono">{(conversionFactor * 100).toFixed(2)}%</span>
+                        <span className="text-[9px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
+                          Total: <span className="text-white ml-1">{(conversionFactor * 100).toFixed(2)}%</span>
                         </span>
                       </div>
 
-                      <div className="space-y-4 pt-1">
+                      <div className="space-y-6 pt-2">
                         {[
                           { l: 'Visit → Signup', v: visitToSignupPct, s: setVisitToSignupPct },
                           { l: 'Signup → Amazon', v: signupToAmazonPct, s: setSignupToAmazonPct },
@@ -235,16 +241,17 @@ export default function RevenueModel() {
                           { l: 'Evidence → Findings', v: evidenceToFindingsPct, s: setEvidenceToFindingsPct },
                           { l: 'Findings → Payout', v: findingsToPayoutPct, s: setFindingsToPayoutPct }
                         ].map((item, idx) => (
-                          <div key={idx} className="space-y-1.5">
+                          <div key={idx} className="space-y-3">
                             <div className="flex justify-between items-center">
-                              <span className="text-xs text-gray-600">{item.l}</span>
-                              <span className="text-xs font-medium text-gray-900 w-10 text-right">{item.v}%</span>
+                              <span className="text-[10px] font-mono uppercase tracking-widest text-white/50">{item.l}</span>
+                              <span className="text-xs font-mono text-emerald-400 w-10 text-right">{item.v}%</span>
                             </div>
                             <Slider
                               value={[item.v]}
                               max={100}
                               step={1}
                               onValueChange={(vals) => item.s(vals[0])}
+                              className="[&>span:first-child]:bg-white/10 [&_[role=slider]]:bg-emerald-500 [&_[role=slider]]:border-emerald-500 [&>span>span]:bg-emerald-500"
                             />
                           </div>
                         ))}
@@ -255,42 +262,43 @@ export default function RevenueModel() {
                   {/* TAB 3: ECONOMICS */}
                   <TabsContent value="economics" className="space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xs font-semibold text-gray-700">
+                      <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono text-emerald-500/80 mb-4">
                         Unit Economics
                       </h3>
 
-                      <div className="space-y-4 pt-1">
-                        <div className="space-y-1.5">
-                          <Label className="text-xs font-medium text-gray-500">Recovered / Seller / Mo ($)</Label>
+                      <div className="grid gap-6">
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Recovered / Seller / Mo ($)</Label>
                           <Input
                             type="number"
                             value={avgRecoveredPerSeller}
                             onChange={e => setAvgRecoveredPerSeller(clamp(parseFloat(e.target.value || '0'), 0, 1_000_000))}
-                            className="font-mono bg-emerald-50/30"
+                            className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400 font-mono text-xs w-full h-10 rounded-lg focus:border-emerald-500/50"
                           />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <Label className="text-xs font-medium text-gray-500">Take Rate</Label>
-                            <span className="text-xs font-medium text-gray-900">{takeRatePct}%</span>
+                            <Label className="text-[10px] font-mono uppercase tracking-widest text-white/50">Take Rate</Label>
+                            <span className="text-xs font-mono text-emerald-400">{takeRatePct}%</span>
                           </div>
                           <Slider
                             value={[takeRatePct]}
                             max={100}
                             step={1}
                             onValueChange={(vals) => setTakeRatePct(vals[0])}
+                            className="[&>span:first-child]:bg-white/10 [&_[role=slider]]:bg-emerald-500 [&_[role=slider]]:border-emerald-500 [&>span>span]:bg-emerald-500"
                           />
                         </div>
 
-                        <Separator />
+                        <Separator className="bg-white/5 my-4" />
 
-                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-600 font-medium">ARPS (Rev/Seller/Mo)</span>
-                            <span className="font-mono text-base font-semibold text-emerald-700">${arps.toFixed(2)}</span>
+                        <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-white/60">ARPS (Rev/Seller/Mo)</span>
+                            <span className="font-serif text-2xl text-emerald-400">${arps.toFixed(2)}</span>
                           </div>
-                          <p className="text-xs text-gray-400 mt-0.5">Average Revenue Per Seller based on recovery and take rate.</p>
+                          <p className="text-xs text-white/30 font-serif italic">Average Revenue Per Seller based on recovery and take rate.</p>
                         </div>
                       </div>
                     </div>
@@ -301,46 +309,48 @@ export default function RevenueModel() {
 
 
             {/* PROJECTION TABLE */}
-            <Card className="xl:col-span-8 border-gray-200 shadow-sm bg-white h-fit">
-              <CardHeader className="flex flex-row items-center justify-between border-b border-gray-200 pb-3">
+            <Card className="xl:col-span-8 bg-[#0c0c0c] border border-white/5 backdrop-blur-3xl shadow-none rounded-xl overflow-hidden relative group h-fit">
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+              <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4 bg-white/[0.02]">
                 <div>
-                  <CardTitle className="text-sm font-semibold text-gray-900">Revenue Projection (2026)</CardTitle>
-                  <CardDescription className="text-xs text-gray-500 mt-0.5">Based on current inputs</CardDescription>
+                  <CardTitle className="text-sm font-mono tracking-[0.2em] uppercase text-emerald-500/80">Revenue Projection (2026)</CardTitle>
+                  <CardDescription className="text-xs text-white/40 mt-1 font-serif italic">Based on current inputs</CardDescription>
                 </div>
-                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-1.5 text-gray-700 border-gray-200 text-xs h-7">
+                <Button variant="outline" size="sm" onClick={exportCsv} className="gap-2 text-white/50 border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 hover:text-emerald-400 font-mono text-[9px] uppercase tracking-widest h-8 transition-all">
                   <Download className="h-3.5 w-3.5" />
-                  Export
+                  Export Data
                 </Button>
               </CardHeader>
-              <CardContent className="pt-4">
-                <div className="overflow-x-auto rounded-lg border border-gray-100">
+              <CardContent className="pt-6 relative z-10">
+                <div className="overflow-x-auto rounded-xl border border-white/5 bg-white/[0.01]">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-gray-50/50 border-b border-gray-200">
-                        <th className="py-2 px-3 text-left text-xs font-semibold text-gray-500">Month</th>
-                        <th className="py-2 px-3 text-right text-xs font-semibold text-gray-500">Traffic</th>
-                        <th className="py-2 px-3 text-right text-xs font-semibold text-gray-500">New Paid</th>
-                        <th className="py-2 px-3 text-right text-xs font-semibold text-gray-500">Active</th>
-                        <th className="py-2 px-3 text-right text-xs font-semibold text-gray-700">Revenue (USD)</th>
+                      <tr className="border-b border-white/5 bg-white/[0.02]">
+                        <th className="py-3 px-4 text-left text-[10px] font-mono tracking-widest uppercase text-white/40">Month</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">Traffic</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">New Paid</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">Active</th>
+                        <th className="py-3 px-4 text-right text-[10px] font-mono tracking-widest uppercase text-white/40">Revenue (USD)</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-white/5">
                       {rows.map((r, i) => (
-                        <tr key={r.month} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="py-2 px-3 text-xs text-gray-900 font-medium">{r.month}</td>
-                          <td className="py-2 px-3 text-right text-xs text-gray-600 font-mono">{r.sessions.toLocaleString()}</td>
-                          <td className="py-2 px-3 text-right text-xs text-emerald-600 font-mono">+{r.newPaid.toLocaleString()}</td>
-                          <td className="py-2 px-3 text-right text-xs text-gray-700 font-mono">{r.activeSellers.toLocaleString()}</td>
-                          <td className="py-2 px-3 text-right text-xs text-gray-900 font-mono font-medium">
+                        <tr key={r.month} className="hover:bg-white/[0.02] transition-colors">
+                          <td className="py-3 px-4 text-xs text-white/70 font-mono tracking-widest uppercase">{r.month}</td>
+                          <td className="py-3 px-4 text-right text-xs text-white/50 font-mono">{r.sessions.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right text-xs text-emerald-500/80 font-mono">+{r.newPaid.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right text-xs text-white/70 font-mono">{r.activeSellers.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-right text-sm text-emerald-400 font-mono">
                             ${r.revenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </td>
                         </tr>
                       ))}
                     </tbody>
-                    <tfoot className="bg-gray-50 font-medium">
+                    <tfoot className="bg-white/[0.02] border-t border-white/10">
                       <tr>
-                        <td className="py-3 px-3 text-xs text-gray-900" colSpan={4}>Total Projected Revenue</td>
-                        <td className="py-3 px-3 text-right text-base font-semibold text-emerald-700">
+                        <td className="py-4 px-4 text-[10px] font-mono tracking-widest uppercase text-white/50" colSpan={4}>Total Projected Revenue</td>
+                        <td className="py-4 px-4 text-right text-xl font-serif text-emerald-400">
                           ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </td>
                       </tr>
@@ -348,24 +358,37 @@ export default function RevenueModel() {
                   </table>
                 </div>
 
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="px-1">
-                    <div className="text-xs text-gray-500 font-medium mb-0.5">Total Active Sellers (Dec)</div>
-                    <div className="text-base text-gray-900 font-semibold">{rows[11].activeSellers.toLocaleString()}</div>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5 text-center">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-white/50 mb-2">Total Active Sellers (Dec)</div>
+                    <div className="text-2xl font-serif text-white/90">{rows[11].activeSellers.toLocaleString()}</div>
                   </div>
-                  <div className="px-1">
-                    <div className="text-xs text-gray-500 font-medium mb-0.5">Annual Revenue (USD)</div>
-                    <div className="text-base text-gray-900 font-semibold">${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  <div className="bg-[#0c0c0c] rounded-xl p-4 border border-emerald-500/20 text-center shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-500/70 mb-2">Annual Revenue (USD)</div>
+                    <div className="text-2xl font-serif text-emerald-400">
+                      ${totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </div>
                   </div>
-                  <div className="px-1">
-                    <div className="text-xs text-gray-500 font-medium mb-0.5">Annual Revenue (ZAR)</div>
-                    <div className="text-base text-gray-900 font-semibold">R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                  <div className="bg-white/[0.02] rounded-xl p-4 border border-white/5 text-center">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-500/70 mb-2">Annual Revenue (ZAR)</div>
+                    <div className="text-2xl font-serif text-white/90">
+                      R {totalRevenueZar.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </div>
                   </div>
                 </div>
 
               </CardContent>
             </Card>
           </div>
+
+          <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between opacity-50 px-2 max-w-7xl mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[9px] font-mono tracking-[0.3em] text-white uppercase">Margin Internal System // Authorized access only</span>
+            </div>
+            <span className="text-[9px] font-mono tracking-widest text-emerald-500">v2.0.4-STABLE</span>
+          </div>
+
         </div>
       </div>
     </PageLayout>
