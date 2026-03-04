@@ -327,12 +327,21 @@ export function Sidebar({
         "border-t border-white/5 py-3",
         isCollapsed ? "px-2 text-center" : "px-6"
       )}>
-        <span className={cn(
-          "text-[9px] font-mono text-white/20 uppercase tracking-[0.2em]",
-          isCollapsed ? "block" : ""
-        )}>
-          {isCollapsed ? "v1" : "v1.0.0-GOLD"}
-        </span>
+        <Link
+          to={tenantRoute(currentTenantSlug, '/whats-new')}
+          className={cn(
+            "group flex items-center gap-2 w-fit transition-colors",
+            isCollapsed ? "justify-center" : ""
+          )}
+        >
+          <span className={cn(
+            "text-[9px] font-mono text-white/20 uppercase tracking-[0.2em] group-hover:text-emerald-500/80 transition-colors",
+            isCollapsed ? "block" : ""
+          )}>
+            {isCollapsed ? "v1" : "v1.0.0-GOLD"}
+          </span>
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+        </Link>
       </div>
 
       {/* More Menu / Logout */}
