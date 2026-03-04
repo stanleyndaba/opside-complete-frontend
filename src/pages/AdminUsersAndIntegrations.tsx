@@ -154,219 +154,316 @@ export default function AdminUsersAndIntegrations() {
 
   return (
     <AdminOnly>
-      <PageLayout title="Admin · Users & Integrations">
-        <div className="relative -m-4 lg:-m-6 min-h-screen bg-gray-50">
-          <div className="container mx-auto px-6 md:px-10 lg:px-12 py-6 space-y-6">
+      <PageLayout title="Admin Command Center // Terminals" midnight>
+        <div className="min-h-screen bg-[#050505] relative overflow-hidden -m-4 lg:-m-6">
+          {/* Aesthetic Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
+          <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+
+          <div className="relative z-10 container max-w-7xl mx-auto px-6 py-12 space-y-8">
+            {/* Header section */}
+            <div className="flex flex-col mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px w-8 bg-emerald-500/50" />
+                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">CORE_SYSTEM // TERMINAL_ACCESS</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight">
+                    Terminal Directory
+                  </h1>
+                  <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
+                    Manage terminal access protocols and connected system integrations.
+                  </p>
+                </div>
+                <Button
+                  onClick={fetchData}
+                  variant="outline"
+                  size="sm"
+                  className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-9 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all"
+                >
+                  <RefreshCw className={`h-3 w-3 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  Sync Directory
+                </Button>
+              </div>
+            </div>
             {/* Waitlist Section */}
-            <Card className="bg-white border-gray-200 shadow-sm">
-              <CardHeader>
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden mt-8">
+              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-lg bg-emerald-50 flex items-center justify-center">
-                      <Mail className="h-4 w-4 text-emerald-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-normal text-gray-700">Waitlist</CardTitle>
-                      <CardDescription className="text-gray-500">
-                        {waitlistTotal} signups • Priority leads are marked
-                      </CardDescription>
-                    </div>
+                  <div>
+                    <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-[0.3em]">Access Requests Directory</CardTitle>
+                    <CardDescription className="text-xs text-white/40 pt-1 font-serif italic">
+                      {waitlistTotal} signups • Priority leads authenticated
+                    </CardDescription>
                   </div>
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-widest">
+                    <Mail className="h-3 w-3 mr-2" />
+                    INCOMING PINGS
+                  </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="waitlistFilter" className="text-gray-600">Search waitlist</Label>
+              <CardContent className="p-0">
+                <div className="p-6 border-b border-white/5">
+                  <Label htmlFor="waitlistFilter" className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-2 block">Search Directory</Label>
                   <Input
                     id="waitlistFilter"
-                    placeholder="Search by email or user type..."
+                    placeholder="Search by email or signature..."
                     value={waitlistFilter}
                     onChange={e => setWaitlistFilter(e.target.value)}
-                    className="bg-white border-gray-200 text-gray-700"
+                    className="bg-white/[0.03] border-white/10 text-white font-mono text-xs w-full max-w-md h-10 rounded-lg focus:border-emerald-500/50"
                   />
                 </div>
                 {waitlistLoading ? (
-                  <div className="py-8 text-center text-gray-500">Loading waitlist...</div>
+                  <div className="py-16 text-center text-white/30">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-4 text-emerald-500/50" />
+                    <p className="font-mono text-xs uppercase tracking-widest">Compiling Directory...</p>
+                  </div>
                 ) : filteredWaitlist.length === 0 ? (
-                  <div className="py-8 text-center text-gray-500">No waitlist entries yet</div>
+                  <div className="py-16 text-center text-white/30">
+                    <p className="font-mono text-xs uppercase tracking-widest">No access requests detected.</p>
+                  </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
-                      <thead className="text-left text-gray-500 border-b border-gray-200">
-                        <tr>
-                          <th className="py-2 pr-4 font-normal">Email</th>
-                          <th className="py-2 pr-4 font-normal">Type</th>
-                          <th className="py-2 pr-4 font-normal">Revenue</th>
-                          <th className="py-2 pr-4 font-normal">Contact</th>
-                          <th className="py-2 pr-4 font-normal">Signed Up</th>
-                          <th className="py-2 font-normal">Priority</th>
-                        </tr>
-                      </thead>
-                      <tbody>
+                  <div className="overflow-x-auto select-none">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-b border-white/5 hover:bg-transparent bg-transparent">
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Email</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Type</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Revenue</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Contact</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Ident</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Priority</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
                         {filteredWaitlist.map(entry => (
-                          <tr key={entry.id} className="border-b border-gray-100">
-                            <td className="py-2 pr-4 text-gray-700">{entry.email}</td>
-                            <td className="py-2 pr-4 text-gray-600 capitalize">{entry.user_type || '—'}</td>
-                            <td className="py-2 pr-4 text-gray-600">{entry.annual_revenue || '—'}</td>
-                            <td className="py-2 pr-4 text-gray-600">{entry.contact_handle || '—'}</td>
-                            <td className="py-2 pr-4 text-gray-500 text-xs">
-                              <span className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {formatDate(entry.created_at)}
-                              </span>
-                            </td>
-                            <td className="py-2">
+                          <TableRow key={entry.id} className="border-b border-white/5 border-dashed hover:bg-white/[0.02] transition-colors">
+                            <TableCell className="px-8 py-4 font-sans text-sm text-white/90">
+                              {entry.email}
+                            </TableCell>
+                            <TableCell className="px-8 py-4 font-mono text-[10px] uppercase text-white/60">
+                              {entry.user_type || '—'}
+                            </TableCell>
+                            <TableCell className="px-8 py-4 font-serif text-sm text-emerald-500/80">
+                              {entry.annual_revenue || '—'}
+                            </TableCell>
+                            <TableCell className="px-8 py-4 font-sans text-sm text-white/70">
+                              {entry.contact_handle || '—'}
+                            </TableCell>
+                            <TableCell className="px-8 py-4 text-[10px] font-mono text-white/30 tracking-widest">
+                              <div className="flex flex-col gap-1">
+                                <span>{formatDate(entry.created_at)}</span>
+                                <span>{entry.id.substring(0, 8)}...</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-8 py-4">
                               {entry.metadata?.is_whale ? (
-                                <Badge className="bg-amber-100 text-amber-800 border-amber-200 flex items-center gap-1 w-fit">
-                                  <Star className="h-3 w-3" />
-                                  Whale
+                                <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20 font-mono text-[9px] uppercase tracking-widest">
+                                  <Star className="h-3 w-3 mr-1" />
+                                  WHALE_PRIORITY
                                 </Badge>
                               ) : (
-                                <Badge variant="outline" className="text-gray-500 border-gray-200">Standard</Badge>
+                                <Badge variant="outline" className="bg-white/5 text-white/40 border-white/10 font-mono text-[9px] uppercase tracking-widest">
+                                  STANDARD
+                                </Badge>
                               )}
-                            </td>
-                          </tr>
+                            </TableCell>
+                          </TableRow>
                         ))}
-                      </tbody>
-                    </table>
+                      </TableBody>
+                    </Table>
                   </div>
                 )}
               </CardContent>
             </Card>
-
             {/* Users Section - Full Width */}
-            <Card className="bg-white border-gray-200 shadow-sm">
-              <CardHeader>
+            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden mt-8">
+              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <Users className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-normal text-gray-700">All Users</CardTitle>
-                      <CardDescription className="text-gray-500">
-                        {filtered.length} users • Manage roles, integrations, and access
-                      </CardDescription>
-                    </div>
+                  <div>
+                    <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-[0.3em]">Active Terminals & Roles</CardTitle>
+                    <CardDescription className="text-xs text-white/40 pt-1 font-serif italic">
+                      {filtered.length} active nodes • Manage authorization and telemetry access
+                    </CardDescription>
                   </div>
+                  <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-widest">
+                    <Users className="h-3 w-3 mr-2" />
+                    ROSTER
+                  </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="userFilter" className="text-gray-600">Search users</Label>
-                  <Input id="userFilter" placeholder="email@company.com" value={filter} onChange={e => setFilter(e.target.value)} className="bg-white border-gray-200 text-gray-700" />
+              <CardContent className="p-0">
+                <div className="p-6 border-b border-white/5">
+                  <Label htmlFor="userFilter" className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-2 block">Trace Identity</Label>
+                  <Input
+                    id="userFilter"
+                    placeholder="target@company.com"
+                    value={filter}
+                    onChange={e => setFilter(e.target.value)}
+                    className="bg-white/[0.03] border-white/10 text-white font-mono text-xs w-full max-w-md h-10 rounded-lg focus:border-emerald-500/50"
+                  />
                 </div>
                 {usersLoading ? (
-                  <div className="py-8 text-center text-gray-500">Loading users...</div>
+                  <div className="py-16 text-center text-white/30">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-4 text-emerald-500/50" />
+                    <p className="font-mono text-xs uppercase tracking-widest">Establishing Handshake...</p>
+                  </div>
                 ) : filtered.length === 0 ? (
-                  <div className="py-8 text-center text-gray-500">No users found</div>
+                  <div className="py-16 text-center text-white/30">
+                    <p className="font-mono text-xs uppercase tracking-widest">No matching identities found.</p>
+                  </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
-                      <thead className="text-left text-gray-500 border-b border-gray-200">
-                        <tr>
-                          <th className="py-2 pr-4 font-normal">Email</th>
-                          <th className="py-2 pr-4 font-normal">Joined</th>
-                          <th className="py-2 pr-4 font-normal">Integrations</th>
-                          <th className="py-2 pr-4 font-normal">Cases</th>
-                          <th className="py-2 pr-4 font-normal">Recovered</th>
-                          <th className="py-2 pr-4 font-normal">Role</th>
-                          <th className="py-2 pr-4 font-normal">Status</th>
-                          <th className="py-2 font-normal">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
+                  <div className="overflow-x-auto select-none">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-b border-white/5 hover:bg-transparent bg-transparent">
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Terminal/Email</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Connections</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Active Cases</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Net Recovered</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Access Level</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8">Protocol State</TableHead>
+                          <TableHead className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 h-10 px-8 text-right">Root Commands</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
                         {filtered.map(u => (
-                          <tr key={u.id} className="border-b border-gray-100 hover:bg-gray-50">
-                            <td className="py-3 pr-4">
-                              <div className="text-gray-700 font-medium">{u.email}</div>
-                              {u.last_login && (
-                                <div className="text-gray-400 text-xs">Last login: {formatDate(u.last_login)}</div>
-                              )}
-                            </td>
-                            <td className="py-3 pr-4 text-gray-500 text-xs">
-                              {u.created_at ? formatDate(u.created_at) : '—'}
-                            </td>
-                            <td className="py-3 pr-4">
-                              <span className="flex items-center gap-1 text-gray-600">
-                                <Plug className="h-3 w-3" />
+                          <TableRow key={u.id} className="border-b border-white/5 border-dashed hover:bg-white/[0.02] transition-colors">
+                            <TableCell className="px-8 py-5">
+                              <div className="font-sans font-medium text-white/90">{u.email}</div>
+                              <div className="text-[10px] font-mono text-white/40 mt-1 uppercase tracking-wider">
+                                {u.last_login ? `LAST_SYNC: ${formatDate(u.last_login)}` : 'NOD_SYNC'} | IDENT: {u.id.substring(0, 8)}...
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-8 py-5 text-center">
+                              <Badge variant="outline" className="bg-white/5 border-white/10 text-white/70 font-mono text-[10px]">
+                                <Plug className="h-3 w-3 mr-2 text-emerald-500/50" />
                                 {u.integrations_count || 0}
-                              </span>
-                            </td>
-                            <td className="py-3 pr-4">
-                              <span className="flex items-center gap-1 text-gray-600">
-                                <Briefcase className="h-3 w-3" />
-                                {u.cases_count || 0}
-                              </span>
-                            </td>
-                            <td className="py-3 pr-4">
-                              <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                                <DollarSign className="h-3 w-3" />
-                                {(u.total_recovered || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                              </span>
-                            </td>
-                            <td className="py-3 pr-4">
-                              <select className="bg-white border-gray-200 text-gray-700 rounded px-2 py-1 text-sm" value={u.role} onChange={e => updateUser(u.id, { role: e.target.value as UserRow['role'] })}>
-                                <option value="user">user</option>
-                                <option value="admin">admin</option>
-                              </select>
-                            </td>
-                            <td className="py-3 pr-4">
-                              <Badge className={u.status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-gray-100 text-gray-500 border-gray-200'}>
-                                {u.status}
                               </Badge>
-                            </td>
-                            <td className="py-3 flex gap-2">
-                              <Button size="sm" variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={() => handleImpersonate(u.id)}>Impersonate</Button>
-                              <Button size="sm" className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" onClick={() => toggleUserStatus(u)}>{u.status === 'active' ? 'Lock' : 'Unlock'}</Button>
-                            </td>
-                          </tr>
+                            </TableCell>
+                            <TableCell className="px-8 py-5 text-center">
+                              <Badge variant="outline" className="bg-white/5 border-white/10 text-white/70 font-mono text-[10px]">
+                                <Briefcase className="h-3 w-3 mr-2 text-emerald-500/50" />
+                                {u.cases_count || 0}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="px-8 py-5 font-serif text-emerald-400 text-sm">
+                              <div className="flex flex-col">
+                                <span>${(u.total_recovered || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-8 py-5">
+                              <select
+                                className="bg-[#0c0c0c] border border-white/10 text-white/80 rounded-lg px-3 py-1 text-xs font-mono tracking-widest uppercase outline-none focus:border-emerald-500/50 transition-colors"
+                                value={u.role}
+                                onChange={e => updateUser(u.id, { role: e.target.value as UserRow['role'] })}
+                              >
+                                <option value="user">USER</option>
+                                <option value="admin">ROOT</option>
+                              </select>
+                            </TableCell>
+                            <TableCell className="px-8 py-5">
+                              <Badge
+                                variant="outline"
+                                className={
+                                  u.status === 'active'
+                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono text-[9px] uppercase tracking-widest'
+                                    : 'bg-red-500/10 text-red-500 border-red-500/20 font-mono text-[9px] uppercase tracking-widest'
+                                }
+                              >
+                                {u.status === 'active' ? 'NOMINAL' : 'LOCKED'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="px-8 py-5 text-right flex gap-3 justify-end">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-400 h-8 px-3 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all"
+                                onClick={() => handleImpersonate(u.id)}
+                              >
+                                Infiltrate
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className={
+                                  u.status === 'active'
+                                    ? 'border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-500 h-8 px-3 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all'
+                                    : 'border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-emerald-500 h-8 px-3 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all'
+                                }
+                                onClick={() => toggleUserStatus(u)}
+                              >
+                                {u.status === 'active' ? 'Revoke' : 'Restore'}
+                              </Button>
+                            </TableCell>
+                          </TableRow>
                         ))}
-                      </tbody>
-                    </table>
+                      </TableBody>
+                    </Table>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-
-              <Card className="bg-white border-gray-200 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-base font-normal text-gray-700">Document Ingestion</CardTitle>
-                  <CardDescription className="text-gray-500">Connection status and ingestion settings.</CardDescription>
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-8">
+              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden">
+                <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
+                  <CardTitle className="text-[10px] font-mono font-bold text-white/50 uppercase tracking-[0.3em]">Document Ingestion Protocols</CardTitle>
+                  <CardDescription className="text-xs text-white/40 pt-1 font-serif italic">Global connection telemetrics and autonomous pipeline settings.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-5">
-                  <div className="space-y-3 text-sm">
+                <CardContent className="p-8 space-y-8">
+                  <div className="space-y-4 text-sm max-w-2xl">
                     {['gmail', 'outlook', 'gdrive', 'dropbox'].map(p => {
                       const ps = provider(p);
                       return (
-                        <div key={p} className="rounded-lg border border-gray-200 bg-gray-50 p-3">
-                          <div className="flex items-center justify-between">
-                            <div className="text-gray-700 font-normal capitalize">{p}</div>
-                            <span className={`text-xs px-2 py-0.5 rounded ${ps.connected ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-500'}`}>{ps.connected ? 'connected' : 'disconnected'}</span>
+                        <div key={p} className="rounded-xl border border-white/5 bg-white/[0.01] p-5 hover:border-white/10 transition-colors">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="text-white/80 font-mono tracking-widest uppercase text-xs">{p}</div>
+                            <Badge variant="outline" className={ps.connected ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px]' : 'bg-white/5 text-white/30 border-white/10 text-[9px]'}>
+                              {ps.connected ? 'ESTABLISHED' : 'SEVERED'}
+                            </Badge>
                           </div>
-                          <div className="text-gray-500 text-xs mt-1">Last sync: {ps.lastSync || '—'}</div>
-                          <div className="text-gray-500 text-xs">Token age: {ps.tokenAgeDays ?? '—'} days</div>
-                          <div className="mt-2 flex gap-2">
-                            <Button size="sm" className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200" onClick={() => reconnect(p)}>Reconnect</Button>
-                            <Button size="sm" variant="outline" className="bg-white text-gray-700 border-gray-200 hover:bg-gray-50" onClick={async () => { await api.disconnectIntegration(p, true); window.location.reload(); }}>Disconnect & purge</Button>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <div className="text-[9px] font-mono text-white/30 tracking-widest uppercase">Last Sync Ping</div>
+                              <div className="text-xs text-white/60 font-serif mt-1">{ps.lastSync || 'NO_DATA'}</div>
+                            </div>
+                            <div>
+                              <div className="text-[9px] font-mono text-white/30 tracking-widest uppercase">Key Age (Days)</div>
+                              <div className="text-xs text-white/60 font-serif mt-1">{ps.tokenAgeDays ?? 'UNKNOWN'}</div>
+                            </div>
+                          </div>
+                          <div className="mt-5 flex gap-3">
+                            <Button size="sm" variant="outline" className="border-white/10 hover:border-white/30 hover:bg-white/5 text-white h-8 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all" onClick={() => reconnect(p)}>
+                              Re-Establish
+                            </Button>
+                            <Button size="sm" variant="outline" className="border-red-500/20 hover:border-red-500/50 hover:bg-red-500/5 text-red-500 h-8 px-4 font-mono uppercase tracking-widest text-[9px] rounded-lg transition-all" onClick={async () => { await api.disconnectIntegration(p, true); window.location.reload(); }}>
+                              Terminate Trace
+                            </Button>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div className="border-t border-gray-200 pt-4 space-y-4">
-                    <div className="flex items-center justify-between">
+
+                  <div className="border border-white/5 p-6 rounded-xl bg-white/[0.01] max-w-2xl">
+                    <div className="flex items-center justify-between mb-6">
                       <div>
-                        <div className="text-gray-700 font-normal">Auto-collect evidence</div>
-                        <div className="text-gray-500 text-xs">Read-only ingestion from email and drives.</div>
+                        <div className="text-sm font-serif text-white/90">Autonomous Extraction Engine</div>
+                        <div className="text-xs text-white/40 mt-1">Engage read-only evidence scraping across active pipes.</div>
                       </div>
-                      <Switch checked={autoCollect} onCheckedChange={async (v) => { setAutoCollect(v); await api.setEvidenceAutoCollect(v); }} />
+                      <Switch checked={autoCollect} onCheckedChange={async (v) => { setAutoCollect(v); await api.setEvidenceAutoCollect(v); }} className="data-[state=checked]:bg-emerald-500" />
                     </div>
                     <div>
-                      <Label htmlFor="sched" className="text-gray-600">Schedule</Label>
-                      <Input id="sched" value={schedule} onChange={e => setSchedule(e.target.value)} onBlur={async () => { await api.setEvidenceSchedule(schedule); }} className="bg-white border-gray-200 text-gray-700" />
+                      <Label htmlFor="sched" className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-2 block">Cron Schedule</Label>
+                      <Input
+                        id="sched"
+                        value={schedule}
+                        onChange={e => setSchedule(e.target.value)}
+                        onBlur={async () => { await api.setEvidenceSchedule(schedule); }}
+                        className="bg-white/[0.03] border-white/10 text-emerald-400 font-mono text-xs w-full h-10 rounded-lg focus:border-emerald-500/50 placeholder:text-white/20"
+                      />
                     </div>
                   </div>
                 </CardContent>
