@@ -159,36 +159,6 @@ export default function Help() {
               </div>
             </section>
 
-            {/* Guides Section */}
-            <section className="w-full">
-              <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
-                <div className="h-px w-8 bg-gray-500/30" />
-                Quick Guides
-              </h2>
-              <div className="flex flex-col gap-6">
-                {gettingStartedSteps.map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    whileHover={{ x: 4 }}
-                    className="p-6 bg-[#0c0c0c] border border-white/5 rounded-2xl group hover:border-emerald-500/30 transition-all flex items-center gap-6"
-                  >
-                    <div className="h-12 w-12 shrink-0 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-sm font-mono text-white group-hover:bg-emerald-500 group-hover:text-black transition-all">
-                      {item.step}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="text-white font-medium">{item.title}</h3>
-                        <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">{item.time}</span>
-                      </div>
-                      <p className="text-xs text-gray-400 font-light leading-relaxed mb-2">{item.description}</p>
-                      <Button variant="ghost" className="h-auto p-0 text-[10px] font-mono uppercase tracking-widest text-emerald-500/60 hover:text-emerald-500 hover:bg-transparent group/btn">
-                        Learn More <ChevronRight className="h-3 w-3 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                      </Button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
 
             {/* Reach Out Section */}
             <section className="w-full">
