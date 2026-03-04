@@ -1346,13 +1346,13 @@ export default function CaseDetail() {
                             <div key={step} className="flex flex-col items-center gap-2">
                               <div className={cn(
                                 "w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all shrink-0",
-                                active ? "bg-white/70 border-white/70 text-[#0a0a0a]" : "bg-[#0a0a0a] border-white/10 text-white/30"
+                                active ? "bg-blue-600 border-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]" : "bg-[#0a0a0a] border-white/10 text-white/30"
                               )}>
                                 {idx + 1}
                               </div>
                               <span className={cn(
                                 "text-[11px] font-normal tracking-widest uppercase",
-                                active ? "text-white/80" : "text-white/20"
+                                active ? "text-blue-500" : "text-white/20"
                               )}>{step}</span>
                             </div>
                           );
@@ -1368,8 +1368,8 @@ export default function CaseDetail() {
                     {/* Events List */}
                     <div className="space-y-4">
                       {(effectiveCase.events || []).slice(0, 4).map((event: any, index: number) => (
-                        <div key={index} className="relative pl-6 border-l border-white/10">
-                          <div className="absolute left-[-4px] top-1 w-2 h-2 rounded-full bg-white/20 border-2 border-[#050505]" />
+                        <div key={index} className="relative pl-6 border-l border-blue-600/30">
+                          <div className="absolute left-[-4.5px] top-1.5 w-2 h-2 rounded-full bg-blue-600 border-2 border-[#050505]" />
                           <div className="flex flex-col">
                             <div className="flex justify-between items-baseline mb-2">
                               <h4 className="text-[11px] font-bold text-white tracking-tight">{event.title}</h4>
