@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { RefreshCw, TrendingUp, TrendingDown } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import AdminOnly from '@/components/routes/AdminOnly';
+import { api } from '@/lib/api';
 
 interface RevenueMetrics {
     totalRecovered: number;
@@ -59,20 +60,16 @@ export default function AdminRevenue() {
             setLoading(true);
             setError(null);
 
-            const backendUrl = 'https://opside-node-api-woco.onrender.com';
-            const response = await fetch(`${backendUrl}/api/admin/revenue`, {
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const data = await response.json();
+            const response = await api.getAdminRevenue();
 
-            if (data.ok) {
-                setMetrics(data.data);
-                setFeePercentage(data.feePercentage || 20);
+            if (response.ok && response.data) {
+                setMetrics(response.data);
+                // Try to get feePercentage if it's there
+                if ((response.data as any).feePercentage) {
+                    setFeePercentage((response.data as any).feePercentage);
+                }
             } else {
-                setError(data.error || 'Failed to fetch revenue metrics');
+                setError(response.error || 'Failed to fetch revenue metrics');
             }
         } catch (err: any) {
             setError(err.message || 'Failed to fetch revenue metrics');

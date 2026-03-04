@@ -1924,6 +1924,9 @@ export const detectionApi = {
     body: JSON.stringify({ schedule })
   }),
 
+  // Admin: Revenue analytics
+  getAdminRevenue: () => requestJson<any>('/api/admin/revenue'),
+
   // Admin: Users management
   getAdminUsers: () => requestJson<{
     success: boolean;

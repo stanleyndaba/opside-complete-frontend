@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import AdminOnly from '@/components/routes/AdminOnly';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -38,6 +38,7 @@ interface WaitlistEntry {
 
 export default function AdminUsersAndIntegrations() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams();
 
   // Users - fetched from backend
   const [users, setUsers] = useState<UserRow[]>([]);
@@ -476,7 +477,7 @@ export default function AdminUsersAndIntegrations() {
               {/* Navigation Links */}
               <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-white/5">
                 <Button
-                  onClick={() => navigate('/admin/revenue')}
+                  onClick={() => navigate(`/app/${tenantSlug}/admin/revenue`)}
                   variant="outline"
                   className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
                 >
@@ -484,7 +485,7 @@ export default function AdminUsersAndIntegrations() {
                   Revenue Analytics Terminal
                 </Button>
                 <Button
-                  onClick={() => navigate('/admin/revenue-model')}
+                  onClick={() => navigate(`/app/${tenantSlug}/revenue-model`)}
                   variant="outline"
                   className="flex-1 bg-white/[0.01] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-white/80 hover:text-emerald-400 h-12 font-mono uppercase tracking-widest text-xs rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.05)_inset]"
                 >
