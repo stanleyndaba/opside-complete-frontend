@@ -427,7 +427,7 @@ const Index = () => {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto mt-6">
                   <div className="flex flex-col items-center gap-1 w-full sm:w-auto">
                     <button
-                      onClick={() => navigate('/waitlist')}
+                      onClick={() => navigate('/app/default/data-upload')}
                       className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
                       {/* Glass backdrop with glow */}
                       <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
@@ -436,7 +436,7 @@ const Index = () => {
                       <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
                       <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
-                        Private Beta
+                        Get Started
                         <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
                       </span>
                     </button>
