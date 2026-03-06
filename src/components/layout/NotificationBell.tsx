@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
+import { useTenant } from '@/contexts/TenantContext';
+import { tenantRoute } from '@/lib/routes';
 import { format, formatDistanceToNow } from 'date-fns';
 
 interface NotificationBellProps {
@@ -49,6 +51,8 @@ export function NotificationBell({
 }: NotificationBellProps) {
   const location = useLocation();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const { tenant } = useTenant();
+  const activeSlug = tenant?.slug || 'beta';
   const [isOpen, setIsOpen] = useState(false);
 
   const isTransparentNavbar = (
@@ -67,11 +71,11 @@ export function NotificationBell({
   );
 
   const getHrefForType = (type: string) => {
-    if (type.includes('claim') || type.includes('refund') || type.includes('funds')) return '/recoveries';
-    if (type.includes('integration')) return '/integrations-hub';
-    if (type.includes('payment') || type.includes('billing')) return '/billing';
-    if (type.includes('evidence')) return '/evidence-locker';
-    return '/notifications';
+    if (type.includes('claim') || type.includes('refund') || type.includes('funds')) return tenantRoute(activeSlug, '/recoveries');
+    if (type.includes('integration')) return tenantRoute(activeSlug, '/integrations-hub');
+    if (type.includes('payment') || type.includes('billing')) return tenantRoute(activeSlug, '/billing');
+    if (type.includes('evidence')) return tenantRoute(activeSlug, '/evidence-locker');
+    return tenantRoute(activeSlug, '/notifications');
   };
 
   const displayNotifications = notifications.slice(0, 10).map(n => {
@@ -305,7 +309,7 @@ export function NotificationBell({
 
         {/* Footer - Institutional Style */}
         <div className="px-6 py-4 border-t border-white/5 flex-shrink-0 bg-white/[0.01]">
-          <Link to="/notifications" onClick={() => setIsOpen(false)} reloadDocument>
+          <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
             <button className="w-full text-center text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-[0.3em]">
               All Notifications
             </button>

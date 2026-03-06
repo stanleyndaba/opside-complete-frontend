@@ -1558,7 +1558,7 @@ export function Dashboard() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => navigate('/notifications')}
+                              onClick={() => navigate(tenantRoute(activeSlug, '/notifications'))}
                               className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-emerald-500 uppercase tracking-widest transition-colors"
                             >
                               All Activity Logs
