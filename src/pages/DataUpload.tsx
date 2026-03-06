@@ -222,13 +222,14 @@ export default function DataUpload() {
     const successCount = batchResult?.results?.filter(r => r.success).length || 0;
 
     return (
-        <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true}>
-            <div className="min-h-screen bg-[#0a0a0f] text-white relative">
+        <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} midnight>
+            <div className="min-h-screen bg-[#050505] text-white relative">
                 {/* Noise Texture */}
                 <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
-                {/* Ambient Glow */}
-                <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-violet-600/8 rounded-full blur-[120px] pointer-events-none" />
+                {/* Aesthetic Background Elements */}
+                <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.06),transparent_70%)] pointer-events-none" />
+                <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
                 <div className="relative z-10 w-full mx-auto px-6 lg:px-10 py-10">
                     {/* Header */}
@@ -260,7 +261,7 @@ export default function DataUpload() {
                     >
                         <label className="text-xs font-mono uppercase tracking-widest text-white/30 mb-2 block">Data Type</label>
                         <Select value={selectedType} onValueChange={setSelectedType}>
-                            <SelectTrigger className="w-full bg-white/[0.03] border-white/[0.06] text-white h-11 focus:ring-violet-500/30">
+                            <SelectTrigger className="w-full bg-white/[0.02] border-white/10 text-white h-11 focus:ring-emerald-500/30">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-[#14141f] border-white/[0.08]">
@@ -295,8 +296,8 @@ export default function DataUpload() {
                             className={`
                 relative cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-300
                 ${isDragOver
-                                    ? 'border-violet-500/60 bg-violet-500/[0.06] scale-[1.01]'
-                                    : 'border-white/[0.06] bg-white/[0.015] hover:border-white/[0.12] hover:bg-white/[0.025]'
+                                    ? 'border-emerald-500/60 bg-emerald-500/[0.06] scale-[1.01]'
+                                    : 'border-white/10 bg-white/[0.01] hover:border-white/20 hover:bg-white/[0.02]'
                                 }
                 ${files.length > 0 ? 'py-8 px-6' : 'py-16 px-6'}
               `}
@@ -525,7 +526,7 @@ export default function DataUpload() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.25 }}
-                        className="mt-10 rounded-xl bg-white/[0.015] border border-white/[0.04] p-5"
+                        className="mt-10 rounded-xl bg-white/[0.01] border border-white/10 p-5"
                     >
                         <div className="flex items-start gap-3 mb-4">
                             <Info className="h-4 w-4 text-white/20 mt-0.5" />
