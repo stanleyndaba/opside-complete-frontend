@@ -20,6 +20,7 @@ import {
   Clock
 } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow, isAfter, subDays, subHours } from 'date-fns';
 
@@ -85,6 +86,9 @@ export default function NotificationHub() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const { tenant } = useTenant();
+  const activeSlug = tenant?.slug || 'beta';
+
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
@@ -98,7 +102,7 @@ export default function NotificationHub() {
       setLoading(true);
       setError(null);
       try {
-        const response = await api.getNotifications({ limit: 100 });
+        const response = await api.getNotifications({ limit: 100 }, activeSlug);
         if (!cancelled) {
           const notifData = response.ok
             ? (response.data?.notifications || response.data?.data || response.data || [])
@@ -209,7 +213,7 @@ export default function NotificationHub() {
   // Mark notification as read
   const handleMarkAsRead = async (notificationId: string) => {
     try {
-      const response = await api.markNotificationRead(notificationId);
+      const response = await api.markNotificationRead(notificationId, activeSlug);
       if (response.ok) {
         setNotifications(prev => prev.map(n =>
           n.id === notificationId ? { ...n, read: true } : n
@@ -233,7 +237,7 @@ export default function NotificationHub() {
   // Mark all notifications as read
   const handleMarkAllRead = async () => {
     try {
-      const response = await api.markAllNotificationsRead();
+      const response = await api.markAllNotificationsRead(activeSlug);
       if (response.ok) {
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
         toast({ title: 'Success', description: 'All notifications marked as read' });
@@ -256,7 +260,7 @@ export default function NotificationHub() {
   // Refresh notifications
   const handleRefresh = () => {
     setLoading(true);
-    api.getNotifications({ limit: 100 }).then(response => {
+    api.getNotifications({ limit: 100 }, activeSlug).then(response => {
       const notifData = response.ok
         ? (response.data?.notifications || response.data?.data || response.data || [])
         : [];
