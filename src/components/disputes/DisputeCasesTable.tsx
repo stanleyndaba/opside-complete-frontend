@@ -446,7 +446,7 @@ export function DisputeCasesTable() {
                               <MoreHorizontal className="w-3.5 h-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48 bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl font-mono text-[9px] uppercase tracking-widest p-1">
+                          <DropdownMenuContent align="end" className="w-48 bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl font-mono text-[11px] p-1">
                             <DropdownMenuItem asChild className="hover:bg-white/5 focus:bg-white/5 text-white/50 cursor-pointer rounded-lg px-3 py-2.5">
                               <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2">
                                 <Eye className="w-3 h-3 text-white/30" />
