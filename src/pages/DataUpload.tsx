@@ -222,7 +222,7 @@ export default function DataUpload() {
     const successCount = batchResult?.results?.filter(r => r.success).length || 0;
 
     return (
-        <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} midnight>
+        <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
             <div className="min-h-screen bg-[#050505] text-white relative">
                 {/* Noise Texture */}
                 <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
@@ -420,7 +420,7 @@ export default function DataUpload() {
                                 {isUploading ? (
                                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
                                 ) : (
-                                    <><Zap className="h-4 w-4 mr-2" />Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
+                                    <>Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
                                 )}
                             </Button>
                         ) : (
