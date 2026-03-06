@@ -811,7 +811,7 @@ export default function CaseDetail() {
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-light text-white tracking-tight font-mono">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                   </div>
-                  <p className="text-xs text-white/30 mt-1 font-mono tracking-tight">Claim Details | <span className="text-emerald-500 font-bold">{derivedConfidencePct}% Confident</span></p>
+                  <p className="text-xs text-white/30 mt-1 font-mono tracking-tight">Claim Details</p>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
@@ -820,7 +820,7 @@ export default function CaseDetail() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-8 border-emerald-500/30 text-xs font-bold text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors bg-transparent px-4"
+                      className="h-8 bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white transition-colors border-none px-4"
                     >
                       Review Discrepancy
                     </Button>
@@ -919,24 +919,24 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "px-8 py-4 text-[13px] font-bold transition-all duration-300 relative uppercase tracking-widest",
-                  activeTab === 'RECORD' ? "text-emerald-500" : "text-white/40 hover:text-white/60"
+                  "px-8 py-4 text-[13px] font-bold transition-all duration-300 relative uppercase",
+                  activeTab === 'RECORD' ? "text-white" : "text-white/40 hover:text-white/60"
                 )}>
                 CLAIM RECORD
                 <div className={cn(
-                  "absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500 transition-all duration-300 transform origin-left",
+                  "absolute bottom-0 left-0 right-0 h-[2px] bg-white transition-all duration-300 transform origin-left",
                   activeTab === 'RECORD' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
                 )} />
               </button>
               <button
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "px-8 py-4 text-[13px] font-bold transition-all duration-300 relative uppercase tracking-widest",
-                  activeTab === 'PROTOCOL' ? "text-emerald-500" : "text-white/40 hover:text-white/60"
+                  "px-8 py-4 text-[13px] font-bold transition-all duration-300 relative uppercase",
+                  activeTab === 'PROTOCOL' ? "text-white" : "text-white/40 hover:text-white/60"
                 )}>
                 RESOLUTION STEPS
                 <div className={cn(
-                  "absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500 transition-all duration-300 transform origin-left",
+                  "absolute bottom-0 left-0 right-0 h-[2px] bg-white transition-all duration-300 transform origin-left",
                   activeTab === 'PROTOCOL' ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
                 )} />
               </button>
