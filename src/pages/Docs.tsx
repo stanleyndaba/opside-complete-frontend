@@ -130,7 +130,7 @@ const Docs = () => {
               </h2>
               <div className="space-y-2 text-gray-700">
                 <p>
-                  Report suspected abuse at hello@margin.io
+                  Report suspected abuse at support@margin-finance.com
                 </p>
                 <p className="text-gray-500">
                   Internal escalation only — not for user support.

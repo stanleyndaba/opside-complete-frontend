@@ -47,7 +47,7 @@ export default function Contact() {
         const body = encodeURIComponent(
             `Name: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company || 'N/A'}\n\n${form.message}`
         );
-        window.open(`mailto:support@margin.io?subject=${subject}&body=${body}`, '_blank');
+        window.open(`mailto:support@margin-finance.com?subject=${subject}&body=${body}`, '_blank');
 
         setIsSubmitting(false);
         setIsSubmitted(true);
@@ -219,14 +219,14 @@ export default function Contact() {
                             <h2 className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase pl-2 mb-4">Direct Gateways</h2>
 
                             <a
-                                href="mailto:support@margin.io"
+                                href="mailto:support@margin-finance.com"
                                 className="flex items-center gap-4 p-5 rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-white/10 hover:bg-white/[0.02] transition-all group">
                                 <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all border border-white/10">
                                     <Mail className="h-5 w-5 text-white/40 group-hover:text-white" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-white uppercase tracking-tight">Technical Support</p>
-                                    <p className="text-sm text-white/40 font-mono">support@margin.io</p>
+                                    <p className="text-sm text-white/40 font-mono">support@margin-finance.com</p>
                                 </div>
                             </a>
 

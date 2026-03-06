@@ -212,7 +212,7 @@ const Terms = () => {
               </h2>
               <div className="space-y-2 text-gray-700">
                 <p>
-                  For questions about these Terms, contact us at hello@margin.io
+                  For questions about these Terms, contact us at support@margin-finance.com
                 </p>
               </div>
             </section>

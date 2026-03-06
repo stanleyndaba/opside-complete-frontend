@@ -164,7 +164,7 @@ const Privacy = () => {
               </h2>
               <div className="space-y-2 text-gray-700">
                 <p>
-                  For questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at hello@margin.io
+                  For questions about this Privacy Policy or our compliance with the Amazon DPP, contact us at support@margin-finance.com
                 </p>
               </div>
             </section>

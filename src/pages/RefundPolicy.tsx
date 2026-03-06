@@ -95,7 +95,7 @@ const RefundPolicy = () => {
                             </h2>
                             <div className="space-y-2 text-gray-700">
                                 <p>
-                                    For questions about billing or refunds, contact us at hello@margin.io
+                                    For questions about billing or refunds, contact us at support@margin-finance.com or billing@margin-finance.com
                                 </p>
                                 <p className="text-gray-500">
                                     Response time: Within 48 hours

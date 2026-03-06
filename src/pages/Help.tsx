@@ -239,7 +239,7 @@ export default function Help() {
                   </div>
                   <div>
                     <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest">Email Support</span>
-                    <span className="text-[11px] text-white/60">support@opside.app</span>
+                    <span className="text-[11px] text-white/60">support@margin-finance.com</span>
                   </div>
                 </div>
                 <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
@@ -248,7 +248,7 @@ export default function Help() {
                   </div>
                   <div>
                     <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest">Response Time</span>
-                    <span className="text-[11px] text-white/60">Under 24 Hours</span>
+                    <span className="text-[11px] text-white/60">12 Minutes</span>
                   </div>
                 </div>
               </div>

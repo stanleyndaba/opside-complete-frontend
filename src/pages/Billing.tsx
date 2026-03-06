@@ -890,7 +890,7 @@ export default function Billing() {
           <div className="text-center pt-32 pb-16">
             <p className="text-white/20 font-mono text-[10px] uppercase tracking-widest">
               Need direct protocol assistance?{' '}
-              <Link to={`/app/${tenantSlug || 'default'}/help`} className="text-emerald-500 hover:text-emerald-400 font-bold ml-2">Open Transmission</Link>
+              <a href="mailto:billing@margin-finance.com" className="text-emerald-500 hover:text-emerald-400 font-bold ml-2">billing@margin-finance.com</a>
             </p>
           </div>
         </div>

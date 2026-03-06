@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, ArrowRight, Activity, Terminal, Shield, Zap, Info, Clock, ExternalLink, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, ArrowRight, Activity, Terminal, Shield, Zap, Info, Clock, ExternalLink, Sparkles, Send } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -23,15 +23,6 @@ const updates = [{
   highlights: ["50% reduction in detection time", "More accurate claim categorization", "Improved false positive filtering"],
   cta: { text: "View Recoveries", href: "/recoveries" },
   updateId: "REF_003"
-}, {
-  id: 3,
-  title: "Dashboard Loading Issues on Mobile — Fixed",
-  date: "August 22, 2025",
-  tag: "Bug Fix",
-  description: "We've resolved the slow loading times some users experienced on mobile devices when accessing the Command Center.",
-  highlights: ["75% faster mobile load times", "Improved responsive design", "Better touch interactions"],
-  cta: null,
-  updateId: "REF_002"
 }, {
   id: 4,
   title: "Enhanced Evidence Locker with Document Preview",
@@ -141,15 +132,7 @@ export default function WhatsNew() {
                             ))}
                           </div>
 
-                          {/* CTA */}
-                          {update.cta && (
-                            <a
-                              href={update.cta.href}
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/5 border border-emerald-500/20 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all duration-300 rounded-lg text-xs font-mono uppercase tracking-widest"
-                            >
-                              Explore {update.cta.text} <ArrowRight className="h-3.5 w-3.5" />
-                            </a>
-                          )}
+
                         </div>
 
                         {/* Decorative Corner */}
@@ -164,22 +147,39 @@ export default function WhatsNew() {
             ))}
           </div>
 
-          {/* Feedback Section */}
+          {/* Support & Feedback Section */}
           <motion.footer
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             className="mt-20 pt-12 border-t border-white/5 text-center"
           >
-            <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 bg-white/[0.02] border border-white/5 rounded-full">
+            {/* Support Button */}
+            <div className="flex flex-col items-center gap-3 mb-10">
+              <a
+                href="mailto:support@margin-finance.com"
+                className="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all duration-300 text-sm font-semibold text-emerald-500 uppercase tracking-widest"
+              >
+                Support
+              </a>
+              <span className="text-[9px] font-mono text-white/20 tracking-widest uppercase">12 minute response time</span>
+            </div>
+
+            <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 bg-white/[0.02] border border-white/5 rounded-full">
               <Zap className="h-3 w-3 text-emerald-500" />
               <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">Feedback Channel Open</span>
             </div>
-            <p className="text-sm text-gray-500 font-light italic">
-              Have a feature request?{' '}
-              <a href="mailto:support@margin.io" className="text-white hover:text-emerald-500 font-mono transition-colors ml-1">
-                CONTACT_SUPPORT
-              </a>
-            </p>
+            <div className="max-w-xl mx-auto">
+              <div className="relative group">
+                <input
+                  type="text"
+                  placeholder="Changelogs and user feature request"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-300 pr-12 font-light"
+                />
+                <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all duration-300">
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           </motion.footer>
         </div>
       </div>
