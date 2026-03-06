@@ -15,7 +15,7 @@ import {
   FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
   ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
   Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X, AlertTriangle,
-  ChevronDown, Clock, Terminal, MoreVertical
+  ChevronDown, Clock, Terminal, MoreVertical, Files
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
 import { supabase } from '@/lib/supabaseClient';
@@ -339,6 +339,7 @@ export function Dashboard() {
   const syncCheckTimeoutRef = useRef<number | null>(null);
   const upcomingPaymentsLoadedRef = useRef(false);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
+  const [quickNoticeOpen, setQuickNoticeOpen] = useState<boolean>(false);
   // Evidence stats
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [gmailConnected, setGmailConnected] = useState<boolean>(false);
@@ -451,6 +452,13 @@ export function Dashboard() {
       return Array.isArray(parsed) && parsed.length > 0 ? parsed : ['ingest_now', 'invite_teammate'];
     } catch { return ['ingest_now', 'invite_teammate']; }
   });
+
+  // Auto-persist quick actions to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions));
+    } catch { }
+  }, [selectedQuickActions]);
   const QUICK_ActionS: Array<{ id: string; label: string; subtitle: string }> = [
     { id: 'connect_evidence', label: 'Connect sources', subtitle: 'Sync evidence sources' },
     { id: 'review_high_conf', label: 'High confidence', subtitle: 'Audit verified claims' },
@@ -642,7 +650,7 @@ export function Dashboard() {
           setNextPaymentDate(data.next_payment_date ?? null);
           setSuccessRate(data.success_rate ?? null);
           setApprovedClaimsThisMonth(data.approved_claims_this_month ?? null);
-          setSettlementRate(data.settlement_rate ?? null);
+          if (typeof data.settlement_rate === 'number') setSettlementRate(data.settlement_rate);
           setLastUpdated(new Date().toISOString());
 
           if (data.syncTriggered || data.needsSync) {
@@ -962,6 +970,7 @@ export function Dashboard() {
         });
       } else {
         console.warn('[Dashboard] No dispute cases returned');
+        setSettlementRate(0);
       }
     } catch (error) {
       console.error('[Dashboard] Failed to fetch dispute metrics:', error);
@@ -1103,6 +1112,12 @@ export function Dashboard() {
                     </div>
                   </div>
                 </div>
+                <button
+                  onClick={() => setQuickNoticeOpen(true)}
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-mono font-bold uppercase tracking-wider rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(37,99,235,0.3)] hover:shadow-[0_0_20px_rgba(37,99,235,0.5)]"
+                >
+                  Quick Notice
+                </button>
               </div>
 
               {activeTab === 'overview' ? (
@@ -1587,7 +1602,7 @@ export function Dashboard() {
                           <div className="flex flex-col">
                             <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">DISCREPANCIES</span>
                             <span className="text-lg font-mono font-bold text-white leading-none mt-1">
-                              {detectionResults.filter(r => r.status === 'detected').length}
+                              {detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed').length}
                             </span>
                           </div>
 
@@ -1598,7 +1613,7 @@ export function Dashboard() {
                             <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest group-hover:text-emerald-500/50">CLAIMS</span>
                             <div className="flex items-center gap-2 mt-1">
                               <span className="text-lg font-mono font-bold text-white leading-none group-hover:text-emerald-500">
-                                {submittedClaimsCount || effectivePendingClaims || 0}
+                                {submittedClaimsCount || effectivePendingClaims || detectionResults.filter(r => r.status === 'filed' || r.status === 'resolved' || r.status === 'converted').length}
                               </span>
                               <ArrowRight className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                             </div>
@@ -1607,7 +1622,12 @@ export function Dashboard() {
                           <div className="flex flex-col">
                             <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">RECOVERED</span>
                             <span className="text-lg font-mono font-bold text-emerald-500 leading-none mt-1">
-                              {formatCurrencyWithSelection(recoveredTotal || 0, recoveredCurrency)}
+                              {formatCurrencyWithSelection(
+                                recoveredTotal || detectionResults
+                                  .filter(r => r.status === 'resolved' || r.status === 'converted')
+                                  .reduce((sum, r) => sum + (r.estimated_value || 0), 0),
+                                recoveredCurrency
+                              )}
                             </span>
                           </div>
                         </div>
@@ -1957,6 +1977,46 @@ export function Dashboard() {
               onClick={() => { try { localStorage.setItem('clario.quickActions', JSON.stringify(selectedQuickActions)); toast({ title: 'PROTOCOL_UPDATED_SECURELY' }); } catch { } setQuickActionsEditOpen(false); }}
             >
               SAVE_CONFIGURATION
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Quick Notice Modal */}
+      <Dialog open={quickNoticeOpen} onOpenChange={setQuickNoticeOpen}>
+        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-2xl">
+          <DialogHeader className="px-8 pt-8 pb-6 border-b border-white/5 bg-white/[0.01]">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="h-10 w-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
+                <Files className="h-5 w-5 text-blue-400" />
+              </div>
+              <div>
+                <DialogTitle className="text-base font-serif text-white tracking-tight">
+                  Data uploads will be gone soon
+                </DialogTitle>
+                <DialogDescription className="text-[10px] text-blue-400/50 font-mono mt-0.5 uppercase tracking-[0.2em]">
+                  PLATFORM UPDATE
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="px-8 py-6">
+            <p className="text-[13px] text-white/50 leading-relaxed font-serif">
+              We're transitioning the platform to <span className="text-white font-medium">full API-based control</span>, which means you'll be able to connect your accounts once and let the system handle everything automatically — a true <span className="text-white font-medium">set-it-and-forget-it</span> experience.
+            </p>
+            <p className="text-[13px] text-white/50 leading-relaxed font-serif mt-4">
+              Manual data uploads will become a <span className="text-white font-medium">secondary backup option</span>, available only if the API connection is temporarily unavailable on any given day. This change ensures faster, more reliable, and fully end-to-end processing of your recoveries.
+            </p>
+            <p className="text-[13px] text-white/40 leading-relaxed font-serif mt-4 italic">
+              We appreciate your patience as we roll this out. Your experience matters to us, and this upgrade is designed to make things easier for you.
+            </p>
+          </div>
+          <div className="px-8 py-5 border-t border-white/5 bg-white/[0.02] flex justify-end">
+            <button
+              onClick={() => setQuickNoticeOpen(false)}
+              className="px-6 py-2.5 text-[10px] font-mono font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+            >
+              Got It
             </button>
           </div>
         </DialogContent>

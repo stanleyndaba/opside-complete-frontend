@@ -97,12 +97,13 @@ export default function TransactionHistory() {
                     // Map dispute cases to transaction format
                     const mapped: Transaction[] = transactionCases.map((c: any) => {
                         const amount = parseFloat(String(c.amount ?? c.claim_amount ?? c.actual_payout_amount ?? 0)) || 0;
-                        const originalAmount = parseFloat(String(c.claim_amount ?? c.amount ?? 0)) * 1.08; // Mocking original slightly higher
+                        const claimAmount = parseFloat(String(c.claim_amount ?? c.amount ?? 0)) || 0;
                         const feePercent = 20;
                         const feeAmount = amount * (feePercent / 100);
                         const status = (c.status || '').toLowerCase();
+                        const meta = c.metadata || {};
 
-                        // Extract ASIN/Category from description or case_type
+                        // Extract category from case_type or description
                         const desc = (c.description || c.case_type || '').toUpperCase();
                         let category = '[RECOVERY]';
                         if (desc.includes('WEIGHT') || desc.includes('DIMENSION')) category = '[WEIGHT_FEE]';
@@ -111,8 +112,10 @@ export default function TransactionHistory() {
                         else if (desc.includes('STORAGE')) category = '[STORAGE]';
                         else if (desc.includes('DAMAGED')) category = '[DAMAGED]';
 
-                        const errorStartDate = new Date(new Date(c.created_at || Date.now()).getTime() - (90 + Math.random() * 60) * 24 * 3600000);
-                        const errorEndDate = new Date(errorStartDate.getTime() + (Math.random() * 30) * 24 * 3600000);
+                        // Use real dates from the case metadata or created_at
+                        const caseCreated = c.created_at ? new Date(c.created_at) : new Date();
+                        const errorStart = meta.error_start_date || meta.discrepancy_date || c.created_at || new Date().toISOString();
+                        const errorEnd = meta.error_end_date || c.updated_at || c.created_at || new Date().toISOString();
 
                         return {
                             id: c.id,
@@ -130,17 +133,17 @@ export default function TransactionHistory() {
                                     : status === 'disputed' ? 'disputed'
                                         : 'pending',
                             stripeLastFour: c.stripe_last_four || null,
-                            // Enhanced fields
-                            asin: c.metadata?.asin || c.asin || 'B0' + Math.random().toString(36).substring(2, 9).toUpperCase(),
-                            sku: c.metadata?.sku || c.sku || 'SKU-' + Math.random().toString(36).substring(2, 6).toUpperCase(),
-                            units: c.metadata?.units || Math.floor(Math.random() * 50) + 1,
-                            originalClaimAmount: originalAmount,
-                            recoveryRate: originalAmount > 0 ? (amount / originalAmount) * 100 : 100,
+                            // Real data fields — use '-' for missing
+                            asin: c.asin || meta.asin || meta.fnsku || '-',
+                            sku: c.sku || meta.sku || '-',
+                            units: meta.units || meta.expected_qty || meta.quantity || null,
+                            originalClaimAmount: claimAmount > 0 ? claimAmount : amount,
+                            recoveryRate: claimAmount > 0 ? (amount / claimAmount) * 100 : (amount > 0 ? 100 : 0),
                             category,
-                            errorDate: errorStartDate.toISOString(),
+                            errorDate: errorStart,
                             filedDate: c.created_at || new Date().toISOString(),
                             paidDate: status === 'paid' ? c.updated_at || new Date().toISOString() : undefined,
-                            description: `${format(errorStartDate, 'yyyy-MM-dd')} to ${format(errorEndDate, 'yyyy-MM-dd')}`
+                            description: `${format(new Date(errorStart), 'yyyy-MM-dd')} to ${format(new Date(errorEnd), 'yyyy-MM-dd')}`
                         };
                     });
 
@@ -412,7 +415,13 @@ export default function TransactionHistory() {
         doc.setTextColor(RICH_BLACK);
         doc.text(`${summary.inProgressCount} CASES (${formatUSD(summary.inProgressAmount)})`, 18, currentY + 11);
         doc.text(`${summary.deniedCount} CASES (${formatUSD(summary.deniedAmount)})`, 18 + colWidth, currentY + 11);
-        doc.text(`122 DAYS (FORENSIC SCALE)`, 18 + colWidth * 2, currentY + 11);
+        const avgClaimAge = filteredTransactions.length > 0
+            ? Math.round(filteredTransactions.reduce((sum, t) => {
+                const created = new Date(t.filedDate || t.date);
+                return sum + Math.max(0, Math.floor((Date.now() - created.getTime()) / (24 * 3600000)));
+            }, 0) / filteredTransactions.length)
+            : 0;
+        doc.text(`${avgClaimAge} DAYS`, 18 + colWidth * 2, currentY + 11);
 
         currentY += 25;
 
@@ -452,7 +461,7 @@ export default function TransactionHistory() {
                 `${t.asin}\n${t.sku}`,
                 `AMZ: ${t.caseId}\nINT: ${t.reimbursementId}`,
                 `${categoryLabel}\nEP: ${t.description}`,
-                t.units,
+                t.units ?? '-',
                 formatUSD(t.originalClaimAmount || 0),
                 `${t.recoveryRate?.toFixed(0)}%`,
                 formatUSD(t.recoveredAmount),
@@ -761,7 +770,7 @@ export default function TransactionHistory() {
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-6 text-center font-mono text-[11px] text-white/60">
-                                                        {transaction.units}
+                                                        {transaction.units ?? '-'}
                                                     </td>
                                                     <td className="px-6 py-6 text-right font-mono text-[11px] text-white/40">
                                                         ${transaction.originalClaimAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 })}

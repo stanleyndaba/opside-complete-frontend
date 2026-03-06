@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 import { useTenant } from '@/contexts/TenantContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { tenantRoute } from '@/lib/routes';
@@ -140,17 +141,19 @@ export function Sidebar({
     })();
   }, [isReady, currentTenantSlug]);
 
-  // Fetch claim count
+  // Fetch claim count — use the SAME data source as the Recoveries page table
   React.useEffect(() => {
     if (!isReady) return;
+    let cancelled = false;
     (async () => {
       try {
-        const r = await api.getRecoveriesMetrics(currentTenantSlug);
-        if (r.ok && r.data?.totalClaimsFound !== undefined) {
-          setClaimCount(r.data.totalClaimsFound);
+        const recoveries = await recoveryApi.getRecoveries(currentTenantSlug);
+        if (!cancelled && Array.isArray(recoveries)) {
+          setClaimCount(recoveries.length);
         }
       } catch { }
     })();
+    return () => { cancelled = true; };
   }, [currentTenantSlug, isReady]);
 
   // Check if we're on the Dashboard (Command Center) page
