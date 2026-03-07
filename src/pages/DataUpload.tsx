@@ -684,7 +684,7 @@ export default function DataUpload() {
                                                         </div>
                                                     ))}
                                                 </div>
-                                                <div className="mt-4">
+                                                <div className="mt-4 flex justify-end">
                                                     <button className="text-[9px] font-mono font-bold text-violet-600 hover:text-violet-700 uppercase tracking-widest flex items-center gap-1 group">
                                                         See More
                                                         <span className="group-hover:translate-x-0.5 transition-transform">→</span>
@@ -714,7 +714,7 @@ export default function DataUpload() {
                                             </div>
                                             
                                             <div className="flex-1 overflow-auto p-6">
-                                                <div className="w-full max-w-2xl">
+                                                <div className="w-full">
                                                     <table className="w-full">
                                                         <thead>
                                                             <tr className="border-b border-gray-50">
@@ -747,9 +747,9 @@ export default function DataUpload() {
                                                                     <span className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Total Estimated Recovery</span>
                                                                 </td>
                                                                 <td className="py-6 text-right">
-                                                                    <div className="flex items-center justify-end gap-6">
-                                                                        <span className="text-2xl font-bold font-sans text-gray-900 tracking-tighter">$4,987.00</span>
-                                                                        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95">
+                                                                    <div className="flex items-center justify-end gap-12">
+                                                                        <span className="text-base font-bold font-sans text-gray-900 tracking-tight">$4,987.00</span>
+                                                                        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95 whitespace-nowrap">
                                                                             <Upload size={14} className="stroke-[3]" />
                                                                             FILE FOR CASES
                                                                         </button>
