@@ -620,6 +620,7 @@ export default function DataUpload() {
                                         >
                                             <Share2 className="h-4 w-4" />
                                             Share
+                                            Import and Share
                                         </button>
                                         <button
                                             onClick={() => setIsPreviewOpen(false)}
