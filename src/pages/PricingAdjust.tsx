@@ -193,8 +193,6 @@ export default function PricingAdjust() {
           </motion.div>
         </div>
       </div>
-        </div>
-      </div>
     </PageLayout>
   );
 }
