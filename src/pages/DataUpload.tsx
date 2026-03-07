@@ -640,18 +640,25 @@ export default function DataUpload() {
                                                 <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Seller details</h3>
                                                 <ul className="space-y-1.5">
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Seller Account:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">Active_Merchant_Store_01</span>
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Account:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">[Brand Name] (redacted ID: ***1234)</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Amazon reimbursement:</span>
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Marketplace:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight uppercase">US / UK / EU</span>
+                                                    </li>
+                                                    <li className="flex items-baseline gap-2">
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Discrepancies:</span>
                                                         <span className="text-[11px] font-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Period:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">3 Month data</span>
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Period analysed:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">2024/10/01 to 2025/03/01</span>
                                                     </li>
                                                 </ul>
+                                                <p className="mt-3 text-[9px] font-mono text-gray-400 italic leading-tight">
+                                                    based on your uploaded CSVs and Amazon's reimbursement policies.
+                                                </p>
                                             </div>
 
                                             {/* Lower-space: Eventual data breakdown */}
