@@ -11,7 +11,7 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 export default function PricingAdjust() {
   return (
     <PageLayout title="Pricing Adjust" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
-      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center justify-center overflow-hidden font-sans">
+      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center pt-32 md:pt-40 lg:pt-48 pb-24 overflow-hidden font-sans px-6 lg:px-10">
         <PublicNavbar />
         {/* Noise Texture Overlay */}
         <div 
