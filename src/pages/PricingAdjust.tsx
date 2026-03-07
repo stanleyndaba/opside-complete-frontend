@@ -6,11 +6,13 @@ import { motion } from 'framer-motion';
 import { Check, ArrowRight, Sparkles, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BrandFooter } from '@/components/layout/BrandFooter';
+import { PublicNavbar } from '@/components/layout/PublicNavbar';
 
 export default function PricingAdjust() {
   return (
     <PageLayout title="Pricing Adjust" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
-      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center justify-center p-6 lg:p-10 overflow-hidden font-sans">
+      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center justify-center overflow-hidden font-sans">
+        <PublicNavbar />
         {/* Noise Texture Overlay */}
         <div 
           className="fixed inset-0 pointer-events-none opacity-[0.03] z-[1]" 
@@ -28,7 +30,7 @@ export default function PricingAdjust() {
           >
             <div className="flex flex-col items-center gap-4">
               <Badge variant="outline" className="text-[10px] font-bold uppercase border-white/10 text-white/70 px-5 py-1.5 bg-white/5 backdrop-blur-sm">
-                Pricing
+                Margin Pricing
               </Badge>
               <div className="h-px w-12 bg-white/10" />
             </div>
