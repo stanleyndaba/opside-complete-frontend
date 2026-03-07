@@ -50,23 +50,23 @@ export default function PricingAdjust() {
               className="group relative flex flex-col"
             >
               <div className="absolute inset-0 bg-white/[0.01] rounded-2xl border border-white/5 group-hover:bg-white/[0.02] group-hover:border-white/10 transition-all duration-500 backdrop-blur-[2px]" />
-              <div className="relative p-10 flex flex-col h-full z-10">
-                <div className="mb-10">
+              <div className="relative p-8 flex flex-col h-full z-10">
+                <div className="mb-6">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest px-2 py-0.5 border border-white/5">Option 1</span>
                     <div className="h-px flex-1 bg-white/5" />
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Standard Recovery</h2>
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Standard</h2>
                     <span className="text-[10px] text-white/30 uppercase tracking-widest">(Default)</span>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <span className="text-[11px] font-bold text-white/40 uppercase tracking-widest">Includes:</span>
+                  <span className="text-[11px] font-bold text-white/40">Includes:</span>
                 </div>
 
-                <div className="space-y-6 flex-grow mb-12">
+                <div className="space-y-6 flex-grow mb-8">
                   <div className="flex items-start gap-4">
                     <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                       <DollarSign className="h-3 w-3 text-white/40" />
@@ -119,8 +119,8 @@ export default function PricingAdjust() {
             >
               <div className="absolute inset-0 bg-white/[0.02] rounded-2xl border border-white/10 group-hover:bg-white/[0.04] group-hover:border-white/20 transition-all duration-500 backdrop-blur-sm" />
               
-              <div className="relative p-10 flex flex-col h-full z-10">
-                <div className="mb-10">
+              <div className="relative p-8 flex flex-col h-full z-10">
+                <div className="mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3 flex-1">
                       <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-2 py-0.5 border border-white/10">Option 2</span>
@@ -129,15 +129,15 @@ export default function PricingAdjust() {
                     <span className="text-[10px] font-bold text-white uppercase ml-4 tracking-tighter">Highly recommended</span>
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Priority Audit Pass</h2>
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Priority</h2>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <span className="text-[11px] font-bold text-white/40 uppercase tracking-widest">Everything in Standard, plus:</span>
+                  <span className="text-[11px] font-bold text-white/40">Everything in Standard, plus:</span>
                 </div>
 
-                <div className="space-y-6 flex-grow mb-12">
+                <div className="space-y-6 flex-grow mb-8">
                   <div className="flex items-start gap-4">
                     <div className="mt-1 h-6 w-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.05)]">
                       <Zap className="h-3 w-3 text-white/80 fill-white" />
@@ -153,7 +153,7 @@ export default function PricingAdjust() {
                       <Search className="h-3 w-3 text-white/60" />
                     </div>
                     <div>
-                      <p className="text-sm text-white font-medium">18-Month Historical Deep Dive</p>
+                      <p className="text-sm text-white font-medium">18-Month Historical Deep Audit</p>
                       <p className="text-[11px] text-white/30 uppercase tracking-normal">Full account reconciliation scan</p>
                     </div>
                   </div>
@@ -169,7 +169,7 @@ export default function PricingAdjust() {
                     <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                       <CheckCircle2 className="h-3 w-3 text-white/60" />
                     </div>
-                    <p className="text-sm text-white/80">Priority preparation and case follow-ups.</p>
+                    <p className="text-sm text-white/80">Priority support, and case follow ups</p>
                   </div>
                 </div>
 
