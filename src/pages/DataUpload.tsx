@@ -12,7 +12,7 @@ import { api } from '@/lib/api';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
     Package, Truck, RotateCcw, DollarSign, Archive, Target,
-    Zap, ChevronRight, Info, Coins
+    Zap, ChevronRight, Info, Coins, Share2
 } from 'lucide-react';
 
 // Supported CSV types
@@ -614,12 +614,20 @@ export default function DataUpload() {
                                             <p className="text-[10px] font-mono font-bold text-emerald-600 uppercase mt-0.5">Recovery: $4,987.00</p>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => setIsPreviewOpen(false)}
-                                        className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors"
-                                    >
-                                        <X className="h-5 w-5" />
-                                    </button>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-mono font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase"
+                                        >
+                                            <Share2 className="h-4 w-4" />
+                                            Share
+                                        </button>
+                                        <button
+                                            onClick={() => setIsPreviewOpen(false)}
+                                            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors"
+                                        >
+                                            <X className="h-5 w-5" />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Drawer Content populated with hardcoded data */}
