@@ -608,10 +608,18 @@ export default function DataUpload() {
                                 {/* Drawer Header */}
                                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                                     <div>
-                                        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-tight">Audit Report</h2>
-                                        <div className="flex flex-col">
-                                            <p className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Reimbursement seller account overview</p>
-                                            <p className="text-[10px] font-mono font-bold text-emerald-600 uppercase mt-0.5">Recovery: $4,987.00</p>
+                                        <div className="flex items-center gap-2.5 mb-1">
+                                            <img 
+                                                src="/logoimagetwo.png" 
+                                                alt="Margin Finance" 
+                                                className="h-3.5 w-auto object-contain brightness-0"
+                                            />
+                                            <span className="text-gray-200 font-light text-sm">|</span>
+                                            <h2 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.3em]">Audit Report</h2>
+                                        </div>
+                                        <div className="flex flex-col px-0.5">
+                                            <p className="text-[8px] font-mono text-gray-300 uppercase tracking-widest leading-none">Reimbursement seller account overview</p>
+                                            <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">Recovery: $4,987.00</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
