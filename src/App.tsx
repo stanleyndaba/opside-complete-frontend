@@ -204,6 +204,9 @@ const App = () => (
                     <Route path="/reconnect-amazon" element={<TenantRedirect />} />
                     <Route path="/billing" element={<TenantRedirect />} />
                     <Route path="/upcoming-payments" element={<TenantRedirect />} />
+                    <Route path="/admin/queue" element={<TenantRedirect />} />
+                    <Route path="/admin/users-integrations" element={<TenantRedirect />} />
+                    <Route path="/pricing-adjust" element={<TenantRedirect />} />
 
                     {/* 404 Catch All */}
                     <Route path="*" element={<NotFound />} />

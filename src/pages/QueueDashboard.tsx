@@ -90,7 +90,7 @@ export default function QueueDashboard() {
         : 0;
 
     return (
-        <PageLayout>
+        <PageLayout title="Queue Dashboard" midnight>
             <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; }

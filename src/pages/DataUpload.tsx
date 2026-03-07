@@ -236,20 +236,33 @@ export default function DataUpload() {
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mb-8"
+                        className="mb-8 flex flex-col md:flex-row md:items-start md:justify-between gap-6"
                     >
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/10">
-                                <Upload className="h-5 w-5 text-violet-400" />
+                        <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/10">
+                                    <Upload className="h-5 w-5 text-violet-400" />
+                                </div>
+                                <h1 className="text-2xl font-semibold tracking-tight">Data Upload</h1>
+                                <Badge variant="outline" className="text-[10px] font-mono tracking-widest uppercase border-violet-500/30 text-violet-400 ml-2">
+                                    CSV Ingestion
+                                </Badge>
                             </div>
-                            <h1 className="text-2xl font-semibold tracking-tight">Data Upload</h1>
-                            <Badge variant="outline" className="text-[10px] font-mono tracking-widest uppercase border-violet-500/30 text-violet-400 ml-2">
-                                CSV Ingestion
-                            </Badge>
+                            <p className="text-sm text-white/40 max-w-xl">
+                                Upload Amazon Seller Central CSV reports to feed the detection pipeline. Your data flows directly into Agent 3's 26 claim detection algorithms.
+                            </p>
                         </div>
-                        <p className="text-sm text-white/40 max-w-xl">
-                            Upload Amazon Seller Central CSV reports to feed the detection pipeline. Your data flows directly into Agent 3's 26 claim detection algorithms.
-                        </p>
+                        
+                        <Button 
+                            asChild
+                            variant="outline" 
+                            className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all font-mono text-[10px] uppercase tracking-widest h-10 px-6 rounded-xl"
+                        >
+                            <Link to={`/app/${currentTenantSlug}/pricing-adjust`}>
+                                <DollarSign className="mr-2 h-3.5 w-3.5" />
+                                Pricing Tiers
+                            </Link>
+                        </Button>
                     </motion.div>
 
                     {/* Type Selector */}

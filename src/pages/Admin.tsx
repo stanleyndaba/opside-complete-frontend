@@ -186,6 +186,9 @@ export default function Admin() {
                 <Button asChild className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-10 px-6 font-mono uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(255,255,255,0.05)]">
                   <a href="/revenue-model">Launch Revenue Model</a>
                 </Button>
+                <Button variant="outline" asChild className="border-white/10 hover:border-white/20 hover:bg-white/5 text-white h-10 px-6 font-mono uppercase tracking-widest text-[10px] rounded-xl text-emerald-500 border-emerald-500/20 bg-emerald-500/5">
+                  <a href="/admin/queue">System Queue</a>
+                </Button>
                 <Button variant="outline" asChild className="border-white/10 hover:border-white/20 hover:bg-white/5 text-white h-10 px-6 font-mono uppercase tracking-widest text-[10px] rounded-xl">
                   <a href="/admin/users-integrations">Manage User Terminals</a>
                 </Button>
