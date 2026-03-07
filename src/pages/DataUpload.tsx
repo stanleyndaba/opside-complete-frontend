@@ -733,7 +733,7 @@ export default function DataUpload() {
                                                                 <tr key={idx} className="group">
                                                                     <td className="py-2">
                                                                         <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
-                                                                        <p className="text-[9px] font-mono text-gray-300 uppercase mt-0.5">{row.sub}</p>
+                                                                        <p className="text-[9px] font-mono text-gray-300 uppercase mt-0.5">{row.sub} | {row.status}</p>
                                                                     </td>
                                                                     <td className="py-2 text-right align-top">
                                                                         <span className="text-xs font-bold text-gray-900 font-mono">{row.amount}</span>
