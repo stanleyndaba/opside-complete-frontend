@@ -619,11 +619,106 @@ export default function DataUpload() {
                                     </button>
                                 </div>
 
-                                {/* Drawer Content (Blank for now as requested) */}
-                                <div className="flex-1 overflow-auto p-8 bg-white">
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-center opacity-20">
-                                        <FileSpreadsheet className="h-16 w-16 text-gray-400 mb-4" />
-                                        <p className="text-gray-400 font-medium">Ready for data ingestion</p>
+                                {/* Drawer Content populated with hardcoded data */}
+                                <div className="flex-1 overflow-hidden bg-white">
+                                    <div className="flex h-full w-full">
+                                        {/* Left Column - Split into 2 vertical spaces */}
+                                        <div className="w-1/3 border-r border-gray-100 flex flex-col">
+                                            {/* Upper-space: Seller details */}
+                                            <div className="p-8 border-b border-gray-100">
+                                                <h3 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Seller details</h3>
+                                                <ul className="space-y-4">
+                                                    <li className="flex flex-col">
+                                                        <span className="text-[10px] font-mono text-gray-300 uppercase">Seller Account</span>
+                                                        <span className="text-sm font-semibold text-gray-900 font-sans tracking-tight">Active_Merchant_Store_01</span>
+                                                    </li>
+                                                    <li className="flex flex-col">
+                                                        <span className="text-[10px] font-mono text-gray-300 uppercase">Amazon reimbursement</span>
+                                                        <span className="text-sm font-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
+                                                    </li>
+                                                    <li className="flex flex-col">
+                                                        <span className="text-[10px] font-mono text-gray-300 uppercase">Period</span>
+                                                        <span className="text-sm font-semibold text-gray-900 font-sans tracking-tight">3 Month data</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            {/* Lower-space: Eventual data breakdown */}
+                                            <div className="p-8 flex-1 bg-gray-50/30">
+                                                <h3 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
+                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">
+                                                    Events that led to the miscalculation
+                                                </p>
+                                                
+                                                <div className="mt-8 space-y-6">
+                                                    {[
+                                                        { label: 'Inbound Discrepancy', date: 'Oct 12', status: 'Flagged' },
+                                                        { label: 'Fee Overcharge', date: 'Oct 15', status: 'Calculated' },
+                                                        { label: 'Lost in Warehouse', date: 'Nov 02', status: 'Verified' }
+                                                    ].map((item, idx) => (
+                                                        <div key={idx} className="flex items-center justify-between group">
+                                                            <div className="flex flex-col">
+                                                                <span className="text-[11px] font-bold text-gray-800 font-sans">{item.label}</span>
+                                                                <span className="text-[9px] font-mono text-gray-300 uppercase">{item.date}</span>
+                                                            </div>
+                                                            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white border border-gray-100 text-gray-400 group-hover:bg-violet-50 group-hover:text-violet-500 group-hover:border-violet-100 transition-colors">
+                                                                {item.status}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Column - Full Detailed Data */}
+                                        <div className="flex-1 flex flex-col">
+                                            <div className="p-8 border-b border-gray-100">
+                                                <h3 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-1">Full Data</h3>
+                                                <p className="text-xs text-gray-400 font-sans">your full cost breakdown</p>
+                                            </div>
+                                            
+                                            <div className="flex-1 overflow-auto p-8">
+                                                <div className="w-full max-w-2xl">
+                                                    <table className="w-full">
+                                                        <thead>
+                                                            <tr className="border-b border-gray-50">
+                                                                <th className="text-left py-4 text-[10px] font-mono text-gray-300 uppercase tracking-widest">Description</th>
+                                                                <th className="text-right py-4 text-[10px] font-mono text-gray-300 uppercase tracking-widest">Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y divide-gray-50">
+                                                            {[
+                                                                { item: 'Lost shipment (Inbound #FBA17Z2K)', amount: '$1,245.50', sub: 'Detected in Oct Audit' },
+                                                                { item: 'Inventory damaged by Warehouse', amount: '$840.20', sub: 'FNSKU: B07XJ8L9S1' },
+                                                                { item: 'Missing units in removal order', amount: '$312.00', sub: 'Order #114-9283741' },
+                                                                { item: 'Weight/Dimension Fee Drift', amount: '$156.40', sub: '12 SKUs affected' },
+                                                                { item: 'Lost Inventory (Reconciliation Gap)', amount: '$2,432.90', sub: '180-day historical window' },
+                                                            ].map((row, idx) => (
+                                                                <tr key={idx} className="group">
+                                                                    <td className="py-5">
+                                                                        <p className="text-sm font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
+                                                                        <p className="text-[10px] font-mono text-gray-300 uppercase mt-0.5">{row.sub}</p>
+                                                                    </td>
+                                                                    <td className="py-5 text-right align-top">
+                                                                        <span className="text-sm font-bold text-gray-900 font-mono">{row.amount}</span>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr className="border-t border-gray-100">
+                                                                <td className="py-6">
+                                                                    <span className="text-sm font-mono font-bold text-gray-400 uppercase tracking-widest">Total Estimated Recovery</span>
+                                                                </td>
+                                                                <td className="py-6 text-right">
+                                                                    <span className="text-xl font-bold font-sans text-gray-900">$4,987.00</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
