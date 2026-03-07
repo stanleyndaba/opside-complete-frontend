@@ -33,7 +33,7 @@ export default function PricingAdjust() {
             </div>
             
             <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white/95 leading-tight max-w-4xl">
-              Select your <span className="font-medium text-white">Recovery Option</span>
+              Pricing
             </h1>
             <p className="text-sm md:text-base text-white/40 tracking-tight max-w-2xl mx-auto">
               Choose how you want Margin to monitor and recover your Amazon reimbursements.
@@ -41,16 +41,16 @@ export default function PricingAdjust() {
           </motion.div>
 
           {/* Pricing Options Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl items-stretch">
             {/* Option 1: Standard Recovery */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative"
+              className="group relative flex flex-col"
             >
               <div className="absolute inset-0 bg-white/[0.01] rounded-2xl border border-white/5 group-hover:bg-white/[0.02] group-hover:border-white/10 transition-all duration-500 backdrop-blur-[2px]" />
-              <div className="relative p-10 flex flex-col h-full">
+              <div className="relative p-10 flex flex-col h-full z-10">
                 <div className="mb-10">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest px-2 py-0.5 border border-white/5">Option 1</span>
@@ -60,6 +60,10 @@ export default function PricingAdjust() {
                     <h2 className="text-2xl font-bold text-white tracking-tight">Standard Recovery</h2>
                     <span className="text-[10px] text-white/30 uppercase tracking-widest">(Default)</span>
                   </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-[11px] font-bold text-white/40 uppercase tracking-widest">Includes:</span>
                 </div>
 
                 <div className="space-y-6 flex-grow mb-12">
@@ -111,25 +115,26 @@ export default function PricingAdjust() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative"
+              className="group relative flex flex-col"
             >
               <div className="absolute inset-0 bg-white/[0.02] rounded-2xl border border-white/10 group-hover:bg-white/[0.04] group-hover:border-white/20 transition-all duration-500 backdrop-blur-sm" />
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
-                <Badge className="bg-white text-black text-[10px] font-bold tracking-widest uppercase px-5 py-1 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                  Highly Recommended
-                </Badge>
-              </div>
               
-              <div className="relative p-10 flex flex-col h-full">
+              <div className="relative p-10 flex flex-col h-full z-10">
                 <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-2 py-0.5 border border-white/10">Option 2</span>
-                    <Sparkles className="h-3 w-3 text-white/60" />
-                    <div className="h-px flex-1 bg-white/10" />
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3 flex-1">
+                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-2 py-0.5 border border-white/10">Option 2</span>
+                      <div className="h-px flex-1 bg-white/10" />
+                    </div>
+                    <span className="text-[10px] font-bold text-white uppercase ml-4 tracking-tighter">Highly recommended</span>
                   </div>
                   <div className="flex items-baseline gap-2">
                     <h2 className="text-2xl font-bold text-white tracking-tight">Priority Audit Pass</h2>
                   </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-[11px] font-bold text-white/40 uppercase tracking-widest">Everything in Standard, plus:</span>
                 </div>
 
                 <div className="space-y-6 flex-grow mb-12">
