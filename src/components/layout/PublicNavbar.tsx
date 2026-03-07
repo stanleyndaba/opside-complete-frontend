@@ -88,23 +88,12 @@ export const PublicNavbar = () => {
                             <ProductsMegaMenu />
                         </div>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none">
-                                Finance <ChevronDown className="h-3 w-3 opacity-30" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="bg-[#050505]/95 border-white/10 backdrop-blur-xl rounded-none p-1 min-w-[160px]">
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
-                                    <Link to="/pricing" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Pricing</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="focus:bg-white/5 focus:text-white cursor-pointer rounded-none px-3 py-2">
-                                    <Link to="/contact" className="flex items-center gap-2 w-full">
-                                        <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Talk to Sales</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Link
+                            to="/pricing"
+                            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none"
+                        >
+                            Pricing
+                        </Link>
 
                     </div>
 
@@ -153,27 +142,12 @@ export const PublicNavbar = () => {
                                     </div>
                                 </Link>
                                 <Accordion type="single" collapsible className="w-full space-y-4">
-                                    <AccordionItem value="finance" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
-                                            Finance
-                                        </AccordionTrigger>
-                                        <AccordionContent className="pt-2 pb-2 px-2">
-                                            <div className="grid gap-1">
-                                                <Link
-                                                    to="/pricing"
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
-                                                    Pricing
-                                                </Link>
-                                                <Link
-                                                    to="/contact"
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="px-3 py-2 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
-                                                    Talk to Sales
-                                                </Link>
-                                            </div>
-                                        </AccordionContent>
-                                    </AccordionItem>
+                                    <Link
+                                        to="/pricing"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors">
+                                        Pricing
+                                    </Link>
 
                                     {/* About Us & Enterprise shifted inside for consistent menu feel or kept separate? 
                                         Keeping them as links but merged into the same flow */}

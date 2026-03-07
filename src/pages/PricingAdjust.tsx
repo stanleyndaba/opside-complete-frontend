@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, Sparkles, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandFooter } from '@/components/layout/BrandFooter';
 
 export default function PricingAdjust() {
   return (
@@ -188,21 +189,9 @@ export default function PricingAdjust() {
               </div>
             </motion.div>
           </div>
-
-          {/* Footer Contact */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mt-16 text-center"
-          >
-            <a 
-              href="mailto:billing@margin-finance.com" 
-              className="text-[11px] text-white/20 hover:text-white/40 transition-colors tracking-widest uppercase font-medium"
-            >
-              billing@margin-finance.com
-            </a>
-          </motion.div>
+        </div>
+        <div className="w-full mt-24 relative z-10">
+          <BrandFooter />
         </div>
       </div>
     </PageLayout>
