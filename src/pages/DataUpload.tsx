@@ -636,9 +636,9 @@ export default function DataUpload() {
                                         {/* Left Column - Split into 2 vertical spaces */}
                                         <div className="w-1/3 border-r border-gray-100 flex flex-col">
                                             {/* Upper-space: Seller details */}
-                                            <div className="px-5 py-4 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Seller details</h3>
-                                                <ul className="space-y-0.5">
+                                            <div className="px-5 py-3.5 border-b border-gray-100">
+                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-1.5">Seller details</h3>
+                                                <ul className="space-y-0">
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Account:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">[Brand Name] (redacted ID: ***1234)</span>
@@ -656,28 +656,29 @@ export default function DataUpload() {
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">2024/10/01 to 2025/03/01</span>
                                                     </li>
                                                 </ul>
-                                                <p className="mt-1.5 text-[9px] font-mono text-gray-400 italic leading-tight">
+                                                <p className="mt-1 text-[9px] font-mono text-gray-400 italic leading-tight">
                                                     based on your uploaded CSVs and Amazon's reimbursement policies.
                                                 </p>
                                             </div>
 
                                             {/* Middle-space: Eventual data breakdown */}
-                                            <div className="px-5 py-4 border-b border-gray-100 flex-1">
-                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Eventual data breakdown</h3>
-                                                <p className="text-[9px] font-mono text-gray-400 uppercase tracking-wider mb-4">Events that led to the miscalculation</p>
+                                            <div className="px-5 py-4 border-b border-gray-100">
+                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
+                                                <p className="text-[9px] font-mono text-gray-400 uppercase tracking-wider mb-3">Events that led to the miscalculation</p>
                                                 
                                                 <div className="space-y-3">
                                                     {[
-                                                        { label: 'Inbound Discrepancy', date: 'OCT 12', status: 'Flagged' },
-                                                        { label: 'Fee Overcharge', date: 'OCT 15', status: 'Calculated' },
-                                                        { label: 'Lost in Warehouse', date: 'NOV 02', status: 'Verified' }
+                                                        { label: 'Inbound Discrepancy', desc: 'Shipment FBAXXXX, 186 units unaccounted for', date: 'OCT 12 - OCT 15', status: 'Flagged' },
+                                                        { label: 'Fee Overcharge', desc: 'Weight/dimension mismatch on 12 SKUs', date: 'OCT 15 - NOV 01', status: 'Calculated' },
+                                                        { label: 'Lost in Warehouse', desc: 'Inventory disappeared after check in', date: 'NOV 02 - NOV 15', status: 'Verified' }
                                                     ].map((item, idx) => (
-                                                        <div key={idx} className="flex items-center justify-between">
-                                                            <div>
+                                                        <div key={idx} className="flex items-start justify-between">
+                                                            <div className="flex-1 min-w-0 mr-4">
                                                                 <p className="text-[10px] font-bold text-gray-900 leading-none">{item.label}</p>
+                                                                <p className="text-[9px] text-gray-500 mt-1 truncate leading-tight font-medium">{item.desc}</p>
                                                                 <p className="text-[8px] font-mono text-gray-300 mt-1 uppercase">{item.date}</p>
                                                             </div>
-                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-mono text-gray-400 uppercase">
+                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-mono text-gray-400 uppercase shrink-0">
                                                                 {item.status}
                                                             </div>
                                                         </div>
