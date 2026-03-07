@@ -16,13 +16,6 @@ export default function PricingAdjust() {
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} 
         />
 
-        {/* Aesthetic Background Elements: Harmonic Emerald Blooms */}
-        <div className="absolute top-0 left-0 w-full h-[1000px] bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.1),transparent_70%)] pointer-events-none z-[1]" />
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none z-[1]" />
-        
-        {/* Subtle grid pattern background */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-[1]" />
-
         {/* Main Content Container */}
         <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
           {/* Header */}
@@ -33,10 +26,10 @@ export default function PricingAdjust() {
             className="text-center mb-16 space-y-6"
           >
             <div className="flex flex-col items-center gap-4">
-              <Badge variant="outline" className="text-[10px] font-bold tracking-[0.4em] uppercase border-white/10 text-emerald-500 px-5 py-1.5 bg-emerald-500/5 backdrop-blur-sm">
+              <Badge variant="outline" className="text-[10px] font-bold tracking-[0.4em] uppercase border-white/10 text-white/70 px-5 py-1.5 bg-white/5 backdrop-blur-sm">
                 Service Configuration
               </Badge>
-              <div className="h-px w-12 bg-emerald-500/30" />
+              <div className="h-px w-12 bg-white/10" />
             </div>
             
             <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white/95 leading-tight max-w-4xl">
@@ -111,9 +104,9 @@ export default function PricingAdjust() {
               transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-emerald-500/[0.02] rounded-2xl border border-emerald-500/20 group-hover:bg-emerald-500/[0.04] group-hover:border-emerald-500/40 transition-all duration-500 shadow-[0_0_50px_rgba(16,185,129,0.03)] backdrop-blur-sm" />
+              <div className="absolute inset-0 bg-white/[0.02] rounded-2xl border border-white/10 group-hover:bg-white/[0.04] group-hover:border-white/20 transition-all duration-500 backdrop-blur-sm" />
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
-                <Badge className="bg-emerald-500 text-black text-[10px] font-bold tracking-widest uppercase px-5 py-1 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+                <Badge className="bg-white text-black text-[10px] font-bold tracking-widest uppercase px-5 py-1 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                   Highly Recommended
                 </Badge>
               </div>
@@ -121,9 +114,9 @@ export default function PricingAdjust() {
               <div className="relative p-10 flex flex-col h-full">
                 <div className="mb-10">
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="text-[10px] font-bold text-emerald-500/40 uppercase tracking-widest px-2 py-0.5 border border-emerald-500/20">Option 2</span>
-                    <Sparkles className="h-3 w-3 text-emerald-400" />
-                    <div className="h-px flex-1 bg-emerald-500/20" />
+                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-2 py-0.5 border border-white/10">Option 2</span>
+                    <Sparkles className="h-3 w-3 text-white/60" />
+                    <div className="h-px flex-1 bg-white/10" />
                   </div>
                   <div className="flex items-baseline gap-2">
                     <h2 className="text-2xl font-bold text-white tracking-tight">Priority Audit Pass</h2>
@@ -132,18 +125,18 @@ export default function PricingAdjust() {
 
                 <div className="space-y-6 flex-grow">
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                      <Zap className="h-3 w-3 text-emerald-400 fill-emerald-400" />
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                      <Zap className="h-3 w-3 text-white/80 fill-white" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-white">Cost: One-time $99</p>
-                      <p className="text-[11px] text-emerald-500/70 font-bold uppercase tracking-tight">100% credited against success fees</p>
+                      <p className="text-[11px] text-white/50 font-bold uppercase tracking-tight">100% credited against success fees</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
-                      <Search className="h-3 w-3 text-emerald-400" />
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <Search className="h-3 w-3 text-white/60" />
                     </div>
                     <div>
                       <p className="text-sm text-white font-medium">18-Month Historical Deep Dive</p>
@@ -152,24 +145,24 @@ export default function PricingAdjust() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
-                      <Zap className="h-3 w-3 text-emerald-400" />
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <Zap className="h-3 w-3 text-white/60" />
                     </div>
                     <p className="text-sm text-white/80 font-medium">Immediate processing (start in &lt; 5m)</p>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <CheckCircle2 className="h-3 w-3 text-white/60" />
                     </div>
                     <p className="text-sm text-white/80">Priority preparation and case follow-ups.</p>
                   </div>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-emerald-500/10">
-                  <div className="p-4 rounded-xl bg-emerald-500/[0.03] border border-emerald-500/10">
-                    <p className="text-[11px] text-emerald-500/60 leading-relaxed tracking-tight">
-                      <span className="text-emerald-400/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-emerald-400 font-bold">$251</span> after your $99 credit is applied.
+                <div className="mt-10 pt-6 border-t border-white/10">
+                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                    <p className="text-[11px] text-white/60 leading-relaxed tracking-tight">
+                      <span className="text-white/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-white font-bold">$251</span> after your $99 credit is applied.
                     </p>
                   </div>
                 </div>
@@ -186,7 +179,7 @@ export default function PricingAdjust() {
           >
             <Button 
                 size="lg"
-                className="h-14 px-12 bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-lg rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.3)] group transition-all duration-300"
+                className="h-14 px-12 bg-white hover:bg-white/90 text-black font-bold text-lg rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.1)] group transition-all duration-300"
             >
               Start Immediately ($99 Priority Pass)
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -198,28 +191,8 @@ export default function PricingAdjust() {
               Continue with Standard 20% Recovery
             </Button>
           </motion.div>
-
-          {/* Bottom Explanation */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1.2 }}
-            className="mt-24 max-w-3xl text-center space-y-8 pb-20"
-          >
-            <div className="h-px w-40 bg-gradient-to-r from-transparent via-white/10 to-transparent mx-auto" />
-            
-            <div className="space-y-6">
-              <h3 className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Pricing Thesis</h3>
-              <p className="text-base text-white/60 leading-relaxed font-light max-w-2xl mx-auto italic">
-                "Margin works on a simple success-fee model: we take 20% of what we recover, and you only pay after Amazon actually deposits the funds into your bank account."
-              </p>
-              <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.01]">
-                <p className="text-[11px] text-white/30 leading-relaxed max-w-xl mx-auto uppercase tracking-wider">
-                  The Priority Audit Pass gets us started on your account immediately and runs a maximum 18-month historical audit. The $99 fee is fully credited against your future success fees.
-                </p>
-              </div>
-            </div>
-          </motion.div>
+        </div>
+      </div>
         </div>
       </div>
     </PageLayout>
