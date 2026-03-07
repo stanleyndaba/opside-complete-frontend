@@ -619,7 +619,6 @@ export default function DataUpload() {
                                             className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-mono font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase"
                                         >
                                             <Share2 className="h-4 w-4" />
-                                            Share
                                             Import and Share
                                         </button>
                                         <button
