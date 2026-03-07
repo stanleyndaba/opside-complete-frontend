@@ -724,19 +724,26 @@ export default function DataUpload() {
                                                         </thead>
                                                         <tbody className="divide-y divide-gray-50">
                                                             {[
-                                                                { item: 'Lost shipment (Inbound #FBA17Z2K)', amount: '$1,245.50', sub: 'Detected in Oct Audit' },
-                                                                { item: 'Inventory damaged by Warehouse', amount: '$840.20', sub: 'FNSKU: B07XJ8L9S1' },
-                                                                { item: 'Missing units in removal order', amount: '$312.00', sub: 'Order #114-9283741' },
-                                                                { item: 'Weight/Dimension Fee Drift', amount: '$156.40', sub: '12 SKUs affected' },
-                                                                { item: 'Lost Inventory (Reconciliation Gap)', amount: '$2,432.90', sub: '180-day historical window' },
+                                                                { item: 'Lost shipment (Inbound #FBA17Z2K)', amount: '$1,245.50', sub: 'Detected in Oct Audit', days: 42, status: 'within policy' },
+                                                                { item: 'Inventory damaged by Warehouse', amount: '$840.20', sub: 'FNSKU: B07XJ8L9S1', days: 24, status: 'within policy' },
+                                                                { item: 'Missing units in removal order', amount: '$312.00', sub: 'Order #114-9283741', days: 12, status: 'action required' },
+                                                                { item: 'Weight/Dimension Fee Drift', amount: '$156.40', sub: '12 SKUs affected', days: 35, status: 'within policy' },
+                                                                { item: 'Lost Inventory (Reconciliation Gap)', amount: '$2,432.90', sub: '180-day historical window', days: 18, status: 'urgent' },
                                                             ].map((row, idx) => (
                                                                 <tr key={idx} className="group">
-                                                                    <td className="py-3">
+                                                                    <td className="py-2">
                                                                         <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
                                                                         <p className="text-[9px] font-mono text-gray-300 uppercase mt-0.5">{row.sub}</p>
                                                                     </td>
-                                                                    <td className="py-3 text-right align-top">
+                                                                    <td className="py-2 text-right align-top">
                                                                         <span className="text-xs font-bold text-gray-900 font-mono">{row.amount}</span>
+                                                                        <p className={`text-[8px] font-mono mt-0.5 lowercase ${
+                                                                            row.days < 20 ? 'text-red-500' : 
+                                                                            row.days < 30 ? 'text-orange-500' : 
+                                                                            'text-emerald-500'
+                                                                        }`}>
+                                                                            ({row.days} days | {row.status})
+                                                                        </p>
                                                                     </td>
                                                                 </tr>
                                                             ))}
