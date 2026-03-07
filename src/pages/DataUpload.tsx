@@ -666,7 +666,7 @@ export default function DataUpload() {
                                                 <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
                                                 <p className="text-[9px] font-mono text-gray-400 uppercase tracking-wider mb-3">Events that led to the miscalculation</p>
                                                 
-                                                <div className="space-y-3">
+                                                <div className="space-y-2">
                                                     {[
                                                         { label: 'Inbound Discrepancy', desc: 'Shipment FBAXXXX, 186 units unaccounted for', date: 'OCT 12 - OCT 15', status: 'Flagged' },
                                                         { label: 'Fee Overcharge', desc: 'Weight/dimension mismatch on 12 SKUs', date: 'OCT 15 - NOV 01', status: 'Calculated' },
@@ -675,8 +675,8 @@ export default function DataUpload() {
                                                         <div key={idx} className="flex items-start justify-between">
                                                             <div className="flex-1 min-w-0 mr-4">
                                                                 <p className="text-[10px] font-bold text-gray-900 leading-none">{item.label}</p>
-                                                                <p className="text-[9px] text-gray-500 mt-1 truncate leading-tight font-medium">{item.desc}</p>
-                                                                <p className="text-[8px] font-mono text-gray-300 mt-1 uppercase">{item.date}</p>
+                                                                <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{item.desc}</p>
+                                                                <p className="text-[8px] font-mono text-gray-300 mt-0.5 uppercase">{item.date}</p>
                                                             </div>
                                                             <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-mono text-gray-400 uppercase shrink-0">
                                                                 {item.status}
@@ -684,7 +684,7 @@ export default function DataUpload() {
                                                         </div>
                                                     ))}
                                                 </div>
-                                                <div className="mt-4 flex justify-end">
+                                                <div className="mt-1 flex justify-end">
                                                     <button className="text-[9px] font-mono font-bold text-violet-600 hover:text-violet-700 uppercase tracking-widest flex items-center gap-1 group">
                                                         See More
                                                         <span className="group-hover:translate-x-0.5 transition-transform">→</span>
