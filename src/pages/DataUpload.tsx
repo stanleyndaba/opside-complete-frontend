@@ -606,16 +606,16 @@ export default function DataUpload() {
                                 className="fixed inset-x-0 bottom-0 top-0 z-[101] bg-white rounded-t-[32px] overflow-hidden flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.3)]"
                             >
                                 {/* Drawer Header */}
-                                <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100">
+                                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                                     <div>
-                                        <h2 className="text-xl font-semibold text-gray-900">Data Preview</h2>
-                                        <p className="text-sm text-gray-400">Reviewing {files.length} staged file{files.length !== 1 ? 's' : ''}</p>
+                                        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-tight">Audit Report</h2>
+                                        <p className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Reimbursement seller account overview</p>
                                     </div>
                                     <button
                                         onClick={() => setIsPreviewOpen(false)}
-                                        className="p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors"
+                                        className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors"
                                     >
-                                        <X className="h-6 w-6" />
+                                        <X className="h-5 w-5" />
                                     </button>
                                 </div>
 
@@ -625,32 +625,32 @@ export default function DataUpload() {
                                         {/* Left Column - Split into 2 vertical spaces */}
                                         <div className="w-1/3 border-r border-gray-100 flex flex-col">
                                             {/* Upper-space: Seller details */}
-                                            <div className="p-8 border-b border-gray-100">
-                                                <h3 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Seller details</h3>
-                                                <ul className="space-y-4">
+                                            <div className="p-6 border-b border-gray-100">
+                                                <h3 className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-3">Seller details</h3>
+                                                <ul className="space-y-3">
                                                     <li className="flex flex-col">
-                                                        <span className="text-[10px] font-mono text-gray-300 uppercase">Seller Account</span>
-                                                        <span className="text-sm font-semibold text-gray-900 font-sans tracking-tight">Active_Merchant_Store_01</span>
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase">Seller Account</span>
+                                                        <span className="text-xs font-semibold text-gray-900 font-sans tracking-tight">Active_Merchant_Store_01</span>
                                                     </li>
                                                     <li className="flex flex-col">
-                                                        <span className="text-[10px] font-mono text-gray-300 uppercase">Amazon reimbursement</span>
-                                                        <span className="text-sm font-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase">Amazon reimbursement</span>
+                                                        <span className="text-xs font-extra-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
                                                     </li>
                                                     <li className="flex flex-col">
-                                                        <span className="text-[10px] font-mono text-gray-300 uppercase">Period</span>
-                                                        <span className="text-sm font-semibold text-gray-900 font-sans tracking-tight">3 Month data</span>
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase">Period</span>
+                                                        <span className="text-xs font-semibold text-gray-900 font-sans tracking-tight">3 Month data</span>
                                                     </li>
                                                 </ul>
                                             </div>
 
                                             {/* Lower-space: Eventual data breakdown */}
-                                            <div className="p-8 flex-1 bg-gray-50/30">
-                                                <h3 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
-                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">
+                                            <div className="p-6 flex-1 bg-gray-50/30">
+                                                <h3 className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
+                                                <p className="text-[10px] text-gray-400 font-sans leading-relaxed">
                                                     Events that led to the miscalculation
                                                 </p>
                                                 
-                                                <div className="mt-8 space-y-6">
+                                                <div className="mt-6 space-y-4">
                                                     {[
                                                         { label: 'Inbound Discrepancy', date: 'Oct 12', status: 'Flagged' },
                                                         { label: 'Fee Overcharge', date: 'Oct 15', status: 'Calculated' },
@@ -658,10 +658,10 @@ export default function DataUpload() {
                                                     ].map((item, idx) => (
                                                         <div key={idx} className="flex items-center justify-between group">
                                                             <div className="flex flex-col">
-                                                                <span className="text-[11px] font-bold text-gray-800 font-sans">{item.label}</span>
-                                                                <span className="text-[9px] font-mono text-gray-300 uppercase">{item.date}</span>
+                                                                <span className="text-[10px] font-bold text-gray-800 font-sans">{item.label}</span>
+                                                                <span className="text-[8px] font-mono text-gray-300 uppercase">{item.date}</span>
                                                             </div>
-                                                            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white border border-gray-100 text-gray-400 group-hover:bg-violet-50 group-hover:text-violet-500 group-hover:border-violet-100 transition-colors">
+                                                            <span className="text-[8px] font-mono px-1.5 py-0.5 rounded-full bg-white border border-gray-100 text-gray-400 group-hover:bg-violet-50 group-hover:text-violet-500 group-hover:border-violet-100 transition-colors">
                                                                 {item.status}
                                                             </span>
                                                         </div>
@@ -672,18 +672,18 @@ export default function DataUpload() {
 
                                         {/* Right Column - Full Detailed Data */}
                                         <div className="flex-1 flex flex-col">
-                                            <div className="p-8 border-b border-gray-100">
-                                                <h3 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-1">Full Data</h3>
-                                                <p className="text-xs text-gray-400 font-sans">your full cost breakdown</p>
+                                            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
+                                                <h3 className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-0.5">Full Data</h3>
+                                                <p className="text-[10px] text-gray-400 font-sans">your full cost breakdown</p>
                                             </div>
                                             
-                                            <div className="flex-1 overflow-auto p-8">
+                                            <div className="flex-1 overflow-auto p-6">
                                                 <div className="w-full max-w-2xl">
                                                     <table className="w-full">
                                                         <thead>
                                                             <tr className="border-b border-gray-50">
-                                                                <th className="text-left py-4 text-[10px] font-mono text-gray-300 uppercase tracking-widest">Description</th>
-                                                                <th className="text-right py-4 text-[10px] font-mono text-gray-300 uppercase tracking-widest">Amount</th>
+                                                                <th className="text-left py-2 text-[9px] font-mono text-gray-300 uppercase tracking-widest">Description</th>
+                                                                <th className="text-right py-2 text-[9px] font-mono text-gray-300 uppercase tracking-widest">Amount</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody className="divide-y divide-gray-50">
@@ -695,23 +695,23 @@ export default function DataUpload() {
                                                                 { item: 'Lost Inventory (Reconciliation Gap)', amount: '$2,432.90', sub: '180-day historical window' },
                                                             ].map((row, idx) => (
                                                                 <tr key={idx} className="group">
-                                                                    <td className="py-5">
-                                                                        <p className="text-sm font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
-                                                                        <p className="text-[10px] font-mono text-gray-300 uppercase mt-0.5">{row.sub}</p>
+                                                                    <td className="py-3">
+                                                                        <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
+                                                                        <p className="text-[9px] font-mono text-gray-300 uppercase mt-0.5">{row.sub}</p>
                                                                     </td>
-                                                                    <td className="py-5 text-right align-top">
-                                                                        <span className="text-sm font-bold text-gray-900 font-mono">{row.amount}</span>
+                                                                    <td className="py-3 text-right align-top">
+                                                                        <span className="text-xs font-bold text-gray-900 font-mono">{row.amount}</span>
                                                                     </td>
                                                                 </tr>
                                                             ))}
                                                         </tbody>
                                                         <tfoot>
                                                             <tr className="border-t border-gray-100">
-                                                                <td className="py-6">
-                                                                    <span className="text-sm font-mono font-bold text-gray-400 uppercase tracking-widest">Total Estimated Recovery</span>
+                                                                <td className="py-4">
+                                                                    <span className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Total Estimated Recovery</span>
                                                                 </td>
-                                                                <td className="py-6 text-right">
-                                                                    <span className="text-xl font-bold font-sans text-gray-900">$4,987.00</span>
+                                                                <td className="py-4 text-right">
+                                                                    <span className="text-lg font-bold font-sans text-gray-900">$4,987.00</span>
                                                                 </td>
                                                             </tr>
                                                         </tfoot>
