@@ -9,16 +9,19 @@ import { cn } from '@/lib/utils';
 export default function PricingAdjust() {
   return (
     <PageLayout title="Pricing Adjust" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
-      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center justify-center p-6 lg:p-10 overflow-hidden">
-        {/* Noise Texture */}
+      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center justify-center p-6 lg:p-10 overflow-hidden font-sans">
+        {/* Noise Texture Overlay */}
         <div 
           className="fixed inset-0 pointer-events-none opacity-[0.03] z-[1]" 
           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} 
         />
 
-        {/* Aesthetic Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none z-[1]" />
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-emerald-500/5 rounded-full blur-[160px] pointer-events-none z-[1]" />
+        {/* Aesthetic Background Elements: Harmonic Emerald Blooms */}
+        <div className="absolute top-0 left-0 w-full h-[1000px] bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.1),transparent_70%)] pointer-events-none z-[1]" />
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-emerald-500/[0.03] rounded-full blur-[160px] pointer-events-none z-[1]" />
+        
+        {/* Subtle grid pattern background */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-[1]" />
 
         {/* Main Content Container */}
         <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
@@ -26,15 +29,22 @@ export default function PricingAdjust() {
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center mb-16 space-y-4"
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center mb-16 space-y-6"
           >
-            <Badge variant="outline" className="text-[10px] font-mono tracking-[0.4em] uppercase border-emerald-500/30 text-emerald-400 px-4 py-1 bg-emerald-500/5">
-              Service Configuration
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white/90">
-              Choose how you want <span className="font-semibold text-white">Margin</span> to recover your reimbursements
+            <div className="flex flex-col items-center gap-4">
+              <Badge variant="outline" className="text-[10px] font-bold tracking-[0.4em] uppercase border-white/10 text-emerald-500 px-5 py-1.5 bg-emerald-500/5 backdrop-blur-sm">
+                Service Configuration
+              </Badge>
+              <div className="h-px w-12 bg-emerald-500/30" />
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white/95 leading-tight max-w-4xl">
+              Select your <span className="font-medium text-white">Recovery Option</span>
             </h1>
+            <p className="text-sm md:text-base text-white/40 tracking-tight max-w-2xl mx-auto">
+              Choose how you want Margin to monitor and recover your Amazon reimbursements.
+            </p>
           </motion.div>
 
           {/* Pricing Options Grid */}
@@ -43,57 +53,53 @@ export default function PricingAdjust() {
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
+              transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-white/[0.01] rounded-3xl border border-white/5 group-hover:bg-white/[0.02] group-hover:border-white/10 transition-all duration-500" />
+              <div className="absolute inset-0 bg-white/[0.01] rounded-2xl border border-white/5 group-hover:bg-white/[0.02] group-hover:border-white/10 transition-all duration-500 backdrop-blur-[2px]" />
               <div className="relative p-10 flex flex-col h-full">
-                <div className="mb-8">
-                  <h3 className="text-sm font-mono text-white/40 uppercase tracking-widest mb-4">Option 1</h3>
+                <div className="mb-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest px-2 py-0.5 border border-white/5">Option 1</span>
+                    <div className="h-px flex-1 bg-white/5" />
+                  </div>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-2xl font-bold text-white">Standard Recovery</h2>
-                    <span className="text-xs text-white/20 font-mono">(Default)</span>
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Standard Recovery</h2>
+                    <span className="text-[10px] text-white/30 uppercase tracking-widest">(Default)</span>
                   </div>
                 </div>
 
                 <div className="space-y-6 flex-grow">
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                      <DollarSign className="h-3 w-3 text-emerald-500" />
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <DollarSign className="h-3 w-3 text-white/40" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Cost: 20% success fee</p>
-                      <p className="text-xs text-white/40 font-mono">No upfront cost</p>
+                      <p className="text-sm font-semibold text-white">Success Fee: 20%</p>
+                      <p className="text-[11px] text-white/30 uppercase tracking-wider">No upfront cost</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                       <Clock className="h-3 w-3 text-white/40" />
                     </div>
                     <div>
-                      <p className="text-sm text-white/80">Audit Depth: Last 90 days</p>
-                      <p className="text-xs text-white/30">Fee and inventory error scans</p>
+                      <p className="text-sm text-white/80">Audit Window: Last 90 Days</p>
+                      <p className="text-[11px] text-white/20 uppercase tracking-wider">Inventory & fee error scans</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <Clock className="h-3 w-3 text-white/40" />
-                    </div>
-                    <p className="text-sm text-white/80">Speed: 1 business day processing</p>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                       <ShieldCheck className="h-3 w-3 text-white/40" />
                     </div>
-                    <p className="text-sm text-white/80">Terms: Payout after Amazon approval</p>
+                    <p className="text-sm text-white/80 leading-relaxed font-light">Payouts are only generated after Amazon approves your reimbursements.</p>
                   </div>
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-white/5">
-                  <p className="text-[11px] text-white/30 italic">"Best if you’re not in a rush and just want money back on autopilot."</p>
+                  <p className="text-[11px] text-white/30 italic font-light tracking-wide">"Best if you want to keep everything on autopilot with zero risk."</p>
                 </div>
               </div>
             </motion.div>
@@ -102,72 +108,68 @@ export default function PricingAdjust() {
             <motion.div 
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="group relative"
             >
-              <div className="absolute inset-0 bg-emerald-500/[0.02] rounded-3xl border border-emerald-500/20 group-hover:bg-emerald-500/[0.04] group-hover:border-emerald-500/40 transition-all duration-500 shadow-[0_0_40px_rgba(16,185,129,0.05)]" />
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <Badge className="bg-emerald-500 text-black text-[10px] font-bold tracking-widest uppercase px-4 py-1 animate-pulse shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+              <div className="absolute inset-0 bg-emerald-500/[0.02] rounded-2xl border border-emerald-500/20 group-hover:bg-emerald-500/[0.04] group-hover:border-emerald-500/40 transition-all duration-500 shadow-[0_0_50px_rgba(16,185,129,0.03)] backdrop-blur-sm" />
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
+                <Badge className="bg-emerald-500 text-black text-[10px] font-bold tracking-widest uppercase px-5 py-1 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)]">
                   Highly Recommended
                 </Badge>
               </div>
               
               <div className="relative p-10 flex flex-col h-full">
-                <div className="mb-8">
-                  <h3 className="text-sm font-mono text-emerald-500/60 uppercase tracking-widest mb-4">Option 2</h3>
+                <div className="mb-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[10px] font-bold text-emerald-500/40 uppercase tracking-widest px-2 py-0.5 border border-emerald-500/20">Option 2</span>
+                    <Sparkles className="h-3 w-3 text-emerald-400" />
+                    <div className="h-px flex-1 bg-emerald-500/20" />
+                  </div>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-2xl font-bold text-white">Priority Audit Pass</h2>
-                    <Sparkles className="h-4 w-4 text-emerald-400" />
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Priority Audit Pass</h2>
                   </div>
                 </div>
 
                 <div className="space-y-6 flex-grow">
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)]">
                       <Zap className="h-3 w-3 text-emerald-400 fill-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Cost: One-time $99</p>
-                      <p className="text-xs text-emerald-500/60 font-mono">100% credited against success fee</p>
+                      <p className="text-sm font-bold text-white">Cost: One-time $99</p>
+                      <p className="text-[11px] text-emerald-500/70 font-bold uppercase tracking-tight">100% credited against success fees</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
                       <Search className="h-3 w-3 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-sm text-white/90">18-Month Deep Dive</p>
-                      <p className="text-xs text-white/40">Full historical legal audit scan</p>
+                      <p className="text-sm text-white font-medium">18-Month Historical Deep Dive</p>
+                      <p className="text-[11px] text-white/30 uppercase tracking-normal">Full account reconciliation scan</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
                       <Zap className="h-3 w-3 text-emerald-400" />
                     </div>
-                    <p className="text-sm text-white/90">Speed: Immediate processing (&lt; 5m)</p>
+                    <p className="text-sm text-white/80 font-medium">Immediate processing (start in &lt; 5m)</p>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <div className="mt-1 h-6 w-6 rounded-full bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
                       <CheckCircle2 className="h-3 w-3 text-emerald-400" />
                     </div>
-                    <p className="text-sm text-white/90">Priority preparation & follow-ups</p>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                      <FileText className="h-3 w-3 text-emerald-400" />
-                    </div>
-                    <p className="text-sm text-white/90">Full reporting breakdown</p>
+                    <p className="text-sm text-white/80">Priority preparation and case follow-ups.</p>
                   </div>
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-emerald-500/10">
-                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5">
-                    <p className="text-[11px] text-white/40 leading-relaxed font-mono">
-                      <span className="text-white/60">Example:</span> If our 20% fee is $350, you only pay <span className="text-emerald-400 font-bold">$251</span> after your $99 credit.
+                  <div className="p-4 rounded-xl bg-emerald-500/[0.03] border border-emerald-500/10">
+                    <p className="text-[11px] text-emerald-500/60 leading-relaxed tracking-tight">
+                      <span className="text-emerald-400/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-emerald-400 font-bold">$251</span> after your $99 credit is applied.
                     </p>
                   </div>
                 </div>
@@ -179,7 +181,7 @@ export default function PricingAdjust() {
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="mt-16 flex flex-col items-center gap-6"
           >
             <Button 
@@ -191,7 +193,7 @@ export default function PricingAdjust() {
             </Button>
             <Button 
                 variant="ghost"
-                className="text-white/40 hover:text-white transition-colors tracking-widest text-[10px] font-bold uppercase"
+                className="text-white/30 hover:text-white transition-colors tracking-widest text-[10px] font-bold uppercase hover:bg-transparent"
             >
               Continue with Standard 20% Recovery
             </Button>
@@ -201,19 +203,21 @@ export default function PricingAdjust() {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="mt-24 max-w-3xl text-center space-y-8"
+            transition={{ delay: 1, duration: 1.2 }}
+            className="mt-24 max-w-3xl text-center space-y-8 pb-20"
           >
-            <div className="h-[1px] w-40 bg-gradient-to-r from-transparent via-white/10 to-transparent mx-auto" />
+            <div className="h-px w-40 bg-gradient-to-r from-transparent via-white/10 to-transparent mx-auto" />
             
             <div className="space-y-6">
-              <h3 className="text-xs font-mono font-bold text-emerald-500 uppercase tracking-widest">Pricing Thesis</h3>
-              <p className="text-base text-white/60 leading-relaxed font-light">
+              <h3 className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Pricing Thesis</h3>
+              <p className="text-base text-white/60 leading-relaxed font-light max-w-2xl mx-auto italic">
                 "Margin works on a simple success-fee model: we take 20% of what we recover, and you only pay after Amazon actually deposits the funds into your bank account."
               </p>
-              <p className="text-sm text-white/40 leading-relaxed max-w-2xl mx-auto italic font-serif">
-                If you want us to jump on your account immediately and run a maximum 18-month historical audit, you can add a one-time Priority Audit Pass. You pay $99 today, we start processing in under 5 minutes, and that $99 is fully credited against your future success fees.
-              </p>
+              <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.01]">
+                <p className="text-[11px] text-white/30 leading-relaxed max-w-xl mx-auto uppercase tracking-wider">
+                  The Priority Audit Pass gets us started on your account immediately and runs a maximum 18-month historical audit. The $99 fee is fully credited against your future success fees.
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>
