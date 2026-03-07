@@ -72,6 +72,7 @@ export default function DataUpload() {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [batchResult, setBatchResult] = useState<BatchResult | null>(null);
     const [isDragOver, setIsDragOver] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Handle file selection
@@ -425,17 +426,28 @@ export default function DataUpload() {
                         className="mt-6 flex items-center gap-3"
                     >
                         {!batchResult ? (
-                            <Button
-                                onClick={handleUpload}
-                                disabled={files.length === 0 || isUploading}
-                                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-medium px-6 h-10 shadow-lg shadow-violet-500/20 disabled:opacity-30 disabled:shadow-none"
-                            >
-                                {isUploading ? (
-                                    <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
-                                ) : (
-                                    <>Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
-                                )}
-                            </Button>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={handleUpload}
+                                    disabled={files.length === 0 || isUploading}
+                                    className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-medium px-6 h-10 shadow-lg shadow-violet-500/20 disabled:opacity-30 disabled:shadow-none"
+                                >
+                                    {isUploading ? (
+                                        <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
+                                    ) : (
+                                        <>Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
+                                    )}
+                                </Button>
+                                
+                                <Button
+                                    onClick={() => setIsPreviewOpen(true)}
+                                    disabled={files.length === 0 || isUploading}
+                                    variant="outline"
+                                    className="border-white/10 text-white/60 hover:bg-white/5 hover:text-white h-10 px-6 rounded-lg transition-all"
+                                >
+                                    Preview
+                                </Button>
+                            </div>
                         ) : (
                             <Button
                                 onClick={handleReset}
@@ -571,6 +583,53 @@ export default function DataUpload() {
                         </div>
                     </motion.div>
                 </div>
+
+                {/* Preview Drawer */}
+                <AnimatePresence>
+                    {isPreviewOpen && (
+                        <>
+                            {/* Backdrop */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setIsPreviewOpen(false)}
+                                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+                            />
+
+                            {/* Drawer */}
+                            <motion.div
+                                initial={{ y: '100%' }}
+                                animate={{ y: '15%' }} // Occupies most of the page but not all
+                                exit={{ y: '100%' }}
+                                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                                className="fixed inset-x-0 bottom-0 top-0 z-[101] bg-white rounded-t-[32px] overflow-hidden flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.3)]"
+                            >
+                                {/* Drawer Header */}
+                                <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100">
+                                    <div>
+                                        <h2 className="text-xl font-semibold text-gray-900">Data Preview</h2>
+                                        <p className="text-sm text-gray-400">Reviewing {files.length} staged file{files.length !== 1 ? 's' : ''}</p>
+                                    </div>
+                                    <button
+                                        onClick={() => setIsPreviewOpen(false)}
+                                        className="p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors"
+                                    >
+                                        <X className="h-6 w-6" />
+                                    </button>
+                                </div>
+
+                                {/* Drawer Content (Blank for now as requested) */}
+                                <div className="flex-1 overflow-auto p-8 bg-white">
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-center opacity-20">
+                                        <FileSpreadsheet className="h-16 w-16 text-gray-400 mb-4" />
+                                        <p className="text-gray-400 font-medium">Ready for data ingestion</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
             </div>
         </PageLayout>
     );
