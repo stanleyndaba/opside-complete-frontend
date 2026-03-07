@@ -26,8 +26,8 @@ export default function PricingAdjust() {
             className="text-center mb-16 space-y-6"
           >
             <div className="flex flex-col items-center gap-4">
-              <Badge variant="outline" className="text-[10px] font-bold tracking-[0.4em] uppercase border-white/10 text-white/70 px-5 py-1.5 bg-white/5 backdrop-blur-sm">
-                Service Configuration
+              <Badge variant="outline" className="text-[10px] font-bold uppercase border-white/10 text-white/70 px-5 py-1.5 bg-white/5 backdrop-blur-sm">
+                Pricing
               </Badge>
               <div className="h-px w-12 bg-white/10" />
             </div>
@@ -62,7 +62,7 @@ export default function PricingAdjust() {
                   </div>
                 </div>
 
-                <div className="space-y-6 flex-grow">
+                <div className="space-y-6 flex-grow mb-12">
                   <div className="flex items-start gap-4">
                     <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                       <DollarSign className="h-3 w-3 text-white/40" />
@@ -91,8 +91,17 @@ export default function PricingAdjust() {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-white/5">
-                  <p className="text-[11px] text-white/30 italic font-light tracking-wide">"Best if you want to keep everything on autopilot with zero risk."</p>
+                <div className="mt-auto flex flex-col gap-6">
+                  <Button 
+                    variant="secondary"
+                    className="bg-white hover:bg-white/90 text-black font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
+                  >
+                    Get Standard
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                  <div className="pt-6 border-t border-white/5">
+                    <p className="text-[11px] text-white/30 italic font-light tracking-wide">"Best if you want to keep everything on autopilot with zero risk."</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -123,7 +132,7 @@ export default function PricingAdjust() {
                   </div>
                 </div>
 
-                <div className="space-y-6 flex-grow">
+                <div className="space-y-6 flex-grow mb-12">
                   <div className="flex items-start gap-4">
                     <div className="mt-1 h-6 w-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.05)]">
                       <Zap className="h-3 w-3 text-white/80 fill-white" />
@@ -159,38 +168,25 @@ export default function PricingAdjust() {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-white/10">
-                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-                    <p className="text-[11px] text-white/60 leading-relaxed tracking-tight">
-                      <span className="text-white/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-white font-bold">$251</span> after your $99 credit is applied.
-                    </p>
+                <div className="mt-auto flex flex-col gap-6">
+                  <Button 
+                    variant="ghost"
+                    className="text-white/70 hover:text-white font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 hover:bg-transparent"
+                  >
+                    Get Priority
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                  <div className="pt-6 border-t border-white/10">
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                      <p className="text-[11px] text-white/60 leading-relaxed tracking-tight">
+                        <span className="text-white/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-white font-bold">$251</span> after your $99 credit is applied.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </motion.div>
           </div>
-
-          {/* Action Buttons */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-16 flex flex-col items-center gap-6"
-          >
-            <Button 
-                size="lg"
-                className="h-14 px-12 bg-white hover:bg-white/90 text-black font-bold text-lg rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.1)] group transition-all duration-300"
-            >
-              Start Immediately ($99 Priority Pass)
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-                variant="ghost"
-                className="text-white/30 hover:text-white transition-colors tracking-widest text-[10px] font-bold uppercase hover:bg-transparent"
-            >
-              Continue with Standard 20% Recovery
-            </Button>
-          </motion.div>
         </div>
       </div>
     </PageLayout>
