@@ -742,7 +742,7 @@ export default function DataUpload() {
                                                                             row.days < 30 ? 'text-orange-500' : 
                                                                             'text-emerald-500'
                                                                         }`}>
-                                                                            {row.days} days
+                                                                            {row.days < 20 ? 'deadline: ' : 'expires in: '}{row.days} days
                                                                         </p>
                                                                     </td>
                                                                 </tr>
