@@ -65,6 +65,7 @@ const Sales = lazy(() => import("./pages/Sales"));
 const UltraBeta = lazy(() => import("./pages/UltraBeta"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
+const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 
 
 // New Evidence Pages
@@ -182,6 +183,7 @@ const App = () => (
                     <Route path="/app/:tenantSlug/evidence-search" element={<EvidenceSearch />} />
                     <Route path="/app/:tenantSlug/margin-board" element={<MarginBoard />} />
                     <Route path="/app/:tenantSlug/data-upload" element={<DataUpload />} />
+                    <Route path="/app/:tenantSlug/pricing-adjust" element={<PricingAdjust />} />
 
                     {/* Admin routes - still tenant-scoped */}
                     <Route path="/app/:tenantSlug/admin" element={<Admin />} />

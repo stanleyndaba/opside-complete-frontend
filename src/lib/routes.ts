@@ -36,4 +36,5 @@ export const ROUTES = {
     WHATS_NEW: '/whats-new',
     CASE_DETAIL: '/recoveries/:caseId',
     RESOLVE_CASE: '/resolve/:id',
+    PRICING_ADJUST: '/pricing-adjust',
 };
