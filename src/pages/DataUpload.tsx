@@ -609,7 +609,10 @@ export default function DataUpload() {
                                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                                     <div>
                                         <h2 className="text-sm font-bold text-gray-900 uppercase tracking-tight">Audit Report</h2>
-                                        <p className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Reimbursement seller account overview</p>
+                                        <div className="flex flex-col">
+                                            <p className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Reimbursement seller account overview</p>
+                                            <p className="text-[10px] font-mono font-bold text-emerald-600 uppercase mt-0.5">Recovery: $4,987.00</p>
+                                        </div>
                                     </div>
                                     <button
                                         onClick={() => setIsPreviewOpen(false)}
@@ -625,20 +628,20 @@ export default function DataUpload() {
                                         {/* Left Column - Split into 2 vertical spaces */}
                                         <div className="w-1/3 border-r border-gray-100 flex flex-col">
                                             {/* Upper-space: Seller details */}
-                                            <div className="p-6 border-b border-gray-100">
-                                                <h3 className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-3">Seller details</h3>
-                                                <ul className="space-y-3">
-                                                    <li className="flex flex-col">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase">Seller Account</span>
-                                                        <span className="text-xs font-semibold text-gray-900 font-sans tracking-tight">Active_Merchant_Store_01</span>
+                                            <div className="px-5 py-4 border-b border-gray-100">
+                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Seller details</h3>
+                                                <ul className="space-y-1.5">
+                                                    <li className="flex items-baseline gap-2">
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Seller Account:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">Active_Merchant_Store_01</span>
                                                     </li>
-                                                    <li className="flex flex-col">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase">Amazon reimbursement</span>
-                                                        <span className="text-xs font-extra-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
+                                                    <li className="flex items-baseline gap-2">
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Amazon reimbursement:</span>
+                                                        <span className="text-[11px] font-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
                                                     </li>
-                                                    <li className="flex flex-col">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase">Period</span>
-                                                        <span className="text-xs font-semibold text-gray-900 font-sans tracking-tight">3 Month data</span>
+                                                    <li className="flex items-baseline gap-2">
+                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Period:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">3 Month data</span>
                                                     </li>
                                                 </ul>
                                             </div>
