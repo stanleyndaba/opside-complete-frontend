@@ -638,7 +638,7 @@ export default function DataUpload() {
                                             {/* Upper-space: Seller details */}
                                             <div className="px-5 py-4 border-b border-gray-100">
                                                 <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Seller details</h3>
-                                                <ul className="space-y-1.5">
+                                                <ul className="space-y-0.5">
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Account:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">[Brand Name] (redacted ID: ***1234)</span>
@@ -656,34 +656,45 @@ export default function DataUpload() {
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">2024/10/01 to 2025/03/01</span>
                                                     </li>
                                                 </ul>
-                                                <p className="mt-3 text-[9px] font-mono text-gray-400 italic leading-tight">
+                                                <p className="mt-1.5 text-[9px] font-mono text-gray-400 italic leading-tight">
                                                     based on your uploaded CSVs and Amazon's reimbursement policies.
                                                 </p>
                                             </div>
 
-                                            {/* Lower-space: Eventual data breakdown */}
-                                            <div className="p-6 flex-1 bg-gray-50/30">
-                                                <h3 className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
-                                                <p className="text-[10px] text-gray-400 font-sans leading-relaxed">
-                                                    Events that led to the miscalculation
-                                                </p>
+                                            {/* Middle-space: Eventual data breakdown */}
+                                            <div className="px-5 py-4 border-b border-gray-100 flex-1">
+                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Eventual data breakdown</h3>
+                                                <p className="text-[9px] font-mono text-gray-400 uppercase tracking-wider mb-4">Events that led to the miscalculation</p>
                                                 
-                                                <div className="mt-6 space-y-4">
+                                                <div className="space-y-3">
                                                     {[
-                                                        { label: 'Inbound Discrepancy', date: 'Oct 12', status: 'Flagged' },
-                                                        { label: 'Fee Overcharge', date: 'Oct 15', status: 'Calculated' },
-                                                        { label: 'Lost in Warehouse', date: 'Nov 02', status: 'Verified' }
+                                                        { label: 'Inbound Discrepancy', date: 'OCT 12', status: 'Flagged' },
+                                                        { label: 'Fee Overcharge', date: 'OCT 15', status: 'Calculated' },
+                                                        { label: 'Lost in Warehouse', date: 'NOV 02', status: 'Verified' }
                                                     ].map((item, idx) => (
-                                                        <div key={idx} className="flex items-center justify-between group">
-                                                            <div className="flex flex-col">
-                                                                <span className="text-[10px] font-bold text-gray-800 font-sans">{item.label}</span>
-                                                                <span className="text-[8px] font-mono text-gray-300 uppercase">{item.date}</span>
+                                                        <div key={idx} className="flex items-center justify-between">
+                                                            <div>
+                                                                <p className="text-[10px] font-bold text-gray-900 leading-none">{item.label}</p>
+                                                                <p className="text-[8px] font-mono text-gray-300 mt-1 uppercase">{item.date}</p>
                                                             </div>
-                                                            <span className="text-[8px] font-mono px-1.5 py-0.5 rounded-full bg-white border border-gray-100 text-gray-400 group-hover:bg-violet-50 group-hover:text-violet-500 group-hover:border-violet-100 transition-colors">
+                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-mono text-gray-400 uppercase">
                                                                 {item.status}
-                                                            </span>
+                                                            </div>
                                                         </div>
                                                     ))}
+                                                </div>
+                                            </div>
+
+                                            {/* Bottom-space: Policy reference */}
+                                            <div className="px-5 py-4 bg-gray-50/50">
+                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Policy reference</h3>
+                                                <p className="text-[9px] font-mono text-gray-300 uppercase tracking-widest mb-2">Policy basis</p>
+                                                <div className="space-y-2">
+                                                    <p className="text-[9px] font-mono text-gray-500 leading-relaxed italic">
+                                                        <span className="font-bold text-gray-400 not-italic mr-1 uppercase">Policy:</span>
+                                                        "These opportunities are identified using Amazon’s published reimbursement policies for lost, damaged, and incorrectly charged FBA inventory. 
+                                                        We prepare claims that match what Seller Support expects to see."
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
