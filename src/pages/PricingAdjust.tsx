@@ -3,7 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Zap, ShieldCheck, Clock, FileText, CheckCircle2, ArrowRight, Sparkles, DollarSign } from 'lucide-react';
+import { Check, ArrowRight, Sparkles, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function PricingAdjust() {
@@ -68,9 +68,7 @@ export default function PricingAdjust() {
 
                 <div className="space-y-6 flex-grow mb-8">
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <DollarSign className="h-3 w-3 text-white/40" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
                       <p className="text-sm font-semibold text-white">Success Fee: 20%</p>
                       <p className="text-[11px] text-white/30 uppercase tracking-wider">No upfront cost</p>
@@ -78,9 +76,7 @@ export default function PricingAdjust() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <Clock className="h-3 w-3 text-white/40" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
                       <p className="text-sm text-white/80">Audit Window: Last 90 Days</p>
                       <p className="text-[11px] text-white/20 uppercase tracking-wider">Inventory & fee error scans</p>
@@ -88,9 +84,7 @@ export default function PricingAdjust() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <ShieldCheck className="h-3 w-3 text-white/40" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <p className="text-sm text-white/80 leading-relaxed font-light">Payouts are only generated after Amazon approves your reimbursements.</p>
                   </div>
                 </div>
@@ -139,9 +133,7 @@ export default function PricingAdjust() {
 
                 <div className="space-y-6 flex-grow mb-8">
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.05)]">
-                      <Zap className="h-3 w-3 text-white/80 fill-white" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-white">Cost: One-time $99</p>
                       <p className="text-[11px] text-white/50 font-bold uppercase tracking-tight">100% credited against success fees</p>
@@ -149,9 +141,7 @@ export default function PricingAdjust() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <Search className="h-3 w-3 text-white/60" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
                       <p className="text-sm text-white font-medium">18-Month Historical Deep Audit</p>
                       <p className="text-[11px] text-white/30 uppercase tracking-normal">Full account reconciliation scan</p>
@@ -159,16 +149,12 @@ export default function PricingAdjust() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <Zap className="h-3 w-3 text-white/60" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <p className="text-sm text-white/80 font-medium">Immediate processing (start in &lt; 5m)</p>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="mt-1 h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <CheckCircle2 className="h-3 w-3 text-white/60" />
-                    </div>
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <p className="text-sm text-white/80">Priority support, and case follow ups</p>
                   </div>
                 </div>
