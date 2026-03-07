@@ -155,7 +155,17 @@ export default function PricingAdjust() {
 
                   <div className="flex items-start gap-4">
                     <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
-                    <p className="text-sm text-white/80">Priority support, and case follow ups</p>
+                    <div>
+                      <p className="text-sm text-white/80">Priority support, and case follow ups</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <div>
+                      <p className="text-sm text-white font-medium">Expert Case Escalation</p>
+                      <p className="text-[10px] text-white/30 uppercase tracking-[0.1em] font-bold">Bypasses automated bot rejections</p>
+                    </div>
                   </div>
                 </div>
 
@@ -178,6 +188,21 @@ export default function PricingAdjust() {
               </div>
             </motion.div>
           </div>
+
+          {/* Footer Contact */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-16 text-center"
+          >
+            <a 
+              href="mailto:billing@margin-finance.com" 
+              className="text-[11px] text-white/20 hover:text-white/40 transition-colors tracking-widest uppercase font-medium"
+            >
+              billing@margin-finance.com
+            </a>
+          </motion.div>
         </div>
       </div>
     </PageLayout>
