@@ -371,7 +371,7 @@ const Index = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col text-white relative overflow-x-hidden w-full bg-[#050505] selection:bg-emerald-500/30 selection:text-white"
+      className="min-h-screen flex flex-col font-sans text-white relative overflow-x-hidden w-full bg-[#050505] selection:bg-emerald-500/30 selection:text-white"
       style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
 
       <PublicNavbar />
@@ -406,20 +406,20 @@ const Index = () => {
                     <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
                     <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
                   </div>
-                  <span className="text-[9px] font-mono font-medium text-white/70 uppercase tracking-widest">
+                  <span className="text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight">
                     <span className="text-white font-bold">7</span> spots remaining
                   </span>
                 </div>
 
-                <h1 className="font-merriweather text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
+                <h1 className="font-sans text-4xl md:text-5xl lg:text-7xl font-light tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
                   The Autonomous <br className="hidden lg:block" />
                   FBA Recovery Engine.
                 </h1>
 
-                <p className="font-montserrat text-base md:text-lg text-white/40 font-medium max-w-xl leading-[1.6]">
+                <p className="font-sans text-base md:text-lg text-white/40 font-light max-w-xl leading-[1.6] tracking-tight">
                   Your inventory vanished at FTW1? Our 11-agent engine automatically detects these discrepancies, builds policy-proof claims with your exact documentation, and recovers your lost margins at machine speed.
                 </p>
-                <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest">
+                <p className="text-[10px] text-white/20 font-sans uppercase tracking-tight">
                   Automated detection within Amazon-approved policy windows.
                 </p>
 
@@ -435,7 +435,7 @@ const Index = () => {
                       </div>
                       <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
-                      <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
+                      <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
                         Get Started
                         <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
                       </span>
@@ -448,7 +448,7 @@ const Index = () => {
                 <div className="w-full flex items-center justify-center gap-4 mt-20 mb-10 px-6">
                   <div className="h-[1px] flex-1 max-w-[300px] bg-white/10" />
                   <div className="px-5 py-2 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-md">
-                    <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Integrations</span>
+                    <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Integrations</span>
                   </div>
                   <div className="h-[1px] flex-1 max-w-[300px] bg-white/10" />
                 </div>
@@ -498,16 +498,16 @@ const Index = () => {
               <div className="text-center space-y-6 max-w-3xl mx-auto mb-16 relative z-10">
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <div className="h-[1px] w-8 bg-gray-200" />
-                  <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[0.3em] uppercase">
+                  <span className="text-[10px] font-bold text-gray-400 font-sans tracking-tight uppercase">
                     DEMO
                   </span>
                   <div className="h-[1px] w-8 bg-gray-200" />
                 </div>
-                <h2 className="text-3xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
+                <h2 className="text-3xl md:text-5xl font-sans font-light tracking-tight text-white leading-tight">
                   30 Seconds to Reconcile <br className="hidden sm:block" />
                   90 Days of Data.
                 </h2>
-                <p className="text-base md:text-lg text-white/50 font-montserrat leading-relaxed max-w-xl mx-auto">
+                <p className="text-base md:text-lg text-white/50 font-sans tracking-tight leading-relaxed max-w-xl mx-auto">
                   Watch Margin autonomously detect missing inventory, match the exact supplier invoice, and submit the claim to Amazon for a $1M+ FBA portfolio.
                 </p>
               </div>
@@ -538,8 +538,8 @@ const Index = () => {
                         </div>
                       </div>
                       <div className="text-center space-y-2 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">Institutional Preview</p>
-                        <p className="text-white/20 text-xs font-mono">ENCRYPTED_FEED_STREAM_V2</p>
+                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-tight">Institutional Preview</p>
+                        <p className="text-white/20 text-xs font-sans tracking-tight">ENCRYPTED_FEED_STREAM_V2</p>
                       </div>
                     </div>
 
@@ -566,15 +566,15 @@ const Index = () => {
                   className="space-y-8"
                 >
                   <div className="space-y-4">
-                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.4em] uppercase">
+                    <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                       CORPORATE MANDATE
                     </span>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-merriweather font-bold text-white tracking-tight leading-[1.1]">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white tracking-tight leading-[1.1]">
                       Corporate Profile & <br />
                       <span className="text-white/40 italic">Operational Mandate</span>
                     </h2>
                   </div>
-                  <p className="max-w-md text-white/30 text-base md:text-lg font-montserrat leading-relaxed font-medium">
+                  <p className="max-w-md text-white/30 text-base md:text-lg font-sans tracking-tight leading-relaxed font-light">
                     To ensure institutional-grade forensic validation and priority API rate limits, Margin is strictly optimized for high-complexity FBA operations.
                   </p>
                 </motion.div>
@@ -608,12 +608,12 @@ const Index = () => {
                       className="group border-t border-white/10 py-8 first:border-0"
                     >
                       <div className="flex gap-8">
-                        <span className={`text-[10px] font-mono ${item.color.replace('text-', 'text-opacity-20 ')} mt-1.5 font-bold`}>{item.id}</span>
+                        <span className={`text-[10px] font-sans tracking-tight ${item.color.replace('text-', 'text-opacity-20 ')} mt-1.5 font-bold`}>{item.id}</span>
                         <div className="space-y-2">
-                          <h3 className={`text-sm font-bold text-white font-montserrat uppercase tracking-widest group-hover:${item.color} transition-colors`}>
+                          <h3 className={`text-sm font-bold text-white font-sans uppercase tracking-tight group-hover:${item.color} transition-colors`}>
                             {item.title}
                           </h3>
-                          <p className="text-white/40 text-[13px] font-montserrat leading-relaxed font-medium">
+                          <p className="text-white/40 text-[13px] font-sans tracking-tight leading-relaxed font-light">
                             {item.desc}
                           </p>
                         </div>
@@ -627,23 +627,23 @@ const Index = () => {
               <div className="border-t border-white/5 pt-24 mt-24">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12">
                   <div className="space-y-6">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">THROUGHPUT CAPACITY</span>
-                    <div className="text-4xl md:text-5xl font-merriweather font-bold text-white tracking-tight">10k TPS</div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                    <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">THROUGHPUT CAPACITY</span>
+                    <div className="text-4xl md:text-5xl font-sans font-light text-white tracking-tight">10k TPS</div>
+                    <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed font-light">
                       Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
                     </p>
                   </div>
                   <div className="space-y-6">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">AUDIT LATENCY</span>
-                    <div className="text-4xl md:text-5xl font-merriweather font-bold text-white tracking-tight">&lt; 200ms</div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                    <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">AUDIT LATENCY</span>
+                    <div className="text-4xl md:text-5xl font-sans font-light text-white tracking-tight">&lt; 200ms</div>
+                    <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed font-light">
                       Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
                     </p>
                   </div>
                   <div className="space-y-6">
-                    <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.2em] uppercase">SYSTEM UPTIME</span>
-                    <div className="text-4xl md:text-5xl font-merriweather font-bold text-white tracking-tight">99.99%</div>
-                    <p className="text-white/40 text-sm font-montserrat leading-relaxed font-medium">
+                    <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">SYSTEM UPTIME</span>
+                    <div className="text-4xl md:text-5xl font-sans font-light text-white tracking-tight">99.99%</div>
+                    <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed font-light">
                       Redundant server clusters ensure your audit process never sleeps, even during surges.
                     </p>
                   </div>
@@ -661,15 +661,15 @@ const Index = () => {
                 <div className="text-center mb-16 sm:mb-24 space-y-6">
                   <div className="flex items-center justify-center gap-3 mb-4">
                     <div className="h-[1px] w-8 bg-gray-200" />
-                    <span className="text-[10px] font-bold text-gray-400 font-mono tracking-[.3em] uppercase">
+                    <span className="text-[10px] font-bold text-gray-400 font-sans tracking-tight uppercase">
                       frequently asked questions
                     </span>
                     <div className="h-[1px] w-8 bg-gray-200" />
                   </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-5xl font-merriweather font-bold tracking-tight text-white leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
+                  <h2 className="text-4xl md:text-5xl lg:text-5xl font-sans font-light tracking-tight text-white leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
                     Frequently Asked Questions
                   </h2>
-                  <p className="text-white/40 text-base md:text-lg font-montserrat max-w-2xl mx-auto leading-relaxed">
+                  <p className="text-white/40 text-base md:text-lg font-sans tracking-tight max-w-2xl mx-auto leading-relaxed">
                     Everything you need to know before we connect to your Seller Central account.
                   </p>
                 </div>
@@ -677,10 +677,10 @@ const Index = () => {
                 <div className="space-y-4">
                   <Accordion type="single" collapsible className="w-full space-y-4">
                     <AccordionItem value="data" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         What data do you access? Do you look at my customer info or sales?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
+                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
                           No. Margin operates strictly on the SP-API endpoints related to inbound inventory, fee ledgers, and fulfillment reports. We have zero access to your customer data, messaging, or storefront. We operate with read-only access for discovery, and strictly restricted write-access just to file the reimbursement cases.
                         </p>
@@ -688,10 +688,10 @@ const Index = () => {
                     </AccordionItem>
 
                     <AccordionItem value="cost" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         How much does Margin cost?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
+                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
                           Zero upfront, and zero monthly subscriptions. We take a flat 20% success fee only on the capital that actually clears into your Amazon settlement balance. If we scan your ledgers and find nothing, or if Amazon rejects the claim, you pay absolutely nothing.
                         </p>
@@ -699,21 +699,21 @@ const Index = () => {
                     </AccordionItem>
 
                     <AccordionItem value="safety" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         Will using an automated tool get my Amazon account suspended?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
+                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          No. Margin is 100% compliant with Amazon&apos;s 2026 Terms of Service. We do not &quot;spam&quot; Seller Support with blind claims. Our 11-agent constellation only files a case when it has successfully matched a missing FNSKU to a verified, policy-proof document (like your stamped BOL and supplier invoice). We play exactly by Amazon&apos;s rules; we just do it faster.
+                          No. Margin is 100% compliant with Amazon&aposs 2026 Terms of Service. We do not &quot;spam&quot; Seller Support with blind claims. Our 11-agent constellation only files a case when it has successfully matched a missing FNSKU to a verified, policy-proof document (like your stamped BOL and supplier invoice). We play exactly by Amazon&aposs rules; we just do it faster.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
 
                     <AccordionItem value="invoices" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                         Do I have to manually upload my supplier invoices for every claim?
                       </AccordionTrigger>
-                      <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
+                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
                           No. That is what makes Margin autonomous. You connect your Google Drive or email during onboarding. Our neural agents autonomously locate the correct supplier invoice, match it line-by-line to the missing inventory, and attach it to the Amazon claim without you ever clicking a button.
                         </p>
@@ -724,20 +724,20 @@ const Index = () => {
                       <>
 
                         <AccordionItem value="coexist" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                          <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             What if I already use another reimbursement service?
                           </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                            <p>
-                              No problem. Run Margin alongside your current tool. We&apos;re confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
-                            </p>
-                          </AccordionContent>
+                            <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
+                              <p>
+                                No problem. Run Margin alongside your current tool. We&aposs confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                              </p>
+                            </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="cancel" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-montserrat text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                          <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
                             What if I want to cancel?
                           </AccordionTrigger>
-                          <AccordionContent className="font-montserrat pb-6 text-base text-white/40 leading-relaxed space-y-4">
+                          <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
                               You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
                             </p>
@@ -751,7 +751,7 @@ const Index = () => {
                     <div className="flex justify-center pt-8">
                       <button
                         onClick={() => setShowMoreFAQs(true)}
-                        className="group flex items-center gap-3 text-[11px] font-bold text-white/30 font-mono tracking-[.25em] hover:text-white transition-all uppercase">
+                        className="group flex items-center gap-3 text-[11px] font-bold text-white/30 font-sans tracking-tight hover:text-white transition-all uppercase">
                         <Search className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
                         <span>Query Extended Database</span>
                       </button>
@@ -773,17 +773,17 @@ const Index = () => {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
                     <div className="h-[1px] w-8 bg-emerald-500/50" />
-                    <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.3em] uppercase">
+                    <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                       Case studies
                     </span>
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-merriweather font-bold tracking-tight text-white leading-tight">
+                  <h2 className="text-4xl md:text-5xl font-sans font-light tracking-tight text-white leading-tight">
                     Capital Margin Restored
                   </h2>
                 </div>
                 <div className="md:text-right">
-                  <p className="text-white/30 text-sm font-montserrat max-w-xs md:ml-auto leading-relaxed">
-                    See exactly how our 11-agent engine extracts lost capital from Amazon&apos;s warehouse network.
+                  <p className="text-white/30 text-sm font-sans tracking-tight max-w-xs md:ml-auto leading-relaxed">
+                    See exactly how our 11-agent engine extracts lost capital from Amazon&aposs warehouse network.
                   </p>
                 </div>
               </div>
@@ -795,19 +795,19 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Intel_Report_V4
                         </span>
-                        <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
                           The Invisible Tax: Why FBA Inventory Drift Exceeds 3% at Scale
                         </h3>
-                        <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
                           Analysis of 47 seller accounts reveals systematic inventory variance patterns. Our forensic protocol recovered an average of $8,400 per account in the first 30 days.
                         </p>
                       </div>
                       <div className="mt-6 flex items-center gap-2">
                         <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-mono uppercase tracking-[0.2em]">Verified_Intel</span>
+                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Verified_Intel</span>
                       </div>
                     </div>
                   </div>
@@ -816,19 +816,19 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Forensic_Case_019
                         </span>
-                        <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
                           Case File 019: Recovering $14,200 in &ldquo;Warehouse Damaged&rdquo; Assets
                         </h3>
-                        <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
                           A single seller with 3,000+ units flagged as &ldquo;damaged.&rdquo; Agent 3 detected pattern inconsistencies, Agent 4 found original photos in email, Agent 6 matched 94% of claims. Full recovery in 19 days.
                         </p>
                       </div>
                       <div className="mt-6 flex items-center gap-2">
                         <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-mono uppercase tracking-[0.2em]">Case_Secure</span>
+                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Case_Secure</span>
                       </div>
                     </div>
                   </div>
@@ -837,19 +837,19 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Tech_Spec_Algo26
                         </span>
-                        <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
                           Algo-26 Detection Protocol: Inside the Engineering Stack
                         </h3>
-                        <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
                           How our 26th algorithm identifies dimensional weight discrepancies across 1M+ SKUs. Technical deep dive on neural matching confidence scores and false-positive reduction.
                         </p>
                       </div>
                       <div className="mt-6 flex items-center gap-2">
                         <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-mono uppercase tracking-[0.2em]">Protocol_Stack</span>
+                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Protocol_Stack</span>
                       </div>
                     </div>
                   </div>
@@ -859,7 +859,7 @@ const Index = () => {
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                          <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                             Valuation_Strategy
                           </span>
                           <div className="flex items-end gap-[1px]">
@@ -868,16 +868,16 @@ const Index = () => {
                             <div className="w-[2px] h-5 bg-emerald-500/40" />
                           </div>
                         </div>
-                        <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
                           The Valuation Delta: How Unclaimed Margin Erodes 12-Month Rolling EBITDA
                         </h3>
-                        <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
                           For aggregators and high-volume sellers, every $1 of recovered margin adds $4 to valuation (at a 4x multiple). Protect your final exit price by repairing your P&L before due diligence.
                         </p>
                       </div>
                       <div className="mt-6 flex items-center gap-2">
                         <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-mono uppercase tracking-[0.2em]">EBITDA_Impact</span>
+                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">EBITDA_Impact</span>
                       </div>
                     </div>
                   </div>
@@ -887,21 +887,21 @@ const Index = () => {
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                          <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                             Temporal_Expiry_Alert
                           </span>
                           <div className="w-10 h-[1px] bg-gradient-to-r from-emerald-500/40 via-white/10 to-transparent" />
                         </div>
-                        <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
                           Temporal Decay: The 18-Month Audit Cliff & Liquidity Forfeiture
                         </h3>
-                        <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
                           Amazon data expires. If you don&apos;t audit the shipment from 19 months ago today, that capital is legally forfeited. We identify and arrest the decay of your claimable assets in real-time.
                         </p>
                       </div>
                       <div className="mt-6 flex items-center gap-2">
                         <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-mono uppercase tracking-[0.2em]">Expiry_Guard</span>
+                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Expiry_Guard</span>
                       </div>
                     </div>
                   </div>
@@ -910,19 +910,19 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-[0.2em] uppercase">
+                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Logistics_Recon_01
                         </span>
-                        <h3 className="text-xl md:text-2xl font-merriweather font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
                           Inbound Reconciliation: Mapping the &ldquo;Black Hole&rdquo; Between 3PL and FC Transfer
                         </h3>
-                        <p className="text-white/40 text-sm font-montserrat leading-relaxed line-clamp-4">
+                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
                           We don&apos;t accept &ldquo;Received in Full&rdquo; as a status. Our engine validates against the Bill of Lading and Carrier Weight to find units that vanish in the void between shipment and arrival.
                         </p>
                       </div>
                       <div className="mt-6 flex items-center gap-2">
                         <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-mono uppercase tracking-[0.2em]">Logistics_Recon</span>
+                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Logistics_Recon</span>
                       </div>
                     </div>
                   </div>
@@ -934,7 +934,7 @@ const Index = () => {
                   <div className="h-[1px] flex-1 bg-white/5 relative">
                     <div className="absolute top-0 left-0 h-full w-1/6 bg-emerald-500/40" />
                   </div>
-                  <span className="text-[9px] font-bold text-white/20 font-mono uppercase tracking-[0.3em]">
+                  <span className="text-[9px] font-bold text-white/20 font-sans uppercase tracking-tight">
                     Hold Shift + Scroll to Navigate // Briefs 01-06
                   </span>
                   <div className="h-[1px] flex-1 bg-white/5" />
@@ -956,24 +956,24 @@ const Index = () => {
               className="relative z-10 space-y-8 max-w-4xl mx-auto">
               <div className="flex items-center justify-center gap-3 mb-2">
                 <div className="h-[1px] w-8 bg-white/10" />
-                <span className="text-[10px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase">
+                <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">
                   PROTOCOL_26_DEPLOYED
                 </span>
                 <div className="h-[1px] w-8 bg-white/10" />
               </div>
 
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-merriweather font-bold tracking-tight text-white leading-[1.1]">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight text-white leading-[1.1]">
                 Bring Your Ledger. <br className="hidden md:block" />
                 Achieve 100% Accuracy.
               </h2>
 
-              <p className="text-[10px] text-white/20 font-mono uppercase tracking-widest mt-4">
+              <p className="text-[10px] text-white/20 font-sans uppercase tracking-tight mt-4">
                 Refers to internal reconciliation precision; individual recovery outcomes vary by account health.
               </p>
 
               <div className="flex flex-col items-center gap-8 pt-4">
                 <div className="max-w-xl mx-auto">
-                  <p className="text-base text-white/40 font-medium leading-relaxed font-montserrat">
+                  <p className="text-base text-white/40 font-light leading-relaxed font-sans tracking-tight">
                     Eliminate supply chain uncertainty. Our 26-point forensic protocol <br className="hidden md:block" />
                     is ready to reconcile your inbound shipments.
                   </p>
@@ -985,7 +985,7 @@ const Index = () => {
                       <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
                       <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
                     </div>
-                    <span className="text-[9px] font-mono font-medium text-white/70 uppercase tracking-widest">
+                    <span className="text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight">
                       <span className="text-white font-bold">7</span> spots remaining
                     </span>
                   </div>
@@ -998,9 +998,9 @@ const Index = () => {
                     </div>
                     <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
-                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-mono font-bold text-white uppercase tracking-[0.2em]">
+                     <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
                       Private Beta
-                      <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
+                      <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-100" />
                     </span>
                   </button>
                   {/* <AmazonConnect
