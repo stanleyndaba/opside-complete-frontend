@@ -441,7 +441,7 @@ export default function NotificationHub() {
           <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
             <div className="flex items-center gap-3">
               <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-              <h1 className="text-4xl font-light text-white tracking-tight font-serif">Notifications <span className="text-white/40">and settings</span></h1>
+              <h1 className="text-4xl font-light text-white tracking-tight font-sans">Notifications <span className="text-white/40">and settings</span></h1>
             </div>
             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
               Updates and communication preferences.
@@ -455,10 +455,10 @@ export default function NotificationHub() {
               <div className="flex items-center gap-3">
                 <RefreshCw className="h-3 w-3 text-emerald-500/50" />
                 <div>
-                  <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">
+                  <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
                     History
                   </h2>
-                  <p className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-0.5">
+                  <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">
                     Your update log
                   </p>
                 </div>
@@ -467,7 +467,7 @@ export default function NotificationHub() {
                 <button
                   onClick={handleMarkAllRead}
                   disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                  className="px-3 py-1.5 text-[10px] font-mono font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-emerald-500/10 hover:text-emerald-500 rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-20 uppercase tracking-widest">
+                  className="px-3 py-1.5 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-emerald-500/10 hover:text-emerald-500 rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-20 uppercase tracking-tight">
                   <CheckCheck className="h-3.5 w-3.5" />
                   Mark read
                 </button>
@@ -494,7 +494,7 @@ export default function NotificationHub() {
                     placeholder="Search updates..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-10 h-10 text-[11px] font-mono bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+                    className="pl-10 pr-10 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
                   />
                   {searchQuery && (
                     <button
@@ -509,39 +509,39 @@ export default function NotificationHub() {
                 <div className="flex gap-2">
                   {/* Type Filter */}
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="h-10 w-[130px] text-[11px] font-mono bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-widest">
+                    <SelectTrigger className="h-10 w-[130px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-tight">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
-                      <SelectItem value="all" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">All Types</SelectItem>
-                      <SelectItem value="financial" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Financial</SelectItem>
-                      <SelectItem value="document" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Documents</SelectItem>
-                      <SelectItem value="system" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">System</SelectItem>
+                      <SelectItem value="all" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">All Types</SelectItem>
+                      <SelectItem value="financial" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Financial</SelectItem>
+                      <SelectItem value="document" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Documents</SelectItem>
+                      <SelectItem value="system" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">System</SelectItem>
                     </SelectContent>
                   </Select>
 
                   {/* Date Filter */}
                   <Select value={dateFilter} onValueChange={setDateFilter}>
-                    <SelectTrigger className="h-10 w-[120px] text-[11px] font-mono bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-widest">
+                    <SelectTrigger className="h-10 w-[120px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-tight">
                       <SelectValue placeholder="Date" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
-                      <SelectItem value="all" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">All Time</SelectItem>
-                      <SelectItem value="today" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Today</SelectItem>
-                      <SelectItem value="week" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Week</SelectItem>
-                      <SelectItem value="month" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Month</SelectItem>
+                      <SelectItem value="all" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">All Time</SelectItem>
+                      <SelectItem value="today" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Today</SelectItem>
+                      <SelectItem value="week" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Week</SelectItem>
+                      <SelectItem value="month" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Month</SelectItem>
                     </SelectContent>
                   </Select>
 
                   {/* Status Filter */}
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-10 w-[110px] text-[11px] font-mono bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-widest">
+                    <SelectTrigger className="h-10 w-[110px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-tight">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
-                      <SelectItem value="all" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">All</SelectItem>
-                      <SelectItem value="unread" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Unread</SelectItem>
-                      <SelectItem value="read" className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-widest">Read</SelectItem>
+                      <SelectItem value="all" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">All</SelectItem>
+                      <SelectItem value="unread" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Unread</SelectItem>
+                      <SelectItem value="read" className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white uppercase tracking-tight">Read</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -549,7 +549,7 @@ export default function NotificationHub() {
                   {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
                     <button
                       onClick={clearFilters}
-                      className="px-4 h-10 text-[10px] font-mono font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-widest">
+                      className="px-4 h-10 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-tight">
                       Clear
                     </button>
                   )}
@@ -558,7 +558,7 @@ export default function NotificationHub() {
 
               {/* Filter Summary */}
               {(searchQuery || typeFilter !== 'all' || statusFilter !== 'all') && (
-                <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest mt-4">
+                <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight mt-4">
                   Showing {filteredNotifications.length} of {notifications.length} matches
                 </p>
               )}
@@ -569,16 +569,16 @@ export default function NotificationHub() {
               {loading && (
                 <div className="text-center py-20">
                   <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-emerald-500" />
-                  <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Loading updates...</p>
+                  <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading updates...</p>
                 </div>
               )}
 
               {error && !loading && (
                 <div className="text-center py-20">
-                  <p className="text-[11px] font-mono text-rose-500 mb-6 uppercase tracking-widest">{error}</p>
+                  <p className="text-[11px] font-sans font-bold text-rose-500 mb-6 uppercase tracking-tight">{error}</p>
                   <button
                     onClick={handleRefresh}
-                    className="px-6 py-2.5 text-[10px] font-mono font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-widest">
+                    className="px-6 py-2.5 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-tight">
                     Retry
                   </button>
                 </div>
@@ -586,8 +586,8 @@ export default function NotificationHub() {
 
               {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
                 <div className="text-center py-20">
-                  <p className="text-[11px] font-mono text-white/20 mb-4 uppercase tracking-widest">No matching results found.</p>
-                  <button onClick={clearFilters} className="text-[10px] font-mono font-bold text-emerald-500 hover:underline uppercase tracking-widest">
+                  <p className="text-[11px] font-sans font-bold text-white/20 mb-4 uppercase tracking-tight">No matching results found.</p>
+                  <button onClick={clearFilters} className="text-[10px] font-sans font-bold text-emerald-500 hover:underline uppercase tracking-tight">
                     Reset filters
                   </button>
                 </div>
@@ -595,8 +595,8 @@ export default function NotificationHub() {
 
               {!loading && !error && notifications.length === 0 && (
                 <div className="text-center py-20">
-                  <p className="text-[11px] font-mono text-white/20 mb-2 uppercase tracking-widest">Update log empty.</p>
-                  <p className="text-[9px] font-mono text-white/10 uppercase tracking-widest italic">Notifications will appear here as events occur.</p>
+                  <p className="text-[11px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Update log empty.</p>
+                  <p className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight italic">Notifications will appear here as events occur.</p>
                 </div>
               )}
 
@@ -621,7 +621,7 @@ export default function NotificationHub() {
                         <p className="text-sm font-medium text-white mb-1.5 leading-relaxed tracking-tight">
                           {renderNotificationMessage(notification.message)}
                         </p>
-                        <div className="flex items-center gap-3 text-[10px] font-mono font-bold uppercase tracking-widest text-white/20">
+                        <div className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">
                           <span className="flex items-center gap-1.5">
                             <Clock className="h-3 w-3" />
                             {notification.timestamp}
@@ -649,14 +649,14 @@ export default function NotificationHub() {
             <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
               <div className="flex items-center gap-3">
                 <Shield className="h-3 w-3 text-emerald-500/50" />
-                <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">
+                <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">
                   Settings
                 </h2>
               </div>
               <div className="flex items-center gap-3 mt-1.5">
-                <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Preferences</span>
+                <span className="text-sm font-sans font-medium text-white tracking-tight uppercase">Preferences</span>
                 <div className="h-1.5 w-[1px] bg-white/10" />
-                <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">Configuration Active</span>
+                <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">Configuration Active</span>
               </div>
             </div>
 
@@ -667,10 +667,10 @@ export default function NotificationHub() {
                 return (
                   <div key={category} className="space-y-6">
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-[10px] font-mono font-bold text-emerald-500/60 uppercase tracking-widest">
+                      <h3 className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">
                         {category}
                       </h3>
-                      <p className="text-xs text-white/40 italic font-mono uppercase tracking-tighter">
+                      <p className="text-xs text-white/40 italic font-sans font-bold uppercase tracking-tight">
                         {category === 'Financial Milestones' && '// High-signal, essential updates about your money'}
                         {category === 'Account & Security' && '// Important account and security notifications'}
                         {category === 'Platform & Performance' && '// Updates about platform features and performance'}
@@ -689,10 +689,10 @@ export default function NotificationHub() {
                             </div>
 
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-medium text-white mb-1 uppercase tracking-wider font-serif">
+                              <h4 className="text-sm font-medium text-white mb-1 uppercase tracking-tight font-sans">
                                 {pref.title}
                               </h4>
-                              <p className="text-[11px] font-mono text-white/20 uppercase tracking-widest mb-4 leading-relaxed">
+                              <p className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight mb-4 leading-relaxed">
                                 {pref.description}
                               </p>
 
@@ -705,7 +705,7 @@ export default function NotificationHub() {
                                     }
                                     className="scale-90 data-[state=checked]:bg-emerald-500"
                                   />
-                                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Email</span>
+                                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Email</span>
                                 </div>
 
                                 <div className="flex items-center gap-3">
@@ -716,7 +716,7 @@ export default function NotificationHub() {
                                     }
                                     className="scale-90 data-[state=checked]:bg-emerald-500"
                                   />
-                                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">In-App</span>
+                                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">In-App</span>
                                 </div>
                               </div>
                             </div>
@@ -733,7 +733,7 @@ export default function NotificationHub() {
 
           {/* Analysis Footer */}
           <div className="mt-12 text-center border-t border-white/5 pt-8 mb-12">
-            <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
+            <p className="text-[10px] text-gray-600 font-sans font-bold uppercase tracking-tight">
               Communication Registry • Status: Active
             </p>
           </div>
