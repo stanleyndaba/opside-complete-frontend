@@ -206,7 +206,7 @@ export function Navbar({
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-30 transition-all duration-500 ease-in-out font-serif",
+        "sticky top-0 z-30 transition-all duration-500 ease-in-out font-sans",
         sidebarCollapsed ? "ml-20" : "ml-64",
         "bg-[#070707]/90 border-b border-white/5 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]",
         className
@@ -225,7 +225,7 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-emerald-500/30 focus:ring-0 transition-all placeholder:text-white/10 font-mono tracking-tight text-emerald-500"
+                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-emerald-500/30 focus:ring-0 transition-all placeholder:text-white/10 font-sans font-bold tracking-tight text-emerald-500"
                 />
                 {/* Clear button */}
                 {searchQuery && (
@@ -243,10 +243,10 @@ export function Navbar({
                     {recentSearches.length > 0 && (
                       <div className="p-3 border-b border-white/5">
                         <div className="flex items-center justify-between px-2 mb-2">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Recent searches</span>
+                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Recent searches</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-[10px] font-mono text-emerald-500/50 hover:text-emerald-500 uppercase tracking-wider transition-colors">
+                            className="text-[10px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-tight transition-colors">
                             Clear
                           </button>
                         </div>
@@ -257,7 +257,7 @@ export function Navbar({
                               setSearchQuery(search);
                               handleSearch(search);
                             }}
-                            className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-mono uppercase tracking-tight group">
+                            className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-sans font-bold uppercase tracking-tight group">
                             <Clock className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                             {search}
                           </button>
@@ -267,7 +267,7 @@ export function Navbar({
 
                     {/* Quick Access */}
                     <div className="p-3">
-                      <span className="text-[10px] font-mono font-bold text-white/20 px-2 uppercase tracking-widest block mb-2">Quick links</span>
+                      <span className="text-[10px] font-sans font-bold text-white/20 px-2 uppercase tracking-tight block mb-2">Quick links</span>
                       {quickLinks.map((link) => (
                         <button
                           key={link.id}
@@ -275,7 +275,7 @@ export function Navbar({
                             setIsSearchFocused(false);
                             navigate(tenantRoute(tenantSlug || 'default', link.path));
                           }}
-                          className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-mono uppercase tracking-tight group">
+                          className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-sans font-bold uppercase tracking-tight group">
                           <link.icon className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                           {link.label}
                         </button>
@@ -284,8 +284,8 @@ export function Navbar({
 
                     {/* Search Tip */}
                     <div className="px-4 py-3 bg-white/[0.01] border-t border-white/5">
-                      <p className="text-[9px] text-white/20 font-mono uppercase tracking-widest">
-                        Invoke system command with <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-emerald-500 font-mono text-[9px]">ENTER</kbd>
+                      <p className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">
+                        Invoke system command with <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-emerald-500 font-sans font-bold text-[9px]">ENTER</kbd>
                       </p>
                     </div>
                   </div>
@@ -320,15 +320,15 @@ export function Navbar({
                         exit={{ opacity: 0, y: 10 }}
                         className="absolute top-full right-0 mt-3 w-[280px] bg-[#0c0c0c] border border-white/10 rounded-2xl shadow-3xl z-50 overflow-hidden backdrop-blur-3xl">
                         <div className="px-5 py-4 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">Recent notes</span>
-                          <span className="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">{notes.length} total</span>
+                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Recent notes</span>
+                          <span className="text-[9px] font-sans font-bold text-emerald-500/50 uppercase tracking-tight">{notes.length} total</span>
                         </div>
                         <div className="max-h-64 overflow-y-auto divide-y divide-white/5 scrollbar-hide">
                           {notes.slice(0, 5).map((note) => (
                             <div key={note.id} className="group relative p-5 hover:bg-white/[0.02] transition-all">
                               <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                              <p className="text-[11px] text-white/40 font-serif tracking-tight line-clamp-3 leading-relaxed group-hover:text-white/60">{note.text}</p>
-                              <div className="text-[9px] text-white/10 mt-3 font-mono flex items-center justify-between uppercase tracking-widest">
+                              <p className="text-[11px] text-white/40 font-sans font-bold tracking-tight line-clamp-3 leading-relaxed group-hover:text-white/60">{note.text}</p>
+                              <div className="text-[9px] text-white/10 mt-3 font-sans font-bold flex items-center justify-between uppercase tracking-tight">
                                 <span>ID.{note.id.substring(0, 6)}</span>
                                 <span>{new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                               </div>
@@ -359,9 +359,9 @@ export function Navbar({
                         <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center border border-violet-500/20">
                           <Upload className="h-4 w-4 text-violet-500" />
                         </div>
-                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Data Upload</span>
+                        <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Data Upload</span>
                       </div>
-                      <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                      <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
                         "Upload Amazon Seller Central CSV reports to feed the detection pipeline."
                       </p>
                     </div>
@@ -397,10 +397,10 @@ export function Navbar({
                         <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                           <Store className="h-4 w-4 text-emerald-500" />
                         </div>
-                        <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Store Setup</span>
+                        <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Store Setup</span>
                       </div>
-                      <h4 className="text-[13px] font-serif font-medium text-white mb-2 uppercase tracking-tight">Connections</h4>
-                      <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                      <h4 className="text-[13px] font-sans font-bold text-white mb-2 uppercase tracking-tight">Connections</h4>
+                      <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
                         "Consolidate institutional data flows from Amazon, Shopify, or Walmart to maximize multi-vector recoveries."
                       </p>
                       <div className="mt-6">
@@ -409,7 +409,7 @@ export function Navbar({
                           onClick={() => {
                             navigate(tenantRoute(tenantSlug || 'default', '/integrations-hub'));
                           }}
-                          className="w-full h-10 border border-emerald-500/20 bg-emerald-500/[0.02] hover:bg-emerald-500/10 hover:border-emerald-500/50 text-emerald-500 text-[10px] font-mono font-bold uppercase tracking-widest transition-all rounded-xl">
+                          className="w-full h-10 border border-emerald-500/20 bg-emerald-500/[0.02] hover:bg-emerald-500/10 hover:border-emerald-500/50 text-emerald-500 text-[10px] font-sans font-bold uppercase tracking-tight transition-all rounded-xl">
                           Manage connections
                         </Button>
                       </div>
@@ -442,9 +442,9 @@ export function Navbar({
                     <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
                       <Box className="h-4 w-4 text-blue-500" />
                     </div>
-                    <span className="text-[11px] font-serif font-bold text-white uppercase tracking-widest">Integrations Hub</span>
+                    <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Integrations Hub</span>
                   </div>
-                  <p className="text-[11px] text-white/40 leading-relaxed font-serif italic">
+                  <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
                     "Configure your document and data providers — connect Amazon, Gmail, and other marketplace sources."
                   </p>
                 </div>
@@ -452,22 +452,22 @@ export function Navbar({
             </HoverCard>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-serif group/account uppercase tracking-[0.2em] px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
+                <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-sans font-bold group/account uppercase tracking-tight px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
                   <User className="h-5 w-5 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
-                  <span className="hidden sm:inline font-medium">Account</span>
+                  <span className="hidden sm:inline">Account</span>
                   <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
                 {/* Connection Status Header */}
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <h3 className="text-[12px] font-serif font-bold text-white uppercase tracking-[0.2em]">{userProfile?.name || userProfile?.email || 'My Account'}</h3>
+                  <h3 className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">{userProfile?.name || userProfile?.email || 'My Account'}</h3>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
                       <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", userProfile?.amazon_connected ? "bg-emerald-400" : "bg-amber-400")}></span>
                       <span className={cn("relative inline-flex rounded-full h-1.5 w-1.5", userProfile?.amazon_connected ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]")}></span>
                     </div>
-                    <p className={cn("text-[10px] font-mono uppercase tracking-[0.2em]", userProfile?.amazon_connected ? "text-emerald-500/50" : "text-amber-500/50")}>{userProfile?.amazon_connected ? 'Amazon Connected' : 'Amazon Not Connected'}</p>
+                    <p className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", userProfile?.amazon_connected ? "text-emerald-500/50" : "text-amber-500/50")}>{userProfile?.amazon_connected ? 'Amazon Connected' : 'Amazon Not Connected'}</p>
                   </div>
                 </div>
 
@@ -482,11 +482,11 @@ export function Navbar({
                       { label: 'Member Since', value: userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—' }
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-4 group/item">
-                        <span className="text-[10px] font-mono font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-widest shrink-0">
+                        <span className="text-[10px] font-sans font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-tight shrink-0">
                           {item.label}
                         </span>
                         <span className={cn(
-                          "text-[10px] font-mono transition-colors text-right truncate uppercase tracking-tighter",
+                          "text-[10px] font-sans font-bold transition-colors text-right truncate uppercase tracking-tight",
                           !userProfile || item.value === 'Not available' || item.value === 'Not set' || item.value === 'Not connected' || item.value === 'Loading...' ? "text-emerald-500/30" : "text-white/60 group-hover/item:text-white"
                         )}>
                           {item.value}
@@ -499,7 +499,7 @@ export function Navbar({
                   <div className="pt-5 border-t border-white/5 mt-2">
                     <button
                       onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between text-[10px] font-serif font-bold text-white/20 hover:text-rose-500 transition-all group/logout uppercase tracking-[0.3em]">
+                      className="w-full flex items-center justify-between text-[10px] font-sans font-bold text-white/20 hover:text-rose-500 transition-all group/logout uppercase tracking-tight">
                       <span>Sign out</span>
                       <LogOut className="h-4 w-4 group-hover/logout:translate-x-1 transition-transform opacity-20 group-hover/logout:opacity-100" />
                     </button>
@@ -524,8 +524,8 @@ export function Navbar({
             <div className="mx-auto w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mb-6 border border-rose-500/20">
               <LogOut className="h-8 w-8 text-rose-500" />
             </div>
-            <DialogTitle className="text-[16px] font-serif font-bold text-white uppercase tracking-[0.2em]">Sign out?</DialogTitle>
-            <DialogDescription className="text-[12px] text-white/40 mt-4 font-serif italic leading-relaxed max-w-[280px] mx-auto">
+            <DialogTitle className="text-[16px] font-sans font-bold text-white uppercase tracking-tight">Sign out?</DialogTitle>
+            <DialogDescription className="text-[12px] text-white/40 mt-4 font-sans font-bold italic leading-relaxed max-w-[280px] mx-auto">
               "Margin core continues to monitor your assets and recover funds 24/7. Re-authorize anytime to audit recent anomalies."
             </DialogDescription>
           </DialogHeader>
@@ -537,13 +537,13 @@ export function Navbar({
                 try { await api.logout(); } catch (_) { }
                 navigate('/');
               }}
-              className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-serif font-bold transition-all uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.1)]">
+              className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-sans font-bold transition-all uppercase tracking-tight rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.1)]">
               SIGN OUT
             </Button>
             <Button
               variant="ghost"
               onClick={() => setShowSignOutModal(false)}
-              className="w-full h-12 text-[10px] font-mono text-white/20 hover:text-white hover:bg-white/5 transition-all uppercase tracking-widest">
+              className="w-full h-12 text-[10px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 transition-all uppercase tracking-tight">
               Cancel
             </Button>
           </div>
