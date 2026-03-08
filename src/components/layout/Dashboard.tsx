@@ -1090,13 +1090,21 @@ export function Dashboard() {
                       <button
                         onClick={() => handleTabChange('discrepancies')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider",
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider flex items-center gap-2",
                           activeTab === 'discrepancies'
                             ? "text-white bg-white/[0.08]"
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
                         Audits
+                        {(() => {
+                          const count = detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed').length;
+                          return (
+                            <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-white text-[9px] font-bold rounded-full border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                              {count > 10 ? '10+' : count}
+                            </span>
+                          );
+                        })()}
                       </button>
                       <button
                         onClick={() => handleTabChange('disputes')}
