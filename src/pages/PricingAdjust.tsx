@@ -44,7 +44,7 @@ export default function PricingAdjust() {
           </motion.div>
 
           {/* Pricing Options Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl items-stretch">
             {/* Option 1: Standard Recovery */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
@@ -109,12 +109,12 @@ export default function PricingAdjust() {
 
             {/* Option 2: Priority Audit Pass */}
             <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="group relative flex flex-col"
             >
-              <div className="absolute inset-0 bg-white/[0.02] rounded-2xl border border-white/10 group-hover:bg-white/[0.04] group-hover:border-white/20 transition-all duration-500 backdrop-blur-sm" />
+              <div className="absolute inset-0 bg-white/[0.02] rounded-2xl border border-emerald-500/20 group-hover:bg-white/[0.04] group-hover:border-emerald-500/40 transition-all duration-500 backdrop-blur-sm" />
               
               <div className="relative p-8 flex flex-col h-full z-10">
                 <div className="mb-6">
@@ -123,7 +123,7 @@ export default function PricingAdjust() {
                       <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest px-2 py-0.5 border border-white/10">Option 2</span>
                       <div className="h-px flex-1 bg-white/10" />
                     </div>
-                    <span className="text-[10px] font-bold text-white uppercase ml-4 tracking-tighter">Highly recommended</span>
+                    <Badge variant="outline" className="text-[9px] font-bold text-emerald-400 border-emerald-500/30 uppercase tracking-tighter">Recommended</Badge>
                   </div>
                   <div className="flex items-baseline gap-2">
                     <h2 className="text-2xl font-bold text-white tracking-tight">Priority</h2>
@@ -136,15 +136,15 @@ export default function PricingAdjust() {
 
                 <div className="space-y-6 flex-grow mb-8">
                   <div className="flex items-start gap-4">
-                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-white">Cost: One-time $99</p>
-                      <p className="text-[11px] text-white/50 font-bold uppercase tracking-tight">100% credited against success fees</p>
+                      <p className="text-[11px] text-emerald-400/60 font-bold uppercase tracking-tight">100% credited against success fees</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
                       <p className="text-sm text-white font-medium">18-Month Historical Deep Audit</p>
                       <p className="text-[11px] text-white/30 uppercase tracking-normal">Full account reconciliation scan</p>
@@ -152,19 +152,19 @@ export default function PricingAdjust() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <p className="text-sm text-white/80 font-medium">Immediate processing (start in &lt; 5m)</p>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
-                      <p className="text-sm text-white/80">Priority support, and case follow ups</p>
+                      <p className="text-sm text-white/80">Priority support & case follow ups</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
                       <p className="text-sm text-white font-medium">Expert Case Escalation</p>
                       <p className="text-[10px] text-white/30 uppercase tracking-[0.1em] font-bold">Bypasses automated bot rejections</p>
@@ -174,8 +174,8 @@ export default function PricingAdjust() {
 
                 <div className="mt-auto flex flex-col gap-6">
                   <Button 
-                    variant="ghost"
-                    className="text-white/70 hover:text-white font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 hover:bg-transparent"
+                    variant="default"
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                   >
                     Get Priority
                     <ArrowRight className="h-4 w-4" />
@@ -186,6 +186,81 @@ export default function PricingAdjust() {
                         <span className="text-white/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-white font-bold">$251</span> after your $99 credit is applied.
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Option 3: Enterprise / Agency */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative flex flex-col"
+            >
+              <div className="absolute inset-0 bg-white/[0.01] rounded-2xl border border-white/5 group-hover:bg-white/[0.02] group-hover:border-white/10 transition-all duration-500 backdrop-blur-[2px]" />
+              <div className="relative p-8 flex flex-col h-full z-10">
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest px-2 py-0.5 border border-white/5">Option 3</span>
+                    <div className="h-px flex-1 bg-white/5" />
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Enterprise</h2>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <span className="text-[11px] font-bold text-white/40">Custom solutions for scale:</span>
+                </div>
+
+                <div className="space-y-6 flex-grow mb-8">
+                  <div className="flex items-start gap-4">
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-white">Custom Volume Pricing</p>
+                      <p className="text-[11px] text-white/30 uppercase tracking-wider">For aggregators with 10+ accounts</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <div>
+                      <p className="text-sm text-white/80">Dedicated Account Manager</p>
+                      <p className="text-[11px] text-white/20 uppercase tracking-wider">Direct line for complex claims</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <Sparkles className="mt-1 h-3.5 w-3.5 text-violet-400 shrink-0" />
+                    <div>
+                      <p className="text-sm text-white/80">API Access</p>
+                      <p className="text-[11px] text-violet-400/60 uppercase tracking-wider font-bold">Coming Soon</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
+                    <div>
+                      <p className="text-sm text-white/80">Priority SLA Support</p>
+                      <p className="text-[11px] text-white/20 uppercase tracking-wider">Guaranteed response times</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-auto flex flex-col gap-6">
+                  <Button 
+                    asChild
+                    variant="outline"
+                    className="border-white/10 text-white/70 hover:text-white hover:bg-white/5 font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
+                  >
+                    <a href="mailto:billing@margin-finance.com?subject=Enterprise Inquiry - Margin Finance">
+                        Contact Sales
+                        <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </Button>
+                  <div className="pt-6 border-t border-white/5">
+                    <p className="text-[11px] text-white/30 italic font-light tracking-wide">"Tailored strategies for agencies and high-volume sellers."</p>
                   </div>
                 </div>
               </div>
