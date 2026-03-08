@@ -67,7 +67,7 @@ export default function Contact() {
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-3 group">
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
-                        <span className="text-base font-bold text-white font-montserrat tracking-tight">Margin</span>
+                        <span className="text-base font-bold text-white font-sans tracking-tight">Margin</span>
                     </Link>
                 </div>
             </header>
@@ -77,12 +77,12 @@ export default function Contact() {
                 <div className="max-w-2xl mb-20 text-left">
                     <div className="flex items-center gap-2 mb-4">
                         <div className="h-[1px] w-8 bg-white/20" />
-                        <span className="text-[11px] font-bold text-white/40 font-montserrat tracking-wider sm:tracking-[0.2em] uppercase">Contact Us</span>
+                        <span className="text-[11px] font-bold text-white/40 font-sans tracking-tight uppercase">Contact Us</span>
                     </div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-merriweather font-bold text-white leading-tight mb-6 break-words">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-light text-white leading-tight mb-6 break-words tracking-tight">
                         Contact Support & <br />Enterprise Sales
                     </h1>
-                    <p className="text-lg text-white/40 font-montserrat max-w-xl leading-relaxed">
+                    <p className="text-lg text-white/40 font-sans tracking-tight max-w-xl leading-relaxed">
                         Secure a forensic audit of your Amazon portfolio. Our technical team responds to global inquiries within 24 operational hours.
                     </p>
                 </div>
@@ -95,16 +95,16 @@ export default function Contact() {
                                 <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-8">
                                     <CheckCircle2 className="h-10 w-10 text-emerald-500" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-white font-merriweather mb-3">
+                                <h2 className="text-2xl font-sans font-light tracking-tight text-white mb-3">
                                     Transmission Prepared
                                 </h2>
-                                <p className="text-white/40 font-montserrat mb-10 max-w-xs mx-auto text-sm leading-relaxed">
+                                <p className="text-white/40 font-sans tracking-tight mb-10 max-w-xs mx-auto text-sm leading-relaxed">
                                     Your secure inquiry has been formatted. Please complete the transmission via your email client.
                                 </p>
                                 <Button
                                     onClick={() => setIsSubmitted(false)}
                                     variant="outline"
-                                    className="font-bold text-xs uppercase tracking-widest border-white/10 text-white hover:bg-white/5 rounded-xl h-12 px-8 font-montserrat">
+                                    className="font-sans font-light text-xs uppercase tracking-tight border-white/10 text-white hover:bg-white/5 rounded-xl h-12 px-8">
                                     New Transmission
                                 </Button>
                             </div>
@@ -112,7 +112,7 @@ export default function Contact() {
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-white/30 tracking-wider sm:tracking-widest uppercase mb-2 block font-montserrat">
+                                        <label className="text-[10px] font-bold text-white/30 tracking-tight uppercase mb-2 block font-sans">
                                             Your Name
                                         </label>
                                         <Input
@@ -120,12 +120,12 @@ export default function Contact() {
                                             value={form.name}
                                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                                             placeholder="FULL NAME"
-                                            className="h-12 border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl placeholder:text-white/10 font-montserrat"
+                                            className="h-12 border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl placeholder:text-white/10 font-sans"
                                             required
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-white/30 tracking-wider sm:tracking-widest uppercase mb-2 block font-montserrat">
+                                        <label className="text-[10px] font-bold text-white/30 tracking-tight uppercase mb-2 block font-sans">
                                             Email Address
                                         </label>
                                         <Input
@@ -133,7 +133,7 @@ export default function Contact() {
                                             value={form.email}
                                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                                             placeholder="SENDER@DOMAIN.COM"
-                                            className="h-12 border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl placeholder:text-white/10 font-montserrat"
+                                            className="h-12 border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl placeholder:text-white/10 font-sans"
                                             required
                                         />
                                     </div>
@@ -141,7 +141,7 @@ export default function Contact() {
 
                                 <div className="grid md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-white/30 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase mb-2 block">
                                             Entity / Company
                                         </label>
                                         <Input
@@ -149,11 +149,11 @@ export default function Contact() {
                                             value={form.company}
                                             onChange={(e) => setForm({ ...form, company: e.target.value })}
                                             placeholder="COMPANY NAME"
-                                            className="h-12 border-white/10 text-sm font-mono tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none placeholder:text-white/10"
+                                            className="h-12 border-white/10 text-sm font-sans tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none placeholder:text-white/10"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-white/30 font-mono tracking-wider sm:tracking-widest uppercase mb-2 block">
+                                        <label className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase mb-2 block">
                                             Subject Header
                                         </label>
                                         <Input
@@ -161,20 +161,20 @@ export default function Contact() {
                                             value={form.subject}
                                             onChange={(e) => setForm({ ...form, subject: e.target.value })}
                                             placeholder="INQUIRY TYPE"
-                                            className="h-12 border-white/10 text-sm font-mono tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none placeholder:text-white/10"
+                                            className="h-12 border-white/10 text-sm font-sans tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-none placeholder:text-white/10"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-bold text-white/30 tracking-widest uppercase mb-2 block font-montserrat">
+                                    <label className="text-[10px] font-bold text-white/30 tracking-tight uppercase mb-2 block font-sans">
                                         Message Body
                                     </label>
                                     <Textarea
                                         value={form.message}
                                         onChange={(e) => setForm({ ...form, message: e.target.value })}
                                         placeholder="DECRYPTED MESSAGE CONTENT..."
-                                        className="min-h-[160px] border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl resize-none px-4 py-4 placeholder:text-white/10 font-montserrat"
+                                        className="min-h-[160px] border-white/10 text-sm tracking-tight bg-white/[0.02] focus:bg-white/[0.04] focus:border-emerald-500/50 transition-all rounded-xl resize-none px-4 py-4 placeholder:text-white/10 font-sans"
                                         required
                                     />
                                 </div>
@@ -182,7 +182,7 @@ export default function Contact() {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full h-14 bg-white hover:bg-white/90 text-black text-xs font-bold tracking-widest uppercase rounded-xl transition-all shadow-2xl font-montserrat">
+                                    className="w-full h-14 bg-white hover:bg-white/90 text-black text-xs font-sans font-light tracking-tight uppercase rounded-xl transition-all shadow-2xl">
                                     {isSubmitting ? (
                                         <>Formatting Transmission...</>
                                     ) : (
@@ -199,7 +199,7 @@ export default function Contact() {
                     {/* Contact Info Sidebar */}
                     <div className="lg:col-span-5 space-y-12">
                         <div className="pt-8 border-t border-white/5">
-                            <h2 className="text-[10px] font-bold text-white/40 font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
+                            <h2 className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase mb-4 flex items-center gap-2">
                                 <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
                                 Operations Status
                             </h2>
@@ -208,15 +208,15 @@ export default function Contact() {
                                     <Clock className="h-4 w-4" />
                                 </div>
                                 <div>
-                                    <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-1">Response Latency</p>
-                                    <p className="text-sm font-bold text-white font-mono uppercase">LT &lt; 24 Hours</p>
+                                    <p className="text-[11px] font-bold text-white/30 uppercase tracking-tight mb-1 font-sans">Response Latency</p>
+                                    <p className="text-sm font-bold text-white font-sans uppercase tracking-tight">LT &lt; 24 Hours</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Direct Access Gateways */}
                         <div className="space-y-4">
-                            <h2 className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase pl-2 mb-4">Direct Gateways</h2>
+                            <h2 className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase pl-2 mb-4">Direct Gateways</h2>
 
                             <a
                                 href="mailto:support@margin-finance.com"
@@ -225,8 +225,8 @@ export default function Contact() {
                                     <Mail className="h-5 w-5 text-white/40 group-hover:text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-white uppercase tracking-tight">Technical Support</p>
-                                    <p className="text-sm text-white/40 font-mono">support@margin-finance.com</p>
+                                    <p className="text-xs font-bold text-white uppercase tracking-tight font-sans">Technical Support</p>
+                                    <p className="text-sm text-white/40 font-sans tracking-tight">support@margin-finance.com</p>
                                 </div>
                             </a>
 
@@ -238,8 +238,8 @@ export default function Contact() {
                                     <ShieldCheck className="h-5 w-5 text-emerald-500" />
                                 </div>
                                 <div className="relative z-10">
-                                    <p className="text-xs font-bold text-white uppercase tracking-tight">Enterprise Sales</p>
-                                    <p className="text-[11px] text-white/40 font-mono uppercase tracking-widest mt-0.5">VIP Priority Gateway</p>
+                                    <p className="text-xs font-bold text-white uppercase tracking-tight font-sans">Enterprise Sales</p>
+                                    <p className="text-[11px] text-white/40 font-sans uppercase tracking-tight mt-0.5">VIP Priority Gateway</p>
                                 </div>
                             </Link>
                         </div>

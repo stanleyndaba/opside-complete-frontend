@@ -37,11 +37,11 @@ const UltraBeta = () => {
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-3 group">
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
-                        <span className="text-sm font-bold tracking-widest uppercase font-mono text-white/90">Ultra Node</span>
+                        <span className="text-sm font-bold tracking-tight uppercase font-sans text-white/90">Ultra Node</span>
                     </Link>
                     <div className="flex items-center gap-8">
                         <Link to="/contact">
-                            <Button variant="outline" className="h-9 rounded-none border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-mono text-[10px] uppercase tracking-widest transition-all">
+                            <Button variant="outline" className="h-9 rounded-none border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-sans text-[10px] uppercase tracking-tight font-light transition-all">
                                 Request Briefing
                             </Button>
                         </Link>
@@ -59,28 +59,28 @@ const UltraBeta = () => {
                         className="space-y-8"
                     >
                         <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-sm">
-                            <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-widest uppercase">Limited Beta</span>
+                            <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">Limited Beta</span>
                             <div className="h-3 w-[1px] bg-white/10" />
-                            <span className="text-[10px] font-bold text-white/60 font-mono tracking-widest uppercase">4/25 Seats Remaining</span>
+                            <span className="text-[10px] font-bold text-white/60 font-sans tracking-tight uppercase">4/25 Seats Remaining</span>
                         </div>
 
-                        <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight">
+                        <h1 className="text-4xl md:text-7xl font-sans font-light leading-tight tracking-tight">
                             Institutional <br />
                             Inventory Arbitrage
                         </h1>
 
-                        <p className="max-w-2xl text-lg md:text-xl text-white/60 font-montserrat leading-relaxed">
+                        <p className="max-w-2xl text-lg md:text-xl text-white/60 font-sans tracking-tight leading-relaxed">
                             High-frequency auditing for &gt;2,000 tx/mo portfolios. We convert SKU-level inventory drift into liquidity.
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center gap-6 pt-8">
                             <Button
                                 onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeXmAX8v7qLQD-e0N-5nPpfbnoPvK5L0RIxZvnAMABKanFI6A/viewform', '_blank')}
-                                className="w-full sm:w-auto h-14 px-10 bg-white text-black hover:bg-white/90 rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all"
+                                className="w-full sm:w-auto h-14 px-10 bg-white text-black hover:bg-white/90 rounded-none font-sans font-light text-xs uppercase tracking-tight transition-all"
                             >
                                 Request Access to Beta
                             </Button>
-                            <span className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase">
+                            <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">
                                 Manual Onboarding Restricted to 3 Partners / Week
                             </span>
                         </div>
@@ -92,12 +92,12 @@ const UltraBeta = () => {
                     <div className="container mx-auto px-6 max-w-5xl">
                         <div className="grid md:grid-cols-2 gap-24">
                             <div>
-                                <h2 className="text-[11px] font-bold text-white/40 font-mono tracking-[0.3em] uppercase mb-12">System Requirement</h2>
-                                <h3 className="text-3xl font-merriweather font-bold mb-8">
+                                <h2 className="text-[11px] font-bold text-white/40 font-sans tracking-tight uppercase mb-12">System Requirement</h2>
+                                <h3 className="text-3xl font-sans font-light tracking-tight mb-8">
                                     Is Your Infrastructure <br />
                                     Ready for Ultra?
                                 </h3>
-                                <p className="text-white/60 leading-relaxed font-montserrat">
+                                <p className="text-white/60 leading-relaxed font-sans tracking-tight">
                                     To ensure the fastest audit speeds, the Ultra Beta is currently limited to high-complexity operations.
                                     If you manage a standard private label account, the Core Plan will offer faster execution for your specific data load.
                                 </p>
@@ -119,10 +119,10 @@ const UltraBeta = () => {
                                     }
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-6 pb-8 border-b border-white/5 last:border-0">
-                                        <div className="text-[10px] font-mono text-white/20 mt-1">{`0${i + 1}`}</div>
+                                        <div className="text-[10px] font-sans font-bold text-white/20 mt-1">{`0${i + 1}`}</div>
                                         <div className="space-y-2">
-                                            <div className="font-bold text-white/90 uppercase tracking-tighter">{item.title}</div>
-                                            <div className="text-sm text-white/40 font-montserrat">{item.desc}</div>
+                                            <div className="font-bold text-white/90 font-sans uppercase tracking-tight">{item.title}</div>
+                                            <div className="text-sm text-white/40 font-sans tracking-tight">{item.desc}</div>
                                         </div>
                                     </div>
                                 ))}
@@ -154,10 +154,10 @@ const UltraBeta = () => {
                             <div key={i} className="space-y-6">
                                 <div className="h-[1px] w-12 bg-emerald-500/50" />
                                 <div className="space-y-2">
-                                    <div className="text-[10px] font-bold text-white/30 font-mono tracking-widest uppercase">{feature.label}</div>
-                                    <h4 className="text-xl font-bold tracking-tight">{feature.title}</h4>
+                                    <div className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">{feature.label}</div>
+                                    <h4 className="text-xl font-sans font-bold tracking-tight">{feature.title}</h4>
                                 </div>
-                                <p className="text-sm text-white/50 leading-loose font-montserrat">
+                                <p className="text-sm text-white/50 leading-loose font-sans tracking-tight">
                                     {feature.desc}
                                 </p>
                             </div>
@@ -168,18 +168,18 @@ const UltraBeta = () => {
                 {/* Final CTA */}
                 <section className="container mx-auto px-6 max-w-3xl text-center py-24">
                     <div className="space-y-12">
-                        <h2 className="text-2xl md:text-3xl font-merriweather font-bold leading-relaxed">
+                        <h2 className="text-2xl md:text-3xl font-sans font-light tracking-tight leading-relaxed">
                             Transition to institutional-grade profit recovery. <br />
                             Secure your node in the Ultra Beta.
                         </h2>
                         <div className="flex flex-col items-center gap-6">
                             <Button
                                 onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeXmAX8v7qLQD-e0N-5nPpfbnoPvK5L0RIxZvnAMABKanFI6A/viewform', '_blank')}
-                                className="h-16 px-12 bg-emerald-600 hover:bg-emerald-500 text-white rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-2xl shadow-emerald-500/10"
+                                className="h-16 px-12 bg-emerald-600 hover:bg-emerald-500 text-white rounded-none font-sans font-light text-xs uppercase tracking-tight transition-all shadow-2xl shadow-emerald-500/10"
                             >
                                 Request Access to Beta
                             </Button>
-                            <div className="text-[10px] font-bold text-white/20 font-mono tracking-widest uppercase flex items-center gap-4">
+                            <div className="text-[10px] font-bold text-white/20 font-sans tracking-tight uppercase flex items-center gap-4">
                                 <div className="h-[1px] w-8 bg-white/10" />
                                 No Credit Card Required
                                 <div className="h-[1px] w-8 bg-white/10" />

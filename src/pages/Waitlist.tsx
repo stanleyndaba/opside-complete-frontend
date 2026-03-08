@@ -124,17 +124,17 @@ const Waitlist = () => {
                         {/* Header Section */}
                         <div className="space-y-8 text-center md:text-left">
                             <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-none">
-                                <span className="text-[10px] font-bold text-emerald-500 font-mono tracking-widest uppercase">Node Authorization</span>
+                                <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">Node Authorization</span>
                                 <div className="h-3 w-[1px] bg-white/10" />
-                                <span className="text-[10px] font-bold text-white/40 font-mono tracking-widest uppercase">Waitlist Protocol</span>
+                                <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">Waitlist Protocol</span>
                             </div>
 
-                            <h1 className="text-4xl md:text-7xl font-merriweather font-bold leading-tight tracking-tight">
+                            <h1 className="text-4xl md:text-7xl font-sans font-light leading-tight tracking-tight">
                                 Request <br />
                                 Early Access
                             </h1>
 
-                            <p className="max-w-md text-lg text-white/50 font-montserrat leading-relaxed border-l-2 border-emerald-500/20 pl-6 mx-auto md:mx-0">
+                            <p className="max-w-md text-lg text-white/50 font-sans tracking-tight leading-relaxed border-l-2 border-emerald-500/20 pl-6 mx-auto md:mx-0">
                                 Currently operating at maximum institutional bandwidth. Join the priority node release queue.
                             </p>
                         </div>
@@ -168,7 +168,7 @@ const Waitlist = () => {
                                     {step === 1 && (
                                         <div className="space-y-12">
                                             <div className="space-y-6">
-                                                <Label className="text-[10px] font-bold text-white/30 tracking-[0.3em] uppercase font-mono">Profile Identifier</Label>
+                                                <Label className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Profile Identifier</Label>
                                                 <div className="grid grid-cols-1 gap-3">
                                                     {[
                                                         { id: 'brand', label: 'Brand Owner', icon: Building2 },
@@ -184,7 +184,7 @@ const Waitlist = () => {
                                                                 }`}
                                                         >
                                                             <item.icon className="w-4 h-4 opacity-50" />
-                                                            <span className="text-[11px] font-bold uppercase tracking-[0.2em] font-mono">{item.label}</span>
+                                                            <span className="text-[11px] font-bold uppercase tracking-tight font-sans">{item.label}</span>
                                                             {formData.user_type === item.id && (
                                                                 <div className="absolute right-6 h-1 w-8 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                                                             )}
@@ -194,15 +194,15 @@ const Waitlist = () => {
                                             </div>
 
                                             <div className="space-y-6">
-                                                <Label className="text-[10px] font-bold text-white/30 tracking-[0.3em] uppercase font-mono">Volume Band (Annual)</Label>
+                                                <Label className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Volume Band (Annual)</Label>
                                                 <Select
                                                     onValueChange={(v) => handleSelection('annual_revenue', v)}
                                                     value={formData.annual_revenue}
                                                 >
-                                                    <SelectTrigger className="h-16 bg-white/[0.02] border-white/10 text-white rounded-none font-mono text-[10px] tracking-[0.2em] uppercase focus:border-emerald-500/50">
+                                                    <SelectTrigger className="h-16 bg-white/[0.02] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase focus:border-emerald-500/50">
                                                         <SelectValue placeholder="SELECT MAGNITUDE" />
                                                     </SelectTrigger>
-                                                    <SelectContent className="bg-[#0a0a0a] border-white/10 text-white rounded-none font-mono text-[10px] tracking-widest uppercase">
+                                                    <SelectContent className="bg-[#0a0a0a] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase">
                                                         <SelectItem value="starter">Starter (&lt;$200k)</SelectItem>
                                                         <SelectItem value="growing">Growing ($200k - $1M)</SelectItem>
                                                         <SelectItem value="scaling">Scaling ($1M - $10M)</SelectItem>
@@ -214,7 +214,7 @@ const Waitlist = () => {
                                             <div className="pt-8">
                                                 <Button
                                                     onClick={nextStep}
-                                                    className="w-full h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-[0.3em] font-mono"
+                                                    className="w-full h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
                                                 >
                                                     Transmit Signal
                                                 </Button>
@@ -226,7 +226,7 @@ const Waitlist = () => {
                                         <div className="space-y-12">
                                             <div className="space-y-8">
                                                 <div className="space-y-6">
-                                                    <Label htmlFor="email" className="text-[10px] font-bold text-white/30 tracking-[0.3em] uppercase font-mono">Communication Gateway</Label>
+                                                    <Label htmlFor="email" className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Communication Gateway</Label>
                                                     <div className="relative">
                                                         <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                                                         <Input
@@ -234,7 +234,7 @@ const Waitlist = () => {
                                                             name="email"
                                                             type="email"
                                                             placeholder="AUTHORITY@DOMAIN.COM"
-                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-mono text-xs tracking-widest placeholder:text-white/10"
+                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
                                                             value={formData.email}
                                                             onChange={handleInputChange}
                                                         />
@@ -242,14 +242,14 @@ const Waitlist = () => {
                                                 </div>
 
                                                 <div className="space-y-6">
-                                                    <Label htmlFor="contact_handle" className="text-[10px] font-bold text-white/30 tracking-[0.3em] uppercase font-mono">Priority Node Channel</Label>
+                                                    <Label htmlFor="contact_handle" className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Priority Node Channel</Label>
                                                     <div className="relative">
                                                         <MessageSquare className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                                                         <Input
                                                             id="contact_handle"
                                                             name="contact_handle"
                                                             placeholder="WHATSAPP / TELEGRAM ID"
-                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-mono text-xs tracking-widest placeholder:text-white/10"
+                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
                                                             value={formData.contact_handle}
                                                             onChange={handleInputChange}
                                                         />
@@ -267,7 +267,7 @@ const Waitlist = () => {
                                                 </Button>
                                                 <Button
                                                     onClick={nextStep}
-                                                    className="flex-1 h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-[0.3em] font-mono"
+                                                    className="flex-1 h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
                                                 >
                                                     Verify Node
                                                 </Button>
@@ -278,7 +278,7 @@ const Waitlist = () => {
                                     {step === 3 && (
                                         <div className="space-y-12">
                                             <div className="space-y-6">
-                                                <Label className="text-[10px] font-bold text-white/30 tracking-[0.3em] uppercase font-mono">Strategic Directive</Label>
+                                                <Label className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Strategic Directive</Label>
                                                 <div className="grid grid-cols-1 gap-3">
                                                     {[
                                                         { id: 'recover', label: 'Profit Flow Recovery', desc: 'SKU-level forensic drift analysis.' },
@@ -295,8 +295,8 @@ const Waitlist = () => {
                                                         >
                                                             <div className={`mt-1.5 w-3 h-3 rounded-none border transition-all ${formData.primary_goal === item.id ? 'border-emerald-500 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'border-white/20'}`} />
                                                             <div className="space-y-2 text-left">
-                                                                <div className={`text-xs font-bold uppercase tracking-tight font-mono ${formData.primary_goal === item.id ? 'text-white' : 'text-white/40'}`}>{item.label}</div>
-                                                                <div className="text-[10px] uppercase tracking-widest text-white/20 font-mono font-medium">{item.desc}</div>
+                                                                <div className={`text-xs font-bold uppercase tracking-tight font-sans ${formData.primary_goal === item.id ? 'text-white' : 'text-white/40'}`}>{item.label}</div>
+                                                                <div className="text-[10px] uppercase tracking-tight text-white/20 font-sans font-bold">{item.desc}</div>
                                                             </div>
                                                         </button>
                                                     ))}
@@ -315,7 +315,7 @@ const Waitlist = () => {
                                                 <Button
                                                     onClick={handleSubmit}
                                                     disabled={isSubmitting}
-                                                    className={`flex-1 h-16 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-[0.3em] font-mono ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-emerald-600 text-white hover:bg-emerald-500 active:scale-[0.98]'
+                                                    className={`flex-1 h-16 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-emerald-600 text-white hover:bg-emerald-500 active:scale-[0.98]'
                                                         }`}
                                                 >
                                                     {isSubmitting ? (
@@ -330,7 +330,7 @@ const Waitlist = () => {
                                             </div>
 
                                             <div className="text-center pt-4">
-                                                <p className="text-[9px] text-white/20 uppercase tracking-[0.3em] flex items-center justify-center gap-4 font-mono font-bold">
+                                                <p className="text-[9px] text-white/20 uppercase tracking-tight flex items-center justify-center gap-4 font-sans font-bold">
                                                     <ShieldCheck className="w-3.5 h-3.5 opacity-20" />
                                                     Military Grade Encryption Standard
                                                 </p>
@@ -356,8 +356,8 @@ const Waitlist = () => {
                                     </div>
 
                                     <div className="space-y-8">
-                                        <h3 className="text-3xl md:text-4xl font-merriweather font-bold tracking-tight">Protocol Live</h3>
-                                        <p className="text-white/40 font-mono text-[10px] max-w-sm mx-auto leading-loose uppercase tracking-[0.3em] font-bold">
+                                        <h3 className="text-3xl md:text-4xl font-sans font-light tracking-tight">Protocol Live</h3>
+                                        <p className="text-white/40 font-sans text-[10px] max-w-sm mx-auto leading-loose uppercase tracking-tight font-bold">
                                             Your node identifier has been <br />
                                             encrypted and added to the <br />
                                             priority institutional queue.
@@ -368,7 +368,7 @@ const Waitlist = () => {
                                         <Button
                                             variant="outline"
                                             asChild
-                                            className="h-16 px-12 border border-white/10 bg-transparent text-white/50 hover:text-white rounded-none font-bold font-mono text-[10px] uppercase tracking-[0.3em] transition-all"
+                                            className="h-16 px-12 border border-white/10 bg-transparent text-white/50 hover:text-white rounded-none font-sans font-light text-[10px] uppercase tracking-tight transition-all"
                                         >
                                             <Link to="/">
                                                 Back to Portal Interface
