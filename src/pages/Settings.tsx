@@ -371,8 +371,8 @@ const Settings = () => {
             className="space-y-6"
           >
             <div>
-              <h2 className="text-xl font-serif text-white tracking-tight">Seller Profile</h2>
-              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+              <h2 className="text-xl font-sans font-bold text-white tracking-tight">Seller Profile</h2>
+              <p className="text-[10px] text-white/40 font-sans font-bold uppercase tracking-tight mt-1">
                 IDENTITY_MANAGEMENT // CORE_SYSTEM
               </p>
             </div>
@@ -387,15 +387,15 @@ const Settings = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-2xl font-serif text-white tracking-tighter">
+                      <h3 className="text-2xl font-sans font-bold text-white tracking-tight">
                         {sellerProfile.company_name || 'Identity Logged'}
                       </h3>
                       <div className="flex items-center gap-3 mt-2">
-                        <Badge variant="outline" className={cn("text-[10px] font-mono uppercase tracking-widest px-3 py-1", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-red-500/10 text-red-500 border-red-500/20")}>
+                        <Badge variant="outline" className={cn("text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-red-500/10 text-red-500 border-red-500/20")}>
                           {isAmazonConnected ? 'VERIFIED_CONNECTION' : 'PENDING_HANDSHAKE'}
                         </Badge>
                         {sellerProfile.amazon_seller_id && (
-                          <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
+                          <span className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight flex items-center gap-2">
                             ID: {sellerProfile.amazon_seller_id}
                           </span>
                         )}
@@ -404,23 +404,23 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Marketplaces</p>
-                        <p className="text-sm font-serif text-white/80">{marketplaces.length} Nodes Online</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Marketplaces</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{marketplaces.length} Nodes Online</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Last Sync</p>
-                        <p className="text-sm font-serif text-white/80">{formatDate(sellerProfile.last_sync_completed_at)}</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Sync</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{formatDate(sellerProfile.last_sync_completed_at)}</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">System Age</p>
-                        <p className="text-sm font-serif text-white/80">{formatDate(sellerProfile.created_at)}</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">System Age</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{formatDate(sellerProfile.created_at)}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
                     >
                       Manage Profile
@@ -433,24 +433,24 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
                 <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
-                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Platform Connectivity</CardTitle>
+                  <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
                     <div className="flex items-center gap-3">
                       <Store className="h-4 w-4 text-white/40" />
-                      <span className="text-xs font-serif text-white/80">Amazon SP-API</span>
+                      <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Amazon SP-API</span>
                     </div>
-                    <Badge variant="outline" className={cn("text-[9px] font-mono uppercase tracking-[0.2em] px-2 py-0.5", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
+                    <Badge variant="outline" className={cn("text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
                       {isAmazonConnected ? 'Linked' : 'Offline'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
                     <div className="flex items-center gap-3">
                       <CreditCard className="h-4 w-4 text-white/40" />
-                      <span className="text-xs font-serif text-white/80">Stripe Billing</span>
+                      <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Stripe Billing</span>
                     </div>
-                    <Badge variant="outline" className={cn("text-[9px] font-mono uppercase tracking-[0.2em] px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
+                    <Badge variant="outline" className={cn("text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
                       {sellerProfile.stripe_connected ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
@@ -459,7 +459,7 @@ const Settings = () => {
 
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
                 <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
-                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Support Tier</CardTitle>
+                  <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
                   <p className="text-xs text-white/40 font-serif leading-relaxed italic mb-6">
@@ -467,7 +467,7 @@ const Settings = () => {
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => navigate(tenantRoute(activeTenantSlug, '/help'))}
                   >
                     Open Support Channel
@@ -488,8 +488,8 @@ const Settings = () => {
             className="space-y-6"
           >
             <div>
-              <h2 className="text-xl font-serif text-white tracking-tight">Billing and Recovery Summary</h2>
-              <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
+              <h2 className="text-xl font-sans font-bold text-white tracking-tight">Billing and Recovery Summary</h2>
+              <p className="text-[11px] text-white/40 font-sans font-bold uppercase tracking-tight mt-1">
                 FINANCIAL_RECORDS // RECOVERY_LOGS
               </p>
             </div>
@@ -504,12 +504,12 @@ const Settings = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-2xl font-serif text-white tracking-tighter">Account Status</h3>
+                      <h3 className="text-2xl font-sans font-bold text-white tracking-tight">Account Status</h3>
                       <div className="flex items-center gap-3 mt-2">
-                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1">
                           ACTIVE_DELEGATION
                         </Badge>
-                        <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
+                        <span className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight flex items-center gap-2">
                           <span className="h-1 w-1 bg-emerald-500 rounded-full animate-pulse" />
                           Live Sync Active
                         </span>
@@ -518,23 +518,23 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Subscription</p>
-                        <p className="text-sm font-serif text-white/80">Professional Suite</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Subscription</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">Professional Suite</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Protection Status</p>
-                        <p className="text-sm font-serif text-emerald-500 font-medium">100% Comprehensive</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Protection Status</p>
+                        <p className="text-sm font-sans font-bold text-emerald-500 tracking-tight">100% Comprehensive</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Fee Structure</p>
-                        <p className="text-sm font-serif text-white/80">Commission Managed</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Fee Structure</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">Commission Managed</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                       onClick={() => navigate(tenantRoute(activeTenantSlug, '/upcoming-payments'))}
                     >
                       View Documents
@@ -547,15 +547,15 @@ const Settings = () => {
             <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
               <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-500/20 group-hover:bg-emerald-500 transition-colors duration-500" />
               <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
-                <CardTitle className="text-xs font-mono font-bold text-white/30 uppercase tracking-[0.3em]">
+                <CardTitle className="text-xs font-sans font-bold text-white/30 uppercase tracking-tight">
                   Automated Filing System
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-8 space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1.5 max-w-md">
-                    <p className="text-base font-serif text-white font-medium">Auto-Pilot Mode</p>
-                    <p className="text-xs text-white/40 font-serif leading-relaxed italic">
+                    <p className="text-base font-sans font-bold text-white tracking-tight">Auto-Pilot Mode</p>
+                    <p className="text-xs text-white/40 font-sans font-bold leading-relaxed italic tracking-tight">
                       "Opside will automatically transmit verified claims to Amazon's systems twice per day without requiring manual intervention."
                     </p>
                   </div>
@@ -565,7 +565,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
-                  <p className="text-[10px] text-emerald-500/60 leading-relaxed font-mono uppercase tracking-widest">
+                  <p className="text-[10px] text-emerald-500/60 leading-relaxed font-sans font-bold uppercase tracking-tight">
                     SYSTEM_NOTE: Enabled by default for all institutional accounts. Manual overrides available in the Claims Terminal.
                   </p>
                 </div>
@@ -583,7 +583,7 @@ const Settings = () => {
             className="space-y-6"
           >
             <div>
-              <h2 className="text-xl font-serif text-white tracking-tight">Advanced Developer Access</h2>
+              <h2 className="text-xl font-sans font-bold text-white tracking-tight">Advanced Developer Access</h2>
               <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
                 SYSTEM_INTEGRATION // API_TERMINAL
               </p>
@@ -599,9 +599,9 @@ const Settings = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-2xl font-serif text-white tracking-tighter">Gateway Management</h3>
+                      <h3 className="text-2xl font-sans font-bold text-white tracking-tight">Gateway Management</h3>
                       <div className="flex items-center gap-3 mt-2">
-                        <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                        <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1">
                           PRODUCTION_ENVIRONMENT
                         </Badge>
                         <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
@@ -613,16 +613,16 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Available Nodes</p>
-                        <p className="text-sm font-serif text-white/80">14 Secure Endpoints</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Available Nodes</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">14 Secure Endpoints</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Latency</p>
-                        <p className="text-sm font-serif text-emerald-500 font-medium">84ms Premium</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Latency</p>
+                        <p className="text-sm font-sans font-bold text-emerald-500 tracking-tight">84ms Premium</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Rate Policy</p>
-                        <p className="text-sm font-serif text-white/80">Institutional Scale</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Rate Policy</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">Institutional Scale</p>
                       </div>
                     </div>
                   </div>
@@ -643,7 +643,7 @@ const Settings = () => {
               <div className="col-span-1 p-6 bg-white/[0.02] border border-white/5 rounded-2xl group hover:border-emerald-500/20 transition-all">
                 <div className="flex items-center gap-4 mb-4">
                   <Monitor className="h-5 w-5 text-white/30" />
-                  <h4 className="text-[11px] font-mono font-bold text-white/60 uppercase tracking-widest">Documentation</h4>
+                  <h4 className="text-[11px] font-sans font-bold text-white/60 uppercase tracking-tight">Documentation</h4>
                 </div>
                 <p className="text-xs text-white/40 font-serif leading-relaxed italic">
                   "Full schema specifications for triangulating recovery data into external data warehouses."
@@ -652,7 +652,7 @@ const Settings = () => {
               <div className="col-span-1 p-6 bg-white/[0.02] border border-white/5 rounded-2xl group hover:border-emerald-500/20 transition-all">
                 <div className="flex items-center gap-4 mb-4">
                   <Zap className="h-5 w-5 text-white/30" />
-                  <h4 className="text-[11px] font-mono font-bold text-white/60 uppercase tracking-widest">Webhooks</h4>
+                  <h4 className="text-[11px] font-sans font-bold text-white/60 uppercase tracking-tight">Webhooks</h4>
                 </div>
                 <p className="text-xs text-white/40 font-serif leading-relaxed italic">
                   "Real-time event streams for confirmed recoveries and manual claim overrides."
@@ -686,7 +686,7 @@ const Settings = () => {
             className="space-y-6"
           >
             <div>
-              <h2 className="text-xl font-serif text-white tracking-tight">Institutional Hub</h2>
+              <h2 className="text-xl font-sans font-bold text-white tracking-tight">Institutional Hub</h2>
               <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
                 ECOLOGY_MAP // DATA_STREAMS
               </p>
@@ -702,7 +702,7 @@ const Settings = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-2xl font-serif text-white tracking-tighter">Connectivity Matrix</h3>
+                      <h3 className="text-2xl font-sans font-bold text-white tracking-tight">Connectivity Matrix</h3>
                       <div className="flex items-center gap-3 mt-2">
                         <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
                           {activePlatforms.length} ACTIVE_FEED
@@ -716,7 +716,7 @@ const Settings = () => {
                     <div className="flex flex-wrap gap-4 pt-4">
                       {activePlatforms.map(p => (
                         <div key={p.id} className="flex items-center gap-3 p-3 px-5 border border-white/5 bg-white/[0.02] rounded-xl hover:border-emerald-500/20 transition-all group/chip">
-                          <span className="text-xs font-serif text-white/80">{p.name}</span>
+                          <span className="text-xs font-sans font-bold text-white/80 tracking-tight">{p.name}</span>
                           <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse" />
                         </div>
                       ))}
@@ -738,13 +738,13 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
                 <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
-                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Integration Roadmap</CardTitle>
+                  <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Integration Roadmap</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                   {upcomingPlatforms.map(p => (
                     <div key={p.id} className="flex items-center justify-between p-3 bg-white/[0.01] border border-white/5 rounded-xl opacity-40">
-                      <span className="text-xs font-serif text-white/60">{p.name}</span>
-                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/20">Awaiting_Launch</span>
+                      <span className="text-xs font-sans font-bold text-white/60 tracking-tight">{p.name}</span>
+                      <span className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Awaiting_Launch</span>
                     </div>
                   ))}
                 </CardContent>
@@ -752,7 +752,7 @@ const Settings = () => {
 
               <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
                 <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
-                  <CardTitle className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Custom Connectors</CardTitle>
+                  <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Custom Connectors</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
                   <p className="text-xs text-white/40 font-serif leading-relaxed italic mb-6">
@@ -780,7 +780,7 @@ const Settings = () => {
             className="space-y-6"
           >
             <div>
-              <h2 className="text-xl font-serif text-white tracking-tight">Alert Protocol</h2>
+              <h2 className="text-xl font-sans font-bold text-white tracking-tight">Alert Protocol</h2>
               <p className="text-[11px] text-white/40 font-mono uppercase tracking-[0.2em] mt-1">
                 COMM_LINK // SIGNAL_CHANNELS
               </p>
@@ -796,12 +796,12 @@ const Settings = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-2xl font-serif text-white tracking-tighter">Transmission Registry</h3>
+                      <h3 className="text-2xl font-sans font-bold text-white tracking-tight">Transmission Registry</h3>
                       <div className="flex items-center gap-3 mt-2">
-                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-mono uppercase tracking-widest px-3 py-1">
+                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1">
                           ACTIVE_MONITORING
                         </Badge>
-                        <span className="text-[10px] text-white/20 font-mono uppercase tracking-widest flex items-center gap-2">
+                        <span className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight flex items-center gap-2">
                           Standard Priority Grid
                         </span>
                       </div>
@@ -809,23 +809,23 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Email Alerts</p>
-                        <p className="text-sm font-serif text-emerald-500">Online</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Email Alerts</p>
+                        <p className="text-sm font-sans font-bold text-emerald-500 tracking-tight">Online</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Web Push</p>
-                        <p className="text-sm font-serif text-white/40">Dormant</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Web Push</p>
+                        <p className="text-sm font-sans font-bold text-white/40 tracking-tight">Dormant</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Slack Stream</p>
-                        <p className="text-sm font-serif text-white/40">Institutional Required</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Slack Stream</p>
+                        <p className="text-sm font-sans font-bold text-white/40 tracking-tight">Institutional Required</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-serif font-bold uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                      className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                       onClick={() => toast({ title: "Configuration Locked", description: "Signal parameters modified." })}
                     >
                       Update Registry
@@ -837,14 +837,14 @@ const Settings = () => {
 
             <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
               <CardHeader className="border-b border-white/5 bg-white/[0.01] px-8 py-6">
-                <CardTitle className="text-xs font-mono font-bold text-white/30 uppercase tracking-[0.3em]">Event Subscriptions</CardTitle>
+                <CardTitle className="text-xs font-sans font-bold text-white/30 uppercase tracking-tight">Event Subscriptions</CardTitle>
               </CardHeader>
               <CardContent className="p-8 space-y-4">
                 {notificationSettings.map((setting) => (
                   <div key={setting.id} className="flex items-center justify-between py-4 border-b border-white/5 last:border-0">
                     <div className="space-y-1">
-                      <p className="text-sm font-serif text-white font-medium">{setting.label}</p>
-                      <p className="text-xs text-white/40 font-serif italic leading-relaxed">{setting.description}</p>
+                      <p className="text-sm font-sans font-bold text-white tracking-tight">{setting.label}</p>
+                      <p className="text-xs text-white/40 font-sans font-bold italic leading-relaxed tracking-tight">{setting.description}</p>
                     </div>
                     <Switch
                       defaultChecked={setting.enabled}
@@ -874,7 +874,7 @@ const Settings = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900 tracking-tight">Security Backbone</h3>
+                      <h3 className="text-lg font-sans font-bold text-gray-900 tracking-tight">Security Backbone</h3>
                       <div className="flex items-center gap-3 mt-1">
                         <Badge variant="secondary" className="bg-blue-50 text-blue-700 text-xs border-blue-100 px-2 py-0.5">
                           Enterprise Protection
@@ -1019,8 +1019,8 @@ const Settings = () => {
             <div className="lg:col-span-1">
               <div className="lg:sticky lg:top-24 space-y-8">
                 <div>
-                  <h1 className="text-2xl font-serif text-white tracking-tight mb-1">Settings</h1>
-                  <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.3em]">
+                  <h1 className="text-2xl font-sans font-bold text-white tracking-tight mb-1">Settings</h1>
+                  <p className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
                     SYSTEM_CONFIG // V1.0.0
                   </p>
                 </div>
@@ -1043,7 +1043,7 @@ const Settings = () => {
                         />
                       )}
                       <item.icon className={cn("h-4.5 w-4.5 transition-colors", activeSection === item.id ? "text-emerald-500" : "text-white/20 group-hover:text-emerald-500/50")} />
-                      <span className="text-[11px] font-mono uppercase tracking-widest font-bold">
+                      <span className="text-[11px] font-sans font-bold uppercase tracking-tight">
                         {item.label}
                       </span>
                     </button>
