@@ -80,7 +80,7 @@ export const PublicNavbar = () => {
                         <Link
                             to="/ultra-beta"
                             className="hidden md:flex items-center gap-2 group px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">Private Beta</span>
+                            <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Private Beta</span>
                             <span className="px-1.5 py-0.5 bg-emerald-500 text-[8px] font-bold text-white rounded-none leading-none">NEW</span>
                         </Link>
 
@@ -90,7 +90,7 @@ export const PublicNavbar = () => {
 
                         <Link
                             to="/pricing"
-                            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-mono font-bold text-white uppercase tracking-widest outline-none"
+                            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-sans font-bold text-white uppercase tracking-tight outline-none"
                         >
                             Pricing
                         </Link>
@@ -100,13 +100,13 @@ export const PublicNavbar = () => {
                     <nav className="hidden md:flex items-center gap-4">
                         <Link
                             to="/sales"
-                            className="h-9 px-5 text-[10px] font-bold text-black bg-white hover:bg-emerald-500 hover:text-white transition-all inline-flex items-center uppercase tracking-[0.2em] font-mono"
+                            className="h-9 px-5 text-[10px] font-light text-black bg-white hover:bg-emerald-500 hover:text-white transition-all inline-flex items-center uppercase tracking-tight font-sans"
                             style={{ borderRadius: '0px' }}>
                             Enterprise
                         </Link>
                         <Link
                             to="/waitlist"
-                            className="h-9 px-6 text-[10px] font-bold text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center gap-2 tracking-[0.3em] uppercase font-mono"
+                            className="h-9 px-6 text-[10px] font-light text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center gap-2 tracking-tight uppercase font-sans"
                             style={{ borderRadius: '0px' }}>
                             Join Waitlist <ArrowRight className="h-3 w-3" />
                         </Link>
@@ -135,7 +135,7 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/ultra-beta"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg px-3 py-2.5 text-[10px] font-mono font-bold text-white uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
+                                    className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white uppercase tracking-tight bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <span>Private Beta</span>
                                         <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
@@ -145,7 +145,7 @@ export const PublicNavbar = () => {
                                     <Link
                                         to="/pricing"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors">
+                                        className="rounded-lg px-3 py-4 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors">
                                         Pricing
                                     </Link>
 
@@ -153,13 +153,13 @@ export const PublicNavbar = () => {
                                         Keeping them as links but merged into the same flow */}
 
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
                                             {/* Audit Vectors */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">Audit Vectors</h5>
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-tight pl-2">Audit Vectors</h5>
                                                 <div className="grid gap-1">
                                                     <MobileNavItem icon={Search} title="Inbound Variance" description="Reconcile shipping plan/ledger" />
                                                     <MobileNavItem icon={ShieldCheck} title="Inventory Reconciliation" description="Lost & destroyed unit recovery" />
@@ -172,7 +172,7 @@ export const PublicNavbar = () => {
 
                                             {/* Governance */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">Governance & Scale</h5>
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-tight pl-2">Governance & Scale</h5>
                                                 <div className="grid gap-1">
                                                     <MobileNavItem icon={Layers} title="Inbound Fee Governance" description="Line-by-line proof" />
                                                     <MobileNavItem icon={Briefcase} title="Agency Portfolio Manager" description="Multi-account reconciliation" />
@@ -183,7 +183,7 @@ export const PublicNavbar = () => {
 
                                             {/* By Profile */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em] pl-2">By Profile</h5>
+                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-tight pl-2">By Profile</h5>
                                                 <div className="grid gap-1">
                                                     <MobileNavItem icon={Activity} title="Growth ($0 - $1M)" description="Automated recovery for emerging brands" />
                                                     <MobileNavItem icon={TrendingUp} title="High Volume ($1M - $10M)" description="Deep-dive forensic audit for scale" />
@@ -197,13 +197,13 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-4 text-[10px] font-mono font-bold text-white/70 uppercase tracking-widest hover:text-white transition-colors">
+                                    className="px-3 py-4 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:text-white transition-colors">
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[10px] font-mono font-bold text-center tracking-widest uppercase">
+                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[10px] font-sans font-bold text-center tracking-tight uppercase">
                                     Join Waitlist
                                 </Link>
                             </div>
