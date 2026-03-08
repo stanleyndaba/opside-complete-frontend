@@ -11,7 +11,7 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 export default function PricingAdjust() {
   return (
     <PageLayout title="Pricing Adjust" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
-      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center pt-32 md:pt-40 lg:pt-48 pb-24 overflow-hidden font-sans px-6 lg:px-10">
+      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center pt-32 md:pt-40 lg:pt-48 pb-24 overflow-hidden font-sans">
         <PublicNavbar />
         {/* Noise Texture Overlay */}
         <div 
@@ -20,7 +20,7 @@ export default function PricingAdjust() {
         />
 
         {/* Main Content Container */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center">
+        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center px-6 lg:px-10">
           {/* Header */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
