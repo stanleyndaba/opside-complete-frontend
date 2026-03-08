@@ -101,12 +101,12 @@ export default function Help() {
           >
             <div className="flex items-center gap-3 mb-4">
               <LifeBuoy className="h-5 w-5 text-emerald-500" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Support and Requests</span>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-500/80">Support and Requests</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif text-white mb-6">
+            <h1 className="text-4xl md:text-5xl font-sans font-bold text-white mb-6 tracking-tight">
               How can we <span className="text-white/40">help you today?</span>
             </h1>
-            <p className="text-gray-400 max-w-2xl text-lg leading-relaxed font-light italic">
+            <p className="text-gray-400 max-w-2xl text-lg leading-relaxed font-sans font-bold italic tracking-tight">
               Whether you have a question about your account or need help with a specific claim, our team is here to support your business.
             </p>
           </motion.header>
@@ -127,7 +127,7 @@ export default function Help() {
           <div className="flex flex-col gap-12">
             {/* FAQs Section */}
             <section className="w-full">
-              <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+              <h2 className="text-xs font-sans font-bold uppercase tracking-tight text-gray-500 mb-8 flex items-center gap-3">
                 <div className="h-px w-8 bg-gray-500/30" />
                 Common Questions
               </h2>
@@ -145,14 +145,14 @@ export default function Help() {
                       <AccordionTrigger className="py-6 text-left hover:no-underline text-sm font-medium text-white/80 hover:text-white transition-colors">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="pb-6 text-sm text-gray-400 leading-relaxed font-light">
+                      <AccordionContent className="pb-6 text-sm text-gray-400 leading-relaxed font-sans font-bold tracking-tight">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>
                 {filteredFaqs.length === 0 && (
-                  <div className="text-center py-12 text-gray-500 italic font-light">
+                  <div className="text-center py-12 text-gray-500 italic font-sans font-bold tracking-tight">
                     We couldn't find any results matching your search.
                   </div>
                 )}
@@ -162,7 +162,7 @@ export default function Help() {
 
             {/* Reach Out Section */}
             <section className="w-full">
-              <h2 className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-8 flex items-center gap-3">
+              <h2 className="text-xs font-sans font-bold uppercase tracking-tight text-gray-500 mb-8 flex items-center gap-3">
                 <div className="h-px w-8 bg-gray-500/30" />
                 Reach Out
               </h2>
@@ -175,7 +175,7 @@ export default function Help() {
                 <form onSubmit={handleContactSubmit} className="space-y-6 relative z-10 max-w-2xl">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Your Name</Label>
+                      <Label htmlFor="name" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">Your Name</Label>
                       <Input
                         id="name"
                         value={contactForm.name}
@@ -186,7 +186,7 @@ export default function Help() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="sellerId" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Store Name or ID</Label>
+                      <Label htmlFor="sellerId" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">Store Name or ID</Label>
                       <Input
                         id="sellerId"
                         value={contactForm.sellerId}
@@ -198,7 +198,7 @@ export default function Help() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="category" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">How can we help?</Label>
+                    <Label htmlFor="category" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">How can we help?</Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
                       <SelectTrigger className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:ring-0 focus:border-emerald-500/30">
                         <SelectValue placeholder="Select a topic..." />
@@ -214,7 +214,7 @@ export default function Help() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-[10px] font-mono uppercase tracking-widest text-gray-500 ml-1">Tell us more</Label>
+                    <Label htmlFor="message" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">Tell us more</Label>
                     <Textarea
                       id="message"
                       value={contactForm.message}
@@ -225,7 +225,7 @@ export default function Help() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full md:w-auto px-12 h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-widest transition-all rounded-xl">
+                  <Button type="submit" className="w-full md:w-auto px-12 h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold text-xs uppercase tracking-tight transition-all rounded-xl">
                     Submit Request
                   </Button>
                 </form>
@@ -238,8 +238,8 @@ export default function Help() {
                     <Mail className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest">Email Support</span>
-                    <span className="text-[11px] text-white/60">support@margin-finance.com</span>
+                    <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Email Support</span>
+                    <span className="text-[11px] text-white/60 font-sans font-bold tracking-tight">support@margin-finance.com</span>
                   </div>
                 </div>
                 <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
@@ -247,8 +247,8 @@ export default function Help() {
                     <MessageSquare className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
                   </div>
                   <div>
-                    <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest">Response Time</span>
-                    <span className="text-[11px] text-white/60">12 Minutes</span>
+                    <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Response Time</span>
+                    <span className="text-[11px] text-white/60 font-sans font-bold tracking-tight">12 Minutes</span>
                   </div>
                 </div>
               </div>

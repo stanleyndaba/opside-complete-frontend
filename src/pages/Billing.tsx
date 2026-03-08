@@ -406,7 +406,7 @@ export default function Billing() {
 
   return (
     <PageLayout title="Billing" midnight>
-      <div className="relative min-h-screen font-serif bg-[#050505]">
+      <div className="relative min-h-screen font-sans bg-[#050505]">
         {/* Matrix Background Aesthetic */}
         <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
         <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
@@ -419,12 +419,12 @@ export default function Billing() {
           >
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <Badge variant="outline" className="px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-mono text-[9px] tracking-[0.2em] uppercase">
+                <Badge variant="outline" className="px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-sans font-bold text-[9px] tracking-tight uppercase">
                   Billing System // Active
                 </Badge>
               </div>
-              <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Billing.</h1>
-              <p className="text-white/40 mt-3 font-serif italic text-lg max-w-2xl">View your billing history and manage payment settings.</p>
+              <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Billing.</h1>
+              <p className="text-white/40 mt-3 font-sans font-bold italic text-lg max-w-2xl tracking-tight">View your billing history and manage payment settings.</p>
             </div>
           </motion.div>
 
@@ -444,12 +444,12 @@ export default function Billing() {
                       <div className="p-2 rounded-lg bg-white/5 border border-white/10">
                         <CreditCard className="h-4 w-4 text-white/60" />
                       </div>
-                      <CardTitle className="text-2xl font-serif tracking-tight">Payment Methods</CardTitle>
+                      <CardTitle className="text-2xl font-sans font-bold tracking-tight">Payment Methods</CardTitle>
                     </div>
                     <Button
                       onClick={() => setShowAddCard(!showAddCard)}
                       variant="outline"
-                      className="h-9 px-4 border-white/10 hover:border-emerald-500/50 bg-transparent text-white hover:bg-emerald-500/10 font-mono text-[10px] uppercase tracking-widest rounded-xl"
+                      className="h-9 px-4 border-white/10 hover:border-emerald-500/50 bg-transparent text-white hover:bg-emerald-500/10 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl"
                     >
                       <Plus className="h-3.5 w-3.5 mr-2" />
                       Add card
@@ -469,7 +469,7 @@ export default function Billing() {
                       >
                         <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl space-y-5">
                           <div className="flex items-center justify-between">
-                            <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">New payment method</p>
+                            <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">New payment method</p>
                             <button onClick={() => setShowAddCard(false)} className="text-white/20 hover:text-white transition-colors">
                               <X className="h-4 w-4" />
                             </button>
@@ -482,7 +482,7 @@ export default function Billing() {
                                 key={brand}
                                 onClick={() => setCardBrand(brand)}
                                 className={cn(
-                                  "px-4 py-2 rounded-lg border text-[10px] font-mono uppercase tracking-widest transition-all",
+                                  "px-4 py-2 rounded-lg border text-[10px] font-sans font-bold uppercase tracking-tight transition-all",
                                   cardBrand === brand
                                     ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
                                     : "border-white/10 text-white/30 hover:border-white/20"
@@ -495,41 +495,41 @@ export default function Billing() {
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Card number</label>
+                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Card number</label>
                               <Input
                                 placeholder="•••• •••• •••• 4242"
                                 value={cardNumber}
                                 onChange={(e) => setCardNumber(e.target.value)}
                                 maxLength={19}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-mono text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Expiry</label>
+                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Expiry</label>
                               <Input
                                 placeholder="MM/YY"
                                 value={cardExpiry}
                                 onChange={(e) => setCardExpiry(e.target.value)}
                                 maxLength={5}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-mono text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Cardholder name</label>
+                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Cardholder name</label>
                               <Input
                                 placeholder="Full name on card"
                                 value={cardholderName}
                                 onChange={(e) => setCardholderName(e.target.value)}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Billing email</label>
+                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Billing email</label>
                               <Input
                                 placeholder="billing@company.com"
                                 value={billingEmail}
                                 onChange={(e) => setBillingEmail(e.target.value)}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20"
+                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
                               />
                             </div>
                           </div>
@@ -538,13 +538,13 @@ export default function Billing() {
                             <Button
                               onClick={handleAddCard}
                               disabled={addingCard}
-                              className="bg-white text-black hover:bg-emerald-500 rounded-xl font-serif font-bold uppercase text-[10px] tracking-widest h-11 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
+                              className="bg-white text-black hover:bg-emerald-500 rounded-xl font-sans font-bold uppercase text-[10px] tracking-tight h-11 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                             >
                               {addingCard ? 'Adding...' : 'Add payment method'}
                             </Button>
                             <div className="flex items-center gap-2 text-white/20">
                               <Lock className="h-3 w-3" />
-                              <span className="text-[9px] font-mono uppercase tracking-widest">Encrypted & secure</span>
+                              <span className="text-[9px] font-sans font-bold uppercase tracking-tight">Encrypted & secure</span>
                             </div>
                           </div>
                         </div>
@@ -556,7 +556,7 @@ export default function Billing() {
                   {loadingCards ? (
                     <div className="flex items-center gap-3 py-6">
                       <div className="h-5 w-5 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-                      <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Fetching payment methods...</span>
+                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Fetching payment methods...</span>
                     </div>
                   ) : paymentMethods.length > 0 ? (
                     <div className="space-y-3">
@@ -571,17 +571,17 @@ export default function Billing() {
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <p className="text-xs font-mono font-bold uppercase tracking-widest">
+                                <p className="text-xs font-sans font-bold uppercase tracking-tight">
                                   {pm.card_brand} .... {pm.card_last_four}
                                 </p>
                                 {pm.is_default && (
-                                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[8px] px-2 font-mono">DEFAULT</Badge>
+                                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[8px] px-2 font-sans font-bold tracking-tight">DEFAULT</Badge>
                                 )}
                               </div>
-                              <p className="text-[10px] text-white/30 uppercase tracking-tighter">
-                                Exp {String(pm.card_exp_month).padStart(2, '0')} // {pm.card_exp_year}
-                                {pm.cardholder_name && ` · ${pm.cardholder_name}`}
-                              </p>
+                                <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                                  Exp {String(pm.card_exp_month).padStart(2, '0')} // {pm.card_exp_year}
+                                  {pm.cardholder_name && ` · ${pm.cardholder_name}`}
+                                </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 opacity-0 group-hover/card:opacity-100 transition-opacity">
@@ -612,8 +612,8 @@ export default function Billing() {
                   ) : (
                     <div className="flex flex-col items-center py-10 gap-3 opacity-30">
                       <CreditCard className="h-8 w-8" />
-                      <p className="text-[10px] font-mono uppercase tracking-[0.2em]">No payment methods on file</p>
-                      <p className="text-xs italic font-serif">"Add a card to enable automatic commission settlement."</p>
+                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight">No payment methods on file</p>
+                      <p className="text-xs italic font-sans font-bold tracking-tight">"Add a card to enable automatic commission settlement."</p>
                     </div>
                   )}
                 </CardContent>
@@ -629,35 +629,35 @@ export default function Billing() {
                       <Receipt className="h-4 w-4 text-white/60" />
                     </div>
                   </div>
-                  <CardTitle className="text-2xl font-serif tracking-tight">Invoice Settings</CardTitle>
+                    <CardTitle className="text-2xl font-sans font-bold tracking-tight">Invoice Settings</CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 pt-0 space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Invoice recipients</label>
+                        <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Invoice recipients</label>
                       <div className="flex gap-2">
-                        <Input
-                          placeholder="Email address"
-                          value={newRecipient}
-                          onChange={(e) => setNewRecipient(e.target.value)}
-                          className="h-10 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20"
-                        />
-                        <Button
-                          onClick={() => {
-                            if (!newRecipient.trim()) return;
-                            setInvoiceRecipients(prev => [...prev, newRecipient.trim()]);
-                            setNewRecipient('');
-                          }}
-                          variant="outline"
-                          className="h-10 px-4 border-white/10 hover:border-emerald-500/50 text-black bg-white hover:bg-emerald-500 font-mono text-[10px]"
-                        >
-                          Add
-                        </Button>
+                            <Input
+                              placeholder="Email address"
+                              value={newRecipient}
+                              onChange={(e) => setNewRecipient(e.target.value)}
+                              className="h-10 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20 tracking-tight"
+                            />
+                            <Button
+                              onClick={() => {
+                                if (!newRecipient.trim()) return;
+                                setInvoiceRecipients(prev => [...prev, newRecipient.trim()]);
+                                setNewRecipient('');
+                              }}
+                              variant="outline"
+                              className="h-10 px-4 border-white/10 hover:border-emerald-500/50 text-black bg-white hover:bg-emerald-500 font-sans font-bold text-[10px] tracking-tight"
+                            >
+                              Add
+                            </Button>
                       </div>
                       {invoiceRecipients.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {invoiceRecipients.map((r, i) => (
-                            <Badge key={i} variant="outline" className="text-[9px] font-mono text-white/40 border-white/10 px-3 py-1 gap-2">
+                              <Badge key={i} variant="outline" className="text-[9px] font-sans font-bold text-white/40 border-white/10 px-3 py-1 gap-2 tracking-tight">
                               {r}
                               <button onClick={() => setInvoiceRecipients(prev => prev.filter((_, idx) => idx !== i))} className="text-white/20 hover:text-rose-500">
                                 <X className="h-3 w-3" />
@@ -668,23 +668,23 @@ export default function Billing() {
                       )}
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">Tax details</label>
-                      <Input
-                        placeholder="Tax ID"
-                        value={taxId}
-                        onChange={(e) => setTaxId(e.target.value)}
-                        className="h-10 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/20"
-                      />
+                        <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Tax details</label>
+                        <Input
+                          placeholder="Tax ID"
+                          value={taxId}
+                          onChange={(e) => setTaxId(e.target.value)}
+                          className="h-10 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/20 tracking-tight"
+                        />
                     </div>
                   </div>
 
                   <div className="pt-4 border-t border-white/5">
-                    <Button
-                      onClick={saveBillingSettings}
-                      className="bg-white text-black hover:bg-emerald-500 rounded-xl font-serif font-bold uppercase text-[10px] tracking-widest h-12 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
-                    >
-                      Save changes
-                    </Button>
+                      <Button
+                        onClick={saveBillingSettings}
+                        className="bg-white text-black hover:bg-emerald-500 rounded-xl font-sans font-bold uppercase text-[10px] tracking-tight h-12 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
+                      >
+                        Save changes
+                      </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -700,8 +700,8 @@ export default function Billing() {
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
               <div className="space-y-1">
-                <h2 className="text-2xl font-serif text-white tracking-tight">Billing History</h2>
-                <p className="text-white/30 text-sm font-serif italic">Complete log of all recoveries and payments.</p>
+                <h2 className="text-2xl font-sans font-bold text-white tracking-tight">Billing History</h2>
+                <p className="text-white/30 text-sm font-sans font-bold italic tracking-tight">Complete log of all recoveries and payments.</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="relative group">
@@ -710,12 +710,12 @@ export default function Billing() {
                     placeholder="Search by ID..."
                     value={invoiceSearch}
                     onChange={(e) => setInvoiceSearch(e.target.value)}
-                    className="pl-10 h-11 w-64 bg-white/5 border-white/10 text-xs font-serif text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20"
+                    className="pl-10 h-11 w-64 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20 tracking-tight"
                   />
                 </div>
                 <Button
                   variant="outline"
-                  className="h-11 border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 transition-all font-mono uppercase text-[10px] tracking-widest rounded-xl px-6"
+                  className="h-11 border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 transition-all font-sans font-bold uppercase text-[10px] tracking-tight rounded-xl px-6"
                   onClick={exportBillingPDF}
                 >
                   <Download className="h-3.5 w-3.5 mr-2 text-emerald-500" />
@@ -728,7 +728,7 @@ export default function Billing() {
               {loading && (
                 <div className="flex flex-col items-center justify-center py-24 gap-4">
                   <div className="h-8 w-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-                  <p className="text-[10px] font-mono text-white/20 uppercase tracking-[0.3em]">Synchronizing Ledger...</p>
+                  <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Synchronizing Ledger...</p>
                 </div>
               )}
 
@@ -736,10 +736,10 @@ export default function Billing() {
                 <div className="flex flex-col items-center justify-center py-24 gap-4 px-6 text-center">
                   <AlertCircle className="h-8 w-8 text-rose-500 opacity-50 mb-2" />
                   <div className="space-y-2">
-                    <p className="text-sm text-white/40 italic font-serif">"{error}"</p>
-                    <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Error Code: SYNC_NODE_INTERRUPT</p>
+                    <p className="text-sm text-white/40 italic font-sans font-bold tracking-tight">"{error}"</p>
+                    <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Error Code: SYNC_NODE_INTERRUPT</p>
                   </div>
-                  <Button onClick={() => window.location.reload()} variant="outline" className="mt-4 h-10 border-white/10 hover:border-white/20 text-white font-mono text-[9px] px-6">RE-ATTEMPT SYNC</Button>
+                  <Button onClick={() => window.location.reload()} variant="outline" className="mt-4 h-10 border-white/10 hover:border-white/20 text-white font-sans font-bold text-[9px] px-6 tracking-tight">RE-ATTEMPT SYNC</Button>
                 </div>
               )}
 
@@ -748,12 +748,12 @@ export default function Billing() {
                   <Table>
                     <TableHeader className="bg-white/[0.02]">
                       <TableRow className="border-b border-white/5 hover:bg-transparent">
-                        <TableHead className="py-6 px-8 text-white/20 font-mono text-[9px] uppercase tracking-widest">Invoice ID</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Date</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest">Status</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Recovered</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Fee</TableHead>
-                        <TableHead className="text-white/20 font-mono text-[9px] uppercase tracking-widest text-right">Charged</TableHead>
+                        <TableHead className="py-6 px-8 text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight">Invoice ID</TableHead>
+                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight">Date</TableHead>
+                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight">Status</TableHead>
+                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight text-right">Recovered</TableHead>
+                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight text-right">Fee</TableHead>
+                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight text-right">Charged</TableHead>
                         <TableHead className="pr-8"></TableHead>
                       </TableRow>
                     </TableHeader>
@@ -769,25 +769,25 @@ export default function Billing() {
                               className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group"
                             >
                               <TableCell className="py-6 px-8">
-                                <span className="text-[11px] font-mono text-white/60 group-hover:text-emerald-500 transition-colors">
+                                <span className="text-[11px] font-sans font-bold text-white/60 group-hover:text-emerald-500 transition-colors tracking-tight">
                                   {invoice.id}
                                 </span>
                               </TableCell>
-                              <TableCell className="text-[10px] font-mono text-white/40 uppercase tracking-tight">
+                              <TableCell className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
                                 {new Date(invoice.dateIssued).toLocaleDateString()}
                               </TableCell>
                               <TableCell>
-                                <Badge variant="outline" className={cn("text-[9px] font-mono px-3 py-0.5 tracking-widest", getStatusStyles(invoice.status))}>
+                                <Badge variant="outline" className={cn("text-[9px] font-sans font-bold px-3 py-0.5 tracking-tight", getStatusStyles(invoice.status))}>
                                   {invoice.status}
                                 </Badge>
                               </TableCell>
-                              <TableCell className="text-right text-[11px] font-mono text-white/80">
+                              <TableCell className="text-right text-[11px] font-sans font-bold text-white/80 tracking-tight">
                                 ${invoice.totalRecovered.toLocaleString()}
                               </TableCell>
-                              <TableCell className="text-right text-[11px] font-mono text-white/30">
+                              <TableCell className="text-right text-[11px] font-sans font-bold text-white/30 tracking-tight">
                                 ${invoice.commission.toLocaleString()}
                               </TableCell>
-                              <TableCell className="text-right text-[12px] font-mono font-bold text-white">
+                              <TableCell className="text-right text-[12px] font-sans font-bold text-white tracking-tight">
                                 ${invoice.amountCharged.toLocaleString()}
                               </TableCell>
                               <TableCell className="pr-8">
@@ -816,8 +816,8 @@ export default function Billing() {
                             <TableCell colSpan={7} className="py-32 text-center border-none">
                               <div className="flex flex-col items-center justify-center space-y-3 opacity-20">
                                 <Receipt className="h-8 w-8 mb-2" />
-                                <p className="text-[10px] font-mono uppercase tracking-[0.2em]">Transaction registry empty.</p>
-                                <p className="text-xs italic font-serif">"No capital synchronization events detected on this node."</p>
+                                <p className="text-[10px] font-sans font-bold uppercase tracking-tight">Transaction registry empty.</p>
+                                <p className="text-xs italic font-sans font-bold tracking-tight">"No capital synchronization events detected on this node."</p>
                               </div>
                             </TableCell>
                           </TableRow>
@@ -832,14 +832,14 @@ export default function Billing() {
             {/* Pagination */}
             <div className="flex flex-col md:flex-row items-center justify-between pt-10 gap-6">
               <div className="flex items-center gap-6">
-                <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Showing {pageData.length} records</p>
+                <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Showing {pageData.length} records</p>
                 <div className="h-4 w-[1px] bg-white/5" />
                 <div className="flex gap-4">
                   <Button
                     disabled={page === 1}
                     onClick={() => setPage(p => Math.max(1, p - 1))}
                     variant="ghost"
-                    className="text-[10px] font-mono text-white/40 uppercase hover:text-white"
+                    className="text-[10px] font-sans font-bold text-white/40 uppercase hover:text-white tracking-tight"
                   >
                     Previous //
                   </Button>
@@ -847,13 +847,13 @@ export default function Billing() {
                     disabled={page === totalPages}
                     onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                     variant="ghost"
-                    className="text-[10px] font-mono text-white/40 uppercase hover:text-white"
+                    className="text-[10px] font-sans font-bold text-white/40 uppercase hover:text-white tracking-tight"
                   >
                         // Next
                   </Button>
                 </div>
               </div>
-              <div className="text-[10px] font-mono text-white/10 uppercase tracking-[0.5em]">
+              <div className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">
                 Financial Access: GRANTED
               </div>
             </div>
@@ -862,10 +862,10 @@ export default function Billing() {
           {/* Institutional FAQ */}
           <div className="mt-32 max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <Badge variant="outline" className="text-white/20 border-white/5 font-mono text-[9px] tracking-[0.3em] uppercase">
+              <Badge variant="outline" className="text-white/20 border-white/5 font-sans font-bold text-[9px] tracking-tight uppercase">
                 Governance Docs
               </Badge>
-              <h3 className="text-3xl font-serif text-white italic tracking-tight">Financial Protocol Inquiries</h3>
+              <h3 className="text-3xl font-sans font-bold text-white italic tracking-tight">Financial Protocol Inquiries</h3>
             </div>
             <Accordion type="single" collapsible className="space-y-4">
               {[
@@ -875,10 +875,10 @@ export default function Billing() {
                 { q: "Commission Rate", a: "Margin takes a 20% commission on Amazon reimbursements recovered through Margin-filed claims. You only pay when Amazon pays you." }
               ].map((item, i) => (
                 <AccordionItem key={i} value={`item-${i}`} className="border-white/5 bg-white/[0.01] rounded-2xl px-6 md:px-8 overflow-hidden">
-                  <AccordionTrigger className="text-sm font-serif text-white/80 hover:text-white transition-colors py-6 uppercase tracking-widest hover:no-underline">
+                  <AccordionTrigger className="text-sm font-sans font-bold text-white/80 hover:text-white transition-colors py-6 uppercase tracking-tight hover:no-underline">
                     {item.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/40 font-serif italic text-base pb-6 leading-relaxed">
+                  <AccordionContent className="text-white/40 font-sans font-bold italic text-base pb-6 leading-relaxed tracking-tight">
                     "{item.a}"
                   </AccordionContent>
                 </AccordionItem>
@@ -888,7 +888,7 @@ export default function Billing() {
 
           {/* Support Link */}
           <div className="text-center pt-32 pb-16">
-            <p className="text-white/20 font-mono text-[10px] uppercase tracking-widest">
+            <p className="text-white/20 font-sans font-bold text-[10px] uppercase tracking-tight">
               Need direct protocol assistance?{' '}
               <a href="mailto:billing@margin-finance.com" className="text-emerald-500 hover:text-emerald-400 font-bold ml-2">billing@margin-finance.com</a>
             </p>

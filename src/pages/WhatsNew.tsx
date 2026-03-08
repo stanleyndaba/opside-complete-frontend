@@ -60,12 +60,12 @@ export default function WhatsNew() {
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-8 bg-emerald-500/50" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Updates & Releases</span>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-500/80">Updates & Releases</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 italic">
-              Product <span className="text-white/40 not-italic">Updates</span>
+            <h1 className="text-4xl md:text-5xl font-sans font-bold text-white mb-4 tracking-tight">
+              Product <span className="text-white/40">Updates</span>
             </h1>
-            <p className="text-gray-400 max-w-xl text-lg leading-relaxed font-light italic">
+            <p className="text-gray-400 max-w-xl text-lg leading-relaxed font-sans font-bold italic tracking-tight">
               Stay informed about the latest enhancements, feature releases, and platform improvements designed to maximize your FBA recoveries.
             </p>
           </motion.header>
@@ -82,7 +82,7 @@ export default function WhatsNew() {
                   whileInView={{ opacity: 1 }}
                   className="flex items-center gap-6 mb-8 md:ml-[32px]"
                 >
-                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.3em] bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full">{month}</span>
+                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight bg-white/[0.02] border border-white/5 px-3 py-1 rounded-full">{month}</span>
                   <div className="h-px flex-1 bg-white/5" />
                 </motion.div>
 
@@ -104,11 +104,11 @@ export default function WhatsNew() {
                         {/* Status Line */}
                         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                           <div className="flex items-center gap-4">
-                            <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono text-emerald-500 uppercase tracking-widest rounded">
+                            <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight rounded">
                               {update.tag}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-[10px] font-mono text-gray-500">
+                          <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-gray-500 tracking-tight">
                             <Clock className="h-3 w-3" />
                             {update.date}
                           </div>
@@ -119,7 +119,7 @@ export default function WhatsNew() {
                           <h3 className="text-2xl font-medium text-white mb-4 tracking-tight group-hover:text-emerald-400 transition-colors">
                             {update.title}
                           </h3>
-                          <p className="text-gray-400 text-sm leading-relaxed mb-6 font-light">
+                          <p className="text-gray-400 text-sm leading-relaxed mb-6 font-sans font-bold tracking-tight">
                             {update.description}
                           </p>
 
@@ -157,23 +157,23 @@ export default function WhatsNew() {
             <div className="flex flex-col items-center gap-3 mb-10">
               <a
                 href="mailto:support@margin-finance.com"
-                className="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all duration-300 text-sm font-semibold text-emerald-500 uppercase tracking-widest"
+                className="inline-flex items-center gap-2.5 px-8 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all duration-300 text-sm font-sans font-bold text-emerald-500 uppercase tracking-tight"
               >
                 Support
               </a>
-              <span className="text-[9px] font-mono text-white/20 tracking-widest uppercase">12 minute response time</span>
+              <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">12 minute response time</span>
             </div>
 
             <div className="inline-flex items-center gap-2 mb-6 px-3 py-1 bg-white/[0.02] border border-white/5 rounded-full">
               <Zap className="h-3 w-3 text-emerald-500" />
-              <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">Feedback Channel Open</span>
+              <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Feedback Channel Open</span>
             </div>
             <div className="max-w-xl mx-auto">
               <div className="relative group">
                 <input
                   type="text"
                   placeholder="Changelogs and user feature request"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-300 pr-12 font-light"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/40 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-300 pr-12 font-sans font-bold tracking-tight"
                 />
                 <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all duration-300">
                   <Send className="h-4 w-4" />
