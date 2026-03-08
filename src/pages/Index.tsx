@@ -798,7 +798,7 @@ const Index = () => {
                         <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Intel_Report_V4
                         </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
                           The Invisible Tax: Why FBA Inventory Drift Exceeds 3% at Scale
                         </h3>
                         <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
@@ -819,7 +819,7 @@ const Index = () => {
                         <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Forensic_Case_019
                         </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
                           Case File 019: Recovering $14,200 in &ldquo;Warehouse Damaged&rdquo; Assets
                         </h3>
                         <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
@@ -840,7 +840,7 @@ const Index = () => {
                         <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Tech_Spec_Algo26
                         </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
                           Algo-26 Detection Protocol: Inside the Engineering Stack
                         </h3>
                         <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
@@ -868,7 +868,7 @@ const Index = () => {
                             <div className="w-[2px] h-5 bg-emerald-500/40" />
                           </div>
                         </div>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4">
                           The Valuation Delta: How Unclaimed Margin Erodes 12-Month Rolling EBITDA
                         </h3>
                         <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
@@ -892,7 +892,7 @@ const Index = () => {
                           </span>
                           <div className="w-10 h-[1px] bg-gradient-to-r from-emerald-500/40 via-white/10 to-transparent" />
                         </div>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4">
                           Temporal Decay: The 18-Month Audit Cliff & Liquidity Forfeiture
                         </h3>
                         <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
@@ -913,7 +913,7 @@ const Index = () => {
                         <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
                           Logistics_Recon_01
                         </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4 group-hover:text-emerald-400/90 transition-colors">
+                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
                           Inbound Reconciliation: Mapping the &ldquo;Black Hole&rdquo; Between 3PL and FC Transfer
                         </h3>
                         <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
