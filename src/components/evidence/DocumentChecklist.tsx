@@ -134,7 +134,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
             <Collapsible open={expanded} onOpenChange={setExpanded}>
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-3 w-full px-4 py-3 bg-transparent border border-white/10 rounded-lg text-left hover:bg-white/5 transition-colors">
-                        <span className="text-xs font-medium text-white/80">Amazon Proof Requirements</span>
+                        <span className="text-xs font-bold text-white/80 tracking-tight">Amazon Proof Requirements</span>
                         <div className="flex-1" />
                         <span className="text-xs text-white/40">{completeCount}/4</span>
                         <ChevronRight className="h-3.5 w-3.5 text-white/20" />
@@ -150,7 +150,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                 {/* Header */}
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-3 w-full px-4 py-2 bg-white/5 border-b border-white/10 text-left hover:bg-white/10 transition-colors">
-                        <h4 className="text-xs font-semibold text-white/80">
+                        <h4 className="text-xs font-bold text-white/80 tracking-tight uppercase">
                             Amazon Proof Requirements
                         </h4>
                         <span className="text-xs text-white/40 ml-auto mr-2">
@@ -174,7 +174,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                     style={{ width: `${checklist.overallScore}%` }}
                                 />
                             </div>
-                            <div className="text-xs text-white/40">
+                            <div className="text-xs text-white/40 font-bold tracking-tight uppercase">
                                 {completeCount} of 4 complete
                             </div>
                         </div>
@@ -199,7 +199,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-white/40">{categoryIcons[key]}</span>
-                                                <h5 className="text-xs font-medium text-white">
+                                                <h5 className="text-xs font-bold text-white tracking-tight uppercase">
                                                     {categoryLabels[key]}
                                                 </h5>
                                                 <span className={`text-xs px-1.5 py-0.5 rounded ${proof.status === 'complete'
@@ -209,7 +209,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                                                     {proof.status}
                                                 </span>
                                             </div>
-                                            <p className="text-sm text-white/40 mt-1">{proof.message}</p>
+                                            <p className="text-sm text-white/40 mt-1 font-bold tracking-tight">{proof.message}</p>
 
                                             {/* Found fields */}
                                             {proof.fields.filter(f => f.found).length > 0 && (
@@ -240,7 +240,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                         {/* Recommendations */}
                         {checklist.recommendations.length > 0 && (
                             <div className="px-4 py-3 border-t border-white/10 bg-white/5">
-                                <h5 className="text-xs text-white/40 font-medium mb-2">
+                                <h5 className="text-xs text-white/40 font-bold mb-2 uppercase tracking-tight">
                                     Recommendations
                                 </h5>
                                 <ul className="space-y-1.5">

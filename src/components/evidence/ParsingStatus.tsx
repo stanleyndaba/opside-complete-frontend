@@ -111,21 +111,21 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         return (
           <div className="flex items-center gap-2 text-emerald-500">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-mono font-bold tracking-widest uppercase">INTELLIGENCE_VERIFIED</span>
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">INTELLIGENCE_VERIFIED</span>
           </div>
         );
       case 'processing':
         return (
           <div className="flex items-center gap-2 text-amber-500">
             <Activity className="w-3.5 h-3.5 animate-pulse" />
-            <span className="text-[10px] font-mono font-bold tracking-widest uppercase">EXTRACTION_ACTIVE</span>
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">EXTRACTION_ACTIVE</span>
           </div>
         );
       case 'failed':
         return (
           <div className="flex items-center gap-2 text-rose-500">
             <XCircle className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-mono font-bold tracking-widest uppercase">EXTRACTION_HALTED</span>
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">EXTRACTION_HALTED</span>
           </div>
         );
       case 'pending':
@@ -133,7 +133,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         return (
           <div className="flex items-center gap-2 text-white/20">
             <Clock className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-mono font-bold tracking-widest uppercase">QUEUE_LOCKED</span>
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">QUEUE_LOCKED</span>
           </div>
         );
     }
@@ -144,7 +144,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
       <div className="flex items-center justify-center p-12">
         <div className="text-center">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-4 text-emerald-500/30" />
-          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">SYNCHRONIZING_STATUS...</span>
+          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">SYNCHRONIZING_STATUS...</span>
         </div>
       </div>
     );
@@ -159,7 +159,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
       {/* Status Overview */}
       <div className="bg-white/[0.03] border-b border-white/10 py-5 px-6 flex items-center justify-between backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <h4 className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.2em]">
+          <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
             NODE_OVERVIEW
           </h4>
           <div className="h-4 w-[1px] bg-white/10" />
@@ -168,7 +168,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
             {jobStatus.confidence_score !== undefined && (
               <div className="flex items-center gap-4">
                 <div className="h-4 w-[1px] bg-white/10" />
-                <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
                   CONFIDENCE: <span className="text-emerald-500 font-bold">{(jobStatus.confidence_score * 100).toFixed(1)}%</span>
                 </span>
               </div>
@@ -179,7 +179,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         <button
           onClick={fetchParsingStatus}
           disabled={loading}
-          className="flex items-center gap-2 text-[10px] font-mono font-bold text-white/30 hover:text-emerald-500 transition-all uppercase tracking-widest group"
+          className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/30 hover:text-emerald-500 transition-all uppercase tracking-tight group"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
           FORCE_REFRESH
@@ -190,11 +190,11 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
           <div className="space-y-4 max-w-xl">
             <div className="flex justify-between items-end mb-1">
-              <span className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest">EXTRACTION_PROGRESS</span>
-              <span className="text-sm font-mono text-amber-500 font-bold">{jobStatus.progress}%</span>
+              <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">EXTRACTION_PROGRESS</span>
+              <span className="text-sm font-sans font-bold text-amber-500">{jobStatus.progress}%</span>
             </div>
             <Progress value={jobStatus.progress} className="h-1.5 bg-white/5" />
-            <p className="text-[10px] text-white/20 font-mono uppercase tracking-wide leading-relaxed">
+            <p className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight leading-relaxed">
               Synchronizing document nodes with neural intelligence engine...
             </p>
           </div>
@@ -204,8 +204,8 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
           <div className="flex items-start gap-4 p-5 bg-rose-500/5 border border-rose-500/20 rounded-lg">
             <AlertTriangle className="w-5 h-5 text-rose-500/50 mt-0.5" />
             <div className="space-y-2">
-              <span className="text-[10px] font-mono font-bold text-rose-500 uppercase tracking-widest leading-none block">EXTRACTION_FAULT_DETECTED</span>
-              <p className="text-xs text-rose-500/40 leading-relaxed font-mono">{jobStatus.error}</p>
+              <span className="text-[10px] font-sans font-bold text-rose-500 uppercase tracking-tight leading-none block">EXTRACTION_FAULT_DETECTED</span>
+              <p className="text-xs text-rose-500/40 leading-relaxed font-sans font-bold tracking-tight">{jobStatus.error}</p>
             </div>
           </div>
         )}
@@ -216,7 +216,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.2em]">SUMMARY_INTELLIGENCE</h4>
+                <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">SUMMARY_INTELLIGENCE</h4>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
 
@@ -228,8 +228,8 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
                   { label: 'Validated Total', value: parsedData.total_amount !== undefined ? `${parsedData.currency || '$'}${parsedData.total_amount.toFixed(2)}` : null, highlight: true }
                 ].map((item, i) => item.value && (
                   <div key={i} className="space-y-2">
-                    <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest block">{item.label}</span>
-                    <span className={`text-sm tracking-tight ${item.mono ? 'font-mono' : ''} ${item.highlight ? 'text-emerald-500 font-bold' : 'text-white/80'}`}>
+                    <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">{item.label}</span>
+                    <span className={`text-sm tracking-tight font-sans font-bold ${item.highlight ? 'text-emerald-500' : 'text-white/80'}`}>
                       {item.value}
                     </span>
                   </div>
@@ -241,7 +241,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                  <h4 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.2em]">DETAILED_EXTRACTIONS</h4>
+                  <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">DETAILED_EXTRACTIONS</h4>
                   <div className="h-px flex-1 bg-white/5" />
                 </div>
 
@@ -249,21 +249,21 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-white/5 border-b border-white/10">
-                        <th className="px-6 py-4 text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest">ENTRY_ITEM</th>
-                        <th className="px-6 py-4 text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest">QTY</th>
-                        <th className="px-6 py-4 text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest text-right">UNIT_PRICE</th>
-                        <th className="px-6 py-4 text-[10px] font-mono font-bold text-white/30 uppercase tracking-widest text-right">PURITY</th>
+                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">ENTRY_ITEM</th>
+                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">QTY</th>
+                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight text-right">UNIT_PRICE</th>
+                        <th className="px-6 py-4 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight text-right">PURITY</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                       {parsedData.line_items.map((item: any, idx: number) => (
                         <tr key={idx} className="hover:bg-white/[0.02] transition-colors group">
-                          <td className="px-6 py-4 text-xs font-medium text-white/70">{item.description}</td>
-                          <td className="px-6 py-4 text-xs font-mono text-white/40">{item.quantity}</td>
-                          <td className="px-6 py-4 text-xs font-mono text-white/40 text-right">
+                          <td className="px-6 py-4 text-xs font-bold text-white/70 tracking-tight">{item.description}</td>
+                          <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 tracking-tight">{item.quantity}</td>
+                          <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 text-right tracking-tight">
                             {parsedData.currency || '$'}{item.unit_price?.toFixed(2)}
                           </td>
-                          <td className="px-6 py-4 text-xs font-mono font-bold text-white group-hover:text-emerald-500 transition-colors text-right">
+                          <td className="px-6 py-4 text-xs font-sans font-bold text-white group-hover:text-emerald-500 transition-colors text-right tracking-tight">
                             {parsedData.currency || '$'}{item.total?.toFixed(2)}
                           </td>
                         </tr>

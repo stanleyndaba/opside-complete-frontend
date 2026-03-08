@@ -169,7 +169,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-2 w-full p-3 bg-white/5 border border-white/10 rounded-lg text-left hover:bg-white/10 transition-colors">
                         <Shield className="h-4 w-4 text-white/60" />
-                        <span className="text-sm font-medium text-white/80">Evidence Audit Trail</span>
+                        <span className="text-sm font-bold text-white/80 tracking-tight">Evidence Audit Trail</span>
                         <Badge className="bg-white/10 text-white/60 border-white/5 text-xs ml-2">
                             {timeline.length} events
                         </Badge>
@@ -187,7 +187,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                     <CollapsibleTrigger asChild>
                         <button className="flex items-center gap-2 w-full text-left">
                             <Shield className="h-5 w-5 text-white/60" />
-                            <CardTitle className="text-base font-semibold text-white">
+                            <CardTitle className="text-base font-bold text-white tracking-tight">
                                 Evidence Audit Trail
                             </CardTitle>
                             <Badge className="bg-white/5 text-white/60 border-white/10 text-xs ml-2">
@@ -207,7 +207,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                         {/* Narrative Summary */}
                         {narrativeSummary && (
                             <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                                <p className="text-sm text-blue-400 font-mono leading-relaxed">
+                                <p className="text-sm text-blue-400 font-sans font-bold tracking-tight leading-relaxed">
                                     {narrativeSummary}
                                 </p>
                             </div>
@@ -231,7 +231,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                                             <div className="flex items-start justify-between">
                                                 <div>
                                                     {event.documentFilename && (
-                                                        <span className="text-xs font-medium text-white/40 block mb-1">
+                                                        <span className="text-xs font-bold text-white/40 block mb-1 tracking-tight">
                                                             {event.documentFilename}
                                                         </span>
                                                     )}
@@ -266,7 +266,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                                             {/* Edit details */}
                                             {event.eventType === 'edited' && event.details.fieldName && (
                                                 <div className="mt-2 text-xs bg-amber-500/10 p-2 rounded border border-amber-500/20">
-                                                    <span className="font-medium text-amber-500/80">{event.details.fieldName}:</span>
+                                                    <span className="font-bold text-amber-500/80 tracking-tight">{event.details.fieldName}:</span>
                                                     {event.details.oldValue && (
                                                         <span className="text-red-400/60 line-through mx-1">{event.details.oldValue}</span>
                                                     )}
@@ -285,12 +285,12 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
                         {/* Document summaries */}
                         {documents.length > 0 && (
                             <div className="mt-6 pt-4 border-t border-white/10">
-                                <h4 className="text-sm font-medium text-white/60 mb-3">Document Summaries</h4>
+                                <h4 className="text-sm font-bold text-white/60 mb-3 tracking-tight">Document Summaries</h4>
                                 <div className="space-y-2">
                                     {documents.map((doc) => (
                                         <div key={doc.documentId} className="p-3 bg-white/5 rounded-lg text-sm">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-medium text-white/80">{doc.filename}</span>
+                                                <span className="font-bold text-white/80 tracking-tight">{doc.filename}</span>
                                                 <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs">
                                                     {doc.summary.linkedClaims} claim{doc.summary.linkedClaims !== 1 ? 's' : ''}
                                                 </Badge>

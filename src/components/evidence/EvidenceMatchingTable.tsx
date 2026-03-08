@@ -322,7 +322,7 @@ export function EvidenceMatchingTable() {
     return (
       <div className="bg-[#0c0c0c] border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
         <Loader2 className="w-8 h-8 mx-auto text-emerald-500/50 mb-4 animate-spin" />
-        <p className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.3em]">SYNCHRONIZING_INTELLIGENCE...</p>
+        <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">SYNCHRONIZING_INTELLIGENCE...</p>
       </div>
     );
   }
@@ -330,8 +330,8 @@ export function EvidenceMatchingTable() {
   if (error && matchingResults.length === 0) {
     return (
       <div className="bg-[#0c0c0c] border border-red-500/20 p-8 text-center rounded-2xl backdrop-blur-xl">
-        <p className="text-[10px] font-mono font-bold text-red-500/80 uppercase tracking-[0.2em] mb-4">{error}</p>
-        <Button onClick={fetchMatchingResults} className="h-10 px-6 text-[10px] font-mono font-bold uppercase tracking-[0.2em] bg-white/5 hover:bg-white/10 text-white/60 border border-white/10 rounded-xl">
+        <p className="text-[10px] font-sans font-bold text-red-500/80 uppercase tracking-tight mb-4">{error}</p>
+        <Button onClick={fetchMatchingResults} className="h-10 px-6 text-[10px] font-sans font-bold uppercase tracking-tight bg-white/5 hover:bg-white/10 text-white/60 border border-white/10 rounded-xl">
           <RefreshCw className="w-3.5 h-3.5 mr-2" />
           RETRY_CONNECTION
         </Button>
@@ -347,9 +347,9 @@ export function EvidenceMatchingTable() {
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-            <h2 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">Evidence_Correlation_Matrix</h2>
+            <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Evidence_Correlation_Matrix</h2>
           </div>
-          <p className="text-[9px] font-mono text-white/20 uppercase tracking-tight">
+          <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
             {refreshing ? (
               <span className="animate-pulse">SYNCHRONIZING_NEURAL_VECTORS...</span>
             ) : (
@@ -361,7 +361,7 @@ export function EvidenceMatchingTable() {
           onClick={handleRunMatching}
           disabled={refreshing}
           className={cn(
-            "h-12 px-6 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl border border-white/5",
+            "h-12 px-6 font-sans text-[10px] font-bold uppercase tracking-tight transition-all rounded-xl border border-white/5",
             refreshing
               ? "bg-white/5 text-white/20"
               : "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
@@ -380,7 +380,7 @@ export function EvidenceMatchingTable() {
         <TabsList className="flex h-12 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl mb-6">
           <TabsTrigger
             value="smart-prompts"
-            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <Sparkles className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               PENDING_REVIEW
@@ -392,7 +392,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               AUTO_SUBMITTED
@@ -404,7 +404,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <XCircle className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               HELD_REJECTED
@@ -416,7 +416,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <FileText className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               ALL_VECTORS
@@ -432,8 +432,8 @@ export function EvidenceMatchingTable() {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/5 border border-emerald-500/20 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
                 <CheckCircle2 className="h-6 w-6 text-emerald-500" />
               </div>
-              <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">QUEUE_FULLY_AUDITED</h3>
-              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-widest">
+              <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">QUEUE_FULLY_AUDITED</h3>
+              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
                 No matches currently require manual confirmation. Autonomous engine has finalized all active correlations.
               </p>
             </div>
@@ -459,8 +459,8 @@ export function EvidenceMatchingTable() {
               <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
                 <Hexagon className="h-5 w-5 text-white/20" />
               </div>
-              <h3 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.2em]">NO_AUTO_SUBMITTED_VECTORS</h3>
-              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-wide">
+              <h3 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">NO_AUTO_SUBMITTED_VECTORS</h3>
+              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
                 System initiates automatic filing for matches exceeding the 85% confidence threshold. No high-confidence pairings detected.
               </p>
             </div>
@@ -476,15 +476,15 @@ export function EvidenceMatchingTable() {
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-mono font-bold text-white/80 uppercase tracking-wide">
+                          <span className="text-[11px] font-sans font-bold text-white/80 uppercase tracking-tight">
                             {getMatchTypeLabel(match.match_type)}
                           </span>
                           <span className="text-[10px] text-white/10">|</span>
-                          <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-wider">
+                          <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
                             {Math.round(match.confidence_score * 100)}%_CONFIDENCE
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 text-[9px] font-mono text-white/40 uppercase tracking-wide">
+                        <div className="flex items-center gap-3 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
                           <div className="flex items-center gap-1.5">
                             <span className="text-white/20">CLAIM:</span>
                             <Link to={`/recoveries/${match.claim_id}`} className="text-emerald-500/60 hover:text-emerald-500 transition-colors">
@@ -500,7 +500,7 @@ export function EvidenceMatchingTable() {
                           </div>
                         </div>
                         {match.created_at && (
-                          <div className="text-[9px] font-mono text-white/20 flex items-center gap-1.5 uppercase tracking-wide">
+                          <div className="text-[9px] font-sans font-bold text-white/20 flex items-center gap-1.5 uppercase tracking-tight">
                             <Clock className="h-2.5 w-2.5" />
                             SUBMITTED {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm').replace(/ /g, '_')}
                           </div>
@@ -508,7 +508,7 @@ export function EvidenceMatchingTable() {
                       </div>
                     </div>
                     <div className="pr-6">
-                      <Button asChild variant="ghost" size="sm" className="h-8 text-[9px] font-mono font-bold text-white/30 hover:text-emerald-500 hover:bg-transparent group/btn uppercase tracking-widest p-0">
+                      <Button asChild variant="ghost" size="sm" className="h-8 text-[9px] font-sans font-bold text-white/30 hover:text-emerald-500 hover:bg-transparent group/btn uppercase tracking-tight p-0">
                         <Link to={`/recoveries/${match.claim_id}`} className="flex items-center gap-2">
                           VIEW_RECOVERY
                           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
@@ -530,8 +530,8 @@ export function EvidenceMatchingTable() {
               <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
                 <CheckCircle2 className="h-5 w-5 text-white/20" />
               </div>
-              <h3 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.2em]">NO_PARKED_CLAIMS</h3>
-              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-wide">
+              <h3 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">NO_PARKED_CLAIMS</h3>
+              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
                 All identified overlaps have been either actioned or dismissed. Systematic queue is clear.
               </p>
             </div>
@@ -557,13 +557,13 @@ export function EvidenceMatchingTable() {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-6">
                 <FileText className="h-6 w-6 text-white/20" />
               </div>
-              <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">NO_EVIDENCE_MATCHES</h3>
-              <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-widest">
+              <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">NO_EVIDENCE_MATCHES</h3>
+              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
                 No claim-to-document correlations established. Run matching to process backlog.
               </p>
               <Button
                 onClick={handleRunMatching}
-                className="mt-8 h-10 px-6 font-mono text-[9px] font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-full transition-all uppercase tracking-widest">
+                className="mt-8 h-10 px-6 font-sans text-[9px] font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-full transition-all uppercase tracking-tight">
                 <RefreshCw className="w-3.5 h-3.5 mr-2" />
                 INDEX_BACKLOG
               </Button>
@@ -580,39 +580,39 @@ export function EvidenceMatchingTable() {
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-mono font-bold text-white uppercase tracking-widest">
+                          <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">
                             {getMatchTypeLabel(match.match_type)}
-                          </span>
-                          <div className="h-1 w-1 rounded-full bg-white/10" />
+                          </span>                           <div className="h-1 w-1 rounded-full bg-white/10" />
                           <span className={cn(
-                            "text-[10px] font-mono font-bold uppercase tracking-tighter",
+                            "text-[10px] font-sans font-bold uppercase tracking-tight",
                             match.confidence_score >= 0.85 ? "text-emerald-500" :
                               match.confidence_score >= 0.5 ? "text-amber-500" : "text-white/20"
                           )}>
                             {Math.round(match.confidence_score * 100)}%_CONFIDENCE
                           </span>
                           <div className="h-1 w-1 rounded-full bg-white/10" />
-                          <span className="text-[10px] font-mono font-bold text-white/10 uppercase tracking-tighter">
+                          <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">
                             {match.action_taken.replace(/_/g, '_')}
                           </span>
                         </div>
-                        <div className="flex items-center gap-4 text-[10px] font-mono text-white/40 uppercase tracking-tight">
+                        <div className="flex items-center gap-4 text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
+
                           <div className="flex items-center gap-2">
                             <span className="text-white/10">CLAIM:</span>
-                            <Link to={`/recoveries/${match.claim_id}`} className="text-white/60 hover:text-emerald-500 transition-colors">
+                            <Link to={`/recoveries/${match.claim_id}`} className="text-white/60 font-sans font-bold hover:text-emerald-500 transition-colors">
                               {match.claim_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
                           <span className="text-white/10">/</span>
                           <div className="flex items-center gap-2">
                             <span className="text-white/10">DOC:</span>
-                            <Link to={`/documents/${match.document_id}`} className="text-white/60 hover:text-emerald-500 transition-colors">
+                            <Link to={`/documents/${match.document_id}`} className="text-white/60 font-sans font-bold hover:text-emerald-500 transition-colors">
                               {match.document_details?.filename?.substring(0, 20) || match.document_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
                         </div>
                         {match.created_at && (
-                          <div className="text-[9px] font-mono text-white/10 flex items-center gap-2 uppercase">
+                          <div className="text-[9px] font-sans font-bold text-white/10 flex items-center gap-2 uppercase tracking-tight">
                             <Clock className="h-3 w-3" />
                             INDEXED_{format(new Date(match.created_at), 'yyyy_MM_dd__HH:mm').toUpperCase()}
                           </div>
@@ -622,7 +622,7 @@ export function EvidenceMatchingTable() {
                     <div className="flex items-center gap-4 self-center">
                       <Link
                         to={`/recoveries/${match.claim_id}`}
-                        className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-widest"
+                        className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-tight"
                       >
                         DATA_NODE
                         <ArrowRight className="h-3.5 w-3.5 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />

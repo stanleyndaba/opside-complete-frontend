@@ -212,15 +212,15 @@ export function DisputeCasesTable() {
 
     if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'approved') return null;
     if (filingStatus === 'duplicate_blocked' || filingStatus === 'already_reimbursed') {
-      return <span className="text-[9px] font-mono font-bold text-white/15 uppercase tracking-widest">BLOCKED</span>;
+      return <span className="text-[9px] font-sans font-bold text-white/15 uppercase tracking-tight">BLOCKED</span>;
     }
     if (filingStatus === 'quarantined_dangerous_doc') {
-      return <span className="text-[9px] font-mono font-bold text-red-500/50 uppercase tracking-widest">REVIEW_REQUIRED</span>;
+      return <span className="text-[9px] font-sans font-bold text-red-500/50 uppercase tracking-tight">REVIEW_REQUIRED</span>;
     }
     if (filingStatus === 'pending_approval') {
       return (
         <Button onClick={() => handleApproveFiling(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-mono font-bold text-amber-500 bg-amber-500/5 border border-amber-500/20 hover:bg-amber-500/10 transition-all uppercase tracking-widest rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-amber-500 bg-amber-500/5 border border-amber-500/20 hover:bg-amber-500/10 transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
           APPROVE
         </Button>
@@ -229,7 +229,7 @@ export function DisputeCasesTable() {
     if (filingStatus === 'failed') {
       return (
         <Button onClick={() => handleRetryFiling(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-mono font-bold text-red-500 bg-red-500/5 border border-red-500/20 hover:bg-red-500/10 transition-all uppercase tracking-widest rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-red-500 bg-red-500/5 border border-red-500/20 hover:bg-red-500/10 transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
           RETRY
         </Button>
@@ -238,14 +238,14 @@ export function DisputeCasesTable() {
     if (filingStatus === 'pending' || !filingStatus) {
       return (
         <Button onClick={() => handleFileNow(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-mono font-bold text-white/60 bg-white/5 border border-white/10 hover:bg-emerald-500/10 hover:text-emerald-500 hover:border-emerald-500/20 transition-all uppercase tracking-widest rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-white/60 bg-white/5 border border-white/10 hover:bg-emerald-500/10 hover:text-emerald-500 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
           FILE
         </Button>
       );
     }
     if (filingStatus === 'filing' || filingStatus === 'retrying') {
-      return <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest animate-pulse">PROCESSING...</span>;
+      return <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight animate-pulse">PROCESSING...</span>;
     }
     return null;
   };
@@ -256,7 +256,7 @@ export function DisputeCasesTable() {
     return (
       <div className="py-24 flex flex-col items-center justify-center gap-4">
         <Loader2 className="h-6 w-6 text-emerald-500 animate-spin" />
-        <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em] animate-pulse">Synchronizing Intelligence...</span>
+        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight animate-pulse">Synchronizing Intelligence...</span>
       </div>
     );
   }
@@ -268,11 +268,11 @@ export function DisputeCasesTable() {
           <XCircle className="w-6 h-6 text-red-500/50" />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <span className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">CONNECTION_ERROR</span>
-          <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest max-w-sm text-center">{error}</span>
+          <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">CONNECTION_ERROR</span>
+          <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight max-w-sm text-center">{error}</span>
         </div>
         <Button onClick={() => fetchCases()}
-          className="h-8 px-5 text-[9px] font-mono font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all uppercase tracking-widest">
+          className="h-8 px-5 text-[9px] font-sans font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all uppercase tracking-tight">
           RETRY_CONNECTION
         </Button>
       </div>
@@ -286,30 +286,30 @@ export function DisputeCasesTable() {
         <div>
           <div className="flex items-center gap-3">
             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-            <h2 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">Dispute_Filing_Queue</h2>
+            <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Dispute_Filing_Queue</h2>
           </div>
-          <p className="text-[9px] font-mono text-white/20 uppercase tracking-tight mt-1">
+          <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
             ACTIVE_CASES: {cases.length} • AGENT_7_FILING_PROTOCOL
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px] h-10 text-[9px] font-mono font-bold bg-white/5 text-white/40 border-white/5 hover:bg-white/10 rounded-xl transition-all uppercase tracking-widest">
+            <SelectTrigger className="w-[160px] h-10 text-[9px] font-sans font-bold bg-white/5 text-white/40 border-white/5 hover:bg-white/10 rounded-xl transition-all uppercase tracking-tight">
               <SelectValue placeholder="ALL_CASES" />
             </SelectTrigger>
-            <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
-              <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-widest">ALL_CASES</SelectItem>
-              <SelectItem value="pending" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-widest">PENDING</SelectItem>
-              <SelectItem value="submitted" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-widest">SUBMITTED</SelectItem>
-              <SelectItem value="in_progress" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-widest">IN_PROGRESS</SelectItem>
-              <SelectItem value="approved" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-widest">APPROVED</SelectItem>
-              <SelectItem value="rejected" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-widest">REJECTED</SelectItem>
+            <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+              <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">ALL_CASES</SelectItem>
+              <SelectItem value="pending" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">PENDING</SelectItem>
+              <SelectItem value="submitted" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">SUBMITTED</SelectItem>
+              <SelectItem value="in_progress" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">IN_PROGRESS</SelectItem>
+              <SelectItem value="approved" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">APPROVED</SelectItem>
+              <SelectItem value="rejected" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">REJECTED</SelectItem>
             </SelectContent>
           </Select>
           <Button
             onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
             className={cn(
-              "h-10 px-5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] transition-all rounded-xl border border-white/5",
+              "h-10 px-5 font-sans font-bold text-[9px] uppercase tracking-tight transition-all rounded-xl border border-white/5",
               "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
             )}>
             <RefreshCw className="w-3 h-3 mr-2" />
@@ -324,8 +324,8 @@ export function DisputeCasesTable() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/5 border border-emerald-500/20 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
             <CheckCircle2 className="h-6 w-6 text-emerald-500" />
           </div>
-          <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">QUEUE_CLEAR</h3>
-          <p className="text-[9px] font-mono text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-widest">
+          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">QUEUE_CLEAR</h3>
+          <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
             No dispute cases require immediate filing. All active sessions have been processed.
           </p>
         </div>
@@ -352,19 +352,18 @@ export function DisputeCasesTable() {
                     </div>
 
                     <div className="space-y-1.5 min-w-0">
-                      {/* Row 1: Case number | Status | Amount */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[11px] font-mono font-bold text-white/80 uppercase tracking-wide">
+                      {/* Row 1: Case number | Status | Amount */}                       <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[11px] font-sans font-bold text-white/80 uppercase tracking-tight">
                           {caseItem.case_number || 'CASE_ID_PENDING'}
                         </span>
                         <span className="text-white/10">|</span>
-                        <span className={cn("text-[10px] font-mono font-bold uppercase tracking-wider", statusColor)}>
+                        <span className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", statusColor)}>
                           {(caseItem.status || 'UNKNOWN').replace(/ /g, '_')}
                         </span>
                         {filingLabel && (
                           <>
                             <span className="text-white/10">|</span>
-                            <span className={cn("text-[10px] font-mono font-bold uppercase tracking-wider", filingLabel.color)}>
+                            <span className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", filingLabel.color)}>
                               {filingLabel.label}
                             </span>
                           </>
@@ -372,19 +371,18 @@ export function DisputeCasesTable() {
                         {caseItem.retry_count && caseItem.retry_count > 0 && (
                           <>
                             <span className="text-white/10">|</span>
-                            <span className="text-[9px] font-mono font-bold text-amber-500/50 uppercase tracking-wider">
+                            <span className="text-[9px] font-sans font-bold text-amber-500/50 uppercase tracking-tight">
                               RETRY_{caseItem.retry_count}
                             </span>
                           </>
                         )}
                         <span className="text-white/10">|</span>
-                        <span className="text-[11px] font-mono font-bold text-white tracking-wide tabular-nums">
+                        <span className="text-[11px] font-sans font-bold text-white tracking-tight tabular-nums">
                           {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                         </span>
                       </div>
 
-                      {/* Row 2: Metadata line */}
-                      <div className="flex items-center gap-3 text-[9px] font-mono text-white/25 uppercase tracking-wide">
+                      {/* Row 2: Metadata line */}                       <div className="flex items-center gap-3 text-[9px] font-sans font-bold text-white/25 uppercase tracking-tight">
                         {caseItem.amazon_case_id && (
                           <div className="flex items-center gap-1.5">
                             <span className="text-white/15">AMZ:</span>
@@ -396,14 +394,14 @@ export function DisputeCasesTable() {
                         {caseItem.claim_id && (
                           <div className="flex items-center gap-1.5">
                             <span className="text-white/15">REF:</span>
-                            <span className="text-white/40">{caseItem.claim_id.substring(0, 12).toUpperCase()}</span>
+                            <span className="text-white/40 font-sans font-bold">{caseItem.claim_id.substring(0, 12).toUpperCase()}</span>
                           </div>
                         )}
                       </div>
 
                       {/* Row 3: Timestamp */}
                       {caseItem.created_at && (
-                        <div className="text-[9px] font-mono text-white/15 flex items-center gap-1.5 uppercase tracking-wide">
+                        <div className="text-[9px] font-sans font-bold text-white/15 flex items-center gap-1.5 uppercase tracking-tight">
                           <Clock className="h-2.5 w-2.5" />
                           CREATED {format(new Date(caseItem.created_at), 'MMM_dd,_yyyy • HH:mm').toUpperCase()}
                         </div>
@@ -435,7 +433,7 @@ export function DisputeCasesTable() {
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl">
-                              <span className="text-[9px] font-mono text-white/50 uppercase tracking-widest">Download Brief</span>
+                              <span className="text-[9px] font-sans font-bold text-white/50 uppercase tracking-tight">Download Brief</span>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -446,9 +444,9 @@ export function DisputeCasesTable() {
                               <MoreHorizontal className="w-3.5 h-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48 bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl font-mono text-[11px] p-1">
+                          <DropdownMenuContent align="end" className="w-48 bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl font-sans font-bold text-[11px] p-1">
                             <DropdownMenuItem asChild className="hover:bg-white/5 focus:bg-white/5 text-white/50 cursor-pointer rounded-lg px-3 py-2.5">
-                              <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2">
+                              <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2 tracking-tight uppercase">
                                 <Eye className="w-3 h-3 text-white/30" />
                                 View Core Claim
                               </Link>

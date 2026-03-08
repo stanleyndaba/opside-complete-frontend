@@ -619,7 +619,7 @@ const DoubleDipBadge = ({ warning }: { warning: DuplicateWarning }) => {
   return (
     <Tooltip>
       <TooltipTrigger>
-        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${c.bg} ${c.text} ${c.border}`}>
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-sans font-bold ${c.bg} ${c.text} ${c.border} uppercase tracking-tight`}>
           {c.icon && <span>{c.icon}</span>}
           {c.label}
         </span>
@@ -2274,11 +2274,11 @@ export default function Recoveries() {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">SYSTEM_BUFFER</span>
+                    <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight uppercase">SYSTEM_BUFFER</span>
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   </div>
-                  <h1 className="text-4xl font-serif text-white mb-2 tracking-tight">Claims & Recoveries <span className="text-xs font-mono text-white/20 ml-2 uppercase tracking-widest border border-white/5 px-2 py-0.5 rounded-full">BETA</span></h1>
-                  <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] max-w-md leading-relaxed">
+                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Claims & Recoveries <span className="text-xs font-sans font-bold text-white/20 ml-2 uppercase tracking-tight border border-white/5 px-2 py-0.5 rounded-full">BETA</span></h1>
+                  <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
                     Active auditing of detected discrepancies and financial reconciliation ledger
                   </p>
                 </div>
@@ -2286,7 +2286,7 @@ export default function Recoveries() {
                   <Button
                     variant="ghost"
                     className={cn(
-                      "h-11 px-6 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all border border-white/5",
+                      "h-11 px-6 font-sans font-bold text-[10px] uppercase tracking-tight transition-all border border-white/5",
                       selectedIds.size === 0 || submittingBulk
                         ? "text-white/20 bg-transparent"
                         : "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30"
@@ -2324,7 +2324,7 @@ export default function Recoveries() {
               <div className="flex items-end justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] font-mono font-bold text-white/30 uppercase tracking-[0.2em]">RECOVERY_YIELD</span>
+                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">RECOVERY_YIELD</span>
                     {recoveredTotal != null && recoveredTotal > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -2332,17 +2332,17 @@ export default function Recoveries() {
                             type="button"
                             aria-label="About recovered value"
                             className="w-3.5 h-3.5 rounded-full border border-white/10 flex items-center justify-center hover:border-emerald-500/30 transition-colors group">
-                            <span className="text-white/40 text-[8px] font-mono group-hover:text-emerald-500">i</span>
+                            <span className="text-white/40 text-[8px] font-sans font-bold group-hover:text-emerald-500">i</span>
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-lg shadow-2xl backdrop-blur-3xl">
+                        <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-lg shadow-2xl backdrop-blur-3xl uppercase tracking-tight">
                           Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
                         </TooltipContent>
                       </Tooltip>
                     )}
                   </div>
                   <div className="flex items-baseline gap-4">
-                    <div className="text-6xl font-mono font-bold text-white tracking-tighter shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
+                    <div className="text-6xl font-sans font-bold text-white tracking-tight shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
                       {recoveredTotal != null && recoveredTotal > 0 ? (
                         formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)
                       ) : (
@@ -2351,15 +2351,15 @@ export default function Recoveries() {
                     </div>
                     {recoveredTotal != null && recoveredTotal > 0 ? (
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-mono font-bold text-emerald-500 tracking-widest uppercase">PROCESSED</span>
-                        <span className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">
+                        <span className="text-[10px] font-sans font-bold text-emerald-500 tracking-tight uppercase">PROCESSED</span>
+                        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
                           {amazonClaimCount ?? 0} NODES_FINALIZED
                         </span>
                       </div>
                     ) : (
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-mono font-bold text-white/20 tracking-widest uppercase">INITIALIZING</span>
-                        <span className="text-[10px] font-mono text-white/10 uppercase tracking-tighter">NO_ACTIVE_RECOVERIES</span>
+                        <span className="text-[10px] font-sans font-bold text-white/20 tracking-tight uppercase">INITIALIZING</span>
+                        <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">NO_ACTIVE_RECOVERIES</span>
                       </div>
                     )}
                   </div>
@@ -2381,14 +2381,14 @@ export default function Recoveries() {
                           ) : (
                             <div className="h-1.5 w-1.5 rounded-full bg-current animate-pulse shadow-[0_0_8px_rgba(current,0.5)]" />
                           )}
-                          <span className="text-[10px] font-mono uppercase tracking-widest">
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-tight">
                             {syncMessage || (needsSync ? 'SYNCHRONIZING_AMAZON_NODES..._UPDATE_PENDING' : '')}
                           </span>
                         </div>
                         {activeSyncId && (
                           <Link
                             to={`/sync?id=${activeSyncId}`}
-                            className="text-[10px] font-mono font-bold uppercase tracking-widest hover:underline px-2 py-1 border border-current/20 rounded">
+                            className="text-[10px] font-sans font-bold uppercase tracking-tight hover:underline px-2 py-1 border border-current/20 rounded">
                             VIEW_STREAM
                           </Link>
                         )}
@@ -2399,7 +2399,7 @@ export default function Recoveries() {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-mono text-[9px] uppercase tracking-widest rounded-lg px-4 gap-3 group transition-all">
+                    <Button variant="outline" className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-sans font-bold text-[9px] uppercase tracking-tight rounded-lg px-4 gap-3 group transition-all">
                       <div className="flex items-center gap-2">
                         <div className="h-1 w-1 rounded-full bg-emerald-500/50 group-hover:bg-emerald-500" />
                         EVENT_MATRICES
@@ -2411,7 +2411,7 @@ export default function Recoveries() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-2 outline-none">
-                    <div className="text-[9px] font-mono font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-2 uppercase tracking-[0.2em]">
+                    <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-2 uppercase tracking-tight">
                       AMAZON_FINANCIAL_SPECTRUM
                     </div>
                     <div className="max-h-80 overflow-y-auto custom-scrollbar">
@@ -2420,7 +2420,7 @@ export default function Recoveries() {
                         .map(([label, count]) => (
                           <DropdownMenuItem
                             key={label}
-                            className="flex justify-between items-center px-3 py-2 text-[10px] font-mono font-medium rounded-lg hover:bg-white/5 focus:bg-white/5 cursor-default group transition-all">
+                            className="flex justify-between items-center px-3 py-2 text-[10px] font-sans font-bold text-[10px] rounded-lg hover:bg-white/5 focus:bg-white/5 cursor-default group transition-all">
                             <span className="text-white/60 group-hover:text-white truncate uppercase tracking-tight">{label}</span>
                             <span className="text-white/20 group-hover:text-emerald-500 tabular-nums">[{String(count).padStart(3, '0')}]</span>
                           </DropdownMenuItem>
@@ -2436,14 +2436,14 @@ export default function Recoveries() {
             <div className="mb-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px flex-1 bg-white/5" />
-                <h2 className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Operational_Vectors</h2>
+                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Operational_Vectors</h2>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
                 <TabsList className="mb-8 flex h-14 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl">
                   <TabsTrigger
                     value="claims"
-                    className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
                       Created Claims
                       {tabCounts.claimsCount > 0 && (
@@ -2456,7 +2456,7 @@ export default function Recoveries() {
                   </TabsTrigger>
                   <TabsTrigger
                     value="matching"
-                    className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
                       Evidence Matched
                       {tabCounts.evidenceMatchingCount > 0 && (
@@ -2469,7 +2469,7 @@ export default function Recoveries() {
                   </TabsTrigger>
                   <TabsTrigger
                     value="cases"
-                    className="flex-1 relative px-6 text-[10px] font-mono font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-widest group">
+                    className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
                       Filed Disputes
                       {tabCounts.disputeCasesCount > 0 && (
@@ -2492,10 +2492,10 @@ export default function Recoveries() {
 
                       <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between">
                         <div>
-                          <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">REVENUE_RECOVERY_LEDGER</h3>
-                          <p className="text-[9px] font-mono text-white/20 mt-1 uppercase tracking-tight">Real-time audit of finalized reimbursements and recovery nodes</p>
+                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">REVENUE_RECOVERY_LEDGER</h3>
+                          <p className="text-[9px] font-sans font-bold text-white/20 mt-1 uppercase tracking-tight">Real-time audit of finalized reimbursements and recovery nodes</p>
                         </div>
-                        <div className="flex items-center gap-1.5 font-mono text-[9px] text-white/10 uppercase tracking-tighter">
+                        <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-white/10 uppercase tracking-tight">
                           <Eye className="w-3 h-3" />
                           MONITORING_ACTIVE
                         </div>
@@ -2511,7 +2511,7 @@ export default function Recoveries() {
                                 placeholder="IDENTIFY_NODES (Claim ID, ASIN, SKU)..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-12 h-14 bg-white/5 border-white/5 text-white font-mono text-[11px] placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-2xl transition-all shadow-inner"
+                                className="pl-12 h-14 bg-white/5 border-white/5 text-white font-sans font-bold text-[11px] placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-2xl transition-all shadow-inner"
                               />
                             </div>
 
@@ -2528,7 +2528,7 @@ export default function Recoveries() {
                                   variant="ghost"
                                   size="sm"
                                   className={cn(
-                                    "h-8 px-4 text-[9px] font-mono font-medium border border-white/5 rounded-full transition-all uppercase tracking-tight",
+                                    "h-8 px-4 text-[9px] font-sans font-bold border border-white/5 rounded-full transition-all uppercase tracking-tight",
                                     quickDateRange === opt.val
                                       ? "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
                                       : "text-white/30 hover:text-white/60 hover:bg-white/5"
@@ -2548,7 +2548,7 @@ export default function Recoveries() {
                                 <Button
                                   variant="outline"
                                   className={cn(
-                                    "h-12 bg-white/5 border-white/5 text-[10px] font-mono uppercase tracking-widest px-5 gap-4 rounded-xl hover:bg-white/10 transition-all",
+                                    "h-12 bg-white/5 border-white/5 text-[10px] font-sans font-bold uppercase tracking-tight px-5 gap-4 rounded-xl hover:bg-white/10 transition-all",
                                     !dateRange ? "text-white/20" : "text-white/60"
                                   )}>
                                   <CalendarIcon className="h-4 w-4 text-emerald-500/40" />
@@ -2571,7 +2571,7 @@ export default function Recoveries() {
                                   selected={dateRange}
                                   onSelect={setDateRange}
                                   numberOfMonths={2}
-                                  className="bg-transparent text-white font-mono text-[10px]"
+                                  className="bg-transparent text-white font-sans font-bold text-[10px]"
                                 />
                               </PopoverContent>
                             </Popover>
@@ -2580,13 +2580,13 @@ export default function Recoveries() {
                             <Select
                               value={selectedClaimTypes.length > 0 ? selectedClaimTypes[0] : 'all'}
                               onValueChange={(value) => setSelectedClaimTypes(value === 'all' ? [] : [value])}>
-                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-mono text-[10px] uppercase tracking-widest rounded-xl px-5 hover:bg-white/10 transition-all">
+                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl px-5 hover:bg-white/10 transition-all">
                                 <div className="flex items-center gap-3">
                                   <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
                                   <SelectValue placeholder="CLAIM_SPECTRUM" />
                                 </div>
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
                                 <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">SPECTRUM_ALL</SelectItem>
                                 {claimTypes.map(type => (
                                   <SelectItem key={type} value={type} className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">{type.replace(/_/g, ' ')}</SelectItem>
@@ -2598,13 +2598,13 @@ export default function Recoveries() {
                             <Select
                               value={selectedStatuses.length > 0 ? selectedStatuses[0] : 'all'}
                               onValueChange={(value) => setSelectedStatuses(value === 'all' ? [] : [value])}>
-                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-mono text-[10px] uppercase tracking-widest rounded-xl px-5 hover:bg-white/10 transition-all">
+                              <SelectTrigger className="h-12 min-w-[200px] bg-white/5 border-white/5 text-white/40 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl px-5 hover:bg-white/10 transition-all">
                                 <div className="flex items-center gap-3">
                                   <div className="h-1 w-1 rounded-full bg-emerald-500/30" />
                                   <SelectValue placeholder="NODE_STATUS" />
                                 </div>
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
                                 <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATUS_ALL</SelectItem>
                                 {['Pending', 'Approved', 'Submitted', 'Reimbursed', 'Denied', 'Under Review'].map(s => (
                                   <SelectItem key={s} value={s} className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">{s.replace(/ /g, '_')}</SelectItem>
@@ -2621,7 +2621,7 @@ export default function Recoveries() {
                                 setSelectedClaimTypes([]);
                                 setSelectedStatuses([]);
                               }}
-                              className="h-12 text-[10px] font-mono font-bold text-white/20 hover:text-white/60 uppercase tracking-widest px-6 ml-auto">
+                              className="h-12 text-[10px] font-sans font-bold text-white/20 hover:text-white/60 uppercase tracking-tight px-6 ml-auto">
                               TERMINATE_FILTERS
                             </Button>
                           </div>
@@ -2637,13 +2637,13 @@ export default function Recoveries() {
                       {loading && (
                         <div className="py-24 flex flex-col items-center justify-center space-y-6">
                           <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
-                          <span className="text-[10px] font-mono font-bold text-white/30 tracking-[0.3em] uppercase">SYNCHRONIZING_DATA_NODES...</span>
+                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">SYNCHRONIZING_DATA_NODES...</span>
                         </div>
                       )}
                       {error && (
                         <div className="py-24 flex flex-col items-center justify-center space-y-4 text-center px-6">
                           <AlertTriangle className="w-8 h-8 text-red-500/50" />
-                          <span className="text-xs font-mono text-red-400">ERROR_OVERRIDE: {error}</span>
+                          <span className="text-xs font-sans font-bold text-red-400">ERROR_OVERRIDE: {error}</span>
                         </div>
                       )}
                       {!loading && !error && rankedClaims.length === 0 && (
@@ -2653,8 +2653,8 @@ export default function Recoveries() {
                             <div className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-full" />
                           </div>
                           <div className="flex flex-col items-center text-center max-w-sm px-6">
-                            <span className="text-xs font-mono font-bold text-white uppercase tracking-widest">ZERO_NODES_IDENTIFIED</span>
-                            <span className="text-[10px] font-mono text-white/20 mt-3 leading-relaxed uppercase tracking-tighter">
+                            <span className="text-xs font-sans font-bold text-white uppercase tracking-tight">ZERO_NODES_IDENTIFIED</span>
+                            <span className="text-[10px] font-sans font-bold text-white/20 mt-3 leading-relaxed uppercase tracking-tighter">
                               {((mergedRecoveries === null || (mergedRecoveries && mergedRecoveries.length === 0)) && (!claims || claims.length === 0))
                                 ? 'SYNC_AMAZON_ACCOUNT_OR_RUN_ANALYSIS_TO_IDENTIFY_NODES'
                                 : 'ADJUST_PARAMETERS_TO_EXPAND_AUDIT_SPECTRUM'}
@@ -2673,7 +2673,7 @@ export default function Recoveries() {
                               }}
                               className="mr-6 border-white/10 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                             />
-                            <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">BATCH_OPERATIONS_TARGETING</span>
+                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">BATCH OPERATIONS TARGETING</span>
                           </div>
 
                           {claimsByMonth.map((monthGroup, groupIndex) => (
@@ -2682,12 +2682,12 @@ export default function Recoveries() {
                               <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header shadow-lg">
                                 <div className="flex items-center gap-4">
                                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                                  <span className="text-xs font-mono font-bold text-white uppercase tracking-[0.3em]">
+                                  <span className="text-xs font-sans font-bold text-white uppercase tracking-[0.3em]">
                                     {monthGroup.month} {monthGroup.year}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                  <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest border border-white/5 px-3 py-1 rounded-full bg-white/5">
+                                  <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight border border-white/5 px-3 py-1 rounded-full bg-white/5">
                                     {monthGroup.claims.length} NODES_FINALIZED
                                   </span>
                                 </div>
@@ -2737,7 +2737,7 @@ export default function Recoveries() {
                                                 isCritical ? "text-red-500/20" : isUrgent ? "text-amber-500/20" : ""
                                               )} strokeWidth={1} />
                                               <div className={cn(
-                                                "absolute inset-0 flex items-center justify-center text-[8px] font-mono font-bold text-white/20 transition-colors",
+                                                "absolute inset-0 flex items-center justify-center text-[8px] font-sans font-bold text-white/20 transition-colors",
                                                 isCritical ? "text-red-400" : isUrgent ? "text-amber-400" : "group-hover/hex:text-emerald-500"
                                               )}>
                                                 {claim.id.slice(0, 1)}
@@ -2748,25 +2748,25 @@ export default function Recoveries() {
                                           <div className="flex flex-col min-w-0 flex-1">
                                             <div className="flex items-center gap-4 mb-1.5">
                                               <Link to={`/recoveries/${claim.id}`} state={{ claim }}>
-                                                <span className="text-[11px] font-mono font-bold text-white hover:text-emerald-500 transition-colors tracking-tight">
+                                                <span className="text-[11px] font-sans font-bold text-white hover:text-emerald-500 transition-colors tracking-tight">
                                                   {claim.claim_number || claim.id.slice(0, 16)}
                                                 </span>
                                               </Link>
                                               <div className="h-1 w-1 rounded-full bg-white/5" />
-                                              <span className="text-[10px] font-mono font-medium text-white/20 uppercase tracking-tighter">
+                                              <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
                                                 {format(claimDate, 'dd_MMM_yyyy HH:mm')}
                                               </span>
                                             </div>
 
-                                            <div className="flex items-center gap-3 text-[10px] font-mono text-white/40 mb-3">
+                                            <div className="flex items-center gap-3 text-[10px] font-sans font-bold text-white/40 mb-3">
                                               <span className="truncate max-w-md uppercase tracking-tight">{claim.details}</span>
                                               <span className="text-white/10">|</span>
-                                              <span className="text-white/10 uppercase tracking-tighter">SKU_FIX: {claim.sku || 'N/A'}</span>
+                                              <span className="text-white/10 uppercase tracking-tight">SKU FIX: {claim.sku || 'N/A'}</span>
                                             </div>
 
                                             <div className="flex items-center gap-3 flex-wrap">
                                               <div className={cn(
-                                                "px-2 py-0.5 rounded border text-[9px] font-mono font-bold uppercase tracking-widest",
+                                                "px-2 py-0.5 rounded border text-[9px] font-sans font-bold uppercase tracking-tight",
                                                 claim.status === 'Submitted' ? "bg-blue-500/10 border-blue-500/20 text-blue-400" :
                                                   claim.status === 'Reimbursed' ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
                                                     claim.status === 'Denied' ? "bg-red-500/10 border-red-500/20 text-red-400" :
@@ -2780,7 +2780,7 @@ export default function Recoveries() {
                                                 return doubleDipWarning ? <DoubleDipBadge warning={doubleDipWarning} /> : null;
                                               })()}
                                               <div className={cn(
-                                                "text-[9px] font-mono font-bold uppercase tracking-tighter",
+                                                "text-[9px] font-sans font-bold uppercase tracking-tight",
                                                 isCritical ? "text-red-500" : isUrgent ? "text-amber-500" : "text-white/20"
                                               )}>
                                                 {claim.days_remaining !== null ? `EXPIRY_IN_${claim.days_remaining}D` : 'EXPIRY_N/A'}
@@ -2791,10 +2791,10 @@ export default function Recoveries() {
                                           </div>
 
                                           <div className="flex flex-col items-end gap-1">
-                                            <span className="text-sm font-serif italic text-white tracking-tighter">
+                                            <span className="text-sm font-sans font-bold italic text-white tracking-tight">
                                               {formatCurrency(claim.guaranteedAmount, claim.currency || 'USD')}
                                             </span>
-                                            <span className="text-[9px] font-mono text-white/10 uppercase tracking-tighter font-bold">RECOVERY_VALUE</span>
+                                            <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">RECOVERY_VALUE</span>
                                           </div>
                                         </div>
 
@@ -2806,13 +2806,13 @@ export default function Recoveries() {
                                               </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
-                                              <div className="text-[9px] font-mono font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-widest">ACTION_VECTOR</div>
-                                              <DropdownMenuItem asChild className="text-[10px] font-mono font-medium text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase">
+                                              <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-tight">ACTION_VECTOR</div>
+                                              <DropdownMenuItem asChild className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight">
                                                 <Link to={`/recoveries/${claim.id}`} state={{ claim }}>VIEW_PARAMETERS</Link>
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-[10px] font-mono font-medium text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase"
+                                                className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
                                                 onClick={async () => {
                                                   try {
                                                     const res = await api.getRecoveryDetail(claim.id);
@@ -2828,7 +2828,7 @@ export default function Recoveries() {
                                               </DropdownMenuItem>
 
                                               <DropdownMenuItem
-                                                className="text-[10px] font-mono font-medium text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase"
+                                                className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
                                                 onClick={() => {
                                                   setEvidencePackClaim(claim);
                                                   setEvidencePackOpen(true);
@@ -2838,7 +2838,7 @@ export default function Recoveries() {
 
                                               {claim.status === 'Denied' && (
                                                 <DropdownMenuItem
-                                                  className="text-[10px] font-mono font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2 cursor-pointer uppercase"
+                                                  className="text-[10px] font-sans font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
                                                   onClick={async () => {
                                                     try {
                                                       await api.resubmitClaim(claim.id);
@@ -2856,7 +2856,7 @@ export default function Recoveries() {
                                           <Link
                                             to={`/recoveries/${claim.id}`}
                                             state={{ claim }}
-                                            className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-widest"
+                                            className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-tight"
                                           >
                                             NODE_SPEC
                                             <ArrowRight className="w-3 h-3 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
@@ -2878,25 +2878,25 @@ export default function Recoveries() {
                   <Dialog open={resolveModalOpen} onOpenChange={setResolveModalOpen}>
                     <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
                       <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-                        <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">RESOLUTION_PARAMETER_ENTRY</DialogTitle>
-                        <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1">
+                        <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">RESOLUTION_PARAMETER_ENTRY</DialogTitle>
+                        <DialogDescription className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
                           Complete resolution vectors and finalize node status
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
                         <div className="space-y-6 px-8 py-8">
                           <div>
-                            <Label className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">DETECTION_UUID</Label>
-                            <p className="text-[10px] font-mono text-emerald-500/60 font-bold mt-1.5 uppercase">{selectedDetection.id}</p>
+                            <Label className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DETECTION_UUID</Label>
+                            <p className="text-[10px] font-sans font-bold text-emerald-500/60 mt-1.5 uppercase">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">ANOMALY_VECTOR_TYPE</Label>
-                            <p className="text-[11px] font-mono text-white/60 uppercase mt-1.5 tracking-tighter">
+                            <Label className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">ANOMALY_VECTOR_TYPE</Label>
+                            <p className="text-[11px] font-sans font-bold text-white/60 uppercase mt-1.5 tracking-tight">
                               {selectedDetection.type?.replace(/_/g, '_') || selectedDetection.anomaly_type?.replace(/_/g, '_')}
                             </p>
                           </div>
                           <div>
-                            <Label htmlFor="resolve-amount" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">FINAL_SETTLEMENT_VAL</Label>
+                            <Label htmlFor="resolve-amount" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">FINAL_SETTLEMENT_VAL</Label>
                             <Input
                               id="resolve-amount"
                               type="number"
@@ -2904,17 +2904,17 @@ export default function Recoveries() {
                               value={resolveAmount}
                               onChange={(e) => setResolveAmount(e.target.value)}
                               placeholder="0.00"
-                              className="mt-2 h-10 text-[11px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl"
+                              className="mt-2 h-10 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl"
                             />
                           </div>
                           <div>
-                            <Label htmlFor="resolve-notes" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">CLOSURE_NARRATIVE</Label>
+                            <Label htmlFor="resolve-notes" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CLOSURE_NARRATIVE</Label>
                             <Textarea
                               id="resolve-notes"
                               value={resolveNotes}
                               onChange={(e) => setResolveNotes(e.target.value)}
                               placeholder="INPUT_RESOLUTION_PROTOCOL_DATA..."
-                              className="mt-2 text-[11px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
+                              className="mt-2 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
                             />
                           </div>
                         </div>
@@ -2928,7 +2928,7 @@ export default function Recoveries() {
                             setResolveNotes('');
                             setResolveAmount('');
                           }}
-                          className="h-10 px-6 font-mono text-[10px] font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
+                          className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
                           ABORT_SESSION
                         </Button>
                         <Button
@@ -2974,7 +2974,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all">
                           COMMIT_RESOLUTION_LINK
                         </Button>
                       </DialogFooter>
@@ -2985,24 +2985,24 @@ export default function Recoveries() {
                   <Dialog open={statusUpdateModalOpen} onOpenChange={setStatusUpdateModalOpen}>
                     <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl p-0 overflow-hidden">
                       <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-                        <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">NODE_STATUS_OVERRIDE</DialogTitle>
-                        <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1">
+                        <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">NODE_STATUS_OVERRIDE</DialogTitle>
+                        <DialogDescription className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
                           Update claim status and inject audit log entry
                         </DialogDescription>
                       </DialogHeader>
                       {selectedDetection && (
                         <div className="space-y-6 px-8 py-8">
                           <div>
-                            <Label className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">DETECTION_UUID</Label>
-                            <p className="text-[10px] font-mono text-emerald-500/60 font-bold mt-1.5 uppercase">{selectedDetection.id}</p>
+                            <Label className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DETECTION_UUID</Label>
+                            <p className="text-[10px] font-sans font-bold text-emerald-500/60 mt-1.5 uppercase">{selectedDetection.id}</p>
                           </div>
                           <div>
-                            <Label htmlFor="status-select" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">TARGET_STATE</Label>
+                            <Label htmlFor="status-select" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">TARGET_STATE</Label>
                             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                              <SelectTrigger id="status-select" className="mt-2 h-10 text-[11px] font-mono bg-white/5 border-white/5 text-white rounded-xl uppercase tracking-widest">
+                              <SelectTrigger id="status-select" className="mt-2 h-10 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white rounded-xl uppercase tracking-tight">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-mono text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
+                              <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
                                 <SelectItem value="pending" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_PENDING</SelectItem>
                                 <SelectItem value="reviewed" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_REVIEWED</SelectItem>
                                 <SelectItem value="disputed" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase">STATE_DISPUTED</SelectItem>
@@ -3011,14 +3011,14 @@ export default function Recoveries() {
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="status-notes" className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-[0.2em]">INJECT_ANNOTATION</Label>
-                            <span className="text-[8px] font-mono text-white/10 ml-2 uppercase">(OPTIONAL)</span>
+                            <Label htmlFor="status-notes" className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">INJECT_ANNOTATION</Label>
+                            <span className="text-[8px] font-sans font-bold text-white/10 ml-2 uppercase">(OPTIONAL)</span>
                             <Textarea
                               id="status-notes"
                               value={statusUpdateNotes}
                               onChange={(e) => setStatusUpdateNotes(e.target.value)}
                               placeholder="INPUT_AUDIT_DATA_VECT..."
-                              className="mt-2 text-[11px] font-mono bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
+                              className="mt-2 text-[11px] font-sans font-bold bg-white/5 border-white/5 text-white placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-xl min-h-[100px]"
                             />
                           </div>
                         </div>
@@ -3032,7 +3032,7 @@ export default function Recoveries() {
                             setStatusUpdateNotes('');
                             setSelectedStatus('pending');
                           }}
-                          className="h-10 px-6 font-mono text-[10px] font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
+                          className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
                           ABORT_ACTION
                         </Button>
                         <Button
@@ -3073,7 +3073,7 @@ export default function Recoveries() {
                               });
                             }
                           }}
-                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                          className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all">
                           COMMIT_STATE_CHANGE
                         </Button>
                       </DialogFooter>
@@ -3087,10 +3087,10 @@ export default function Recoveries() {
                         <div className="w-16 h-16 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group">
                           <Mail className="h-6 w-6 text-white/20 group-hover:text-emerald-500 transition-colors animate-pulse" />
                         </div>
-                        <h3 className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em] mb-2">
-                          GLOBAL_ENTRY_SYNC
+                        <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight mb-2">
+                          GLOBAL ENTRY SYNC
                         </h3>
-                        <p className="text-[9px] font-mono text-white/20 uppercase tracking-widest mb-8 leading-relaxed">
+                        <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mb-8 leading-relaxed">
                           All active nodes will be marked as [REVIEWED] in the primary ledger.
                         </p>
                         <div className="flex flex-col gap-2">
@@ -3102,14 +3102,14 @@ export default function Recoveries() {
                               });
                               setMarkAllReadModalOpen(false);
                             }}
-                            className="h-11 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all group">
-                            EXECUTE_MASS_SYNC
+                            className="h-11 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all group">
+                            EXECUTE MASS SYNC
                           </Button>
                           <Button
                             variant="ghost"
                             onClick={() => setMarkAllReadModalOpen(false)}
-                            className="h-10 text-[9px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl transition-all">
-                            ABORT_SESSION
+                            className="h-10 text-[9px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
+                            ABORT SESSION
                           </Button>
                         </div>
                       </div>
@@ -3122,10 +3122,10 @@ export default function Recoveries() {
                 <Dialog open={fileAnywayModalOpen} onOpenChange={setFileAnywayModalOpen}>
                   <DialogContent className="bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-2xl max-w-lg max-h-[85vh] overflow-hidden p-0">
                     <DialogHeader className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-                      <DialogTitle className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.3em]">
-                        CORRELATION_STRENGTH_AUDIT
+                      <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">
+                        CORRELATION STRENGTH AUDIT
                       </DialogTitle>
-                      <DialogDescription className="text-[9px] font-mono text-white/20 uppercase tracking-widest mt-1 leading-relaxed">
+                      <DialogDescription className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1 leading-relaxed">
                         Analysis of neural match vectors and risk-adjusted recovery recommendations
                       </DialogDescription>
                     </DialogHeader>
@@ -3140,25 +3140,25 @@ export default function Recoveries() {
                           <div className="bg-white/5 border border-white/5 rounded-xl overflow-hidden backdrop-blur-md">
                             <div className="bg-white/[0.05] border-b border-white/5 px-4 py-3 flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                              <h4 className="text-[8px] font-mono font-bold text-white/40 uppercase tracking-widest">RAW_NODE_PARAMETERS</h4>
+                              <h4 className="text-[8px] font-sans font-bold text-white/40 uppercase tracking-tight">RAW_NODE_PARAMETERS</h4>
                             </div>
                             <div className="divide-y divide-white/5">
                               <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">UUID</span>
-                                <span className="text-[9px] font-mono font-bold text-emerald-500/60 uppercase">{claimToFile.id?.slice(0, 16) || 'N/A'}</span>
+                                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">UUID</span>
+                                <span className="text-[9px] font-sans font-bold text-emerald-500/60 uppercase">{claimToFile.id?.slice(0, 16) || 'N/A'}</span>
                               </div>
                               <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">ESTIMATED_VAL</span>
-                                <span className="text-[10px] font-mono font-bold text-white">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
+                                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">ESTIMATED_VAL</span>
+                                <span className="text-[10px] font-sans font-bold text-white">${typeof claimAmount === 'number' ? claimAmount.toFixed(2) : claimAmount}</span>
                               </div>
                               <div className="flex justify-between items-center px-4 py-3">
-                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">ANOMALY_VECTOR</span>
-                                <span className="text-[9px] font-mono font-bold text-white/60 uppercase tracking-tight">{String(claimType).replace(/_/g, '_')}</span>
+                                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">ANOMALY_VECTOR</span>
+                                <span className="text-[9px] font-sans font-bold text-white/60 uppercase tracking-tight">{String(claimType).replace(/_/g, '_')}</span>
                               </div>
                               {claimDate && (
                                 <div className="flex justify-between items-center px-4 py-3">
-                                  <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">INDEX_COORD</span>
-                                  <span className="text-[9px] font-mono font-bold text-white/40 uppercase">{new Date(claimDate).toLocaleDateString().replace(/\//g, '_')}</span>
+                                  <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">INDEX_COORD</span>
+                                  <span className="text-[9px] font-sans font-bold text-white/40 uppercase">{new Date(claimDate).toLocaleDateString().replace(/\//g, '_')}</span>
                                 </div>
                               )}
                             </div>
@@ -3170,32 +3170,32 @@ export default function Recoveries() {
                               <Hexagon className="w-12 h-12 text-white" strokeWidth={1} />
                             </div>
                             <div className="flex flex-col gap-1">
-                              <span className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">INTEGRITY_SCORE</span>
+                              <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">INTEGRITY_SCORE</span>
                               <div className="flex items-baseline gap-2">
                                 <span className={cn(
-                                  "text-4xl font-mono font-bold tracking-tighter",
+                                  "text-4xl font-sans font-bold tracking-tighter",
                                   strength.score >= 80 ? "text-emerald-500" : strength.score >= 50 ? "text-amber-500" : "text-red-500"
                                 )}>
                                   {strength.score}
                                 </span>
-                                <span className="text-xs font-mono text-white/10 uppercase font-bold">/ 100_PTS</span>
+                                <span className="text-xs font-sans font-bold text-white/10 uppercase font-bold">/ 100 PTS</span>
                               </div>
                             </div>
                           </div>
 
                           {/* Detailed Breakdown */}
                           <div className="space-y-3">
-                            <h4 className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-[0.2em] px-1">VECTOR_DECOMPOSITION</h4>
+                            <h4 className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">VECTOR_DECOMPOSITION</h4>
                             <div className="space-y-2">
                               {strength.factors.map((f, i) => (
                                 <div key={i} className="bg-white/5 rounded-xl border border-white/5 p-4 flex justify-between items-center group/item hover:border-white/10 transition-colors">
                                   <div className="space-y-1">
-                                    <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-tighter group-hover/item:text-white transition-colors">{f.label.replace(/ /g, '_')}</span>
-                                    <p className="text-[9px] font-mono text-white/20 uppercase italic tracking-tight">{f.reason}</p>
+                                    <span className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight group-hover/item:text-white transition-colors">{f.label.replace(/ /g, '_')}</span>
+                                    <p className="text-[9px] font-sans font-bold text-white/20 uppercase italic tracking-tight">{f.reason}</p>
                                   </div>
                                   <div className="text-right">
-                                    <span className="text-xs font-mono font-bold text-emerald-500/50">{f.value}</span>
-                                    <span className="text-[10px] font-mono text-white/5 font-bold"> / {f.max}</span>
+                                    <span className="text-xs font-sans font-bold text-emerald-500/50">{f.value}</span>
+                                    <span className="text-[10px] font-sans font-bold text-white/5 font-bold"> / {f.max}</span>
                                   </div>
                                 </div>
                               ))}
@@ -3204,9 +3204,9 @@ export default function Recoveries() {
 
                           {/* Advisory Note */}
                           <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl px-5 py-4">
-                            <p className="text-[10px] font-mono text-amber-500/60 leading-relaxed uppercase tracking-tight italic">
-                              <span className="font-bold text-amber-500 not-italic mr-2">PROTOCOL_ADVISORY:</span>
-                              OBTAIN SUPPLEMENTAL DATA_NODES BEFORE EXECUTION TO ENSURE LEDGER INTEGRITY. MANUAL BYPASS REQUIRED.
+                            <p className="text-[10px] font-sans font-bold text-amber-500/60 leading-relaxed uppercase tracking-tight italic">
+                              <span className="font-bold text-amber-500 not-italic mr-2">PROTOCOL ADVISORY:</span>
+                              OBTAIN SUPPLEMENTAL DATA NODES BEFORE EXECUTION TO ENSURE LEDGER INTEGRITY. MANUAL BYPASS REQUIRED.
                             </p>
                           </div>
                         </div>
@@ -3219,8 +3219,8 @@ export default function Recoveries() {
                           setFileAnywayModalOpen(false);
                           setClaimToFile(null);
                         }}
-                        className="h-10 px-6 font-mono text-[10px] font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl transition-all">
-                        TERMINATE_SESSION
+                        className="h-10 px-6 font-sans font-bold text-[10px] text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
+                        ABORT SESSION
                       </Button>
                       <Button
                         onClick={async () => {
@@ -3242,9 +3242,9 @@ export default function Recoveries() {
                             setClaimToFile(null);
                           }
                         }}
-                        className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-[0.2em] rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all">
+                        className="h-10 px-8 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all">
                         <ArrowUpFromLine className="h-4 w-4 mr-2" />
-                        MANUAL_OVERRIDE_RUN
+                        MANUAL OVERRIDE RUN
                       </Button>
                     </DialogFooter>
                   </DialogContent>
@@ -3282,37 +3282,35 @@ export default function Recoveries() {
                     <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
                       <div className="flex justify-between items-start">
                         <div>
-                          <div className="text-[8px] font-mono font-bold text-white/20 mb-1.5 uppercase tracking-[0.3em]">NODE_SPECIFICATION_LEDGER</div>
-                          <DialogTitle className="text-xl font-serif italic text-white tracking-tighter">
-                            Claim_Data_Matrix
+                          <div className="text-[8px] font-sans font-bold text-white/20 mb-1.5 uppercase tracking-tight">NODE SPECIFICATION LEDGER</div>
+                          <DialogTitle className="text-xl font-sans font-bold italic text-white tracking-tight">
+                            Claim Data Matrix
                           </DialogTitle>
                         </div>
-                        <div className="text-right">
-                          {detectionDetails && (
-                            <>
-                              <div
-                                className="text-[10px] font-mono font-bold text-emerald-500/60 cursor-pointer hover:text-emerald-500 transition-colors uppercase tracking-widest"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(detectionDetails.id || '');
-                                  toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
-                                }}
-                                title="Click to copy">
-                                REF://{(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
-                              </div>
-                              <div className="text-[9px] font-mono font-bold text-white/10 mt-1 uppercase tracking-widest">
-                                {detectionDetails.created_at || detectionDetails.discovery_date
-                                  ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'dd_MMM_yyyy HH:mm')
-                                  : 'INDEX_PENDING'
-                                }
-                              </div>
-                            </>
-                          )}
-                        </div>
+                        {detectionDetails && (
+                          <>
+                            <div
+                              className="text-[10px] font-sans font-bold text-emerald-500/60 cursor-pointer hover:text-emerald-500 transition-colors uppercase tracking-tight"
+                              onClick={() => {
+                                navigator.clipboard.writeText(detectionDetails.id || '');
+                                toast({ title: 'Copied', description: 'Claim ID copied to clipboard' });
+                              }}
+                              title="Click to copy">
+                              REF://{(detectionDetails.claim_number || detectionDetails.id?.slice(0, 12) || '').toUpperCase()}
+                            </div>
+                            <div className="text-[9px] font-sans font-bold text-white/10 mt-1 uppercase tracking-tight">
+                              {detectionDetails.created_at || detectionDetails.discovery_date
+                                ? format(new Date(detectionDetails.created_at || detectionDetails.discovery_date), 'dd_MMM_yyyy HH:mm')
+                                : 'INDEX_PENDING'
+                              }
+                            </div>
+                          </>
+                        )}
                       </div>
                       {detectionDetails && (
                         <div className="mt-3 flex items-center gap-3">
                           <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                          <div className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-widest">
+                          <div className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
                             {(detectionDetails.anomaly_type || detectionDetails.type || 'Recovery Claim').replace(/_/g, '_')}
                           </div>
                         </div>
@@ -3321,8 +3319,8 @@ export default function Recoveries() {
                         <Link
                           to={`/recoveries/${detectionDetails.id}`}
                           state={{ claim: detectionDetails }}
-                          className="mt-4 inline-flex items-center text-[10px] font-mono font-bold text-emerald-500/40 hover:text-emerald-500 transition-colors uppercase tracking-[0.2em] group">
-                          ACCESS_FULL_TELEMETRY
+                          className="mt-4 inline-flex items-center text-[10px] font-sans font-bold text-emerald-500/40 hover:text-emerald-500 transition-colors uppercase tracking-tight group">
+                          ACCESS FULL TELEMETRY
                           <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
                         </Link>
                       )}
@@ -3333,26 +3331,26 @@ export default function Recoveries() {
                         {/* Summary Card - Institutional Style */}
                         <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
                           <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4">
-                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">EXECUTIVE_SUMMARY</h4>
+                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">EXECUTIVE SUMMARY</h4>
                           </div>
                           <div className="divide-y divide-white/5">
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">EXPECTED_RECOVERY</span>
-                              <span className="text-lg font-serif italic text-white tracking-tighter">
+                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">EXPECTED RECOVERY</span>
+                              <span className="text-lg font-sans font-bold italic text-white tracking-tighter">
                                 {formatCurrency(detectionDetails.guaranteedAmount || detectionDetails.amount || detectionDetails.estimated_value || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">CURRENT_STATE</span>
+                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">CURRENT STATE</span>
                               <div className="flex items-center gap-2">
                                 <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                                <span className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">{detectionDetails.status || 'PENDING'}</span>
+                                <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">{detectionDetails.status || 'PENDING'}</span>
                               </div>
                             </div>
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">EVIDENCE_COUNT</span>
-                              <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest">
-                                {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} FILE_NODES
+                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">EVIDENCE COUNT</span>
+                              <span className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">
+                                {detectionDetails.matchedCount || detectionDetails.matchedDocs?.length || 0} FILE NODES
                               </span>
                             </div>
                           </div>
@@ -3361,38 +3359,38 @@ export default function Recoveries() {
 
                         {/* Claim Info Section */}
                         <div className="space-y-4">
-                          <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">TECHNICAL_TELEMETRY</h4>
+                          <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">TECHNICAL TELEMETRY</h4>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">CLAIM_UUID</div>
-                              <div className="text-[10px] font-mono font-bold text-emerald-500/60 mt-2 uppercase tracking-tight">{detectionDetails.id?.slice(0, 16) || '—'}...</div>
+                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CLAIM UUID</div>
+                              <div className="text-[10px] font-sans font-bold text-emerald-500/60 mt-2 uppercase tracking-tight">{detectionDetails.id?.slice(0, 16) || '—'}...</div>
                             </div>
                             <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">SYNC_NODE_ID</div>
-                              <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sync_id || 'N/A'}</div>
+                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">SYNC NODE ID</div>
+                              <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sync_id || 'N/A'}</div>
                             </div>
                             <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">VECTOR_TYPE</div>
-                              <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">
+                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">VECTOR TYPE</div>
+                              <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">
                                 {detectionDetails.anomaly_type?.replace(/_/g, '_').toUpperCase() || '—'}
                               </div>
                             </div>
                             <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                              <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">THREAT_LEVEL</div>
-                              <Badge className="mt-2 bg-white/5 hover:bg-white/10 text-white/60 border-white/10 text-[9px] font-mono font-bold uppercase tracking-widest">
+                              <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">THREAT LEVEL</div>
+                              <Badge className="mt-2 bg-white/5 hover:bg-white/10 text-white/60 border-white/10 text-[9px] font-sans font-bold uppercase tracking-tight">
                                 {detectionDetails.severity?.toUpperCase() || 'UNKNOWN'}
                               </Badge>
                             </div>
                             {detectionDetails.sku && (
                               <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">SKU_INDEX</div>
-                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sku}</div>
+                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">SKU INDEX</div>
+                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.sku}</div>
                               </div>
                             )}
                             {detectionDetails.asin && (
                               <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">ASIN_COORD</div>
-                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.asin}</div>
+                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">ASIN COORD</div>
+                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">{detectionDetails.asin}</div>
                               </div>
                             )}
                           </div>
@@ -3404,33 +3402,33 @@ export default function Recoveries() {
 
                           return (
                             <div className="space-y-4">
-                              <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">EVIDENCE_AUTHENTICATION</h4>
+                              <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">EVIDENCE AUTHENTICATION</h4>
                               <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
                                 <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4 flex items-center justify-between">
-                                  <h4 className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest">VALIDATION_STATUS</h4>
+                                  <h4 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">VALIDATION STATUS</h4>
                                   <span className={cn(
-                                    "text-[10px] font-mono font-bold uppercase tracking-widest",
-                                    validation.quality === 'high' ? "text-emerald-500" : validation.quality === 'medium' ? "text-amber-500" : "text-red-500"
+                                    "text-[10px] font-sans font-bold uppercase tracking-tight",
+                                    validation.quality === 'strong' ? "text-emerald-500" : validation.quality === 'medium' ? "text-amber-500" : "text-red-500"
                                   )}>
-                                    {validation.quality}_CONFIDENCE
+                                    {validation.quality.toUpperCase()}_CONFIDENCE
                                   </span>
                                 </div>
                                 <div className="p-6 space-y-6">
                                   {/* Quality Summary */}
                                   <div>
-                                    <div className="text-[10px] font-mono font-bold text-white uppercase tracking-widest">PROTOCOL_RECOMMENDATION</div>
-                                    <div className="text-[9px] font-mono text-white/20 uppercase mt-2 tracking-tight leading-relaxed">{validation.recommendationText}</div>
+                                    <div className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">PROTOCOL RECOMMENDATION</div>
+                                    <div className="text-[9px] font-sans font-bold text-white/20 uppercase mt-2 tracking-tight leading-relaxed">{validation.recommendationText}</div>
                                   </div>
 
                                   {/* Field Verification */}
                                   <div className="space-y-3">
-                                    <p className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">FIELD_INTEGRITY_INDEX</p>
+                                    <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">FIELD INTEGRITY INDEX</p>
                                     <div className="grid grid-cols-1 gap-2">
                                       {validation.fieldChecks.map((check, i) => (
-                                        <div key={i} className="flex items-center justify-between text-[10px] font-mono py-2.5 border-b border-white/5 last:border-0 group/field">
+                                        <div key={i} className="flex items-center justify-between text-[10px] font-sans font-bold py-2.5 border-b border-white/5 last:border-0 group/field uppercase tracking-tight">
                                           <span className="text-white/40 uppercase tracking-tighter group-hover/field:text-white/60 transition-colors">{check.label.replace(/ /g, '_')}</span>
                                           <span className={cn(
-                                            "font-bold uppercase tracking-widest",
+                                            "font-bold uppercase tracking-tight",
                                             check.present ? "text-emerald-500/50" : check.required ? "text-red-500/50" : "text-white/10"
                                           )}>
                                             {check.present ? "VALIDATED" : check.required ? "MISSING_CRITICAL" : "OPTIONAL_NULL"}
@@ -3443,10 +3441,10 @@ export default function Recoveries() {
                                   {/* Policy Notes */}
                                   {validation.warnings.length > 0 && (
                                     <div className="space-y-3 pt-4 border-t border-white/5">
-                                      <p className="text-[9px] font-mono font-bold text-red-500/40 uppercase tracking-widest">POLICY_CONFLICT_WARNINGS</p>
+                                      <p className="text-[9px] font-sans font-bold text-red-500/40 uppercase tracking-tight">POLICY CONFLICT WARNINGS</p>
                                       <ul className="space-y-2">
                                         {validation.warnings.map((w, i) => (
-                                          <li key={i} className="text-[9px] font-mono text-white/40 uppercase tracking-tight pl-4 relative before:content-['>'] before:absolute before:left-0 before:text-red-500/30 font-bold leading-relaxed">{w}</li>
+                                          <li key={i} className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight pl-4 relative before:content-['>'] before:absolute before:left-0 before:text-red-500/30 leading-relaxed">{w}</li>
                                         ))}
                                       </ul>
                                     </div>
@@ -3460,38 +3458,38 @@ export default function Recoveries() {
                         {/* Financial Information - Institutional Style */}
                         <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
                           <div className="bg-white/[0.05] border-b border-white/5 px-6 py-4">
-                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">FINANCIAL_LEDGER</h4>
+                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">FINANCIAL LEDGER</h4>
                           </div>
                           <div className="divide-y divide-white/5">
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">NET_ESTIMATED_VALUE</span>
-                              <span className="text-[11px] font-mono font-bold text-white">
+                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">NET ESTIMATED VALUE</span>
+                              <span className="text-[11px] font-sans font-bold text-white tracking-tight">
                                 {formatCurrency(detectionDetails.estimated_value || detectionDetails.guaranteedAmount || 0, detectionDetails.currency || 'USD')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center px-6 py-4">
-                              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">CURRENCY_CODE</span>
-                              <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest">{detectionDetails.currency || 'USD'}</span>
+                              <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">CURRENCY CODE</span>
+                              <span className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight">{detectionDetails.currency || 'USD'}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Dates & Deadlines */}
                         <div className="space-y-4">
-                          <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">TEMPORAL_MARKERS</h4>
+                          <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">TEMPORAL MARKERS</h4>
                           <div className="grid grid-cols-2 gap-4">
                             {detectionDetails.discovery_date && (
                               <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">DISCOVERY_INDEX</div>
-                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">
+                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DISCOVERY INDEX</div>
+                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">
                                   {format(new Date(detectionDetails.discovery_date), 'dd_MMM_yyyy')}
                                 </div>
                               </div>
                             )}
                             {detectionDetails.deadline_date && (
                               <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">EXPIRY_COORD</div>
-                                <div className={`text-[10px] font-mono font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
+                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">EXPIRY COORD</div>
+                                <div className={`text-[10px] font-sans font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining !== undefined && detectionDetails.days_remaining <= 7
                                   ? 'text-amber-500'
                                   : 'text-white/60'
                                   }`}>
@@ -3501,8 +3499,8 @@ export default function Recoveries() {
                             )}
                             {detectionDetails.days_remaining !== undefined && (
                               <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">COUNTDOWN_VAL</div>
-                                <div className={`text-[10px] font-mono font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining <= 3 ? 'text-red-500' :
+                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">COUNTDOWN VAL</div>
+                                <div className={`text-[10px] font-sans font-bold mt-2 uppercase tracking-tight ${detectionDetails.days_remaining <= 3 ? 'text-red-500' :
                                   detectionDetails.days_remaining <= 7 ? 'text-amber-500' :
                                     'text-white/60'
                                   }`}>
@@ -3512,8 +3510,8 @@ export default function Recoveries() {
                             )}
                             {detectionDetails.created_at && (
                               <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                                <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">CREATION_STAMP</div>
-                                <div className="text-[10px] font-mono font-bold text-white/60 mt-2 uppercase tracking-tight">
+                                <div className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CREATION STAMP</div>
+                                <div className="text-[10px] font-sans font-bold text-white/60 mt-2 uppercase tracking-tight">
                                   {format(new Date(detectionDetails.created_at), 'dd_MMM_yyyy HH:mm')}
                                 </div>
                               </div>
@@ -3525,10 +3523,10 @@ export default function Recoveries() {
                         {/* Related Event IDs */}
                         {detectionDetails.related_event_ids && detectionDetails.related_event_ids.length > 0 && (
                           <div className="space-y-4">
-                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">LINKED_TRANSACTION_IDS</h4>
+                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">LINKED TRANSACTION IDS</h4>
                             <div className="flex flex-wrap gap-2">
                               {detectionDetails.related_event_ids.map((eventId: string, idx: number) => (
-                                <Badge key={idx} variant="outline" className="font-mono text-[9px] bg-white/5 border-white/10 text-white/60 uppercase tracking-widest">
+                                <Badge key={idx} variant="outline" className="font-sans font-bold text-[9px] bg-white/5 border-white/10 text-white/60 uppercase tracking-tight">
                                   {eventId}
                                 </Badge>
                               ))}
@@ -3539,9 +3537,9 @@ export default function Recoveries() {
                         {/* Evidence Data */}
                         {detectionDetails.evidence && (
                           <div className="space-y-4">
-                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">RAW_EVIDENCE_DUMP</h4>
+                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">RAW EVIDENCE DUMP</h4>
                             <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 max-h-48 overflow-auto">
-                              <pre className="text-[9px] font-mono text-white/40 uppercase">
+                              <pre className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
                                 {JSON.stringify(detectionDetails.evidence, null, 2)}
                               </pre>
                             </div>
@@ -3551,8 +3549,8 @@ export default function Recoveries() {
                         {/* Details/Description */}
                         {detectionDetails.details && (
                           <div className="space-y-4">
-                            <h4 className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-[0.3em] px-1">ANOMALY_NARRATIVE</h4>
-                            <p className="text-[10px] font-mono text-white/40 bg-white/[0.02] border border-white/5 p-4 rounded-xl leading-relaxed uppercase tracking-tight">{detectionDetails.details}</p>
+                            <h4 className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight px-1">ANOMALY NARRATIVE</h4>
+                            <p className="text-[10px] font-sans font-bold text-white/40 bg-white/[0.02] border border-white/5 p-4 rounded-xl leading-relaxed uppercase tracking-tight">{detectionDetails.details}</p>
                           </div>
                         )}
 
@@ -3580,8 +3578,8 @@ export default function Recoveries() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setDetailsModalOpen(false)}
-                        className="h-10 px-6 text-[10px] font-mono font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-widest rounded-xl">
-                        CLOSE_SESSION
+                        className="h-10 px-6 text-[10px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 uppercase tracking-tight rounded-xl">
+                        CLOSE SESSION
                       </Button>
                       <Button
                         size="sm"
@@ -3590,7 +3588,7 @@ export default function Recoveries() {
                           setEvidencePackOpen(true);
                           setDetailsModalOpen(false);
                         }}
-                        className="h-10 px-6 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-mono font-bold uppercase tracking-widest rounded-xl transition-all">
+                        className="h-10 px-6 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/20 text-[10px] font-sans font-bold uppercase tracking-tight rounded-xl transition-all">
                         <FileText className="h-3.5 w-3.5 mr-2" />
                         VIEW_AUDIT_PACK
                       </Button>

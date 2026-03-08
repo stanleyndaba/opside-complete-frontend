@@ -618,7 +618,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0c0c0c] border border-white/10 text-white">
         <DialogHeader className="border-b border-white/10 pb-3">
-          <DialogTitle className="text-base font-semibold text-white">
+          <DialogTitle className="text-base font-bold text-white tracking-tight uppercase">
             Evidence Documentation Package
           </DialogTitle>
           <DialogDescription className="text-xs text-white/60 mt-1">
@@ -630,46 +630,46 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Summary Information */}
           <div className="border border-white/10 rounded-lg overflow-hidden">
             <div className="bg-white/5 border-b border-white/10 px-4 py-2">
-              <h4 className="text-xs font-semibold text-white/80">Claim Summary</h4>
+              <h4 className="text-xs font-bold text-white/80 uppercase tracking-tight">Claim Summary</h4>
             </div>
             <div className="bg-transparent">
               <div className="divide-y divide-white/10">
                 <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-white/40">Claim Type</span>
-                  <span className="text-xs font-medium text-white">{claimType}</span>
+                  <span className="text-xs font-bold text-white/40 uppercase tracking-tight">Claim Type</span>
+                  <span className="text-xs font-bold text-white tracking-tight">{claimType}</span>
                 </div>
                 <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-white/40">Status</span>
-                  <span className="text-xs font-medium text-white">{claim.status}</span>
+                  <span className="text-xs font-bold text-white/40 uppercase tracking-tight">Status</span>
+                  <span className="text-xs font-bold text-white tracking-tight">{claim.status}</span>
                 </div>
                 <div className="flex justify-between items-center px-4 py-2.5">
-                  <span className="text-xs text-white/40">Amount</span>
-                  <span className="text-xs font-semibold text-white">{formatCurrency(amount)}</span>
+                  <span className="text-xs font-bold text-white/40 uppercase tracking-tight">Amount</span>
+                  <span className="text-xs font-bold text-white tracking-tight">{formatCurrency(amount)}</span>
                 </div>
                 {claimDate && (
                   <div className="flex justify-between items-center px-4 py-2.5">
-                    <span className="text-xs text-white/40">Discovery Date</span>
-                    <span className="text-xs font-medium text-white">{format(new Date(claimDate), 'MMM dd, yyyy')}</span>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-tight">Discovery Date</span>
+                    <span className="text-xs font-bold text-white tracking-tight">{format(new Date(claimDate), 'MMM dd, yyyy')}</span>
                   </div>
                 )}
                 {claim.sku && (
                   <div className="flex justify-between items-center px-4 py-2.5">
-                    <span className="text-xs text-white/40">SKU</span>
-                    <span className="text-xs font-mono text-white">{claim.sku}</span>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-tight">SKU</span>
+                    <span className="text-xs font-sans font-bold text-white tracking-tight">{claim.sku}</span>
                   </div>
                 )}
                 {claim.asin && (
                   <div className="flex justify-between items-center px-4 py-2.5">
-                    <span className="text-xs text-white/40">ASIN</span>
-                    <span className="text-xs font-mono text-white">{claim.asin}</span>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-tight">ASIN</span>
+                    <span className="text-xs font-sans font-bold text-white tracking-tight">{claim.asin}</span>
                   </div>
                 )}
               </div>
 
               {claim.details && (
                 <div className="border-t border-white/10 px-4 py-3 bg-white/5">
-                  <div className="text-xs text-white/40 font-medium mb-1">Details</div>
-                  <p className="text-xs text-white/80">{claim.details}</p>
+                  <div className="text-xs font-bold text-white/40 uppercase tracking-tight mb-1">Details</div>
+                  <p className="text-xs font-bold text-white/80 tracking-tight">{claim.details}</p>
                 </div>
               )}
             </div>
@@ -678,7 +678,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Order & Inventory Evidence */}
           <div className="border border-white/10 rounded-lg overflow-hidden">
             <div className="bg-white/5 border-b border-white/10 px-4 py-2">
-              <h4 className="text-xs font-semibold text-white/80">Order & Inventory Evidence</h4>
+              <h4 className="text-xs font-bold text-white/80 uppercase tracking-tight">Order & Inventory Evidence</h4>
             </div>
             <div className="bg-transparent">
               {organizedDocs.orderDocs.length > 0 ? (
@@ -687,7 +687,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                     <div key={doc.id || i} className="px-4 py-3">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="text-xs font-medium text-white">{doc.name}</div>
+                          <div className="text-xs font-bold text-white">{doc.name}</div>
                           <div className="text-xs text-white/60 mt-1">
                             {doc.supplier && <span>Supplier: {doc.supplier} • </span>}
                             {doc.invoice && <span>Invoice: {doc.invoice} • </span>}
@@ -696,7 +696,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                           {doc.extracted?.order_ids && doc.extracted.order_ids.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {doc.extracted.order_ids.map((id, j) => (
-                                <span key={j} className="px-1.5 py-0.5 bg-white/10 text-white/80 rounded text-xs font-medium">
+                                <span key={j} className="px-1.5 py-0.5 bg-white/10 text-white/80 rounded text-xs font-bold">
                                   Order #{id}
                                 </span>
                               ))}
@@ -719,7 +719,7 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Shipment & Delivery Evidence */}
           <div className="border border-white/10 rounded-lg overflow-hidden">
             <div className="bg-white/5 border-b border-white/10 px-4 py-2">
-              <h4 className="text-xs font-semibold text-white/80">Shipment & Delivery Evidence</h4>
+              <h4 className="text-xs font-bold text-white/80 uppercase tracking-tight">Shipment & Delivery Evidence</h4>
             </div>
             <div className="bg-transparent">
               {organizedDocs.shipmentDocs.length > 0 ? (
@@ -728,11 +728,11 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
                     <div key={doc.id || i} className="px-4 py-3">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="text-xs font-medium text-white">{doc.name}</div>
+                          <div className="text-xs font-bold text-white">{doc.name}</div>
                           {doc.extracted?.tracking_numbers && doc.extracted.tracking_numbers.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {doc.extracted.tracking_numbers.map((t, j) => (
-                                <span key={j} className="px-1.5 py-0.5 bg-white/10 text-white/80 rounded text-xs font-medium">
+                                <span key={j} className="px-1.5 py-0.5 bg-white/10 text-white/80 rounded text-xs font-bold">
                                   {t}
                                 </span>
                               ))}
@@ -755,8 +755,8 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {/* Policy Reference & Legal Argument */}
           <div className="border border-white/10 rounded-lg overflow-hidden">
             <div className="bg-white/5 border-b border-white/10 px-4 py-2 flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-white/80">Policy Reference & Argument</h4>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded ${policyArgument.withinWindow ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/40'}`}>
+              <h4 className="text-xs font-bold text-white/80 uppercase tracking-tight">Policy Reference & Argument</h4>
+              <span className={`text-xs font-bold px-2 py-0.5 rounded tracking-tight ${policyArgument.withinWindow ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/40'}`}>
                 {policyArgument.withinWindow ? 'Within Window' : 'Outside Window'}
               </span>
             </div>
@@ -764,26 +764,26 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
               {/* Policy Details */}
               <div className="divide-y divide-white/10">
                 <div className="px-4 py-3">
-                  <div className="text-xs font-semibold text-white mb-1">{policy.name}</div>
-                  <p className="text-xs text-white/60 leading-relaxed">{policy.excerpt}</p>
+                  <div className="text-xs font-bold text-white tracking-tight mb-1">{policy.name}</div>
+                  <p className="text-xs text-white/60 font-bold tracking-tight leading-relaxed">{policy.excerpt}</p>
                 </div>
                 <div className="flex px-4 py-2.5">
                   <div className="flex-1">
                     <span className="text-xs text-white/40">Filing Deadline</span>
-                    <div className="text-xs font-medium text-white">{policy.deadline}</div>
+                    <div className="text-xs font-bold text-white">{policy.deadline}</div>
                   </div>
                   <div className="flex-1">
                     <span className="text-xs text-white/40">Claim Age</span>
-                    <div className="text-xs font-medium text-white">{policyArgument.daysOld} days</div>
+                    <div className="text-xs font-bold text-white">{policyArgument.daysOld} days</div>
                   </div>
                 </div>
               </div>
 
               {/* Legal Argument */}
               <div className="border-t border-white/10 px-4 py-3 bg-white/5">
-                <div className="text-xs text-white/40 font-medium mb-2">Reimbursement Argument</div>
+                <div className="text-xs font-bold text-white/40 uppercase tracking-tight mb-2">Reimbursement Argument</div>
                 <div className="bg-[#0c0c0c] border border-white/10 rounded p-3">
-                  <p className="text-xs text-white/80 leading-relaxed">
+                  <p className="text-xs font-bold text-white/80 tracking-tight leading-relaxed italic">
                     "{policyArgument.argument}"
                   </p>
                 </div>
@@ -795,13 +795,13 @@ export function EvidencePackView({ open, onClose, claim }: EvidencePackProps) {
           {organizedDocs.otherDocs.length > 0 && (
             <div className="border border-white/10 rounded-lg overflow-hidden">
               <div className="bg-white/5 border-b border-white/10 px-4 py-2">
-                <h4 className="text-xs font-semibold text-white/80">Additional Supporting Documents</h4>
+                <h4 className="text-xs font-bold text-white/80 uppercase tracking-tight">Additional Supporting Documents</h4>
               </div>
               <div className="bg-transparent">
                 <div className="divide-y divide-white/10">
                   {organizedDocs.otherDocs.map((doc, i) => (
                     <div key={doc.id || i} className="px-4 py-3 flex items-center justify-between">
-                      <span className="text-xs font-medium text-white">{doc.name}</span>
+                      <span className="text-xs font-bold text-white">{doc.name}</span>
                       <span className="text-xs text-white/40">
                         {Math.round((doc.confidence || 0) * 100)}% match
                       </span>

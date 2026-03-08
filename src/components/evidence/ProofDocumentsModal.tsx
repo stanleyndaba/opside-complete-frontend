@@ -78,7 +78,7 @@ export function ProofDocumentsModal({
             <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 text-white">
                 {/* Header */}
                 <DialogHeader className="border-b border-white/10 pb-3">
-                    <DialogTitle className="text-sm font-semibold text-white">
+                    <DialogTitle className="text-sm font-bold text-white tracking-tight uppercase">
                         Proof Documents
                     </DialogTitle>
                     <DialogDescription className="text-xs text-white/60 mt-1">
@@ -103,7 +103,7 @@ export function ProofDocumentsModal({
                         /* Document List */
                         <div className="border border-white/10 rounded-lg overflow-hidden">
                             <div className="bg-white/5 px-4 py-2 border-b border-white/10">
-                                <span className="text-xs text-white/40 font-medium">
+                                <span className="text-xs text-white/40 font-bold tracking-tight uppercase">
                                     {documents.length} Document{documents.length !== 1 ? 's' : ''} Available
                                 </span>
                             </div>
@@ -118,7 +118,7 @@ export function ProofDocumentsModal({
 
                                             {/* Details */}
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-xs font-medium text-white truncate">
+                                                <div className="text-xs font-bold text-white truncate tracking-tight uppercase">
                                                     {getDocumentName(doc)}
                                                 </div>
                                                 <div className="flex items-center gap-2 mt-1">
@@ -128,7 +128,7 @@ export function ProofDocumentsModal({
                                                     {getDocumentDate(doc) && (
                                                         <>
                                                             <span className="text-white/10">•</span>
-                                                            <span className="text-xs text-white/40">
+                                                            <span className="text-xs text-white/40 font-bold tracking-tight uppercase">
                                                                 {getDocumentDate(doc)}
                                                             </span>
                                                         </>

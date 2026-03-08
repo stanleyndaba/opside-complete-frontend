@@ -121,12 +121,12 @@ export function ParkedClaimCard({
                         {/* Header Metadata */}
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-mono font-bold text-white uppercase tracking-[0.2em]">
+                                <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">
                                     PARKED_DATA_NODE
                                 </span>
                                 <div className="h-1 w-1 rounded-full bg-white/10" />
                                 <span className={cn(
-                                    "text-[10px] font-mono font-bold uppercase tracking-tighter",
+                                    "text-[10px] font-sans font-bold uppercase tracking-tight",
                                     confidencePercent >= 85 ? "text-emerald-500" :
                                         confidencePercent >= 50 ? "text-amber-500" : "text-white/20"
                                 )}>
@@ -134,7 +134,7 @@ export function ParkedClaimCard({
                                 </span>
                             </div>
                             {claim.created_at && (
-                                <div className="text-[9px] font-mono text-white/10 uppercase">
+                                <div className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">
                                     INDEXED_{format(new Date(claim.created_at), 'yyyy_MM_dd__HH:mm').toUpperCase()}
                                 </div>
                             )}
@@ -143,25 +143,25 @@ export function ParkedClaimCard({
                         {/* ID & Source Group */}
                         <div className="flex items-center gap-8">
                             <div className="space-y-1.5">
-                                <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest">CLAIM_UUID</span>
+                                <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CLAIM_UUID</span>
                                 <div className="flex items-center gap-2">
                                     <Link2 className="h-3 w-3 text-white/10" />
-                                    <Link to={`/recoveries/${claim.claim_id}`} className="text-[10px] font-mono text-white/60 hover:text-emerald-500 transition-colors uppercase">
+                                    <Link to={`/recoveries/${claim.claim_id}`} className="text-[10px] font-sans font-bold text-white/60 hover:text-emerald-500 transition-colors uppercase tracking-tight">
                                         {claim.claim_id.substring(0, 16).toUpperCase()}
                                     </Link>
                                 </div>
                             </div>
 
-                            <div className="space-y-1.5">
-                                <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest">DOC_REFS</span>
+                             <div className="space-y-1.5">
+                                <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DOC_REFS</span>
                                 <div className="flex items-center gap-2">
                                     <FileText className="h-3 w-3 text-white/10" />
                                     {claim.document_id ? (
-                                        <Link to={`/documents/${claim.document_id}`} className="text-[10px] font-mono text-white/60 hover:text-emerald-500 transition-colors uppercase">
+                                        <Link to={`/documents/${claim.document_id}`} className="text-[10px] font-sans font-bold text-white/60 hover:text-emerald-500 transition-colors uppercase tracking-tight">
                                             {claim.document_details?.filename?.substring(0, 24) || claim.document_id.substring(0, 16).toUpperCase()}
                                         </Link>
                                     ) : (
-                                        <span className="text-[10px] font-mono text-white/20 italic uppercase tracking-widest">[UNLINKED]</span>
+                                        <span className="text-[10px] font-sans font-bold text-white/20 italic uppercase tracking-tight">[UNLINKED]</span>
                                     )}
                                 </div>
                             </div>
@@ -170,10 +170,10 @@ export function ParkedClaimCard({
                         {/* Partial Matches */}
                         {claim.matched_fields && claim.matched_fields.length > 0 && (
                             <div className="flex items-center gap-3 py-1.5 px-3 bg-white/5 border border-white/5 rounded-lg inline-flex">
-                                <span className="text-[8px] font-mono text-white/20 font-bold uppercase tracking-widest">PARTIAL_VECTORS:</span>
+                                <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">PARTIAL_VECTORS:</span>
                                 <div className="flex gap-3">
                                     {claim.matched_fields.map((field, idx) => (
-                                        <span key={idx} className="text-[9px] font-mono text-amber-500/50 uppercase tracking-tighter">
+                                        <span key={idx} className="text-[9px] font-sans font-bold text-amber-500/50 uppercase tracking-tight">
                                             {field.replace(/_/g, '_')}
                                         </span>
                                     ))}
@@ -185,8 +185,8 @@ export function ParkedClaimCard({
                         <div className="flex items-start gap-3 pt-1">
                             <AlertCircle className="h-3.5 w-3.5 text-amber-500/50 shrink-0 mt-1" />
                             <div className="space-y-1.5">
-                                <span className="text-[8px] font-mono text-amber-500/50 font-bold uppercase tracking-widest leading-none">SYSTEM_ADVISORY</span>
-                                <p className="text-[11px] font-mono text-white/40 leading-relaxed max-w-2xl lowercase italic">
+                                <span className="text-[8px] font-sans font-bold text-amber-500/50 uppercase tracking-tight leading-none">SYSTEM_ADVISORY</span>
+                                <p className="text-[11px] font-sans font-bold text-white/40 leading-relaxed max-w-2xl lowercase italic tracking-tight">
                                     {getParkedReason()}. manual verification or supplemental evidence required to proceed with recovery filing.
                                 </p>
                             </div>
@@ -199,7 +199,7 @@ export function ParkedClaimCard({
                     <Button
                         onClick={handleRequestEvidence}
                         disabled={isLoading}
-                        className="h-11 px-6 font-mono text-[10px] font-bold uppercase tracking-[0.2em] bg-white/5 text-white/40 border border-white/5 hover:text-white hover:bg-white/10 transition-all rounded-xl">
+                        className="h-11 px-6 font-sans text-[10px] font-bold uppercase tracking-tight bg-white/5 text-white/40 border border-white/5 hover:text-white hover:bg-white/10 transition-all rounded-xl">
                         {isRequestingEvidence ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
                         ) : (
@@ -213,7 +213,7 @@ export function ParkedClaimCard({
                             variant="ghost"
                             onClick={handleForceApprove}
                             disabled={isLoading}
-                            className="h-8 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-transparent p-0 uppercase tracking-widest transition-colors">
+                            className="h-8 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-transparent p-0 uppercase tracking-tight transition-colors">
                             {isForceApproving ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
                             ) : (
@@ -227,7 +227,7 @@ export function ParkedClaimCard({
                             variant="ghost"
                             onClick={handleDismiss}
                             disabled={isLoading}
-                            className="h-8 text-[9px] font-mono font-bold text-white/20 hover:text-red-400 hover:bg-transparent p-0 uppercase tracking-widest transition-colors">
+                            className="h-8 text-[9px] font-sans font-bold text-white/20 hover:text-red-400 hover:bg-transparent p-0 uppercase tracking-tight transition-colors">
                             {isDismissing ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
                             ) : (
