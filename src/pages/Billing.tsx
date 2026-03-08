@@ -32,7 +32,7 @@ import {
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { cn } from '@/lib/utils';
-import { api } from '@/lib/api';
+import { api, detectionApi } from '@/lib/api';
 import { tenantRoute } from '@/lib/routes';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -122,7 +122,7 @@ export default function Billing() {
     (async () => {
       setLoadingCards(true);
       try {
-        const res = await api.getPaymentMethods();
+        const res = await detectionApi.getPaymentMethods();
         if (res.ok && res.data?.data) {
           setPaymentMethods(res.data.data);
         }
@@ -143,7 +143,7 @@ export default function Billing() {
       setError(null);
       try {
         // Try new revenue invoices first
-        const revenueRes = await api.getRevenueInvoices({ limit: 100 });
+        const revenueRes = await detectionApi.getRevenueInvoices({ limit: 100 });
         if (!cancelled && revenueRes.ok && revenueRes.data?.data?.invoices?.length > 0) {
           const mapped: InvoiceRecord[] = revenueRes.data.data.invoices.map((inv: any) => {
             let status: 'SETTLED' | 'PENDING' | 'BREACH' = 'PENDING';
@@ -231,7 +231,7 @@ export default function Billing() {
 
     setAddingCard(true);
     try {
-      const res = await api.addPaymentMethod({
+      const res = await detectionApi.addPaymentMethod({
         cardBrand: cardBrand,
         cardLastFour: lastFour,
         cardExpMonth: expMonth,
@@ -244,7 +244,7 @@ export default function Billing() {
       if (res.ok && res.data?.success) {
         toast({ title: 'Card Added', description: `${cardBrand.toUpperCase()} ending in ${lastFour} has been added.` });
         // Refresh payment methods
-        const refreshed = await api.getPaymentMethods();
+        const refreshed = await detectionApi.getPaymentMethods();
         if (refreshed.ok && refreshed.data?.data) setPaymentMethods(refreshed.data.data);
         // Reset form
         setShowAddCard(false);
@@ -265,7 +265,7 @@ export default function Billing() {
   // Remove card
   const handleRemoveCard = async (id: string) => {
     try {
-      const res = await api.removePaymentMethod(id);
+      const res = await detectionApi.removePaymentMethod(id);
       if (res.ok) {
         setPaymentMethods(prev => prev.filter(p => p.id !== id));
         toast({ title: 'Card Removed', description: 'Payment method has been removed.' });
@@ -278,7 +278,7 @@ export default function Billing() {
   // Set default card
   const handleSetDefault = async (id: string) => {
     try {
-      const res = await api.setDefaultPaymentMethod(id);
+      const res = await detectionApi.setDefaultPaymentMethod(id);
       if (res.ok) {
         setPaymentMethods(prev => prev.map(p => ({ ...p, is_default: p.id === id })));
         toast({ title: 'Default Updated', description: 'Default payment method updated.' });
