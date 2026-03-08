@@ -34,7 +34,7 @@ export function ProductsMegaMenu() {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-white/5 text-white/60 hover:text-white data-[state=open]:!bg-white/5 data-[state=open]:!text-white h-auto py-2 px-3 text-[10px] font-mono font-bold uppercase tracking-widest outline-none transition-all">
+                    <NavigationMenuTrigger className="bg-transparent hover:bg-white/5 text-white/60 hover:text-white data-[state=open]:!bg-white/5 data-[state=open]:!text-white h-auto py-2 px-3 text-[10px] font-sans font-bold uppercase tracking-tight outline-none transition-all">
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
@@ -43,7 +43,7 @@ export function ProductsMegaMenu() {
                             {/* Column 1: Audit Vectors */}
                             <div className="flex-[1.6] p-6 lg:p-7 border-r border-white/5">
                                 <div className="mb-5 flex items-center justify-between">
-                                    <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em]">
+                                    <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-tight">
                                         Audit Vectors
                                     </h4>
                                     <span className="text-[7px] font-bold text-emerald-500/50 bg-emerald-500/5 px-2 py-0.5 border border-emerald-500/10 uppercase tracking-tighter rounded">
@@ -87,7 +87,7 @@ export function ProductsMegaMenu() {
 
                             {/* Column 2: Governance & Scale */}
                             <div className="flex-1 p-6 lg:p-7 border-r border-white/5 bg-white/[0.01]">
-                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
+                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-tight mb-5">
                                     Governance & Scale
                                 </h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
@@ -116,7 +116,7 @@ export function ProductsMegaMenu() {
 
                             {/* Column 3: By Profile */}
                             <div className="flex-[0.8] p-6 lg:p-7 bg-white/[0.02]">
-                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em] mb-5">
+                                <h4 className="text-[9px] font-bold text-white/30 uppercase tracking-tight mb-5">
                                     By Profile
                                 </h4>
                                 <div className="grid grid-cols-1 gap-2.5">
@@ -142,7 +142,7 @@ export function ProductsMegaMenu() {
                                     <p className="text-[8px] text-white/40 leading-relaxed mb-3 line-clamp-1">
                                         Engineering for multi-channel recovery.
                                     </p>
-                                    <div className="text-[8px] font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-[0.15em] cursor-default">
+                                    <div className="text-[8px] font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-tight cursor-default">
                                         Proprietary Architecture <ArrowRight className="h-2.5 w-2.5" />
                                     </div>
                                 </div>
