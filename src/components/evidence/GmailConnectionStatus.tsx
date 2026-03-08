@@ -134,7 +134,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
           <span className="relative inline-flex rounded-full h-5 w-5 bg-emerald-500/40"></span>
         </div>
-        <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">Connecting...</span>
+        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Connecting...</span>
       </div>
     );
   }
@@ -147,18 +147,18 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
             <img src="/G.png" alt="Gmail" className="h-4 w-4" />
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">Data Source</span>
-            <h3 className="text-sm font-serif font-medium text-white tracking-wide uppercase">Gmail Connection</h3>
+            <span className="text-[10px] font-sans font-bold text-emerald-500/50 uppercase tracking-tight">Data Source</span>
+            <h3 className="text-sm font-sans font-bold text-white tracking-tight uppercase">Gmail Connection</h3>
           </div>
         </div>
 
         {status?.connected ? (
-          <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+          <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
             <CheckCircle2 className="w-3 h-3" />
             Connected
           </div>
         ) : (
-          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[9px] font-mono font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1.5 rounded-sm">
+          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[9px] font-sans font-bold text-amber-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
             <XCircle className="w-3 h-3" />
             Disconnected
           </div>
@@ -168,9 +168,9 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[10px] font-mono text-white/20 uppercase tracking-wider block">Connected Email</span>
+            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">Connected Email</span>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-white/60">
+              <span className="text-xs font-sans font-bold text-white/60 tracking-tight">
                 {status?.email || 'Not authorized'}
               </span>
             </div>
@@ -182,7 +182,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
               size="sm"
               onClick={handleDisconnect}
               disabled={disconnecting}
-              className="h-9 px-4 text-[10px] font-mono font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-widest rounded-lg"
+              className="h-9 px-4 text-[10px] font-sans font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-tight rounded-lg"
             >
               {disconnecting ? (
                 <>
@@ -203,7 +203,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 px-4 text-[10px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-widest rounded-lg"
+                className="h-9 px-4 text-[10px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-tight rounded-lg"
               >
                 Connect Gmail
               </Button>
@@ -214,7 +214,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
         {status?.connected && status.lastSync && (
           <div className="flex items-center gap-3 pt-4 border-t border-white/5">
             <RefreshCw className="h-3 w-3 text-white/20" />
-            <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">
+            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
               Last Sync: <span className="text-white/40">{new Date(status.lastSync).toLocaleString().toUpperCase()}</span>
             </span>
           </div>
@@ -222,7 +222,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
         {!status?.connected && (
           <div className="p-4 bg-white/[0.01] border border-white/5 rounded-lg">
-            <p className="text-[10px] font-mono text-white/20 leading-relaxed uppercase tracking-wider">
+            <p className="text-[10px] font-sans font-bold text-white/20 leading-relaxed uppercase tracking-tight">
               Please connect your Gmail to allow the system to automatically scan for invoice attachments and evidence.
             </p>
           </div>
@@ -231,4 +231,4 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
     </div>
   );
 }
-
+```

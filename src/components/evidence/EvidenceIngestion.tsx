@@ -55,14 +55,10 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   useEffect(() => {
     const loadSources = async () => {
       try {
-        // Use api client to get sources from backend (handles correct URL routing)
         const res = await api.get<{ success: boolean; sources: EvidenceSource[] }>('/api/evidence/sources');
         if (res.ok && res.data?.sources && res.data.sources.filter((s: EvidenceSource) => s.status === 'connected').length > 0) {
           setSources(res.data.sources.filter((s: EvidenceSource) => s.status === 'connected'));
         } else {
-          // Fallback: check integrations status endpoint which also verifies token table
-          // This catches cases where Gmail is connected via OAuth (token in tokens table)
-          // but no row exists in evidence_sources table yet
           try {
             const intRes = await api.getIntegrationsStatus(tenantSlug || 'beta');
             if (intRes.ok && intRes.data?.providerIngest) {
@@ -143,13 +139,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     setProgress(0);
     setResult(null);
 
-    // Log ingestion start
     const sourceNames = sources.map(s => getProviderName(s.provider)).join(', ');
     onLogEvent?.({ type: 'info', category: 'system', message: `Connecting to ${sources.length} source(s): ${sourceNames}...`, thinkingDuration: 2 }, 0);
     onLogEvent?.({ type: 'thinking', category: 'system', message: 'Scanning for invoice attachments and documents...' }, 1000);
 
     try {
-      // Use unified ingestion endpoint - processes ALL sources in parallel
       onLogEvent?.({ type: 'progress', category: 'system', message: 'Ingesting from all connected sources...', thinkingDuration: 3 }, 1200);
 
       const res = await api.ingestAllEvidence({
@@ -158,7 +152,6 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
       });
 
       if (res.ok && res.data) {
-        // Log success with details
         onLogEvent?.({ type: 'success', category: 'system', message: `[CONNECTED] All sources responded` }, 800);
 
         if (res.data.totalItemsProcessed > 0) {
@@ -173,7 +166,6 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           onLogEvent?.({ type: 'info', category: 'system', message: 'No new documents found in sources' }, 800);
         }
 
-        // Log per-source results
         if (res.data.results) {
           if (res.data.results.gmail?.documentsIngested) {
             onLogEvent?.({ type: 'success', category: 'parse', message: `Gmail: ${res.data.results.gmail.documentsIngested} docs from ${res.data.results.gmail.emailsProcessed} emails` }, 600);
@@ -268,20 +260,20 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             <Cloud className="h-4 w-4 text-emerald-500/50" />
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-mono font-bold text-emerald-500/50 uppercase tracking-widest">Collector</span>
-            <h3 className="text-sm font-serif font-medium text-white tracking-wide uppercase">Scanner</h3>
+            <span className="text-[10px] font-sans font-bold text-emerald-500/50 uppercase tracking-tight">Collector</span>
+            <h3 className="text-sm font-sans font-bold text-white tracking-tight uppercase">Scanner</h3>
           </div>
         </div>
 
         {loadingSources ? (
           <div className="flex items-center gap-2">
             <Loader2 className="h-3 w-3 animate-spin text-white/20" />
-            <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">Checking sources...</span>
+            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Checking sources...</span>
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <div className={cn("h-1.5 w-1.5 rounded-full", hasConnectedSources ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-rose-500")} />
-            <span className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-widest">
+            <span className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
               {sources.length} Active sources
             </span>
           </div>
@@ -292,7 +284,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         {!loadingSources && sources.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {sources.map((source) => (
-              <div key={source.id} className="px-2 py-0.5 bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-mono font-bold text-emerald-500/60 uppercase tracking-widest rounded-sm">
+              <div key={source.id} className="px-2 py-0.5 bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight rounded-sm">
                 {getProviderName(source.provider)}
               </div>
             ))}
@@ -304,7 +296,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             onClick={handleIngest}
             disabled={ingesting || !hasConnectedSources}
             className={cn(
-              "w-full h-10 px-6 text-[11px] font-mono font-bold uppercase tracking-[0.2em] rounded-lg transition-all",
+              "w-full h-10 px-6 text-[11px] font-sans font-bold uppercase tracking-tight rounded-lg transition-all",
               ingesting
                 ? "bg-white/[0.03] text-white/40 border border-white/10"
                 : "bg-emerald-500 hover:bg-emerald-600 text-black border-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
@@ -336,7 +328,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         {!hasConnectedSources && !loadingSources && (
           <div className="flex items-start gap-3 p-4 bg-rose-500/[0.02] border border-rose-500/10 rounded-lg">
             <AlertCircle className="w-3.5 h-3.5 text-rose-500/40 mt-0.5" />
-            <span className="text-[10px] font-mono text-rose-500/60 uppercase tracking-wide leading-relaxed">
+            <span className="text-[10px] font-sans font-bold text-rose-500/60 uppercase tracking-tight leading-relaxed">
               Sync Paused: No active data sources identified. Please connect a source to start.
             </span>
           </div>
@@ -346,20 +338,20 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           <div className="p-5 bg-white/[0.02] border border-white/5 rounded-xl space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest">Sync Summary</span>
-                <span className={cn("text-xs font-mono font-bold uppercase", result.success ? "text-emerald-500" : "text-rose-500")}>
+                <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Sync Summary</span>
+                <span className={cn("text-xs font-sans font-bold uppercase", result.success ? "text-emerald-500" : "text-rose-500")}>
                   {result.success ? 'Success' : 'Error'}
                 </span>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest">Documents Found</div>
-                  <div className="text-sm font-mono font-bold text-white">{result.totalDocumentsIngested}</div>
+                  <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Documents Found</div>
+                  <div className="text-sm font-sans font-bold text-white tracking-tight">{result.totalDocumentsIngested}</div>
                 </div>
                 <div className="h-6 w-[1px] bg-white/5" />
                 <div className="text-right">
-                  <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest">Items Scanned</div>
-                  <div className="text-sm font-mono font-bold text-white">{result.totalItemsProcessed}</div>
+                  <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Items Scanned</div>
+                  <div className="text-sm font-sans font-bold text-white tracking-tight">{result.totalItemsProcessed}</div>
                 </div>
               </div>
             </div>
@@ -368,8 +360,8 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
               <div className="grid grid-cols-2 gap-3 pt-3 border-t border-white/5">
                 {Object.entries(result.results).map(([source, data]: [string, any]) => (
                   <div key={source} className="flex flex-col gap-0.5">
-                    <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest">{source}</span>
-                    <span className="text-[10px] font-mono text-white/60">{data.documentsIngested || 0} docs found</span>
+                    <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">{source}</span>
+                    <span className="text-[10px] font-sans font-bold text-white/60 tracking-tight">{data.documentsIngested || 0} docs found</span>
                   </div>
                 ))}
               </div>
@@ -380,4 +372,3 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     </div>
   );
 }
-
