@@ -551,7 +551,7 @@ export default function TransactionHistory() {
         return (
             <div className="flex items-center gap-2">
                 <div className={cn("h-1.5 w-1.5 rounded-full", dot)} />
-                <span className="text-xs font-bold text-gray-900 font-mono">{label}</span>
+                <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{label}</span>
             </div>
         );
     };
@@ -569,10 +569,10 @@ export default function TransactionHistory() {
                         <div>
                             <div className="flex items-center gap-2 mb-2">
                                 <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[10px] font-mono text-emerald-500/80 uppercase tracking-[0.2em]">Account Statement</span>
+                                <span className="text-[10px] font-sans font-bold text-emerald-500/80 uppercase tracking-tight">Account Statement</span>
                             </div>
-                            <h1 className="text-4xl font-light text-white tracking-tight font-serif">Transaction <span className="text-white/40">History</span></h1>
-                            <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
+                            <h1 className="text-4xl font-bold text-white tracking-tight font-sans">Transaction <span className="text-white/40">History</span></h1>
+                            <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed font-sans font-bold tracking-tight">
                                 Real-time monitoring of recovery disbursements and matched financial repositories.
                             </p>
                         </div>
@@ -581,7 +581,7 @@ export default function TransactionHistory() {
                                 variant="outline"
                                 onClick={exportStatement}
                                 disabled={transactions.length === 0}
-                                className="bg-white/5 border-white/10 text-white hover:bg-white/10 h-11 px-6 rounded-xl font-mono text-xs transition-all duration-300"
+                                className="bg-white/5 border-white/10 text-white hover:bg-white/10 h-11 px-6 rounded-xl font-sans font-bold text-xs transition-all duration-300 tracking-tight"
                             >
                                 <Download className="h-4 w-4 mr-2 text-emerald-500" />
                                 Export Statement (PDF)
@@ -619,13 +619,13 @@ export default function TransactionHistory() {
                                 <div className="absolute inset-0 bg-white/[0.02] rounded-2xl blur-xl group-hover:bg-white/[0.05] transition-all duration-500" />
                                 <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden">
                                     <div className="flex justify-between items-center mb-3">
-                                        <div className="text-[10px] font-mono text-gray-500 tracking-widest">{stat.label}</div>
+                                        <div className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">{stat.label}</div>
                                         {stat.percentage !== undefined && (
-                                            <div className="text-xs font-bold text-white font-mono">{stat.percentage.toFixed(0)}%</div>
+                                            <div className="text-xs font-bold text-white font-sans tracking-tight">{stat.percentage.toFixed(0)}%</div>
                                         )}
                                     </div>
                                     <div className={cn(
-                                        "text-2xl font-mono tracking-tighter",
+                                        "text-2xl font-sans font-bold tracking-tight",
                                         stat.color,
                                         stat.glow && "drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]"
                                     )}>
@@ -633,7 +633,7 @@ export default function TransactionHistory() {
                                     </div>
 
                                     {stat.count !== undefined && (
-                                        <div className="text-[10px] text-gray-500 mt-2 font-mono">
+                                        <div className="text-[10px] text-gray-500 mt-2 font-sans font-bold tracking-tight">
                                             {stat.count} recoveries matched
                                         </div>
                                     )}
@@ -641,7 +641,7 @@ export default function TransactionHistory() {
                                     {stat.breakdown && (
                                         <div className="mt-3 space-y-1 border-t border-white/5 pt-3">
                                             {stat.breakdown.map((b, bi) => (
-                                                <div key={bi} className="flex justify-between items-center text-[9px] font-mono">
+                                                <div key={bi} className="flex justify-between items-center text-[9px] font-sans font-bold tracking-tight">
                                                     <span className="text-gray-500">{b.label}</span>
                                                     <span className={b.color}>${b.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
                                                 </div>
@@ -652,7 +652,7 @@ export default function TransactionHistory() {
                                                     {Object.entries(summary.categoryTotals)
                                                         .filter(([cat]) => cat !== '[LOST_INV]' && cat !== '[RECOVERY]')
                                                         .sort((a, b) => b[1].amount - a[1].amount).map(([cat, data], ci) => (
-                                                            <div key={ci} className="flex justify-between items-center text-[9px] font-mono">
+                                                            <div key={ci} className="flex justify-between items-center text-[9px] font-sans font-bold tracking-tight">
                                                                 <span className="text-white/60">{cat.replace(/[\[\]]/g, '')}:</span>
                                                                 <span className="text-white">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} ({data.percentage.toFixed(0)}%)</span>
                                                             </div>
@@ -674,11 +674,11 @@ export default function TransactionHistory() {
                             .map(([cat, data], i) => (
                                 <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
                                     <div className="flex justify-between items-start mb-2">
-                                        <span className="text-[10px] font-mono text-gray-500">[{cat.replace(/[\[\]]/g, '')}]</span>
-                                        <span className="text-xs font-bold text-white">{data.percentage.toFixed(0)}%</span>
+                                        <span className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">[{cat.replace(/[\[\]]/g, '')}]</span>
+                                        <span className="text-xs font-bold text-white font-sans tracking-tight">{data.percentage.toFixed(0)}%</span>
                                     </div>
-                                    <div className="text-lg font-mono text-white mb-1">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                                    <div className="text-[10px] text-gray-500">{data.count} recoveries matched</div>
+                                    <div className="text-lg font-sans font-bold text-white mb-1 tracking-tight">${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                                    <div className="text-[10px] text-gray-500 font-sans font-bold tracking-tight">{data.count} recoveries matched</div>
                                     <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-emerald-500 rounded-full"
@@ -699,7 +699,7 @@ export default function TransactionHistory() {
                                     placeholder="Search History (Case ID, Reimb ID...)"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="bg-transparent border-none text-white font-mono text-[10px] h-12 uppercase placeholder:text-gray-600 focus-visible:ring-0"
+                                    className="bg-transparent border-none text-white font-sans font-bold text-[10px] h-12 uppercase placeholder:text-gray-600 focus-visible:ring-0 tracking-tight"
                                 />
                             </div>
                         </div>
@@ -714,42 +714,42 @@ export default function TransactionHistory() {
                                     <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                                         <Calculator className="h-4 w-4 text-emerald-500" />
                                     </div>
-                                    <h2 className="text-sm font-light text-white tracking-wide">Transaction History</h2>
+                                    <h2 className="text-sm font-bold text-white tracking-tight font-sans">Transaction History</h2>
                                 </div>
-                                <span className="text-[10px] font-mono text-gray-500">SYS_UPTIME: 99.99%</span>
+                                <span className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">SYS_UPTIME: 99.99%</span>
                             </div>
 
                             <div className="overflow-x-auto p-0">
                                 {loading ? (
                                     <div className="py-32 text-center">
                                         <Loader2 className="h-8 w-8 animate-spin mx-auto text-emerald-500 mb-4" />
-                                        <p className="text-xs font-mono text-emerald-500/60 uppercase tracking-widest">Initialising_Secure_Vault...</p>
+                                        <p className="text-xs font-sans font-bold text-emerald-500/60 uppercase tracking-tight">Initialising_Secure_Vault...</p>
                                     </div>
                                 ) : (
                                     <table className="w-full text-left">
                                         <thead>
                                             <tr className="border-b border-white/5">
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest">ASIN_SKU</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest">Traceability_Case_ID</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest">Issue_Analytics</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest text-center">Qty</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest text-right">Claim_Amt</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest text-right">Recovered</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest text-center">%_Eff</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest text-right">Net_Capt</th>
-                                                <th className="px-6 py-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest">State</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">ASIN_SKU</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Traceability_Case_ID</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Issue_Analytics</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-center">Qty</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Claim_Amt</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Recovered</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-center">%_Eff</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Net_Capt</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">State</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-white/5">
                                             {filteredTransactions.map((transaction) => (
                                                 <tr key={transaction.id} className="group hover:bg-white/[0.02] transition-colors duration-300">
-                                                    <td className="px-6 py-6 font-mono text-[10px] text-white/60 relative">
+                                                    <td className="px-6 py-6 font-sans font-bold text-[10px] text-white/60 relative tracking-tight">
                                                         <div className="absolute left-0 top-1/4 bottom-1/4 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                                                        <div className="text-white font-mono text-[11px] mb-1">{transaction.asin}</div>
-                                                        <div className="text-gray-500 text-[9px]">{transaction.sku}</div>
+                                                        <div className="text-white font-sans font-bold text-[11px] mb-1">{transaction.asin}</div>
+                                                        <div className="text-gray-500 text-[9px] font-sans font-bold">{transaction.sku}</div>
                                                     </td>
-                                                    <td className="px-6 py-6 font-mono text-[11px] text-white">
-                                                        <div className="text-[9px] text-gray-500 uppercase mb-1">AMZ Case ID</div>
+                                                    <td className="px-6 py-6 font-sans font-bold text-[11px] text-white tracking-tight">
+                                                        <div className="text-[9px] text-gray-500 uppercase mb-1 font-sans font-bold">AMZ Case ID</div>
                                                         {transaction.amazonCaseUrl !== '#' ? (
                                                             <a href={transaction.amazonCaseUrl} target="_blank" rel="noopener noreferrer"
                                                                 className="hover:text-emerald-400 flex items-center gap-1 transition-colors">
@@ -757,37 +757,37 @@ export default function TransactionHistory() {
                                                                 <ExternalLink className="h-2.5 w-2.5 opacity-40" />
                                                             </a>
                                                         ) : transaction.caseId}
-                                                        <div className="text-gray-500 text-[9px] mt-1 uppercase">Reimb ID: {transaction.reimbursementId}</div>
+                                                        <div className="text-gray-500 text-[9px] mt-1 uppercase font-sans font-bold">Reimb ID: {transaction.reimbursementId}</div>
                                                     </td>
-                                                    <td className="px-6 py-6 font-mono">
+                                                    <td className="px-6 py-6 font-sans font-bold tracking-tight">
                                                         <div className="flex flex-col gap-1">
                                                             <span className="text-[10px] font-bold text-white">
                                                                 {transaction.category}
                                                             </span>
-                                                            <span className="text-[9px] text-gray-500 font-mono">
+                                                            <span className="text-[9px] text-gray-500">
                                                                 Error Pd: {transaction.description}
                                                             </span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-6 text-center font-mono text-[11px] text-white/60">
+                                                    <td className="px-6 py-6 text-center font-sans font-bold text-[11px] text-white/60 tracking-tight">
                                                         {transaction.units ?? '-'}
                                                     </td>
-                                                    <td className="px-6 py-6 text-right font-mono text-[11px] text-white/40">
+                                                    <td className="px-6 py-6 text-right font-sans font-bold text-[11px] text-white/40 tracking-tight">
                                                         ${transaction.originalClaimAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                                     </td>
-                                                    <td className="px-6 py-6 text-right font-mono text-[11px] text-emerald-400">
+                                                    <td className="px-6 py-6 text-right font-sans font-bold text-[11px] text-emerald-400 tracking-tight">
                                                         +${transaction.recoveredAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                                     </td>
                                                     <td className="px-6 py-6 text-center">
                                                         <span className={cn(
-                                                            "text-[10px] font-mono px-2 py-1 rounded-full",
+                                                            "text-[10px] font-sans font-bold px-2 py-1 rounded-full tracking-tight",
                                                             (transaction.recoveryRate || 0) > 90 ? "bg-emerald-500/10 text-emerald-500" :
                                                                 (transaction.recoveryRate || 0) > 50 ? "bg-amber-500/10 text-amber-500" : "bg-red-500/10 text-red-500"
                                                         )}>
                                                             {transaction.recoveryRate?.toFixed(0)}%
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-6 text-right font-mono text-[11px] text-white">
+                                                    <td className="px-6 py-6 text-right font-sans font-bold text-[11px] text-white tracking-tight">
                                                         ${(transaction.recoveredAmount - transaction.feeAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                                     </td>
                                                     <td className="px-6 py-6">
@@ -798,7 +798,7 @@ export default function TransactionHistory() {
                                                                     transaction.status === 'approved' ? "bg-blue-400" :
                                                                         transaction.status === 'pending' ? "bg-yellow-400" : "bg-gray-400"
                                                             )} />
-                                                            <span className="text-[9px] font-mono font-bold text-white tracking-widest uppercase">{transaction.status}</span>
+                                                            <span className="text-[9px] font-sans font-bold text-white tracking-tight uppercase">{transaction.status}</span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -812,7 +812,7 @@ export default function TransactionHistory() {
                                         <div className="h-12 w-12 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center mx-auto mb-4">
                                             <AlertCircle className="h-5 w-5 text-gray-600" />
                                         </div>
-                                        <p className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.3em]">
+                                        <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">
                                             {transactions.length === 0 ? 'No_Records_Found_In_Ledger' : 'No_Matching_Query_Results'}
                                         </p>
                                     </div>
@@ -823,7 +823,7 @@ export default function TransactionHistory() {
 
                     {/* Footer Note */}
                     <div className="mt-12 text-center border-t border-white/5 pt-8">
-                        <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
+                        <p className="text-[10px] text-gray-600 font-sans font-bold uppercase tracking-tight">
                             Account Statement • Sync Status: Active
                         </p>
                     </div>
@@ -840,8 +840,8 @@ export default function TransactionHistory() {
                                     <Zap className="h-5 w-5 text-orange-500" />
                                 </div>
                                 <div>
-                                    <DialogTitle className="text-xl font-light tracking-tight">Flag Anomaly</DialogTitle>
-                                    <DialogDescription className="text-gray-500 font-mono text-[10px] uppercase tracking-wider mt-1">
+                                    <DialogTitle className="text-xl font-bold tracking-tight font-sans">Flag Anomaly</DialogTitle>
+                                    <DialogDescription className="text-gray-500 font-sans font-bold text-[10px] uppercase tracking-tight mt-1">
                                         INCIDENT_REPORT_FORM // {selectedTransaction?.reimbursementId || 'SECURE_LINE'} // MAGNITUDE: ${selectedTransaction?.recoveredAmount.toFixed(2) || '0.00'}
                                     </DialogDescription>
                                 </div>
@@ -850,12 +850,12 @@ export default function TransactionHistory() {
 
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Classification</Label>
+                                <Label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Classification</Label>
                                 <Select value={issueType} onValueChange={setIssueType}>
-                                    <SelectTrigger className="bg-white/5 border-white/10 h-11 text-xs font-mono text-white rounded-xl focus:ring-emerald-500">
+                                    <SelectTrigger className="bg-white/5 border-white/10 h-11 text-xs font-sans font-bold text-white rounded-xl focus:ring-emerald-500 tracking-tight">
                                         <SelectValue placeholder="SELECT_ISSUE_TYPE" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-[#151515] border-white/10 text-white rounded-xl font-mono text-xs">
+                                    <SelectContent className="bg-[#151515] border-white/10 text-white rounded-xl font-sans font-bold text-xs tracking-tight">
                                         <SelectItem value="not_my_claim">INCORRECT_ATTRIBUTION</SelectItem>
                                         <SelectItem value="amount_wrong">QUANTITY_DISCREPANCY</SelectItem>
                                         <SelectItem value="duplicate">REDUNDANT_ENTRY</SelectItem>
@@ -865,28 +865,27 @@ export default function TransactionHistory() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Technical_Context</Label>
+                                <Label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Technical_Context</Label>
                                 <Textarea
                                     value={issueNotes}
                                     onChange={(e) => setIssueNotes(e.target.value)}
                                     placeholder="PROVIDE_DETAILED_INCIDENT_DATA..."
-                                    className="bg-white/5 border-white/10 min-h-[120px] text-xs font-mono text-white rounded-xl focus:ring-emerald-500 resize-none placeholder:text-gray-700"
+                                    className="bg-white/5 border-white/10 min-h-[120px] text-xs font-sans font-bold text-white rounded-xl focus:ring-emerald-500 resize-none placeholder:text-gray-700 tracking-tight"
                                 />
                             </div>
                         </div>
-
                         <div className="mt-10 flex gap-3">
                             <Button
                                 variant="outline"
                                 onClick={() => setReportModalOpen(false)}
-                                className="flex-1 bg-transparent border-white/10 text-white hover:bg-white/5 h-11 rounded-xl font-mono text-[10px] uppercase tracking-widest"
+                                className="flex-1 bg-transparent border-white/10 text-white hover:bg-white/5 h-11 rounded-xl font-sans font-bold text-[10px] uppercase tracking-tight"
                             >
                                 ABORT_REPORT
                             </Button>
                             <Button
                                 onClick={handleSubmitReport}
                                 disabled={!issueType || isSubmitting}
-                                className="flex-1 bg-white text-black hover:bg-white/90 h-11 rounded-xl font-mono text-[10px] font-bold uppercase tracking-widest"
+                                className="flex-1 bg-white text-black hover:bg-white/90 h-11 rounded-xl font-sans font-bold text-[10px] font-bold uppercase tracking-tight"
                             >
                                 {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT_REPORT'}
                             </Button>
