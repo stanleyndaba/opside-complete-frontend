@@ -853,11 +853,11 @@ export default function EvidenceLocker() {
               {/* Institutional Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-2">
-                  <Badge variant="outline" className="w-fit px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-mono text-[9px] tracking-[0.2em] uppercase">
+                  <Badge variant="outline" className="w-fit px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-sans font-bold text-[9px] tracking-tight uppercase">
                     Evidence System // Active
                   </Badge>
-                  <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Evidence Locker.</h1>
-                  <p className="text-white/40 mt-1 font-serif italic text-lg max-w-2xl">Manage your uploaded documents and evidence artifacts.</p>
+                  <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Evidence Locker.</h1>
+                  <p className="text-white/40 mt-1 font-sans font-light italic text-lg max-w-2xl">Manage your uploaded documents and evidence artifacts.</p>
                 </div>
 
                 {/* Evidence Stats Badges */}
@@ -867,10 +867,10 @@ export default function EvidenceLocker() {
                     { label: 'Ingestion_Active', value: evidenceStatus?.processingCount || 0, icon: RefreshCw, pulse: (evidenceStatus?.processingCount || 0) > 0 }
                   ].map((stat, idx) => (
                     <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
-                      <span className="text-[9px] font-mono font-bold text-white/20 tracking-[0.2em] uppercase">{stat.label}</span>
+                      <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">{stat.label}</span>
                       <div className="flex items-center gap-3">
                         <stat.icon className={cn("h-3 w-3", stat.pulse ? "text-emerald-500 animate-spin" : "text-white/20")} />
-                        <span className="text-lg font-mono font-bold text-white tracking-tight">
+                        <span className="text-lg font-sans font-bold text-white tracking-tight">
                           {stat.value}
                         </span>
                       </div>
@@ -910,10 +910,10 @@ export default function EvidenceLocker() {
                 <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Terminal className="h-3 w-3 text-emerald-500/50" />
-                    <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Activity Log</h2>
+                    <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Activity Log</h2>
                   </div>
                   <div className="flex items-center gap-6">
-                    <label className="flex items-center gap-2 text-[9px] font-mono text-white/20 hover:text-white/40 cursor-pointer transition-colors uppercase tracking-widest">
+                    <label className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-white/40 cursor-pointer transition-colors uppercase tracking-tight">
                       <input
                         type="checkbox"
                         checked={showDevLogs}
@@ -922,7 +922,7 @@ export default function EvidenceLocker() {
                       />
                       Detailed Logs
                     </label>
-                    <span className="text-[9px] font-mono text-white/10 uppercase tracking-widest">{filteredDocLogs.length} entries</span>
+                    <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">{filteredDocLogs.length} entries</span>
                   </div>
                 </div>
 
@@ -930,28 +930,28 @@ export default function EvidenceLocker() {
                   {/* Terminal Search */}
                   <div className="relative mb-6">
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                      <span className="text-emerald-500/40 text-[10px] font-mono">$</span>
+                      <span className="text-emerald-500/40 text-[10px] font-sans font-bold">$</span>
                     </div>
                     <Input
                       type="text"
                       placeholder="Search activity..."
                       value={docLogSearch}
                       onChange={(e) => setQ(e.target.value)}
-                      className="pl-8 h-10 text-[11px] font-mono bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg tracking-tight"
                     />
                   </div>
 
                   {/* Terminal Logs */}
                   <div
                     ref={docLogContainerRef}
-                    className="bg-black/40 border border-white/5 rounded-lg p-6 font-mono text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative">
+                    className="bg-black/40 border border-white/5 rounded-lg p-6 font-sans font-bold text-[10px] h-60 overflow-y-auto scrollbar-hide space-y-2 relative tracking-tight">
                     {/* Shadow overlay for depth */}
                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/20" />
 
                     {filteredDocLogs.length === 0 ? (
                       <div className="text-white/10 flex items-center justify-center h-full gap-3">
                         <Loader2 className="h-3 w-3 animate-spin opacity-20" />
-                        <span className="uppercase tracking-[0.2em]">Initializing...</span>
+                        <span className="uppercase tracking-tight">Initializing...</span>
                       </div>
                     ) : (
                       <div className="relative space-y-1.5">
@@ -963,7 +963,7 @@ export default function EvidenceLocker() {
                               </span>
                               <div className="flex items-center gap-2 shrink-0">
                                 <Shield className="h-2.5 w-2.5 text-emerald-500/30" />
-                                <span className="text-emerald-500/60 font-bold uppercase tracking-tighter">System</span>
+                                <span className="text-emerald-500/60 font-bold uppercase tracking-tight">System</span>
                               </div>
                               <span className={cn("flex-1 break-words leading-relaxed", getDocLogColor(log.type))}>
                                 <span className="mr-2 opacity-50">{">>"}</span>
@@ -983,7 +983,7 @@ export default function EvidenceLocker() {
                             </div>
                             {log.thinkingDuration && showDevLogs && (
                               <div className="ml-14 mb-1">
-                                <span className="text-[9px] text-white/10 italic">
+                                <span className="text-[9px] text-white/10 italic font-sans font-light tracking-tight">
                                   Duration: {log.thinkingDuration}ms
                                 </span>
                               </div>
@@ -995,7 +995,7 @@ export default function EvidenceLocker() {
                             <span className="text-white/10 shrink-0 select-none tabular-nums">[{new Date().toLocaleTimeString()}]</span>
                             <div className="flex items-center gap-2">
                               <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                              <span className="font-bold uppercase tracking-tighter">Scanning documents...</span>
+                              <span className="font-bold uppercase tracking-tight">Scanning documents...</span>
                             </div>
                           </div>
                         )}
@@ -1020,8 +1020,8 @@ export default function EvidenceLocker() {
                   <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-emerald-500" : "text-white/10 group-hover:text-white/20")} />
-                  <h3 className="text-sm font-serif font-medium text-white mb-2 uppercase tracking-wide">Document Ingestion</h3>
-                  <p className="text-[10px] text-white/20 font-mono mb-8 uppercase tracking-[0.2em]">
+                  <h3 className="text-sm font-sans font-bold text-white mb-2 uppercase tracking-tight">Document Ingestion</h3>
+                  <p className="text-[10px] text-white/20 font-sans font-bold mb-8 uppercase tracking-tight">
                     Supported types: PDF, JPG, PNG
                   </p>
 
@@ -1032,7 +1032,7 @@ export default function EvidenceLocker() {
                     >
                       <div className="relative flex items-center gap-2">
                         <Upload className="w-3.5 h-3.5 text-black" />
-                        <span className="text-[11px] font-mono font-bold text-black uppercase tracking-widest">Upload Files</span>
+                        <span className="text-[11px] font-sans font-bold text-black uppercase tracking-tight">Upload Files</span>
                       </div>
                     </button>
                     <input id="doc-file-input" type="file" multiple className="hidden" onChange={(e) => {
@@ -1044,9 +1044,9 @@ export default function EvidenceLocker() {
                     <div className="flex items-center gap-6 pl-4 border-l border-white/5">
                       <div className="flex items-center gap-2 text-white/20">
                         <Mail className="w-3.5 h-3.5" />
-                        <span className="text-[10px] font-mono uppercase tracking-widest">store@invoices.margin.app</span>
+                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight">store@invoices.margin.app</span>
                       </div>
-                      <Link to="/integrations-hub" className="text-[10px] font-mono font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-widest transition-colors">
+                      <Link to="/integrations-hub" className="text-[10px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-tight transition-colors">
                         Connect sources {">>"}
                       </Link>
                     </div>
@@ -1059,11 +1059,11 @@ export default function EvidenceLocker() {
                 {/* Ledger Header */}
                 <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                   <div>
-                    <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Document Library</h2>
+                    <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">Document Library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">{sorted.length} documents</span>
+                      <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">{sorted.length} documents</span>
                       <div className="h-1.5 w-[1px] bg-white/10" />
-                      <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">AI Analysis Enabled</span>
+                      <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">AI Analysis Enabled</span>
                     </div>
                   </div>
 
@@ -1074,14 +1074,14 @@ export default function EvidenceLocker() {
                         placeholder="Search documents..."
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
-                        className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-mono pl-9 focus:border-emerald-500/30 transition-all rounded-lg placeholder:text-white/10"
+                        className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-sans font-bold pl-9 focus:border-emerald-500/30 transition-all rounded-lg placeholder:text-white/10 tracking-tight"
                       />
                     </div>
 
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 px-4 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-widest rounded-lg"
+                      className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
                       onClick={exportCsv}
                     >
                       <Download className="mr-2 h-3.5 w-3.5" />
@@ -1092,7 +1092,7 @@ export default function EvidenceLocker() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-9 px-4 text-[10px] font-mono font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-widest rounded-lg"
+                        className="h-9 px-4 text-[10px] font-sans font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-tight rounded-lg"
                         onClick={handleDeleteAllDocuments}>
                         <Trash2 className="w-3.5 h-3.5 mr-2" />
                         Delete All
@@ -1109,16 +1109,16 @@ export default function EvidenceLocker() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
                         <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500/40"></span>
                       </div>
-                      <span className="text-[11px] font-mono font-bold text-white/20 uppercase tracking-[0.4em]">Loading documents...</span>
+                      <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading documents...</span>
                     </div>
                   ) : error ? (
                     <div className="flex flex-col items-center justify-center py-40 bg-rose-500/[0.02]">
                       <AlertCircle className="h-8 w-8 text-rose-500/20 mb-6" />
-                      <span className="text-[11px] font-mono font-bold text-rose-500 uppercase tracking-widest">Connection error</span>
-                      <p className="text-[10px] text-rose-500/40 mt-2 font-mono">{error}</p>
+                      <span className="text-[11px] font-sans font-bold text-rose-500 uppercase tracking-tight">Connection error</span>
+                      <p className="text-[10px] text-rose-500/40 mt-2 font-sans font-bold tracking-tight">{error}</p>
                       <Button
                         variant="ghost"
-                        className="mt-8 text-[11px] font-mono font-bold text-white/20 hover:text-white"
+                        className="mt-8 text-[11px] font-sans font-bold text-white/20 hover:text-white tracking-tight"
                         onClick={() => window.location.reload()}
                       >
                         Retry
@@ -1156,14 +1156,14 @@ export default function EvidenceLocker() {
                                     {doc.name}
                                   </span>
                                   {doc.matchedClaims && doc.matchedClaims.length > 0 && (
-                                    <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
+                                    <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight flex items-center gap-1.5">
                                       <Link2 className="h-2.5 w-2.5" />
                                       {doc.matchedClaims.length} linked claims
                                     </div>
                                   )}
                                 </div>
 
-                                <div className="flex items-center text-[10px] font-mono font-bold text-white/20 gap-4 uppercase tracking-[0.1em]">
+                                <div className="flex items-center text-[10px] font-sans font-bold text-white/20 gap-4 uppercase tracking-tight">
                                   <span className="text-white/40">{doc.supplier || "Vendor unknown"}</span>
                                   <span className="text-white/5">|</span>
                                   <span className="text-white/40">{doc.invoice || "No reference"}</span>
@@ -1202,7 +1202,7 @@ export default function EvidenceLocker() {
                               {doc.matchedClaims && doc.matchedClaims.length > 0 && (
                                 <Link
                                   to={`/case/${doc.matchedClaims[0]}`}
-                                  className="text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-widest flex items-center gap-2"
+                                  className="text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-tight flex items-center gap-2"
                                 >
                                   ID_{doc.matchedClaims[0].slice(0, 8)}
                                   <ArrowRight className="h-3 w-3" />
@@ -1216,7 +1216,7 @@ export default function EvidenceLocker() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 rounded-xl shadow-3xl backdrop-blur-3xl p-2 animate-in fade-in slide-in-from-top-1">
-                                  <DropdownMenuItem asChild className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest">
+                                  <DropdownMenuItem asChild className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight">
                                     <Link to={`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`} className="flex items-center gap-3">
                                       <Eye className="w-3.5 h-3.5" />
                                       View Details
@@ -1224,7 +1224,7 @@ export default function EvidenceLocker() {
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
                                     onClick={() => downloadDoc(doc.id)}
-                                    className="text-[11px] font-mono text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest"
+                                    className="text-[11px] font-sans font-bold text-white/60 focus:bg-white/5 focus:text-white rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight"
                                   >
                                     <Download className="w-3.5 h-3.5 mr-3" />
                                     Download
@@ -1232,7 +1232,7 @@ export default function EvidenceLocker() {
                                   <div className="h-[1px] bg-white/5 my-2" />
                                   <DropdownMenuItem
                                     onClick={() => handleDeleteDocument(doc.id, doc.name)}
-                                    className="text-[11px] font-mono text-rose-500/60 focus:bg-rose-500/10 focus:text-rose-500 rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-widest"
+                                    className="text-[11px] font-sans font-bold text-rose-500/60 focus:bg-rose-500/10 focus:text-rose-500 rounded-lg cursor-pointer px-4 py-2.5 uppercase tracking-tight"
                                   >
                                     <Trash2 className="w-3.5 h-3.5 mr-3" />
                                     Delete
@@ -1256,19 +1256,19 @@ export default function EvidenceLocker() {
                               }}
                               className="h-3 w-3 border-white/10 rounded-sm"
                             />
-                            <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Selection</span>
+                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Selection</span>
                           </div>
                           <span className="text-white/5 h-3 w-[1px]" />
-                          <span className="text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">
+                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
                             PAGE {page} OF {totalPages}
                           </span>
                         </div>
 
                         <div className="flex items-center gap-8">
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Page size</span>
+                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Page size</span>
                             <select
-                              className="bg-transparent border-none text-[10px] font-mono font-bold text-white/60 focus:ring-0 cursor-pointer p-0 uppercase"
+                              className="bg-transparent border-none text-[10px] font-sans font-bold text-white/60 focus:ring-0 cursor-pointer p-0 uppercase"
                               value={pageSize}
                               onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
                             >
@@ -1281,7 +1281,7 @@ export default function EvidenceLocker() {
                           <div className="flex items-center gap-2">
                             <Button
                               variant="ghost"
-                              className="h-9 px-4 text-[10px] font-mono font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10"
+                              className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10 tracking-tight"
                               disabled={page <= 1}
                               onClick={() => setPage(p => Math.max(1, p - 1))}
                             >
@@ -1289,7 +1289,7 @@ export default function EvidenceLocker() {
                             </Button>
                             <Button
                               variant="ghost"
-                              className="h-9 px-4 text-[10px] font-mono font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10"
+                              className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10 tracking-tight"
                               disabled={page >= totalPages}
                               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                             >
