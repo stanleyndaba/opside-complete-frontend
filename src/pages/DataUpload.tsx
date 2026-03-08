@@ -244,8 +244,8 @@ export default function DataUpload() {
                                 <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/10">
                                     <Upload className="h-5 w-5 text-violet-400" />
                                 </div>
-                                <h1 className="text-2xl font-semibold tracking-tight">Data Upload</h1>
-                                <Badge variant="outline" className="text-[10px] font-mono tracking-widest uppercase border-violet-500/30 text-violet-400 ml-2">
+                                <h1 className="text-2xl font-sans font-light tracking-tight">Data Upload</h1>
+                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-violet-500/30 text-violet-400 ml-2">
                                     CSV Ingestion
                                 </Badge>
                             </div>
@@ -257,7 +257,7 @@ export default function DataUpload() {
                         <Button 
                             asChild
                             variant="outline" 
-                            className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all font-mono text-[10px] uppercase tracking-widest h-10 px-6 rounded-xl"
+                            className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all font-sans font-light text-[10px] uppercase tracking-tight h-10 px-6 rounded-xl"
                         >
                             <Link to={`/app/${currentTenantSlug}/pricing-adjust`}>
                                 <DollarSign className="mr-2 h-3.5 w-3.5" />
@@ -273,7 +273,7 @@ export default function DataUpload() {
                         transition={{ delay: 0.05 }}
                         className="mb-6"
                     >
-                        <label className="text-xs font-mono uppercase tracking-widest text-white/30 mb-2 block">Data Type</label>
+                        <label className="text-xs font-sans font-bold uppercase tracking-tight text-white/30 mb-2 block">Data Type</label>
                         <Select value={selectedType} onValueChange={setSelectedType}>
                             <SelectTrigger className="w-full bg-white/[0.02] border-white/10 text-white h-11 focus:ring-emerald-500/30">
                                 <SelectValue />
@@ -338,7 +338,7 @@ export default function DataUpload() {
                                             Supports orders, shipments, returns, settlements, inventory, financial events, and fee reports
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-4 mt-2 text-[10px] text-white/20 font-mono">
+                                    <div className="flex items-center gap-4 mt-2 text-[10px] text-white/20 font-sans font-bold tracking-tight uppercase">
                                         <span>CSV • TXT • TSV</span>
                                         <span>•</span>
                                         <span>Up to 50 MB each</span>
@@ -359,7 +359,7 @@ export default function DataUpload() {
                                             >
                                                 <FileSpreadsheet className="h-4 w-4 text-white/30 flex-shrink-0" />
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm text-white/70 truncate font-mono">{f.file.name}</p>
+                                                    <p className="text-sm text-white/70 truncate font-sans tracking-tight">{f.file.name}</p>
                                                     <p className="text-[10px] text-white/25">
                                                         {formatSize(f.file.size)}
                                                         {f.detectedType && <span className="ml-2 text-violet-400/60">→ {f.detectedType}</span>}
@@ -393,7 +393,7 @@ export default function DataUpload() {
                                     {!isUploading && !batchResult && (
                                         <button
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="w-full py-2 text-xs text-white/25 hover:text-violet-400/60 transition-colors font-mono"
+                                            className="w-full py-2 text-xs text-white/25 hover:text-violet-400/60 transition-colors font-sans font-bold uppercase tracking-tight"
                                         >
                                             + Add more files
                                         </button>
@@ -411,8 +411,8 @@ export default function DataUpload() {
                             className="mt-6"
                         >
                             <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs font-mono text-white/30">UPLOADING & PROCESSING</span>
-                                <span className="text-xs font-mono text-violet-400">{uploadProgress}%</span>
+                                <span className="text-xs font-sans font-bold uppercase tracking-tight text-white/30">UPLOADING & PROCESSING</span>
+                                <span className="text-xs font-sans font-bold tracking-tight text-violet-400">{uploadProgress}%</span>
                             </div>
                             <Progress value={uploadProgress} className="h-1.5 bg-white/[0.04]" />
                         </motion.div>
@@ -484,7 +484,7 @@ export default function DataUpload() {
                                                 <div className="space-y-3 mt-4">
                                                     <div className="flex items-center gap-2 py-1.5 px-3 bg-violet-500/10 border border-violet-500/20 rounded-lg w-fit">
                                                         <Target className="h-3.5 w-3.5 text-violet-400" />
-                                                        <span className="text-xs text-violet-300 font-mono">
+                                                        <span className="text-xs text-violet-300 font-sans font-bold tracking-tight uppercase">
                                                             Agent 3 detection pipeline triggered
                                                         </span>
                                                     </div>
@@ -521,7 +521,7 @@ export default function DataUpload() {
                                             <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
                                         )}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm text-white/70 font-mono truncate">{r.fileName}</p>
+                                            <p className="text-sm text-white/70 font-sans font-bold tracking-tight truncate">{r.fileName}</p>
                                             <p className="text-[10px] text-white/30 mt-0.5">
                                                 Detected as <span className="text-violet-400/70">{r.csvType}</span>
                                                 {' · '}{r.rowsProcessed} rows processed
@@ -534,10 +534,10 @@ export default function DataUpload() {
                                     {r.errors?.length > 0 && (
                                         <div className="mt-2 pl-7">
                                             {r.errors.slice(0, 3).map((err, j) => (
-                                                <p key={j} className="text-[10px] text-red-400/60 font-mono truncate">{err}</p>
+                                                <p key={j} className="text-[10px] text-red-400/60 font-sans tracking-tight truncate uppercase">{err}</p>
                                             ))}
                                             {r.errors.length > 3 && (
-                                                <p className="text-[10px] text-white/20 font-mono">...and {r.errors.length - 3} more</p>
+                                                <p className="text-[10px] text-white/20 font-sans tracking-tight uppercase">...and {r.errors.length - 3} more</p>
                                             )}
                                         </div>
                                     )}
@@ -573,10 +573,10 @@ export default function DataUpload() {
                                 { step: '4', label: 'Detect', desc: 'Run 26 algorithms' },
                             ].map(s => (
                                 <div key={s.step} className="flex items-center gap-2 py-2 px-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
-                                    <span className="text-[10px] font-mono text-violet-400/50 font-bold">{s.step}</span>
+                                    <span className="text-[10px] font-sans font-bold text-violet-400/50 tracking-tight uppercase">{s.step}</span>
                                     <div>
-                                        <p className="text-[11px] text-white/40 font-medium">{s.label}</p>
-                                        <p className="text-[9px] text-white/20">{s.desc}</p>
+                                        <p className="text-[11px] text-white/40 font-sans font-bold tracking-tight uppercase">{s.label}</p>
+                                        <p className="text-[9px] text-white/20 font-sans tracking-tight uppercase">{s.desc}</p>
                                     </div>
                                 </div>
                             ))}
@@ -615,16 +615,16 @@ export default function DataUpload() {
                                                 className="h-3.5 w-auto object-contain brightness-0"
                                             />
                                             <span className="text-gray-200 font-light text-sm">|</span>
-                                            <h2 className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-[0.3em]">Audit Report</h2>
+                                            <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Audit Report</h2>
                                         </div>
                                         <div className="flex flex-col px-0.5">
-                                            <p className="text-[8px] font-mono text-gray-300 uppercase tracking-widest leading-none">Reimbursement seller account overview</p>
+                                            <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Reimbursement seller account overview</p>
                                             <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">Recovery: $4,987.00</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <button
-                                            className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-mono font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase"
+                                            className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-tight"
                                         >
                                             <Share2 className="h-4 w-4" />
                                             Import and Share
@@ -645,34 +645,34 @@ export default function DataUpload() {
                                         <div className="w-1/3 border-r border-gray-100 flex flex-col">
                                             {/* Upper-space: Seller details */}
                                             <div className="px-5 py-3.5 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-1.5">Seller details</h3>
+                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-1.5">Seller details</h3>
                                                 <ul className="space-y-0">
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Account:</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Account:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">[Brand Name] (redacted ID: ***1234)</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Marketplace:</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Marketplace:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight uppercase">US / UK / EU</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Discrepancies:</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Discrepancies:</span>
                                                         <span className="text-[11px] font-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-mono text-gray-300 uppercase shrink-0">Period analysed:</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">2024/10/01 to 2025/03/01</span>
                                                     </li>
                                                 </ul>
-                                                <p className="mt-1 text-[9px] font-mono text-gray-400 italic leading-tight">
+                                                <p className="mt-1 text-[9px] font-sans font-bold text-gray-400 italic leading-tight uppercase tracking-tight">
                                                     based on your uploaded CSVs and Amazon's reimbursement policies.
                                                 </p>
                                             </div>
 
                                             {/* Middle-space: Eventual data breakdown */}
                                             <div className="px-5 py-4 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2">Eventual data breakdown</h3>
-                                                <p className="text-[9px] font-mono text-gray-400 uppercase tracking-wider mb-3">Events that led to the miscalculation</p>
+                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Eventual data breakdown</h3>
+                                                <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">Events that led to the miscalculation</p>
                                                 
                                                 <div className="space-y-2">
                                                     {[
@@ -684,16 +684,16 @@ export default function DataUpload() {
                                                             <div className="flex-1 min-w-0 mr-4">
                                                                 <p className="text-[10px] font-bold text-gray-900 leading-none">{item.label}</p>
                                                                 <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{item.desc}</p>
-                                                                <p className="text-[8px] font-mono text-gray-300 mt-0.5 uppercase">{item.date}</p>
+                                                                <p className="text-[8px] font-sans font-bold text-gray-300 mt-0.5 uppercase tracking-tight">{item.date}</p>
                                                             </div>
-                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-mono text-gray-400 uppercase shrink-0">
+                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-sans font-bold text-gray-400 uppercase shrink-0 tracking-tight">
                                                                 {item.status}
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
                                                 <div className="mt-1 flex justify-end">
-                                                    <button className="text-[9px] font-mono font-bold text-violet-600 hover:text-violet-700 uppercase tracking-widest flex items-center gap-1 group">
+                                                    <button className="text-[9px] font-sans font-bold text-violet-600 hover:text-violet-700 uppercase tracking-tight flex items-center gap-1 group">
                                                         See More
                                                         <span className="group-hover:translate-x-0.5 transition-transform">→</span>
                                                     </button>
@@ -702,10 +702,10 @@ export default function DataUpload() {
 
                                             {/* Bottom-space: Policy reference */}
                                             <div className="px-5 py-4 bg-gray-50/50">
-                                                <h3 className="text-[8px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-2.5">Policy reference</h3>
-                                                <p className="text-[9px] font-mono text-gray-300 uppercase tracking-widest mb-2">Policy basis</p>
+                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2.5">Policy reference</h3>
+                                                <p className="text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight mb-2">Policy basis</p>
                                                 <div className="space-y-2">
-                                                    <p className="text-[9px] font-mono text-gray-500 leading-relaxed italic">
+                                                    <p className="text-[9px] font-sans text-gray-500 leading-relaxed italic tracking-tight font-light">
                                                         <span className="font-bold text-gray-400 not-italic mr-1 uppercase">Policy:</span>
                                                         "These opportunities are identified using Amazon’s published reimbursement policies for lost, damaged, and incorrectly charged FBA inventory. 
                                                         We prepare claims that match what Seller Support expects to see."
@@ -717,7 +717,7 @@ export default function DataUpload() {
                                         {/* Right Column - Full Detailed Data */}
                                         <div className="flex-1 flex flex-col">
                                             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
-                                                <h3 className="text-[9px] font-mono font-bold text-gray-400 uppercase tracking-[0.2em] mb-0.5">Full Data</h3>
+                                                <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Full Data</h3>
                                                 <p className="text-[10px] text-gray-400 font-sans">your full cost breakdown</p>
                                             </div>
                                             
@@ -726,8 +726,8 @@ export default function DataUpload() {
                                                     <table className="w-full">
                                                         <thead>
                                                             <tr className="border-b border-gray-50">
-                                                                <th className="text-left py-2 text-[9px] font-mono text-gray-300 uppercase tracking-widest">Description</th>
-                                                                <th className="text-right py-2 text-[9px] font-mono text-gray-300 uppercase tracking-widest">Amount</th>
+                                                                <th className="text-left py-2 text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight">Description</th>
+                                                                <th className="text-right py-2 text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight">Amount</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody className="divide-y divide-gray-50">
@@ -741,11 +741,11 @@ export default function DataUpload() {
                                                                 <tr key={idx} className="group">
                                                                     <td className="py-2">
                                                                         <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
-                                                                        <p className="text-[9px] font-mono text-gray-300 uppercase mt-0.5">{row.sub} | {row.status}</p>
+                                                                        <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{row.sub} | {row.status}</p>
                                                                     </td>
                                                                     <td className="py-2 text-right align-top">
-                                                                        <span className="text-xs font-bold text-gray-900 font-mono">{row.amount}</span>
-                                                                        <p className={`text-[8px] font-mono mt-0.5 lowercase ${
+                                                                        <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{row.amount}</span>
+                                                                        <p className={`text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight ${
                                                                             row.days < 20 ? 'text-red-500' : 
                                                                             row.days < 30 ? 'text-orange-500' : 
                                                                             'text-emerald-500'
@@ -759,7 +759,7 @@ export default function DataUpload() {
                                                         <tfoot>
                                                             <tr className="border-t border-gray-100">
                                                                 <td className="py-6">
-                                                                    <span className="text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest">Total Estimated Recovery</span>
+                                                                    <span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Total Estimated Recovery</span>
                                                                 </td>
                                                                 <td className="py-6 text-right">
                                                                     <div className="flex items-center justify-end gap-12">
