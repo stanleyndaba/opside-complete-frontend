@@ -765,8 +765,14 @@ export default function DataUpload() {
                                                                     <div className="flex items-center justify-end gap-12">
                                                                         <span className="text-base font-bold font-sans text-gray-900 tracking-tight">$4,987.00</span>
                                                                         <button 
-                                                                            onClick={() => window.open('https://www.paypal.com/ncp/payment/2KZY7JX8MNTPC', '_blank', 'noopener,noreferrer')}
-                                                                            className="relative z-50 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer"
+                                                                            type="button"
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                e.preventDefault();
+                                                                                console.log('PayPal redirect triggered');
+                                                                                window.open('https://www.paypal.com/ncp/payment/2KZY7JX8MNTPC', '_blank', 'noopener,noreferrer');
+                                                                            }}
+                                                                            className="relative z-[9999] flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer pointer-events-auto"
                                                                         >
                                                                             <Upload size={14} className="stroke-[3]" />
                                                                             FILE FOR CASES
