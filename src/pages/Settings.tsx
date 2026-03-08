@@ -202,7 +202,7 @@ const Settings = () => {
   const menuItems = [
     { id: 'business' as SettingsSection, label: 'Seller Profile', icon: Building2 },
     { id: 'billing' as SettingsSection, label: 'Billing', icon: CreditCard },
-    { id: 'api' as SettingsSection, label: 'API Keys', icon: Key },
+    // { id: 'api' as SettingsSection, label: 'API Keys', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations', icon: Box },
     { id: 'notifications' as SettingsSection, label: 'Notifications', icon: Bell },
     // { id: 'security' as SettingsSection, label: 'Security', icon: Shield },
@@ -574,6 +574,7 @@ const Settings = () => {
           </motion.div>
         );
 
+      /*
       case 'api':
         return (
           <motion.div
@@ -660,6 +661,7 @@ const Settings = () => {
             </div>
           </motion.div>
         );
+      */
 
       case 'integrations': {
         const activePlatforms = [
