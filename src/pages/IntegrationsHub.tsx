@@ -535,7 +535,7 @@ export default function IntegrationsHub() {
         <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
           <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
             <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-serif">
+              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-sans font-bold tracking-tight">
                 <Zap className="h-8 w-8 animate-pulse" />
                 Potential Recoveries Found!
               </DialogTitle>
@@ -544,14 +544,14 @@ export default function IntegrationsHub() {
               {recoveryData && (
                 <>
                   <div className="space-y-2">
-                    <div className="text-6xl font-serif text-white tracking-tighter">
+                    <div className="text-6xl font-sans font-bold text-white tracking-tighter">
                       {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
                     </div>
-                    <div className="text-sm font-mono text-emerald-500/60 uppercase tracking-[0.3em]">
+                    <div className="text-sm font-sans font-bold text-emerald-500/60 uppercase tracking-tight">
                       in Potential Amazon Recoveries Identified
                     </div>
                     <div className="mt-4">
-                      <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/40 text-emerald-400 font-mono text-[10px] uppercase tracking-widest px-3 py-1">
+                      <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/40 text-emerald-400 font-sans font-bold text-[10px] uppercase tracking-tight px-3 py-1">
                         {recoveryData.claimCount} Distinct Recovery Opportunities
                       </Badge>
                     </div>
@@ -560,29 +560,29 @@ export default function IntegrationsHub() {
                   <div className="grid grid-cols-3 gap-4 mt-8">
                     <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
                       <FileText className="h-6 w-6 mx-auto mb-2 text-blue-400" />
-                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-1">Lost Inventory</div>
-                      <div className="text-sm font-medium text-white">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
+                      <div className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Lost Inventory</div>
+                      <div className="text-sm font-bold text-white tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.6, recoveryData.currency)}</div>
                     </div>
                     <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
                       <Calculator className="h-6 w-6 mx-auto mb-2 text-orange-400" />
-                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-1">Fee Errors</div>
-                      <div className="text-sm font-medium text-white">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
+                      <div className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Fee Errors</div>
+                      <div className="text-sm font-bold text-white tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.3, recoveryData.currency)}</div>
                     </div>
                     <div className="text-center p-4 bg-white/[0.03] rounded-xl border border-white/5 backdrop-blur-sm">
                       <Package className="h-6 w-6 mx-auto mb-2 text-purple-400" />
-                      <div className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-1">Shipments</div>
-                      <div className="text-sm font-medium text-white">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
+                      <div className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Shipments</div>
+                      <div className="text-sm font-bold text-white tracking-tight">{formatCurrency(recoveryData.totalAmount * 0.1, recoveryData.currency)}</div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-400 italic font-serif">
+                  <p className="text-sm text-gray-400 font-sans font-light tracking-tight italic">
                     "Our discovery agents identified these anomalies by triangulating your FBA structural data."
                   </p>
                 </>
               )}
             </div>
             <DialogFooter>
-              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-mono uppercase tracking-widest text-xs hover:bg-emerald-500 transition-colors">
+              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-xs hover:bg-emerald-500 transition-colors">
                 Continue to Dashboard
               </Button>
             </DialogFooter>
@@ -593,11 +593,11 @@ export default function IntegrationsHub() {
         <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
           <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
             <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-serif">
+              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-sans font-bold tracking-tight">
                 <Shield className="h-8 w-8 text-emerald-500" />
                 Protect Your Revenue
               </DialogTitle>
-              <DialogDescription className="text-center text-gray-400 italic">
+              <DialogDescription className="text-center text-gray-400 font-sans font-light tracking-tight italic">
                 Connect your data sources to automate document matching.
               </DialogDescription>
             </DialogHeader>
@@ -606,13 +606,13 @@ export default function IntegrationsHub() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-emerald-500/30 transition-all group">
                   <Mail className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
-                  <h3 className="font-serif text-lg mb-2">Connect Email</h3>
-                  <p className="text-xs text-gray-500 mb-6 font-mono leading-relaxed">
+                  <h3 className="font-sans font-bold text-lg mb-2 tracking-tight">Connect Email</h3>
+                  <p className="text-xs text-gray-500 mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
                     AUTOMATICALLY SCAN REPOSITORIES FOR INVOICES, POs, AND SHIPMENT CONFIRMATIONS.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                     }}
@@ -623,13 +623,13 @@ export default function IntegrationsHub() {
 
                 <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-emerald-500/30 transition-all group">
                   <Cloud className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
-                  <h3 className="font-serif text-lg mb-2">Cloud Storage</h3>
-                  <p className="text-xs text-gray-500 mb-6 font-mono leading-relaxed">
+                  <h3 className="font-sans font-bold text-lg mb-2 tracking-tight">Cloud Storage</h3>
+                  <p className="text-xs text-gray-500 mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
                     INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL YOUR BUSINESS DOCUMENTS.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-mono text-[10px] uppercase tracking-widest"
+                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                     }}
@@ -640,14 +640,14 @@ export default function IntegrationsHub() {
               </div>
 
               <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest">
+                <div className="flex items-center justify-center gap-2 text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">
                   <Info className="h-3 w-3" />
                   <span>Evidence increases claim approval rates by 300%</span>
                 </div>
                 <Button
                   variant="ghost"
                   onClick={() => setShowEvidenceModal(false)}
-                  className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-white"
+                  className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white"
                 >
                   I'll upload manual artifacts later
                 </Button>
@@ -667,19 +667,19 @@ export default function IntegrationsHub() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-emerald-500/50" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-emerald-500/80">Connections</span>
+                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-500/80">Connections</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-serif text-white mb-4 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-sans font-light text-white mb-4 leading-tight tracking-tight">
                   Integrations
                 </h1>
-                <p className="text-gray-400 max-w-xl text-lg leading-relaxed">
+                <p className="text-gray-400 max-w-xl text-lg font-sans font-light leading-relaxed tracking-tight">
                   Management of all primary data sources and store connections. Data is isolated per store and synchronized across our platform.
                 </p>
               </div>
 
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-end">
-                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Global Sync Status</span>
+                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Global Sync Status</span>
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-sm font-medium text-white tracking-tight">Systems Operational</span>
@@ -697,7 +697,7 @@ export default function IntegrationsHub() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Query Infrastructure (Amazon, Gmail, Financial Repositories...)"
-                  className="bg-transparent border-none text-white font-mono text-xs h-12 placeholder:text-gray-600 focus-visible:ring-0"
+                  className="bg-transparent border-none text-white font-sans font-bold text-xs h-12 placeholder:text-gray-600 focus-visible:ring-0 tracking-tight"
                 />
               </div>
             </div>
@@ -724,8 +724,8 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-serif text-white tracking-tight mb-1">Amazon SP API</h3>
-                      <p className="text-[10px] font-mono text-emerald-500 uppercase tracking-[0.4em]">Primary Store Connection</p>
+                      <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon SP API</h3>
+                      <p className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">Primary Store Connection</p>
                     </div>
                   </div>
 
@@ -734,42 +734,42 @@ export default function IntegrationsHub() {
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
-                          className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 text-xs font-mono uppercase tracking-widest gap-2"
+                          className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 text-xs font-sans font-bold uppercase tracking-tight gap-2"
                         >
                           <Plus className="w-4 h-4" /> Add a New Store
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
                         <DialogHeader>
-                          <DialogTitle className="text-2xl font-serif">Add a New Store</DialogTitle>
-                          <DialogDescription className="text-gray-400">
+                          <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Add a New Store</DialogTitle>
+                          <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
                             Configure authorization parameters for the terminal connection.
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-6 py-6">
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Store Designator</label>
+                              <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Store Designator</label>
                               <Input
                                 placeholder="Alpha-Store-01"
                                 value={newStoreData.name}
                                 onChange={e => setNewStoreData({ ...newStoreData, name: e.target.value })}
-                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12"
+                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12 font-sans font-bold tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Seller Identity (Optional)</label>
+                              <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Seller Identity (Optional)</label>
                               <Input
                                 placeholder="A3XXXXXXXXXXXX"
                                 value={newStoreData.seller_id}
                                 onChange={e => setNewStoreData({ ...newStoreData, seller_id: e.target.value })}
-                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12"
+                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12 font-sans font-bold tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Marketplace Region</label>
+                              <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Marketplace Region</label>
                               <select
-                                className="w-full h-12 px-3 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-mono"
+                                className="w-full h-12 px-3 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight"
                                 value={newStoreData.marketplace}
                                 onChange={e => setNewStoreData({ ...newStoreData, marketplace: e.target.value })}
                               >
@@ -784,14 +784,14 @@ export default function IntegrationsHub() {
                           <Button
                             variant="ghost"
                             onClick={() => setShowAddStore(false)}
-                            className="bg-transparent text-gray-400 hover:text-white font-mono uppercase text-[10px] py-1 tracking-widest"
+                            className="bg-transparent text-gray-400 hover:text-white font-sans font-bold uppercase text-[10px] py-1 tracking-tight"
                           >
                             Cancel
                           </Button>
                           <Button
                             onClick={handleAddStore}
                             disabled={addingStore}
-                            className="bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase text-[10px] h-12 px-8 tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                            className="bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                           >
                             {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Add Store"}
                           </Button>
@@ -815,7 +815,7 @@ export default function IntegrationsHub() {
                           toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                         }
                       }}
-                      className="h-12 bg-white text-black font-mono uppercase tracking-[0.2em] text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
+                      className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
                     >
                       Establish Master Connection
                     </Button>
@@ -832,16 +832,16 @@ export default function IntegrationsHub() {
                       <div key={store.id} className="bg-black/40 border border-white/5 rounded-xl p-5 backdrop-blur-sm relative group/card transition-all duration-300 hover:border-emerald-500/20 hover:bg-white/[0.03]">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex flex-col">
-                            <span className="text-white font-medium text-base mb-1 truncate max-w-[150px]">{store.name}</span>
-                            <span className="text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest">{store.marketplace}</span>
+                            <span className="text-white font-bold text-base mb-1 truncate max-w-[150px] tracking-tight">{store.name}</span>
+                            <span className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">{store.marketplace}</span>
                           </div>
                           <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                         </div>
 
                         <div className="flex items-center justify-between pt-4 border-t border-white/5">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-mono text-gray-500 uppercase tracking-tighter">Status</span>
-                            <span className="text-[10px] text-gray-300 font-medium">Synced</span>
+                            <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Status</span>
+                            <span className="text-[10px] text-gray-300 font-bold tracking-tight">Synced</span>
                           </div>
                           <button
                             onClick={() => handleDeleteStore(store.id)}
@@ -854,13 +854,13 @@ export default function IntegrationsHub() {
                       </div>
                     ))
                   ) : (
-                    <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5">
-                      <p className="text-gray-500 italic font-serif opacity-50">No store nodes detected. Link a store to begin harvesting.</p>
+                    <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5 font-sans font-light tracking-tight italic">
+                      <p className="text-gray-500 opacity-50">No store nodes detected. Link a store to begin harvesting.</p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em] text-gray-500">
+                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
                   <div className="flex items-center gap-6">
                     <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
                     <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-emerald-500/50" /> Encrypted</span>
@@ -878,14 +878,14 @@ export default function IntegrationsHub() {
                     <Plus className="h-6 w-6 text-gray-400 group-hover:text-emerald-500 transition-colors" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-serif text-white tracking-tight mb-1">Can't find a specific integration?</h3>
-                    <p className="text-sm text-gray-500 font-mono uppercase tracking-widest">Our Engineering Team can build custom harvesting protocols.</p>
+                    <h3 className="text-xl font-sans font-bold text-white tracking-tight mb-1">Can't find a specific integration?</h3>
+                    <p className="text-sm text-gray-500 font-sans font-bold uppercase tracking-tight">Our Engineering Team can build custom harvesting protocols.</p>
                   </div>
                 </div>
                 <Button
                   onClick={() => setShowRequestForm(true)}
                   variant="ghost"
-                  className="h-12 border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-gray-300 hover:text-emerald-500 font-mono uppercase tracking-[0.2em] text-[10px] px-10 transition-all duration-300"
+                  className="h-12 border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-gray-300 hover:text-emerald-500 font-sans font-bold uppercase tracking-tight text-[10px] px-10 transition-all duration-300"
                 >
                   Request Integration Node
                 </Button>
@@ -896,35 +896,35 @@ export default function IntegrationsHub() {
             <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
               <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-serif">Request Integration Protocol</DialogTitle>
-                  <DialogDescription className="text-gray-400">
+                  <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Request Integration Protocol</DialogTitle>
+                  <DialogDescription className="text-gray-400 font-sans font-light tracking-tight italic">
                     Specify the platform or repository you wish to integrate into the matrix.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-6 py-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Platform Name</label>
+                      <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Platform Name</label>
                       <Input
                         placeholder="e.g., Shopify, Walmart, NetSuite..."
                         value={requestFormData.platform}
                         onChange={e => setRequestFormData({ ...requestFormData, platform: e.target.value })}
-                        className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12"
+                        className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12 font-sans font-bold tracking-tight"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Harvesting Context</label>
+                      <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Harvesting Context</label>
                       <textarea
                         placeholder="What data nodes should we extract?"
                         value={requestFormData.description}
                         onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
-                        className="w-full h-32 px-3 py-2 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-serif resize-none"
+                        className="w-full h-32 px-3 py-2 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight resize-none italic"
                       />
                     </div>
                   </div>
                   <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
                     <Info className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <p className="text-[10px] text-emerald-500/80 font-mono leading-relaxed uppercase tracking-wider">
+                    <p className="text-[10px] text-emerald-500/80 font-sans font-bold leading-relaxed uppercase tracking-tight">
                       Requesting a node adds it to our development queue. You will be notified via encrypted channel once the protocol is stabilized.
                     </p>
                   </div>
@@ -933,7 +933,7 @@ export default function IntegrationsHub() {
                   <Button
                     variant="ghost"
                     onClick={() => setShowRequestForm(false)}
-                    className="bg-transparent text-gray-400 hover:text-white font-mono uppercase text-[10px] py-1 tracking-widest"
+                    className="bg-transparent text-gray-400 hover:text-white font-sans font-bold uppercase text-[10px] py-1 tracking-tight"
                   >
                     Cancel
                   </Button>
@@ -943,7 +943,7 @@ export default function IntegrationsHub() {
                       setShowRequestForm(false);
                       setRequestFormData({ platform: '', description: '' });
                     }}
-                    className="bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase text-[10px] h-12 px-8 tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    className="bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                   >
                     Submit Request
                   </Button>
@@ -955,7 +955,7 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-8 mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-px w-8 bg-emerald-500/30" />
-                <h3 className="text-sm font-mono uppercase tracking-[0.4em] text-gray-500">Secondary Harvesting Nodes</h3>
+                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Secondary Harvesting Nodes</h3>
               </div>
             </motion.div>
 
@@ -997,22 +997,22 @@ export default function IntegrationsHub() {
                         <div className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gray-700'}`} />
                       </div>
 
-                      <h4 className="text-lg font-serif text-white tracking-tight mb-1">{meta.name}</h4>
-                      <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-6">Evidence Repository</p>
+                      <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-1">{meta.name}</h4>
+                      <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-6">Evidence Repository</p>
 
                       <div className="flex-1">
                         {connected ? (
                           <div className="space-y-4">
                             <div className="bg-black/40 rounded-lg p-3 border border-white/5">
-                              <span className="text-[9px] font-mono text-gray-500 uppercase block mb-1">Target Account</span>
-                              <span className="text-xs text-gray-300 truncate block">
+                              <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-1 tracking-tight">Target Account</span>
+                              <span className="text-xs text-gray-300 truncate block font-sans font-bold tracking-tight">
                                 {evidenceSources.find(s => s.provider === p)?.account_email || 'Active Stream'}
                               </span>
                             </div>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-mono uppercase tracking-widest"
+                              className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-sans font-bold uppercase tracking-tight"
                               onClick={() => handleConnectDocSource(p)} // Simplified for UI demonstration, actual logic uses disconnect
                             >
                               Decommission
@@ -1024,7 +1024,7 @@ export default function IntegrationsHub() {
                               Establish persistent monitoring of this repository for financial artifacts.
                             </p>
                             <Button
-                              className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-mono uppercase tracking-widest gap-2"
+                              className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-sans font-bold uppercase tracking-tight gap-2"
                               onClick={() => handleConnectDocSource(p)}
                               disabled={providerLoading === p}
                             >
@@ -1043,7 +1043,7 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-px w-8 bg-emerald-500/30" />
-                <h3 className="text-sm font-mono uppercase tracking-[0.4em] text-gray-500">Autonomous Logic Overrides</h3>
+                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Autonomous Logic Overrides</h3>
               </div>
             </motion.div>
 
@@ -1054,38 +1054,38 @@ export default function IntegrationsHub() {
                     <Shield className="h-5 w-5 text-emerald-500" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-serif text-white">Harvesting Parameters</h4>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-0.5">Global Filter Configuration</p>
+                    <h4 className="text-lg font-sans font-bold text-white tracking-tight">Harvesting Parameters</h4>
+                    <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-0.5">Global Filter Configuration</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest">Target Sender Patterns</label>
+                    <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight">Target Sender Patterns</label>
                     <Input
                       value={filters.senderPatterns.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                      className="bg-black/40 border-white/10 text-white font-mono text-xs h-12"
+                      className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-12 tracking-tight"
                     />
                   </div>
                   <div className="space-y-4">
-                    <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest">Subject Scopes</label>
+                    <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight">Subject Scopes</label>
                     <Input
                       value={filters.subjectKeywords.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                      className="bg-black/40 border-white/10 text-white font-mono text-xs h-12"
+                      className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-12 tracking-tight"
                     />
                   </div>
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5">
-                  <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest mb-6 block">Artifact Class Selection</label>
+                  <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight mb-6 block">Artifact Class Selection</label>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {Object.entries(filters.fileTypes).map(([type, enabled]) => (
                       <button
                         key={type}
                         onClick={() => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, [type]: !enabled } }))}
-                        className={`p-4 rounded-xl border font-mono text-[10px] uppercase tracking-widest transition-all duration-300 ${enabled ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/5 text-gray-500 hover:border-white/10'}`}
+                        className={`p-4 rounded-xl border font-sans font-bold text-[10px] uppercase tracking-tight transition-all duration-300 ${enabled ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/5 text-gray-500 hover:border-white/10'}`}
                       >
                         {type}
                       </button>
@@ -1094,24 +1094,24 @@ export default function IntegrationsHub() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5">
-                  <label className="text-[10px] font-mono text-emerald-500/70 uppercase tracking-widest mb-3 block">Exclusion Rules</label>
+                  <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight mb-3 block">Exclusion Rules</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-gray-500 uppercase">Exclude Senders</label>
+                      <label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Exclude Senders</label>
                       <Input
                         placeholder="newsletter, marketing"
                         value={filters.excludeSenders.join(', ')}
                         onChange={(e) => setFilters(f => ({ ...f, excludeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                        className="bg-black/40 border-white/10 text-white font-mono text-xs h-10"
+                        className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-10 tracking-tight"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-gray-500 uppercase">Exclude Subjects</label>
+                      <label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Exclude Subjects</label>
                       <Input
                         placeholder="unsubscribe, promotional"
                         value={filters.excludeSubjects.join(', ')}
                         onChange={(e) => setFilters(f => ({ ...f, excludeSubjects: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                        className="bg-black/40 border-white/10 text-white font-mono text-xs h-10"
+                        className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-10 tracking-tight"
                       />
                     </div>
                   </div>
@@ -1126,7 +1126,7 @@ export default function IntegrationsHub() {
                       setSavingFilters(false);
                     }}
                     disabled={savingFilters}
-                    className="h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-mono uppercase tracking-[0.2em] text-[10px] px-10"
+                    className="h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold uppercase tracking-tight text-[10px] px-10"
                   >
                     {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Commit Changes"}
                   </Button>
@@ -1141,8 +1141,8 @@ export default function IntegrationsHub() {
                     <RefreshCw className="h-5 w-5 text-emerald-500" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-serif text-white">Temporal Sync</h4>
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mt-0.5">Scheduling Engine</p>
+                    <h4 className="text-lg font-sans font-bold text-white tracking-tight">Temporal Sync</h4>
+                    <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-0.5">Scheduling Engine</p>
                   </div>
                 </div>
 
@@ -1167,7 +1167,7 @@ export default function IntegrationsHub() {
                       className={`w-full p-4 rounded-xl border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-white/5 border-white/5 hover:border-white/10'}`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-medium ${schedule === opt.value ? 'text-white' : 'text-gray-400'}`}>{opt.label}</span>
+                        <span className={`text-sm font-bold tracking-tight ${schedule === opt.value ? 'text-white' : 'text-gray-400'}`}>{opt.label}</span>
                         {schedule === opt.value && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
                       </div>
                     </button>
@@ -1177,8 +1177,8 @@ export default function IntegrationsHub() {
                 <div className="mt-8 pt-8 border-t border-white/5">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Auto-Harvesting</span>
-                      <span className="text-sm font-serif text-white">{autoCollect ? 'Active' : 'Standby'}</span>
+                      <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight block">Auto-Harvesting</span>
+                      <span className="text-sm font-sans font-bold text-white tracking-tight">{autoCollect ? 'Active' : 'Standby'}</span>
                     </div>
                     <button
                       onClick={async () => {
@@ -1216,8 +1216,8 @@ export default function IntegrationsHub() {
                   ) : (
                     <>
                       <div className="text-left">
-                        <span className="block text-3xl font-serif text-white tracking-tight">Ingest from all Sources</span>
-                        <span className="block text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mt-1">Sync data from all connected accounts</span>
+                        <span className="block text-3xl font-sans font-bold text-white tracking-tight">Ingest from all Sources</span>
+                        <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">Sync data from all connected accounts</span>
                       </div>
                     </>
                   )}
@@ -1235,28 +1235,28 @@ export default function IntegrationsHub() {
           >
             <div className="flex items-center gap-12">
               <div className="flex flex-col">
-                <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest mb-1">Grid Uptime</span>
+                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Grid Uptime</span>
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  <span className="text-xs text-gray-400 font-mono">99.998%</span>
+                  <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">99.998%</span>
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest mb-1">Repositories</span>
-                <span className="text-xs text-gray-400 font-mono">{evidenceSources.length} Active Node{evidenceSources.length !== 1 ? 's' : ''}</span>
+                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Repositories</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{evidenceSources.length} Active Node{evidenceSources.length !== 1 ? 's' : ''}</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[9px] font-mono text-gray-600 uppercase tracking-widest mb-1">Last Sync</span>
-                <span className="text-xs text-gray-400 font-mono">{status?.lastIngest || 'Never'}</span>
+                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Last Sync</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{status?.lastIngest || 'Never'}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-6">
-              <button onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/evidence-locker'))} className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-emerald-500 transition-colors">
+              <button onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/evidence-locker'))} className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-emerald-500 transition-colors">
                 Evidence Locker
               </button>
               <div className="h-4 w-px bg-white/5" />
-              <button className="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-emerald-500 transition-colors">
+              <button className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-emerald-500 transition-colors">
                 Terminal Protocols
               </button>
             </div>
