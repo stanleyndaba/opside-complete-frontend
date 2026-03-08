@@ -29,7 +29,7 @@ const renderFormattedMessage = (message: string): React.ReactNode => {
   const parts = message.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <span key={index} className="font-semibold text-gray-900">{part.slice(2, -2)}</span>;
+      return <span key={index} className="font-sans font-bold text-gray-900 tracking-tight">{part.slice(2, -2)}</span>;
     }
     return <span key={index}>{part}</span>;
   });
@@ -186,7 +186,7 @@ export function NotificationBell({
             'h-4.5 w-4.5',
             iconClassName || (isSidebarStyle ? '' : isTransparentNavbar ? 'text-white/20' : 'text-white/40')
           )} />
-          {shouldShowLabel && <span className="text-xs font-serif font-medium uppercase tracking-widest">{label}</span>}
+          {shouldShowLabel && <span className="text-xs font-sans font-bold uppercase tracking-tight">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
               "absolute flex items-center justify-center bg-blue-600 text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 shadow-[0_0_10px_rgba(37,99,235,0.5)]",
@@ -206,19 +206,19 @@ export function NotificationBell({
         {/* Header - Fixed, Institutional Style */}
         <div className="px-6 py-5 border-b border-white/5 flex-shrink-0 bg-white/[0.01]">
           <div className="flex items-center justify-between">
-            <h3 className="text-[11px] font-serif font-bold text-white uppercase tracking-[0.2em]">
+            <h3 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">
               Updates
             </h3>
             <div className="flex items-center gap-4">
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[10px] font-mono text-white/20 hover:text-white transition-colors uppercase tracking-widest">
+                  className="text-[10px] font-sans font-bold text-white/20 hover:text-white transition-colors uppercase tracking-tight">
                   Purge_All
                 </button>
               )}
               {unreadCount > 0 && (
-                <div className="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-bold tracking-tighter rounded">
+                <div className="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-sans font-bold tracking-tight rounded">
                   {unreadCount} UNREAD
                 </div>
               )}
@@ -249,20 +249,20 @@ export function NotificationBell({
                     <div className="flex items-center gap-3 overflow-hidden min-w-0">
                       <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.3)]", !notification.read ? "bg-emerald-500" : "bg-white/10")} />
                       <p className={cn(
-                        'text-[11px] truncate flex items-center gap-2 font-serif tracking-wide',
-                        !notification.read ? 'font-semibold text-white' : 'font-medium text-white/40 group-hover:text-white'
+                        'text-[11px] truncate flex items-center gap-2 font-sans font-bold tracking-tight',
+                        !notification.read ? 'text-white' : 'text-white/40 group-hover:text-white'
                       )}>
                         {notification.header}
                       </p>
                     </div>
-                    <span className="text-[10px] text-white/20 font-mono text-right shrink-0 pt-0.5 whitespace-nowrap uppercase tracking-tighter">
+                    <span className="text-[10px] text-white/20 font-sans font-bold text-right shrink-0 pt-0.5 whitespace-nowrap uppercase tracking-tight">
                       {notification.timestamp}
                     </span>
                   </div>
 
                   <div className="flex items-baseline justify-between gap-4 ml-4.5">
                     <p className={cn(
-                      'text-[11px] leading-relaxed font-serif truncate',
+                      'text-[11px] leading-relaxed font-sans font-bold truncate tracking-tight',
                       !notification.read ? 'text-white/60' : 'text-white/20 group-hover:text-white/40'
                     )}>
                       {stripEmojis(notification.message)}
@@ -277,7 +277,7 @@ export function NotificationBell({
 
                       return (
                         <span className={cn(
-                          "text-[9px] font-mono font-bold shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] px-1.5 py-0.5 rounded border",
+                          "text-[9px] font-sans font-bold shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] px-1.5 py-0.5 rounded border tracking-tight",
                           notification.type === 'funds_deposited' ? "text-emerald-500 border-emerald-500/20 bg-emerald-500/5" :
                             notification.type === 'case_filed' ? "text-blue-400 border-blue-400/20 bg-blue-400/5" : "text-white/20 border-white/5"
                         )}>
@@ -310,7 +310,7 @@ export function NotificationBell({
         {/* Footer - Institutional Style */}
         <div className="px-6 py-4 border-t border-white/5 flex-shrink-0 bg-white/[0.01]">
           <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
-            <button className="w-full text-center text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-[0.3em]">
+            <button className="w-full text-center text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-tight">
               All Notifications
             </button>
           </Link>
