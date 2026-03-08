@@ -627,40 +627,40 @@ export function Dashboard() {
     }
   }, []); // Removed activeSlug, toast from dependencies as they are not used in this callback
 
+  const fetchRecoveriesOnce = useCallback(async () => {
+    try {
+      const res = await api.getAmazonRecoveries(activeSlug);
+      if (!mountedRef.current) return;
+      if (res.ok && res.data) {
+        const data = res.data as any;
+        setRecoveredTotal(data.total_recovered ?? data.totalAmount ?? 0);
+        if (data.currency) setRecoveredCurrency(data.currency);
+        if (typeof data.submitted_claims_count === 'number') setSubmittedClaimsCount(data.submitted_claims_count);
+        if (typeof data.reconciled_count === 'number') setReconciledCount(data.reconciled_count);
+
+        setPendingRecoveryAmount(data.pending_recovery_amount ?? 0);
+        setPendingClaimsCount(data.pending_claims_count ?? 0);
+        setApprovedRecoveryAmount(data.approved_recovery_amount ?? 0);
+        setNextPaymentAmount(data.next_payment_amount ?? 0);
+        setNextPaymentDate(data.next_payment_date ?? null);
+        setSuccessRate(data.success_rate ?? null);
+        setApprovedClaimsThisMonth(data.approved_claims_this_month ?? null);
+        if (typeof data.settlement_rate === 'number') setSettlementRate(data.settlement_rate);
+        setLastUpdated(new Date().toISOString());
+
+        if (data.syncTriggered || data.needsSync) {
+          checkAndMonitorSync();
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch recoveries:', err);
+    }
+  }, [activeSlug]);
+
   // Fetch recoveries
   useEffect(() => {
     if (!isReady) return;
     let pollTimer: number | null = null;
-
-    async function fetchRecoveriesOnce() {
-      try {
-        const res = await api.getAmazonRecoveries(activeSlug);
-        if (!mountedRef.current) return;
-        if (res.ok && res.data) {
-          const data = res.data as any;
-          setRecoveredTotal(data.total_recovered ?? data.totalAmount ?? 0);
-          if (data.currency) setRecoveredCurrency(data.currency);
-          if (typeof data.submitted_claims_count === 'number') setSubmittedClaimsCount(data.submitted_claims_count);
-          if (typeof data.reconciled_count === 'number') setReconciledCount(data.reconciled_count);
-
-          setPendingRecoveryAmount(data.pending_recovery_amount ?? 0);
-          setPendingClaimsCount(data.pending_claims_count ?? 0);
-          setApprovedRecoveryAmount(data.approved_recovery_amount ?? 0);
-          setNextPaymentAmount(data.next_payment_amount ?? 0);
-          setNextPaymentDate(data.next_payment_date ?? null);
-          setSuccessRate(data.success_rate ?? null);
-          setApprovedClaimsThisMonth(data.approved_claims_this_month ?? null);
-          if (typeof data.settlement_rate === 'number') setSettlementRate(data.settlement_rate);
-          setLastUpdated(new Date().toISOString());
-
-          if (data.syncTriggered || data.needsSync) {
-            checkAndMonitorSync();
-          }
-        }
-      } catch (err) {
-        console.error('Failed to fetch recoveries:', err);
-      }
-    }
 
     fetchRecoveriesOnce();
     pollTimer = window.setInterval(fetchRecoveriesOnce, 30000);
@@ -668,7 +668,7 @@ export function Dashboard() {
     return () => {
       if (pollTimer) clearInterval(pollTimer);
     };
-  }, [isReady, activeSlug, toast]);
+  }, [isReady, fetchRecoveriesOnce]);
 
   // Function to check sync status and monitor completion
   async function checkAndMonitorSync() {
@@ -1134,9 +1134,9 @@ export function Dashboard() {
                       <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h2 className="text-[11px] font-mono font-bold text-white/40 uppercase">REIMBURSEMENT OVERVIEW</h2>
+                            <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">REIMBURSEMENT OVERVIEW</h2>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-serif font-medium text-white tracking-tight">Recovered Margins</span>
+                              <span className="text-sm font-sans font-bold text-white tracking-tight">Recovered Margins</span>
                             </div>
                           </div>
                         </div>
@@ -1145,7 +1145,7 @@ export function Dashboard() {
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex items-center gap-3 transition-all group"
                           >
-                            <span className="text-[10px] font-mono font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-widest">{submittedClaimsCount} Active Claims</span>
+                            <span className="text-[10px] font-sans font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-tight">{submittedClaimsCount} Active Claims</span>
                             <ArrowRight className="h-3 w-3 text-emerald-500/30 group-hover:text-emerald-500" />
                           </button>
                         )}
@@ -1164,14 +1164,14 @@ export function Dashboard() {
                             </div>
                           ) : recoveredTotal > 0 ? (
                             <>
-                              <div className="text-5xl font-mono font-bold text-white tracking-tighter mb-4 flex items-baseline gap-2">
+                              <div className="text-5xl font-sans font-bold text-white tracking-tight mb-4 flex items-baseline gap-2">
                                 {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
-                                <span className="text-sm font-mono text-emerald-500 animate-pulse">_</span>
+                                <span className="text-sm font-sans font-bold text-emerald-500 animate-pulse">_</span>
                               </div>
                               {reconciledCount != null && reconciledCount > 0 && (
                                 <div className="flex items-center gap-3 w-fit">
                                   <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                                  <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
+                                  <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
                                     {reconciledCount} Verified Records
                                   </span>
                                 </div>
@@ -1181,12 +1181,12 @@ export function Dashboard() {
                             <div className="flex flex-col gap-6 py-2">
                               <div className="flex items-center gap-3 text-emerald-500">
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                <span className="text-[11px] font-mono font-bold uppercase tracking-[0.2em]">Scanning Account</span>
+                                <span className="text-[11px] font-sans font-bold uppercase tracking-tight">Scanning Account</span>
                               </div>
-                              <div className="text-5xl font-mono font-bold text-white/5 tracking-tighter select-none">
+                              <div className="text-5xl font-sans font-bold text-white/5 tracking-tight select-none">
                                 $0,000.00
                               </div>
-                              <p className="text-xs text-white/30 font-serif leading-relaxed max-w-sm">
+                              <p className="text-xs text-white/30 font-sans font-bold leading-relaxed max-w-sm">
                                 Analyzing your store data for potential FBA reimbursements. This process typically takes 24-48 hours.
                               </p>
                             </div>
@@ -1201,8 +1201,8 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">Estimated Payout</div>
-                              <div className="text-2xl font-mono font-bold text-white tracking-tight">
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Estimated Payout</div>
+                              <div className="text-2xl font-sans font-bold text-white tracking-tight">
                                 {nextPaymentAmount === null && !upcomingPaymentsLoadedRef.current ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
@@ -1211,7 +1211,7 @@ export function Dashboard() {
                               </div>
                               <div className="mt-4 flex items-center gap-2">
                                 <Clock className="h-3 w-3 text-emerald-500/30" />
-                                <span className="text-[10px] font-mono text-emerald-500/40 uppercase tracking-widest">
+                                <span className="text-[10px] font-sans font-bold text-emerald-500/40 uppercase tracking-tight">
                                   {nextPaymentDate
                                     ? `${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                                     : 'EST_TBD'}
@@ -1224,9 +1224,9 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">Payout Details</h4>
+                                <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Payout Details</h4>
                               </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-serif">
+                              <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
                                 Capital currently verified and queued for the primary settlement ledger. Disbursement typically occurs within the standard 14-day protocol.
                               </p>
                             </div>
@@ -1236,8 +1236,8 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">Pending Recovery</div>
-                              <div className="text-2xl font-mono font-bold text-white tracking-tight">
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Pending Recovery</div>
+                              <div className="text-2xl font-sans font-bold text-white tracking-tight">
                                 {pendingRecoveryAmount === null && !upcomingPaymentsLoadedRef.current ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
@@ -1246,7 +1246,7 @@ export function Dashboard() {
                               </div>
                               <div className="mt-4 flex items-center gap-2">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                                <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">
+                                <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
                                   {effectivePendingClaims} Claims In Progress
                                 </span>
                               </div>
@@ -1257,9 +1257,9 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">Activity Log</h4>
+                                <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Activity Log</h4>
                               </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-serif">
+                              <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
                                 High-probability discrepancies currently undergoing active forensic verification across the global marketplace nodes.
                               </p>
                             </div>
@@ -1269,9 +1269,9 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-mono font-bold text-white/20 mb-4 tracking-[0.2em] uppercase">Success Rate</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Success Rate</div>
                               <div className="flex items-baseline gap-3">
-                                <div className="text-2xl font-mono font-bold text-white tracking-tight">
+                                <div className="text-2xl font-sans font-bold text-white tracking-tight">
                                   {settlementRate === null ? (
                                     <Skeleton className="h-8 w-16 bg-white/10" />
                                   ) : (
@@ -1280,7 +1280,7 @@ export function Dashboard() {
                                 </div>
                                 <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500 shadow-emerald-500/50' : (settlementRate ?? 0) >= 50 ? 'bg-amber-500 shadow-amber-500/50' : 'bg-white/10'}`} />
                               </div>
-                              <div className="mt-4 text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">
+                              <div className="mt-4 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
                                 Recovery Efficiency
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
@@ -1290,9 +1290,9 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                <h4 className="text-[11px] font-mono font-bold text-white uppercase tracking-widest">Success Metrics</h4>
+                                <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Success Metrics</h4>
                               </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-serif">
+                              <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
                                 The ratio of successfully closed settlement cycles relative to initiated recovery protocols.
                               </p>
                             </div>
@@ -1303,7 +1303,7 @@ export function Dashboard() {
                       {/* Emotional Anchor Line */}
                       <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <p className="text-[9px] text-white/20 font-mono uppercase tracking-[0.4em]">
+                        <p className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">
                           Store Monitoring Active
                         </p>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -1316,24 +1316,24 @@ export function Dashboard() {
                         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                           <div className="flex items-center gap-3">
                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-                            <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Recent Events</h2>
+                            <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Recent Events</h2>
                           </div>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 px-3 text-[10px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/20 transition-all uppercase tracking-widest"
+                            className="h-7 px-3 text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/20 transition-all uppercase tracking-tight"
                             onClick={() => setActiveTab('discrepancies')}>
                             View All
                           </Button>
                         </div>
                         <div className="grid grid-cols-4 divide-x divide-white/5">
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Total Claims</div>
-                            <div className="text-xl font-mono font-bold text-white">{detectionStats?.totalDetections || detectionTotal}</div>
+                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Total Claims</div>
+                            <div className="text-xl font-sans font-bold text-white">{detectionStats?.totalDetections || detectionTotal}</div>
                           </div>
                           <div className="p-6">
-                            <div className="text-xs font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Estimated Results</div>
-                            <div className="text-xl font-mono font-bold text-emerald-500">
+                            <div className="text-xs font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Estimated Results</div>
+                            <div className="text-xl font-sans font-bold text-emerald-500">
                               {formatCurrencyWithSelection(
                                 detectionStats?.estimatedRecovery || detectionResults.reduce((acc, curr) => acc + curr.estimated_value, 0),
                                 recoveredCurrency
@@ -1341,12 +1341,12 @@ export function Dashboard() {
                             </div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Verified Data</div>
-                            <div className="text-xl font-mono font-bold text-white">{detectionStats?.highConfidence || detectionResults.filter(r => r.confidence_score >= 0.8).length}</div>
+                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Verified Data</div>
+                            <div className="text-xl font-sans font-bold text-white">{detectionStats?.highConfidence || detectionResults.filter(r => r.confidence_score >= 0.8).length}</div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-mono font-bold text-white/20 mb-2 uppercase tracking-widest">Confidence Level</div>
-                            <div className="text-xl font-mono font-bold text-white">{(detectionStats?.averageConfidence || 92.4).toFixed(1)}%</div>
+                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Confidence Level</div>
+                            <div className="text-xl font-sans font-bold text-white">{(detectionStats?.averageConfidence || 92.4).toFixed(1)}%</div>
                           </div>
                         </div>
                       </div>
@@ -1357,7 +1357,7 @@ export function Dashboard() {
                       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                         <div className="flex items-center gap-3">
                           <Terminal className="h-3 w-3 text-emerald-500/50" />
-                          <h2 className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.3em]">Quick Actions</h2>
+                          <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Quick Actions</h2>
                         </div>
                         <button
                           aria-label="Customize quick actions"
@@ -1393,8 +1393,8 @@ export function Dashboard() {
                                   <IconComp className="h-4 w-4" />
                                   <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
                                 </div>
-                                <span className="text-[11px] text-white font-bold mb-1 tracking-tight uppercase group-hover:text-emerald-500/80 transition-colors">{action.label.replace('_', ' ')}</span>
-                                <span className="text-[9px] text-white/20 font-mono uppercase tracking-[0.1em]">{action.subtitle.replace('_', ' ')}</span>
+                                <span className="text-[11px] text-white font-sans font-bold mb-1 tracking-tight uppercase group-hover:text-emerald-500/80 transition-colors">{action.label.replace('_', ' ')}</span>
+                                <span className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">{action.subtitle.replace('_', ' ')}</span>
                               </button>
                             );
                           })}
@@ -1591,17 +1591,17 @@ export function Dashboard() {
                     <div className="flex items-center justify-between mb-8">
                       <div className="flex items-center gap-4">
                         <div>
-                          <h2 className="text-[11px] font-mono font-bold text-white/40 tracking-[0.3em] uppercase">Anomaly Ledger</h2>
+                          <h2 className="text-[11px] font-sans font-bold text-white/40 tracking-tight uppercase">Anomaly Ledger</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-serif font-medium text-white tracking-tight uppercase">Discrepancies</span>
+                            <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">Discrepancies</span>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-12">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">DISCREPANCIES</span>
-                            <span className="text-lg font-mono font-bold text-white leading-none mt-1">
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">DISCREPANCIES</span>
+                            <span className="text-lg font-sans font-bold text-white leading-none mt-1">
                               {detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed').length}
                             </span>
                           </div>
@@ -1610,9 +1610,9 @@ export function Dashboard() {
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex flex-col transition-colors group text-left"
                           >
-                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest group-hover:text-emerald-500/50">CLAIMS</span>
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight group-hover:text-emerald-500/50">CLAIMS</span>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-lg font-mono font-bold text-white leading-none group-hover:text-emerald-500">
+                              <span className="text-lg font-sans font-bold text-white leading-none group-hover:text-emerald-500">
                                 {submittedClaimsCount || effectivePendingClaims || detectionResults.filter(r => r.status === 'filed' || r.status === 'resolved' || r.status === 'converted').length}
                               </span>
                               <ArrowRight className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
@@ -1620,8 +1620,8 @@ export function Dashboard() {
                           </button>
 
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">RECOVERED</span>
-                            <span className="text-lg font-mono font-bold text-emerald-500 leading-none mt-1">
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">RECOVERED</span>
+                            <span className="text-lg font-sans font-bold text-emerald-500 leading-none mt-1">
                               {formatCurrencyWithSelection(
                                 recoveredTotal || detectionResults
                                   .filter(r => r.status === 'resolved' || r.status === 'converted')
@@ -1637,7 +1637,7 @@ export function Dashboard() {
                     {loadingDetections ? (
                       <div className="py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
-                        <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em] animate-pulse">Syncing Database...</span>
+                        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight animate-pulse">Syncing Database...</span>
                       </div>
                     ) : detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved').length === 0 ? (
                       <div className="py-24 flex flex-col items-center justify-center text-center">
@@ -1649,8 +1649,8 @@ export function Dashboard() {
                             <Shield className="h-8 w-8 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
                           </div>
                         </div>
-                        <h3 className="text-sm font-mono font-bold text-white uppercase tracking-[0.3em]">Status: <span className="text-emerald-500">All Clear</span></h3>
-                        <p className="text-[10px] text-white/30 mt-3 font-serif max-w-sm mx-auto leading-relaxed">
+                        <h3 className="text-sm font-sans font-bold text-white uppercase tracking-tight">Status: <span className="text-emerald-500">All Clear</span></h3>
+                        <p className="text-[10px] text-white/30 mt-3 font-sans font-bold max-w-sm mx-auto leading-relaxed">
                           No new errors found in the last 24 hours.<br />
                           We are monitoring your account in real-time.
                         </p>
@@ -1658,7 +1658,7 @@ export function Dashboard() {
                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                           className="mt-8 flex items-center gap-3 px-6 py-2 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all rounded-lg group"
                         >
-                          <span className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest">
+                          <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
                             View {submittedClaimsCount || 0} Active Claims in Recovery
                           </span>
                           <ArrowRight className="h-3 w-3 text-emerald-500/40 group-hover:translate-x-1 transition-transform" />
@@ -1670,7 +1670,7 @@ export function Dashboard() {
                           <Button
                             onClick={handleBatchExport}
                             disabled={isExporting}
-                            className={`h-8 px-4 bg-white/5 hover:bg-emerald-500/10 text-white/60 hover:text-emerald-500 border border-white/10 hover:border-emerald-500/20 text-[9px] font-mono font-bold uppercase tracking-widest transition-all rounded-sm ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`h-8 px-4 bg-white/5 hover:bg-emerald-500/10 text-white/60 hover:text-emerald-500 border border-white/10 hover:border-emerald-500/20 text-[9px] font-sans font-bold uppercase tracking-tight transition-all rounded-sm ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             {isExporting ? (
                               <Loader2 className="h-3 w-3 mr-2 animate-spin" />
@@ -1680,7 +1680,7 @@ export function Dashboard() {
                             EXPORT CLAIM BATCH
                           </Button>
                           <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
-                            <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Show Processed</span>
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Show Processed</span>
                             <button
                               onClick={() => setShowProcessed(!showProcessed)}
                               className={cn(
@@ -1698,12 +1698,12 @@ export function Dashboard() {
                         <table className="w-full text-left">
                           <thead>
                             <tr className="border-b border-white/5">
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Type</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Found On</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">Estimated Value</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-center">Certainty</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">Status</th>
-                              <th className="pb-4 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">Action</th>
+                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Type</th>
+                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Found On</th>
+                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight text-right">Estimated Value</th>
+                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight text-center">Certainty</th>
+                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Status</th>
+                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight text-right">Action</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
@@ -1724,18 +1724,18 @@ export function Dashboard() {
                                         <span className="text-[11px] font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">
                                           {result.anomaly_type?.replace(/_/g, ' ') || 'UNKNOWN_ANOMALY'}
                                         </span>
-                                        <span className="text-[9px] font-mono text-white/20 uppercase">
+                                        <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
                                           ID: {result.id?.substring(0, 8) || 'N/A'}
                                         </span>
                                       </div>
                                     </td>
-                                    <td className="py-4 text-[10px] font-mono text-white/40 uppercase">
+                                    <td className="py-4 text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
                                       {result.discovery_date
                                         ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                                         : 'N/A'
                                       }
                                     </td>
-                                    <td className="py-4 text-[11px] font-mono font-bold text-white text-right">
+                                    <td className="py-4 text-[11px] font-sans font-bold text-white text-right tracking-tight">
                                       {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
                                     </td>
                                     <td className="py-4">
@@ -1746,7 +1746,7 @@ export function Dashboard() {
                                             style={{ width: `${(result.confidence_score || 0) * 100}%` }}
                                           />
                                         </div>
-                                        <span className="text-[10px] font-mono font-bold text-emerald-500/60">
+                                        <span className="text-[10px] font-sans font-bold text-emerald-500/60 tracking-tight">
                                           {((result.confidence_score || 0) * 100).toFixed(0)}%
                                         </span>
                                       </div>
@@ -1754,7 +1754,7 @@ export function Dashboard() {
                                     <td className="py-4">
                                       <div className="flex gap-2">
                                         <span className={cn(
-                                          "px-2 py-0.5 rounded-sm text-[8px] font-mono font-bold uppercase tracking-widest",
+                                          "px-2 py-0.5 rounded-sm text-[8px] font-sans font-bold uppercase tracking-tight",
                                           isProcessed ? "bg-white/5 text-white/40 border border-white/10" :
                                             result.status === 'detected' || result.status === 'pending' ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
                                               "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
@@ -1769,7 +1769,7 @@ export function Dashboard() {
                                           variant="ghost"
                                           size="sm"
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                                          className="text-[9px] font-mono font-bold text-emerald-500/40 hover:text-emerald-500 pointer-events-auto"
+                                          className="text-[9px] font-sans font-bold text-emerald-500/40 hover:text-emerald-500 pointer-events-auto tracking-tight"
                                         >
                                           View Case
                                         </Button>
@@ -1778,7 +1778,7 @@ export function Dashboard() {
                                           <Button
                                             variant="ghost"
                                             size="sm"
-                                            className="h-7 px-3 text-[9px] font-mono font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-widest"
+                                            className="h-7 px-3 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-tight"
                                             onClick={() => {
                                               setActiveDiscrepancy({
                                                 id: result.id,
@@ -1808,14 +1808,14 @@ export function Dashboard() {
                                             >
                                               <DropdownMenuItem
                                                 onClick={() => handleRowExport(result.id)}
-                                                className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                                className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                               >
                                                 <Download className="h-3 w-3 mr-2" />
                                                 Download Claim Evidence
                                               </DropdownMenuItem>
                                               <DropdownMenuItem
                                                 onClick={() => openCaseIdModal(result.id)}
-                                                className="text-[9px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                                className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                               >
                                                 <Link2 className="h-3 w-3 mr-2" />
                                                 Link Amazon Case ID
@@ -1823,7 +1823,7 @@ export function Dashboard() {
                                               <DropdownMenuSeparator className="bg-white/5" />
                                               <DropdownMenuItem
                                                 onClick={() => handleMarkFalsePositive(result.id)}
-                                                className="text-[9px] font-mono font-bold uppercase tracking-widest text-red-500/40 hover:text-red-500 focus:text-red-500 focus:bg-red-500/5 cursor-pointer py-2"
+                                                className="text-[9px] font-sans font-bold uppercase tracking-tight text-red-500/40 hover:text-red-500 focus:text-red-500 focus:bg-red-500/5 cursor-pointer py-2"
                                               >
                                                 <AlertTriangle className="h-3 w-3 mr-2" />
                                                 Mark as False Positive
@@ -1844,7 +1844,7 @@ export function Dashboard() {
                           <div className="flex items-center gap-6">
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                              <span className="text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
+                              <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
                                 ENGINE_Status: <span className="text-emerald-500">MONITORING</span>
                               </span>
                             </div>
