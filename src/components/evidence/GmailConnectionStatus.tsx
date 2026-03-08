@@ -230,3 +230,4 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       </div>
     </div>
   );
+}
