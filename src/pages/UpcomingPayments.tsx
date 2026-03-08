@@ -276,9 +276,9 @@ export default function UpcomingPayments() {
           <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
             <div className="flex items-center gap-3">
               <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-              <h1 className="text-4xl font-light text-white tracking-tight font-serif">Payment <span className="text-white/40">Summary</span></h1>
+              <h1 className="text-4xl font-bold text-white tracking-tight font-sans">Payment <span className="text-white/40">Summary</span></h1>
             </div>
-            <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
+            <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed font-sans font-bold tracking-tight">
               Estimated payments and payout projections.
             </p>
           </div>
@@ -288,12 +288,12 @@ export default function UpcomingPayments() {
             <div className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 transition-all hover:border-emerald-500/30 overflow-hidden backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Next payout</span>
-                  <span className="text-xs font-mono text-white/40 uppercase tracking-tighter">
+                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Next payout</span>
+                  <span className="text-xs font-sans font-bold text-white/40 uppercase tracking-tight">
                     {nextPayout ? nextPayout.label.toUpperCase() : 'No pending settlement'}
                   </span>
                 </div>
-                <div className="text-3xl font-mono font-bold tracking-tighter text-white">
+                <div className="text-3xl font-sans font-bold tracking-tight text-white">
                   {nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}
                 </div>
                 <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
@@ -305,15 +305,15 @@ export default function UpcomingPayments() {
             <div className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 transition-all hover:border-emerald-500/30 overflow-hidden text-white backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Monthly Projection</span>
-                  <span className="text-xs font-mono text-white/40 uppercase tracking-tighter">
+                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Monthly Projection</span>
+                  <span className="text-xs font-sans font-bold text-white/40 uppercase tracking-tight">
                     Current billing cycle
                   </span>
                 </div>
-                <div className="text-3xl font-mono font-bold tracking-tighter text-white">
+                <div className="text-3xl font-sans font-bold tracking-tight text-white">
                   {formatCurrency(monthTotals.gross, currency)}
                 </div>
-                <div className="flex items-center gap-2 text-[10px] font-mono text-white/40 uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   {monthTotals.count} claims sampled
                 </div>
@@ -323,15 +323,15 @@ export default function UpcomingPayments() {
             <div className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 transition-all hover:border-emerald-500/40 overflow-hidden bg-gradient-to-br from-emerald-500/10 to-transparent backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] font-mono font-bold text-emerald-500/60 uppercase tracking-widest">Net Recovery</span>
-                  <span className="text-xs font-mono text-white/40 uppercase tracking-tighter">
+                  <span className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">Net Recovery</span>
+                  <span className="text-xs font-sans font-bold text-white/40 uppercase tracking-tight">
                     After service fee
                   </span>
                 </div>
-                <div className="text-3xl font-mono font-bold tracking-tighter text-emerald-500">
+                <div className="text-3xl font-sans font-bold tracking-tight text-emerald-500">
                   {formatCurrency(monthTotals.net, currency)}
                 </div>
-                <div className="text-[10px] font-mono text-emerald-500/60 uppercase tracking-widest bg-emerald-500/5 border border-emerald-500/10 px-2 py-1 rounded inline-block">
+                <div className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight bg-emerald-500/5 border border-emerald-500/10 px-2 py-1 rounded inline-block">
                   Stable projection
                 </div>
               </div>
@@ -343,13 +343,13 @@ export default function UpcomingPayments() {
             <div className="p-8 space-y-8">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-[0.3em]">Pipeline Progress</span>
-                  <h2 className="text-lg font-serif font-medium text-white uppercase tracking-wider">Amount by Stage</h2>
+                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Pipeline Progress</span>
+                  <h2 className="text-lg font-bold font-sans text-white uppercase tracking-tight">Amount by Stage</h2>
                 </div>
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <div className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Total in pipeline</div>
-                    <div className="text-2xl font-mono font-bold text-white tracking-tighter">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
+                    <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Total in pipeline</div>
+                    <div className="text-2xl font-sans font-bold text-white tracking-tight">{formatCurrency(pipelineStages.totalInPipeline, currency)}</div>
                   </div>
                   <div className="h-10 w-[1px] bg-white/5" />
                   <button
@@ -383,12 +383,12 @@ export default function UpcomingPayments() {
                     )}
                   >
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">{item.label}</span>
-                      <div className={cn("text-lg font-mono font-bold tracking-tighter", item.highlight ? "text-emerald-500" : "text-white")}>
+                      <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">{item.label}</span>
+                      <div className={cn("text-lg font-sans font-bold tracking-tight", item.highlight ? "text-emerald-500" : "text-white")}>
                         {formatCurrency(item.stage.amount, currency)}
                       </div>
                     </div>
-                    <div className="text-[10px] font-mono text-white/20 uppercase tracking-tighter">
+                    <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
                       {item.stage.count} claims
                     </div>
                   </div>
@@ -399,13 +399,13 @@ export default function UpcomingPayments() {
                 <div className="flex items-center justify-between bg-rose-500/10 border border-rose-500/20 rounded-lg p-4">
                   <div className="flex items-center gap-3">
                     <AlertCircle className="h-4 w-4 text-rose-500" />
-                    <span className="text-xs font-mono text-rose-200 uppercase tracking-tighter">
+                    <span className="text-xs font-sans font-bold text-rose-200 uppercase tracking-tight">
                       Connection Error: {errorMessage}
                     </span>
                   </div>
                   <button
                     onClick={() => setReloadToken((token) => token + 1)}
-                    className="px-3 py-1 bg-rose-500/20 border border-rose-500/30 rounded text-[10px] font-mono font-bold uppercase tracking-widest text-white hover:bg-rose-500/40 transition-all"
+                    className="px-3 py-1 bg-rose-500/20 border border-rose-500/30 rounded text-[10px] font-sans font-bold uppercase tracking-tight text-white hover:bg-rose-500/40 transition-all"
                   >
                     Retry
                   </button>
@@ -418,21 +418,21 @@ export default function UpcomingPayments() {
           <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
             <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-[0.2em]">Recent Recoveries</span>
-                <h3 className="text-sm font-serif font-medium text-white tracking-wide uppercase">Payout Details</h3>
+                <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Recent Recoveries</span>
+                <h3 className="text-sm font-bold font-sans text-white tracking-tight uppercase">Payout Details</h3>
               </div>
             </div>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-white/5 hover:bg-transparent">
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Payout Date</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest text-center">Claims</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Gross Value</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Fee</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Net Credit</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest">Status</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-mono font-bold text-white/20 uppercase tracking-widest text-right">Details</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Payout Date</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight text-center">Claims</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Gross Value</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Fee</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Net Credit</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Status</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight text-right">Details</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -441,32 +441,32 @@ export default function UpcomingPayments() {
                       <TableCell colSpan={7} className="h-32 text-center">
                         <div className="flex flex-col items-center gap-2">
                           <RefreshCw className="h-5 w-5 animate-spin text-emerald-500/30" />
-                          <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">Synchronizing...</span>
+                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Synchronizing...</span>
                         </div>
                       </TableCell>
                     </TableRow>
                   ) : upcomingGroups.length === 0 ? (
                     <TableRow className="hover:bg-transparent border-0">
-                      <TableCell colSpan={7} className="h-32 text-center font-mono text-[11px] text-white/20 uppercase tracking-widest">
+                      <TableCell colSpan={7} className="h-32 text-center font-sans font-bold text-[11px] text-white/20 uppercase tracking-tight">
                         No upcoming payments identified
                       </TableCell>
                     </TableRow>
                   ) : (
                     upcomingGroups.map((g) => (
                       <TableRow key={g.key} className="border-b border-white/5 hover:bg-white/[0.01] transition-colors group">
-                        <TableCell className="py-4 px-6 font-mono text-[11px] font-bold text-white uppercase tracking-tighter">
+                        <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-white uppercase tracking-tight">
                           {g.label}
                         </TableCell>
-                        <TableCell className="py-4 px-6 text-center font-mono text-[11px] text-white/60">
+                        <TableCell className="py-4 px-6 text-center font-sans font-bold text-[11px] text-white/60">
                           {g.count.toString().padStart(2, '0')}
                         </TableCell>
-                        <TableCell className="py-4 px-6 font-mono text-[11px] font-bold text-white">
+                        <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-white">
                           {formatCurrency(g.gross, currency)}
                         </TableCell>
-                        <TableCell className="py-4 px-6 font-mono text-[11px] text-white/40">
+                        <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-white/40">
                           {formatCurrency(g.commission, currency)}
                         </TableCell>
-                        <TableCell className="py-4 px-6 font-mono text-[11px] font-bold text-emerald-500">
+                        <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-emerald-500">
                           {formatCurrency(g.net, currency)}
                         </TableCell>
                         <TableCell className="py-4 px-6">
@@ -477,13 +477,13 @@ export default function UpcomingPayments() {
                                   "h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]",
                                   claim.filing_status === 'filed' ? "bg-emerald-500 shadow-emerald-500/50" : "bg-amber-500 shadow-amber-500/30"
                                 )} />
-                                <span className="text-[9px] font-mono text-white/60 uppercase tracking-widest">
+                                <span className="text-[9px] font-sans font-bold text-white/60 uppercase tracking-tight">
                                   {(claim.filing_status || claim.status || 'UNKNOWN').toUpperCase()}
                                 </span>
                               </div>
                             ))}
                             {g.claims.length > 1 && (
-                              <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest ml-3.5">
+                              <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight ml-3.5">
                                 + {g.claims.length - 1} Additional claims
                               </span>
                             )}
@@ -493,7 +493,7 @@ export default function UpcomingPayments() {
                           <Button
                             asChild
                             variant="ghost"
-                            className="h-8 px-4 border border-white/5 bg-white/[0.02] text-[10px] font-mono font-bold uppercase tracking-widest hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all"
+                            className="h-8 px-4 border border-white/5 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all"
                           >
                             <Link to={tenantRoute(activeTenantSlug, '/recoveries?tab=cases')}>VIEW DETAILS</Link>
                           </Button>
@@ -508,7 +508,7 @@ export default function UpcomingPayments() {
 
           {/* Footer Note */}
           <div className="mt-12 text-center border-t border-white/5 pt-8 mb-12">
-            <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
+            <p className="text-[10px] text-gray-600 font-sans font-bold uppercase tracking-tight">
               Account Statement • Sync Status: Active
             </p>
           </div>
