@@ -520,7 +520,7 @@ export default function DataUpload() {
                             <Button
                                 onClick={handleReset}
                                 variant="outline"
-                                className="border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
+                                className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
                             >
                                 <Upload className="h-4 w-4 mr-2" />Upload More Files
                             </Button>
