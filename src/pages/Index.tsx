@@ -777,7 +777,7 @@ const Index = () => {
                     </span>
                   </div>
                   <h2 className="text-4xl md:text-5xl font-sans font-light tracking-tight text-white leading-tight">
-                    Capital Margin Restored
+                    Re-establishing your target equity cushion
                   </h2>
                 </div>
                 <div className="md:text-right">
