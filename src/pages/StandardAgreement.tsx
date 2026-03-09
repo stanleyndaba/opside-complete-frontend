@@ -106,7 +106,7 @@ export default function StandardAgreement() {
                     <Button
                       onClick={handleDisagree}
                       variant="outline"
-                      className="flex-1 h-14 rounded-2xl border-white/10 text-white/40 hover:text-white hover:bg-white/5 font-bold transition-all"
+                      className="flex-1 h-14 rounded-2xl border-white/10 bg-transparent text-white/40 hover:text-white hover:bg-white/5 font-bold transition-all"
                     >
                       Disagree
                     </Button>
