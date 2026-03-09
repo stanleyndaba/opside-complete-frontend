@@ -266,8 +266,27 @@ export default function DataUpload() {
             if (successCount > 0) {
                 toast({
                     title: `${successCount} file${successCount > 1 ? 's' : ''} ingested`,
-                    description: `${totalRows.toLocaleString()} rows imported${result.detectionTriggered ? ' · Detection triggered' : ''}`,
+                    description: `${totalRows.toLocaleString()} rows imported${result.detectionTriggered ? ' · Detection running...' : ''}`,
                 });
+
+                // Auto-open preview drawer after detection completes
+                if (result.detectionTriggered) {
+                    const pollAndOpen = async () => {
+                        const maxAttempts = 15;
+                        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            try {
+                                const statusRes = await detectionApi.getDetectionResults({ limit: 1 }, currentTenantSlug);
+                                if (statusRes?.ok && statusRes.data?.results?.length > 0) {
+                                    setIsPreviewOpen(true);
+                                    return;
+                                }
+                            } catch { /* keep polling */ }
+                        }
+                        setIsPreviewOpen(true);
+                    };
+                    pollAndOpen();
+                }
             } else {
                 toast({
                     title: 'Upload failed',
