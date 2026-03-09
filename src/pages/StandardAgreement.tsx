@@ -22,7 +22,7 @@ export default function StandardAgreement() {
       } else {
         navigate('/app/default/data-upload');
       }
-    }, 1500);
+    }, 3000);
   };
 
   const handleDisagree = () => {
