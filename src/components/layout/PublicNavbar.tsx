@@ -131,7 +131,7 @@ export const PublicNavbar = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             className="mt-4 md:hidden relative z-50">
-                            <div className="flex flex-col gap-4 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
+                            <div className="flex flex-col gap-1 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
                                 <Link
                                     to="/ultra-beta"
                                     onClick={() => setMobileMenuOpen(false)}
@@ -141,11 +141,11 @@ export const PublicNavbar = () => {
                                         <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
                                     </div>
                                 </Link>
-                                <Accordion type="single" collapsible className="w-full space-y-4">
+                                <Accordion type="single" collapsible className="w-full">
                                     <Link
                                         to="/pricing"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="rounded-lg px-3 py-4 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors">
+                                        className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
                                         Pricing
                                     </Link>
 
@@ -153,7 +153,7 @@ export const PublicNavbar = () => {
                                         Keeping them as links but merged into the same flow */}
 
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-4 text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors hover:no-underline">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors hover:no-underline border-none outline-none">
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
@@ -197,13 +197,13 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-4 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:text-white transition-colors">
+                                    className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="mt-2 rounded-lg py-3 px-4 bg-white text-black text-[10px] font-sans font-bold text-center tracking-tight uppercase">
+                                    className="rounded-lg py-2.5 px-4 bg-white text-black text-[10px] font-sans font-bold text-center tracking-tight uppercase">
                                     Join Waitlist
                                 </Link>
                             </div>
