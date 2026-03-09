@@ -567,26 +567,7 @@ export default function DataUpload() {
                                                 {totalRowsFailed > 0 && ` · ${totalRowsFailed.toLocaleString()} rows failed`}
                                             </p>
 
-                                            {batchResult.detectionTriggered && (
-                                                <div className="space-y-3 mt-4">
-                                                    <div className="flex items-center gap-2 py-1.5 px-3 bg-violet-500/10 border border-violet-500/20 rounded-lg w-fit">
-                                                        <Target className="h-3.5 w-3.5 text-violet-400" />
-                                                        <span className="text-xs text-violet-300 font-sans font-bold tracking-tight uppercase">
-                                                            Agent 3 detection pipeline triggered
-                                                        </span>
-                                                    </div>
 
-                                                    <Button
-                                                        asChild
-                                                        className="bg-violet-600 hover:bg-violet-500 text-white text-xs h-8 px-4"
-                                                    >
-                                                        <Link to="/dashboard">
-                                                            View Detection Results
-                                                            <ChevronRight className="ml-2 h-3.5 w-3.5" />
-                                                        </Link>
-                                                    </Button>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
