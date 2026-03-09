@@ -432,7 +432,7 @@ export default function DataUpload() {
                                     onClick={() => setIsPreviewOpen(true)}
                                     disabled={files.length === 0 || isUploading}
                                     variant="outline"
-                                    className="bg-white text-[#050505] border-transparent hover:bg-gray-100 h-10 px-6 rounded-lg transition-all font-sans font-bold uppercase tracking-tight"
+                                    className="bg-transparent border-white text-white hover:bg-white/5 h-10 px-6 rounded-lg transition-all font-medium"
                                 >
                                     Preview
                                 </Button>
@@ -610,6 +610,24 @@ export default function DataUpload() {
                                             <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Reimbursement seller account overview</p>
                                             <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">Recovery: $4,987.00</p>
                                         </div>
+                                    </div>
+
+                                    {/* Dispute Cases Dropdown - Centered */}
+                                    <div className="absolute left-1/2 -translate-x-1/2 w-64">
+                                        <Select defaultValue="case-12345">
+                                            <SelectTrigger className="h-9 bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
+                                                <div className="flex items-center gap-2">
+                                                    <Target className="h-3.5 w-3.5 text-gray-400" />
+                                                    <SelectValue placeholder="Dispute Cases" />
+                                                </div>
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-white border-gray-100 shadow-xl">
+                                                <SelectItem value="case-12345" className="text-[11px] focus:bg-gray-50">Case #12345 - Inbound Discrepancy</SelectItem>
+                                                <SelectItem value="case-23456" className="text-[11px] focus:bg-gray-50">Case #23456 - Warehouse Damage</SelectItem>
+                                                <SelectItem value="case-34567" className="text-[11px] focus:bg-gray-50">Case #34567 - Missing Units</SelectItem>
+                                                <SelectItem value="case-45678" className="text-[11px] focus:bg-gray-50">Case #45678 - Incorrect Weight</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <button
