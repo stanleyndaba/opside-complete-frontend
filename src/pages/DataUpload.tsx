@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useParams, Link } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
-import { api } from '@/lib/api';
+import { api, detectionApi } from '@/lib/api';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
     Package, Truck, RotateCcw, DollarSign, Archive, Target,
@@ -60,6 +60,39 @@ interface BatchResult {
     syncId: string;
 }
 
+
+interface PreviewDetectionResult {
+    id: string;
+    seller_id: string;
+    sync_id: string;
+    anomaly_type: string;
+    severity: string;
+    estimated_value: number;
+    currency: string;
+    confidence_score: number;
+    evidence: any;
+    status: string;
+    discovery_date: string;
+    deadline_date: string;
+    days_remaining: number;
+}
+
+const ANOMALY_LABELS: Record<string, string> = {
+    missing_unit: 'Missing Units', overcharge: 'Overcharge', damaged_stock: 'Damaged Stock',
+    incorrect_fee: 'Incorrect Fee', duplicate_charge: 'Duplicate Charge',
+    lost_warehouse: 'Lost in Warehouse', damaged_warehouse: 'Warehouse Damage',
+    lost_inbound: 'Lost Inbound Shipment', damaged_inbound: 'Damaged Inbound',
+    carrier_claim: 'Carrier Claim', customer_return: 'Customer Return',
+    reimbursement_reversal: 'Reimbursement Reversal', weight_fee_overcharge: 'Weight/Dimension Fee Drift',
+    fulfillment_fee_error: 'Fulfillment Fee Error', storage_overcharge: 'Storage Overcharge',
+    lts_overcharge: 'Long-Term Storage Overcharge', refund_no_return: 'Refund Without Return',
+    refund_commission_error: 'Refund Commission Error', fba_inventory_reimbursement: 'FBA Inventory Reimbursement',
+    removal_fee_error: 'Removal Fee Error', inbound_placement_fee: 'Inbound Placement Fee',
+    aged_inventory_surcharge: 'Aged Inventory Surcharge', partial_reimbursement: 'Partial Reimbursement',
+    return_not_restocked: 'Return Not Restocked', refund_exceeds_charge: 'Refund Exceeds Charge',
+};
+const formatAnomalyType = (type: string) => ANOMALY_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
     const { tenant } = useTenant();
@@ -73,7 +106,53 @@ export default function DataUpload() {
     const [batchResult, setBatchResult] = useState<BatchResult | null>(null);
     const [isDragOver, setIsDragOver] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [previewResults, setPreviewResults] = useState<PreviewDetectionResult[]>([]);
+    const [isPreviewLoading, setIsPreviewLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Fetch detection data when preview drawer opens
+    useEffect(() => {
+        if (!isPreviewOpen) return;
+        let cancelled = false;
+        const fetchPreviewData = async () => {
+            setIsPreviewLoading(true);
+            try {
+                const res = await detectionApi.getDetectionResults({ limit: 50 }, currentTenantSlug);
+                if (!cancelled && res?.ok && res.data?.results) {
+                    setPreviewResults(res.data.results);
+                } else if (!cancelled) {
+                    setPreviewResults([]);
+                }
+            } catch (err) {
+                console.error('Failed to fetch preview data:', err);
+                if (!cancelled) setPreviewResults([]);
+            } finally {
+                if (!cancelled) setIsPreviewLoading(false);
+            }
+        };
+        fetchPreviewData();
+        return () => { cancelled = true; };
+    }, [isPreviewOpen, currentTenantSlug]);
+
+    // Computed preview values
+    const previewTotalRecovery = useMemo(() => previewResults.reduce((s, r) => s + (r.estimated_value || 0), 0), [previewResults]);
+    const previewCurrency = previewResults[0]?.currency || 'USD';
+    const fmt = useCallback((val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: previewCurrency }).format(val), [previewCurrency]);
+    const previewTopTypes = useMemo(() => {
+        const groups: Record<string, { count: number; value: number; status: string }> = {};
+        previewResults.forEach(r => {
+            if (!groups[r.anomaly_type]) groups[r.anomaly_type] = { count: 0, value: 0, status: r.status };
+            groups[r.anomaly_type].count++;
+            groups[r.anomaly_type].value += r.estimated_value || 0;
+        });
+        return Object.entries(groups).sort((a, b) => b[1].value - a[1].value);
+    }, [previewResults]);
+    const previewDates = useMemo(() => {
+        const ds = previewResults.map(r => r.discovery_date ? new Date(r.discovery_date).getTime() : NaN).filter(n => !isNaN(n));
+        if (ds.length === 0) return null;
+        const fmtD = (t: number) => new Date(t).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+        return { from: fmtD(Math.min(...ds)), to: fmtD(Math.max(...ds)) };
+    }, [previewResults]);
 
     // Handle file selection
     const addFiles = useCallback((newFiles: FileList | File[]) => {
@@ -598,23 +677,18 @@ export default function DataUpload() {
                                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                                     <div>
                                         <div className="flex items-center gap-2.5 mb-1">
-                                            <img 
-                                                src="/logoimagetwo.png" 
-                                                alt="Margin Finance" 
-                                                className="h-3.5 w-auto object-contain brightness-0"
-                                            />
+                                            <img src="/logoimagetwo.png" alt="Margin Finance" className="h-3.5 w-auto object-contain brightness-0" />
                                             <span className="text-gray-200 font-light text-sm">|</span>
                                             <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Audit Report</h2>
                                         </div>
                                         <div className="flex flex-col px-0.5">
                                             <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Reimbursement seller account overview</p>
-                                            <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">Recovery: $4,987.00</p>
+                                            <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `Recovery: ${fmt(previewTotalRecovery)}`}</p>
                                         </div>
                                     </div>
-
-                                    {/* Dispute Cases Dropdown - Centered */}
+                                    {previewResults.length > 0 && (
                                     <div className="absolute left-1/2 -translate-x-1/2 w-64">
-                                        <Select defaultValue="case-12345">
+                                        <Select defaultValue={previewResults[0]?.id || 'none'}>
                                             <SelectTrigger className="h-9 bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
                                                 <div className="flex items-center gap-2">
                                                     <Target className="h-3.5 w-3.5 text-gray-400" />
@@ -622,112 +696,102 @@ export default function DataUpload() {
                                                 </div>
                                             </SelectTrigger>
                                             <SelectContent className="bg-white border-gray-100 shadow-xl">
-                                                <SelectItem value="case-12345" className="text-[11px] focus:bg-gray-50">Case #12345 - Inbound Discrepancy</SelectItem>
-                                                <SelectItem value="case-23456" className="text-[11px] focus:bg-gray-50">Case #23456 - Warehouse Damage</SelectItem>
-                                                <SelectItem value="case-34567" className="text-[11px] focus:bg-gray-50">Case #34567 - Missing Units</SelectItem>
-                                                <SelectItem value="case-45678" className="text-[11px] focus:bg-gray-50">Case #45678 - Incorrect Weight</SelectItem>
+                                                {previewResults.slice(0, 10).map(r => (
+                                                    <SelectItem key={r.id} value={r.id} className="text-[11px] focus:bg-gray-50">{formatAnomalyType(r.anomaly_type)} — {fmt(r.estimated_value)}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
+                                    )}
                                     <div className="flex items-center gap-3">
-                                        <button
-                                            className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-tight"
-                                        >
+                                        <button className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-tight">
                                             <Share2 className="h-4 w-4" />
                                             Import and Share
                                         </button>
-                                        <button
-                                            onClick={() => setIsPreviewOpen(false)}
-                                            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors"
-                                        >
+                                        <button onClick={() => setIsPreviewOpen(false)} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors">
                                             <X className="h-5 w-5" />
                                         </button>
                                     </div>
                                 </div>
 
-                                {/* Drawer Content populated with hardcoded data */}
+                                {/* Drawer Content */}
                                 <div className="flex-1 overflow-hidden bg-white">
+                                    {isPreviewLoading ? (
+                                        <div className="flex items-center justify-center h-full">
+                                            <div className="flex flex-col items-center gap-3">
+                                                <Loader2 className="h-8 w-8 text-violet-400 animate-spin" />
+                                                <p className="text-sm text-gray-400 font-sans">Loading your audit report...</p>
+                                            </div>
+                                        </div>
+                                    ) : previewResults.length === 0 ? (
+                                        <div className="flex items-center justify-center h-full">
+                                            <div className="flex flex-col items-center gap-3 text-center max-w-sm">
+                                                <div className="p-4 rounded-2xl bg-gray-50"><Target className="h-10 w-10 text-gray-300" /></div>
+                                                <h3 className="text-sm font-semibold text-gray-700 font-sans">No detections found yet</h3>
+                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">Upload your Amazon CSV reports and run the ingestion pipeline. Once data is ingested, Agent 3 will automatically scan for recoverable claims.</p>
+                                            </div>
+                                        </div>
+                                    ) : (
                                     <div className="flex h-full w-full">
-                                        {/* Left Column - Split into 2 vertical spaces */}
                                         <div className="w-1/3 border-r border-gray-100 flex flex-col">
-                                            {/* Upper-space: Seller details */}
                                             <div className="px-5 py-3.5 border-b border-gray-100">
                                                 <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-1.5">Seller details</h3>
                                                 <ul className="space-y-0">
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Account:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">[Brand Name] (redacted ID: ***1234)</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{tenant?.name || currentTenantSlug} (ID: ***{previewResults[0]?.seller_id?.slice(-4) || '----'})</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Marketplace:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight uppercase">US / UK / EU</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Claims found:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight uppercase">{previewResults.length} discrepancies</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Discrepancies:</span>
-                                                        <span className="text-[11px] font-bold text-emerald-600 font-sans tracking-tight">$4,987.00</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Est. Recovery:</span>
+                                                        <span className="text-[11px] font-bold text-emerald-600 font-sans tracking-tight">{fmt(previewTotalRecovery)}</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">2024/10/01 to 2025/03/01</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewDates ? `${previewDates.from} to ${previewDates.to}` : 'All available data'}</span>
                                                     </li>
                                                 </ul>
-                                                <p className="mt-1 text-[9px] font-sans font-bold text-gray-400 italic leading-tight uppercase tracking-tight">
-                                                    based on your uploaded CSVs and Amazon's reimbursement policies.
-                                                </p>
+                                                <p className="mt-1 text-[9px] font-sans font-bold text-gray-400 italic leading-tight uppercase tracking-tight">based on your uploaded CSVs and Amazon's reimbursement policies.</p>
                                             </div>
-
-                                            {/* Middle-space: Eventual data breakdown */}
                                             <div className="px-5 py-4 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Eventual data breakdown</h3>
-                                                <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">Events that led to the miscalculation</p>
-                                                
+                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Detection breakdown</h3>
+                                                <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">Top claim categories by value</p>
                                                 <div className="space-y-2">
-                                                    {[
-                                                        { label: 'Inbound Discrepancy', desc: 'Shipment FBAXXXX, 186 units unaccounted for', date: 'OCT 12 - OCT 15', status: 'Flagged' },
-                                                        { label: 'Fee Overcharge', desc: 'Weight/dimension mismatch on 12 SKUs', date: 'OCT 15 - NOV 01', status: 'Calculated' },
-                                                        { label: 'Lost in Warehouse', desc: 'Inventory disappeared after check in', date: 'NOV 02 - NOV 15', status: 'Verified' }
-                                                    ].map((item, idx) => (
+                                                    {previewTopTypes.slice(0, 5).map(([type, data], idx) => (
                                                         <div key={idx} className="flex items-start justify-between">
                                                             <div className="flex-1 min-w-0 mr-4">
-                                                                <p className="text-[10px] font-bold text-gray-900 leading-none">{item.label}</p>
-                                                                <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{item.desc}</p>
-                                                                <p className="text-[8px] font-sans font-bold text-gray-300 mt-0.5 uppercase tracking-tight">{item.date}</p>
+                                                                <p className="text-[10px] font-bold text-gray-900 leading-none">{formatAnomalyType(type)}</p>
+                                                                <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{data.count} case{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
                                                             </div>
-                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-sans font-bold text-gray-400 uppercase shrink-0 tracking-tight">
-                                                                {item.status}
-                                                            </div>
+                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-sans font-bold text-gray-400 uppercase shrink-0 tracking-tight">{data.status === 'resolved' ? 'Resolved' : data.status === 'disputed' ? 'Disputed' : 'Flagged'}</div>
                                                         </div>
                                                     ))}
                                                 </div>
+                                                {previewTopTypes.length > 5 && (
                                                 <div className="mt-1 flex justify-end">
-                                                    <button className="text-[9px] font-sans font-bold text-violet-600 hover:text-violet-700 uppercase tracking-tight flex items-center gap-1 group">
-                                                        See More
-                                                        <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-                                                    </button>
+                                                    <button className="text-[9px] font-sans font-bold text-violet-600 hover:text-violet-700 uppercase tracking-tight flex items-center gap-1 group">+{previewTopTypes.length - 5} More <span className="group-hover:translate-x-0.5 transition-transform">→</span></button>
                                                 </div>
+                                                )}
                                             </div>
-
-                                            {/* Bottom-space: Policy reference */}
                                             <div className="px-5 py-4 bg-gray-50/50">
                                                 <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2.5">Policy reference</h3>
                                                 <p className="text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight mb-2">Policy basis</p>
                                                 <div className="space-y-2">
                                                     <p className="text-[9px] font-sans text-gray-500 leading-relaxed italic tracking-tight font-light">
                                                         <span className="font-bold text-gray-400 not-italic mr-1 uppercase">Policy:</span>
-                                                        "These opportunities are identified using Amazon’s published reimbursement policies for lost, damaged, and incorrectly charged FBA inventory. 
-                                                        We prepare claims that match what Seller Support expects to see."
+                                                        "These opportunities are identified using Amazon's published reimbursement policies for lost, damaged, and incorrectly charged FBA inventory. We prepare claims that match what Seller Support expects to see."
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/* Right Column - Full Detailed Data */}
                                         <div className="flex-1 flex flex-col">
                                             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
                                                 <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Full Data</h3>
-                                                <p className="text-[10px] text-gray-400 font-sans">your full cost breakdown</p>
+                                                <p className="text-[10px] text-gray-400 font-sans">{previewResults.length} detection result{previewResults.length !== 1 ? 's' : ''} — your full cost breakdown</p>
                                             </div>
-                                            
                                             <div className="flex-1 overflow-auto p-6">
                                                 <div className="w-full">
                                                     <table className="w-full">
@@ -738,49 +802,29 @@ export default function DataUpload() {
                                                             </tr>
                                                         </thead>
                                                         <tbody className="divide-y divide-gray-50">
-                                                            {[
-                                                                { item: 'Lost shipment (Inbound #FBA17Z2K)', amount: '$1,245.50', sub: 'Detected in Oct Audit', days: 42, status: 'within policy' },
-                                                                { item: 'Inventory damaged by Warehouse', amount: '$840.20', sub: 'FNSKU: B07XJ8L9S1', days: 24, status: 'within policy' },
-                                                                { item: 'Missing units in removal order', amount: '$312.00', sub: 'Order #114-9283741', days: 12, status: 'action required' },
-                                                                { item: 'Weight/Dimension Fee Drift', amount: '$156.40', sub: '12 SKUs affected', days: 35, status: 'within policy' },
-                                                                { item: 'Lost Inventory (Reconciliation Gap)', amount: '$2,432.90', sub: '180-day historical window', days: 18, status: 'urgent' },
-                                                            ].map((row, idx) => (
-                                                                <tr key={idx} className="group">
+                                                            {previewResults.map((row, idx) => {
+                                                                const days = row.days_remaining ?? 0;
+                                                                const evDesc = row.evidence?.order_id ? `Order: ${row.evidence.order_id}` : row.evidence?.fnsku ? `FNSKU: ${row.evidence.fnsku}` : row.evidence?.shipment_id ? `Shipment: ${row.evidence.shipment_id}` : row.sync_id ? `Sync: ${row.sync_id.slice(0, 8)}...` : `Detection #${idx + 1}`;
+                                                                return (
+                                                                <tr key={row.id || idx} className="group">
                                                                     <td className="py-2">
-                                                                        <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{row.item}</p>
-                                                                        <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{row.sub} | {row.status}</p>
+                                                                        <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{formatAnomalyType(row.anomaly_type)}</p>
+                                                                        <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{evDesc} | {row.status}</p>
                                                                     </td>
                                                                     <td className="py-2 text-right align-top">
-                                                                        <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{row.amount}</span>
-                                                                        <p className={`text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight ${
-                                                                            row.days < 20 ? 'text-red-500' : 
-                                                                            row.days < 30 ? 'text-orange-500' : 
-                                                                            'text-emerald-500'
-                                                                        }`}>
-                                                                            {row.days < 20 ? 'deadline: ' : 'expires in: '}{row.days} days
-                                                                        </p>
+                                                                        <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{fmt(row.estimated_value)}</span>
+                                                                        {days > 0 && <p className={`text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight ${days < 20 ? 'text-red-500' : days < 30 ? 'text-orange-500' : 'text-emerald-500'}`}>{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
                                                                     </td>
-                                                                </tr>
-                                                            ))}
+                                                                </tr>);
+                                                            })}
                                                         </tbody>
                                                         <tfoot>
                                                             <tr className="border-t border-gray-100">
-                                                                <td className="py-6">
-                                                                    <span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Total Estimated Recovery</span>
-                                                                </td>
+                                                                <td className="py-6"><span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Total Estimated Recovery</span></td>
                                                                 <td className="py-6 text-right">
                                                                     <div className="flex items-center justify-end gap-12">
-                                                                        <span className="text-base font-bold font-sans text-gray-900 tracking-tight">$4,987.00</span>
-                                                                        <button 
-                                                                            type="button"
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation();
-                                                                                e.preventDefault();
-                                                                                console.log('PayPal redirect triggered');
-                                                                                window.open('https://www.paypal.com/ncp/payment/2KZY7JX8MNTPC', '_blank', 'noopener,noreferrer');
-                                                                            }}
-                                                                            className="relative z-[9999] flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer pointer-events-auto"
-                                                                        >
+                                                                        <span className="text-base font-bold font-sans text-gray-900 tracking-tight">{fmt(previewTotalRecovery)}</span>
+                                                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); window.open('https://www.paypal.com/ncp/payment/2KZY7JX8MNTPC', '_blank', 'noopener,noreferrer'); }} className="relative z-[9999] flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer pointer-events-auto">
                                                                             <Upload size={14} className="stroke-[3]" />
                                                                             FILE FOR CASES
                                                                         </button>
@@ -793,6 +837,7 @@ export default function DataUpload() {
                                             </div>
                                         </div>
                                     </div>
+                                    )}
                                 </div>
                             </motion.div>
                         </>
