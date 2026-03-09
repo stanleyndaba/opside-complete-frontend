@@ -17,7 +17,7 @@ import {
 
 // Supported CSV types
 const CSV_TYPES = [
-    { value: 'auto', label: 'Auto-Detect', icon: Coins, description: 'Let the system detect the type from headers', color: 'from-violet-500/20 to-purple-500/20' },
+    { value: 'auto', label: 'Any Data Type', icon: Coins, description: 'Let the system detect the type from headers', color: 'from-violet-500/20 to-purple-500/20' },
     { value: 'orders', label: 'Orders', icon: Package, description: 'Amazon order data', color: 'from-blue-500/20 to-cyan-500/20' },
     { value: 'shipments', label: 'Shipments', icon: Truck, description: 'FBA inbound shipments', color: 'from-emerald-500/20 to-green-500/20' },
     { value: 'returns', label: 'Returns', icon: RotateCcw, description: 'Customer returns', color: 'from-amber-500/20 to-orange-500/20' },
@@ -254,16 +254,6 @@ export default function DataUpload() {
                             </p>
                         </div>
                         
-                        <Button 
-                            asChild
-                            variant="outline" 
-                            className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all font-sans font-light text-[10px] uppercase tracking-tight h-10 px-6 rounded-xl"
-                        >
-                            <Link to={`/app/${currentTenantSlug}/pricing-adjust`}>
-                                <DollarSign className="mr-2 h-3.5 w-3.5" />
-                                Pricing Tiers
-                            </Link>
-                        </Button>
                     </motion.div>
 
                     {/* Type Selector */}
@@ -286,7 +276,6 @@ export default function DataUpload() {
                                         className="text-white/80 focus:bg-white/5 focus:text-white"
                                     >
                                         <span className="flex items-center gap-2">
-                                            <t.icon className="h-3.5 w-3.5 text-white/40" />
                                             <span>{t.label}</span>
                                             <span className="text-[10px] text-white/25 ml-1">— {t.description}</span>
                                         </span>
@@ -443,7 +432,7 @@ export default function DataUpload() {
                                     onClick={() => setIsPreviewOpen(true)}
                                     disabled={files.length === 0 || isUploading}
                                     variant="outline"
-                                    className="border-white/10 text-white/60 hover:bg-white/5 hover:text-white h-10 px-6 rounded-lg transition-all"
+                                    className="bg-white text-[#050505] border-transparent hover:bg-gray-100 h-10 px-6 rounded-lg transition-all font-sans font-bold uppercase tracking-tight"
                                 >
                                     Preview
                                 </Button>
