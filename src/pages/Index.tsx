@@ -979,17 +979,8 @@ const Index = () => {
                 </div>
 
                 <div className="flex flex-col items-center gap-1 pt-6">
-                  <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm mb-3">
-                    <div className="relative flex items-center justify-center">
-                      <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
-                      <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
-                    </div>
-                    <span className="text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight">
-                      <span className="text-white font-bold">7</span> spots remaining
-                    </span>
-                  </div>
                   <button
-                    onClick={() => navigate('/waitlist')}
+                    onClick={() => navigate('/app/default/data-upload')}
                     className="group relative inline-flex items-center justify-center min-w-[280px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                     {/* Glass backdrop with glow */}
                     <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
@@ -997,8 +988,8 @@ const Index = () => {
                     </div>
                     <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
-                     <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
-                      Private Beta
+                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
+                      Get Started
                       <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-100" />
                     </span>
                   </button>

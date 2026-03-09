@@ -60,7 +60,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
               </div>
             )}
             <div className="flex flex-col gap-1.5 text-[12px] font-mono text-white/40">
-              <span>Email: <a href="mailto:support@margin-finance.com" className="hover:text-white transition-colors">support@margin-finance.com</a> or <a href="mailto:billing@margin-finance.com" className="hover:text-white transition-colors">billing@margin-finance.com</a></span>
+              <span>Email: <a href="mailto:support@margin-finance.com" className="hover:text-white transition-colors">support@margin-finance.com</a></span>
             </div>
           </div>
           <div className="flex flex-col gap-10 border-t border-white/5 pt-10">
