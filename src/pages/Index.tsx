@@ -676,7 +676,7 @@ const Index = () => {
                 <div className="space-y-4">
                   <Accordion type="single" collapsible className="w-full space-y-4">
                     <AccordionItem value="data" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
                         What data do you access? Do you look at my customer info or sales?
                       </AccordionTrigger>
                       <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
@@ -687,7 +687,7 @@ const Index = () => {
                     </AccordionItem>
 
                     <AccordionItem value="cost" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
                         How much does Margin cost?
                       </AccordionTrigger>
                       <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
@@ -698,7 +698,7 @@ const Index = () => {
                     </AccordionItem>
 
                     <AccordionItem value="safety" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
                         Will using an automated tool get my Amazon account suspended?
                       </AccordionTrigger>
                       <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
@@ -709,7 +709,7 @@ const Index = () => {
                     </AccordionItem>
 
                     <AccordionItem value="invoices" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
                         Do I have to manually upload my supplier invoices for every claim?
                       </AccordionTrigger>
                       <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
@@ -723,7 +723,7 @@ const Index = () => {
                       <>
 
                         <AccordionItem value="coexist" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                          <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
                             What if I already use another reimbursement service?
                           </AccordionTrigger>
                             <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
@@ -733,7 +733,7 @@ const Index = () => {
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="cancel" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-sans text-left text-lg font-bold text-white hover:no-underline py-6 tracking-tight">
+                          <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
                             What if I want to cancel?
                           </AccordionTrigger>
                           <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
