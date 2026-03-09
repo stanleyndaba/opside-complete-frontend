@@ -67,8 +67,8 @@ export function CookieConsent() {
                     <div className="container mx-auto px-6 py-8">
                         <div className="flex flex-col md:flex-row gap-8 md:items-center">
                             <div className="flex-1 space-y-3">
-                                <h3 className="font-semibold text-lg text-white">Cookie Preferences</h3>
-                                <p className="text-sm text-white/40 leading-relaxed max-w-2xl">
+                                <h3 className="font-sans font-light text-2xl md:text-3xl text-white tracking-tight">Cookie Preferences</h3>
+                                <p className="font-sans text-sm text-white/40 font-light leading-relaxed max-w-2xl tracking-tight">
                                     This website uses cookies that provide necessary site functionality and improve your online experience. By continuing to use this website, you agree to the use of cookies. Our Privacy Policy provides more information about what cookies we use and how you can change them.
                                 </p>
                             </div>
@@ -76,12 +76,12 @@ export function CookieConsent() {
                                 <Button
                                     onClick={() => setView('settings')}
                                     variant="outline"
-                                    className="bg-transparent text-white/60 border-white/10 hover:bg-white/5 font-medium h-11">
+                                    className="bg-transparent text-white/60 border-white/10 hover:bg-white/5 font-bold text-[10px] uppercase tracking-tight h-10 px-6">
                                     Manage Settings
                                 </Button>
                                 <Button
                                     onClick={handleAgreeAll}
-                                    className="bg-white text-black hover:bg-white/90 font-medium h-11">
+                                    className="bg-white text-black hover:bg-white/90 font-bold text-[10px] uppercase tracking-tight h-10 px-8">
                                     Agree
                                 </Button>
                             </div>
@@ -93,7 +93,7 @@ export function CookieConsent() {
                 {view === 'settings' && (
                     <div className="container mx-auto px-6 py-8 animate-in slide-in-from-bottom duration-300">
                         <div className="flex items-center justify-between mb-8">
-                            <h3 className="font-semibold text-xl text-white">Cookie Settings</h3>
+                            <h3 className="font-sans font-light text-2xl text-white tracking-tight">Cookie Settings</h3>
                             <button
                                 onClick={() => setView('banner')}
                                 className="text-white/40 hover:text-white transition-colors"
@@ -107,10 +107,10 @@ export function CookieConsent() {
                             <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-bold text-white text-sm">Necessary cookies</span>
-                                        <Badge variant="secondary" className="bg-white/10 text-white/60 hover:bg-white/10 text-[10px] uppercase font-bold tracking-wider">Always on</Badge>
+                                        <span className="font-bold text-white text-[11px] uppercase tracking-tight font-sans">Necessary cookies</span>
+                                        <Badge variant="secondary" className="bg-white/10 text-white/60 hover:bg-white/10 text-[9px] uppercase font-bold tracking-tight px-2 py-0">Always on</Badge>
                                     </div>
-                                    <p className="text-xs text-white/30 leading-relaxed max-w-lg">
+                                    <p className="text-[11px] text-white/30 font-light font-sans leading-relaxed max-w-lg tracking-tight">
                                         These keep things running smoothly (like helping you stay logged in). You can't turn these off.
                                     </p>
                                 </div>
@@ -119,8 +119,8 @@ export function CookieConsent() {
                             {/* Box 2: Analytics */}
                             <div className="flex items-center justify-between gap-4 p-4 rounded-lg border border-white/5 hover:border-white/10 transition-colors">
                                 <div className="space-y-1">
-                                    <span className="font-medium text-white text-sm">Analytics cookies</span>
-                                    <p className="text-xs text-white/30 leading-relaxed max-w-lg">
+                                    <span className="font-bold text-white text-[11px] uppercase tracking-tight font-sans">Analytics cookies</span>
+                                    <p className="text-[11px] text-white/30 font-light font-sans leading-relaxed max-w-lg tracking-tight">
                                         These help us understand how people use the site so we can make improvements. You can turn these off if you'd rather not share that info.
                                     </p>
                                 </div>
@@ -133,8 +133,8 @@ export function CookieConsent() {
                             {/* Box 3: Marketing */}
                             <div className="flex items-center justify-between gap-4 p-4 rounded-lg border border-white/5 hover:border-white/10 transition-colors">
                                 <div className="space-y-1">
-                                    <span className="font-medium text-white text-sm">Marketing cookies</span>
-                                    <p className="text-xs text-white/30 leading-relaxed max-w-lg">
+                                    <span className="font-bold text-white text-[11px] uppercase tracking-tight font-sans">Marketing cookies</span>
+                                    <p className="text-[11px] text-white/30 font-light font-sans leading-relaxed max-w-lg tracking-tight">
                                         These help us (and our trusted partners) show you more relevant content and ads based on how you use the site.
                                     </p>
                                 </div>
@@ -149,13 +149,13 @@ export function CookieConsent() {
                                 <Button
                                     onClick={handleTurnOnOptional}
                                     variant="outline"
-                                    className="w-full sm:w-auto bg-transparent text-white/60 border-white/10 hover:bg-white/5 font-medium h-11">
+                                    className="w-full sm:w-auto bg-transparent text-white/60 border-white/10 hover:bg-white/5 font-bold text-[10px] uppercase tracking-tight h-10 px-6">
                                     Turn on optional cookies
                                 </Button>
                                 <div className="flex-1" />
                                 <Button
                                     onClick={handleSaveSettings}
-                                    className="bg-white text-black hover:bg-white/90 font-medium h-11 min-w-[160px]">
+                                    className="bg-white text-black hover:bg-white/90 font-bold text-[10px] uppercase tracking-tight h-10 px-8 min-w-[160px]">
                                     Save and Accept
                                 </Button>
                             </div>

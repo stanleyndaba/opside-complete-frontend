@@ -504,11 +504,10 @@ const Index = () => {
                   <div className="h-[1px] w-8 bg-gray-200" />
                 </div>
                 <h2 className="text-3xl md:text-5xl font-sans font-light tracking-tight text-white leading-tight">
-                  30 Seconds to Reconcile <br className="hidden sm:block" />
-                  90 Days of Data.
+                  Finally, clarity for your missing FBA inventory.
                 </h2>
                 <p className="text-base md:text-lg text-white/50 font-sans tracking-tight leading-relaxed max-w-xl mx-auto">
-                  Watch Margin autonomously detect missing inventory, match the exact supplier invoice, and submit the claim to Amazon for a $1M+ FBA portfolio.
+                  Don't drown in cross-referenced spreadsheets. Margin audits 18 months of your inventory data to find the exact units Amazon lost. We do the complex math and hand you the undeniable proof. You just file the ticket and get paid.
                 </p>
               </div>
 
