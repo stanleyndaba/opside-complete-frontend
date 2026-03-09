@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, ArrowRight, XCircle, CheckCircle2 } from 'lucide-react';
@@ -8,13 +8,18 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 
 export default function StandardAgreement() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams();
   const [status, setStatus] = useState<'pending' | 'agreed' | 'disagreed'>('pending');
 
   const handleAgree = () => {
     setStatus('agreed');
     // Navigate to data upload after a short delay
     setTimeout(() => {
-      navigate('/app/default/data-upload');
+      if (tenantSlug) {
+        navigate(`/app/${tenantSlug}/data-upload`);
+      } else {
+        navigate('/app/default/data-upload');
+      }
     }, 1500);
   };
 

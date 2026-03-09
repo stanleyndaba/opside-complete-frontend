@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +10,17 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 
 export default function PricingAdjust() {
+  const navigate = useNavigate();
+  const { tenantSlug } = useParams();
+
+  const handleStandardClick = () => {
+    if (tenantSlug) {
+      navigate(`/app/${tenantSlug}/pricing/standard-agreement`);
+    } else {
+      navigate('/pricing/standard-agreement');
+    }
+  };
+
   return (
     <PageLayout title="Pricing Adjust" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
       <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center pt-32 md:pt-40 lg:pt-48 pb-24 overflow-hidden font-sans">
@@ -94,7 +106,7 @@ export default function PricingAdjust() {
 
                 <div className="mt-auto flex flex-col gap-6">
                   <Button 
-                    onClick={() => navigate('/pricing/standard-agreement')}
+                    onClick={handleStandardClick}
                     className="bg-white hover:bg-white/90 text-black font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
                   >
                     Get Standard
