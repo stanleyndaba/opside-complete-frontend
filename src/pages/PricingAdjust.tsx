@@ -94,7 +94,7 @@ export default function PricingAdjust() {
 
                 <div className="mt-auto flex flex-col gap-6">
                   <Button 
-                    variant="secondary"
+                    onClick={() => navigate('/pricing/standard-agreement')}
                     className="bg-white hover:bg-white/90 text-black font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
                   >
                     Get Standard
@@ -174,11 +174,14 @@ export default function PricingAdjust() {
 
                 <div className="mt-auto flex flex-col gap-6">
                   <Button 
+                    asChild
                     variant="default"
                     className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                   >
-                    Get Priority
-                    <ArrowRight className="h-4 w-4" />
+                    <a href="https://www.paypal.com/ncp/payment/2KZY7JX8MNTPC" target="_blank" rel="noopener noreferrer">
+                      Get Priority
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
                   </Button>
                   <div className="pt-6 border-t border-white/10">
                     <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
@@ -252,9 +255,9 @@ export default function PricingAdjust() {
                   <Button 
                     asChild
                     variant="outline"
-                    className="border-white/10 text-white/70 hover:text-white hover:bg-white/5 font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
+                    className="bg-white hover:bg-white border-white/10 text-black hover:text-black font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 transition-all"
                   >
-                    <a href="mailto:billing@margin-finance.com?subject=Enterprise Inquiry - Margin Finance">
+                    <a href="mailto:support@margin-finance.com?subject=Enterprise Inquiry - Margin Finance">
                         Contact Sales
                         <ArrowRight className="h-4 w-4" />
                     </a>
