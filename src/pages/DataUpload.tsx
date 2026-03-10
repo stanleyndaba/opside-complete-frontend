@@ -696,7 +696,7 @@ export default function DataUpload() {
                                 animate={{ y: '15%' }} // Occupies most of the page but not all
                                 exit={{ y: '100%' }}
                                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                                className="fixed inset-x-0 bottom-0 top-0 z-[101] bg-white rounded-t-[32px] overflow-hidden flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.3)]"
+                                className="fixed inset-x-0 bottom-0 top-0 z-[101] bg-white rounded-none overflow-hidden flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.3)]"
                             >
                                 {/* Drawer Header */}
                                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
