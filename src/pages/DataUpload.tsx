@@ -117,19 +117,17 @@ export default function DataUpload() {
         const fetchPreviewData = async () => {
             setIsPreviewLoading(true);
             try {
-                const res = await detectionApi.getDetectionResults({ limit: 200 }, currentTenantSlug);
-                if (!cancelled && res?.ok && res.data?.results) {
-                    let results = res.data.results;
-                    // Filter by current upload's syncId if available
-                    if (batchResult?.syncId) {
-                        const filtered = results.filter((r: any) => r.sync_id === batchResult.syncId);
-                        if (filtered.length > 0) {
-                            results = filtered;
-                        }
-                        // If no results match the syncId (detection may use different ID format),
-                        // show the most recent results by discovery_date
-                    }
-                    setPreviewResults(results);
+                const res = await detectionApi.getDetectionResults({ limit: 500 }, currentTenantSlug);
+                if (!cancelled && res?.ok && res.data?.results && res.data.results.length > 0) {
+                    const all = res.data.results;
+                    // Find the most recent sync_id (latest detection batch)
+                    const latestSyncId = all
+                        .filter((r: any) => r.sync_id)
+                        .sort((a: any, b: any) => new Date(b.discovery_date || b.created_at || 0).getTime() - new Date(a.discovery_date || a.created_at || 0).getTime())
+                        [0]?.sync_id;
+                    // Show only results from the latest batch
+                    const filtered = latestSyncId ? all.filter((r: any) => r.sync_id === latestSyncId) : all;
+                    setPreviewResults(filtered.length > 0 ? filtered : all);
                 } else if (!cancelled) {
                     setPreviewResults([]);
                 }
