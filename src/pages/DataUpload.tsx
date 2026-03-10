@@ -717,7 +717,7 @@ export default function DataUpload() {
                                             <SelectTrigger className="h-9 w-full bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
                                                 <SelectValue placeholder="Disputes (Margin)" />
                                             </SelectTrigger>
-                                            <SelectContent className="bg-white border-gray-100 shadow-xl">
+                                            <SelectContent className="bg-white border-gray-100 shadow-xl z-[200]">
                                                 {disputeCases.map(c => {
                                                     const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
                                                     return (
