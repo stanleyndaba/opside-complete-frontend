@@ -12,7 +12,7 @@ import { api, detectionApi } from '@/lib/api';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
     Package, Truck, RotateCcw, DollarSign, Archive, Target,
-    Zap, ChevronRight, Info, Coins, Share2
+    Zap, ChevronRight, Info, Coins
 } from 'lucide-react';
 
 // Supported CSV types
@@ -712,36 +712,33 @@ export default function DataUpload() {
                                         </div>
                                     </div>
                                     {disputeCases.length > 0 && (
-                                    <div className="absolute left-1/2 -translate-x-1/2 w-96">
+                                    <div className="flex-1 mx-6">
                                         <Select defaultValue={disputeCases[0]?.id || 'none'}>
-                                            <SelectTrigger className="h-9 bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
-                                                <div className="flex items-center gap-2">
-                                                    <Target className="h-3.5 w-3.5 text-gray-400" />
-                                                    <SelectValue placeholder="Disputes (Margin)" />
-                                                </div>
+                                            <SelectTrigger className="h-9 w-full bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
+                                                <SelectValue placeholder="Disputes (Margin)" />
                                             </SelectTrigger>
-                                            <SelectContent className="bg-white border-gray-100 shadow-xl w-96">
-                                                {disputeCases.map(c => (
+                                            <SelectContent className="bg-white border-gray-100 shadow-xl">
+                                                {disputeCases.map(c => {
+                                                    const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                                                    return (
                                                     <SelectItem key={c.id} value={c.id} className="text-[11px] focus:bg-gray-50">
                                                         <span className="flex items-center gap-2">
                                                             <span className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${c.status === 'approved' || c.status === 'paid' || c.status === 'won' ? 'bg-emerald-500' : c.status === 'rejected' || c.status === 'denied' ? 'bg-red-400' : c.status === 'pending' || c.status === 'submitted' ? 'bg-amber-400' : 'bg-gray-300'}`} />
                                                             <span className="font-semibold truncate">{c.case_number || c.id?.substring(0, 8)}</span>
-                                                            <span className="text-gray-400">·</span>
+                                                            <span className="text-gray-300">·</span>
                                                             <span className="text-gray-400 uppercase text-[9px]">{(c.status || 'open').replace(/_/g, ' ')}</span>
-                                                            <span className="text-gray-400">·</span>
+                                                            <span className="text-gray-300">·</span>
                                                             <span className="font-bold text-gray-700">{new Intl.NumberFormat('en-US', { style: 'currency', currency: c.currency || 'USD' }).format(c.amount || 0)}</span>
+                                                            {dateStr && <><span className="text-gray-300">·</span><span className="text-gray-400 text-[9px]">{dateStr}</span></>}
                                                         </span>
                                                     </SelectItem>
-                                                ))}
+                                                    );
+                                                })}
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     )}
-                                    <div className="flex items-center gap-3">
-                                        <button className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold text-gray-400 hover:text-gray-900 transition-colors uppercase tracking-tight">
-                                            <Share2 className="h-4 w-4" />
-                                            Import and Share
-                                        </button>
+                                    <div className="flex items-center">
                                         <button onClick={() => setIsPreviewOpen(false)} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors">
                                             <X className="h-5 w-5" />
                                         </button>
