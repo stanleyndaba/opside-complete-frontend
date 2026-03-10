@@ -1185,6 +1185,28 @@ export function Dashboard() {
                                 </div>
                               )}
                             </>
+                          ) : detectionStats && detectionStats.estimatedRecovery > 0 ? (
+                            <>
+                              <div className="text-5xl font-sans font-bold text-white tracking-tight mb-4 flex items-baseline gap-2">
+                                {formatCurrencyWithSelection(detectionStats.estimatedRecovery, recoveredCurrency)}
+                                <span className="text-sm font-sans font-bold text-amber-400 animate-pulse">_</span>
+                              </div>
+                              <div className="flex items-center gap-3 w-fit">
+                                <div className="h-1 w-1 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+                                <span className="text-[10px] font-sans font-bold text-amber-400 uppercase tracking-tight">
+                                  {detectionStats.totalDetections} Pending Recovery Opportunities
+                                </span>
+                              </div>
+                            </>
+                          ) : recoveredTotal !== null ? (
+                            <div className="flex flex-col gap-6 py-2">
+                              <div className="text-5xl font-sans font-bold text-white/20 tracking-tight">
+                                $0.00
+                              </div>
+                              <p className="text-xs text-white/30 font-sans font-bold leading-relaxed max-w-sm">
+                                No recoveries found yet. Upload your Amazon CSV data to start the detection pipeline.
+                              </p>
+                            </div>
                           ) : (
                             <div className="flex flex-col gap-6 py-2">
                               <div className="flex items-center gap-3 text-emerald-500">
@@ -1195,7 +1217,7 @@ export function Dashboard() {
                                 $0,000.00
                               </div>
                               <p className="text-xs text-white/30 font-sans font-bold leading-relaxed max-w-sm">
-                                Analyzing your store data for potential FBA reimbursements. This process typically takes 24-48 hours.
+                                Loading your account data...
                               </p>
                             </div>
                           )}
