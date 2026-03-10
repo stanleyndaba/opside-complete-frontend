@@ -117,9 +117,19 @@ export default function DataUpload() {
         const fetchPreviewData = async () => {
             setIsPreviewLoading(true);
             try {
-                const res = await detectionApi.getDetectionResults({ limit: 50 }, currentTenantSlug);
+                const res = await detectionApi.getDetectionResults({ limit: 200 }, currentTenantSlug);
                 if (!cancelled && res?.ok && res.data?.results) {
-                    setPreviewResults(res.data.results);
+                    let results = res.data.results;
+                    // Filter by current upload's syncId if available
+                    if (batchResult?.syncId) {
+                        const filtered = results.filter((r: any) => r.sync_id === batchResult.syncId);
+                        if (filtered.length > 0) {
+                            results = filtered;
+                        }
+                        // If no results match the syncId (detection may use different ID format),
+                        // show the most recent results by discovery_date
+                    }
+                    setPreviewResults(results);
                 } else if (!cancelled) {
                     setPreviewResults([]);
                 }
@@ -132,7 +142,7 @@ export default function DataUpload() {
         };
         fetchPreviewData();
         return () => { cancelled = true; };
-    }, [isPreviewOpen, currentTenantSlug]);
+    }, [isPreviewOpen, currentTenantSlug, batchResult]);
 
     // Computed preview values
     const previewTotalRecovery = useMemo(() => previewResults.reduce((s, r) => s + (r.estimated_value || 0), 0), [previewResults]);
