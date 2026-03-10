@@ -108,6 +108,7 @@ export default function DataUpload() {
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [previewResults, setPreviewResults] = useState<PreviewDetectionResult[]>([]);
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+    const [disputeCases, setDisputeCases] = useState<any[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Fetch detection data when preview drawer opens
@@ -141,6 +142,22 @@ export default function DataUpload() {
         fetchPreviewData();
         return () => { cancelled = true; };
     }, [isPreviewOpen, currentTenantSlug, batchResult]);
+
+    // Fetch dispute cases when preview drawer opens
+    useEffect(() => {
+        if (!isPreviewOpen) return;
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await api.getDisputeCases({ limit: 5 }, currentTenantSlug);
+                if (!cancelled && res?.ok) {
+                    const cases = res.data?.cases || (Array.isArray(res.data) ? res.data : []);
+                    setDisputeCases(cases.slice(0, 5));
+                }
+            } catch (_e) { /* silent */ }
+        })();
+        return () => { cancelled = true; };
+    }, [isPreviewOpen, currentTenantSlug]);
 
     // Computed preview values
     const previewTotalRecovery = useMemo(() => previewResults.reduce((s, r) => s + (r.estimated_value || 0), 0), [previewResults]);
@@ -694,18 +711,27 @@ export default function DataUpload() {
                                             <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `Recovery: ${fmt(previewTotalRecovery)}`}</p>
                                         </div>
                                     </div>
-                                    {previewResults.length > 0 && (
-                                    <div className="absolute left-1/2 -translate-x-1/2 w-64">
-                                        <Select defaultValue={previewResults[0]?.id || 'none'}>
+                                    {disputeCases.length > 0 && (
+                                    <div className="absolute left-1/2 -translate-x-1/2 w-96">
+                                        <Select defaultValue={disputeCases[0]?.id || 'none'}>
                                             <SelectTrigger className="h-9 bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
                                                 <div className="flex items-center gap-2">
                                                     <Target className="h-3.5 w-3.5 text-gray-400" />
-                                                    <SelectValue placeholder="Dispute Cases" />
+                                                    <SelectValue placeholder="Disputes (Margin)" />
                                                 </div>
                                             </SelectTrigger>
-                                            <SelectContent className="bg-white border-gray-100 shadow-xl">
-                                                {previewResults.slice(0, 10).map(r => (
-                                                    <SelectItem key={r.id} value={r.id} className="text-[11px] focus:bg-gray-50">{formatAnomalyType(r.anomaly_type)} — {fmt(r.estimated_value)}</SelectItem>
+                                            <SelectContent className="bg-white border-gray-100 shadow-xl w-96">
+                                                {disputeCases.map(c => (
+                                                    <SelectItem key={c.id} value={c.id} className="text-[11px] focus:bg-gray-50">
+                                                        <span className="flex items-center gap-2">
+                                                            <span className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${c.status === 'approved' || c.status === 'paid' || c.status === 'won' ? 'bg-emerald-500' : c.status === 'rejected' || c.status === 'denied' ? 'bg-red-400' : c.status === 'pending' || c.status === 'submitted' ? 'bg-amber-400' : 'bg-gray-300'}`} />
+                                                            <span className="font-semibold truncate">{c.case_number || c.id?.substring(0, 8)}</span>
+                                                            <span className="text-gray-400">·</span>
+                                                            <span className="text-gray-400 uppercase text-[9px]">{(c.status || 'open').replace(/_/g, ' ')}</span>
+                                                            <span className="text-gray-400">·</span>
+                                                            <span className="font-bold text-gray-700">{new Intl.NumberFormat('en-US', { style: 'currency', currency: c.currency || 'USD' }).format(c.amount || 0)}</span>
+                                                        </span>
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
