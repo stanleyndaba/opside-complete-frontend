@@ -10,6 +10,7 @@ import DemoOverlay from "@/components/demo/DemoOverlay";
 import AdminOnly from "@/components/routes/AdminOnly";
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { TenantProvider } from '@/contexts/TenantContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PublicChatNode } from "@/components/chat/PublicChatNode";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 
@@ -109,7 +110,8 @@ const RouteSkeleton = () => (
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+    <ThemeProvider>
+      <TooltipProvider>
       <CurrencyProvider>
         <Toaster />
         <Sonner />
@@ -222,7 +224,8 @@ const App = () => (
           </SmoothScrollProvider>
         </BrowserRouter>
       </CurrencyProvider>
-    </TooltipProvider>
+        </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

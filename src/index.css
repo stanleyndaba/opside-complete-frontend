@@ -39,23 +39,22 @@
 }
 
 @layer base {
+  /* Light Theme (default) - Pure White */
   :root {
-    /* Light Background */
     --background: 0 0% 100%;
-    --foreground: 220 13% 18%;
+    --foreground: 220 13% 13%;
 
-    /* Light cards */
     --card: 0 0% 100%;
-    --card-foreground: 220 13% 18%;
+    --card-foreground: 220 13% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 18%;
+    --popover-foreground: 220 13% 13%;
 
     --primary: 224 82% 56%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14% 96%;
-    --secondary-foreground: 220 13% 18%;
+    --secondary-foreground: 220 13% 13%;
 
     --muted: 220 14% 96%;
     --muted-foreground: 220 9% 46%;
@@ -66,7 +65,6 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Action Color: Executive Emerald (Deep institutional green) */
     --success: 162 82% 12%;
     --success-foreground: 0 0% 100%;
 
@@ -82,14 +80,62 @@
 
     --radius: 0.5rem;
 
-    /* Light theme sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 13% 18%;
+    --sidebar-foreground: 220 13% 13%;
     --sidebar-primary: 224 82% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 220 13% 18%;
+    --sidebar-accent-foreground: 220 13% 13%;
     --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 224 82% 56%;
+  }
+
+  /* Dark Theme - Midnight Black */
+  .dark {
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 224 82% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 224 82% 56%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 162 82% 35%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 224 82% 56%;
+
+    --sidebar-background: 0 0% 2%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 224 82% 56%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 15%;
     --sidebar-ring: 224 82% 56%;
   }
 }
@@ -124,7 +170,7 @@
     max-width: 100%;
     overflow-x: hidden;
     min-height: 100vh;
-    background-color: #050505;
+    background-color: hsl(var(--background));
   }
 
   /* Ensure main content uses full width */
@@ -138,15 +184,17 @@
     @apply bg-background text-foreground text-[15px];
   }
 
-  /* Force dark background when midnight mode is active */
-  body:has(.bg-\[#050505\]),
-  html:has(.bg-\[#050505\]) {
-    background-color: #050505 !important;
+  /* Theme-aware backgrounds */
+  html.dark,
+  html.dark body,
+  html.dark #root {
+    background-color: hsl(var(--background)) !important;
   }
 
-  /* Fallback for browsers that don't support :has() */
-  .midnight-body {
-    background-color: #050505 !important;
+  html:not(.dark),
+  html:not(.dark) body,
+  html:not(.dark) #root {
+    background-color: hsl(var(--background)) !important;
   }
 
   /* All text elements use Inter - comprehensive coverage */

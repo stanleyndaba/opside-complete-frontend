@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -85,6 +86,7 @@ export function Sidebar({
   const [claimCount, setClaimCount] = useState<number | null>(null);
   const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   // States for referral functionality
   const [showReferralPopup, setShowReferralPopup] = useState(false);
@@ -221,7 +223,7 @@ export function Sidebar({
                   "relative flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-xl group",
                   isActive
                     ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
-                    : "text-white/30 hover:bg-white/5 hover:text-white"
+                    : "text-foreground/30 hover:bg-foreground/5 hover:text-foreground"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
@@ -233,7 +235,7 @@ export function Sidebar({
                 <item.icon className="h-5 w-5" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-[#0c0c0c] border border-white/10 text-emerald-500 text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1.5 backdrop-blur-xl">
+            <TooltipContent side="right" className="bg-popover border border-border text-emerald-500 text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1.5 backdrop-blur-xl">
               {item.title}
             </TooltipContent>
           </Tooltip>
@@ -247,8 +249,8 @@ export function Sidebar({
         className={cn(
           "relative flex items-center gap-3 w-full px-5 py-2.5 transition-all duration-300 group rounded-xl mb-1",
           isActive
-            ? "bg-white/[0.03] text-white shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-            : "text-white/40 hover:bg-white/[0.02] hover:text-white"
+            ? "bg-foreground/[0.03] text-foreground dark:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+            : "text-foreground/40 hover:bg-foreground/[0.02] hover:text-foreground"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
@@ -260,17 +262,17 @@ export function Sidebar({
         {!isActive && (
           <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-white/20 group-hover:text-white")} />
+        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-foreground/20 group-hover:text-foreground")} />
         <span className={cn(
           "text-[11px] font-sans transition-colors tracking-tight uppercase",
-          isActive ? "font-bold text-white" : "font-light"
+          isActive ? "font-bold text-foreground" : "font-light"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
             "ml-auto text-[10px] font-sans font-bold tabular-nums px-2 py-0.5 rounded-md border tracking-tight",
             isActive
               ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
-              : "text-white/20 bg-white/5 border-white/5"
+              : "text-foreground/20 bg-foreground/5 border-foreground/5"
           )}>
             {claimCount}
           </span>
@@ -281,24 +283,24 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 transition-all duration-500 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-sans shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
+        "fixed left-0 top-0 transition-all duration-500 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-sans",
         isCollapsed ? "w-20" : "w-64",
-        "text-white/60 border-r border-white/5",
-        "bg-[#070707]",
+        "text-foreground/60 border-r border-border",
+        "bg-sidebar-background dark:shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
         className
       )}
       style={{ willChange: 'width' }}>
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-white/5 flex items-center h-16",
+          "border-b border-border flex items-center h-16",
           isCollapsed ? "justify-center px-2" : "justify-between px-6"
         )}>
         <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-3")}>
           <img
             src="/logoimagetwo.png"
             alt="Margin"
-            className={cn(isCollapsed ? "h-3.5" : "h-3.5", "w-auto object-contain invert brightness-0")}
+            className={cn(isCollapsed ? "h-3.5" : "h-3.5", "w-auto object-contain dark:invert dark:brightness-0")}
           />
         </div>
       </div>
@@ -315,7 +317,7 @@ export function Sidebar({
                 <NavItemComponent key={item.title} item={item} />
               ))}
             </div>
-            {!isCollapsed && <div className="h-px bg-white/5 w-full mx-4 my-2" />}
+            {!isCollapsed && <div className="h-px bg-border w-full mx-4 my-2" />}
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
               {secondaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
@@ -327,7 +329,7 @@ export function Sidebar({
 
       {/* Version Badge */}
       <div className={cn(
-        "border-t border-white/5 py-3",
+        "border-t border-border py-3",
         isCollapsed ? "px-2 text-center" : "px-6"
       )}>
         <Link
@@ -338,7 +340,7 @@ export function Sidebar({
           )}
         >
           <span className={cn(
-            "text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight group-hover:text-emerald-500/80 transition-colors",
+            "text-[9px] font-sans font-bold text-foreground/20 uppercase tracking-tight group-hover:text-emerald-500/80 transition-colors",
             isCollapsed ? "block" : ""
           )}>
             {isCollapsed ? "v1" : "v1.0.0-GOLD"}
@@ -349,7 +351,7 @@ export function Sidebar({
 
       {/* More Menu / Logout */}
       <div className={cn(
-        "mt-auto border-t border-white/5 py-3",
+        "mt-auto border-t border-border py-3",
         isCollapsed ? "px-2 flex justify-center" : ""
       )}>
         <DropdownMenu>
@@ -358,23 +360,23 @@ export function Sidebar({
               className={cn(
                 "w-full flex items-center transition-all group outline-none",
                 isCollapsed
-                  ? "justify-center p-3 rounded-xl hover:bg-white/5"
-                  : "gap-3 px-6 py-3 text-left hover:bg-white/[0.02] text-white/50 hover:text-white"
+                  ? "justify-center p-3 rounded-xl hover:bg-foreground/5"
+                  : "gap-3 px-6 py-3 text-left hover:bg-foreground/[0.02] text-foreground/50 hover:text-foreground"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight">More</span>}
+              {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
-              className="flex items-center justify-between px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center justify-between px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
@@ -399,7 +401,7 @@ export function Sidebar({
             */}
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <Sparkles className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
               <span>Patch_Notes</span>
             </DropdownMenuItem>
@@ -445,17 +447,27 @@ export function Sidebar({
             </DropdownMenuItem> */}
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <CreditCard className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Billing</span>
             </DropdownMenuItem>
             <DropdownMenuItem
+              onClick={toggleTheme}
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4 text-amber-500/50" strokeWidth={1.5} />
+              ) : (
+                <Moon className="h-4 w-4 text-indigo-500/50" strokeWidth={1.5} />
+              )}
+              <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-white/50 hover:bg-white/5 hover:text-white cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <Settings2 className="h-4 w-4 text-white/20" strokeWidth={1.5} />
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              <Settings2 className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-white/5 my-1" />
+            <DropdownMenuSeparator className="bg-border my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
@@ -614,7 +626,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-3 z-50 h-6 w-6 rounded-full border border-white/10 bg-[#0c0c0c]/80 backdrop-blur-md flex items-center justify-center text-white/40 hover:text-white hover:border-emerald-500/50 shadow-2xl transition-all duration-300',
+          'absolute top-14 -right-3 z-50 h-6 w-6 rounded-full border border-border bg-popover/80 backdrop-blur-md flex items-center justify-center text-foreground/40 hover:text-foreground hover:border-emerald-500/50 shadow-2xl transition-all duration-300',
         )}>
         {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
       </button>
