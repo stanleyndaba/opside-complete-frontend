@@ -786,7 +786,7 @@ export default function DataUpload() {
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Claims found:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight uppercase">{previewResults.length} discrepancies</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewResults.length} Discrepancies</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Est. Recovery:</span>
