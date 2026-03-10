@@ -708,7 +708,7 @@ export default function DataUpload() {
                                         </div>
                                         <div className="flex flex-col px-0.5">
                                             <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Reimbursement seller account overview</p>
-                                            <p className="text-[11px] font-bold text-blue-600 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `Recovery: ${fmt(previewTotalRecovery)}`}</p>
+                                            <p className="text-[11px] font-bold text-gray-900 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `Recovery: ${fmt(previewTotalRecovery)}`}</p>
                                         </div>
                                     </div>
                                     {disputeCases.length > 0 && (
@@ -729,11 +729,23 @@ export default function DataUpload() {
                                                             <span className="text-gray-400 uppercase text-[9px]">{(c.status || 'open').replace(/_/g, ' ')}</span>
                                                             <span className="text-gray-300">·</span>
                                                             <span className="font-bold text-gray-700">{new Intl.NumberFormat('en-US', { style: 'currency', currency: c.currency || 'USD' }).format(c.amount || 0)}</span>
+                                                            {c.amount > 100 && (
+                                                                <>
+                                                                    <span className="text-gray-300">·</span>
+                                                                    <span className="text-amber-500 font-medium text-[9px] uppercase tracking-wider">Awaiting for your review</span>
+                                                                </>
+                                                            )}
                                                             {dateStr && <><span className="text-gray-300">·</span><span className="text-gray-400 text-[9px]">{dateStr}</span></>}
                                                         </span>
                                                     </SelectItem>
                                                     );
                                                 })}
+                                                <div className="border-t border-gray-100 mt-1 pt-1">
+                                                    <Link to={`/${currentTenantSlug}/recoveries`} className="flex items-center justify-between w-full px-2 py-1.5 text-[11px] font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-900 rounded cursor-pointer transition-colors group">
+                                                        <span>See more</span>
+                                                        <ChevronRight className="h-3 w-3 text-gray-400 group-hover:text-gray-800 transition-colors" />
+                                                    </Link>
+                                                </div>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -778,7 +790,7 @@ export default function DataUpload() {
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Est. Recovery:</span>
-                                                        <span className="text-[11px] font-bold text-emerald-600 font-sans tracking-tight">{fmt(previewTotalRecovery)}</span>
+                                                        <span className="text-[11px] font-bold text-gray-900 font-sans tracking-tight">{fmt(previewTotalRecovery)}</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
