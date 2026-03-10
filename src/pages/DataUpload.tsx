@@ -281,7 +281,7 @@ export default function DataUpload() {
                                     setIsPreviewOpen(true);
                                     return;
                                 }
-                            } catch { /* keep polling */ }
+                            } catch (_e) { /* keep polling */ }
                         }
                         setIsPreviewOpen(true);
                     };
@@ -813,7 +813,7 @@ export default function DataUpload() {
                                                                     </td>
                                                                     <td className="py-2 text-right align-top">
                                                                         <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{fmt(row.estimated_value)}</span>
-                                                                        {days > 0 && <p className={`text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight ${days < 20 ? 'text-red-500' : days < 30 ? 'text-orange-500' : 'text-emerald-500'}`}>{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
+                                                                        {days > 0 && <p className="text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight text-gray-400">{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
                                                                     </td>
                                                                 </tr>);
                                                             })}
