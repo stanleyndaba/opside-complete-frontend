@@ -850,11 +850,11 @@ export default function DataUpload() {
                                                                 const evDesc = row.evidence?.order_id ? `Order: ${row.evidence.order_id}` : row.evidence?.fnsku ? `FNSKU: ${row.evidence.fnsku}` : row.evidence?.shipment_id ? `Shipment: ${row.evidence.shipment_id}` : row.sync_id ? `Sync: ${row.sync_id.slice(0, 8)}...` : `Detection #${idx + 1}`;
                                                                 return (
                                                                 <tr key={row.id || idx} className="group">
-                                                                    <td className="py-2">
+                                                                    <td className="py-0.5">
                                                                         <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{formatAnomalyType(row.anomaly_type)}</p>
                                                                         <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{evDesc} | {row.status}</p>
                                                                     </td>
-                                                                    <td className="py-2 text-right align-top">
+                                                                    <td className="py-0.5 text-right align-top">
                                                                         <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{fmt(row.estimated_value)}</span>
                                                                         {days > 0 && <p className="text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight text-gray-400">{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
                                                                     </td>
