@@ -619,18 +619,22 @@ export default function TransactionHistory() {
                                 <div className="absolute inset-0 bg-white/[0.02] rounded-2xl blur-xl group-hover:bg-white/[0.05] transition-all duration-500" />
                                 <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden">
                                     <div className="flex justify-between items-center mb-3">
-                                        <div className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">{stat.label}</div>
+                                        <div className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">
+                                            {stat.label === 'TOTAL_DISCOVERY' ? 'Summary' : stat.label}
+                                        </div>
                                         {stat.percentage !== undefined && (
                                             <div className="text-xs font-bold text-white font-sans tracking-tight">{stat.percentage.toFixed(0)}%</div>
                                         )}
                                     </div>
-                                    <div className={cn(
-                                        "text-2xl font-sans font-bold tracking-tight",
-                                        stat.color,
-                                        stat.glow && "drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]"
-                                    )}>
-                                        {(stat as any).prefix || ''}{stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}{(stat as any).suffix || ''}
-                                    </div>
+                                    {stat.label !== 'TOTAL_DISCOVERY' && (
+                                        <div className={cn(
+                                            "text-2xl font-sans font-bold tracking-tight",
+                                            stat.color,
+                                            stat.glow && "drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]"
+                                        )}>
+                                            {(stat as any).prefix || ''}{stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}{(stat as any).suffix || ''}
+                                        </div>
+                                    )}
 
                                     {stat.count !== undefined && (
                                         <div className="text-[10px] text-gray-500 mt-2 font-sans font-bold tracking-tight">
@@ -648,7 +652,9 @@ export default function TransactionHistory() {
                                             ))}
                                             {stat.label === 'TOTAL_DISCOVERY' && (
                                                 <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
-                                                    <div className="text-[8px] text-gray-600 uppercase mb-1">By Issue Type Breakdown:</div>
+                                                    <div className="text-[10px] text-gray-400 font-sans font-bold uppercase mb-4 tracking-tight">
+                                                        Total discovery: ${stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                                    </div>
                                                     {Object.entries(summary.categoryTotals)
                                                         .filter(([cat]) => cat !== '[LOST_INV]' && cat !== '[RECOVERY]')
                                                         .sort((a, b) => b[1].amount - a[1].amount).map(([cat, data], ci) => (
