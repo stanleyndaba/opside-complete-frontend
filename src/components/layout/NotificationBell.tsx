@@ -249,7 +249,7 @@ export function NotificationBell({
                     <div className="flex items-center gap-3 overflow-hidden min-w-0">
                       <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.3)]", !notification.read ? "bg-emerald-500" : "bg-white/10")} />
                       <p className={cn(
-                        'text-[11px] truncate flex items-center gap-2 font-sans font-bold tracking-tight',
+                        'text-[13px] truncate flex items-center gap-2 font-sans font-bold tracking-tight',
                         !notification.read ? 'text-white' : 'text-white/40 group-hover:text-white'
                       )}>
                         {notification.header}
@@ -262,7 +262,7 @@ export function NotificationBell({
 
                   <div className="flex items-baseline justify-between gap-4 ml-4.5">
                     <p className={cn(
-                      'text-[11px] leading-relaxed font-sans font-bold truncate tracking-tight',
+                      'text-[12px] leading-relaxed font-sans font-bold truncate tracking-tight',
                       !notification.read ? 'text-white/60' : 'text-white/20 group-hover:text-white/40'
                     )}>
                       {stripEmojis(notification.message)}

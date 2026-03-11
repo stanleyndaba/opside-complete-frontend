@@ -430,6 +430,9 @@ export function Navbar({
                   className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
+                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center bg-blue-600 text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
+                    2
+                  </span>
                 </button>
               </HoverCardTrigger>
               <HoverCardContent
@@ -442,7 +445,10 @@ export function Navbar({
                     <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
                       <Box className="h-4 w-4 text-blue-500" />
                     </div>
-                    <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Integrations Hub</span>
+                    <div className="flex flex-col">
+                      <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Integrations Hub</span>
+                      <span className="text-[9px] font-sans font-bold text-orange-600 uppercase tracking-tight mt-0.5">2 Platforms connected</span>
+                    </div>
                   </div>
                   <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
                     "Configure your document and data providers — connect Amazon, Gmail, and other marketplace sources."
