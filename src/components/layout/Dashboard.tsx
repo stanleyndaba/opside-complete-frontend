@@ -1080,7 +1080,7 @@ export function Dashboard() {
                       <button
                         onClick={() => handleTabChange('overview')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider",
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight",
                           activeTab === 'overview'
                             ? "text-white bg-white/[0.08]"
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
@@ -1091,7 +1091,7 @@ export function Dashboard() {
                       <button
                         onClick={() => handleTabChange('discrepancies')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider flex items-center gap-2",
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
                           activeTab === 'discrepancies'
                             ? "text-white bg-white/[0.08]"
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
@@ -1110,7 +1110,7 @@ export function Dashboard() {
                       <button
                         onClick={() => handleTabChange('disputes')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider flex items-center gap-2",
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
                           activeTab === 'disputes'
                             ? "text-white bg-white/[0.08]"
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
@@ -1126,7 +1126,7 @@ export function Dashboard() {
                       <button
                         onClick={() => handleTabChange('evidence')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider flex items-center gap-2",
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
                           activeTab === 'evidence'
                             ? "text-white bg-white/[0.08]"
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
