@@ -615,9 +615,9 @@ export default function TransactionHistory() {
                                 count: summary.categoryTotals['[RECOVERY]']?.count
                             }
                         ].map((stat, i) => (
-                            <div key={i} className="group relative">
+                            <div key={i} className="group relative h-full">
                                 <div className="absolute inset-0 bg-white/[0.02] rounded-2xl blur-xl group-hover:bg-white/[0.05] transition-all duration-500" />
-                                <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden">
+                                <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden h-full flex flex-col">
                                     <div className="flex justify-between items-center mb-3">
                                         <div className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">
                                             {stat.label === 'TOTAL_DISCOVERY' ? 'Summary' : stat.label}
@@ -667,7 +667,7 @@ export default function TransactionHistory() {
                                             )}
                                         </div>
                                     )}
-                                    <div className="mt-4 h-[2px] w-8 bg-white/10 group-hover:w-full transition-all duration-700" />
+                                    <div className="mt-auto pt-4 h-[2px] w-8 bg-white/10 group-hover:w-full transition-all duration-700" />
                                 </div>
                             </div>
                         ))}
