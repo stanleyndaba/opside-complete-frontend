@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase, BoxSelect, BadgePercent, Database } from 'lucide-react';
+import { ArrowRight, Upload, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase, BoxSelect, BadgePercent, Database } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AmazonConnect } from '@/components/AmazonConnect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -108,7 +108,7 @@ const Index = () => {
       setSigningIn(true);
 
       // Start OAuth flow (same as Connect Amazon Account)
-      const response = await api.connectAmazon();
+      const response = await api.connectAmazon(undefined, false, 'default');
 
       if (!response.ok) {
         console.error('[Index] Failed to get OAuth URL:', response.error);
@@ -425,23 +425,35 @@ const Index = () => {
 
                 {/* Buttons - left aligned on mobile, centered on desktop */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto mt-6">
-                  <div className="flex flex-col items-center gap-1 w-full sm:w-auto">
-                    <button
-                      onClick={() => navigate('/app/default/data-upload')}
-                      className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
-                      {/* Glass backdrop with glow */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
-                        <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
-                      </div>
-                      <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
+                  <button
+                    onClick={() => navigate('/app/default/data-upload')}
+                    className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
+                    {/* Glass backdrop with glow */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
+                      <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
+                    </div>
+                    <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
 
-                      <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
-                        Get Started
-                        <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
-                      </span>
-                    </button>
-                    {/* <AmazonConnect className="w-full sm:w-auto min-w-[220px] h-12 text-sm font-medium" /> */}
-                  </div>
+                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
+                      Upload CSV
+                      <Upload className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:-translate-y-0.5 transition-all duration-300" />
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={handleSignIn}
+                    disabled={signingIn}
+                    className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50">
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
+                      <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
+                    </div>
+                    <div className="absolute inset-0 bg-white/[0.03] group-hover:bg-white/[0.07] transition-colors duration-500" />
+
+                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
+                      {signingIn ? 'Connecting...' : 'Connect Account'}
+                      <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
+                    </span>
+                  </button>
                 </div>
 
                 {/* Integrations Separator */}

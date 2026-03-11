@@ -538,28 +538,17 @@ export default function DataUpload() {
                         className="mt-6 flex items-center gap-3"
                     >
                         {!batchResult ? (
-                            <div className="flex items-center gap-3">
-                                <Button
-                                    onClick={handleUpload}
-                                    disabled={files.length === 0 || isUploading}
-                                    className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-medium px-6 h-10 shadow-lg shadow-violet-500/20 disabled:opacity-30 disabled:shadow-none"
-                                >
-                                    {isUploading ? (
-                                        <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
-                                    ) : (
-                                        <>Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
-                                    )}
-                                </Button>
-                                
-                                <Button
-                                    onClick={() => setIsPreviewOpen(true)}
-                                    disabled={files.length === 0 || isUploading}
-                                    variant="outline"
-                                    className="bg-transparent border-white text-white hover:bg-white/5 h-10 px-6 rounded-lg transition-all font-medium"
-                                >
-                                    Preview
-                                </Button>
-                            </div>
+                            <Button
+                                onClick={handleUpload}
+                                disabled={files.length === 0 || isUploading}
+                                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-medium px-6 h-10 shadow-lg shadow-violet-500/20 disabled:opacity-30 disabled:shadow-none"
+                            >
+                                {isUploading ? (
+                                    <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
+                                ) : (
+                                    <>Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
+                                )}
+                            </Button>
                         ) : (
                             <Button
                                 onClick={handleReset}
