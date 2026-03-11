@@ -101,11 +101,8 @@ export function ChatNode() {
                         {/* Header */}
                         <div className="px-5 py-4 border-b border-white/5 bg-[#050505]/95 flex items-center justify-between">
                             <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                                    <span className="text-[10px] font-mono text-emerald-500/70 tracking-widest uppercase">ONLINE</span>
-                                </div>
-                                <h3 className="text-sm font-bold text-white tracking-widest font-mono uppercase">Margin Assistance</h3>
+                                <h3 className="text-sm font-bold text-white tracking-tight font-mono uppercase">Welcome 👋</h3>
+                                <p className="text-[10px] text-white/40 font-mono tracking-tight mt-0.5">Ask anything based off the Margin platform and your data</p>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
@@ -136,7 +133,7 @@ export function ChatNode() {
                                     )}>
                                         {msg.text}
                                     </div>
-                                    <span className="text-[9px] text-white/30 mt-1.5 font-mono uppercase tracking-widest flex items-center gap-1">
+                                    <span className="text-[9px] text-white/30 mt-1.5 font-mono uppercase tracking-tight flex items-center gap-1">
                                         {msg.role === 'agent' && <span className="w-1 h-1 rounded-full bg-emerald-500/50" />}
                                         {msg.role === 'agent' ? 'AI_AGENT_01' : 'USER_ID_Auth'} · {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
