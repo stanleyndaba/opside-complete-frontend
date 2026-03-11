@@ -38,6 +38,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
+import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 
 // Icon imports for document sources
 const GmailIcon = '/G.png';
@@ -64,7 +65,7 @@ const stripEmojis = (text: any) => {
 };
 
 export function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes' | 'evidence'>('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
@@ -77,7 +78,7 @@ export function Dashboard() {
     setIsSidebarCollapsed(prev => !prev);
   }, []);
 
-  const handleTabChange = (tab: 'overview' | 'discrepancies' | 'disputes') => {
+  const handleTabChange = (tab: 'overview' | 'discrepancies' | 'disputes' | 'evidence') => {
     setActiveTab(tab);
   };
 
@@ -531,9 +532,9 @@ export function Dashboard() {
     })();
   }, [isReady, activeSlug]);
 
-  // Fetch detection results when switching to discrepancies tab
+  // Fetch detection results for anomaly ledger counter
   useEffect(() => {
-    if (!isReady || activeTab !== 'discrepancies' || detectionResults.length !== 0) return;
+    if (!isReady || detectionResults.length !== 0) return;
     const fetchDetections = async () => {
       setLoadingDetections(true);
       try {
@@ -554,7 +555,7 @@ export function Dashboard() {
       }
     };
     fetchDetections();
-  }, [activeTab, detectionResults.length, toast, isReady]);
+  }, [detectionResults.length, toast, isReady]);
 
   const updateUpcomingMetrics = useCallback((payments: any[]) => {
     upcomingPaymentsLoadedRef.current = true;
@@ -1109,13 +1110,29 @@ export function Dashboard() {
                       <button
                         onClick={() => handleTabChange('disputes')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider",
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider flex items-center gap-2",
                           activeTab === 'disputes'
                             ? "text-white bg-white/[0.08]"
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
                         Dispute Claims
+                        {effectivePendingClaims > 0 && (
+                          <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-emerald-500 text-[9px] font-bold rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                            {effectivePendingClaims > 99 ? '99+' : effectivePendingClaims}
+                          </span>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleTabChange('evidence')}
+                        className={cn(
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-wider flex items-center gap-2",
+                          activeTab === 'evidence'
+                            ? "text-white bg-white/[0.08]"
+                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
+                        )}
+                      >
+                        Cases with Evidence
                       </button>
                     </div>
                   </div>
@@ -1893,6 +1910,12 @@ export function Dashboard() {
                         </div>
                       </div>
                     )}
+                  </div>
+                </div>
+              ) : activeTab === 'evidence' ? (
+                <div className="space-y-6">
+                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                    <EvidenceMatchingTable />
                   </div>
                 </div>
               ) : (

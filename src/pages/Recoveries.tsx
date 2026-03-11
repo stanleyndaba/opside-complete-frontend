@@ -2632,7 +2632,7 @@ export default function Recoveries() {
 
 
                   {/* Data Table */}
-                  <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl shadow-2xl">
+                  <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl">
                     <div className="p-0">
                       {loading && (
                         <div className="py-24 flex flex-col items-center justify-center space-y-6">
@@ -2679,7 +2679,7 @@ export default function Recoveries() {
                           {claimsByMonth.map((monthGroup, groupIndex) => (
                             <React.Fragment key={`${monthGroup.month}-${monthGroup.year}`}>
                               {/* Matrix Institutional Month Header */}
-                              <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header shadow-lg">
+                              <div className="sticky top-[0px] z-10 bg-[#0c0c0c]/90 backdrop-blur-xl px-8 py-4 border-y border-white/5 flex items-center justify-between group/header">
                                 <div className="flex items-center gap-4">
                                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                   <span className="text-xs font-sans font-bold text-white uppercase tracking-[0.3em]">

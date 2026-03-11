@@ -1,9 +1,8 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import viteCompression from "vite-plugin-compression";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -32,26 +31,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (!id.includes('node_modules')) return undefined;
-
-          // Keep React and ReactDOM together to avoid timing issues
-          if (id.includes('react') || id.includes('react-dom') || id.includes('react-is')) {
-            return 'react-vendor';
-          }
-
-          if (id.includes('react-router')) return 'react-router';
-          if (id.includes('@tanstack')) return 'tanstack';
-          if (id.includes('@radix-ui')) return 'radix';
-          if (id.includes('lucide-react')) return 'icons';
-          if (id.includes('recharts')) return 'recharts';
-          if (id.includes('date-fns')) return 'date-fns';
-          if (id.includes('zod')) return 'zod';
-          if (id.includes('cmdk')) return 'cmdk';
-
-          // leave the rest to be split per entry to avoid a monolithic vendor
-          return undefined;
-        },
+        // manualChunks removed to prevent Rollup circular dependency OOMs
       },
     },
     chunkSizeWarningLimit: 1000, // Warn for chunks larger than 1MB
@@ -60,7 +40,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    mode === 'development' && componentTagger(),
     // Generate bundle report when running `npm run analyze`
     (process.env.npm_lifecycle_event === 'analyze') && visualizer({
       filename: "dist/bundle-report.html",
@@ -70,8 +49,8 @@ export default defineConfig(({ mode }) => ({
       template: "treemap"
     }),
     // Emit compressed assets for prod preview and easy CDN upload
-    mode === 'production' && viteCompression({ algorithm: 'brotliCompress' }),
-    mode === 'production' && viteCompression({ algorithm: 'gzip' }),
+    // mode === 'production' && viteCompression({ algorithm: 'brotliCompress' }),
+    // mode === 'production' && viteCompression({ algorithm: 'gzip' }),
   ].filter(Boolean) as any,
   resolve: {
     alias: {
