@@ -810,6 +810,7 @@ export default function CaseDetail() {
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
+                  </div>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
