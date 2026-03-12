@@ -950,14 +950,13 @@ export default function CaseDetail() {
                     <h3 className="text-sm font-bold text-white">Case Summary</h3>
                   </div>
                   <div className="space-y-8">
-                    <p className="text-[15px] text-white/70 leading-relaxed font-bold tracking-tight">
+                    <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
                       {generateNarrative(effectiveCase)}
                     </p>
 
                     <div className="pt-6 border-t border-white/10">
                       <div className="text-xs text-white/30 font-bold mb-6 flex items-center gap-2">
                         Product & Facility Details
-                        <div className="h-px flex-1 bg-white/10" />
                       </div>
                       <div className="space-y-6">
                         <div className="flex items-start gap-4">
@@ -1256,7 +1255,7 @@ export default function CaseDetail() {
                   <div className="flex flex-col md:flex-row gap-12 items-start">
                     <div className="min-w-[240px]">
                       <div className="text-[10px] text-white/30 font-bold mb-3 tracking-tight">Recovery Amount</div>
-                      <div className="text-4xl font-bold text-emerald-500 font-sans tracking-tight">
+                      <div className="text-2xl font-bold text-emerald-500 font-sans tracking-tight">
                         ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
                       </div>
 
@@ -1290,7 +1289,7 @@ export default function CaseDetail() {
                         </div>
 
                         <div className="p-6">
-                          <div className="text-2xl font-bold text-white tabular-nums font-sans tracking-tight">
+                          <div className="text-lg font-bold text-white tabular-nums font-sans tracking-tight">
                             {selectedMetric === 'payout' && (
                               effectiveCase.expectedPayoutDate ? (
                                 (() => {
@@ -1603,7 +1602,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
                           <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 tracking-tight uppercase mb-2">
-                            <Activity className="h-3 w-3" /> System Health
+                            System Health
                           </div>
                           <p className="text-[11px] text-white/70 leading-relaxed font-bold italic">
                             Agent 11 is primary observer. Audit cycle synchronization established. Continuous monitoring of FC records enabled.
@@ -1695,7 +1694,6 @@ export default function CaseDetail() {
                       <div className="space-y-8">
                         <div className="flex items-center gap-3 border-b border-white/5 pb-4">
                           <div className="p-2 bg-emerald-500/10 rounded-lg">
-                            <Activity className="h-4 w-4 text-emerald-500" />
                           </div>
                           <div>
                             <h4 className="text-xs font-bold text-white tracking-tight uppercase">Tactical Playbook</h4>
@@ -1720,7 +1718,6 @@ export default function CaseDetail() {
                         <div className="pt-6 border-t border-white/5">
                           <div className="flex items-center justify-between p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
                             <div className="flex items-center gap-3">
-                              <DollarSign className="h-4 w-4 text-emerald-500" />
                               <span className="text-xs font-bold text-white/60">Expected Recovery</span>
                             </div>
                             <span className="text-sm font-sans font-bold text-emerald-500">
