@@ -32,11 +32,11 @@ export function PageLayout({
   const isAuthView = !!hideNavbar && !!hideSidebar;
   const shouldShowMidnightBg = !plainBackground && (isAuthView || midnight);
   const mainIndent = hideSidebar ? 'ml-0' : (isSidebarCollapsed ? 'ml-16' : 'ml-60');
-  return <div className={`min-h-screen h-full flex flex-col platform ${shouldShowMidnightBg ? 'relative bg-[#070707]' : plainBackground ? 'bg-white' : 'bg-[#070707]'}`}>
+  return <div className={`min-h-screen h-full flex flex-col platform ${shouldShowMidnightBg ? 'relative bg-background' : plainBackground ? 'bg-white' : 'bg-background'}`}>
     {shouldShowMidnightBg && (
       <>
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#070707]" />
       </>
     )}
     {!hideNavbar && (

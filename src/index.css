@@ -92,7 +92,7 @@
 
   /* Dark Theme - Midnight Black */
   .dark {
-    --background: 0 0% 2%;
+    --background: 0 0% 3%;
     --foreground: 0 0% 98%;
 
     --card: 0 0% 4%;
@@ -129,13 +129,13 @@
     --input: 0 0% 15%;
     --ring: 224 82% 56%;
 
-    --sidebar-background: 0 0% 2%;
+    --sidebar-background: 0 0% 3%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 224 82% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent: 0 0% 5%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 15%;
+    --sidebar-border: 0 0% 10%;
     --sidebar-ring: 224 82% 56%;
   }
 }
