@@ -799,7 +799,7 @@ export default function CaseDetail() {
   return (
     <PageLayout title={`Case ID: ${effectiveCase.id}`} midnight>
       <div className="relative -m-4 lg:-m-6">
-        <div className="relative w-full bg-[#050505] min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
+        <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
             {/* Header - Case Information */}
             <div className="mb-2 flex items-center justify-between">
