@@ -914,7 +914,7 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('RECORD')}
                 className={cn(
-                  "px-8 py-4 text-[13px] font-bold transition-all duration-300 relative uppercase",
+                  "px-8 py-4 text-[12px] font-bold transition-all duration-300 relative uppercase",
                   activeTab === 'RECORD' ? "text-white" : "text-white/40 hover:text-white/60"
                 )}>
                 CLAIM RECORD
@@ -926,7 +926,7 @@ export default function CaseDetail() {
               <button
                 onClick={() => setActiveTab('PROTOCOL')}
                 className={cn(
-                  "px-8 py-4 text-[13px] font-bold transition-all duration-300 relative uppercase",
+                  "px-8 py-4 text-[12px] font-bold transition-all duration-300 relative uppercase",
                   activeTab === 'PROTOCOL' ? "text-white" : "text-white/40 hover:text-white/60"
                 )}>
                 RESOLUTION STEPS
