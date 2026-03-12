@@ -158,7 +158,7 @@ export function ChatNode() {
                                 <button
                                     key={idx}
                                     onClick={() => handlePathwayClick(path)}
-                                    className="whitespace-nowrap px-3 py-1.5 bg-emerald-500/5 border border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/40 text-[10px] font-mono font-bold text-emerald-500 transition-all rounded-none uppercase tracking-wider"
+                                    className="whitespace-nowrap px-3 py-1.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-[10px] font-mono font-bold text-gray-300 hover:text-white transition-all rounded-none uppercase tracking-wider"
                                 >
                                     {path.label}
                                 </button>
