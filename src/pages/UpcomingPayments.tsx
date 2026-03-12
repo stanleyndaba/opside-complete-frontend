@@ -267,11 +267,7 @@ export default function UpcomingPayments() {
 
   return (
     <PageLayout title="Upcoming Payments" midnight>
-      <div className="relative min-h-screen">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-
-        <div className="relative max-w-[1600px] mx-auto px-8 py-12">
+      <div className="relative max-w-[1600px] mx-auto px-8 py-12">
           {/* Analysis Header */}
           <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
             <div className="flex items-center gap-3">
@@ -513,7 +509,6 @@ export default function UpcomingPayments() {
             </p>
           </div>
         </div>
-      </div>
     </PageLayout>
   );
 }

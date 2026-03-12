@@ -558,12 +558,7 @@ export default function TransactionHistory() {
 
     return (
         <PageLayout title="Transaction History" midnight>
-            <div className="relative -m-4 lg:-m-6 bg-[#0c0c0c] min-h-screen">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                    style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-
-                <div className="relative container mx-auto px-10 lg:px-16 py-12">
+            <div className="relative container mx-auto px-10 lg:px-16 py-12">
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-white/5 pb-10">
                         <div>
@@ -834,7 +829,6 @@ export default function TransactionHistory() {
                         </p>
                     </div>
                 </div>
-            </div>
 
             {/* Premium Dialog Styling */}
             <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
