@@ -72,13 +72,13 @@ export default function PricingAdjust() {
                     <div className="h-px flex-1 bg-white/5" />
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Standard</h2>
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Customized</h2>
                     <span className="text-[10px] text-white/30 uppercase tracking-widest">(Default)</span>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <span className="text-[11px] font-bold text-white/40">Includes:</span>
+                  <span className="text-[11px] font-bold text-white/40">Benefits Includes:</span>
                 </div>
 
                 <div className="space-y-6 flex-grow mb-8">
@@ -109,7 +109,7 @@ export default function PricingAdjust() {
                     onClick={handleStandardClick}
                     className="bg-white hover:bg-white/90 text-black font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
                   >
-                    Get Standard
+                    Get Customized
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                   <div className="pt-6 border-t border-white/5">

@@ -407,7 +407,7 @@ const Index = () => {
                     <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
                   </div>
                   <span className="text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight">
-                    <span className="text-white font-bold">7</span> spots remaining
+                    <span className="text-white font-bold">only 17</span> spots left
                   </span>
                 </div>
 
@@ -524,7 +524,7 @@ const Index = () => {
               </div>
 
               {/* Dark container for "Startup" feel */}
-              <div className="bg-[#050505] rounded-[24px] relative overflow-hidden shadow-2xl border border-white/5">
+              <div className="bg-[#050505] rounded-none relative overflow-hidden shadow-2xl border border-white/5">
 
                 {/* Background Accents (Subtle) */}
                 <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
