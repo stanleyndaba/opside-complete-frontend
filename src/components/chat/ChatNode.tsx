@@ -101,7 +101,10 @@ export function ChatNode() {
                         {/* Header */}
                         <div className="px-5 py-4 border-b border-white/5 bg-[#050505]/95 flex items-center justify-between">
                             <div>
-                                <h3 className="text-sm font-bold text-white tracking-tight font-mono uppercase">Welcome 👋</h3>
+                                <h3 className="text-sm font-bold text-white tracking-tight font-mono uppercase flex items-center gap-2">
+                                    Welcome 👋
+                                    <span className="bg-blue-600 text-white text-[8px] px-1.5 py-0.5 rounded-[5px] normal-case font-sans font-medium leading-none">beta</span>
+                                </h3>
                                 <p className="text-[10px] text-white/40 font-mono tracking-tight mt-0.5">Ask anything based off the Margin platform and your data</p>
                             </div>
                             <button
