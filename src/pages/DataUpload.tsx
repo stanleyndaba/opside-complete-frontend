@@ -82,6 +82,7 @@ const ANOMALY_LABELS: Record<string, string> = {
     incorrect_fee: 'Incorrect Fee', duplicate_charge: 'Duplicate Charge',
     lost_warehouse: 'Lost in Warehouse', damaged_warehouse: 'Warehouse Damage',
     lost_inbound: 'Lost Inbound Shipment', damaged_inbound: 'Damaged Inbound',
+    lost_in_transit: 'Lost in Transit', inbound_shipment_shortage: 'Inbound Shipment Shortage',
     carrier_claim: 'Carrier Claim', customer_return: 'Customer Return',
     reimbursement_reversal: 'Reimbursement Reversal', weight_fee_overcharge: 'Weight/Dimension Fee Drift',
     fulfillment_fee_error: 'Fulfillment Fee Error', storage_overcharge: 'Storage Overcharge',
