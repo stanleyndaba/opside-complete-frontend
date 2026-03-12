@@ -1359,33 +1359,6 @@ export default function CaseDetail() {
                       <Timeline claimId={effectiveCase.id} />
                     </div>
 
-                    {/* Events List */}
-                    <div className="space-y-4">
-                      {(effectiveCase.events || []).slice(0, 4).map((event: any, index: number) => (
-                        <div key={index} className="relative pl-6 border-l border-blue-600/30">
-                          <div className="absolute left-[-4.5px] top-1.5 w-2 h-2 rounded-full bg-blue-600 border-2 border-[#050505]" />
-                          <div className="flex flex-col">
-                            <div className="flex justify-between items-baseline mb-2">
-                              <h4 className="text-[11px] font-bold text-white tracking-tight">{event.title}</h4>
-                            </div>
-                            <div className="text-[10px] font-sans font-bold text-white/30 mb-2">
-                              {(() => {
-                                const d = new Date(event.timestamp);
-                                return isNaN(d.getTime()) ? '—' : d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                              })()}
-                            </div>
-                            <p className="text-[11px] text-white/50 font-bold tracking-tight leading-relaxed">{event.description}</p>
-                          </div>
-                        </div>
-                      ))}
-                      {effectiveCase.status === 'Guaranteed' && (
-                        <div className="relative pl-6 border-l border-white/10 opacity-40 italic">
-                          <div className="absolute left-[-4px] top-1 w-2 h-2 rounded-full bg-white/10 border-2 border-[#050505]" />
-                          <h4 className="text-[11px] font-bold text-white/40 tracking-tight">Awaiting submission ({AGENT_NAMES['refund_filing']})</h4>
-                          <p className="text-[11px] text-white/30 font-bold tracking-tight leading-relaxed mt-4">Verification in progress by {AGENT_NAMES['evidence_matching']}. Case will be filed once ready.</p>
-                        </div>
-                      )}
-                    </div>
                   </div>
                 </div>
 
