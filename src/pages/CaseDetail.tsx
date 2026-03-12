@@ -810,8 +810,6 @@ export default function CaseDetail() {
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
-                  </div>
-                  <p className="text-xs text-white/30 mt-1 font-sans font-bold tracking-tight">Claim Details</p>
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
@@ -870,10 +868,6 @@ export default function CaseDetail() {
                   <FileText className="h-3.5 w-3.5 mr-2" />
                   Get PDF
                 </Button>
-                <div className="text-right">
-                  <div className="text-xs text-white/30 font-bold">Resolution Progress</div>
-                  <div className="text-xs font-sans font-bold text-white mt-0.5">{typeof effectiveCase.progress === 'number' ? Math.round(effectiveCase.progress) : 85}% completed</div>
-                </div>
               </div>
             </div>
 
