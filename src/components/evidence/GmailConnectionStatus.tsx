@@ -37,27 +37,40 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       // Try getGmailStatus first (specific endpoint)
       let gmailRes = await api.getGmailStatus(activeSlug);
 
-      // Also check getIntegrationsStatus as fallback (more comprehensive)
-      const integrationsRes = await api.getIntegrationsStatus(activeSlug);
+      // Also get integrations status and evidence sources for robust checking
+      const [integrationsRes, sourcesRes] = await Promise.all([
+        api.getIntegrationsStatus(activeSlug),
+        api.getEvidenceSources(activeSlug)
+      ]);
 
-      // Helper function to determine if Gmail is connected - only return true when explicitly verified
+      // Helper function to determine if Gmail is connected robustly
       const isGmailConnected = (): boolean => {
-        // Check specific Gmail status endpoint first - must explicitly be true
-        if (gmailRes?.ok && gmailRes.data?.connected === true) return true;
-
-        // Check integrations status providerIngest - must explicitly be true
-        if (integrationsRes?.ok && integrationsRes.data) {
-          const data = integrationsRes.data;
-          // Check providerIngest with lowercase - must be explicitly true
-          if (data.providerIngest?.['gmail']?.connected === true) return true;
-          // Check providerIngest with capitalized - must be explicitly true
-          if (data.providerIngest?.['Gmail']?.connected === true) return true;
-          // Check top-level gmail_connected field - must be explicitly true
-          if ((data as any).gmail_connected === true) return true;
+        let isConnected = false;
+        
+        // 1. Check specific Gmail status endpoint
+        if (gmailRes?.ok && gmailRes.data?.connected === true) {
+          isConnected = true;
         }
 
-        // Only return true if explicitly verified - don't assume connected
-        return false;
+        // 2. Check integrations status
+        if (!isConnected && integrationsRes?.ok && integrationsRes.data) {
+          const statusObj = integrationsRes.data as any;
+          if (statusObj?.providerIngest?.['gmail']?.connected === true) isConnected = true;
+          if (!isConnected && statusObj?.providerIngest?.['Gmail']?.connected === true) isConnected = true;
+          if (!isConnected && statusObj?.providers?.['gmail'] === true) isConnected = true;
+          if (!isConnected && statusObj?.providers?.['Gmail'] === true) isConnected = true;
+          if (!isConnected && statusObj?.gmail_connected === true) isConnected = true;
+        }
+
+        // 3. Check evidence sources array
+        if (!isConnected && sourcesRes?.ok && sourcesRes.data?.sources) {
+          const sources = sourcesRes.data.sources;
+          if (sources.some((s: any) => s.provider?.toLowerCase() === 'gmail' && s.status === 'connected')) {
+            isConnected = true;
+          }
+        }
+
+        return isConnected;
       };
 
       const connected = isGmailConnected();

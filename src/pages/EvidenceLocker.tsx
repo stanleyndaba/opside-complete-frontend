@@ -20,7 +20,7 @@ import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { DocumentReuseInfo } from '@/components/evidence/DocumentReuseInfo';
 
-// Document Log entry type
+// Document Log entry type 
 interface DocLogEntry {
   id: string;
   timestamp: Date;
@@ -139,6 +139,64 @@ export default function EvidenceLocker() {
 
   const [dragActive, setDragActive] = useState(false);
   const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
+
+  // Fetch count of connected platforms
+  const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchConnectionsCount = async () => {
+      try {
+        const [statusRes, sourcesRes] = await Promise.all([
+          api.getIntegrationsStatus(activeSlug),
+          api.getEvidenceSources(activeSlug)
+        ]);
+        
+        if (statusRes.ok && sourcesRes.ok) {
+          const status = statusRes.data;
+          const sources = sourcesRes.data.sources || [];
+          let count = 0;
+          
+          const platforms = ['amazon', 'stripe', 'gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
+          
+          platforms.forEach((p) => {
+            if (p === 'amazon' || p === 'stripe') {
+              if (status && (status as any)[`${p}_connected`]) count++;
+            } else {
+              let isConnected = false;
+              try {
+                const statusObj = status as any;
+                if (statusObj?.providerIngest?.[p]?.connected === true) isConnected = true;
+                const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                if (!isConnected && statusObj?.providerIngest?.[capitalized]?.connected === true) isConnected = true;
+                if (!isConnected && statusObj?.providers?.[p] === true) isConnected = true;
+                if (!isConnected && statusObj?.providers?.[capitalized] === true) isConnected = true;
+                if (!isConnected && p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) isConnected = true;
+                if (!isConnected && p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) isConnected = true;
+                if (!isConnected && statusObj && statusObj[`${p}_connected`] === true) isConnected = true;
+                if (!isConnected && sources.some((s: any) => {
+                  const sLower = s.provider?.toLowerCase() || '';
+                  const pLower = p.toLowerCase();
+                  return s.status === 'connected' && 
+                         (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
+                })) {
+                  isConnected = true;
+                }
+              } catch (e) {
+                console.error("Error checking connection status for", p, e);
+              }
+              if (isConnected) count++;
+            }
+          });
+          
+          setConnectedPlatformsCount(count);
+        }
+      } catch (e) {
+        console.error("Failed to fetch connections count", e);
+      }
+    };
+    
+    fetchConnectionsCount();
+  }, [activeSlug]);
 
   const [documents, setDocuments] = useState<Array<{
     id: string;
@@ -864,7 +922,7 @@ export default function EvidenceLocker() {
                 <div className="hidden xl:flex items-center gap-10">
                   {[
                     { label: 'Total_Archive', value: evidenceStatus?.documentsCount || documents.length, icon: Database },
-                    { label: 'Ingestion_Active', value: evidenceStatus?.processingCount || 0, icon: RefreshCw, pulse: (evidenceStatus?.processingCount || 0) > 0 }
+                    { label: 'Ingestion_Active', value: connectedPlatformsCount, icon: RefreshCw, pulse: connectedPlatformsCount > 0 }
                   ].map((stat, idx) => (
                     <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
                       <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">{stat.label}</span>

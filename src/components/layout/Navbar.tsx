@@ -110,6 +110,64 @@ export function Navbar({
     fetchProfile();
   }, []);
 
+  // Fetch count of connected platforms
+  const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchConnectionsCount = async () => {
+      try {
+        const [statusRes, sourcesRes] = await Promise.all([
+          api.getIntegrationsStatus(tenantSlug),
+          api.getEvidenceSources(tenantSlug)
+        ]);
+        
+        if (statusRes.ok && sourcesRes.ok) {
+          const status = statusRes.data;
+          const sources = sourcesRes.data.sources || [];
+          let count = 0;
+          
+          const platforms = ['amazon', 'stripe', 'gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
+          
+          platforms.forEach((p) => {
+            if (p === 'amazon' || p === 'stripe') {
+              if (status && (status as any)[`${p}_connected`]) count++;
+            } else {
+              let isConnected = false;
+              try {
+                const statusObj = status as any;
+                if (statusObj?.providerIngest?.[p]?.connected === true) isConnected = true;
+                const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                if (!isConnected && statusObj?.providerIngest?.[capitalized]?.connected === true) isConnected = true;
+                if (!isConnected && statusObj?.providers?.[p] === true) isConnected = true;
+                if (!isConnected && statusObj?.providers?.[capitalized] === true) isConnected = true;
+                if (!isConnected && p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) isConnected = true;
+                if (!isConnected && p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) isConnected = true;
+                if (!isConnected && statusObj && statusObj[`${p}_connected`] === true) isConnected = true;
+                if (!isConnected && sources.some((s: any) => {
+                  const sLower = s.provider?.toLowerCase() || '';
+                  const pLower = p.toLowerCase();
+                  return s.status === 'connected' && 
+                         (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
+                })) {
+                  isConnected = true;
+                }
+              } catch (e) {
+                console.error("Error checking connection status for", p, e);
+              }
+              if (isConnected) count++;
+            }
+          });
+          
+          setConnectedPlatformsCount(count);
+        }
+      } catch (e) {
+        console.error("Failed to fetch connections count", e);
+      }
+    };
+    
+    fetchConnectionsCount();
+  }, [tenantSlug]);
+
   // State for notes feature
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [notes, setNotes] = useState<{ id: string; text: string; createdAt: string }[]>([]);
@@ -431,7 +489,7 @@ export function Navbar({
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
                   <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center bg-blue-600 text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
-                    2
+                    {connectedPlatformsCount}
                   </span>
                 </button>
               </HoverCardTrigger>
@@ -447,7 +505,7 @@ export function Navbar({
                     </div>
                     <div className="flex flex-col">
                       <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Integrations Hub</span>
-                      <span className="text-[9px] font-sans font-bold text-orange-600 uppercase tracking-tight mt-0.5">2 Platforms connected</span>
+                      <span className="text-[9px] font-sans font-bold text-orange-600 uppercase tracking-tight mt-0.5">{connectedPlatformsCount} Platform{connectedPlatformsCount === 1 ? '' : 's'} connected</span>
                     </div>
                   </div>
                   <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">

@@ -55,32 +55,79 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   useEffect(() => {
     const loadSources = async () => {
       try {
-        const res = await api.get<{ success: boolean; sources: EvidenceSource[] }>('/api/evidence/sources');
-        if (res.ok && res.data?.sources && res.data.sources.filter((s: EvidenceSource) => s.status === 'connected').length > 0) {
-          setSources(res.data.sources.filter((s: EvidenceSource) => s.status === 'connected'));
-        } else {
+        const [sourcesRes, statusRes] = await Promise.all([
+          api.get<{ success: boolean; sources: EvidenceSource[] }>('/api/evidence/sources'),
+          api.getIntegrationsStatus(tenantSlug || 'beta')
+        ]);
+
+        const connectedProviders: EvidenceSource[] = [];
+        const platforms = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
+        const apiSources = sourcesRes.ok && sourcesRes.data?.sources ? sourcesRes.data.sources : [];
+        const statusData = statusRes.ok && statusRes.data ? statusRes.data : null;
+
+        platforms.forEach((p) => {
+          let isConnected = false;
+          let lastSync: string | null = null;
+          
           try {
-            const intRes = await api.getIntegrationsStatus(tenantSlug || 'beta');
-            if (intRes.ok && intRes.data?.providerIngest) {
-              const connectedProviders: EvidenceSource[] = [];
-              const providers = intRes.data.providerIngest;
-              for (const [provider, info] of Object.entries(providers)) {
-                if (info && info.connected) {
-                  connectedProviders.push({
-                    id: `integration-${provider}`,
-                    provider: provider as 'gmail' | 'outlook' | 'gdrive' | 'dropbox',
-                    account_email: '',
-                    status: 'connected',
-                    last_sync_at: info.lastIngest || null,
-                  });
-                }
-              }
-              setSources(connectedProviders);
+            const statusObj = statusData as any;
+            
+            // Check direct exact match in providerIngest
+            if (statusObj?.providerIngest?.[p]?.connected === true) {
+              isConnected = true;
+              lastSync = statusObj.providerIngest[p].lastIngest || null;
             }
-          } catch (intError) {
-            console.warn('Integrations status fallback failed:', intError);
+            
+            // Check capitalized
+            const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+            if (!isConnected && statusObj?.providerIngest?.[capitalized]?.connected === true) {
+              isConnected = true;
+              lastSync = statusObj.providerIngest[capitalized].lastIngest || null;
+            }
+            
+            // Check legacy `providers`
+            if (!isConnected && statusObj?.providers?.[p] === true) isConnected = true;
+            if (!isConnected && statusObj?.providers?.[capitalized] === true) isConnected = true;
+            
+            // Handle google_drive vs gdrive mapping
+            if (!isConnected && p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) {
+              isConnected = true;
+              lastSync = statusObj.providerIngest['google_drive'].lastIngest || null;
+            }
+            if (!isConnected && p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) isConnected = true;
+            
+            // Check root field e.g. `gmail_connected`
+            if (!isConnected && statusObj && statusObj[`${p}_connected`] === true) isConnected = true;
+
+            // Lastly check evidence sources array
+            if (!isConnected && apiSources.length > 0) {
+              const matchingSource = apiSources.find((s: any) => {
+                const sLower = s.provider?.toLowerCase() || '';
+                const pLower = p.toLowerCase();
+                return s.status === 'connected' && 
+                       (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
+              });
+              if (matchingSource) {
+                isConnected = true;
+                lastSync = matchingSource.last_sync_at || null;
+              }
+            }
+          } catch (e) {
+            console.error("Error checking connection status for", p, e);
           }
-        }
+
+          if (isConnected) {
+            connectedProviders.push({
+              id: `integration-${p}`,
+              provider: p as 'gmail' | 'outlook' | 'gdrive' | 'dropbox',
+              account_email: '',
+              status: 'connected',
+              last_sync_at: lastSync,
+            });
+          }
+        });
+
+        setSources(connectedProviders);
       } catch (error) {
         console.error('Failed to load evidence sources:', error);
       } finally {

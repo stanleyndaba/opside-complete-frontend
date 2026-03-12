@@ -207,17 +207,20 @@ export default function IntegrationsHub() {
   };
   const [evidenceSources, setEvidenceSources] = useState<Array<{
     id: string;
-    provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+    provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive';
     account_email: string;
     status: 'connected' | 'disconnected' | 'error';
     last_sync_at: string | null;
     created_at: string;
     metadata: Record<string, any>;
   }>>([]);
-  const handleConnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') => {
+  const handleConnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive') => {
     const providerName = provider === 'gdrive' ? 'Google Drive'
       : provider === 'gmail' ? 'Gmail'
         : provider === 'dropbox' ? 'Dropbox'
+        : provider === 'slack' ? 'Slack'
+        : provider === 'adobe_sign' ? 'Adobe Sign'
+        : provider === 'onedrive' ? 'OneDrive'
           : 'Outlook';
     try {
       setProviderLoading(provider);
@@ -244,6 +247,63 @@ export default function IntegrationsHub() {
       });
     } finally {
       setProviderLoading(prev => (prev === provider ? null : prev));
+    }
+  };
+
+  const handleDisconnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive') => {
+    const providerName = provider === 'gdrive' ? 'Google Drive'
+      : provider === 'gmail' ? 'Gmail'
+        : provider === 'dropbox' ? 'Dropbox'
+        : provider === 'slack' ? 'Slack'
+        : provider === 'adobe_sign' ? 'Adobe Sign'
+        : provider === 'onedrive' ? 'OneDrive'
+          : 'Outlook';
+          
+    try {
+      setDisconnectingProvider(provider);
+      
+      const source = evidenceSources.find(s => {
+        const sLower = s.provider.toLowerCase();
+        const pLower = provider.toLowerCase();
+        return sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive');
+      });
+      
+      let res;
+      if (source?.id) {
+        res = await api.disconnectEvidenceSource(source.id);
+      } else {
+        res = await api.disconnectIntegration(provider);
+      }
+      
+      if (res.ok) {
+        toast({
+          title: `${providerName} Disconnected`,
+          description: `Your ${providerName} account has been disconnected.`,
+        });
+        
+        const [statusRes, sourcesRes] = await Promise.all([
+          api.getIntegrationsStatus(activeSlug),
+          api.getEvidenceSources(activeSlug)
+        ]);
+        
+        if (statusRes.ok) setStatus(statusRes.data);
+        if (sourcesRes.ok) setEvidenceSources(sourcesRes.data.sources || []);
+      } else {
+        toast({
+          title: 'Disconnection Failed',
+          description: res.error || `Failed to disconnect ${providerName}.`,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to disconnect ${provider}:`, error);
+      toast({
+        title: 'Error',
+        description: `An error occurred while disconnecting ${providerName}.`,
+        variant: 'destructive',
+      });
+    } finally {
+      setDisconnectingProvider(null);
     }
   };
 
@@ -973,14 +1033,32 @@ export default function IntegrationsHub() {
                 } as const;
 
                 const isConnected = () => {
-                  if (status?.providerIngest?.[p]?.connected === true) return true;
-                  const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                  if (status?.providerIngest?.[capitalized]?.connected === true) return true;
-                  if (status?.providers?.[p] === true) return true;
-                  if (status?.providers?.[capitalized] === true) return true;
-                  const providerConnectedKey = `${p}_connected` as keyof typeof status;
-                  if (status && (status as any)[providerConnectedKey] === true) return true;
-                  if (evidenceSources.some(s => s.provider === p && s.status === 'connected')) return true;
+                  try {
+                    const statusObj = status as any;
+                    if (statusObj?.providerIngest?.[p]?.connected === true) return true;
+                    
+                    const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
+                    if (statusObj?.providerIngest?.[capitalized]?.connected === true) return true;
+                    
+                    if (statusObj?.providers?.[p] === true) return true;
+                    if (statusObj?.providers?.[capitalized] === true) return true;
+                    
+                    if (p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) return true;
+                    if (p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) return true;
+                    
+                    const providerConnectedKey = `${p}_connected`;
+                    if (statusObj && statusObj[providerConnectedKey] === true) return true;
+                    
+                    if (evidenceSources.some(s => {
+                      const sLower = s.provider.toLowerCase();
+                      const pLower = p.toLowerCase();
+                      return s.status === 'connected' && 
+                             (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
+                    })) return true;
+                    
+                  } catch (e) {
+                    console.error("Error checking connection status for", p, e);
+                  }
                   return false;
                 };
 
@@ -1012,10 +1090,11 @@ export default function IntegrationsHub() {
                             <Button
                               variant="ghost"
                               size="sm"
+                              disabled={disconnectingProvider === p}
                               className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-sans font-bold uppercase tracking-tight"
-                              onClick={() => handleConnectDocSource(p)} // Simplified for UI demonstration, actual logic uses disconnect
+                              onClick={() => handleDisconnectDocSource(p)}
                             >
-                              Decommission
+                              {disconnectingProvider === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin mx-auto" /> : "Disconnect Account"}
                             </Button>
                           </div>
                         ) : (

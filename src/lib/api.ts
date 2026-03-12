@@ -416,6 +416,38 @@ export const api = {
       }
     );
   },
+  
+  createStore: (data: { name: string; marketplace: string; seller_id: string }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for createStore");
+    return requestJson<{ store: any }>(
+      `/api/v1/integrations/amazon/stores?tenantSlug=${tenantSlug}`, 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      }
+    );
+  },
+  
+  getStores: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getStores");
+    return requestJson<{ stores: any[] }>(
+      `/api/v1/integrations/amazon/stores?tenantSlug=${tenantSlug}`
+    );
+  },
+  
+  deleteStore: (id: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for deleteStore");
+    return requestJson<{ success: boolean; message?: string }>(
+      `/api/v1/integrations/amazon/stores/${id}?tenantSlug=${tenantSlug}`,
+      {
+        method: 'DELETE',
+      }
+    );
+  },
+  
   getAmazonRecoveries: async (tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getAmazonRecoveries");
     const startTime = performance.now();
@@ -585,7 +617,7 @@ export const api = {
   // Disputes
   getDisputeBrief: (id: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief`),
 
-  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack', tenantSlug?: string) => {
+  connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive', tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for connectDocs");
     const frontendUrl = getFrontendUrl();
     const slug = tenantSlug;
@@ -1114,7 +1146,18 @@ export const api = {
   },
   setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
   setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
-  setEvidenceFilters: (filters: { includeSenders?: string[]; excludeSenders?: string[]; fileTypes?: string[]; folders?: string[] }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
+  setEvidenceFilters: (filters: { 
+    senderPatterns?: string[]; 
+    excludeSenders?: string[]; 
+    subjectKeywords?: string[];
+    excludeSubjects?: string[];
+    fileTypes?: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean }; 
+    fileNamePatterns?: string[];
+    folders?: string[];
+    dateRange?: string;
+    skipDuplicates?: boolean;
+    skipExisting?: boolean;
+  }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
   // Legacy endpoint - now uses unified orchestrator
   startEvidenceIngest: () => requestJson<any>('/api/evidence/ingest/all', { method: 'POST', body: JSON.stringify({ maxResults: 50, autoParse: true }) }),
   disconnectIntegration: (provider: string, purge = false) =>
