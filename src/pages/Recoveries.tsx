@@ -1161,6 +1161,8 @@ export default function Recoveries() {
   const [metricsError, setMetricsError] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ totalClaimsFound: number; inProgress: number; valueInProgress: number; successRate30d: number } | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const loadData = useCallback(() => setRefreshTrigger(prev => prev + 1), []);
   const [error, setError] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [submittingBulk, setSubmittingBulk] = useState(false);
@@ -1202,6 +1204,13 @@ export default function Recoveries() {
       setSearchTerm(queryParam);
     }
   }, [searchParams]);
+
+  // Ref for cleanup/unmount tracking
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
+  }, []);
 
   // Table drag-to-scroll functionality
   const tableScrollRef = useRef<HTMLDivElement>(null);
@@ -1475,7 +1484,7 @@ export default function Recoveries() {
       }
     })();
     return () => { cancelled = true; };
-  }, [isReady, activeSlug]);
+  }, [isReady, activeSlug, refreshTrigger]);
 
   useEffect(() => {
     if (!isReady) return;
@@ -1798,7 +1807,7 @@ export default function Recoveries() {
         syncCheckTimeoutRef.current = null;
       }
     };
-  }, [toast]);
+  }, [isReady, activeSlug, refreshTrigger, toast]);
 
   // Real-time recovery status updates; update table rows on the fly
   useStatusStream((evt: StatusEvent) => {
@@ -2575,6 +2584,14 @@ export default function Recoveries() {
                                 />
                               </PopoverContent>
                             </Popover>
+
+                            <Button
+                              variant="ghost"
+                              className="h-12 bg-transparent border-0 text-[10px] font-sans font-bold uppercase tracking-tight px-4 gap-2 text-white/40 hover:text-white/60 transition-all"
+                              onClick={() => loadData()}>
+                              <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
+                              REFRESH
+                            </Button>
 
                             {/* Spectrum Select Filter (Claim Type) */}
                             <Select
