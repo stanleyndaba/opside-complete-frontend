@@ -615,7 +615,7 @@ export default function TransactionHistory() {
                                 count: summary.categoryTotals['[RECOVERY]']?.count
                             }
                         ].map((stat, i) => (
-                            <div key={i} className="group relative h-[180px]">
+                            <div key={i} className="group relative h-[150px]">
                                 <div className="absolute inset-0 bg-white/[0.02] rounded-2xl blur-xl group-hover:bg-white/[0.05] transition-all duration-500" />
                                 <div className="relative p-6 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl overflow-hidden h-full flex flex-col">
                                     <div className="flex justify-between items-center mb-3">
@@ -643,7 +643,7 @@ export default function TransactionHistory() {
                                     )}
 
                                     {stat.breakdown && (
-                                        <div className="mt-2 space-y-1 border-t border-white/5 pt-2">
+                                        <div className="mt-1 space-y-1 border-t border-white/5 pt-2">
                                             {stat.breakdown.map((b, bi) => (
                                                 <div key={bi} className="flex justify-between items-center text-[9px] font-sans font-bold tracking-tight">
                                                     <span className="text-gray-500">{b.label}</span>
@@ -651,8 +651,8 @@ export default function TransactionHistory() {
                                                 </div>
                                             ))}
                                             {stat.label === 'TOTAL_DISCOVERY' && (
-                                                <div className="mt-2 pt-2 border-t border-white/5 space-y-1">
-                                                    <div className="text-[10px] text-gray-400 font-sans font-bold uppercase mb-2 tracking-tight">
+                                                <div className="mt-1 pt-2 border-t border-white/5 space-y-1">
+                                                    <div className="text-[10px] text-gray-400 font-sans font-bold uppercase mb-1 tracking-tight">
                                                         Total discovery: ${stat.value.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                                     </div>
                                                     {Object.entries(summary.categoryTotals)
@@ -667,7 +667,7 @@ export default function TransactionHistory() {
                                             )}
                                         </div>
                                     )}
-                                    <div className="mt-auto pt-4 h-[2px] w-8 bg-white/10 group-hover:w-full transition-all duration-700" />
+                                    <div className="mt-auto h-[1px] w-8 bg-white/20 group-hover:w-full transition-all duration-700" />
                                 </div>
                             </div>
                         ))}
