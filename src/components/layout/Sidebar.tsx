@@ -235,7 +235,7 @@ export function Sidebar({
                 <item.icon className="h-5 w-5" strokeWidth={isActive ? 2 : 1.5} />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-popover border border-border text-emerald-500 text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1.5 backdrop-blur-xl">
+            <TooltipContent side="right" className="bg-popover border border-border text-emerald-500 text-[13px] font-sans font-bold uppercase tracking-tight px-3 py-1.5 backdrop-blur-xl">
               {item.title}
             </TooltipContent>
           </Tooltip>
@@ -264,12 +264,12 @@ export function Sidebar({
         )}
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-foreground/20 group-hover:text-foreground")} />
         <span className={cn(
-          "text-[11px] font-sans transition-colors tracking-tight uppercase",
+          "text-[14px] font-sans transition-colors tracking-tight uppercase",
           isActive ? "font-bold text-foreground" : "font-light"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
-            "ml-auto text-[10px] font-sans font-bold tabular-nums px-2 py-0.5 rounded-md border tracking-tight",
+            "ml-auto text-[13px] font-sans font-bold tabular-nums px-2 py-0.5 rounded-md border tracking-tight",
             isActive
               ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
               : "text-foreground/20 bg-foreground/5 border-foreground/5"
@@ -340,7 +340,7 @@ export function Sidebar({
           )}
         >
           <span className={cn(
-            "text-[9px] font-sans font-bold text-foreground/20 uppercase tracking-tight group-hover:text-emerald-500/80 transition-colors",
+            "text-[12px] font-sans font-bold text-foreground/20 uppercase tracking-tight group-hover:text-emerald-500/80 transition-colors",
             isCollapsed ? "block" : ""
           )}>
             {isCollapsed ? "v1" : "v1.0.0-GOLD"}
@@ -364,19 +364,19 @@ export function Sidebar({
                   : "gap-3 px-6 py-3 text-left hover:bg-foreground/[0.02] text-foreground/50 hover:text-foreground"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
+              {!isCollapsed && <span className="text-[14px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[14px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
-              className="flex items-center justify-between px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center justify-between px-3 py-2 text-[14px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
@@ -401,7 +401,7 @@ export function Sidebar({
             */}
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[14px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <Sparkles className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
               <span>Patch_Notes</span>
             </DropdownMenuItem>
@@ -453,7 +453,7 @@ export function Sidebar({
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={toggleTheme}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[14px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               {theme === 'dark' ? (
                 <Sun className="h-4 w-4 text-amber-500/50" strokeWidth={1.5} />
               ) : (
@@ -463,14 +463,14 @@ export function Sidebar({
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[14px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <Settings2 className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[14px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
@@ -490,14 +490,14 @@ export function Sidebar({
                 <DialogTitle className="text-xl font-sans font-bold text-white tracking-tight">
                   Sign Out?
                 </DialogTitle>
-                <DialogDescription className="text-gray-500 font-sans font-bold text-[10px] uppercase tracking-tight mt-1">
+                <DialogDescription className="text-gray-500 font-sans font-bold text-[13px] uppercase tracking-tight mt-1">
                   SIGN OUT SESSION // READY
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
           <div className="px-8 py-6">
-            <p className="text-[13px] text-white/40 leading-relaxed font-sans font-light tracking-tight italic">
+            <p className="text-[16px] text-white/40 leading-relaxed font-sans font-light tracking-tight italic">
               "Opside continues to monitor your store and recover funds for you automatically. You don't need to be logged in for the system to work."
             </p>
           </div>
@@ -505,13 +505,13 @@ export function Sidebar({
             <Button
               variant="outline"
               onClick={() => setSignOutOpen(false)}
-              className="bg-transparent border-white/10 text-white hover:bg-white/5 rounded-xl font-sans font-bold uppercase tracking-tight text-[10px] h-10 px-6"
+              className="bg-transparent border-white/10 text-white hover:bg-white/5 rounded-xl font-sans font-bold uppercase tracking-tight text-[13px] h-10 px-6"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSignOut}
-              className="bg-white text-black hover:bg-white/90 rounded-xl font-sans font-bold uppercase tracking-tight text-[10px] h-10 px-6"
+              className="bg-white text-black hover:bg-white/90 rounded-xl font-sans font-bold uppercase tracking-tight text-[13px] h-10 px-6"
             >
               Confirm Sign Out
             </Button>
@@ -530,7 +530,7 @@ export function Sidebar({
                 Alpha_Provision
               </h3>
             </div>
-            <p className="text-[10px] text-emerald-500/50 font-sans font-bold uppercase tracking-tight">
+            <p className="text-[13px] text-emerald-500/50 font-sans font-bold uppercase tracking-tight">
               COMMISSION-FREE_NETWORK_EXPANSION
             </p>
           </div>
@@ -538,14 +538,14 @@ export function Sidebar({
           <div className="p-8">
             <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-[13px] text-white/50 leading-relaxed font-sans font-light tracking-tight italic">
+                <p className="text-[16px] text-white/50 leading-relaxed font-sans font-light tracking-tight italic">
                   "PROVISION: Integrate strategic allies into the Margin matrix to secure 100% of recovered artifacts without commission deductions."
                 </p>
 
                 {/* Value Proposition */}
                 <div className="p-5 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl relative group overflow-hidden">
                   <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-emerald-500" />
-                  <p className="text-[9px] text-emerald-500/40 font-sans font-bold mb-2 uppercase tracking-tight">NETWORK_BENEFIT_PROTOCOL</p>
+                  <p className="text-[12px] text-emerald-500/40 font-sans font-bold mb-2 uppercase tracking-tight">NETWORK_BENEFIT_PROTOCOL</p>
                   <p className="text-base font-sans font-bold text-white tracking-tight uppercase">100%_RECOVERY_YIELD</p>
                 </div>
               </div>
@@ -556,7 +556,7 @@ export function Sidebar({
                   setShowReferralPopup(false);
                   setShowInviteForm(true);
                 }}
-                className="w-full bg-white text-black hover:bg-white/90 text-[10px] h-12 font-bold font-sans uppercase tracking-tight rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                className="w-full bg-white text-black hover:bg-white/90 text-[13px] h-12 font-bold font-sans uppercase tracking-tight rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                 Invoke_Invitation_Sequence
               </Button>
             </div>
@@ -569,12 +569,12 @@ export function Sidebar({
         <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden backdrop-blur-3xl">
           <div className="px-8 py-7 border-b border-white/5 bg-white/[0.01]">
             <h3 className="text-xl font-sans font-bold text-white tracking-tight">Transmit_Invitation</h3>
-            <p className="text-[10px] text-emerald-500/50 font-sans font-bold mt-1 uppercase tracking-tight">TARGET: EXTERNAL_SELLER_ALLIANCE</p>
+            <p className="text-[13px] text-emerald-500/50 font-sans font-bold mt-1 uppercase tracking-tight">TARGET: EXTERNAL_SELLER_ALLIANCE</p>
           </div>
 
           <div className="p-8 space-y-8">
             <div className="space-y-3">
-              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight block">Recipient_Coordinate (Email)</label>
+              <label className="text-[13px] font-sans font-bold text-white/30 uppercase tracking-tight block">Recipient_Coordinate (Email)</label>
               <Input
                 type="email"
                 placeholder="SELLER@ENTITY.INTEL"
@@ -585,16 +585,16 @@ export function Sidebar({
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight block">Authentication_Protocol_Link</label>
+              <label className="text-[13px] font-sans font-bold text-white/30 uppercase tracking-tight block">Authentication_Protocol_Link</label>
               <div className="flex items-center gap-0 p-4 bg-white/[0.02] border border-white/5 rounded-xl group hover:border-white/10 transition-all">
-                <span className="flex-1 text-[11px] text-emerald-500/70 font-sans font-bold break-all truncate overflow-hidden tracking-tight"> {shortLink}</span>
+                <span className="flex-1 text-[14px] text-emerald-500/70 font-sans font-bold break-all truncate overflow-hidden tracking-tight"> {shortLink}</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(referralLink);
                     setLinkCopied(true);
                     setTimeout(() => setLinkCopied(false), 2000);
                   }}
-                  className="flex items-center gap-2 px-4 py-1.5 text-[10px] font-sans font-bold text-white/30 hover:text-white transition-colors shrink-0 uppercase tracking-tight">
+                  className="flex items-center gap-2 px-4 py-1.5 text-[13px] font-sans font-bold text-white/30 hover:text-white transition-colors shrink-0 uppercase tracking-tight">
                   {linkCopied ? (
                     <div className="flex items-center gap-2 text-emerald-500">
                       <Check className="h-3 w-3" />
@@ -614,7 +614,7 @@ export function Sidebar({
               onClick={async () => {
                 // ... (invite logic remains same)
               }}
-              className="w-full bg-white text-black hover:bg-white/90 text-[10px] h-12 font-bold font-sans uppercase tracking-tight rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              className="w-full bg-white text-black hover:bg-white/90 text-[13px] h-12 font-bold font-sans uppercase tracking-tight rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
               Execute_Transmission
             </Button>
           </div>
