@@ -394,6 +394,7 @@ export function DisputeCasesTable() {
                             <span className="text-white/30">{format(new Date(caseItem.created_at), 'MMM dd, yyyy HH:mm').toUpperCase()}</span>
                           </div>
                         )}
+                      </div>
                     </div>
                   </div>
 
