@@ -183,35 +183,25 @@ export function DisputeCasesTable() {
 
   // Derive status color
   const getStatusColor = (status: string) => {
-    const s = status.toLowerCase();
-    if (s === 'approved' || s === 'paid' || s === 'won') return 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20';
-    if (s === 'rejected' || s === 'denied' || s === 'failed') return 'bg-rose-500/10 text-rose-400 ring-rose-500/20';
-    if (s === 'pending' || s === 'submitted') return 'bg-amber-500/10 text-amber-400 ring-amber-500/20';
-    if (s === 'in_progress' || s === 'filing') return 'bg-blue-500/10 text-blue-400 ring-blue-500/20';
     return 'bg-white/5 text-white/40 ring-white/10';
   };
 
   const getStatusDotColor = (status: string) => {
-    const s = status.toLowerCase();
-    if (s === 'approved' || s === 'paid' || s === 'won') return 'bg-emerald-500/50';
-    if (s === 'rejected' || s === 'denied' || s === 'failed') return 'bg-rose-500/50';
-    if (s === 'pending' || s === 'submitted') return 'bg-amber-500/50';
-    if (s === 'in_progress' || s === 'filing') return 'bg-blue-400/50';
-    return 'bg-white/10';
+    return 'hidden';
   };
 
   // Filing status badge (inline)
   const getFilingLabel = (filingStatus?: string, metadata?: DisputeCase['metadata']) => {
     if (!filingStatus) return null;
     const s = filingStatus.toLowerCase();
-    if (s === 'filed' || s === 'submitted') return { label: 'FILED', color: 'bg-white/5 text-white/40 ring-white/10' };
-    if (s === 'filing') return { label: 'FILING...', color: 'bg-blue-500/10 text-blue-400 ring-blue-500/20' };
-    if (s === 'retrying') return { label: 'RETRYING', color: 'bg-amber-500/10 text-amber-400 ring-amber-500/20' };
-    if (s === 'quarantined_dangerous_doc') return { label: 'QUARANTINED', color: 'bg-rose-500/10 text-rose-400 ring-rose-500/20' };
-    if (s === 'pending_approval') return { label: 'NEEDS_APPROVAL', color: 'bg-amber-600/10 text-amber-600 ring-amber-600/20' };
-    if (s === 'duplicate_blocked') return { label: 'DUPLICATE', color: 'bg-white/5 text-white/20 ring-white/10' };
-    if (s === 'already_reimbursed') return { label: 'ALREADY_PAID', color: 'bg-emerald-600/10 text-emerald-600 ring-emerald-600/20' };
-    if (s === 'failed') return { label: 'FAILED', color: 'bg-rose-500/10 text-rose-400 ring-rose-500/20' };
+    if (s === 'filed' || s === 'submitted') return { label: 'FILED', color: 'bg-white/5 text-white/20 ring-white/10' };
+    if (s === 'filing') return { label: 'FILING...', color: 'bg-white/5 text-white/30 ring-white/10' };
+    if (s === 'retrying') return { label: 'RETRYING', color: 'bg-white/5 text-white/30 ring-white/10' };
+    if (s === 'quarantined_dangerous_doc') return { label: 'QUARANTINED', color: 'bg-white/5 text-white/20 ring-white/10' };
+    if (s === 'pending_approval') return { label: 'NEEDS_APPROVAL', color: 'bg-white/5 text-white/30 ring-white/10' };
+    if (s === 'duplicate_blocked') return { label: 'DUPLICATE', color: 'bg-white/5 text-white/15 ring-white/10' };
+    if (s === 'already_reimbursed') return { label: 'ALREADY_PAID', color: 'bg-white/5 text-white/40 ring-white/10' };
+    if (s === 'failed') return { label: 'FAILED', color: 'bg-white/5 text-white/40 ring-white/10' };
     return null;
   };
 
@@ -239,7 +229,7 @@ export function DisputeCasesTable() {
     if (filingStatus === 'failed') {
       return (
         <Button onClick={() => handleRetryFiling(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-sans font-bold text-red-500 bg-red-500/5 border border-red-500/20 hover:bg-red-500/10 transition-all uppercase tracking-tight rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-white/40 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
           RETRY
         </Button>
@@ -248,7 +238,7 @@ export function DisputeCasesTable() {
     if (filingStatus === 'pending' || !filingStatus) {
       return (
         <Button onClick={() => handleFileNow(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-sans font-bold text-white/60 bg-white/5 border border-white/10 hover:bg-emerald-500/5 hover:text-emerald-400 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-white/40 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
           FILE
         </Button>
@@ -296,7 +286,7 @@ export function DisputeCasesTable() {
         <div>
           <div className="flex items-center gap-3">
             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-            <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Dispute_Filing_Queue</h2>
+            <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">DISPUTE_FILING_QUEUE_V3_MONO</h2>
           </div>
           <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
             ACTIVE_CASES: {cases.length} • AGENT_7_FILING_PROTOCOL
@@ -351,12 +341,7 @@ export function DisputeCasesTable() {
                 <div className="flex items-start justify-between px-8 py-6">
                   {/* Left: Info block */}
                   <div className="flex items-start gap-5 min-w-0 flex-1">
-                    {/* Status dot */}
-                    <div className="mt-2 flex-shrink-0">
-                      <div className={cn("w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center group-hover:border-emerald-500/30 transition-all duration-300")}>
-                        <div className={cn("h-2 w-2 rounded-full", dotColor)} />
-                      </div>
-                    </div>                    <div className="space-y-2 min-w-0">
+                    <div className="space-y-2 min-w-0">
                       {/* Row 1: Case number | Status | Amount */}
                       <div className="flex items-center gap-3 flex-wrap">
                         <span className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">
