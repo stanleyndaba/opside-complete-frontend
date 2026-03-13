@@ -184,34 +184,34 @@ export function DisputeCasesTable() {
   // Derive status color
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
-    if (s === 'approved' || s === 'paid' || s === 'won') return 'text-emerald-500';
-    if (s === 'rejected' || s === 'denied' || s === 'failed') return 'text-red-500';
-    if (s === 'pending' || s === 'submitted') return 'text-amber-500';
-    if (s === 'in_progress' || s === 'filing') return 'text-blue-400';
-    return 'text-white/30';
+    if (s === 'approved' || s === 'paid' || s === 'won') return 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20';
+    if (s === 'rejected' || s === 'denied' || s === 'failed') return 'bg-rose-500/10 text-rose-400 ring-rose-500/20';
+    if (s === 'pending' || s === 'submitted') return 'bg-amber-500/10 text-amber-400 ring-amber-500/20';
+    if (s === 'in_progress' || s === 'filing') return 'bg-blue-500/10 text-blue-400 ring-blue-500/20';
+    return 'bg-white/5 text-white/40 ring-white/10';
   };
 
   const getStatusDotColor = (status: string) => {
     const s = status.toLowerCase();
-    if (s === 'approved' || s === 'paid' || s === 'won') return 'bg-emerald-500';
-    if (s === 'rejected' || s === 'denied' || s === 'failed') return 'bg-red-500';
-    if (s === 'pending' || s === 'submitted') return 'bg-amber-500';
-    if (s === 'in_progress' || s === 'filing') return 'bg-blue-400';
-    return 'bg-white/20';
+    if (s === 'approved' || s === 'paid' || s === 'won') return 'bg-emerald-500/50';
+    if (s === 'rejected' || s === 'denied' || s === 'failed') return 'bg-rose-500/50';
+    if (s === 'pending' || s === 'submitted') return 'bg-amber-500/50';
+    if (s === 'in_progress' || s === 'filing') return 'bg-blue-400/50';
+    return 'bg-white/10';
   };
 
   // Filing status badge (inline)
   const getFilingLabel = (filingStatus?: string, metadata?: DisputeCase['metadata']) => {
     if (!filingStatus) return null;
     const s = filingStatus.toLowerCase();
-    if (s === 'filed' || s === 'submitted') return { label: 'FILED', color: 'text-white/40' };
-    if (s === 'filing') return { label: 'FILING...', color: 'text-blue-400' };
-    if (s === 'retrying') return { label: 'RETRYING', color: 'text-amber-500' };
-    if (s === 'quarantined_dangerous_doc') return { label: 'QUARANTINED', color: 'text-red-500' };
-    if (s === 'pending_approval') return { label: 'NEEDS_APPROVAL', color: 'text-amber-600' };
-    if (s === 'duplicate_blocked') return { label: 'DUPLICATE', color: 'text-white/20' };
-    if (s === 'already_reimbursed') return { label: 'ALREADY_PAID', color: 'text-emerald-600' };
-    if (s === 'failed') return { label: 'FAILED', color: 'text-red-500' };
+    if (s === 'filed' || s === 'submitted') return { label: 'FILED', color: 'bg-white/5 text-white/40 ring-white/10' };
+    if (s === 'filing') return { label: 'FILING...', color: 'bg-blue-500/10 text-blue-400 ring-blue-500/20' };
+    if (s === 'retrying') return { label: 'RETRYING', color: 'bg-amber-500/10 text-amber-400 ring-amber-500/20' };
+    if (s === 'quarantined_dangerous_doc') return { label: 'QUARANTINED', color: 'bg-rose-500/10 text-rose-400 ring-rose-500/20' };
+    if (s === 'pending_approval') return { label: 'NEEDS_APPROVAL', color: 'bg-amber-600/10 text-amber-600 ring-amber-600/20' };
+    if (s === 'duplicate_blocked') return { label: 'DUPLICATE', color: 'bg-white/5 text-white/20 ring-white/10' };
+    if (s === 'already_reimbursed') return { label: 'ALREADY_PAID', color: 'bg-emerald-600/10 text-emerald-600 ring-emerald-600/20' };
+    if (s === 'failed') return { label: 'FAILED', color: 'bg-rose-500/10 text-rose-400 ring-rose-500/20' };
     return null;
   };
 
@@ -248,7 +248,7 @@ export function DisputeCasesTable() {
     if (filingStatus === 'pending' || !filingStatus) {
       return (
         <Button onClick={() => handleFileNow(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-sans font-bold text-white/60 bg-white/5 border border-white/10 hover:bg-emerald-500/10 hover:text-emerald-500 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-white/60 bg-white/5 border border-white/10 hover:bg-emerald-500/5 hover:text-emerald-400 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
           FILE
         </Button>
@@ -347,11 +347,8 @@ export function DisputeCasesTable() {
             const filingLabel = getFilingLabel(caseItem.filing_status, caseItem.metadata);
 
             return (
-              <div key={caseItem.id} className="group relative hover:bg-white/[0.02] transition-colors duration-300">
-                {/* Left emerald accent on hover */}
-                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500" />
-
-                <div className="flex items-start justify-between px-8 py-5">
+              <div key={caseItem.id} className="group relative hover:bg-white/[0.01] transition-colors duration-300">
+                <div className="flex items-start justify-between px-8 py-6">
                   {/* Left: Info block */}
                   <div className="flex items-start gap-5 min-w-0 flex-1">
                     {/* Status dot */}
@@ -359,63 +356,59 @@ export function DisputeCasesTable() {
                       <div className={cn("w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center group-hover:border-emerald-500/30 transition-all duration-300")}>
                         <div className={cn("h-2 w-2 rounded-full", dotColor)} />
                       </div>
-                    </div>
-
-                    <div className="space-y-1.5 min-w-0">
-                      {/* Row 1: Case number | Status | Amount */}                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[11px] font-sans font-bold text-white/80 uppercase tracking-tight">
+                    </div>                    <div className="space-y-2 min-w-0">
+                      {/* Row 1: Case number | Status | Amount */}
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">
                           {caseItem.case_number || 'CASE_ID_PENDING'}
                         </span>
-                        <span className="text-white/10">|</span>
-                        <span className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", statusColor)}>
+                        
+                        <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight ring-1 ring-inset", statusColor)}>
                           {(caseItem.status || 'UNKNOWN').replace(/ /g, '_')}
                         </span>
+
                         {filingLabel && (
-                          <>
-                            <span className="text-white/10">|</span>
-                            <span className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", filingLabel.color)}>
-                              {filingLabel.label}
-                            </span>
-                          </>
+                          <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight ring-1 ring-inset", filingLabel.color)}>
+                            {filingLabel.label}
+                          </span>
                         )}
+
                         {caseItem.retry_count && caseItem.retry_count > 0 && (
-                          <>
-                            <span className="text-white/10">|</span>
-                            <span className="text-[9px] font-sans font-bold text-amber-500/50 uppercase tracking-tight">
-                              RETRY_{caseItem.retry_count}
-                            </span>
-                          </>
+                          <span className="inline-flex items-center rounded-full bg-amber-500/5 px-2.5 py-0.5 text-[9px] font-bold text-amber-500/40 ring-1 ring-inset ring-amber-500/10 uppercase tracking-tight">
+                            RETRY_{caseItem.retry_count}
+                          </span>
                         )}
-                        <span className="text-white/10">|</span>
-                        <span className="text-[11px] font-sans font-bold text-white tracking-tight tabular-nums">
-                          {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
-                        </span>
+                        
+                        <div className="ml-auto">
+                          <span className="text-[12px] font-sans font-bold text-white tracking-tight tabular-nums">
+                            {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Row 2: Metadata line */}                       <div className="flex items-center gap-3 text-[9px] font-sans font-bold text-white/25 uppercase tracking-tight">
+                      {/* Row 2: Metadata line */}
+                      <div className="flex items-center gap-3 text-[10px] font-sans font-medium text-white/30 uppercase tracking-tight">
                         {caseItem.amazon_case_id && (
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-white/15">AMZ:</span>
-                            <span className="text-white/40">{caseItem.amazon_case_id}</span>
-                            <ExternalLink className="w-2.5 h-2.5 text-white/15" />
+                          <div className="flex items-center gap-1.5 group/link cursor-pointer">
+                            <span className="text-white/20">AMZ:</span>
+                            <span className="text-white/40 group-hover/link:text-white transition-colors">{caseItem.amazon_case_id}</span>
+                            <ExternalLink className="w-2.5 h-2.5 text-white/20 group-hover/link:text-white" />
                           </div>
                         )}
                         {caseItem.amazon_case_id && caseItem.claim_id && <span className="text-white/10">/</span>}
                         {caseItem.claim_id && (
                           <div className="flex items-center gap-1.5">
-                            <span className="text-white/15">REF:</span>
-                            <span className="text-white/40 font-sans font-bold">{caseItem.claim_id.substring(0, 12).toUpperCase()}</span>
+                            <span className="text-white/20">REF:</span>
+                            <span className="text-white/40">{caseItem.claim_id.substring(0, 12).toUpperCase()}</span>
                           </div>
                         )}
-                      </div>
-
-                      {/* Row 3: Timestamp */}
-                      {caseItem.created_at && (
-                        <div className="text-[9px] font-sans font-bold text-white/15 flex items-center gap-1.5 uppercase tracking-tight">
-                          <Clock className="h-2.5 w-2.5" />
-                          CREATED {format(new Date(caseItem.created_at), 'MMM_dd,_yyyy • HH:mm').toUpperCase()}
-                        </div>
-                      )}
+                        <span className="text-white/10">•</span>
+                        {caseItem.created_at && (
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="h-2.5 w-2.5 text-white/20" />
+                            <span className="text-white/30">{format(new Date(caseItem.created_at), 'MMM dd, yyyy HH:mm').toUpperCase()}</span>
+                          </div>
+                        )}
                     </div>
                   </div>
 
