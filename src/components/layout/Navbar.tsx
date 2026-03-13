@@ -116,20 +116,25 @@ export function Navbar({
   useEffect(() => {
     const fetchConnectionsCount = async () => {
       try {
-        const [statusRes, sourcesRes] = await Promise.all([
+        const [statusRes, sourcesRes, storesRes] = await Promise.all([
           api.getIntegrationsStatus(tenantSlug),
-          api.getEvidenceSources(tenantSlug)
+          api.getEvidenceSources(tenantSlug),
+          api.getStores(tenantSlug)
         ]);
         
         if (statusRes.ok && sourcesRes.ok) {
           const status = statusRes.data;
           const sources = sourcesRes.data.sources || [];
+          const stores = storesRes.ok && storesRes.data?.stores ? storesRes.data.stores : [];
           let count = 0;
           
           const platforms = ['amazon', 'stripe', 'gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
           
           platforms.forEach((p) => {
-            if (p === 'amazon' || p === 'stripe') {
+            if (p === 'amazon') {
+               // Amazon is connected if flag is true OR if there is at least 1 store
+              if ((status && (status as any)[`${p}_connected`]) || stores.length > 0) count++;
+            } else if (p === 'stripe') {
               if (status && (status as any)[`${p}_connected`]) count++;
             } else {
               let isConnected = false;

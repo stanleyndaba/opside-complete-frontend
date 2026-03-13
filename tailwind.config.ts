@@ -27,6 +27,11 @@ export default {
 			}
 		},
 		extend: {
+			fontSize: {
+				'xs': ['14px', { lineHeight: '1.5' }],
+				'sm': ['16px', { lineHeight: '1.5' }],
+				'base': ['17px', { lineHeight: '1.5' }],
+			},
 			fontFamily: {
 				// Platform-wide font: Stack Sans Text for everything
 				body: ['"Stack Sans Text"', 'system-ui', 'sans-serif'],

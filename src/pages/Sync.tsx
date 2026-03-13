@@ -1440,7 +1440,7 @@ export default function Sync() {
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </div>
                     <div>
-                      <p className="text-[15px] font-bold text-white tracking-tight">Scanning for discrepancies</p>
+                      <p className="text-[16px] font-bold text-white tracking-tight">Scanning for discrepancies</p>
                       <p className="text-[13px] text-white/40 mt-1 font-normal font-montserrat">Our AI agents are auditing every transaction in real-time.</p>
                     </div>
                   </div>
@@ -1486,7 +1486,7 @@ export default function Sync() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[15px] font-bold text-white tracking-tight font-merriweather">Activity Log</h4>
+                    <h4 className="text-[16px] font-bold text-white tracking-tight font-merriweather">Activity Log</h4>
                     <TooltipProvider>
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger asChild>
@@ -1823,7 +1823,7 @@ export default function Sync() {
                       <div className="h-2 w-2 rounded-full bg-neutral-900 mt-2 shrink-0" />
                       <div className="space-y-1">
                         <p className="text-[13px] font-medium text-neutral-900 uppercase tracking-wider">System Interruption</p>
-                        <p className="text-[15px] text-neutral-500 font-normal leading-relaxed">{error}</p>
+                        <p className="text-[16px] text-neutral-500 font-normal leading-relaxed"> {error}</p>
                       </div>
                     </div>
                   </div>

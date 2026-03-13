@@ -181,7 +181,7 @@
 
   body {
     /* Default body font - Stack Sans Text for entire platform */
-    @apply bg-background text-foreground text-[15px];
+    @apply bg-background text-foreground text-[16px];
   }
 
   /* Theme-aware backgrounds */
@@ -476,7 +476,7 @@
   /* Platform uses Inter Regular 400 */
   .platform {
     font-family: 'Inter', system-ui, sans-serif !important;
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   /* Apply Inter to all platform elements EXCEPT pre/code which should use monospace */

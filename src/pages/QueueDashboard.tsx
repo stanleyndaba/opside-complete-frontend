@@ -170,7 +170,7 @@ export default function QueueDashboard() {
                             Last Synchronized
                         </div>
                         <div style={{
-                            fontSize: '15px',
+                            fontSize: '16px',
                             fontFamily: "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",
                             color: '#334155',
                             fontWeight: 500
@@ -284,7 +284,7 @@ export default function QueueDashboard() {
                                     Queue Instance
                                 </div>
                                 <div style={{
-                                    fontSize: '15px',
+                                    fontSize: '16px',
                                     fontFamily: "'JetBrains Mono', monospace",
                                     color: '#475569',
                                     fontWeight: 500

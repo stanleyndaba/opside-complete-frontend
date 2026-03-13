@@ -35,7 +35,7 @@ const RefundPolicy = () => {
                     </header>
 
                     {/* Content */}
-                    <div className="space-y-12 text-[15px] leading-relaxed text-gray-600">
+                    <div className="space-y-12 text-[16px] leading-relaxed text-gray-600">
 
                         {/* Section 1 */}
                         <section>

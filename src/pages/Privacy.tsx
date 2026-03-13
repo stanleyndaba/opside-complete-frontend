@@ -32,13 +32,13 @@ const Privacy = () => {
             <h1 className="text-3xl md:text-4xl font-light text-gray-900 tracking-tight leading-tight">
               Privacy Policy
             </h1>
-            <p className="text-[15px] text-gray-500 mt-6 leading-relaxed">
+            <p className="text-[16px] text-gray-500 mt-6 leading-relaxed">
               This Privacy Policy describes our policies on the collection, use, and disclosure of data when you use the Service and explains how we comply with the Amazon Data Protection Policy and the Protection of Personal Information Act.
             </p>
           </header>
 
           {/* Content */}
-          <div className="space-y-12 text-[15px] leading-relaxed text-gray-600">
+          <div className="space-y-12 text-[16px] leading-relaxed text-gray-600">
 
             {/* Section 1 */}
             <section>
