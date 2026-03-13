@@ -3,16 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
+import { recoveryApi } from '@/lib/recoveryApi';
 import { Link, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import {
   RefreshCw, XCircle, Clock, ExternalLink, Loader2, ArrowRight,
-  Search, ShieldAlert, Ban, DollarSign, FileWarning, Download, MoreHorizontal, Eye, CheckCircle2
+  Search, ShieldAlert, Ban, DollarSign, FileWarning, Download, MoreHorizontal, Eye, CheckCircle2, FileText
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { EvidencePackView } from '@/components/evidence/EvidencePackView';
+import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 
 interface DisputeCase {
   id: string;
@@ -44,6 +47,13 @@ export function DisputeCasesTable() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const [downloadingBrief, setDownloadingBrief] = useState<Set<string>>(new Set());
+
+  // Action Vector Modals State
+  const [evidencePackOpen, setEvidencePackOpen] = useState(false);
+  const [evidencePackClaim, setEvidencePackClaim] = useState<any>(null);
+  const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
+  const [proofDocsClaim, setProofDocsClaim] = useState<any>(null);
+  const [proofDocs, setProofDocs] = useState<any[]>([]);
   const { toast } = useToast();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
@@ -440,17 +450,88 @@ export function DisputeCasesTable() {
 
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-white/15 hover:text-white/50 hover:bg-white/5 rounded-lg transition-all focus-visible:ring-0">
+                            <Button variant="ghost" size="icon" className="h-7 w-7 text-white/15 hover:text-white/50 hover:bg-white/5 rounded-lg transition-all focus-visible:ring-0 group">
                               <MoreHorizontal className="w-3.5 h-3.5" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48 bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl font-sans font-bold text-[11px] p-1">
-                            <DropdownMenuItem asChild className="hover:bg-white/5 focus:bg-white/5 text-white/50 cursor-pointer rounded-lg px-3 py-2.5">
-                              <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2 tracking-tight uppercase">
+                          <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
+                            <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-tight">ACTION_VECTOR</div>
+                            
+                            <DropdownMenuItem asChild className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight">
+                              <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2">
                                 <Eye className="w-3 h-3 text-white/30" />
-                                View Core Claim
+                                VIEW_PARAMETERS
                               </Link>
                             </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                              className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight"
+                              onClick={async () => {
+                                try {
+                                  const res = await api.getRecoveryDetail(caseItem.claim_id, activeTenantSlug);
+                                  if (res.ok && res.data) {
+                                    const claimData = res.data;
+                                    const docs = Array.isArray(claimData.documents) ? claimData.documents : 
+                                                 Array.isArray(claimData.matchedDocs) ? claimData.matchedDocs : [];
+                                    setProofDocs(docs);
+                                    setProofDocsClaim({ 
+                                      ...caseItem, 
+                                      id: caseItem.claim_id, 
+                                      claim_number: caseItem.case_number,
+                                      ...claimData 
+                                    });
+                                    setProofDocsModalOpen(true);
+                                  } else {
+                                    throw new Error(res.error || 'Failed to fetch claim details');
+                                  }
+                                } catch (e: any) {
+                                  toast({ title: 'Error loading documents', description: e?.message });
+                                }
+                              }}>
+                              <FileText className="w-3 h-3 mr-2 text-white/30" />
+                              PROOF_DOCUMENTS_RETRIEVAL
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                              className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight"
+                              onClick={async () => {
+                                try {
+                                  const res = await api.getRecoveryDetail(caseItem.claim_id, activeTenantSlug);
+                                  if (res.ok && res.data) {
+                                    setEvidencePackClaim({ 
+                                      ...caseItem, 
+                                      id: caseItem.claim_id, 
+                                      claim_number: caseItem.case_number,
+                                      ...res.data 
+                                    });
+                                    setEvidencePackOpen(true);
+                                  } else {
+                                    throw new Error(res.error || 'Failed to fetch claim details');
+                                  }
+                                } catch (e: any) {
+                                  toast({ title: 'Error loading evidence pack', description: e?.message });
+                                }
+                              }}>
+                              <ShieldAlert className="w-3 h-3 mr-2 text-white/30" />
+                              AUDIT_PACKAGE_VIEW
+                            </DropdownMenuItem>
+
+                            {caseItem.status?.toLowerCase() === 'denied' && (
+                              <DropdownMenuItem
+                                className="text-[10px] font-sans font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight"
+                                onClick={async () => {
+                                  try {
+                                    await recoveryApi.resubmitClaim(caseItem.claim_id, activeTenantSlug);
+                                    toast({ title: 'Resubmitted', description: 'Claim resubmitted with enhanced evidence.' });
+                                    fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
+                                  } catch (e: any) {
+                                    toast({ title: 'Resubmission failed', description: e?.message });
+                                  }
+                                }}>
+                                <RefreshCw className="w-3 h-3 mr-2" />
+                                RESUBMIT_ENHANCED_AUDIT
+                              </DropdownMenuItem>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </>
@@ -462,6 +543,31 @@ export function DisputeCasesTable() {
           })}
         </div>
       )}
+
+      {/* Evidence Pack Dossier View */}
+      {evidencePackClaim && (
+        <EvidencePackView
+          open={evidencePackOpen}
+          onClose={() => {
+            setEvidencePackOpen(false);
+            setEvidencePackClaim(null);
+          }}
+          claim={evidencePackClaim}
+        />
+      )}
+
+      {/* Proof Documents Modal */}
+      <ProofDocumentsModal
+        open={proofDocsModalOpen}
+        onClose={() => {
+          setProofDocsModalOpen(false);
+          setProofDocsClaim(null);
+          setProofDocs([]);
+        }}
+        claimId={proofDocsClaim?.id || ''}
+        claimNumber={proofDocsClaim?.claim_number}
+        documents={proofDocs}
+      />
     </div>
   );
 }
