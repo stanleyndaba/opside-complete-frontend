@@ -28,9 +28,14 @@ export default {
 		},
 		extend: {
 			fontSize: {
-				'xs': ['14px', { lineHeight: '1.5' }],
-				'sm': ['16px', { lineHeight: '1.5' }],
-				'base': ['17px', { lineHeight: '1.5' }],
+				'xs': ['12px', { lineHeight: '1.5' }],     // 14px -> 13px -> 12px
+				'sm': ['14px', { lineHeight: '1.5' }],     // 16px -> 15px -> 14px
+				'base': ['15px', { lineHeight: '1.5' }],   // 17px -> 16px -> 15px
+				'lg': ['16px', { lineHeight: '1.75rem' }], // 18px -> 17px -> 16px
+				'xl': ['18px', { lineHeight: '1.75rem' }], // 20px -> 19px -> 18px
+				'2xl': ['22px', { lineHeight: '2rem' }],    // 24px -> 23px -> 22px
+				'3xl': ['28px', { lineHeight: '2.25rem' }], // 30px -> 29px -> 28px
+				'4xl': ['34px', { lineHeight: '2.5rem' }],  // 36px -> 35px -> 34px
 			},
 			fontFamily: {
 				// Platform-wide font: Stack Sans Text for everything
