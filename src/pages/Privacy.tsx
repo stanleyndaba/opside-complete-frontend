@@ -148,7 +148,22 @@ const Privacy = () => {
             {/* Section 7 */}
             <section>
               <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                07 — Changes
+                07 — Google API Services Usage Disclosure
+              </h2>
+              <div className="space-y-4 text-gray-700">
+                <p>
+                  Whale Hunter's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" className="text-gray-900 underline underline-offset-4 decoration-gray-200 hover:decoration-gray-400 transition-colors">Google API Services User Data Policy</a>, including the Limited Use requirements.
+                </p>
+                <p>
+                  <span className="text-gray-900 italic font-medium">Data Access & Security:</span> We strictly limit our use of Google user data to providing our core e-commerce auditing features. Whale Hunter does not allow human access to read your email data unless we first obtain your affirmative agreement for specific messages, doing so is necessary for security purposes, or it is required to comply with applicable laws. We do not use your Google data for serving ads, including retargeting, personalized, or interest-based advertising.
+                </p>
+              </div>
+            </section>
+
+            {/* Section 8 */}
+            <section>
+              <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
+                08 — Changes
               </h2>
               <div className="space-y-4 text-gray-700">
                 <p>
@@ -157,10 +172,10 @@ const Privacy = () => {
               </div>
             </section>
 
-            {/* Section 8 */}
+            {/* Section 9 */}
             <section>
               <h2 className="text-xs text-gray-400 uppercase tracking-widest mb-4">
-                08 — Contact
+                09 — Contact
               </h2>
               <div className="space-y-2 text-gray-700">
                 <p>
