@@ -41,10 +41,6 @@ import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 
 // Icon imports for document sources
-const GmailIcon = '/G.png';
-const OutlookIcon = '/outlookicon.webp';
-const GoogleDriveIcon = '/gd.png';
-const DropboxIcon = '/Dropbox_Icon.svg.png';
 
 // Helper to render bold text from "**text**" markdown
 const renderNotificationMessage = (message: any) => {
@@ -325,7 +321,6 @@ export function Dashboard() {
     thisMonthGrowth: number;
   } | null>(null);
   const [isActivityExpanded, setIsActivityExpanded] = useState<boolean>(true);
-  const [showSourcesModal, setShowSourcesModal] = useState<boolean>(false);
   const [showSyncModal, setShowSyncModal] = useState<boolean>(false);
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
   // Sync status fields from API response
@@ -989,22 +984,6 @@ export function Dashboard() {
       await fetchRecoveriesOnce();
       await fetchMetrics();
       await fetchDisputeMetrics();
-
-      // Decide whether to prompt evidence connections
-      try {
-        const dismissed = typeof window !== 'undefined' ? localStorage.getItem('clario.evidencePromptDismissed') === 'true' : false;
-        if (dismissed || !mountedRef.current) return;
-        const s = await api.getIntegrationsStatus(activeSlug);
-        if (s.ok) {
-          const prov = (s.data as any)?.providerIngest || {};
-          const anyConnected = Boolean(prov.gmail?.connected || prov.outlook?.connected || prov.gdrive?.connected || prov.dropbox?.connected);
-          if (!anyConnected && mountedRef.current) setShowSourcesModal(true);
-        } else if (mountedRef.current) {
-          setShowSourcesModal(true);
-        }
-      } catch {
-        if (mountedRef.current) setShowSourcesModal(true);
-      }
     };
 
     initFetch();
@@ -1429,7 +1408,7 @@ export function Dashboard() {
                               <button
                                 key={actionId}
                                 onClick={() => {
-                                  if (actionId === 'connect_evidence') setShowSourcesModal(true);
+                                  if (actionId === 'connect_evidence') navigate(tenantRoute(activeSlug, '/integrations-hub'));
                                   else if (actionId === 'invite_teammate') setInviteOpen(true);
                                   else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Processing Data...' }));
                                   else navigate(tenantRoute(activeSlug, `/${actionId.replace(/_/g, '-')}`));
@@ -1929,67 +1908,6 @@ export function Dashboard() {
           </div>
         </main>
       </div>
-      {/* Document Sources Modal */}
-      <Dialog open={showSourcesModal} onOpenChange={setShowSourcesModal}>
-        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
-          <DialogHeader className="px-6 py-5 border-b border-white/5 bg-white/[0.02]">
-            <DialogTitle className="text-[11px] font-mono font-bold text-white uppercase tracking-[0.3em]">Connect Evidence Sources</DialogTitle>
-            <DialogDescription className="text-[10px] text-white/20 font-serif mt-1 uppercase tracking-widest">Link your accounts to automatically collect evidence.</DialogDescription>
-          </DialogHeader>
-
-          <div className="p-8">
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { id: 'gmail', label: 'Gmail', icon: GmailIcon, color: 'hover:border-red-500/30 hover:bg-red-500/5' },
-                { id: 'outlook', label: 'Outlook', icon: OutlookIcon, color: 'hover:border-blue-500/30 hover:bg-blue-500/5' },
-                { id: 'gdrive', label: 'Google Drive', icon: GoogleDriveIcon, color: 'hover:border-emerald-500/30 hover:bg-emerald-500/5' },
-                { id: 'dropbox', label: 'Dropbox', icon: DropboxIcon, color: 'hover:border-indigo-500/30 hover:bg-indigo-500/5' }
-              ].map((provider) => (
-                <button
-                  key={provider.id}
-                  onClick={async () => {
-                    try {
-                      setProviderLoading(provider.id as any);
-                      const r = await api.connectDocs(provider.id as any, activeSlug);
-                      if (r.ok && r.data?.auth_url) {
-                        window.location.href = r.data.auth_url;
-                      } else {
-                        toast({ title: 'PROTOCOL_INIT_FAILURE', description: r.error || `Failed to establish ${provider.label} link.`, variant: 'destructive' });
-                        setProviderLoading(null);
-                      }
-                    } catch (error) {
-                      toast({ title: 'CRITICAL_AUTH_ERROR', description: 'Handshake protocol failed. Retry requested.', variant: 'destructive' });
-                      setProviderLoading(null);
-                    }
-                  }}
-                  disabled={providerLoading === provider.id}
-                  className={cn(
-                    "group flex flex-col items-center justify-center gap-4 p-8 bg-white/[0.02] border border-white/5 transition-all duration-300 rounded-xl relative overflow-hidden",
-                    provider.color
-                  )}
-                >
-                  <div className="absolute inset-0 bg-white/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
-                  {providerLoading === provider.id ? (
-                    <Loader2 className="h-6 w-6 animate-spin text-white/40" />
-                  ) : (
-                    <img src={provider.icon} alt={provider.label} className="h-8 w-8 object-contain opacity-40 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-300" />
-                  )}
-                  <span className="text-[10px] font-mono font-bold text-white/20 group-hover:text-white uppercase tracking-widest transition-colors">{provider.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-center">
-            <button
-              onClick={() => setShowSourcesModal(false)}
-              className="text-[10px] font-mono font-bold text-white/20 hover:text-white uppercase tracking-[0.2em] transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
       {/* Quick Actions Editor */}
       <Dialog open={quickActionsEditOpen} onOpenChange={setQuickActionsEditOpen}>
         <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-xl">
