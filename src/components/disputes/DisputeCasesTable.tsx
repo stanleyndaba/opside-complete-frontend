@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
+import { UpgradeModal } from '@/components/modals/UpgradeModal';
 
 interface DisputeCase {
   id: string;
@@ -66,6 +67,8 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
   const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
   const [proofDocsClaim, setProofDocsClaim] = useState<any>(null);
   const [proofDocs, setProofDocs] = useState<any[]>([]);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeModalCaseId, setUpgradeModalCaseId] = useState<string | undefined>(undefined);
   
   const { toast } = useToast();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
@@ -99,7 +102,8 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
 
   const handleFileNow = async (caseItem: DisputeCase) => {
     if (!isPaid) {
-      toast({ variant: "destructive", title: "UPGRADE REQUIRED", description: "You must complete the $99.00 beta activation to file claims." });
+      setUpgradeModalCaseId(caseItem.case_number || caseItem.id);
+      setUpgradeModalOpen(true);
       return;
     }
     
@@ -519,6 +523,12 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
         claimId={proofDocsClaim?.id || ''}
         claimNumber={proofDocsClaim?.case_number}
         documents={proofDocs}
+      />
+
+      <UpgradeModal 
+        isOpen={upgradeModalOpen} 
+        onClose={() => setUpgradeModalOpen(false)} 
+        caseId={upgradeModalCaseId} 
       />
     </div>
   );
