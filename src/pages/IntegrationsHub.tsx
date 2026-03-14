@@ -379,10 +379,16 @@ export default function IntegrationsHub() {
         description: message || 'Amazon account connected successfully! Redirecting to sync status...',
       });
 
-      // Refresh integration status to update UI
-      api.getIntegrationsStatus(activeSlug).then(res => {
-        if (res.ok && res.data) {
-          setStatus(res.data);
+      // Refresh integration status and evidence sources in parallel to update UI
+      Promise.all([
+        api.getIntegrationsStatus(activeSlug),
+        api.getEvidenceSources(activeSlug)
+      ]).then(([statusRes, sourcesRes]) => {
+        if (statusRes.ok && statusRes.data) {
+          setStatus(statusRes.data);
+        }
+        if (sourcesRes.ok && sourcesRes.data) {
+          setEvidenceSources(sourcesRes.data.sources || []);
         }
       });
 
@@ -425,16 +431,16 @@ export default function IntegrationsHub() {
       });
 
       // Refresh integration status to update UI
-      api.getIntegrationsStatus(activeSlug).then(res => {
-        if (res.ok && res.data) {
-          setStatus(res.data);
+      // Refresh integration status and evidence sources in parallel to update UI
+      Promise.all([
+        api.getIntegrationsStatus(activeSlug),
+        api.getEvidenceSources(activeSlug)
+      ]).then(([statusRes, sourcesRes]) => {
+        if (statusRes.ok && statusRes.data) {
+          setStatus(statusRes.data);
         }
-      });
-
-      // Refresh evidence sources
-      api.getEvidenceSources(activeSlug).then(res => {
-        if (res.ok && res.data) {
-          setEvidenceSources(res.data.sources || []);
+        if (sourcesRes.ok && sourcesRes.data) {
+          setEvidenceSources(sourcesRes.data.sources || []);
         }
       });
 
@@ -463,10 +469,16 @@ export default function IntegrationsHub() {
         description: 'Your account has been connected successfully.',
       });
 
-      // Refresh integration status
-      api.getIntegrationsStatus(activeSlug).then(res => {
-        if (res.ok && res.data) {
-          setStatus(res.data);
+      // Refresh integration status and evidence sources in parallel to update UI
+      Promise.all([
+        api.getIntegrationsStatus(activeSlug),
+        api.getEvidenceSources(activeSlug)
+      ]).then(([statusRes, sourcesRes]) => {
+        if (statusRes.ok && statusRes.data) {
+          setStatus(statusRes.data);
+        }
+        if (sourcesRes.ok && sourcesRes.data) {
+          setEvidenceSources(sourcesRes.data.sources || []);
         }
       });
 
