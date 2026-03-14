@@ -4,11 +4,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
-import {
-  RefreshCw, XCircle, Clock, ExternalLink, Loader2, ArrowRight,
-  Search, ShieldAlert, Ban, DollarSign, FileWarning, Download, MoreHorizontal, Eye, CheckCircle2, FileText
+import { useSession } from '@/contexts/SessionContext';import {
+  RefreshCw, XCircle, Clock, ExternalLink, Loader2,
+  Lock, AlertCircle, DollarSign, Download, MoreHorizontal, Eye, CheckCircle2, FileText,
+  ShieldAlert
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { format } from 'date-fns';
@@ -40,7 +41,18 @@ interface DisputeCase {
   };
 }
 
-export function DisputeCasesTable() {
+interface DisputeCasesTableProps {
+  isPaidUser?: boolean;
+  isTenantThrottled?: boolean;
+}
+
+export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottled: isTenantThrottledProp }: DisputeCasesTableProps) {
+  const { isPaidUser } = useSession();
+  const { isThrottled: isTenantThrottledFromContext } = useTenant();
+  
+  const isPaid = isPaidUserProp ?? isPaidUser;
+  const isThrottled = isTenantThrottledProp ?? isTenantThrottledFromContext;
+
   const [cases, setCases] = useState<DisputeCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +66,7 @@ export function DisputeCasesTable() {
   const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
   const [proofDocsClaim, setProofDocsClaim] = useState<any>(null);
   const [proofDocs, setProofDocs] = useState<any[]>([]);
+  
   const { toast } = useToast();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
@@ -85,19 +98,29 @@ export function DisputeCasesTable() {
   };
 
   const handleFileNow = async (caseItem: DisputeCase) => {
+    if (!isPaid) {
+      toast({ variant: "destructive", title: "UPGRADE REQUIRED", description: "You must complete the $99.00 beta activation to file claims." });
+      return;
+    }
+    
+    if (isThrottled) {
+      toast({ variant: "destructive", title: "SYSTEM COOLDOWN", description: "Filing is temporarily disabled due to Amazon rate limits. Gate reopens in < 30m." });
+      return;
+    }
+
     const caseId = caseItem.id;
     setFilingInProgress(prev => new Set(prev).add(caseId));
     try {
-      toast({ title: "FILING INITIATED", description: `Case ${caseItem.case_number || caseId.substring(0, 8)} queued for immediate submission.` });
+      toast({ title: "SUBMISSION_INITIATED", description: `Dispatched Agent 7 for Case ${caseItem.case_number || caseId.substring(0, 8)}.` });
       const response = await api.post('/api/disputes/file-now', { dispute_id: caseId, claim_id: caseItem.claim_id });
       if (response.ok) {
-        toast({ title: "SUBMISSION SUCCESSFUL", description: `Case filed with Amazon. Case ID: ${response.data?.amazon_case_id || 'Pending'}` });
+        toast({ title: "SUBMISSION_SUCCESS", description: `Case ${response.data?.amazon_case_id || 'locked'} successfully filed.` });
         await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
       } else {
         throw new Error(response.error || 'Filing failed');
       }
     } catch (err: any) {
-      toast({ variant: "destructive", title: "FILING FAILED", description: err.message || 'Unable to submit dispute to Amazon' });
+      toast({ variant: "destructive", title: "HANDSHAKE_ERROR", description: err.message || 'The fortress rejected the submission.' });
     } finally {
       setFilingInProgress(prev => { const next = new Set(prev); next.delete(caseId); return next; });
     }
@@ -107,16 +130,16 @@ export function DisputeCasesTable() {
     const caseId = caseItem.id;
     setFilingInProgress(prev => new Set(prev).add(caseId));
     try {
-      toast({ title: "RETRY INITIATED", description: `Collecting stronger evidence for case ${caseItem.case_number || caseId.substring(0, 8)}...` });
+      toast({ title: "RECOVERY_INITIATED", description: `Re-calibrating evidence for case ${caseItem.case_number || caseId.substring(0, 8)}...` });
       const response = await api.post('/api/disputes/retry-filing', { dispute_id: caseId, claim_id: caseItem.claim_id, collect_stronger_evidence: true });
       if (response.ok) {
-        toast({ title: "RETRY QUEUED", description: `Case will be resubmitted with enhanced evidence package.` });
+        toast({ title: "RETRY_QUEUED", description: `Enhanced evidence payload scheduled for resubmission.` });
         await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
       } else {
         throw new Error(response.error || 'Retry failed');
       }
     } catch (err: any) {
-      toast({ variant: "destructive", title: "RETRY FAILED", description: err.message || 'Unable to queue retry' });
+      toast({ variant: "destructive", title: "RETRY_FAILED", description: err.message || 'Protocol failure during retry.' });
     } finally {
       setFilingInProgress(prev => { const next = new Set(prev); next.delete(caseId); return next; });
     }
@@ -126,16 +149,16 @@ export function DisputeCasesTable() {
     const caseId = caseItem.id;
     setFilingInProgress(prev => new Set(prev).add(caseId));
     try {
-      toast({ title: "APPROVAL PROCESSING", description: `Approving high-value claim ${caseItem.case_number || caseId.substring(0, 8)} for filing...` });
+      toast({ title: "APPROVAL_PROCESSING", description: `Bypassing safety locks for claim ${caseItem.case_number || caseId.substring(0, 8)}...` });
       const response = await api.post('/api/disputes/approve-filing', { dispute_id: caseId, claim_id: caseItem.claim_id });
       if (response.ok) {
-        toast({ title: "CLAIM APPROVED", description: `Case approved and queued for filing.` });
+        toast({ title: "CLAIM_RELEASED", description: `Case approved. Transmitting to Amazon...` });
         await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
       } else {
         throw new Error(response.error || 'Approval failed');
       }
     } catch (err: any) {
-      toast({ variant: "destructive", title: "APPROVAL FAILED", description: err.message || 'Unable to approve claim' });
+      toast({ variant: "destructive", title: "APPROVAL_FAILED", description: err.message || 'Manual override failed.' });
     } finally {
       setFilingInProgress(prev => { const next = new Set(prev); next.delete(caseId); return next; });
     }
@@ -165,9 +188,9 @@ export function DisputeCasesTable() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      toast({ title: "BRIEF DOWNLOADED", description: "The forensic dispute brief has been saved." });
+      toast({ title: "BRIEF_DOWNLOADED", description: "Forensic dispute brief exported." });
     } catch (err: any) {
-      toast({ variant: "destructive", title: "DOWNLOAD FAILED", description: err.message || "Unable to download brief" });
+      toast({ variant: "destructive", title: "EXPORT_FAILED", description: err.message || "Brief generation failed." });
     } finally {
       setDownloadingBrief(prev => { const next = new Set(prev); next.delete(caseId); return next; });
     }
@@ -181,73 +204,94 @@ export function DisputeCasesTable() {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
   };
 
-  // Derive status color
-  const getStatusColor = (status: string) => {
-    return 'bg-white/5 text-white/40 ring-white/10';
-  };
-
-  const getStatusDotColor = (status: string) => {
-    return 'hidden';
-  };
-
-  // Filing status badge (inline)
-  const getFilingLabel = (filingStatus?: string, metadata?: DisputeCase['metadata']) => {
-    if (!filingStatus) return null;
-    const s = filingStatus.toLowerCase();
+  // Status mapping for badges
+  const getStatusLabel = (status: string, filingStatus?: string) => {
+    const s = (filingStatus || status).toLowerCase();
+    
+    // Atomic States
+    if (s === 'submitting') return { label: '[LOCKING...]', color: 'bg-white/5 text-white/60 ring-white/20 animate-pulse' };
+    if (s === 'recovering') return { label: '[RECONCILING...]', color: 'bg-white/5 text-white/40 ring-white/10 italic' };
+    if (s === 'payment_required') return { label: '[PAYMENT_REQUIRED]', color: 'bg-red-500/10 text-red-400 ring-red-500/20' };
+    
+    // Regular States
     if (s === 'filed' || s === 'submitted') return { label: 'FILED', color: 'bg-white/5 text-white/20 ring-white/10' };
-    if (s === 'filing') return { label: 'FILING...', color: 'bg-white/5 text-white/30 ring-white/10' };
+    if (s === 'filing') return { label: 'FILING...', color: 'bg-white/5 text-white/40 ring-white/10' };
     if (s === 'retrying') return { label: 'RETRYING', color: 'bg-white/5 text-white/30 ring-white/10' };
-    if (s === 'quarantined_dangerous_doc') return { label: 'QUARANTINED', color: 'bg-white/5 text-white/20 ring-white/10' };
-    if (s === 'pending_approval') return { label: 'NEEDS_APPROVAL', color: 'bg-white/5 text-white/30 ring-white/10' };
-    if (s === 'duplicate_blocked') return { label: 'DUPLICATE', color: 'bg-white/5 text-white/15 ring-white/10' };
-    if (s === 'already_reimbursed') return { label: 'ALREADY_PAID', color: 'bg-white/5 text-white/40 ring-white/10' };
-    if (s === 'failed') return { label: 'FAILED', color: 'bg-white/5 text-white/40 ring-white/10' };
-    return null;
+    if (s === 'quarantined') return { label: 'QUARANTINED', color: 'bg-white/5 text-white/15 ring-white/10 border-dashed border-red-500/20' };
+    if (s === 'pending_approval') return { label: 'PEER_REVIEW', color: 'bg-white/5 text-white/50 ring-white/10 font-mono' };
+    if (s === 'failed') return { label: 'FAILED', color: 'bg-white/5 text-white/40 ring-white/10 line-through' };
+    
+    return { label: s.toUpperCase().replace(/_/g, ' '), color: 'bg-white/5 text-white/30 ring-white/10' };
   };
 
   // Action buttons per row
   const renderFilingActions = (caseItem: DisputeCase) => {
-    const filingStatus = caseItem.filing_status?.toLowerCase();
+    const filingStatus = (caseItem.filing_status || caseItem.status).toLowerCase();
     const isProcessing = filingInProgress.has(caseItem.id);
+    
+    // Atomic Lock Check
+    const isLocked = filingStatus === 'submitting' || filingStatus === 'recovering' || filingStatus === 'filing';
 
     if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'approved') return null;
-    if (filingStatus === 'duplicate_blocked' || filingStatus === 'already_reimbursed') {
-      return <span className="text-[9px] font-sans font-bold text-white/15 uppercase tracking-tight">BLOCKED</span>;
+    
+    if (isThrottled) {
+      return (
+        <Badge variant="outline" className="h-7 px-3 bg-white/5 text-white/20 border-white/5 rounded-lg flex items-center gap-1.5 grayscale">
+          <Lock className="w-2.5 h-2.5" />
+          GATE_CLOSED
+        </Badge>
+      );
     }
-    if (filingStatus === 'quarantined_dangerous_doc') {
-      return <span className="text-[9px] font-sans font-bold text-red-500/50 uppercase tracking-tight">REVIEW_REQUIRED</span>;
+
+    if (isLocked) {
+      return (
+        <div className="flex items-center gap-2 opacity-30 select-none">
+          <Loader2 className="w-3 h-3 animate-spin" />
+          <span className="text-[9px] font-sans font-bold text-white uppercase tracking-tight">ATOMIC_LOCK</span>
+        </div>
+      );
     }
+
     if (filingStatus === 'pending_approval') {
       return (
         <Button onClick={() => handleApproveFiling(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-sans font-bold text-amber-500 bg-amber-500/5 border border-amber-500/20 hover:bg-amber-500/10 transition-all uppercase tracking-tight rounded-lg">
+          className="h-7 px-4 text-[9px] font-sans font-bold text-white bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all uppercase tracking-tight rounded-lg">
           {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
-          APPROVE
+          APPROVE_OVERRIDE
         </Button>
       );
     }
-    if (filingStatus === 'failed') {
-      return (
-        <Button onClick={() => handleRetryFiling(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-sans font-bold text-white/40 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all uppercase tracking-tight rounded-lg">
-          {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
-          RETRY
-        </Button>
-      );
-    }
-    if (filingStatus === 'pending' || !filingStatus) {
-      return (
-        <Button onClick={() => handleFileNow(caseItem)} disabled={isProcessing}
-          className="h-7 px-4 text-[9px] font-sans font-bold text-white/40 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all uppercase tracking-tight rounded-lg">
-          {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
-          FILE
-        </Button>
-      );
-    }
-    if (filingStatus === 'filing' || filingStatus === 'retrying') {
-      return <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight animate-pulse">PROCESSING...</span>;
-    }
-    return null;
+
+    // Default File/Retry Action
+    const isRetry = filingStatus === 'failed';
+    const actionLabel = isPaid ? (isRetry ? 'RETRY' : 'FILE') : 'UPGRADE REQUIRED ($99)';
+    
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              onClick={() => isRetry ? handleRetryFiling(caseItem) : handleFileNow(caseItem)} 
+              disabled={isProcessing || (!isPaid && !isRetry)}
+              className={cn(
+                "h-7 px-4 text-[9px] font-sans font-bold transition-all uppercase tracking-tight rounded-lg",
+                !isPaid && !isRetry 
+                  ? "bg-white/5 text-white/20 border border-white/10 cursor-not-allowed italic"
+                  : "bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white"
+              )}>
+              {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
+              {!isPaid && !isRetry && <Lock className="w-2.5 h-2.5 mr-1.5 opacity-50" />}
+              {actionLabel}
+            </Button>
+          </TooltipTrigger>
+          {!isPaid && !isRetry && (
+            <TooltipContent className="bg-black border border-white/10 p-2 text-[9px] font-sans font-bold text-white/80 uppercase">
+              $99 Beta Activation Required
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
+    );
   };
 
   // ---------- Render ----------
@@ -255,8 +299,8 @@ export function DisputeCasesTable() {
   if (loading && cases.length === 0) {
     return (
       <div className="py-24 flex flex-col items-center justify-center gap-4">
-        <Loader2 className="h-6 w-6 text-emerald-500 animate-spin" />
-        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight animate-pulse">Synchronizing Intelligence...</span>
+        <Loader2 className="h-4 w-4 text-white/20 animate-spin" />
+        <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tighter animate-pulse">Scanning Fortress State...</span>
       </div>
     );
   }
@@ -264,16 +308,16 @@ export function DisputeCasesTable() {
   if (error && cases.length === 0) {
     return (
       <div className="py-24 flex flex-col items-center justify-center gap-6">
-        <div className="w-14 h-14 rounded-full bg-red-500/5 border border-red-500/20 flex items-center justify-center">
-          <XCircle className="w-6 h-6 text-red-500/50" />
+        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+          <AlertCircle className="w-5 h-5 text-white/40" />
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">CONNECTION_ERROR</span>
-          <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight max-w-sm text-center">{error}</span>
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="text-[10px] font-sans font-bold text-white/80 uppercase tracking-tight">COMM_LINK_DOWN</span>
+          <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight max-w-xs text-center">{error}</span>
         </div>
         <Button onClick={() => fetchCases()}
           className="h-8 px-5 text-[9px] font-sans font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all uppercase tracking-tight">
-          RETRY_CONNECTION
+          RETRY_SYNC
         </Button>
       </div>
     );
@@ -285,33 +329,29 @@ export function DisputeCasesTable() {
       <div className="flex items-center justify-between px-8 py-6">
         <div>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-            <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">DISPUTE_FILING_QUEUE_V3_MONO</h2>
+            <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
+            <h2 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-widest">AGENT_7_DISPUTE_LEDGER</h2>
           </div>
           <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
-            ACTIVE_CASES: {cases.length} • AGENT_7_FILING_PROTOCOL
+            TERMINAL_V3 • ACTIVE_CASES: {cases.length} {isThrottled && "• [THROTTLED]"}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[160px] h-10 text-[9px] font-sans font-bold bg-white/5 text-white/40 border-white/5 hover:bg-white/10 rounded-xl transition-all uppercase tracking-tight">
-              <SelectValue placeholder="ALL_CASES" />
+            <SelectTrigger className="w-[140px] h-9 text-[9px] font-sans font-bold bg-white/5 text-white/40 border-white/10 hover:bg-white/10 rounded-lg transition-all uppercase tracking-tight">
+              <SelectValue placeholder="ALL_RECORDS" />
             </SelectTrigger>
-            <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-xl shadow-2xl backdrop-blur-3xl p-1">
-              <SelectItem value="all" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">ALL_CASES</SelectItem>
-              <SelectItem value="pending" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">PENDING</SelectItem>
-              <SelectItem value="submitted" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">SUBMITTED</SelectItem>
-              <SelectItem value="in_progress" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">IN_PROGRESS</SelectItem>
-              <SelectItem value="approved" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">APPROVED</SelectItem>
-              <SelectItem value="rejected" className="rounded-lg hover:bg-white/5 focus:bg-white/5 py-2.5 uppercase tracking-tight">REJECTED</SelectItem>
+            <SelectContent className="bg-black border border-white/10 text-white font-sans font-bold text-[10px] rounded-lg shadow-2xl p-1">
+              <SelectItem value="all" className="rounded-md hover:bg-white/5 py-2 uppercase">ALL_RECORDS</SelectItem>
+              <SelectItem value="pending" className="rounded-md hover:bg-white/5 py-2 uppercase">PENDING</SelectItem>
+              <SelectItem value="submitted" className="rounded-md hover:bg-white/5 py-2 uppercase">FILED</SelectItem>
+              <SelectItem value="in_progress" className="rounded-md hover:bg-white/5 py-2 uppercase">PROCESSING</SelectItem>
+              <SelectItem value="rejected" className="rounded-md hover:bg-white/5 py-2 uppercase">REJECTED</SelectItem>
             </SelectContent>
           </Select>
           <Button
             onClick={() => fetchCases(statusFilter !== 'all' ? statusFilter : undefined)}
-            className={cn(
-              "h-10 px-5 font-sans font-bold text-[9px] uppercase tracking-tight transition-all rounded-xl border border-white/5",
-              "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
-            )}>
+            className="h-9 px-4 font-sans font-bold text-[9px] bg-white/5 text-white/40 border border-white/10 hover:bg-white/10 hover:text-white-60 transition-all rounded-lg uppercase tracking-tight">
             <RefreshCw className="w-3 h-3 mr-2" />
             RE_SYNC
           </Button>
@@ -320,201 +360,134 @@ export function DisputeCasesTable() {
 
       {/* Case List */}
       {cases.length === 0 ? (
-        <div className="py-24 flex flex-col items-center justify-center text-center bg-white/[0.02] border border-white/5 rounded-2xl backdrop-blur-xl">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/5 border border-emerald-500/20 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
-            <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+        <div className="py-24 flex flex-col items-center justify-center text-center bg-white/[0.01] border border-white/5 rounded-2xl">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 mb-4 opacity-20">
+            <CheckCircle2 className="h-5 w-5 text-white" />
           </div>
-          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">QUEUE_CLEAR</h3>
-          <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
-            No dispute cases require immediate filing. All active sessions have been processed.
-          </p>
+          <h3 className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-widest">LEDGER_EMPTY</h3>
+          <p className="text-[9px] font-sans font-bold text-white/10 mt-1 uppercase">No active disputes requiring intervention.</p>
         </div>
       ) : (
-        <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
+        <div className="bg-white/[0.01] border border-white/5 rounded-xl overflow-hidden divide-y divide-white/5">
           {cases.map((caseItem) => {
-            const statusColor = getStatusColor(caseItem.status || 'unknown');
-            const dotColor = getStatusDotColor(caseItem.status || 'unknown');
-            const filingLabel = getFilingLabel(caseItem.filing_status, caseItem.metadata);
+            const statusBadge = getStatusLabel(caseItem.status, caseItem.filing_status);
 
             return (
-              <div key={caseItem.id} className="group relative hover:bg-white/[0.01] transition-colors duration-300">
-                <div className="flex items-start justify-between px-8 py-6">
-                  {/* Left: Info block */}
-                  <div className="flex items-start gap-5 min-w-0 flex-1">
-                    <div className="space-y-2 min-w-0">
-                      {/* Row 1: Case number | Status | Amount */}
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <span className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">
-                          {caseItem.case_number || 'CASE_ID_PENDING'}
+              <div key={caseItem.id} className="group relative hover:bg-white/[0.02] transition-colors">
+                <div className="flex items-start justify-between px-8 py-5">
+                  <div className="flex items-start gap-4 flex-1">
+                    <div className="space-y-1.5 flex-1">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[11px] font-sans font-bold text-white/80 tabular-nums">
+                          {caseItem.case_number || 'ID_PENDING'}
                         </span>
                         
-                        <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight ring-1 ring-inset", statusColor)}>
-                          {(caseItem.status || 'UNKNOWN').replace(/ /g, '_')}
+                        <span className={cn("inline-flex items-center rounded px-2 py-0.5 text-[8px] font-bold uppercase tracking-tight ring-1 ring-inset", statusBadge.color)}>
+                          {statusBadge.label}
                         </span>
-
-                        {filingLabel && (
-                          <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-tight ring-1 ring-inset", filingLabel.color)}>
-                            {filingLabel.label}
-                          </span>
-                        )}
 
                         {caseItem.retry_count && caseItem.retry_count > 0 && (
-                          <span className="inline-flex items-center rounded-full bg-amber-500/5 px-2.5 py-0.5 text-[9px] font-bold text-amber-500/40 ring-1 ring-inset ring-amber-500/10 uppercase tracking-tight">
-                            RETRY_{caseItem.retry_count}
+                          <span className="text-[8px] font-bold text-white/20 border border-white/10 px-1.5 py-0.5 rounded">
+                            V{caseItem.retry_count + 1}
                           </span>
                         )}
                         
-                        <div className="ml-auto">
-                          <span className="text-[12px] font-sans font-bold text-white tracking-tight tabular-nums">
+                        <div className="ml-auto flex items-center gap-1.5">
+                          {caseItem.status === 'payment_required' && <DollarSign className="w-3 h-3 text-red-400" />}
+                          <span className="text-[11px] font-sans font-bold text-white/80 tracking-tight tabular-nums">
                             {formatCurrency(caseItem.amount || 0, caseItem.currency || 'USD')}
                           </span>
                         </div>
                       </div>
 
-                      {/* Row 2: Metadata line */}
-                      <div className="flex items-center gap-3 text-[10px] font-sans font-medium text-white/30 uppercase tracking-tight">
+                      <div className="flex items-center gap-3 text-[9px] font-sans font-bold text-white/15 uppercase tracking-tighter">
                         {caseItem.amazon_case_id && (
-                          <div className="flex items-center gap-1.5 group/link cursor-pointer">
-                            <span className="text-white/20">AMZ:</span>
-                            <span className="text-white/40 group-hover/link:text-white transition-colors">{caseItem.amazon_case_id}</span>
-                            <ExternalLink className="w-2.5 h-2.5 text-white/20 group-hover/link:text-white" />
+                          <div className="flex items-center gap-1 group/link cursor-pointer">
+                            <span className="opacity-50">AMZ_ID:</span>
+                            <span className="group-hover/link:text-white/40 transition-colors">{caseItem.amazon_case_id}</span>
+                            <ExternalLink className="w-2 h-2 opacity-50" />
                           </div>
                         )}
-                        {caseItem.amazon_case_id && caseItem.claim_id && <span className="text-white/10">/</span>}
                         {caseItem.claim_id && (
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-white/20">REF:</span>
-                            <span className="text-white/40">{caseItem.claim_id.substring(0, 12).toUpperCase()}</span>
+                          <div className="flex items-center gap-1">
+                            <span className="opacity-50">CLAIM_REF:</span>
+                            <span>{caseItem.id.substring(0, 12).toUpperCase()}</span>
                           </div>
                         )}
-                        <span className="text-white/10">•</span>
+                        <span>•</span>
                         {caseItem.created_at && (
-                          <div className="flex items-center gap-1.5">
-                            <Clock className="h-2.5 w-2.5 text-white/20" />
-                            <span className="text-white/30">{format(new Date(caseItem.created_at), 'MMM dd, yyyy HH:mm').toUpperCase()}</span>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-2 w-2 opacity-50" />
+                            <span>{format(new Date(caseItem.created_at), 'yyyy/MM/dd HH:mm').toUpperCase()}</span>
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Right: Actions */}
-                  <div className="flex items-center gap-3 self-center flex-shrink-0 pl-4">
+                  <div className="flex items-center gap-2 self-center flex-shrink-0 pl-6">
                     {renderFilingActions(caseItem)}
 
-                    {caseItem.claim_id && (
-                      <>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                onClick={() => handleDownloadBrief(caseItem.id)}
-                                disabled={downloadingBrief.has(caseItem.id)}
-                                variant="ghost"
-                                size="icon"
-                                className="h-7 w-7 text-white/15 hover:text-emerald-500 hover:bg-emerald-500/10 rounded-lg transition-all"
-                              >
-                                {downloadingBrief.has(caseItem.id) ? (
-                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                ) : (
-                                  <Download className="w-3.5 h-3.5" />
-                                )}
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl">
-                              <span className="text-[9px] font-sans font-bold text-white/50 uppercase tracking-tight">Download Brief</span>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-white/10 hover:text-white/40 hover:bg-white/5 rounded-lg transition-all">
+                          <MoreHorizontal className="w-3 h-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-52 bg-black border border-white/10 shadow-2xl rounded-lg p-1">
+                        <div className="text-[8px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-widest">METR_PROTOCOL</div>
+                        
+                        <DropdownMenuItem asChild className="text-[9px] font-sans font-bold text-white/40 hover:text-white rounded-md px-3 py-2 cursor-pointer uppercase">
+                          <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2">
+                            <Eye className="w-2.5 h-2.5 opacity-50" />
+                            VIEW_RAW_DATA
+                          </Link>
+                        </DropdownMenuItem>
 
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-white/15 hover:text-white/50 hover:bg-white/5 rounded-lg transition-all focus-visible:ring-0 group">
-                              <MoreHorizontal className="w-3.5 h-3.5" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
-                            <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-tight">ACTION_VECTOR</div>
-                            
-                            <DropdownMenuItem asChild className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight">
-                              <Link to={`/recoveries/${caseItem.claim_id}`} className="flex items-center gap-2">
-                                <Eye className="w-3 h-3 text-white/30" />
-                                VIEW_PARAMETERS
-                              </Link>
-                            </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-[9px] font-sans font-bold text-white/40 hover:text-white rounded-md px-3 py-2 cursor-pointer uppercase"
+                          onClick={async () => {
+                            try {
+                              const res = await api.getRecoveryDetail(caseItem.claim_id, activeTenantSlug);
+                              if (res.ok && res.data) {
+                                const docs = Array.isArray(res.data.documents) ? res.data.documents : [];
+                                setProofDocs(docs);
+                                setProofDocsClaim({ ...caseItem, id: caseItem.claim_id });
+                                setProofDocsModalOpen(true);
+                              }
+                            } catch (e: any) {
+                              toast({ title: 'ERROR', description: 'Evidence retrieval failed.' });
+                            }
+                          }}>
+                          <FileText className="w-2.5 h-2.5 mr-2 opacity-50" />
+                          AUDIT_HISTORY
+                        </DropdownMenuItem>
 
-                            <DropdownMenuItem
-                              className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight"
-                              onClick={async () => {
-                                try {
-                                  const res = await api.getRecoveryDetail(caseItem.claim_id, activeTenantSlug);
-                                  if (res.ok && res.data) {
-                                    const claimData = res.data;
-                                    const docs = Array.isArray(claimData.documents) ? claimData.documents : 
-                                                 Array.isArray(claimData.matchedDocs) ? claimData.matchedDocs : [];
-                                    setProofDocs(docs);
-                                    setProofDocsClaim({ 
-                                      ...caseItem, 
-                                      id: caseItem.claim_id, 
-                                      claim_number: caseItem.case_number,
-                                      ...claimData 
-                                    });
-                                    setProofDocsModalOpen(true);
-                                  } else {
-                                    throw new Error(res.error || 'Failed to fetch claim details');
-                                  }
-                                } catch (e: any) {
-                                  toast({ title: 'Error loading documents', description: e?.message });
-                                }
-                              }}>
-                              <FileText className="w-3 h-3 mr-2 text-white/30" />
-                              PROOF_DOCUMENTS_RETRIEVAL
-                            </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-[9px] font-sans font-bold text-white/40 hover:text-white rounded-md px-3 py-2 cursor-pointer uppercase"
+                          onClick={async () => {
+                            try {
+                              const res = await api.getRecoveryDetail(caseItem.claim_id, activeTenantSlug);
+                              if (res.ok && res.data) {
+                                setEvidencePackClaim({ ...caseItem, id: caseItem.claim_id, ...res.data });
+                                setEvidencePackOpen(true);
+                              }
+                            } catch (e: any) {
+                              toast({ title: 'ERROR', description: 'Package collation failed.' });
+                            }
+                          }}>
+                          <ShieldAlert className="w-2.5 h-2.5 mr-2 opacity-50" />
+                          DANGER_FINDINGS
+                        </DropdownMenuItem>
 
-                            <DropdownMenuItem
-                              className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight"
-                              onClick={async () => {
-                                try {
-                                  const res = await api.getRecoveryDetail(caseItem.claim_id, activeTenantSlug);
-                                  if (res.ok && res.data) {
-                                    setEvidencePackClaim({ 
-                                      ...caseItem, 
-                                      id: caseItem.claim_id, 
-                                      claim_number: caseItem.case_number,
-                                      ...res.data 
-                                    });
-                                    setEvidencePackOpen(true);
-                                  } else {
-                                    throw new Error(res.error || 'Failed to fetch claim details');
-                                  }
-                                } catch (e: any) {
-                                  toast({ title: 'Error loading evidence pack', description: e?.message });
-                                }
-                              }}>
-                              <ShieldAlert className="w-3 h-3 mr-2 text-white/30" />
-                              AUDIT_PACKAGE_VIEW
-                            </DropdownMenuItem>
-
-                            {caseItem.status?.toLowerCase() === 'denied' && (
-                              <DropdownMenuItem
-                                className="text-[10px] font-sans font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2.5 cursor-pointer uppercase tracking-tight"
-                                onClick={async () => {
-                                  try {
-                                    await recoveryApi.resubmitClaim(caseItem.claim_id, activeTenantSlug);
-                                    toast({ title: 'Resubmitted', description: 'Claim resubmitted with enhanced evidence.' });
-                                    fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
-                                  } catch (e: any) {
-                                    toast({ title: 'Resubmission failed', description: e?.message });
-                                  }
-                                }}>
-                                <RefreshCw className="w-3 h-3 mr-2" />
-                                RESUBMIT_ENHANCED_AUDIT
-                              </DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </>
-                    )}
+                        <DropdownMenuItem
+                          className="text-[9px] font-sans font-bold text-white/40 hover:text-white rounded-md px-3 py-2 cursor-pointer uppercase"
+                          onClick={() => handleDownloadBrief(caseItem.id)}>
+                          <Download className="w-3 h-3 mr-2 opacity-50" />
+                          EXPORT_BRIEF_PDF
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
               </div>
@@ -544,7 +517,7 @@ export function DisputeCasesTable() {
           setProofDocs([]);
         }}
         claimId={proofDocsClaim?.id || ''}
-        claimNumber={proofDocsClaim?.claim_number}
+        claimNumber={proofDocsClaim?.case_number}
         documents={proofDocs}
       />
     </div>

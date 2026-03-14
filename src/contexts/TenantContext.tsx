@@ -63,6 +63,7 @@ interface TenantContextType {
     isOwner: boolean;
     isAdmin: boolean;
     isReady: boolean;
+    isThrottled: boolean;
     hasRole: (roles: Array<'owner' | 'admin' | 'member' | 'viewer'>) => boolean;
 
     // Plan limits
@@ -97,6 +98,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
     const [planLimits, setPlanLimits] = useState<PlanLimits | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isReady, setIsReady] = useState(false);
+    const [isThrottled, setIsThrottled] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const queryClient = useQueryClient();
@@ -145,6 +147,11 @@ export function TenantProvider({ children }: TenantProviderProps) {
             const planResponse = await api.get('/api/tenant/plan');
             if (planResponse.data.success) {
                 setPlanLimits(planResponse.data.limits);
+                
+                // Check for tenant-level throttles (e.g. from session or backend)
+                if (planResponse.data.is_throttled || planResponse.data.throttle_active) {
+                    setIsThrottled(true);
+                }
             }
         } catch (err: any) {
             console.error('Failed to load tenant context:', err);
@@ -274,7 +281,8 @@ export function TenantProvider({ children }: TenantProviderProps) {
         hasRole,
         planLimits: planLimits || DEFAULT_LIMITS,
         isUnlimited,
-        isReady
+        isReady,
+        isThrottled
     };
 
     return (

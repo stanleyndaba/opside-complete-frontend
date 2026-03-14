@@ -11,6 +11,7 @@ import { SessionTimeoutModal } from '@/components/modals/SessionTimeoutModal';
 interface SessionContextType {
     isSessionValid: boolean;
     userEmail: string | null;
+    isPaidUser: boolean;
     showSessionTimeout: () => void;
     hideSessionTimeout: () => void;
 }
@@ -21,6 +22,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
+    const [isPaidUser, setIsPaidUser] = useState(false);
 
     // Get user email and ID on mount
     useEffect(() => {
@@ -29,6 +31,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             if (user?.email) {
                 setUserEmail(user.email);
                 localStorage.setItem('user_email', user.email);
+                
+                // Fetch the payment status from our fortress users table
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('is_paid_beta')
+                    .eq('id', user.id)
+                    .single();
+                
+                if (profile) {
+                    setIsPaidUser(!!profile.is_paid_beta);
+                }
             }
             // Store user ID for API calls
             if (user?.id) {
@@ -50,6 +63,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 setSessionTimeoutOpen(false);
                 if (session.user?.email) {
                     setUserEmail(session.user.email);
+                    
+                    // Re-verify payment status on re-auth
+                    supabase
+                        .from('users')
+                        .select('is_paid_beta')
+                        .eq('id', session.user.id)
+                        .single()
+                        .then(({ data }) => {
+                            if (data) setIsPaidUser(!!data.is_paid_beta);
+                        });
                 }
                 // Store user_id for API calls
                 if (session.user?.id) {
@@ -78,6 +101,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         <SessionContext.Provider value={{
             isSessionValid,
             userEmail,
+            isPaidUser,
             showSessionTimeout,
             hideSessionTimeout
         }}>
