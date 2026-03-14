@@ -75,15 +75,10 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
       const connected = isGmailConnected();
 
-      // THE UNIFIED HYDRATION FIX: Use the most robust source available for email
-      // Priority: 1. Specific Gmail Status API, 2. Evidence Sources Array, 3. Integrations Status
-      const email = (gmailRes?.ok && gmailRes.data?.email) || 
-                   (sourcesRes?.ok && sourcesRes.data?.sources?.find((s: any) => s.provider?.toLowerCase() === 'gmail')?.account_email) ||
-                   (integrationsRes?.ok && (integrationsRes.data as any)?.providerIngest?.['gmail']?.email) ||
-                   undefined;
-
-      // Filter out 'unknown' or placeholder emails
-      const filteredEmail = email && email !== 'unknown' ? email : undefined;
+      // Get email from either endpoint
+      const email = gmailRes?.ok && gmailRes.data?.email
+        ? gmailRes.data.email
+        : undefined;
 
       // Get lastSync from either endpoint — backend returns lastSync not last_sync_at
       const lastSync = gmailRes?.ok && (gmailRes.data as any)?.lastSync
@@ -98,7 +93,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
       setStatus({
         connected,
-        email: filteredEmail,
+        email,
         lastSync,
       });
       onStatusChange?.(connected);
@@ -187,16 +182,9 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">Connected Email</span>
-            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">Connected Email</span>
             <div className="flex items-center gap-2">
               <span className="text-xs font-sans font-bold text-white/60 tracking-tight">
-                {status?.connected ? (
-                  status.email || (
-                    <span className="text-white/10 italic">Hydrating...</span>
-                  )
-                ) : (
-                  'Not authorized'
-                )}
+                {status?.email || 'Not authorized'}
               </span>
             </div>
           </div>
