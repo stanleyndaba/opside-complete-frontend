@@ -147,14 +147,27 @@ export function Sidebar({
   React.useEffect(() => {
     if (!isReady) return;
     let cancelled = false;
-    (async () => {
+    
+    const fetchRecoveries = async () => {
       try {
         const recoveries = await recoveryApi.getRecoveries(currentTenantSlug);
-        if (!cancelled && Array.isArray(recoveries)) {
-          setClaimCount(recoveries.length);
+        if (!cancelled) {
+          if (Array.isArray(recoveries)) {
+            setClaimCount(recoveries.length);
+          } else {
+            console.warn('[Sidebar] Recoveries response not an array, falling back to 0');
+            setClaimCount(0);
+          }
         }
-      } catch { }
-    })();
+      } catch (err) {
+        if (!cancelled) {
+          console.warn('[Sidebar] Recoveries endpoint unavailable, degrading gracefully.', err);
+          setClaimCount(0); // Resolve loading state to zero to prevent UI hang
+        }
+      }
+    };
+
+    fetchRecoveries();
     return () => { cancelled = true; };
   }, [currentTenantSlug, isReady]);
 

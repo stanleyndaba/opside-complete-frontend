@@ -35,7 +35,7 @@ export const recoveryApi = {
     // 3. ALSO fetch detection results from Agent 3 (unfiled claims/anomalies)
     try {
       const detectionResponse = await api.get(`/api/v1/integrations/detections/results?tenantSlug=${slug}`);
-      if (detectionResponse.ok && detectionResponse.data?.results) {
+      if (detectionResponse.ok && Array.isArray(detectionResponse.data?.results)) {
         const detectionClaims = detectionResponse.data.results
           .filter((d: any) => d.status !== 'filed' && d.status !== 'resolved') // Only include unfiled detections
           .map((d: any) => {
