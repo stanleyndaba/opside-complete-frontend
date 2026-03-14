@@ -14,7 +14,7 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       {/* Psychological Backdrop: Blurred Table Visibility */}
-      <DialogContent className="max-w-md bg-zinc-950 border border-white/10 p-0 overflow-hidden shadow-2xl rounded-sm sm:rounded-sm flex flex-col items-center justify-center">
+      <DialogContent className="max-w-md bg-zinc-950 border border-white/10 p-0 overflow-hidden shadow-2xl rounded-sm sm:rounded-sm flex flex-col items-center justify-center z-[9999]">
         {/* Header Visual: Security Core */}
         <div className="w-full bg-white/[0.02] border-b border-white/5 py-12 flex flex-col items-center justify-center relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />

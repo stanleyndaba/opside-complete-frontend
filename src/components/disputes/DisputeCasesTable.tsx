@@ -276,11 +276,11 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
           <TooltipTrigger asChild>
             <Button 
               onClick={() => isRetry ? handleRetryFiling(caseItem) : handleFileNow(caseItem)} 
-              disabled={isProcessing || (!isPaid && !isRetry)}
+              disabled={isProcessing}
               className={cn(
                 "h-7 px-4 text-[9px] font-sans font-bold transition-all uppercase tracking-tight rounded-lg",
                 !isPaid && !isRetry 
-                  ? "bg-white/5 text-white/20 border border-white/10 cursor-not-allowed italic"
+                  ? "bg-white/5 text-white/20 border border-white/10 cursor-pointer italic grayscale"
                   : "bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white"
               )}>
               {isProcessing ? <Loader2 className="w-3 h-3 mr-1.5 animate-spin" /> : null}
