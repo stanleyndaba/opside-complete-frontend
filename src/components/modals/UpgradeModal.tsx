@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Shield, Lock, CreditCard, ChevronRight } from 'lucide-react';
+import { Shield, Lock, CreditCard, ChevronRight, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useSession } from '@/contexts/SessionContext';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -11,6 +13,9 @@ interface UpgradeModalProps {
 }
 
 export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
+  const { user } = useSession();
+  const [isProcessing, setIsProcessing] = useState(false);
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       {/* Psychological Backdrop: Blurred Table Visibility */}
@@ -57,20 +62,44 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
 
           {/* Primary Action */}
           <div className="space-y-4 pt-2">
-            <Button 
-              className="w-full h-14 bg-white hover:bg-white/90 text-black font-black uppercase tracking-tighter text-lg rounded-none transition-all flex items-center justify-between px-8"
-              onClick={() => {
-                // Future: PayPal Handshake Logic
-                window.open('https://paypal.com', '_blank');
-              }}
-            >
-              PAY $99 VIA PAYPAL
-              <ChevronRight className="w-6 h-6" strokeWidth={3} />
-            </Button>
+            {isProcessing ? (
+              <div className="flex flex-col items-center justify-center space-y-4 py-8 bg-white/[0.02] border border-white/5">
+                <RefreshCw className="w-8 h-8 animate-spin text-white/60" strokeWidth={1} />
+                <p className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-widest">Transaction Processing...</p>
+              </div>
+            ) : (
+              <PayPalScriptProvider options={{ "client-id": "AXZQsrMy-lI1ifLUoZLaMr9ZmED8fQhu4VA21SyRsI-v33-At4YVVcQPX-lIKlVPs7a2ccE0gqJ5tFN8" }}>
+                <PayPalButtons 
+                  style={{ layout: 'vertical', color: 'white', shape: 'rect', label: 'pay' }}
+                  createOrder={(data, actions) => {
+                    return actions.order.create({
+                      intent: "CAPTURE",
+                      purchase_units: [{
+                        amount: { 
+                          currency_code: "USD",
+                          value: "99.00" 
+                        },
+                        custom_id: user?.id || 'anonymous'
+                      }]
+                    });
+                  }}
+                  onApprove={(data, actions) => {
+                    setIsProcessing(true);
+                    if (actions.order) {
+                      return actions.order.capture().then(() => {
+                        onClose();
+                      });
+                    }
+                    return Promise.resolve();
+                  }}
+                />
+              </PayPalScriptProvider>
+            )}
             
             <button 
               onClick={onClose}
-              className="w-full text-[9px] font-bold text-white/20 hover:text-white uppercase tracking-widest transition-colors py-2"
+              disabled={isProcessing}
+              className="w-full text-[9px] font-bold text-white/20 hover:text-white uppercase tracking-widest transition-colors py-2 disabled:opacity-30"
             >
               ABORT_SESSION
             </button>
