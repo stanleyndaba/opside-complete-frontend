@@ -390,9 +390,9 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
                           {statusBadge.label}
                         </span>
 
-                        {caseItem.retry_count && caseItem.retry_count > 0 && (
+                        {(caseItem.retry_count ?? 0) > 0 && (
                           <span className="text-[8px] font-bold text-white/20 border border-white/10 px-1.5 py-0.5 rounded">
-                            V{caseItem.retry_count + 1}
+                            V{caseItem.retry_count! + 1}
                           </span>
                         )}
                         
