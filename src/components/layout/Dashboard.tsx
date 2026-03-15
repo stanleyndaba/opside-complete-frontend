@@ -1647,7 +1647,7 @@ export function Dashboard() {
 
                           <div className="flex flex-col">
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">RECOVERED</span>
-                            <span className="text-lg font-sans font-bold text-emerald-500 leading-none mt-1">
+                            <span className="text-lg font-sans font-bold text-white leading-none mt-1">
                               {formatCurrencyWithSelection(
                                 recoveredTotal || detectionResults
                                   .filter(r => r.status === 'resolved' || r.status === 'converted')
@@ -1768,11 +1768,11 @@ export function Dashboard() {
                                       <div className="flex items-center justify-center gap-2">
                                         <div className="w-12 h-1.5 bg-white/5 rounded-full overflow-hidden">
                                           <div
-                                            className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                                            className="h-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]"
                                             style={{ width: `${(result.confidence_score || 0) * 100}%` }}
                                           />
                                         </div>
-                                        <span className="text-[10px] font-sans font-bold text-emerald-500/60 tracking-tight">
+                                        <span className="text-[10px] font-sans font-bold text-blue-600/60 tracking-tight">
                                           {((result.confidence_score || 0) * 100).toFixed(0)}%
                                         </span>
                                       </div>
