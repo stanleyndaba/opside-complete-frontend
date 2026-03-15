@@ -19,28 +19,23 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 shadow-2xl rounded-sm sm:rounded-sm z-[9999]">
-        {/* Header */}
-        <div className="px-8 pt-8 pb-4 border-b border-white/10">
-          <h2 className="text-sm font-bold text-white tracking-tight uppercase">
-            Unlock Agent 7 Execution Engine
-          </h2>
-          <p className="text-[11px] text-white/60 mt-2 font-medium">
-            Active Case: {caseId ? caseId.substring(0, 8).toUpperCase() : 'PENDING_VALIDATION'}
-          </p>
-        </div>
-
         {/* Content */}
-        <div className="px-8 py-6 space-y-6">
+        <div className="px-8 py-10 space-y-6">
           <div className="space-y-4">
-            <p className="text-[11px] text-white/40 uppercase font-bold tracking-tight">
-              Subscription Protocol: $99.00 / Month
-            </p>
+            <div className="space-y-1">
+              <p className="text-[11px] text-white/60 font-medium">
+                Active Case: {caseId ? caseId.substring(0, 8).toUpperCase() : 'PENDING_VALIDATION'}
+              </p>
+              <p className="text-[11px] text-white/40 uppercase font-bold tracking-tight">
+                Subscription: $99.00 / Month
+              </p>
+            </div>
             
             {/* Benefits List - Matching ProofDocumentsModal list style */}
             <div className="border border-white/10 rounded-sm overflow-hidden">
               <div className="bg-white/5 px-4 py-2 border-b border-white/10">
-                <span className="text-[10px] text-white/40 font-bold uppercase">
-                  Enabled Vector Protocols
+                <span className="text-[10px] text-white/40 font-bold uppercase tracking-tight">
+                  Includes
                 </span>
               </div>
               <div className="divide-y divide-white/10">
@@ -48,14 +43,14 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
                   <div className="w-1 h-1 bg-white/40" />
                   <div className="flex-1 min-w-0">
                     <div className="text-[10px] font-bold text-white uppercase tracking-tight">Unlimited Auto-Filing</div>
-                    <div className="text-[9px] text-white/30 uppercase mt-0.5">Zero-Touch Submission Pipeline</div>
+                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">Zero-Touch Submission Pipeline</div>
                   </div>
                 </div>
                 <div className="px-4 py-3 bg-transparent flex items-center gap-3">
                   <div className="w-1 h-1 bg-white/40" />
                   <div className="flex-1 min-w-0">
                     <div className="text-[10px] font-bold text-white uppercase tracking-tight">Handshake Priority</div>
-                    <div className="text-[9px] text-white/30 uppercase mt-0.5">Amazon Case Management Overlay</div>
+                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">Amazon Case Management Overlay</div>
                   </div>
                 </div>
               </div>
@@ -103,18 +98,8 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
               disabled={isProcessing}
               className="w-full text-[10px] font-bold text-white/20 hover:text-white/60 uppercase tracking-tight transition-colors py-2 disabled:opacity-30"
             >
-              [ ABORT_CONNECTION_SESSION ]
+              Do Not Upgrade
             </button>
-          </div>
-        </div>
-
-        {/* Institutional Footer */}
-        <div className="px-8 py-4 bg-white/[0.02] border-t border-white/10 flex justify-between items-center overflow-hidden">
-          <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">Active Dispute Protection Engine</span>
-          <div className="flex gap-1.5 grayscale opacity-20">
-            <div className="w-1.5 h-1.5 bg-white" />
-            <div className="w-1.5 h-1.5 bg-white" />
-            <div className="w-1.5 h-1.5 bg-white" />
           </div>
         </div>
       </DialogContent>
