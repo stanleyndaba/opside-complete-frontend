@@ -277,7 +277,7 @@ export function Sidebar({
         )}
         <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-foreground/20 group-hover:text-foreground")} />
         <span className={cn(
-          "text-[12px] font-sans transition-colors tracking-tight uppercase",
+          "text-[11px] font-sans transition-colors tracking-tight uppercase",
           isActive ? "font-bold text-foreground" : "font-light"
         )}>{item.title}</span>
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
@@ -309,12 +309,18 @@ export function Sidebar({
           "border-b border-border flex items-center h-16",
           isCollapsed ? "justify-center px-2" : "justify-between px-6"
         )}>
-        <div className={cn("flex items-center", isCollapsed ? "gap-0" : "gap-3")}>
+        <div className={cn("flex flex-col items-start gap-1", isCollapsed ? "items-center" : "")}>
           <img
             src="/logoimagetwo.png"
             alt="Margin"
             className={cn(isCollapsed ? "h-3.5" : "h-3.5", "w-auto object-contain dark:invert dark:brightness-0")}
           />
+          {!isCollapsed && (
+            <div className="flex items-center gap-1.5 translate-x-0.5">
+              <div className="h-1 w-1 rounded-full bg-[#ff4500] animate-pulse shadow-[0_0_8px_rgba(255,69,0,0.4)]" />
+              <span className="text-[8px] font-sans font-bold text-[#ff4500] uppercase tracking-widest">Healthy</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -377,7 +383,7 @@ export function Sidebar({
                   : "gap-3 px-6 py-3 text-left hover:bg-foreground/[0.02] text-foreground/50 hover:text-foreground"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[12px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
+              {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
