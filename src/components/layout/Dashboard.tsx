@@ -1342,7 +1342,10 @@ export function Dashboard() {
                         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                           <div className="flex items-center gap-3">
                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-                            <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Recent Events</h2>
+                            <div>
+                              <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Recent Events</h2>
+                              <p className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">New findings requiring submission</p>
+                            </div>
                           </div>
                           <Button
                             variant="ghost"
@@ -1359,7 +1362,7 @@ export function Dashboard() {
                           </div>
                           <div className="p-6">
                             <div className="text-xs font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Estimated Results</div>
-                            <div className="text-xl font-sans font-bold text-emerald-500">
+                            <div className="text-xl font-sans font-bold text-blue-600">
                               {formatCurrencyWithSelection(
                                 detectionStats?.estimatedRecovery || detectionResults.reduce((acc, curr) => acc + curr.estimated_value, 0),
                                 recoveredCurrency
