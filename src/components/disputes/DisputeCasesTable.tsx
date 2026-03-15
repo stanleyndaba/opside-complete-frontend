@@ -334,10 +334,10 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
         <div>
           <div className="flex items-center gap-3">
             <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
-            <h2 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-widest">AGENT_7_DISPUTE_LEDGER</h2>
+            <h2 className="text-[10px] font-sans font-bold text-white/60 uppercase tracking-widest">DISPUTE LEDGER</h2>
           </div>
           <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-1">
-            TERMINAL_V3 • ACTIVE_CASES: {cases.length} {isThrottled && "• [THROTTLED]"}
+            ACTIVE CASES: {cases.length} {isThrottled && "• [THROTTLED]"}
           </p>
         </div>
         <div className="flex items-center gap-3">
