@@ -11,7 +11,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import {
   Download,
-  CreditCard,
   Shield,
   Check,
   ChevronRight,
@@ -24,10 +23,7 @@ import {
   Receipt,
   ArrowUpRight,
   Scale,
-  Plus,
-  Trash2,
-  X,
-  Star
+  X
 } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
@@ -46,18 +42,6 @@ interface InvoiceRecord {
   recoveryClaimIds?: string[];
 }
 
-interface PaymentMethod {
-  id: string;
-  card_brand: string;
-  card_last_four: string;
-  card_exp_month: number;
-  card_exp_year: number;
-  cardholder_name?: string;
-  billing_email?: string;
-  is_default: boolean;
-  status: string;
-}
-
 const getStatusStyles = (status: InvoiceRecord['status']) => {
   switch (status) {
     case 'SETTLED':
@@ -71,13 +55,6 @@ const getStatusStyles = (status: InvoiceRecord['status']) => {
   }
 };
 
-const BRAND_ICONS: Record<string, string> = {
-  visa: '💳',
-  mastercard: '💳',
-  amex: '💳',
-  discover: '💳',
-};
-
 export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
@@ -88,19 +65,6 @@ export default function Billing() {
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Payment methods state
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [loadingCards, setLoadingCards] = useState(true);
-  const [showAddCard, setShowAddCard] = useState(false);
-  const [addingCard, setAddingCard] = useState(false);
-
-  // Add card form
-  const [cardBrand, setCardBrand] = useState('visa');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardholderName, setCardholderName] = useState('');
-  const [billingEmail, setBillingEmail] = useState('');
 
   // Financial Registration
   const [invoiceRecipients, setInvoiceRecipients] = useState<string[]>([]);
@@ -117,22 +81,6 @@ export default function Billing() {
     } catch { }
   }, []);
 
-  // Fetch payment methods
-  useEffect(() => {
-    (async () => {
-      setLoadingCards(true);
-      try {
-        const res = await detectionApi.getPaymentMethods();
-        if (res.ok && res.data?.data) {
-          setPaymentMethods(res.data.data);
-        }
-      } catch (e) {
-        console.error('Failed to fetch payment methods:', e);
-      } finally {
-        setLoadingCards(false);
-      }
-    })();
-  }, []);
 
   // Fetch invoices
   useEffect(() => {
@@ -212,81 +160,6 @@ export default function Billing() {
     toast({ title: 'Settings Updated', description: 'Your billing preferences have been saved.' });
   };
 
-  // Add card handler
-  const handleAddCard = async () => {
-    if (!cardNumber || cardNumber.length < 4 || !cardExpiry) {
-      toast({ title: 'Invalid Input', description: 'Please enter card number and expiry.', variant: 'destructive' });
-      return;
-    }
-
-    const lastFour = cardNumber.replace(/\s/g, '').slice(-4);
-    const [monthStr, yearStr] = cardExpiry.split('/');
-    const expMonth = parseInt(monthStr);
-    const expYear = parseInt(yearStr?.length === 2 ? `20${yearStr}` : yearStr);
-
-    if (!expMonth || !expYear || expMonth < 1 || expMonth > 12) {
-      toast({ title: 'Invalid Expiry', description: 'Please enter expiry as MM/YY.', variant: 'destructive' });
-      return;
-    }
-
-    setAddingCard(true);
-    try {
-      const res = await detectionApi.addPaymentMethod({
-        cardBrand: cardBrand,
-        cardLastFour: lastFour,
-        cardExpMonth: expMonth,
-        cardExpYear: expYear,
-        cardholderName: cardholderName || undefined,
-        billingEmail: billingEmail || undefined,
-        setDefault: paymentMethods.length === 0,
-      });
-
-      if (res.ok && res.data?.success) {
-        toast({ title: 'Card Added', description: `${cardBrand.toUpperCase()} ending in ${lastFour} has been added.` });
-        // Refresh payment methods
-        const refreshed = await detectionApi.getPaymentMethods();
-        if (refreshed.ok && refreshed.data?.data) setPaymentMethods(refreshed.data.data);
-        // Reset form
-        setShowAddCard(false);
-        setCardNumber('');
-        setCardExpiry('');
-        setCardholderName('');
-        setBillingEmail('');
-      } else {
-        toast({ title: 'Error', description: res.data?.error || 'Failed to add card.', variant: 'destructive' });
-      }
-    } catch (e: any) {
-      toast({ title: 'Error', description: e?.message || 'Failed to add card.', variant: 'destructive' });
-    } finally {
-      setAddingCard(false);
-    }
-  };
-
-  // Remove card
-  const handleRemoveCard = async (id: string) => {
-    try {
-      const res = await detectionApi.removePaymentMethod(id);
-      if (res.ok) {
-        setPaymentMethods(prev => prev.filter(p => p.id !== id));
-        toast({ title: 'Card Removed', description: 'Payment method has been removed.' });
-      }
-    } catch (e: any) {
-      toast({ title: 'Error', description: 'Failed to remove card.', variant: 'destructive' });
-    }
-  };
-
-  // Set default card
-  const handleSetDefault = async (id: string) => {
-    try {
-      const res = await detectionApi.setDefaultPaymentMethod(id);
-      if (res.ok) {
-        setPaymentMethods(prev => prev.map(p => ({ ...p, is_default: p.id === id })));
-        toast({ title: 'Default Updated', description: 'Default payment method updated.' });
-      }
-    } catch (e: any) {
-      toast({ title: 'Error', description: 'Failed to set default.', variant: 'destructive' });
-    }
-  };
 
   const exportBillingPDF = async () => {
     const { default: jsPDF } = await import('jspdf');
@@ -401,8 +274,6 @@ export default function Billing() {
     visible: { opacity: 1, y: 0 }
   };
 
-  // Default card for display
-  const defaultCard = paymentMethods.find(p => p.is_default) || paymentMethods[0];
 
   return (
     <PageLayout title="Billing" midnight>
@@ -435,187 +306,48 @@ export default function Billing() {
             animate="visible"
             className="mb-16 space-y-6"
           >
-            {/* Payment Methods Card */}
+            {/* PayPal Protocol Status */}
             <motion.div variants={itemVariants}>
-              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
+              <Card className="bg-[#0c0c0c] border-emerald-500/10 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
                 <CardHeader className="p-8 pb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                        <CreditCard className="h-4 w-4 text-white/60" />
+                      <div className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+                        <Shield className="h-4 w-4 text-emerald-500" />
                       </div>
-                      <CardTitle className="text-2xl font-sans font-bold tracking-tight">Payment Methods</CardTitle>
+                      <CardTitle className="text-2xl font-sans font-bold tracking-tight">Billing Protocol: PayPal</CardTitle>
                     </div>
-                    <Button
-                      onClick={() => setShowAddCard(!showAddCard)}
-                      variant="outline"
-                      className="h-9 px-4 border-white/10 hover:border-emerald-500/50 bg-transparent text-white hover:bg-emerald-500/10 font-sans font-bold text-[10px] uppercase tracking-tight rounded-xl"
-                    >
-                      <Plus className="h-3.5 w-3.5 mr-2" />
-                      Add card
-                    </Button>
+                    <Badge variant="outline" className="border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-sans font-bold text-[9px] tracking-tight uppercase px-3 py-1">
+                      EXCLUSIVE MODE
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent className="p-8 pt-0 space-y-6">
-
-                  {/* Add Card Form */}
-                  <AnimatePresence>
-                    {showAddCard && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl space-y-5">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">New payment method</p>
-                            <button onClick={() => setShowAddCard(false)} className="text-white/20 hover:text-white transition-colors">
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-
-                          {/* Card Brand Selector */}
-                          <div className="flex gap-3">
-                            {['visa', 'mastercard', 'amex', 'discover'].map(brand => (
-                              <button
-                                key={brand}
-                                onClick={() => setCardBrand(brand)}
-                                className={cn(
-                                  "px-4 py-2 rounded-lg border text-[10px] font-sans font-bold uppercase tracking-tight transition-all",
-                                  cardBrand === brand
-                                    ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
-                                    : "border-white/10 text-white/30 hover:border-white/20"
-                                )}
-                              >
-                                {brand}
-                              </button>
-                            ))}
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Card number</label>
-                              <Input
-                                placeholder="•••• •••• •••• 4242"
-                                value={cardNumber}
-                                onChange={(e) => setCardNumber(e.target.value)}
-                                maxLength={19}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Expiry</label>
-                              <Input
-                                placeholder="MM/YY"
-                                value={cardExpiry}
-                                onChange={(e) => setCardExpiry(e.target.value)}
-                                maxLength={5}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Cardholder name</label>
-                              <Input
-                                placeholder="Full name on card"
-                                value={cardholderName}
-                                onChange={(e) => setCardholderName(e.target.value)}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Billing email</label>
-                              <Input
-                                placeholder="billing@company.com"
-                                value={billingEmail}
-                                onChange={(e) => setBillingEmail(e.target.value)}
-                                className="h-11 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/15 focus:ring-emerald-500/20 tracking-tight"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3 pt-2">
-                            <Button
-                              onClick={handleAddCard}
-                              disabled={addingCard}
-                              className="bg-white text-black hover:bg-emerald-500 rounded-xl font-sans font-bold uppercase text-[10px] tracking-tight h-11 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
-                            >
-                              {addingCard ? 'Adding...' : 'Add payment method'}
-                            </Button>
-                            <div className="flex items-center gap-2 text-white/20">
-                              <Lock className="h-3 w-3" />
-                              <span className="text-[9px] font-sans font-bold uppercase tracking-tight">Encrypted & secure</span>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Cards List */}
-                  {loadingCards ? (
-                    <div className="flex items-center gap-3 py-6">
-                      <div className="h-5 w-5 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Fetching payment methods...</span>
+                  <div className="flex flex-col md:flex-row items-center gap-8 py-4">
+                    <div className="h-24 w-24 flex items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 p-4">
+                      <svg viewBox="0 0 24 24" className="w-full h-full fill-white/60" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.067 8.178c-.652 4.1-3.6 5.867-7.444 5.867h-.822c-.445 0-.777.334-.845.778l-1.044 6.555a.311.311 0 0 1-.31.278H6.555c-.244 0-.4-.2-.334-.4l2.422-15.356c.067-.4.4-.711.823-.711h6.066c1.867 0 3.378.489 4.156 1.489.266.356.444.8.444 1.289 0 .889-.289 1.622-.067 2.211z" />
+                      </svg>
                     </div>
-                  ) : paymentMethods.length > 0 ? (
                     <div className="space-y-3">
-                      {paymentMethods.map((pm) => (
-                        <div
-                          key={pm.id}
-                          className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-xl group/card hover:border-white/10 transition-all"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10">
-                              <CreditCard className="h-5 w-5 text-white/60" />
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <p className="text-xs font-sans font-bold uppercase tracking-tight">
-                                  {pm.card_brand} .... {pm.card_last_four}
-                                </p>
-                                {pm.is_default && (
-                                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[8px] px-2 font-sans font-bold tracking-tight">DEFAULT</Badge>
-                                )}
-                              </div>
-                                <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                  Exp {String(pm.card_exp_month).padStart(2, '0')} // {pm.card_exp_year}
-                                  {pm.cardholder_name && ` · ${pm.cardholder_name}`}
-                                </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 opacity-0 group-hover/card:opacity-100 transition-opacity">
-                            {!pm.is_default && (
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => handleSetDefault(pm.id)}
-                                className="h-8 w-8 text-white/20 hover:text-emerald-500"
-                                title="Set as default"
-                              >
-                                <Star className="h-3.5 w-3.5" />
-                              </Button>
-                            )}
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => handleRemoveCard(pm.id)}
-                              className="h-8 w-8 text-white/20 hover:text-rose-500"
-                              title="Remove card"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
+                      <p className="text-lg font-sans font-bold text-white/90 tracking-tight leading-snug">
+                        Margin now operates exclusively via PayPal Invoicing.
+                      </p>
+                      <p className="text-sm font-sans font-bold text-white/40 italic tracking-tight">
+                        "Commission settlements are processed through standardized PayPal invoice corridors. No card storage required."
+                      </p>
+                      <div className="flex items-center gap-3 pt-2">
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
+                          <Check className="h-3 w-3" />
+                          Auto-Sync Active
                         </div>
-                      ))}
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                          <Lock className="h-3 w-3" />
+                          Encrypted Transmissions
+                        </div>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="flex flex-col items-center py-10 gap-3 opacity-30">
-                      <CreditCard className="h-8 w-8" />
-                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight">No payment methods on file</p>
-                      <p className="text-xs italic font-sans font-bold tracking-tight">"Add a card to enable automatic commission settlement."</p>
-                    </div>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -871,7 +603,7 @@ export default function Billing() {
               {[
                 { q: "Execution Timelines", a: "Yield settlements are generated upon cycle completion and processed within seven standard verification intervals." },
                 { q: "Recovery Reversals", a: "In the rare event of asset reclamation by platform entities, counter-credits are autonomously applied to the subsequent ledger cycle." },
-                { q: "Sovereignty & Security", a: "All transactions route through Level 1 PCI-compliant corridors. Margin does not store raw card numbers — only masked references for display." },
+                { q: "Sovereignty & Security", a: "Margin utilizes PayPal Invoicing for all financial transfers. We never store or transmit sensitive credit card data on our servers." },
                 { q: "Commission Rate", a: "Margin takes a 20% commission on Amazon reimbursements recovered through Margin-filed claims. You only pay when Amazon pays you." }
               ].map((item, i) => (
                 <AccordionItem key={i} value={`item-${i}`} className="border-white/5 bg-white/[0.01] rounded-2xl px-6 md:px-8 overflow-hidden">

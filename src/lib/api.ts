@@ -352,7 +352,6 @@ export const api = {
     };
   }>('/api/auth/me'),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
-  postLoginStripe: () => requestJson<any>('/api/auth/post-login/stripe', { method: 'POST' }),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)
   connectAmazon(marketplaceId?: string, bypassOAuth = false, tenantSlug?: string) {
@@ -2009,28 +2008,6 @@ export const detectionApi = {
   deleteStore: (id: string) => requestJson<{ success: boolean }>('/api/v1/stores/' + id, { method: 'DELETE' }),
   getStore: (id: string) => requestJson<{ success: boolean; store: any }>('/api/v1/stores/' + id),
 
-  // ── Revenue / Payment Methods ──────────────────────────────────
-  getPaymentMethods: () =>
-    requestJson<{ success: boolean; data: any[] }>('/api/revenue/payment-methods'),
-
-  addPaymentMethod: (data: {
-    cardBrand: string;
-    cardLastFour: string;
-    cardExpMonth: number;
-    cardExpYear: number;
-    cardholderName?: string;
-    billingEmail?: string;
-    setDefault?: boolean;
-  }) => requestJson<{ success: boolean; paymentMethodId?: string; error?: string }>('/api/revenue/payment-methods', {
-    method: 'POST',
-    body: JSON.stringify(data)
-  }),
-
-  removePaymentMethod: (id: string) =>
-    requestJson<{ success: boolean }>(`/api/revenue/payment-methods/${id}`, { method: 'DELETE' }),
-
-  setDefaultPaymentMethod: (id: string) =>
-    requestJson<{ success: boolean }>(`/api/revenue/payment-methods/${id}/default`, { method: 'PATCH' }),
 
   getRevenueInvoices: (params?: { status?: string; limit?: number }) => {
     const q = new URLSearchParams();
