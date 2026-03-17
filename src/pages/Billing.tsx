@@ -385,24 +385,24 @@ export default function Billing() {
                       <p className="text-sm font-sans font-bold text-white/40 italic tracking-tight">
                         "Commission settlements are processed through standardized PayPal invoice corridors. No card storage required."
                       </p>
-                      <div className="flex items-center gap-3 pt-2">
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
-                          <Check className="h-3 w-3" />
-                          Auto-Sync Active
+                      <div className="flex flex-wrap items-center gap-3 pt-2">
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                          Payment Infrastructure via PayPal
                         </div>
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                          <Lock className="h-3 w-3" />
-                          Encrypted Transmissions
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                          AES-256 Encrypted
                         </div>
-                  </div>
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                          Automated Ledger Reconciliation
+                        </div>
+                      </div>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-white/5">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <Zap className="h-4 w-4 text-amber-500" />
-                        <span className="text-sm font-sans font-bold text-white/90 tracking-tight">Smart Protocol: Auto-Charge</span>
+                        <span className="text-sm font-sans font-bold text-white/90 tracking-tight">Payment Profile Configuration</span>
                       </div>
                       <Badge variant="outline" className={cn(
                         "text-[9px] font-sans font-bold px-2 py-0.5 tracking-tight uppercase",
@@ -441,9 +441,9 @@ export default function Billing() {
                         <Button 
                           onClick={handleLinkPaymentMethod}
                           disabled={isVaulting}
-                          className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold text-[10px] uppercase tracking-tight h-10 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+                          className="w-full bg-[#0c0c0c] hover:bg-white/5 text-white border border-white/10 font-sans font-bold text-[10px] uppercase tracking-tight h-10 rounded-xl"
                         >
-                          {isVaulting ? "Authenticating..." : "Link Payment Method"}
+                          {isVaulting ? "Authenticating..." : "Authorize Payment Method"}
                         </Button>
                       </div>
                     )}
