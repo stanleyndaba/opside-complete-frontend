@@ -66,6 +66,55 @@ export default function Billing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Vault Status (Phase 2 Auto-Charge)
+  const [vaultedEmail, setVaultedEmail] = useState<string | null>(null);
+  const [isVaulting, setIsVaulting] = useState(false);
+
+  // Fetch vaulted status
+  useEffect(() => {
+    if (!isReady) return;
+    (async () => {
+      try {
+        const res = await api.getUserProfile();
+        if (res.ok && (res.data as any)?.user?.paypal_payment_token) {
+          setVaultedEmail((res.data as any)?.user?.paypal_email || 'Linked Account');
+        }
+      } catch (err) {
+        console.error('Failed to fetch vault status:', err);
+      }
+    })();
+  }, [isReady]);
+
+  const handleLinkPaymentMethod = async () => {
+    setIsVaulting(true);
+    try {
+      // 1. Get Setup Token from Backend
+      const setupRes = await detectionApi.getVaultSetupToken();
+      if (!setupRes.ok) throw new Error(setupRes.error || 'Failed to get setup token');
+      
+      const setupTokenId = setupRes.data?.setupToken?.id;
+
+      // 2. Finalize Vaulting
+      // In production, this would be triggered by a PayPal SDK callback (onApprove/onSuccess)
+      const sellerId = localStorage.getItem('user_id') || 'demo-user';
+      
+      const finalizeRes = await detectionApi.finalizeVaulting(setupTokenId, sellerId);
+      if (finalizeRes.ok) {
+        setVaultedEmail(finalizeRes.data?.paypalEmail || 'Linked Account');
+        toast({ 
+          title: 'Payment Method Linked', 
+          description: `Auto-charge protocol enabled for ${finalizeRes.data?.paypalEmail || 'your account'}.`
+        });
+      } else {
+        throw new Error(finalizeRes.error || 'Failed to finalize vaulting');
+      }
+    } catch (err: any) {
+      toast({ title: 'Vaulting Failed', description: err.message, variant: 'destructive' });
+    } finally {
+      setIsVaulting(false);
+    }
+  };
+
   // Financial Registration
   const [invoiceRecipients, setInvoiceRecipients] = useState<string[]>([]);
   const [newRecipient, setNewRecipient] = useState('');
@@ -345,8 +394,59 @@ export default function Billing() {
                           <Lock className="h-3 w-3" />
                           Encrypted Transmissions
                         </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-white/5">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <Zap className="h-4 w-4 text-amber-500" />
+                        <span className="text-sm font-sans font-bold text-white/90 tracking-tight">Smart Protocol: Auto-Charge</span>
                       </div>
+                      <Badge variant="outline" className={cn(
+                        "text-[9px] font-sans font-bold px-2 py-0.5 tracking-tight uppercase",
+                        vaultedEmail ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/5" : "border-white/10 text-white/20"
+                      )}>
+                        {vaultedEmail ? "ENABLED" : "INACTIVE"}
+                      </Badge>
                     </div>
+                    
+                    {vaultedEmail ? (
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-emerald-500/5">
+                             <Mail className="h-3 w-3 text-emerald-500" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Linked Account</p>
+                            <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{vaultedEmail}</p>
+                          </div>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={handleLinkPaymentMethod}
+                          disabled={isVaulting}
+                          className="text-[9px] font-sans font-bold text-white/20 hover:text-white uppercase tracking-tight"
+                        >
+                          {isVaulting ? "Wait..." : "Update"}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <p className="text-xs font-sans font-bold text-white/40 italic tracking-tight">
+                          Grant Clario permission to automatically process commission fees for successful recoveries.
+                        </p>
+                        <Button 
+                          onClick={handleLinkPaymentMethod}
+                          disabled={isVaulting}
+                          className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold text-[10px] uppercase tracking-tight h-10 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+                        >
+                          {isVaulting ? "Authenticating..." : "Link Payment Method"}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

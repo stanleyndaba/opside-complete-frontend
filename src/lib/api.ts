@@ -2019,4 +2019,12 @@ export const detectionApi = {
 
   getRevenueMetrics: () =>
     requestJson<{ success: boolean; data: any }>('/api/revenue/metrics'),
+
+  getVaultSetupToken: () => requestJson<{ success: boolean; setupToken: any }>('/api/revenue/vault/setup', { method: 'POST' }),
+  
+  finalizeVaulting: (setupTokenId: string, sellerId: string) => 
+    requestJson<{ success: boolean; paymentTokenId: string; paypalEmail?: string }>('/api/revenue/vault/finalize', {
+      method: 'POST',
+      body: JSON.stringify({ setupTokenId, sellerId })
+    }),
 };
