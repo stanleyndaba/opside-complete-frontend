@@ -34,6 +34,7 @@ interface UploadFile {
     status: 'pending' | 'uploading' | 'success' | 'error';
     detectedType?: string;
     rowsInserted?: number;
+    rowsSkipped?: number;
     rowsFailed?: number;
     error?: string;
 }
@@ -45,6 +46,7 @@ interface IngestionFileResult {
     fileName: string;
     rowsProcessed: number;
     rowsInserted: number;
+    rowsSkipped: number;
     rowsFailed: number;
     errors: string[];
     detectionTriggered: boolean;
@@ -58,6 +60,11 @@ interface BatchResult {
     detectionTriggered: boolean;
     detectionJobId?: string;
     syncId: string;
+}
+
+interface SupportedCsvType {
+    type: string;
+    enabled: boolean;
 }
 
 
@@ -110,7 +117,55 @@ export default function DataUpload() {
     const [previewResults, setPreviewResults] = useState<PreviewDetectionResult[]>([]);
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
     const [disputeCases, setDisputeCases] = useState<any[]>([]);
+    const [supportedTypeMap, setSupportedTypeMap] = useState<Record<string, boolean>>({});
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const fetchSupportedTypes = async () => {
+            try {
+                const response = await fetch(api.buildApiUrl('/api/csv-upload/supported-types'), {
+                    credentials: 'include',
+                    headers: {
+                        'x-user-id': localStorage.getItem('user_id') || 'demo-user',
+                        'x-tenant-id': tenant?.id || localStorage.getItem('active_tenant_id') || '',
+                    },
+                });
+
+                const payload = await response.json();
+                if (!response.ok || !payload?.success || !Array.isArray(payload.supportedTypes)) {
+                    return;
+                }
+
+                if (!cancelled) {
+                    const nextMap = payload.supportedTypes.reduce((acc: Record<string, boolean>, type: SupportedCsvType) => {
+                        acc[type.type] = !!type.enabled;
+                        return acc;
+                    }, {});
+                    setSupportedTypeMap(nextMap);
+                }
+            } catch (_error) {
+                // Upload endpoint still returns honest failures if this lookup fails.
+            }
+        };
+
+        fetchSupportedTypes();
+        return () => {
+            cancelled = true;
+        };
+    }, [tenant?.id]);
+
+    useEffect(() => {
+        if (selectedType !== 'auto' && supportedTypeMap[selectedType] === false) {
+            setSelectedType('auto');
+        }
+    }, [selectedType, supportedTypeMap]);
+
+    const availableCsvTypes = useMemo(
+        () => CSV_TYPES.filter(type => type.value === 'auto' || supportedTypeMap[type.value] !== false),
+        [supportedTypeMap]
+    );
 
     // Fetch detection data when preview drawer opens
     useEffect(() => {
@@ -256,15 +311,18 @@ export default function DataUpload() {
                 credentials: 'include',
                 headers: {
                     'x-user-id': localStorage.getItem('user_id') || 'demo-user',
-                    'x-tenant-id': localStorage.getItem('active_tenant_id') || localStorage.getItem('active_store_id') || '',
+                    'x-tenant-id': tenant?.id || localStorage.getItem('active_tenant_id') || '',
                     'x-store-id': localStorage.getItem('active_store_id') || '',
                 },
                 body: formData,
             });
 
             setUploadProgress(70);
-
             const result: BatchResult = await response.json();
+            if (!response.ok || !result) {
+                const reason = (result as any)?.error || `Server returned ${response.status}`;
+                throw new Error(reason);
+            }
             setBatchResult(result);
 
             setUploadProgress(100);
@@ -278,6 +336,7 @@ export default function DataUpload() {
                         status: fileResult.success ? 'success' as const : 'error' as const,
                         detectedType: fileResult.csvType,
                         rowsInserted: fileResult.rowsInserted,
+                        rowsSkipped: fileResult.rowsSkipped,
                         rowsFailed: fileResult.rowsFailed,
                         error: fileResult.errors?.join('; '),
                     };
@@ -288,11 +347,12 @@ export default function DataUpload() {
             // Show toast
             const successCount = result.results?.filter(r => r.success).length || 0;
             const totalRows = result.results?.reduce((sum, r) => sum + r.rowsInserted, 0) || 0;
+            const totalSkipped = result.results?.reduce((sum, r) => sum + (r.rowsSkipped || 0), 0) || 0;
 
             if (successCount > 0) {
                 toast({
                     title: `${successCount} file${successCount > 1 ? 's' : ''} ingested`,
-                    description: `${totalRows.toLocaleString()} rows imported${result.detectionTriggered ? ' · Detection running...' : ''}`,
+                    description: `${totalRows.toLocaleString()} rows imported${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${result.detectionTriggered ? ' · Detection running...' : ''}`,
                 });
 
                 // Auto-open preview drawer after detection completes
@@ -343,6 +403,7 @@ export default function DataUpload() {
     };
 
     const totalRowsInserted = batchResult?.results?.reduce((sum, r) => sum + r.rowsInserted, 0) || 0;
+    const totalRowsSkipped = batchResult?.results?.reduce((sum, r) => sum + (r.rowsSkipped || 0), 0) || 0;
     const totalRowsFailed = batchResult?.results?.reduce((sum, r) => sum + r.rowsFailed, 0) || 0;
     const successCount = batchResult?.results?.filter(r => r.success).length || 0;
 
@@ -393,7 +454,7 @@ export default function DataUpload() {
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-[#14141f] border-white/[0.08]">
-                                {CSV_TYPES.map(t => (
+                                {availableCsvTypes.map(t => (
                                     <SelectItem
                                         key={t.value}
                                         value={t.value}
@@ -525,7 +586,7 @@ export default function DataUpload() {
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-xs font-sans font-bold uppercase tracking-tight text-white/30">UPLOADING & PROCESSING</span>
-                                <span className="text-xs font-sans font-bold tracking-tight text-violet-400">{uploadProgress}%</span>
+                                <span className="text-xs font-sans font-bold tracking-tight text-violet-400">processing state</span>
                             </div>
                             <Progress value={uploadProgress} className="h-1.5 bg-white/[0.04]" />
                         </motion.div>
@@ -579,6 +640,7 @@ export default function DataUpload() {
                                             </h3>
                                             <p className="text-xs text-white/40 mb-3">
                                                 {totalRowsInserted.toLocaleString()} rows imported into the database
+                                                {totalRowsSkipped > 0 && ` · ${totalRowsSkipped.toLocaleString()} rows skipped`}
                                                 {totalRowsFailed > 0 && ` · ${totalRowsFailed.toLocaleString()} rows failed`}
                                             </p>
 
@@ -609,6 +671,7 @@ export default function DataUpload() {
                                                 Detected as <span className="text-violet-400/70">{r.csvType}</span>
                                                 {' · '}{r.rowsProcessed} rows processed
                                                 {' · '}{r.rowsInserted} inserted
+                                                {(r.rowsSkipped || 0) > 0 && <span className="text-amber-400/70"> · {r.rowsSkipped} skipped</span>}
                                                 {r.rowsFailed > 0 && <span className="text-red-400/70"> · {r.rowsFailed} failed</span>}
                                             </p>
                                         </div>
