@@ -15,18 +15,6 @@ import {
     Zap, ChevronRight, Info, Coins
 } from 'lucide-react';
 
-// Supported CSV types
-const CSV_TYPES = [
-    { value: 'auto', label: 'Any Data Type', icon: Coins, description: 'Let the system detect the type from headers', color: 'from-violet-500/20 to-purple-500/20' },
-    { value: 'orders', label: 'Orders', icon: Package, description: 'Amazon order data', color: 'from-blue-500/20 to-cyan-500/20' },
-    { value: 'shipments', label: 'Shipments', icon: Truck, description: 'FBA inbound shipments', color: 'from-emerald-500/20 to-green-500/20' },
-    { value: 'returns', label: 'Returns', icon: RotateCcw, description: 'Customer returns', color: 'from-amber-500/20 to-orange-500/20' },
-    { value: 'settlements', label: 'Settlements', icon: Coins, description: 'Payment/settlement reports', color: 'from-green-500/20 to-teal-500/20' },
-    { value: 'inventory', label: 'Inventory', icon: Archive, description: 'FBA inventory data', color: 'from-indigo-500/20 to-blue-500/20' },
-    { value: 'financial_events', label: 'Financial Events', icon: Target, description: 'Adjustments, liquidations', color: 'from-rose-500/20 to-pink-500/20' },
-    { value: 'fees', label: 'Fees', icon: Coins, description: 'FBA fee data', color: 'from-yellow-500/20 to-amber-500/20' },
-] as const;
-
 // File state
 interface UploadFile {
     file: File;
@@ -65,6 +53,7 @@ interface BatchResult {
 interface SupportedCsvType {
     type: string;
     enabled: boolean;
+    description?: string;
 }
 
 
@@ -108,7 +97,6 @@ export default function DataUpload() {
     const { toast } = useToast();
 
     const [files, setFiles] = useState<UploadFile[]>([]);
-    const [selectedType, setSelectedType] = useState<string>('auto');
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [batchResult, setBatchResult] = useState<BatchResult | null>(null);
@@ -117,7 +105,7 @@ export default function DataUpload() {
     const [previewResults, setPreviewResults] = useState<PreviewDetectionResult[]>([]);
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
     const [disputeCases, setDisputeCases] = useState<any[]>([]);
-    const [supportedTypeMap, setSupportedTypeMap] = useState<Record<string, boolean>>({});
+    const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -139,11 +127,7 @@ export default function DataUpload() {
                 }
 
                 if (!cancelled) {
-                    const nextMap = payload.supportedTypes.reduce((acc: Record<string, boolean>, type: SupportedCsvType) => {
-                        acc[type.type] = !!type.enabled;
-                        return acc;
-                    }, {});
-                    setSupportedTypeMap(nextMap);
+                    setSupportedCsvTypes(payload.supportedTypes);
                 }
             } catch (_error) {
                 // Upload endpoint still returns honest failures if this lookup fails.
@@ -156,15 +140,9 @@ export default function DataUpload() {
         };
     }, [tenant?.id]);
 
-    useEffect(() => {
-        if (selectedType !== 'auto' && supportedTypeMap[selectedType] === false) {
-            setSelectedType('auto');
-        }
-    }, [selectedType, supportedTypeMap]);
-
-    const availableCsvTypes = useMemo(
-        () => CSV_TYPES.filter(type => type.value === 'auto' || supportedTypeMap[type.value] !== false),
-        [supportedTypeMap]
+    const supportedTypeNames = useMemo(
+        () => supportedCsvTypes.filter(type => type.enabled).map(type => type.type.replace(/_/g, ' ')),
+        [supportedCsvTypes]
     );
 
     // Fetch detection data when preview drawer opens
@@ -299,9 +277,7 @@ export default function DataUpload() {
             const formData = new FormData();
             files.forEach(f => formData.append('files', f.file));
 
-            const endpoint = selectedType === 'auto'
-                ? '/api/csv-upload/ingest'
-                : `/api/csv-upload/ingest/${selectedType}`;
+            const endpoint = '/api/csv-upload/ingest';
 
             setUploadProgress(30);
 
@@ -441,40 +417,11 @@ export default function DataUpload() {
                         
                     </motion.div>
 
-                    {/* Type Selector */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.05 }}
-                        className="mb-6"
-                    >
-                        <label className="text-xs font-sans font-bold uppercase tracking-tight text-white/30 mb-2 block">Data Type</label>
-                        <Select value={selectedType} onValueChange={setSelectedType}>
-                            <SelectTrigger className="w-full bg-white/[0.02] border-white/10 text-white h-11 focus:ring-emerald-500/30">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-[#14141f] border-white/[0.08]">
-                                {availableCsvTypes.map(t => (
-                                    <SelectItem
-                                        key={t.value}
-                                        value={t.value}
-                                        className="text-white/80 focus:bg-white/5 focus:text-white"
-                                    >
-                                        <span className="flex items-center gap-2">
-                                            <span>{t.label}</span>
-                                            <span className="text-[10px] text-white/25 ml-1">— {t.description}</span>
-                                        </span>
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </motion.div>
-
                     {/* Drop Zone */}
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
+                        transition={{ delay: 0.05 }}
                     >
                         <div
                             onClick={() => fileInputRef.current?.click()}
@@ -509,7 +456,12 @@ export default function DataUpload() {
                                             Drop CSV files here or <span className="text-violet-400 hover:text-violet-300">browse</span>
                                         </p>
                                         <p className="text-xs text-white/25">
-                                            Supports orders, shipments, returns, settlements, inventory, financial events, and fee reports
+                                            We auto-detect each Amazon report by its headers and ingest it for this workspace.
+                                        </p>
+                                        <p className="text-[11px] text-white/20 mt-2">
+                                            {supportedTypeNames.length > 0
+                                                ? `Supported now: ${supportedTypeNames.join(', ')}`
+                                                : 'Supported now: orders, shipments, returns, settlements, inventory, financial events, fees'}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-4 mt-2 text-[10px] text-white/20 font-sans font-bold tracking-tight uppercase">
