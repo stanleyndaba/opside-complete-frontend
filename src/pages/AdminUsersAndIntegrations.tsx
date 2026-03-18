@@ -103,8 +103,10 @@ export default function AdminUsersAndIntegrations() {
     })();
 
     (async () => {
-      const s = await api.getIntegrationsStatus();
-      if (s.ok) setStatus(s.data);
+      if (tenantSlug) {
+        const s = await api.getIntegrationsStatus(tenantSlug);
+        if (s.ok) setStatus(s.data);
+      }
       const es = await api.getEvidenceSummary();
       if (es.ok && es.data) {
         const data = es.data as { autoCollect?: boolean; schedule?: string };

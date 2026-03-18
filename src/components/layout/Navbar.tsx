@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { api } from '@/lib/api';
 import { StoreSelector } from './StoreSelector';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTenant } from '@/contexts/TenantContext';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -38,10 +39,12 @@ export function Navbar({
 }: NavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { tenant } = useTenant();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const activeTenantSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || undefined;
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -90,36 +93,82 @@ export function Navbar({
     id?: string;
     email?: string;
     name?: string;
+    company_name?: string;
+    amazon_seller_id?: string;
     amazon_connected?: boolean;
     stripe_connected?: boolean;
     created_at?: string;
     last_login?: string;
+    tenant_id?: string | null;
+    tenant_slug?: string | null;
+    role?: string | null;
   } | null>(null);
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!activeTenantSlug) {
+        setIsProfileLoading(false);
+        return;
+      }
+
       try {
-        const res = await api.getMe();
-        if (res.ok && res.data) {
-          setUserProfile(res.data);
+        const [meRes, statusRes] = await Promise.all([
+          api.getMe(activeTenantSlug),
+          api.getIntegrationsStatus(activeTenantSlug)
+        ]);
+
+        if (meRes.ok && meRes.data) {
+          const me = meRes.data as any;
+          const status = statusRes.ok ? statusRes.data as any : null;
+          setUserProfile({
+            id: me.id,
+            email: me.email,
+            name: me.name || me.company_name || me.email || undefined,
+            company_name: me.company_name,
+            amazon_seller_id: me.amazon_seller_id || me.seller_id || status?.amazon_account?.seller_id,
+            amazon_connected: status?.amazon_connected ?? me.amazon_connected ?? false,
+            stripe_connected: me.stripe_connected,
+            created_at: me.created_at,
+            last_login: me.last_login,
+            tenant_id: me.tenant_id,
+            tenant_slug: me.tenant_slug,
+            role: me.role
+          });
+        } else if (statusRes.ok && statusRes.data) {
+          const status = statusRes.data as any;
+          setUserProfile((prev) => ({
+            ...(prev || {}),
+            amazon_connected: status.amazon_connected ?? false,
+            amazon_seller_id: status.amazon_account?.seller_id,
+            name: prev?.name || status.amazon_account?.display_name,
+            email: prev?.email || status.amazon_account?.email
+          }));
         }
       } catch (e) {
         console.error('Failed to fetch user profile:', e);
+      } finally {
+        setIsProfileLoading(false);
       }
     };
     fetchProfile();
-  }, []);
+  }, [activeTenantSlug]);
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
 
   useEffect(() => {
     const fetchConnectionsCount = async () => {
+      if (!activeTenantSlug) {
+        setConnectedPlatformsCount(0);
+        return;
+      }
+
       try {
         const [statusRes, sourcesRes, storesRes] = await Promise.all([
-          api.getIntegrationsStatus(tenantSlug),
-          api.getEvidenceSources(tenantSlug),
-          api.getStores(tenantSlug)
+          api.getIntegrationsStatus(activeTenantSlug),
+          api.getEvidenceSources(activeTenantSlug),
+          api.getStores(activeTenantSlug)
         ]);
         
         if (statusRes.ok && sourcesRes.ok) {
@@ -171,7 +220,7 @@ export function Navbar({
     };
     
     fetchConnectionsCount();
-  }, [tenantSlug]);
+  }, [activeTenantSlug]);
 
   // State for notes feature
   const [showNotesModal, setShowNotesModal] = useState(false);
@@ -530,7 +579,7 @@ export function Navbar({
               <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
                 {/* Connection Status Header */}
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <h3 className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">{userProfile?.name || userProfile?.email || 'My Account'}</h3>
+                  <h3 className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">{userProfile?.name || userProfile?.company_name || userProfile?.email || 'My Account'}</h3>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
                       <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", userProfile?.amazon_connected ? "bg-emerald-400" : "bg-amber-400")}></span>
@@ -544,11 +593,11 @@ export function Navbar({
                   {/* Compact Data Grid */}
                   <div className="grid grid-cols-1 gap-y-4">
                     {[
-                      { label: 'Account ID', value: userProfile?.id ? userProfile.id.substring(0, 12) + '...' : 'Loading...' },
-                      { label: 'Email', value: userProfile?.email || 'Not available' },
-                      { label: 'Name', value: userProfile?.name || 'Not set' },
+                      { label: 'Account ID', value: userProfile?.amazon_seller_id || (userProfile?.id ? userProfile.id.substring(0, 12) + '...' : (isProfileLoading ? 'Loading...' : 'Not available')) },
+                      { label: 'Email', value: userProfile?.email || (isProfileLoading ? 'Loading...' : 'Not available') },
+                      { label: 'Name', value: userProfile?.name || userProfile?.company_name || (isProfileLoading ? 'Loading...' : 'Not set') },
                       { label: 'Amazon', value: userProfile?.amazon_connected ? 'Connected' : 'Not connected' },
-                      { label: 'Member Since', value: userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—' }
+                      { label: 'Member Since', value: userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : (isProfileLoading ? 'Loading...' : '—') }
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-4 group/item">
                         <span className="text-[10px] font-sans font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-tight shrink-0">

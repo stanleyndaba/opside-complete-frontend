@@ -7,6 +7,8 @@ import { CheckCircle, XCircle, Loader2, RefreshCw, ExternalLink, User, Key, Data
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { AmazonConnect } from '@/components/AmazonConnect';
+import { useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 
 interface TestResult {
   name: string;
@@ -16,6 +18,9 @@ interface TestResult {
 }
 
 export default function Agent1Test() {
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || undefined;
   const [tests, setTests] = useState<TestResult[]>([]);
   const [running, setRunning] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -44,7 +49,7 @@ export default function Agent1Test() {
     {
       name: '2. OAuth Start Endpoint',
       fn: async () => {
-        const response = await api.connectAmazon();
+        const response = await api.connectAmazon(undefined, false, activeTenantSlug);
         return {
           ok: response.ok,
           data: response.data,
@@ -55,7 +60,7 @@ export default function Agent1Test() {
     {
       name: '3. Get User Profile',
       fn: async () => {
-        const response = await api.getUserProfile();
+        const response = await api.getUserProfile(activeTenantSlug);
         if (response.ok && response.data) {
           setUserProfile(response.data);
         }
@@ -69,7 +74,7 @@ export default function Agent1Test() {
     {
       name: '4. Get Connection Status',
       fn: async () => {
-        const response = await api.getAmazonConnectionStatus();
+        const response = await api.getAmazonConnectionStatus(activeTenantSlug);
         if (response.ok && response.data) {
           setConnectionStatus(response.data);
         }
@@ -83,7 +88,7 @@ export default function Agent1Test() {
     {
       name: '5. Get Integrations Status',
       fn: async () => {
-        const response = await api.getIntegrationsStatus();
+        const response = await api.getIntegrationsStatus(activeTenantSlug);
         return {
           ok: response.ok,
           data: response.data,
@@ -95,7 +100,7 @@ export default function Agent1Test() {
       name: '6. Verify Token Storage (Backend Check)',
       fn: async () => {
         // This checks if backend has tokens stored (indirect check via connection status)
-        const statusRes = await api.getAmazonConnectionStatus();
+        const statusRes = await api.getAmazonConnectionStatus(activeTenantSlug);
         if (statusRes.ok && statusRes.data?.connected) {
           // If connected, tokens are likely stored
           return {
@@ -287,7 +292,7 @@ export default function Agent1Test() {
                   toast({ title: 'OAuth Complete', description: 'Connection successful!' });
                   // Refresh status after connection
                   setTimeout(() => {
-                    api.getAmazonConnectionStatus().then(res => {
+                    api.getAmazonConnectionStatus(tenantSlug).then(res => {
                       if (res.ok) setConnectionStatus(res.data);
                     });
                   }, 2000);

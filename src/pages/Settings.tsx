@@ -30,7 +30,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
-  const activeTenantSlug = tenantSlug || tenant?.slug || 'default';
+  const activeTenantSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || 'default';
   const { toast } = useToast();
   const [activeSection, setActiveSection] = useState<SettingsSection>('business');
 
@@ -51,6 +51,7 @@ const Settings = () => {
     amazon_seller_id?: string;
     company_name?: string;
     linked_marketplaces?: string[];
+    amazon_account_display_name?: string;
     stripe_customer_id?: string;
     stripe_account_id?: string;
     last_sync_attempt_at?: string;
@@ -60,11 +61,14 @@ const Settings = () => {
     last_login?: string;
     amazon_connected?: boolean;
     stripe_connected?: boolean;
+    paypal_connected?: boolean;
+    paypal_email?: string | null;
+    paypal_payment_token?: string | null;
+    billing_provider?: string | null;
   }
 
   const [sellerProfile, setSellerProfile] = useState<SellerProfile>({});
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
-  const [amazonSellersInfo, setAmazonSellersInfo] = useState<any>(null);
 
   // Load from backend/localStorage
   useEffect(() => {
@@ -87,7 +91,7 @@ const Settings = () => {
     } catch { }
     (async () => {
       // Best-effort: hydrate from backend if available
-      const res = await api.get<any>('/api/auth/me');
+      const res = await api.getMe(activeTenantSlug);
       if (res.ok && res.data) {
         const d: any = res.data;
         const fn = d.first_name || d.firstName || d.given_name || '';
@@ -101,15 +105,18 @@ const Settings = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeTenantSlug]);
 
   // Load seller profile data
   useEffect(() => {
     const loadSellerProfile = async () => {
       setLoadingProfile(true);
       try {
-        // Fetch basic profile
-        const meRes = await api.get<any>('/api/auth/me');
+        const [meRes, statusRes] = await Promise.all([
+          api.getMe(activeTenantSlug),
+          api.getIntegrationsStatus(activeTenantSlug)
+        ]);
+
         if (meRes.ok && meRes.data) {
           const basicData = meRes.data;
           setSellerProfile(prev => ({
@@ -117,10 +124,28 @@ const Settings = () => {
             id: basicData.id,
             email: basicData.email,
             company_name: basicData.name || basicData.company_name,
+            amazon_seller_id: basicData.amazon_seller_id || basicData.seller_id,
             amazon_connected: basicData.amazon_connected || false,
-            stripe_connected: basicData.stripe_connected || false,
+            stripe_connected: false,
+            paypal_connected: basicData.paypal_connected || false,
+            paypal_email: basicData.paypal_email || null,
+            paypal_payment_token: basicData.paypal_payment_token || null,
+            billing_provider: basicData.billing_provider || 'paypal',
             created_at: basicData.created_at,
             last_login: basicData.last_login,
+          }));
+        }
+
+        if (statusRes.ok && statusRes.data) {
+          const status = statusRes.data as any;
+          setSellerProfile(prev => ({
+            ...prev,
+            amazon_connected: status.amazon_connected ?? prev.amazon_connected ?? false,
+            amazon_seller_id: prev.amazon_seller_id || status.amazon_account?.seller_id,
+            amazon_account_display_name: status.amazon_account?.display_name || prev.amazon_account_display_name,
+            company_name: prev.company_name || status.amazon_account?.display_name,
+            linked_marketplaces: Array.isArray(status.amazon_account?.marketplaces) ? status.amazon_account.marketplaces : [],
+            last_sync_completed_at: status.lastSync || status.lastIngest || prev.last_sync_completed_at,
           }));
         }
 
@@ -137,22 +162,6 @@ const Settings = () => {
           // Extended profile endpoint might not exist, that's okay
         }
 
-        // Fetch Amazon sellers info
-        try {
-          const sellersRes = await api.get<any>('/api/v1/integrations/amazon/sellers-info');
-          if (sellersRes.ok && sellersRes.data) {
-            setAmazonSellersInfo(sellersRes.data);
-            if (sellersRes.data.company_name) {
-              setSellerProfile(prev => ({
-                ...prev,
-                company_name: sellersRes.data.company_name || prev.company_name,
-                amazon_seller_id: sellersRes.data.seller_id || prev.amazon_seller_id,
-              }));
-            }
-          }
-        } catch (e) {
-          // Sellers info endpoint might not exist, that's okay
-        }
       } catch (e) {
         console.error('Failed to load seller profile:', e);
       } finally {
@@ -163,7 +172,7 @@ const Settings = () => {
     if (activeSection === 'business') {
       loadSellerProfile();
     }
-  }, [activeSection]);
+  }, [activeSection, activeTenantSlug]);
 
   const onUploadPhoto = async (file?: File) => {
     if (!file) return;
@@ -347,22 +356,22 @@ const Settings = () => {
 
   // Get marketplace display info
   const getMarketplaceDisplay = (marketplaceId: string) => {
-    // Check if we have marketplace info from Amazon API
-    if (amazonSellersInfo?.marketplaces) {
-      const marketplace = amazonSellersInfo.marketplaces.find((m: any) => m.id === marketplaceId);
-      if (marketplace) {
-        return { name: marketplace.name, flag: '' }; // Could add flag mapping if needed
-      }
-    }
-    // Fallback to static mapping
     return MARKETPLACE_NAMES[marketplaceId] || { name: marketplaceId, flag: '🌐' };
   };
 
   const renderContent = () => {
     switch (activeSection) {
       case 'business':
-        const marketplaces = sellerProfile.linked_marketplaces || amazonSellersInfo?.marketplaces?.map((m: any) => m.id) || [];
+        const marketplaces = sellerProfile.linked_marketplaces || [];
         const isAmazonConnected = sellerProfile.amazon_connected || false;
+        const hasMarketplaceList = marketplaces.length > 0;
+        const connectionScope = hasMarketplaceList
+          ? `${marketplaces.length} Marketplace${marketplaces.length === 1 ? '' : 's'} Linked`
+          : isAmazonConnected
+            ? 'Seller Account Linked'
+            : 'No Amazon Link';
+        const lastActivity = sellerProfile.last_sync_completed_at || sellerProfile.last_login;
+        const paypalActive = !!sellerProfile.paypal_payment_token || !!sellerProfile.paypal_email;
 
         return (
           <motion.div
@@ -388,7 +397,7 @@ const Settings = () => {
                   <div className="space-y-6">
                     <div>
                       <h3 className="text-2xl font-sans font-bold text-white tracking-tight">
-                        {sellerProfile.company_name || 'Identity Logged'}
+                        {sellerProfile.company_name || sellerProfile.amazon_account_display_name || (loadingProfile ? 'Loading profile...' : 'Identity Logged')}
                       </h3>
                       <div className="flex items-center gap-3 mt-2">
                         <Badge variant="outline" className={cn("text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1", isAmazonConnected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-red-500/10 text-red-500 border-red-500/20")}>
@@ -404,12 +413,12 @@ const Settings = () => {
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
                       <div className="space-y-2">
-                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Marketplaces</p>
-                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{marketplaces.length} Nodes Online</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Connection Scope</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{connectionScope}</p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Sync</p>
-                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{formatDate(sellerProfile.last_sync_completed_at)}</p>
+                        <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Activity</p>
+                        <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{formatDate(lastActivity)}</p>
                       </div>
                       <div className="space-y-2">
                         <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">System Age</p>
@@ -448,10 +457,10 @@ const Settings = () => {
                   <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
                     <div className="flex items-center gap-3">
                       <CreditCard className="h-4 w-4 text-white/40" />
-                      <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Stripe Billing</span>
+                      <span className="text-xs font-sans font-bold text-white/80 tracking-tight">PayPal Billing</span>
                     </div>
-                    <Badge variant="outline" className={cn("text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5", sellerProfile.stripe_connected ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
-                      {sellerProfile.stripe_connected ? 'Active' : 'Inactive'}
+                    <Badge variant="outline" className={cn("text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5", paypalActive ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/30 border-white/10")}>
+                      {paypalActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
                 </CardContent>

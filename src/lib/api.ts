@@ -339,8 +339,8 @@ export const api = {
   },
 
   // Auth endpoints
-  getMe: () => requestJson<any>('/api/auth/me'),
-  getUserProfile: () => requestJson<{
+  getMe: (tenantSlug?: string) => requestJson<any>(`/api/auth/me${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
+  getUserProfile: (tenantSlug?: string) => requestJson<{
     success: boolean;
     user: {
       id: string;
@@ -350,7 +350,7 @@ export const api = {
       company_name?: string;
       created_at: string;
     };
-  }>('/api/auth/me'),
+  }>(`/api/auth/me${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
   logout: () => requestJson<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
 
   // Amazon SP-API endpoints (Step 1 Auth Process)

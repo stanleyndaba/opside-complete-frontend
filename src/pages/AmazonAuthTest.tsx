@@ -6,8 +6,13 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import { useParams } from 'react-router-dom';
+import { useTenant } from '@/contexts/TenantContext';
 
 export default function AmazonAuthTest() {
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { tenant } = useTenant();
+  const activeTenantSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || undefined;
   const [testResults, setTestResults] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
@@ -30,7 +35,7 @@ export default function AmazonAuthTest() {
     {
       name: 'Connect Amazon',
       description: 'Test GET /api/v1/integrations/amazon/auth/start',
-      fn: () => api.connectAmazon()
+      fn: () => api.connectAmazon(undefined, false, activeTenantSlug)
     },
     {
       name: 'Amazon Sandbox Callback',
@@ -40,22 +45,22 @@ export default function AmazonAuthTest() {
     {
       name: 'Amazon Recoveries',
       description: 'Test GET /api/v1/integrations/amazon/recoveries',
-      fn: () => api.getAmazonRecoveries()
+      fn: () => api.getAmazonRecoveries(activeTenantSlug)
     },
     {
       name: 'Integration Status',
       description: 'Test GET /api/v1/integrations/status',
-      fn: () => api.getIntegrationsStatus()
+      fn: () => api.getIntegrationsStatus(activeTenantSlug)
     },
     {
       name: 'Sync Start',
       description: 'Test POST /api/sync/start',
-      fn: () => api.startAmazonSync()
+      fn: () => api.startAmazonSync(activeTenantSlug)
     },
     {
       name: 'Auth Me',
       description: 'Test GET /api/auth/me',
-      fn: () => api.getMe()
+      fn: () => api.getMe(activeTenantSlug)
     },
     {
       name: 'Logout',

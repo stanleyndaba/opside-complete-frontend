@@ -151,7 +151,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       // By checking status first, we can skip all of that if already connected.
       try {
         console.log('[AmazonConnect] Checking connection status...');
-        const statusResponse = await api.getIntegrationsStatus();
+        const statusResponse = await api.getIntegrationsStatus(currentTenantSlug);
         console.log('[AmazonConnect] Connection status response:', statusResponse);
         if (statusResponse.ok && statusResponse.data?.amazon_connected) {
           // Amazon is already connected! Redirect to sync page to start syncing with dialogue logs

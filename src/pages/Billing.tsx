@@ -57,8 +57,8 @@ const getStatusStyles = (status: InvoiceRecord['status']) => {
 
 export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
-  const { isReady } = useTenant();
-  const activeSlug = tenantSlug || 'beta';
+  const { isReady, tenant } = useTenant();
+  const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || 'beta';
 
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -75,15 +75,15 @@ export default function Billing() {
     if (!isReady) return;
     (async () => {
       try {
-        const res = await api.getUserProfile();
-        if (res.ok && (res.data as any)?.user?.paypal_payment_token) {
-          setVaultedEmail((res.data as any)?.user?.paypal_email || 'Linked Account');
+        const res = await api.getUserProfile(activeSlug);
+        if (res.ok && res.data && (res.data as any)?.paypal_payment_token) {
+          setVaultedEmail((res.data as any)?.paypal_email || 'Linked Account');
         }
       } catch (err) {
         console.error('Failed to fetch vault status:', err);
       }
     })();
-  }, [isReady]);
+  }, [isReady, activeSlug]);
 
   const handleLinkPaymentMethod = async () => {
     setIsVaulting(true);
