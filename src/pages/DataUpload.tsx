@@ -19,7 +19,7 @@ import {
 interface UploadFile {
     file: File;
     id: string;
-    status: 'pending' | 'uploading' | 'success' | 'error';
+    status: 'pending' | 'uploading' | 'success' | 'skipped' | 'error';
     detectedType?: string;
     rowsInserted?: number;
     rowsSkipped?: number;
@@ -56,6 +56,8 @@ interface SupportedCsvType {
     description?: string;
 }
 
+type UploadStage = 'idle' | 'preparing' | 'uploading' | 'processing' | 'complete';
+
 
 interface PreviewDetectionResult {
     id: string;
@@ -89,6 +91,16 @@ const ANOMALY_LABELS: Record<string, string> = {
     return_not_restocked: 'Return Not Restocked', refund_exceeds_charge: 'Refund Exceeds Charge',
 };
 const formatAnomalyType = (type: string) => ANOMALY_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+const FALLBACK_SUPPORTED_TYPES = ['orders', 'shipments', 'returns', 'settlements', 'inventory', 'financial_events', 'fees', 'transfers'];
+const formatCsvTypeLabel = (type: string) => type.replace(/_/g, ' ');
+const getStageValue = (stage: UploadStage) => ({ idle: 0, preparing: 20, uploading: 55, processing: 85, complete: 100 }[stage]);
+const getStageLabel = (stage: UploadStage) => ({
+    idle: 'ready',
+    preparing: 'preparing files',
+    uploading: 'sending to backend',
+    processing: 'waiting for persistence result',
+    complete: 'backend finished',
+}[stage]);
 
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
@@ -98,7 +110,7 @@ export default function DataUpload() {
 
     const [files, setFiles] = useState<UploadFile[]>([]);
     const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadStage, setUploadStage] = useState<UploadStage>('idle');
     const [batchResult, setBatchResult] = useState<BatchResult | null>(null);
     const [isDragOver, setIsDragOver] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -107,18 +119,17 @@ export default function DataUpload() {
     const [disputeCases, setDisputeCases] = useState<any[]>([]);
     const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const activeUserId = localStorage.getItem('user_id') || '';
+    const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
 
     useEffect(() => {
         let cancelled = false;
 
         const fetchSupportedTypes = async () => {
             try {
-                const response = await fetch(api.buildApiUrl('/api/csv-upload/supported-types'), {
+                const response = await fetch(api.buildApiUrl(`/api/csv-upload/supported-types?tenantSlug=${encodeURIComponent(currentTenantSlug)}`), {
                     credentials: 'include',
-                    headers: {
-                        'x-user-id': localStorage.getItem('user_id') || 'demo-user',
-                        'x-tenant-id': tenant?.id || localStorage.getItem('active_tenant_id') || '',
-                    },
+                    headers: activeTenantId ? { 'x-tenant-id': activeTenantId } : undefined,
                 });
 
                 const payload = await response.json();
@@ -138,10 +149,13 @@ export default function DataUpload() {
         return () => {
             cancelled = true;
         };
-    }, [tenant?.id]);
+    }, [activeTenantId, currentTenantSlug]);
 
     const supportedTypeNames = useMemo(
-        () => supportedCsvTypes.filter(type => type.enabled).map(type => type.type.replace(/_/g, ' ')),
+        () => {
+            const enabled = supportedCsvTypes.filter(type => type.enabled).map(type => formatCsvTypeLabel(type.type));
+            return enabled.length > 0 ? enabled : FALLBACK_SUPPORTED_TYPES.map(formatCsvTypeLabel);
+        },
         [supportedCsvTypes]
     );
 
@@ -265,9 +279,25 @@ export default function DataUpload() {
     // Upload files to backend
     const handleUpload = async () => {
         if (files.length === 0 || isUploading) return;
+        if (!activeUserId) {
+            toast({
+                title: 'Sign in required',
+                description: 'CSV upload needs a real signed-in user. Refresh your session and try again.',
+                variant: 'destructive',
+            });
+            return;
+        }
+        if (!activeTenantId) {
+            toast({
+                title: 'Workspace context missing',
+                description: 'CSV upload needs an active workspace before it can write tenant-scoped data.',
+                variant: 'destructive',
+            });
+            return;
+        }
 
         setIsUploading(true);
-        setUploadProgress(10);
+        setUploadStage('preparing');
         setBatchResult(null);
 
         // Mark all files as uploading
@@ -277,23 +307,22 @@ export default function DataUpload() {
             const formData = new FormData();
             files.forEach(f => formData.append('files', f.file));
 
-            const endpoint = '/api/csv-upload/ingest';
+            const endpoint = `/api/csv-upload/ingest?tenantSlug=${encodeURIComponent(currentTenantSlug)}`;
 
-            setUploadProgress(30);
+            setUploadStage('uploading');
 
             const url = api.buildApiUrl(endpoint);
             const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'x-user-id': localStorage.getItem('user_id') || 'demo-user',
-                    'x-tenant-id': tenant?.id || localStorage.getItem('active_tenant_id') || '',
-                    'x-store-id': localStorage.getItem('active_store_id') || '',
+                    'x-user-id': activeUserId,
+                    'x-tenant-id': activeTenantId,
                 },
                 body: formData,
             });
 
-            setUploadProgress(70);
+            setUploadStage('processing');
             const result: BatchResult = await response.json();
             if (!response.ok || !result) {
                 const reason = (result as any)?.error || `Server returned ${response.status}`;
@@ -301,15 +330,16 @@ export default function DataUpload() {
             }
             setBatchResult(result);
 
-            setUploadProgress(100);
+            setUploadStage('complete');
 
             // Update individual file statuses
             setFiles(prev => prev.map(f => {
                 const fileResult = result.results?.find(r => r.fileName === f.file.name);
                 if (fileResult) {
+                    const isSkippedOnly = fileResult.success && fileResult.rowsInserted === 0 && (fileResult.rowsSkipped || 0) > 0 && fileResult.rowsFailed === 0;
                     return {
                         ...f,
-                        status: fileResult.success ? 'success' as const : 'error' as const,
+                        status: fileResult.success ? (isSkippedOnly ? 'skipped' as const : 'success' as const) : 'error' as const,
                         detectedType: fileResult.csvType,
                         rowsInserted: fileResult.rowsInserted,
                         rowsSkipped: fileResult.rowsSkipped,
@@ -321,14 +351,16 @@ export default function DataUpload() {
             }));
 
             // Show toast
-            const successCount = result.results?.filter(r => r.success).length || 0;
+            const insertedFileCount = result.results?.filter(r => r.rowsInserted > 0).length || 0;
+            const skippedOnlyCount = result.results?.filter(r => r.success && r.rowsInserted === 0 && (r.rowsSkipped || 0) > 0 && r.rowsFailed === 0).length || 0;
+            const failedCount = result.results?.filter(r => !r.success || r.rowsFailed > 0).length || 0;
             const totalRows = result.results?.reduce((sum, r) => sum + r.rowsInserted, 0) || 0;
             const totalSkipped = result.results?.reduce((sum, r) => sum + (r.rowsSkipped || 0), 0) || 0;
 
-            if (successCount > 0) {
+            if (insertedFileCount > 0) {
                 toast({
-                    title: `${successCount} file${successCount > 1 ? 's' : ''} ingested`,
-                    description: `${totalRows.toLocaleString()} rows imported${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${result.detectionTriggered ? ' · Detection running...' : ''}`,
+                    title: `${insertedFileCount} file${insertedFileCount > 1 ? 's' : ''} imported`,
+                    description: `${totalRows.toLocaleString()} rows persisted${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${failedCount > 0 ? ` · ${failedCount} file${failedCount > 1 ? 's' : ''} need attention` : ''}${result.detectionTriggered ? ' · Detection running...' : ''}`,
                 });
 
                 // Auto-open preview drawer after detection completes
@@ -349,6 +381,11 @@ export default function DataUpload() {
                     };
                     pollAndOpen();
                 }
+            } else if (skippedOnlyCount > 0 && failedCount === 0) {
+                toast({
+                    title: 'Files already imported',
+                    description: `${totalSkipped.toLocaleString()} rows skipped because these files were already ingested for this workspace.`,
+                });
             } else {
                 toast({
                     title: 'Upload failed',
@@ -368,7 +405,7 @@ export default function DataUpload() {
     const handleReset = () => {
         setFiles([]);
         setBatchResult(null);
-        setUploadProgress(0);
+        setUploadStage('idle');
     };
 
     // Format file size
@@ -385,13 +422,13 @@ export default function DataUpload() {
 
     return (
         <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
-            <div className="min-h-screen bg-[#050505] text-white relative">
+            <div className="min-h-screen bg-[#070707] text-white relative">
                 {/* Noise Texture */}
                 <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
                 {/* Aesthetic Background Elements */}
-                <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(148,163,184,0.05),transparent_70%)] pointer-events-none" />
-                <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-slate-400/5 rounded-full blur-[120px] pointer-events-none" />
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
                 <div className="relative z-10 w-full mx-auto px-6 lg:px-10 py-10">
                     {/* Header */}
@@ -403,10 +440,10 @@ export default function DataUpload() {
                         <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/10">
-                                    <Upload className="h-5 w-5 text-violet-400" />
+                                    <Upload className="h-5 w-5 text-emerald-500" />
                                 </div>
                                 <h1 className="text-2xl font-sans font-light tracking-tight">Data Upload</h1>
-                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-violet-500/30 text-violet-400 ml-2">
+                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-emerald-500/30 text-emerald-500 ml-2">
                                     CSV Ingestion
                                 </Badge>
                             </div>
@@ -448,12 +485,12 @@ export default function DataUpload() {
 
                             {files.length === 0 ? (
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className={`p-4 rounded-2xl transition-all duration-300 ${isDragOver ? 'bg-violet-500/20' : 'bg-white/[0.04]'}`}>
-                                        <FileSpreadsheet className={`h-10 w-10 ${isDragOver ? 'text-violet-400' : 'text-white/20'}`} />
+                                    <div className={`p-4 rounded-2xl transition-all duration-300 ${isDragOver ? 'bg-emerald-500/20' : 'bg-white/[0.04]'}`}>
+                                        <FileSpreadsheet className={`h-10 w-10 ${isDragOver ? 'text-emerald-500' : 'text-white/20'}`} />
                                     </div>
                                     <div className="text-center">
                                         <p className="text-sm font-medium text-white/60 mb-1">
-                                            Drop CSV files here or <span className="text-violet-400 hover:text-violet-300">browse</span>
+                                            Drop CSV files here or <span className="text-emerald-500 hover:text-emerald-400">browse</span>
                                         </p>
                                         <p className="text-xs text-white/25">
                                             We auto-detect each Amazon report by its headers and ingest it for this workspace.
@@ -488,14 +525,15 @@ export default function DataUpload() {
                                                     <p className="text-sm text-white/70 truncate font-sans tracking-tight">{f.file.name}</p>
                                                     <p className="text-[10px] text-white/25">
                                                         {formatSize(f.file.size)}
-                                                        {f.detectedType && <span className="ml-2 text-violet-400/60">→ {f.detectedType}</span>}
+                                                        {f.detectedType && <span className="ml-2 text-emerald-500/60">→ {f.detectedType}</span>}
                                                         {f.rowsInserted !== undefined && <span className="ml-2 text-emerald-400/60">{f.rowsInserted.toLocaleString()} rows</span>}
                                                     </p>
                                                 </div>
 
                                                 {/* Status indicator */}
-                                                {f.status === 'uploading' && <Loader2 className="h-4 w-4 text-violet-400 animate-spin flex-shrink-0" />}
+                                                {f.status === 'uploading' && <Loader2 className="h-4 w-4 text-emerald-500 animate-spin flex-shrink-0" />}
                                                 {f.status === 'success' && <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0" />}
+                                                {f.status === 'skipped' && <Archive className="h-4 w-4 text-amber-400 flex-shrink-0" />}
                                                 {f.status === 'error' && (
                                                     <span title={f.error}>
                                                         <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
@@ -519,7 +557,7 @@ export default function DataUpload() {
                                     {!isUploading && !batchResult && (
                                         <button
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="w-full py-2 text-xs text-white/25 hover:text-violet-400/60 transition-colors font-sans font-bold uppercase tracking-tight"
+                                            className="w-full py-2 text-xs text-white/25 hover:text-emerald-500/60 transition-colors font-sans font-bold uppercase tracking-tight"
                                         >
                                             + Add more files
                                         </button>
@@ -538,9 +576,9 @@ export default function DataUpload() {
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-xs font-sans font-bold uppercase tracking-tight text-white/30">UPLOADING & PROCESSING</span>
-                                <span className="text-xs font-sans font-bold tracking-tight text-violet-400">processing state</span>
+                                <span className="text-xs font-sans font-bold tracking-tight text-emerald-500 uppercase">{getStageLabel(uploadStage)}</span>
                             </div>
-                            <Progress value={uploadProgress} className="h-1.5 bg-white/[0.04]" />
+                            <Progress value={getStageValue(uploadStage)} className="h-1.5 bg-white/[0.04]" />
                         </motion.div>
                     )}
 
@@ -555,7 +593,7 @@ export default function DataUpload() {
                             <Button
                                 onClick={handleUpload}
                                 disabled={files.length === 0 || isUploading}
-                                className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-medium px-6 h-10 shadow-lg shadow-violet-500/20 disabled:opacity-30 disabled:shadow-none"
+                                className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(16,185,129,0.15)] disabled:opacity-30 disabled:shadow-none"
                             >
                                 {isUploading ? (
                                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
@@ -582,7 +620,7 @@ export default function DataUpload() {
                             className="mt-8"
                         >
                             {/* Success Banner */}
-                            {batchResult.success && (
+                            {totalRowsInserted > 0 && (
                                 <div className="rounded-xl bg-gradient-to-r from-emerald-500/[0.08] to-green-500/[0.04] border border-emerald-500/20 p-5 mb-4">
                                     <div className="flex items-start gap-3">
                                         <CheckCircle2 className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
@@ -597,6 +635,38 @@ export default function DataUpload() {
                                             </p>
 
 
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {totalRowsInserted === 0 && totalRowsSkipped > 0 && totalRowsFailed === 0 && (
+                                <div className="rounded-xl bg-gradient-to-r from-amber-500/[0.08] to-yellow-500/[0.04] border border-amber-500/20 p-5 mb-4">
+                                    <div className="flex items-start gap-3">
+                                        <Archive className="h-5 w-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                                        <div>
+                                            <h3 className="text-sm font-medium text-amber-300 mb-1">
+                                                Files were recognized but already imported
+                                            </h3>
+                                            <p className="text-xs text-white/40">
+                                                {totalRowsSkipped.toLocaleString()} rows were skipped because the backend marked these files as duplicates for this workspace.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {totalRowsFailed > 0 && (
+                                <div className="rounded-xl bg-gradient-to-r from-red-500/[0.08] to-orange-500/[0.04] border border-red-500/20 p-5 mb-4">
+                                    <div className="flex items-start gap-3">
+                                        <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
+                                        <div>
+                                            <h3 className="text-sm font-medium text-red-300 mb-1">
+                                                Some files need attention
+                                            </h3>
+                                            <p className="text-xs text-white/40">
+                                                {totalRowsFailed.toLocaleString()} rows failed validation or persistence. Review the per-file errors below before retrying.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -620,7 +690,7 @@ export default function DataUpload() {
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm text-white/70 font-sans font-bold tracking-tight truncate">{r.fileName}</p>
                                             <p className="text-[10px] text-white/30 mt-0.5">
-                                                Detected as <span className="text-violet-400/70">{r.csvType}</span>
+                                                Detected as <span className="text-emerald-500/70">{r.csvType}</span>
                                                 {' · '}{r.rowsProcessed} rows processed
                                                 {' · '}{r.rowsInserted} inserted
                                                 {(r.rowsSkipped || 0) > 0 && <span className="text-amber-400/70"> · {r.rowsSkipped} skipped</span>}
@@ -671,7 +741,7 @@ export default function DataUpload() {
                                 { step: '4', label: 'Detect', desc: 'Run 26 algorithms' },
                             ].map(s => (
                                 <div key={s.step} className="flex items-center gap-2 py-2 px-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
-                                    <span className="text-[10px] font-sans font-bold text-violet-400/50 tracking-tight uppercase">{s.step}</span>
+                                    <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight uppercase">{s.step}</span>
                                     <div>
                                         <p className="text-[11px] text-white/40 font-sans font-bold tracking-tight uppercase">{s.label}</p>
                                         <p className="text-[9px] text-white/20 font-sans tracking-tight uppercase">{s.desc}</p>
