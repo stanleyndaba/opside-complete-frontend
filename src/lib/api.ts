@@ -1004,10 +1004,10 @@ export const api = {
   },
 
   // Phase 1: Amazon connection status check
-  getAmazonConnectionStatus: (tenantSlug?: string) => {
+  getAmazonConnectionStatus: async (tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getAmazonConnectionStatus");
     const slug = tenantSlug;
-    return requestJson<{
+    const statusResponse = await requestJson<{
       connected: boolean;
       sandboxMode?: boolean;
       useMockGenerator?: boolean;
@@ -1015,6 +1015,37 @@ export const api = {
       lastSync?: string;
       connectionVerified?: boolean;
     }>(`/api/v1/integrations/amazon/status?tenantSlug=${slug}`);
+
+    if (statusResponse.ok && statusResponse.data) {
+      return statusResponse;
+    }
+
+    const tenantStatusResponse = await requestJson<{
+      amazon_connected: boolean;
+      lastSync?: string;
+      agent2_ready?: boolean;
+    }>(`/api/v1/integrations/status?tenantSlug=${slug}`);
+
+    if (!tenantStatusResponse.ok || !tenantStatusResponse.data) {
+      return {
+        ok: false,
+        status: tenantStatusResponse.status || statusResponse.status,
+        error: tenantStatusResponse.error || statusResponse.error || 'Failed to get Amazon connection status',
+      };
+    }
+
+    return {
+      ok: true,
+      status: tenantStatusResponse.status,
+      data: {
+        connected: tenantStatusResponse.data.amazon_connected,
+        sandboxMode: false,
+        useMockGenerator: false,
+        useMockData: false,
+        lastSync: tenantStatusResponse.data.lastSync,
+        connectionVerified: tenantStatusResponse.data.agent2_ready ?? tenantStatusResponse.data.amazon_connected,
+      }
+    };
   },
 
   // Phase 1: Fetch Claims (Financial Events)
