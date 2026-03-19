@@ -1020,8 +1020,8 @@ export function Dashboard() {
                         {(() => {
                           const count = detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed').length;
                           return (
-                            <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-white text-[9px] font-bold rounded-full border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-                              {count > 10 ? '10+' : count}
+                            <span className="flex items-center justify-center min-w-[16px] h-4 px-1.5 bg-[#1a1a1a] text-white text-[9px] font-bold rounded-full border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                              {count}
                             </span>
                           );
                         })()}
@@ -1065,15 +1065,22 @@ export function Dashboard() {
               </div>
 
               {activeTab === 'overview' ? (
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#070707] text-white">
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
+                    style={{
+                      backgroundImage:
+                        `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                    }}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6">
                   {/* Main Content - 3 columns */}
                   <div className="lg:col-span-4 space-y-6">
 
                     {/* Institutional Instrument Panel */}
-                    <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
-                      {/* Corner Accents */}
-                      <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30 rounded-tl-xl" />
-                      <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-emerald-500/30 rounded-tr-xl" />
+                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
 
                       <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -1089,8 +1096,8 @@ export function Dashboard() {
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex items-center gap-3 transition-all group"
                           >
-                            <span className="text-[10px] font-sans font-bold text-emerald-500/50 group-hover:text-emerald-500 uppercase tracking-tight">{submittedClaimsCount} Active Claims</span>
-                            <ArrowRight className="h-3 w-3 text-emerald-500/30 group-hover:text-emerald-500" />
+                            <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{submittedClaimsCount} Active Claims</span>
+                            <ArrowRight className="h-3 w-3 text-white/20 group-hover:text-white/65" />
                           </button>
                         )}
                       </div>
@@ -1110,29 +1117,16 @@ export function Dashboard() {
                             <>
                               <div className="text-5xl font-sans font-bold text-white tracking-tight mb-4 flex items-baseline gap-2">
                                 {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
-                                <span className="text-sm font-sans font-bold text-emerald-500 animate-pulse">_</span>
+                                <span className="text-sm font-sans font-bold text-white/40 animate-pulse">_</span>
                               </div>
                               {reconciledCount != null && reconciledCount > 0 && (
                                 <div className="flex items-center gap-3 w-fit">
-                                  <div className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                                  <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
+                                  <div className="h-1 w-1 rounded-full bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" />
+                                  <span className="text-[10px] font-sans font-bold text-white/65 uppercase tracking-tight">
                                     {reconciledCount} Verified Records
                                   </span>
                                 </div>
                               )}
-                            </>
-                          ) : detectionStats && detectionStats.estimatedRecovery > 0 ? (
-                            <>
-                              <div className="text-5xl font-sans font-bold text-white tracking-tight mb-4 flex items-baseline gap-2">
-                                {formatCurrencyWithSelection(detectionStats.estimatedRecovery, recoveredCurrency)}
-                                <span className="text-sm font-sans font-bold text-amber-400 animate-pulse">_</span>
-                              </div>
-                              <div className="flex items-center gap-3 w-fit">
-                                <div className="h-1 w-1 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
-                                <span className="text-[10px] font-sans font-bold text-amber-400 uppercase tracking-tight">
-                                  {detectionStats.totalDetections} Pending Recovery Opportunities
-                                </span>
-                              </div>
                             </>
                           ) : recoveredTotal !== null ? (
                             <div className="flex flex-col gap-6 py-2">
@@ -1145,7 +1139,7 @@ export function Dashboard() {
                             </div>
                           ) : (
                             <div className="flex flex-col gap-6 py-2">
-                              <div className="flex items-center gap-3 text-emerald-500">
+                              <div className="flex items-center gap-3 text-white/60">
                                 <Loader2 className="h-4 w-4 animate-spin" />
                                 <span className="text-[11px] font-sans font-bold uppercase tracking-tight">Scanning Account</span>
                               </div>
@@ -1176,20 +1170,20 @@ export function Dashboard() {
                                 )}
                               </div>
                               <div className="mt-4 flex items-center gap-2">
-                                <Clock className="h-3 w-3 text-emerald-500/30" />
-                                <span className="text-[10px] font-sans font-bold text-emerald-500/40 uppercase tracking-tight">
+                                <Clock className="h-3 w-3 text-white/25" />
+                                <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
                                   {nextPaymentDate
                                     ? `${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                                     : 'EST_TBD'}
                                 </span>
                               </div>
-                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
+                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
                             </div>
                           </HoverCardTrigger>
                           <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="start">
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Payout Details</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
@@ -1211,18 +1205,18 @@ export function Dashboard() {
                                 )}
                               </div>
                               <div className="mt-4 flex items-center gap-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-white/45 shadow-[0_0_8px_rgba(255,255,255,0.16)]" />
                                 <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
                                   {effectivePendingClaims} Claims In Progress
                                 </span>
                               </div>
-                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
+                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
                             </div>
                           </HoverCardTrigger>
                           <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="center">
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Activity Log</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
@@ -1244,18 +1238,18 @@ export function Dashboard() {
                                     `${settlementRate.toFixed(1)}%`
                                   )}
                                 </div>
-                                <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-emerald-500 shadow-emerald-500/50' : (settlementRate ?? 0) >= 50 ? 'bg-amber-500 shadow-amber-500/50' : 'bg-white/10'}`} />
+                                <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-white/60 shadow-white/20' : (settlementRate ?? 0) >= 50 ? 'bg-white/35 shadow-white/15' : 'bg-white/10'}`} />
                               </div>
                               <div className="mt-4 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
                                 Recovery Efficiency
                               </div>
-                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-emerald-500 transition-colors" />
+                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
                             </div>
                           </HoverCardTrigger>
                           <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="end">
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                                <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Success Metrics</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
@@ -1277,48 +1271,45 @@ export function Dashboard() {
                     </div>
 
                     {/* Detection Summary - Instrument Panel */}
-                    {(detectionStats && detectionStats.totalDetections > 0) || (detectionResults.length > 0) && (
-                      <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                    {detectionStats && (
+                      <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                           <div className="flex items-center gap-3">
-                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
+                            <div className="h-1.5 w-1.5 rounded-full bg-white/45 shadow-[0_0_8px_rgba(255,255,255,0.14)]" />
                             <div>
-                              <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Recent Events</h2>
-                              <p className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">New findings requiring submission</p>
+                              <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Agent 3</h2>
+                              <p className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">Detection output only</p>
                             </div>
                           </div>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 px-3 text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/20 transition-all uppercase tracking-tight"
+                            className="h-7 px-3 text-[10px] font-sans font-bold text-white/35 hover:text-white hover:bg-white/[0.04] border border-white/10 transition-all uppercase tracking-tight"
                             onClick={() => setActiveTab('discrepancies')}>
                             View All
                           </Button>
                         </div>
                         <div className="grid grid-cols-4 divide-x divide-white/5">
                           <div className="p-6">
-                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Total Claims</div>
+                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Total Detections</div>
                             <div className="text-xl font-sans font-bold text-white">
-                              {detectionStats ? detectionStats.totalDetections : detectionTotal}
+                              {detectionStats.totalDetections}
                             </div>
                           </div>
                           <div className="p-6">
-                            <div className="text-xs font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Estimated Results</div>
-                            <div className="text-xl font-sans font-bold text-blue-600">
-                              {formatCurrencyWithSelection(
-                                detectionStats?.estimatedRecovery || detectionResults.reduce((acc, curr) => acc + curr.estimated_value, 0),
-                                recoveredCurrency
-                              )}
-                            </div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Verified Data</div>
+                            <div className="text-xs font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Estimated Value</div>
                             <div className="text-xl font-sans font-bold text-white">
-                              {detectionStats ? detectionStats.highConfidence : detectionResults.filter(r => r.confidence_score >= 0.8).length}
+                              {formatCurrencyWithSelection(detectionStats.estimatedRecovery, recoveredCurrency)}
                             </div>
                           </div>
                           <div className="p-6">
-                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Confidence Level</div>
+                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">High Confidence</div>
+                            <div className="text-xl font-sans font-bold text-white">
+                              {detectionStats.highConfidence}
+                            </div>
+                          </div>
+                          <div className="p-6">
+                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Average Confidence</div>
                             <div className="text-xl font-sans font-bold text-white">
                               {typeof detectionStats?.averageConfidence === 'number'
                                 ? `${detectionStats.averageConfidence.toFixed(1)}%`
@@ -1330,15 +1321,15 @@ export function Dashboard() {
                     )}
 
                     {/* Quick Actions - Execution Terminal */}
-                    <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
                         <div className="flex items-center gap-3">
-                          <Terminal className="h-3 w-3 text-emerald-500/50" />
+                          <Terminal className="h-3 w-3 text-white/45" />
                           <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Quick Actions</h2>
                         </div>
                         <button
                           aria-label="Customize quick actions"
-                          className="text-white/10 hover:text-emerald-500 transition-colors"
+                          className="text-white/10 hover:text-white/70 transition-colors"
                           onClick={() => setQuickActionsEditOpen(true)}>
                           <Plus className="h-3 w-3" />
                         </button>
@@ -1365,12 +1356,12 @@ export function Dashboard() {
                                   else navigate(tenantRoute(activeSlug, `/${actionId.replace(/_/g, '-')}`));
                                 }}
                                 className="group flex flex-col p-8 hover:bg-white/[0.02] transition-all text-left border-b border-white/5 relative overflow-hidden">
-                                <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="flex items-center justify-between mb-4 text-white/10 group-hover:text-emerald-500 transition-colors">
+                                <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="flex items-center justify-between mb-4 text-white/10 group-hover:text-white/70 transition-colors">
                                   <IconComp className="h-4 w-4" />
                                   <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
                                 </div>
-                                <span className="text-[11px] text-white font-sans font-bold mb-1 tracking-tight uppercase group-hover:text-emerald-500/80 transition-colors">{action.label.replace('_', ' ')}</span>
+                                <span className="text-[11px] text-white font-sans font-bold mb-1 tracking-tight uppercase group-hover:text-white transition-colors">{action.label.replace('_', ' ')}</span>
                                 <span className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">{action.subtitle.replace('_', ' ')}</span>
                               </button>
                             );
@@ -1382,8 +1373,8 @@ export function Dashboard() {
 
                   {/* System Activity - Audit Registry Sidebar */}
                   <div className="hidden lg:col-span-1">
-                    <div className="bg-[#0c0c0c]/80 border border-white/10 rounded-xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl h-full flex flex-col shadow-3xl backdrop-blur-3xl relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
                       <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full transition-all group">
                         <div className="flex items-center gap-4">
@@ -1397,8 +1388,8 @@ export function Dashboard() {
                             {displayNotifications.length === 0 ? (
                               <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
                                 <div className="relative flex h-3 w-3 mb-6">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
-                                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500/40"></span>
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
+                                  <span className="relative inline-flex rounded-full h-3 w-3 bg-white/35"></span>
                                 </div>
                                 <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">No recent activity</p>
                                 <p className="text-[10px] text-white/10 mt-2 font-serif">Operational baseline maintained.</p>
@@ -1425,12 +1416,12 @@ export function Dashboard() {
                                         <div
                                           className={cn(
                                             "group relative px-5 py-4 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:bg-white/[0.03]",
-                                            isUnread ? "bg-emerald-500/[0.02]" : "bg-transparent"
+                                            isUnread ? "bg-white/[0.02]" : "bg-transparent"
                                           )}
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}>
 
                                           {/* Hover Glow Bar */}
-                                          <div className="absolute left-[-2px] top-3 bottom-3 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                          <div className="absolute left-[-2px] top-3 bottom-3 w-[2px] bg-white/60 shadow-[0_0_15px_rgba(255,255,255,0.2)] opacity-0 group-hover:opacity-100 transition-opacity" />
 
                                           <div className="flex flex-col gap-1.5">
                                             <div className="flex items-center justify-between gap-4">
@@ -1453,7 +1444,7 @@ export function Dashboard() {
                                                     <span className={cn(
                                                       "text-[12px] font-mono font-bold tabular-nums shrink-0",
                                                       notification.type === 'funds_deposited' || notification.type === 'refund_approved'
-                                                        ? "text-emerald-500"
+                                                        ? "text-white"
                                                         : "text-white"
                                                     )}>
                                                       +{amount}
@@ -1468,7 +1459,7 @@ export function Dashboard() {
                                               <div className="flex items-center gap-2">
                                                 <span className={cn(
                                                   "text-[9px] font-mono font-bold",
-                                                  isUnread ? "text-emerald-500/60" : "text-white/10"
+                                                  isUnread ? "text-white/45" : "text-white/10"
                                                 )}>
                                                   {statusText}
                                                 </span>
@@ -1551,7 +1542,7 @@ export function Dashboard() {
                               variant="ghost"
                               size="sm"
                               onClick={() => navigate(tenantRoute(activeSlug, '/notifications'))}
-                              className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-emerald-500 uppercase tracking-widest transition-colors"
+                              className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-widest transition-colors"
                             >
                               All Activity Logs
                             </Button>
@@ -1560,6 +1551,7 @@ export function Dashboard() {
                       )}
                     </div>
                   </div>
+                </div>
                 </div>
               ) : activeTab === 'discrepancies' ? (
                 <div className="space-y-6">

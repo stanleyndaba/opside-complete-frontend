@@ -11,7 +11,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import { recoveryApi } from '@/lib/recoveryApi';
 import { useTenant } from '@/contexts/TenantContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { tenantRoute } from '@/lib/routes';
@@ -143,25 +142,23 @@ export function Sidebar({
     })();
   }, [isReady, currentTenantSlug]);
 
-  // Fetch claim count — use the SAME data source as the Recoveries page table
+  // Fetch claim count from Agent 8 so the sidebar reflects the same source as the Recovery Pipeline page
   React.useEffect(() => {
     if (!isReady) return;
     let cancelled = false;
     
     const fetchRecoveries = async () => {
       try {
-        const recoveries = await recoveryApi.getRecoveries(currentTenantSlug);
+        const response = await api.getAmazonRecoveries(currentTenantSlug);
         if (!cancelled) {
-          if (Array.isArray(recoveries)) {
-            setClaimCount(recoveries.length);
-          } else {
-            console.warn('[Sidebar] Recoveries response not an array, falling back to 0');
-            setClaimCount(0);
-          }
+          const claimCount = response.ok && typeof response.data?.claimCount === 'number'
+            ? response.data.claimCount
+            : 0;
+          setClaimCount(claimCount);
         }
       } catch (err) {
         if (!cancelled) {
-          console.warn('[Sidebar] Recoveries endpoint unavailable, degrading gracefully.', err);
+          console.warn('[Sidebar] Agent 8 recoveries endpoint unavailable, degrading gracefully.', err);
           setClaimCount(0); // Resolve loading state to zero to prevent UI hang
         }
       }

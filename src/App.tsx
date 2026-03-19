@@ -22,7 +22,7 @@ const Sync = lazy(() => import("./pages/Sync"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
-const Recoveries = lazy(() => import("./pages/Recoveries"));
+const Recoveries = lazy(() => import("./pages/RecoveryPipelineAgent8"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
 const ResolveCase = lazy(() => import("./pages/ResolveCase"));
 const DataUpload = lazy(() => import("./pages/DataUpload"));
