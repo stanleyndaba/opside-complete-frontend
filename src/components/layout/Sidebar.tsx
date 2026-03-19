@@ -51,6 +51,9 @@ const prefetchRoute = (path: string) => {
       case '/billing':
         import('@/pages/Billing');
         break;
+      case '/history':
+        import('@/pages/TransactionHistory');
+        break;
       default:
         break;
     }
@@ -179,7 +182,6 @@ export function Sidebar({
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
     { title: 'Refund Recoveries', icon: Plug, href: tenantRoute(currentTenantSlug, '/upcoming-payments') },
-    { title: 'Transaction History', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/history') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') }
   ];
 
@@ -387,13 +389,13 @@ export function Sidebar({
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
-              className="flex items-center gap-3 px-3 py-2 text-[12px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
-              className="flex items-center justify-between px-3 py-2 text-[12px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center justify-between px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
@@ -404,6 +406,12 @@ export function Sidebar({
                 </div>
                 <span>Updates</span>
               </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/history'))}
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              <BarChart3 className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+              <span>Transaction History</span>
             </DropdownMenuItem>
             {/* Reports hidden - Beta Roll Out Soon
             <DropdownMenuItem
@@ -418,7 +426,7 @@ export function Sidebar({
             */}
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
-              className="flex items-center gap-3 px-3 py-2 text-[12px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <Sparkles className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
               <span>Patch_Notes</span>
             </DropdownMenuItem>
@@ -464,7 +472,7 @@ export function Sidebar({
             </DropdownMenuItem> */}
             <DropdownMenuItem
               onClick={toggleTheme}
-              className="flex items-center gap-3 px-3 py-2 text-[12px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               {theme === 'dark' ? (
                 <Sun className="h-4 w-4 text-amber-500/50" strokeWidth={1.5} />
               ) : (
@@ -474,14 +482,14 @@ export function Sidebar({
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
-              className="flex items-center gap-3 px-3 py-2 text-[12px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <Settings2 className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex items-center gap-3 px-3 py-2 text-[12px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>

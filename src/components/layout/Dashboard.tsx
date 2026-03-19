@@ -1270,56 +1270,6 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Detection Summary - Instrument Panel */}
-                    {detectionStats && (
-                      <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
-                        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-                          <div className="flex items-center gap-3">
-                            <div className="h-1.5 w-1.5 rounded-full bg-white/45 shadow-[0_0_8px_rgba(255,255,255,0.14)]" />
-                            <div>
-                              <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Agent 3</h2>
-                              <p className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">Detection output only</p>
-                            </div>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 px-3 text-[10px] font-sans font-bold text-white/35 hover:text-white hover:bg-white/[0.04] border border-white/10 transition-all uppercase tracking-tight"
-                            onClick={() => setActiveTab('discrepancies')}>
-                            View All
-                          </Button>
-                        </div>
-                        <div className="grid grid-cols-4 divide-x divide-white/5">
-                          <div className="p-6">
-                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Total Detections</div>
-                            <div className="text-xl font-sans font-bold text-white">
-                              {detectionStats.totalDetections}
-                            </div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-xs font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Estimated Value</div>
-                            <div className="text-xl font-sans font-bold text-white">
-                              {formatCurrencyWithSelection(detectionStats.estimatedRecovery, recoveredCurrency)}
-                            </div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">High Confidence</div>
-                            <div className="text-xl font-sans font-bold text-white">
-                              {detectionStats.highConfidence}
-                            </div>
-                          </div>
-                          <div className="p-6">
-                            <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Average Confidence</div>
-                            <div className="text-xl font-sans font-bold text-white">
-                              {typeof detectionStats?.averageConfidence === 'number'
-                                ? `${detectionStats.averageConfidence.toFixed(1)}%`
-                                : 'N/A'}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
                     {/* Quick Actions - Execution Terminal */}
                     <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">

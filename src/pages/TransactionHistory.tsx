@@ -558,13 +558,25 @@ export default function TransactionHistory() {
 
     return (
         <PageLayout title="Transaction History" midnight>
-            <div className="relative container mx-auto px-10 lg:px-16 py-12">
+            <div className="min-h-screen bg-[#070707] text-white relative">
+                <div
+                    className="fixed inset-0 pointer-events-none opacity-[0.03]"
+                    style={{
+                        backgroundImage:
+                            `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                    }}
+                />
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+            <div className="relative z-10 container mx-auto px-10 lg:px-16 py-12">
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-white/5 pb-10">
                         <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="text-[10px] font-sans font-bold text-emerald-500/80 uppercase tracking-tight">Account Statement</span>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2 rounded-xl bg-[#111111] border border-white/10">
+                                    <DollarSign className="h-4 w-4 text-white/80" />
+                                </div>
+                                <span className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-tight">Account Statement</span>
                             </div>
                             <h1 className="text-4xl font-bold text-white tracking-tight font-sans">Transaction <span className="text-white/40">History</span></h1>
                             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed font-sans font-bold tracking-tight">
@@ -576,9 +588,9 @@ export default function TransactionHistory() {
                                 variant="outline"
                                 onClick={exportStatement}
                                 disabled={transactions.length === 0}
-                                className="bg-white/5 border-white/10 text-white hover:bg-white/10 h-11 px-6 rounded-xl font-sans font-bold text-xs transition-all duration-300 tracking-tight"
+                                className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white h-11 px-6 rounded-xl font-sans font-bold text-xs transition-all duration-300 tracking-tight shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
                             >
-                                <Download className="h-4 w-4 mr-2 text-emerald-500" />
+                                <Download className="h-4 w-4 mr-2 text-white/80" />
                                 Export Statement (PDF)
                             </Button>
                         </div>
@@ -673,7 +685,7 @@ export default function TransactionHistory() {
                         {Object.entries(summary.categoryTotals)
                             .filter(([cat]) => cat !== '[LOST_INV]' && cat !== '[RECOVERY]')
                             .map(([cat, data], i) => (
-                                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                                <div key={i} className="bg-[#111111]/90 border border-white/10 rounded-xl p-4">
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-[10px] font-sans font-bold text-gray-500 tracking-tight">[{cat.replace(/[\[\]]/g, '')}]</span>
                                         <span className="text-xs font-bold text-white font-sans tracking-tight">{data.percentage.toFixed(0)}%</span>
@@ -682,7 +694,7 @@ export default function TransactionHistory() {
                                     <div className="text-[10px] text-gray-500 font-sans font-bold tracking-tight">{data.count} recoveries matched</div>
                                     <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full bg-emerald-500 rounded-full"
+                                            className="h-full bg-white/50 rounded-full"
                                             style={{ width: `${data.percentage}%` }}
                                         />
                                     </div>
@@ -693,9 +705,9 @@ export default function TransactionHistory() {
                     {/* Filters & Actions */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div className="relative max-w-sm w-full group">
-                            <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-lg group-hover:bg-emerald-500/10 transition-all duration-500" />
-                            <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-emerald-500/50 transition-all duration-300">
-                                <Search className="h-4 w-4 text-gray-500 ml-4 group-hover:text-emerald-500 transition-colors" />
+                            <div className="absolute inset-0 bg-white/[0.03] rounded-xl blur-lg group-hover:bg-white/[0.05] transition-all duration-500" />
+                            <div className="relative flex items-center bg-[#111111]/90 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-white/20 transition-all duration-300">
+                                <Search className="h-4 w-4 text-gray-500 ml-4 group-hover:text-white/70 transition-colors" />
                                 <Input
                                     placeholder="Search History (Case ID, Reimb ID...)"
                                     value={searchQuery}
@@ -829,10 +841,11 @@ export default function TransactionHistory() {
                         </p>
                     </div>
                 </div>
+            </div>
 
             {/* Premium Dialog Styling */}
             <Dialog open={reportModalOpen} onOpenChange={setReportModalOpen}>
-                <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-xl p-0 overflow-hidden">
+                <DialogContent className="max-w-md bg-[#111111] border border-white/10 text-white shadow-2xl backdrop-blur-xl p-0 overflow-hidden">
                     <div className="p-8">
                         <DialogHeader className="mb-8">
                             <div className="flex items-center gap-3 mb-4">

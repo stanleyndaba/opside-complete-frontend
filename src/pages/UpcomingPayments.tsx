@@ -267,11 +267,24 @@ export default function UpcomingPayments() {
 
   return (
     <PageLayout title="Upcoming Payments" midnight>
-      <div className="relative max-w-[1600px] mx-auto px-8 py-12">
+      <div className="min-h-screen bg-[#070707] text-white relative">
+        <div
+          className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage:
+              `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+
+      <div className="relative z-10 max-w-[1600px] mx-auto px-8 py-12">
           {/* Analysis Header */}
           <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
             <div className="flex items-center gap-3">
-              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="p-2 rounded-xl bg-[#111111] border border-white/10">
+                <Clock className="h-5 w-5 text-white/80" />
+              </div>
               <h1 className="text-4xl font-bold text-white tracking-tight font-sans">Payment <span className="text-white/40">Summary</span></h1>
             </div>
             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed font-sans font-bold tracking-tight">
@@ -281,7 +294,7 @@ export default function UpcomingPayments() {
 
           {/* Execution Panels (Summary Cards) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 transition-all hover:border-emerald-500/30 overflow-hidden backdrop-blur-xl">
+            <div className="group relative bg-[#111111]/90 border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 overflow-hidden backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Next payout</span>
@@ -293,12 +306,12 @@ export default function UpcomingPayments() {
                   {nextPayout ? formatCurrency(nextPayout.gross, currency) : formatCurrency(0, currency)}
                 </div>
                 <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] w-[65%]" />
+                  <div className="h-full bg-white/50 shadow-[0_0_10px_rgba(255,255,255,0.14)] w-[65%]" />
                 </div>
               </div>
             </div>
 
-            <div className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 transition-all hover:border-emerald-500/30 overflow-hidden text-white backdrop-blur-xl">
+            <div className="group relative bg-[#111111]/90 border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 overflow-hidden text-white backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Monthly Projection</span>
@@ -310,24 +323,24 @@ export default function UpcomingPayments() {
                   {formatCurrency(monthTotals.gross, currency)}
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-white/50 shadow-[0_0_8px_rgba(255,255,255,0.18)]" />
                   {monthTotals.count} claims sampled
                 </div>
               </div>
             </div>
 
-            <div className="group relative bg-black/40 border border-white/10 rounded-2xl p-6 transition-all hover:border-emerald-500/40 overflow-hidden bg-gradient-to-br from-emerald-500/10 to-transparent backdrop-blur-xl">
+            <div className="group relative bg-[#111111]/90 border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 overflow-hidden backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">Net Recovery</span>
+                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Net Recovery</span>
                   <span className="text-xs font-sans font-bold text-white/40 uppercase tracking-tight">
                     After service fee
                   </span>
                 </div>
-                <div className="text-3xl font-sans font-bold tracking-tight text-emerald-500">
+                <div className="text-3xl font-sans font-bold tracking-tight text-white">
                   {formatCurrency(monthTotals.net, currency)}
                 </div>
-                <div className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight bg-emerald-500/5 border border-emerald-500/10 px-2 py-1 rounded inline-block">
+                <div className="text-[10px] font-sans font-bold text-white/50 uppercase tracking-tight bg-white/[0.03] border border-white/10 px-2 py-1 rounded inline-block">
                   Stable projection
                 </div>
               </div>
@@ -335,7 +348,7 @@ export default function UpcomingPayments() {
           </div>
 
           {/* Pipeline progress (Pipeline Summary) */}
-          <div className="relative bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-12">
+          <div className="relative bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-12">
             <div className="p-8 space-y-8">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">
@@ -351,7 +364,7 @@ export default function UpcomingPayments() {
                   <button
                     onClick={exportPdf}
                     disabled={downloading}
-                    className="p-3 bg-white/[0.03] border border-white/5 rounded-xl hover:border-emerald-500/30 transition-all text-white/40 hover:text-emerald-500 disabled:opacity-50"
+                    className="p-3 bg-white/[0.03] border border-white/10 rounded-xl hover:border-white/20 transition-all text-white/40 hover:text-white disabled:opacity-50"
                   >
                     {downloading ? (
                       <RefreshCw className="h-4 w-4 animate-spin" />
@@ -375,12 +388,12 @@ export default function UpcomingPayments() {
                     className={cn(
                       "p-6 flex flex-col gap-3 group transition-all",
                       idx !== 4 && "border-r border-white/5",
-                      item.highlight ? "bg-emerald-500/[0.03]" : "hover:bg-white/[0.02]"
+                      item.highlight ? "bg-white/[0.03]" : "hover:bg-white/[0.02]"
                     )}
                   >
                     <div className="flex flex-col gap-0.5">
                       <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">{item.label}</span>
-                      <div className={cn("text-lg font-sans font-bold tracking-tight", item.highlight ? "text-emerald-500" : "text-white")}>
+                      <div className={cn("text-lg font-sans font-bold tracking-tight", item.highlight ? "text-white" : "text-white")}>
                         {formatCurrency(item.stage.amount, currency)}
                       </div>
                     </div>
@@ -392,16 +405,16 @@ export default function UpcomingPayments() {
               </div>
 
               {errorMessage && (
-                <div className="flex items-center justify-between bg-rose-500/10 border border-rose-500/20 rounded-lg p-4">
+                <div className="flex items-center justify-between bg-white/[0.03] border border-white/10 rounded-lg p-4">
                   <div className="flex items-center gap-3">
-                    <AlertCircle className="h-4 w-4 text-rose-500" />
-                    <span className="text-xs font-sans font-bold text-rose-200 uppercase tracking-tight">
+                    <AlertCircle className="h-4 w-4 text-white/70" />
+                    <span className="text-xs font-sans font-bold text-white/70 uppercase tracking-tight">
                       Connection Error: {errorMessage}
                     </span>
                   </div>
                   <button
                     onClick={() => setReloadToken((token) => token + 1)}
-                    className="px-3 py-1 bg-rose-500/20 border border-rose-500/30 rounded text-[10px] font-sans font-bold uppercase tracking-tight text-white hover:bg-rose-500/40 transition-all"
+                    className="px-3 py-1 bg-white/[0.03] border border-white/10 rounded text-[10px] font-sans font-bold uppercase tracking-tight text-white hover:bg-white/[0.08] transition-all"
                   >
                     Retry
                   </button>
@@ -411,7 +424,7 @@ export default function UpcomingPayments() {
           </div>
 
           {/* Recent Recoveries (Table) */}
-          <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
+          <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
             <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex flex-col gap-0.5">
                 <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Recent Recoveries</span>
@@ -435,8 +448,8 @@ export default function UpcomingPayments() {
                   {loading ? (
                     <TableRow className="hover:bg-transparent border-0">
                       <TableCell colSpan={7} className="h-32 text-center">
-                        <div className="flex flex-col items-center gap-2">
-                          <RefreshCw className="h-5 w-5 animate-spin text-emerald-500/30" />
+                          <div className="flex flex-col items-center gap-2">
+                          <RefreshCw className="h-5 w-5 animate-spin text-white/40" />
                           <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Synchronizing...</span>
                         </div>
                       </TableCell>
@@ -462,7 +475,7 @@ export default function UpcomingPayments() {
                         <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-white/40">
                           {formatCurrency(g.commission, currency)}
                         </TableCell>
-                        <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-emerald-500">
+                        <TableCell className="py-4 px-6 font-sans font-bold text-[11px] text-white">
                           {formatCurrency(g.net, currency)}
                         </TableCell>
                         <TableCell className="py-4 px-6">
@@ -471,7 +484,7 @@ export default function UpcomingPayments() {
                               <div key={claim.id} className="flex items-center gap-2">
                                 <div className={cn(
                                   "h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]",
-                                  claim.filing_status === 'filed' ? "bg-emerald-500 shadow-emerald-500/50" : "bg-amber-500 shadow-amber-500/30"
+                                  claim.filing_status === 'filed' ? "bg-white/60 shadow-white/20" : "bg-white/30 shadow-white/10"
                                 )} />
                                 <span className="text-[9px] font-sans font-bold text-white/60 uppercase tracking-tight">
                                   {(claim.filing_status || claim.status || 'UNKNOWN').toUpperCase()}
@@ -489,7 +502,7 @@ export default function UpcomingPayments() {
                           <Button
                             asChild
                             variant="ghost"
-                            className="h-8 px-4 border border-white/5 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all"
+                            className="h-8 px-4 border border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight hover:border-white/20 hover:bg-white/[0.06] hover:text-white transition-all"
                           >
                             <Link to={tenantRoute(activeTenantSlug, '/recoveries?tab=cases')}>VIEW DETAILS</Link>
                           </Button>
@@ -509,6 +522,7 @@ export default function UpcomingPayments() {
             </p>
           </div>
         </div>
+      </div>
     </PageLayout>
   );
 }

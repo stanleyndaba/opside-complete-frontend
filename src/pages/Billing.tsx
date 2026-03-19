@@ -11,7 +11,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import {
   Download,
-  Shield,
   Check,
   ChevronRight,
   AlertCircle,
@@ -326,10 +325,10 @@ export default function Billing() {
 
   return (
     <PageLayout title="Billing" midnight>
-      <div className="relative min-h-screen font-sans bg-[#050505]">
-        {/* Matrix Background Aesthetic */}
-        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
+      <div className="relative min-h-screen font-sans bg-[#070707] text-white">
         <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
         <div className="relative container mx-auto px-4 md:px-8 py-16">
           <motion.div
@@ -337,14 +336,14 @@ export default function Billing() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
           >
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Badge variant="outline" className="px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-sans font-bold text-[9px] tracking-tight uppercase">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                <Badge variant="outline" className="px-3 py-0.5 border-white/10 bg-white/[0.02] text-white/60 font-sans font-bold text-[9px] tracking-tight uppercase">
                   Billing System // Active
                 </Badge>
               </div>
               <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Billing.</h1>
-              <p className="text-white/40 mt-3 font-sans font-bold italic text-lg max-w-2xl tracking-tight">View your billing history and manage payment settings.</p>
+              <p className="text-white/40 mt-3 font-sans font-bold text-lg max-w-2xl tracking-tight">View your billing history and manage payment settings.</p>
             </div>
           </motion.div>
 
@@ -357,16 +356,13 @@ export default function Billing() {
           >
             {/* PayPal Protocol Status */}
             <motion.div variants={itemVariants}>
-              <Card className="bg-[#0c0c0c] border-emerald-500/10 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
+              <Card className="bg-[#111111]/90 border border-white/10 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
                 <CardHeader className="p-8 pb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
-                        <Shield className="h-4 w-4 text-emerald-500" />
-                      </div>
-                      <CardTitle className="text-2xl font-sans font-bold tracking-tight">Billing Protocol: PayPal</CardTitle>
+                      <CardTitle className="text-2xl font-sans font-bold tracking-tight">Billing &amp; Invoices</CardTitle>
                     </div>
-                    <Badge variant="outline" className="border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-sans font-bold text-[9px] tracking-tight uppercase px-3 py-1">
+                    <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-white/60 font-sans font-bold text-[9px] tracking-tight uppercase px-3 py-1">
                       EXCLUSIVE MODE
                     </Badge>
                   </div>
@@ -381,9 +377,6 @@ export default function Billing() {
                     <div className="space-y-3">
                       <p className="text-lg font-sans font-bold text-white/90 tracking-tight leading-snug">
                         Margin now operates exclusively via PayPal Invoicing.
-                      </p>
-                      <p className="text-sm font-sans font-bold text-white/40 italic tracking-tight">
-                        "Commission settlements are processed through standardized PayPal invoice corridors. No card storage required."
                       </p>
                       <div className="flex flex-wrap items-center gap-3 pt-2">
                         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
@@ -435,9 +428,6 @@ export default function Billing() {
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        <p className="text-xs font-sans font-bold text-white/40 italic tracking-tight">
-                          Grant Clario permission to automatically process commission fees for successful recoveries.
-                        </p>
                         <Button 
                           onClick={handleLinkPaymentMethod}
                           disabled={isVaulting}
