@@ -42,21 +42,6 @@ const faqs = [
   },
 ];
 
-const supportLanes = [
-  {
-    label: 'Product Support',
-    detail: 'Dashboard access, broken pages, runtime errors, and onboarding blockers.',
-  },
-  {
-    label: 'Billing Questions',
-    detail: 'Invoices, fees, payout timing, and commission reconciliation.',
-  },
-  {
-    label: 'Claim Support',
-    detail: 'Discrepancies, evidence workflow, filing state, and recovery follow-up.',
-  },
-];
-
 const contactStandards = [
   'Response target: within one business day',
   'Use the form for account-specific help',
@@ -109,18 +94,18 @@ export default function Help() {
         <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="relative max-w-7xl mx-auto px-8 py-12">
-          <div className="border-b border-white/10 pb-10 mb-10">
+        <div className="relative max-w-5xl mx-auto px-8 py-12">
+          <div className="border-b border-white/10 pb-10 mb-10 text-center">
             <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Support Console</div>
             <h1 className="mt-2 text-4xl md:text-5xl font-light font-sans text-white tracking-tight">
               Help <span className="text-white/40">and guidance</span>
             </h1>
-            <p className="mt-4 max-w-3xl text-sm md:text-base font-sans font-bold text-white/45 leading-relaxed tracking-tight">
+            <p className="mt-4 max-w-3xl mx-auto text-sm md:text-base font-sans font-bold text-white/45 leading-relaxed tracking-tight">
               Use this page to find operational answers, route account issues, and contact the Margin Finance team with the right context.
             </p>
           </div>
 
-          <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-8">
             <section className="space-y-8">
               <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
                 <div className="border-b border-white/10 px-8 py-6">
@@ -234,56 +219,28 @@ export default function Help() {
               </div>
             </section>
 
-            <aside className="space-y-8">
-              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
-                <div className="border-b border-white/10 px-8 py-6">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Lanes</div>
-                  <div className="mt-2 text-sm font-sans font-bold text-white">What each contact path is best for.</div>
-                </div>
-                <div className="p-8 space-y-4">
-                  {supportLanes.map((lane) => (
-                    <div key={lane.label} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{lane.label}</div>
-                      <div className="mt-2 text-sm font-sans font-bold text-white/60 leading-relaxed">{lane.detail}</div>
+            <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl text-center">
+              <div className="border-b border-white/10 px-8 py-6">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Direct Support</div>
+                <div className="mt-2 text-sm font-sans font-bold text-white">Use this channel for follow-up and account-specific support.</div>
+              </div>
+              <div className="p-8 space-y-6">
+                <a
+                  href="mailto:usersupport@margin-finance.com"
+                  className="block text-lg font-sans font-bold text-white hover:text-white/80 transition-colors break-all"
+                >
+                  usersupport@margin-finance.com
+                </a>
+                <div className="text-sm font-sans font-bold text-white/60">Within one business day for standard requests.</div>
+                <div className="space-y-2">
+                  {contactStandards.map((item) => (
+                    <div key={item} className="text-sm font-sans font-bold text-white/55">
+                      {item}
                     </div>
                   ))}
                 </div>
               </div>
-
-              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
-                <div className="border-b border-white/10 px-8 py-6">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Direct Contact</div>
-                  <div className="mt-2 text-sm font-sans font-bold text-white">Use this channel for support follow-up.</div>
-                </div>
-                <div className="p-8 space-y-5">
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Email</div>
-                    <a
-                      href="mailto:usersupport@margin-finance.com"
-                      className="mt-2 block text-sm font-sans font-bold text-white hover:text-white/80 transition-colors break-all"
-                    >
-                      usersupport@margin-finance.com
-                    </a>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Response Standard</div>
-                    <div className="mt-2 text-sm font-sans font-bold text-white/60">Within one business day for standard requests.</div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Best Practice</div>
-                    <div className="mt-3 space-y-2">
-                      {contactStandards.map((item) => (
-                        <div key={item} className="text-sm font-sans font-bold text-white/55">
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </aside>
+            </div>
           </div>
         </div>
       </div>
