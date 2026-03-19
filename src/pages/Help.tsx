@@ -96,11 +96,11 @@ export default function Help() {
 
         <div className="relative max-w-5xl mx-auto px-8 py-12">
           <div className="border-b border-white/10 pb-10 mb-10 text-center">
-            <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Support Console</div>
+            <div className="text-[10px] font-sans font-medium text-white/30 tracking-tight uppercase">Support Console</div>
             <h1 className="mt-2 text-4xl md:text-5xl font-light font-sans text-white tracking-tight">
               Help <span className="text-white/40">and guidance</span>
             </h1>
-            <p className="mt-4 max-w-3xl mx-auto text-sm md:text-base font-sans font-bold text-white/45 leading-relaxed tracking-tight">
+            <p className="mt-4 max-w-3xl mx-auto text-sm md:text-base font-sans text-white/45 leading-relaxed tracking-tight">
               Use this page to find operational answers, route account issues, and contact the Margin Finance team with the right context.
             </p>
           </div>
@@ -109,8 +109,8 @@ export default function Help() {
             <section className="space-y-8">
               <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
                 <div className="border-b border-white/10 px-8 py-6">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Knowledge Base</div>
-                  <div className="mt-2 text-sm font-sans font-bold text-white">Search common operational questions.</div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Knowledge Base</div>
+                  <div className="mt-2 text-sm font-sans text-white">Search common operational questions.</div>
                 </div>
 
                 <div className="p-8">
@@ -120,17 +120,17 @@ export default function Help() {
                       placeholder="Search for an answer"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="h-12 rounded-2xl border-white/10 bg-white/[0.03] pl-11 pr-4 text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
+                      className="h-12 rounded-2xl border-white/10 bg-white/[0.03] pl-11 pr-4 text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
                     />
                   </div>
 
                   <Accordion type="single" collapsible className="w-full space-y-3">
                     {filteredFaqs.map((faq) => (
                       <AccordionItem key={faq.id} value={faq.id} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5">
-                        <AccordionTrigger className="py-5 text-left text-sm font-sans font-bold text-white hover:no-underline">
+                        <AccordionTrigger className="py-5 text-left text-sm font-sans text-white hover:no-underline">
                           {faq.question}
                         </AccordionTrigger>
-                        <AccordionContent className="pb-5 text-sm font-sans font-bold text-white/45 leading-relaxed">
+                        <AccordionContent className="pb-5 text-sm font-sans text-white/45 leading-relaxed">
                           {faq.answer}
                         </AccordionContent>
                       </AccordionItem>
@@ -138,7 +138,7 @@ export default function Help() {
                   </Accordion>
 
                   {filteredFaqs.length === 0 && (
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-8 text-center text-sm font-sans font-bold text-white/35">
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-8 text-center text-sm font-sans text-white/35">
                       No help articles matched that search.
                     </div>
                   )}
@@ -147,14 +147,14 @@ export default function Help() {
 
               <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
                 <div className="border-b border-white/10 px-8 py-6">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Request</div>
-                  <div className="mt-2 text-sm font-sans font-bold text-white">Send the team a structured issue report.</div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Support Request</div>
+                  <div className="mt-2 text-sm font-sans text-white">Send the team a structured issue report.</div>
                 </div>
 
                 <form onSubmit={handleContactSubmit} className="p-8 space-y-6">
                   <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                      <Label htmlFor="name" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                         Your Name
                       </Label>
                       <Input
@@ -162,12 +162,12 @@ export default function Help() {
                         value={contactForm.name}
                         onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                         placeholder="Name"
-                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
+                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="sellerId" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                      <Label htmlFor="sellerId" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                         Store Name or ID
                       </Label>
                       <Input
@@ -175,17 +175,17 @@ export default function Help() {
                         value={contactForm.sellerId}
                         onChange={(e) => setContactForm({ ...contactForm, sellerId: e.target.value })}
                         placeholder="Store or tenant reference"
-                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
+                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="category" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                    <Label htmlFor="category" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                       Topic
                     </Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                      <SelectTrigger className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white focus:ring-0 focus:border-white/20">
+                      <SelectTrigger className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white focus:ring-0 focus:border-white/20">
                         <SelectValue placeholder="Select a topic" />
                       </SelectTrigger>
                       <SelectContent className="rounded-2xl border-white/10 bg-[#0c0c0c] text-white">
@@ -199,7 +199,7 @@ export default function Help() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                    <Label htmlFor="message" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                       Message
                     </Label>
                     <Textarea
@@ -208,11 +208,11 @@ export default function Help() {
                       onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                       placeholder="Describe the issue, page, workflow, or claim context."
                       rows={6}
-                      className="resize-none rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
+                      className="resize-none rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
                     />
                   </div>
 
-                  <Button type="submit" className="h-12 rounded-2xl border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[11px] uppercase tracking-tight px-8">
+                  <Button type="submit" className="h-12 rounded-2xl border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-medium text-[11px] uppercase tracking-tight px-8">
                     Submit Support Request
                   </Button>
                 </form>
@@ -221,20 +221,20 @@ export default function Help() {
 
             <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl text-center">
               <div className="border-b border-white/10 px-8 py-6">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Direct Support</div>
-                <div className="mt-2 text-sm font-sans font-bold text-white">Use this channel for follow-up and account-specific support.</div>
+                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Direct Support</div>
+                <div className="mt-2 text-sm font-sans text-white">Use this channel for follow-up and account-specific support.</div>
               </div>
               <div className="p-8 space-y-6">
                 <a
                   href="mailto:usersupport@margin-finance.com"
-                  className="block text-lg font-sans font-bold text-white hover:text-white/80 transition-colors break-all"
+                  className="block text-lg font-sans text-white hover:text-white/80 transition-colors break-all"
                 >
                   usersupport@margin-finance.com
                 </a>
-                <div className="text-sm font-sans font-bold text-white/60">Within one business day for standard requests.</div>
+                <div className="text-sm font-sans text-white/60">Within one business day for standard requests.</div>
                 <div className="space-y-2">
                   {contactStandards.map((item) => (
-                    <div key={item} className="text-sm font-sans font-bold text-white/55">
+                    <div key={item} className="text-sm font-sans text-white/55">
                       {item}
                     </div>
                   ))}

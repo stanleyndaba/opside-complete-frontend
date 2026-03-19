@@ -114,10 +114,10 @@ const getDocCategoryIcon = (category: DocLogEntry['category']) => {
 // Get log color for the Matrix Terminal
 const getDocLogColor = (type: DocLogEntry['type']) => {
   switch (type) {
-    case 'success': return 'text-emerald-500 font-bold';
+    case 'success': return 'text-white font-medium';
     case 'error': return 'text-rose-500';
     case 'warning': return 'text-amber-500';
-    case 'progress': return 'text-emerald-500/60';
+    case 'progress': return 'text-white/60';
     case 'thinking': return 'text-white/40 italic';
     default: return 'text-white/60';
   }
@@ -252,7 +252,7 @@ export default function EvidenceLocker() {
     const status = getMatchStatus(confidence);
 
     let colorClass = '';
-    if (status === 'auto_submit') colorClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+    if (status === 'auto_submit') colorClass = 'bg-white/10 text-white/75 border-white/15';
     else if (status === 'smart_prompt') colorClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
     else colorClass = 'bg-red-500/10 text-red-400 border-red-500/20';
 
@@ -270,7 +270,7 @@ export default function EvidenceLocker() {
 
     switch (status) {
       case 'auto_submit':
-        return <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+        return <Badge className="bg-white/10 text-white/75 border-white/15">
           <Check className="w-3 h-3 mr-1" />
           Auto-Submit
         </Badge>;
@@ -916,7 +916,7 @@ export default function EvidenceLocker() {
               {/* Institutional Header */}
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-2">
-                  <Badge variant="outline" className="w-fit px-3 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-500 font-sans font-bold text-[9px] tracking-tight uppercase">
+                  <Badge variant="outline" className="w-fit px-3 py-0.5 border-white/15 bg-white/5 text-white/75 font-sans font-bold text-[9px] tracking-tight uppercase">
                     Evidence System // Active
                   </Badge>
                   <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Evidence Locker.</h1>
@@ -932,7 +932,7 @@ export default function EvidenceLocker() {
                     <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
                       <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">{stat.label}</span>
                       <div className="flex items-center gap-3">
-                        <stat.icon className={cn("h-3 w-3", stat.pulse ? "text-emerald-500 animate-spin" : "text-white/20")} />
+                        <stat.icon className={cn("h-3 w-3", stat.pulse ? "text-white/75 animate-spin" : "text-white/20")} />
                         <span className="text-lg font-sans font-bold text-white tracking-tight">
                           {stat.value}
                         </span>
@@ -972,7 +972,7 @@ export default function EvidenceLocker() {
                 {/* Terminal Header */}
                 <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Terminal className="h-3 w-3 text-emerald-500/50" />
+                    <Terminal className="h-3 w-3 text-white/40" />
                     <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Activity Log</h2>
                   </div>
                   <div className="flex items-center gap-6">
@@ -981,7 +981,7 @@ export default function EvidenceLocker() {
                         type="checkbox"
                         checked={showDevLogs}
                         onChange={(e) => setShowDevLogs(e.target.checked)}
-                        className="w-2.5 h-2.5 rounded border-white/10 bg-transparent text-emerald-500 focus:ring-0"
+                        className="w-2.5 h-2.5 rounded border-white/10 bg-transparent text-white focus:ring-0"
                       />
                       Detailed Logs
                     </label>
@@ -993,14 +993,14 @@ export default function EvidenceLocker() {
                   {/* Terminal Search */}
                   <div className="relative mb-6">
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                      <span className="text-emerald-500/40 text-[10px] font-sans font-bold">$</span>
+                      <span className="text-white/40 text-[10px] font-sans font-bold">$</span>
                     </div>
                     <Input
                       type="text"
                       placeholder="Search activity..."
                       value={docLogSearch}
                       onChange={(e) => setQ(e.target.value)}
-                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg tracking-tight"
+                      className="pl-8 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-white/20 rounded-lg tracking-tight"
                     />
                   </div>
 
@@ -1025,15 +1025,15 @@ export default function EvidenceLocker() {
                                 [{log.timestamp.toLocaleTimeString()}]
                               </span>
                               <div className="flex items-center gap-2 shrink-0">
-                                <Shield className="h-2.5 w-2.5 text-emerald-500/30" />
-                                <span className="text-emerald-500/60 font-bold uppercase tracking-tight">System</span>
+                                <Shield className="h-2.5 w-2.5 text-white/25" />
+                                <span className="text-white/60 font-bold uppercase tracking-tight">System</span>
                               </div>
                               <span className={cn("flex-1 break-words leading-relaxed", getDocLogColor(log.type))}>
                                 <span className="mr-2 opacity-50">{">>"}</span>
                                 {showDevLogs ? log.message : (log.storyMessage || log.message)}
 
                                 {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
-                                  <span className="ml-2 text-emerald-500 bg-emerald-500/10 px-1 border border-emerald-500/20 rounded-sm font-bold">
+                                  <span className="ml-2 text-white/80 bg-white/10 px-1 border border-white/15 rounded-sm font-bold">
                                     +${log.moneyImpact.toLocaleString()}
                                   </span>
                                 )}
@@ -1054,7 +1054,7 @@ export default function EvidenceLocker() {
                           </div>
                         ))}
                         {loading && (
-                          <div className="flex items-center gap-4 text-emerald-500/40 animate-pulse mt-1 px-1">
+                          <div className="flex items-center gap-4 text-white/40 animate-pulse mt-1 px-1">
                             <span className="text-white/10 shrink-0 select-none tabular-nums">[{new Date().toLocaleTimeString()}]</span>
                             <div className="flex items-center gap-2">
                               <Loader2 className="h-2.5 w-2.5 animate-spin" />
@@ -1070,19 +1070,19 @@ export default function EvidenceLocker() {
 
               {/* Ingestion Node - Dropzone */}
               <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl mb-12 relative p-10">
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30 rounded-tl-xl" />
-                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-emerald-500/30 rounded-tr-xl" />
+                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-white/15 rounded-tl-xl" />
+                <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-white/15 rounded-tr-xl" />
 
                 <div
                   className={cn(
                     "border border-dashed transition-all duration-300 rounded-xl p-12 text-center group relative overflow-hidden",
-                    dragActive ? "border-emerald-500/50 bg-emerald-500/[0.02]" : "border-white/10 hover:border-white/20 bg-white/[0.01]"
+                    dragActive ? "border-white/25 bg-white/[0.04]" : "border-white/10 hover:border-white/20 bg-white/[0.01]"
                   )}
                   onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
                 >
-                  <div className="absolute inset-0 bg-emerald-500/[0.01] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-emerald-500" : "text-white/10 group-hover:text-white/20")} />
+                  <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-white/80" : "text-white/10 group-hover:text-white/20")} />
                   <h3 className="text-sm font-sans font-bold text-white mb-2 uppercase tracking-tight">Document Ingestion</h3>
                   <p className="text-[10px] text-white/20 font-sans font-bold mb-8 uppercase tracking-tight">
                     Supported types: PDF, JPG, PNG
@@ -1090,7 +1090,7 @@ export default function EvidenceLocker() {
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
-                      className="group relative px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 transition-all rounded-lg overflow-hidden"
+                      className="group relative px-6 py-2.5 bg-white hover:bg-white/90 transition-all rounded-lg overflow-hidden"
                       onClick={() => document.getElementById('doc-file-input')?.click()}
                     >
                       <div className="relative flex items-center gap-2">
@@ -1109,7 +1109,7 @@ export default function EvidenceLocker() {
                         <Mail className="w-3.5 h-3.5" />
                         <span className="text-[10px] font-sans font-bold uppercase tracking-tight">store@invoices.margin.app</span>
                       </div>
-                      <Link to="/integrations-hub" className="text-[10px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-tight transition-colors">
+                      <Link to="/integrations-hub" className="text-[10px] font-sans font-bold text-white/50 hover:text-white uppercase tracking-tight transition-colors">
                         Connect sources {">>"}
                       </Link>
                     </div>
@@ -1126,7 +1126,7 @@ export default function EvidenceLocker() {
                     <div className="flex items-center gap-3 mt-1.5">
                       <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">{sorted.length} documents</span>
                       <div className="h-1.5 w-[1px] bg-white/10" />
-                      <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">AI Analysis Enabled</span>
+                      <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">AI Analysis Enabled</span>
                     </div>
                   </div>
 
@@ -1137,14 +1137,14 @@ export default function EvidenceLocker() {
                         placeholder="Search documents..."
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
-                        className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-sans font-bold pl-9 focus:border-emerald-500/30 transition-all rounded-lg placeholder:text-white/10 tracking-tight"
+                        className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-sans font-bold pl-9 focus:border-white/20 transition-all rounded-lg placeholder:text-white/10 tracking-tight"
                       />
                     </div>
 
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
+                      className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all uppercase tracking-tight rounded-lg"
                       onClick={exportCsv}
                     >
                       <Download className="mr-2 h-3.5 w-3.5" />
@@ -1169,8 +1169,8 @@ export default function EvidenceLocker() {
                   {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                       <div className="relative flex h-4 w-4 mb-6">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
-                        <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500/40"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-white/35"></span>
                       </div>
                       <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading documents...</span>
                     </div>
@@ -1195,7 +1195,7 @@ export default function EvidenceLocker() {
                             key={doc.id}
                             className="group relative flex items-center justify-between py-6 px-8 hover:bg-white/[0.02] transition-all duration-300"
                           >
-                            <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-white/60 shadow-[0_0_15px_rgba(255,255,255,0.18)] opacity-0 group-hover:opacity-100 transition-opacity" />
 
                             <div className="flex items-start gap-6 flex-1 pr-12">
                               <div className="mt-1.5 flex flex-col items-center gap-3">
@@ -1208,18 +1208,18 @@ export default function EvidenceLocker() {
                                       return next;
                                     });
                                   }}
-                                  className="h-3.5 w-3.5 border-white/20 rounded-sm data-[state=checked]:bg-emerald-500 data-[state=checked]:border-none transition-colors"
+                                  className="h-3.5 w-3.5 border-white/20 rounded-sm data-[state=checked]:bg-white data-[state=checked]:border-none transition-colors"
                                 />
-                                <Hexagon className="h-3.5 w-3.5 text-white/5 group-hover:text-emerald-500/50 transition-colors" />
+                                <Hexagon className="h-3.5 w-3.5 text-white/5 group-hover:text-white/40 transition-colors" />
                               </div>
 
                               <div className="flex flex-col gap-2 flex-1 min-w-0">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-sm font-bold text-white tracking-tight truncate uppercase group-hover:text-emerald-500/80 transition-colors">
+                                  <span className="text-sm font-bold text-white tracking-tight truncate uppercase group-hover:text-white/80 transition-colors">
                                     {doc.name}
                                   </span>
                                   {doc.matchedClaims && doc.matchedClaims.length > 0 && (
-                                    <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight flex items-center gap-1.5">
+                                    <div className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/75 uppercase tracking-tight flex items-center gap-1.5">
                                       <Link2 className="h-2.5 w-2.5" />
                                       {doc.matchedClaims.length} linked claims
                                     </div>
@@ -1234,12 +1234,12 @@ export default function EvidenceLocker() {
                                   <div className="flex items-center gap-2">
                                     <div className={cn(
                                       "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
-                                      doc.parser_status === 'completed' ? 'bg-emerald-500 shadow-emerald-500/50' :
+                                      doc.parser_status === 'completed' ? 'bg-white/70 shadow-white/20' :
                                         doc.parser_status === 'processing' ? 'bg-amber-500 shadow-amber-500/50 animate-pulse' :
                                           doc.parser_status === 'failed' ? 'bg-rose-500 shadow-rose-500/50' : 'bg-white/10'
                                     )} />
                                     <span className={cn(
-                                      doc.parser_status === 'completed' ? 'text-emerald-500/60' :
+                                      doc.parser_status === 'completed' ? 'text-white/60' :
                                         doc.parser_status === 'failed' ? 'text-rose-500/60' : 'text-white/20'
                                     )}>
                                       {doc.parser_status || "Pending"}
@@ -1265,7 +1265,7 @@ export default function EvidenceLocker() {
                               {doc.matchedClaims && doc.matchedClaims.length > 0 && (
                                 <Link
                                   to={`/case/${doc.matchedClaims[0]}`}
-                                  className="text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-tight flex items-center gap-2"
+                                  className="text-[10px] font-sans font-bold text-white/20 hover:text-white transition-colors uppercase tracking-tight flex items-center gap-2"
                                 >
                                   ID_{doc.matchedClaims[0].slice(0, 8)}
                                   <ArrowRight className="h-3 w-3" />

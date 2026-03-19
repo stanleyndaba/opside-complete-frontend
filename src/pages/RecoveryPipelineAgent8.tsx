@@ -373,6 +373,7 @@ export default function RecoveryPipelineAgent8() {
                               <th className="py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Confidence</th>
                               <th className="py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Status</th>
                               <th className="py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Days Remaining</th>
+                              <th className="py-3 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -386,6 +387,18 @@ export default function RecoveryPipelineAgent8() {
                                 <td className="py-4 text-sm font-sans font-bold text-white">{`${Math.round((result.confidence_score || 0) * 100)}%`}</td>
                                 <td className="py-4 text-sm font-sans font-bold text-white/70 uppercase">{result.status}</td>
                                 <td className="py-4 text-sm font-sans font-bold text-white">{result.days_remaining ?? 'N/A'}</td>
+                                <td className="py-4 text-right">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-3 text-[9px] font-sans font-bold text-white/40 hover:text-white hover:bg-white/5 border border-white/10 rounded-lg uppercase tracking-tight"
+                                    onClick={() => {
+                                      window.location.href = `/app/${activeSlug}/dashboard?tab=discrepancies`;
+                                    }}
+                                  >
+                                    Review
+                                  </Button>
+                                </td>
                               </tr>
                             ))}
                           </tbody>
