@@ -977,6 +977,22 @@ export function Dashboard() {
     : Math.max((recoveredTotal ?? 0) - (pendingRecoveryAmount ?? 0), 0);
   const effectivePendingClaims = pendingClaimsCount ?? submittedClaimsCount ?? 0;
   const hasPendingClaimsData = pendingClaimsCount != null || submittedClaimsCount != null;
+  const detectedOpportunitiesCount = detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
+  const filedClaimsCount = submittedClaimsCount ?? effectivePendingClaims ?? detectionResults.filter((r: any) => r.status === 'filed' || r.status === 'resolved' || r.status === 'converted').length;
+  const approvedClaimsCount = approvedClaimsThisMonth ?? 0;
+  const upcomingPayoutCopy = (() => {
+    if (nextPaymentDate) {
+      const payoutDate = new Date(nextPaymentDate);
+      if (!Number.isNaN(payoutDate.getTime())) {
+        const diffDays = Math.max(1, Math.ceil((payoutDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+        const rangeStart = Math.max(1, diffDays - 1);
+        const rangeEnd = Math.max(rangeStart, diffDays + 1);
+        return `Expected in ${rangeStart}-${rangeEnd} days`;
+      }
+    }
+    if ((nextPaymentAmount ?? 0) > 0) return 'Expected in 3-5 days';
+    return 'Processing reimbursements...';
+  })();
 
   return (
     <div
@@ -1171,10 +1187,8 @@ export function Dashboard() {
                               </div>
                               <div className="mt-4 flex items-center gap-2">
                                 <Clock className="h-3 w-3 text-white/25" />
-                                <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
-                                  {nextPaymentDate
-                                    ? `${new Date(nextPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-                                    : 'EST_TBD'}
+                                <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
+                                  {upcomingPayoutCopy}
                                 </span>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
@@ -1204,11 +1218,13 @@ export function Dashboard() {
                                   formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)
                                 )}
                               </div>
-                              <div className="mt-4 flex items-center gap-2">
-                                <div className="h-1.5 w-1.5 rounded-full bg-white/45 shadow-[0_0_8px_rgba(255,255,255,0.16)]" />
-                                <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                  {effectivePendingClaims} Claims In Progress
-                                </span>
+                              <div className="mt-4 space-y-1.5">
+                                <div className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
+                                  {(pendingRecoveryAmount ?? 0) > 0 ? 'Currently Being Recovered' : 'In Progress'}
+                                </div>
+                                <div className="text-[10px] font-sans font-bold text-white/25 tracking-tight">
+                                  {effectivePendingClaims > 0 ? `Across ${effectivePendingClaims} Active Claims` : 'Monitoring active claims...'}
+                                </div>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
                             </div>
@@ -1229,19 +1245,17 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Success Rate</div>
-                              <div className="flex items-baseline gap-3">
-                                <div className="text-2xl font-sans font-bold text-white tracking-tight">
-                                  {settlementRate === null ? (
-                                    <Skeleton className="h-8 w-16 bg-white/10" />
-                                  ) : (
-                                    `${settlementRate.toFixed(1)}%`
-                                  )}
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Brief</div>
+                              <div className="space-y-2.5">
+                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                  Opportunities Found (Detected): <span className="text-white">{detectedOpportunitiesCount}</span>
                                 </div>
-                                <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px] ${(settlementRate ?? 0) >= 80 ? 'bg-white/60 shadow-white/20' : (settlementRate ?? 0) >= 50 ? 'bg-white/35 shadow-white/15' : 'bg-white/10'}`} />
-                              </div>
-                              <div className="mt-4 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                                Recovery Efficiency
+                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                  Filed: <span className="text-white">{filedClaimsCount}</span>
+                                </div>
+                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                  Approved: <span className="text-white">{approvedClaimsCount}</span>
+                                </div>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
                             </div>

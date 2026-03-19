@@ -234,16 +234,57 @@ export default function RecoveryPipelineAgent8() {
           </div>
 
           {loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-              {Array.from({ length: 4 }).map((_, index) => (
-                <Card key={index} className="bg-[#0c0c0c] border-white/10">
-                  <CardContent className="p-6 space-y-4">
-                    <Skeleton className="h-4 w-24 bg-white/10" />
-                    <Skeleton className="h-8 w-32 bg-white/10" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <Card className="bg-[#0c0c0c] border-white/10">
+              <CardContent className="p-8 space-y-6">
+                <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-5">
+                  <Skeleton className="h-4 w-40 bg-white/10" />
+                  <Skeleton className="h-10 w-28 rounded-lg bg-white/10" />
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
+                  <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                    <Skeleton className="h-12 w-full xl:max-w-xl rounded-xl bg-white/10" />
+                    <div className="flex flex-wrap gap-2">
+                      {Array.from({ length: 4 }).map((_, index) => (
+                        <Skeleton key={index} className="h-9 w-28 rounded-full bg-white/10" />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <Skeleton className="h-11 rounded-xl bg-white/10" />
+                    <Skeleton className="h-11 rounded-xl bg-white/10" />
+                  </div>
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border border-white/10">
+                  <div className="border-b border-white/10 px-6 py-4">
+                    <Skeleton className="h-4 w-64 bg-white/10" />
+                  </div>
+                  <div className="divide-y divide-white/[0.06]">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <div key={index} className="grid grid-cols-[1.8fr_0.8fr_0.5fr_0.35fr] gap-4 px-6 py-5">
+                        <div className="space-y-3">
+                          <Skeleton className="h-4 w-56 bg-white/10" />
+                          <Skeleton className="h-3 w-80 bg-white/10" />
+                          <Skeleton className="h-3 w-36 bg-white/10" />
+                        </div>
+                        <div className="space-y-2">
+                          <Skeleton className="h-3 w-24 bg-white/10" />
+                          <Skeleton className="h-3 w-20 bg-white/10" />
+                        </div>
+                        <div className="space-y-2 text-right">
+                          <Skeleton className="ml-auto h-4 w-20 bg-white/10" />
+                          <Skeleton className="ml-auto h-3 w-16 bg-white/10" />
+                        </div>
+                        <div className="flex items-start justify-end">
+                          <Skeleton className="h-8 w-8 rounded-lg bg-white/10" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {!loading && error && (
