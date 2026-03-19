@@ -5,7 +5,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -119,7 +119,7 @@ export default function RecoveryPipelineAgent8() {
   const [metrics, setMetrics] = useState<Agent8MetricsPayload | null>(null);
   const [detectionResults, setDetectionResults] = useState<Agent3Detection[]>([]);
   const [detectionStats, setDetectionStats] = useState<Agent3StatsPayload['statistics'] | null>(null);
-  const [activeTab, setActiveTab] = useState<'opportunity-queue' | 'recoveries'>('opportunity-queue');
+  const [activeTab, setActiveTab] = useState<'opportunity-queue'>('opportunity-queue');
   const [searchTerm, setSearchTerm] = useState('');
   const [datePreset, setDatePreset] = useState<'30' | '90' | '365' | 'all'>('30');
   const [severityFilter, setSeverityFilter] = useState<'all' | string>('all');
@@ -392,34 +392,13 @@ export default function RecoveryPipelineAgent8() {
           )}
 
           {!loading && !error && recoveries && metrics && detectionStats && (
-            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'opportunity-queue' | 'recoveries')} className="space-y-6">
-              <TabsList className="h-auto rounded-2xl border border-white/10 bg-[#0c0c0c] p-1">
-                <TabsTrigger value="opportunity-queue" className="rounded-xl px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight data-[state=active]:bg-white data-[state=active]:text-black">
-                  Opportunity Queue
-                </TabsTrigger>
-                <TabsTrigger value="recoveries" className="rounded-xl px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight data-[state=active]:bg-white data-[state=active]:text-black">
-                  Recoveries
-                </TabsTrigger>
-              </TabsList>
-
+            <Tabs value={activeTab} className="space-y-6">
               <TabsContent value="opportunity-queue" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                  {detectionCards.map((card) => (
-                    <Card key={card.label} className="bg-[#0c0c0c] border-white/10">
-                      <CardContent className="p-6">
-                        <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight mb-4">{card.label}</div>
-                        <div className="text-2xl font-sans font-bold text-white tracking-tight">{card.value}</div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
                 <Card className="bg-[#0c0c0c] border-white/10">
                   <CardContent className="p-8">
                     <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-5 mb-5">
                       <div>
                         <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Agent 3 Opportunity Queue</div>
-                        <div className="text-sm font-sans font-bold text-white mt-2">Live discrepancy opportunities waiting for review.</div>
                       </div>
                       <Button
                         variant="outline"
@@ -649,56 +628,6 @@ export default function RecoveryPipelineAgent8() {
                         </table>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="recoveries" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                  {cards.map((card) => {
-                    const Icon = card.icon;
-                    return (
-                      <Card key={card.label} className="bg-[#0c0c0c] border-white/10">
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">{card.label}</span>
-                            <Icon className="h-4 w-4 text-white/40" />
-                          </div>
-                          <div className="text-2xl font-sans font-bold text-white tracking-tight">{card.value}</div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-
-                <Card className="bg-[#0c0c0c] border-white/10">
-                  <CardContent className="p-8 space-y-4">
-                    <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Agent 8 Feed Status</div>
-                    <div className="text-sm font-sans font-bold text-white">
-                      {recoveries.message || 'Agent 8 recoveries are available.'}
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 pt-2">
-                      <div>
-                        <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Data Source</div>
-                        <div className="text-sm font-sans font-bold text-white mt-2">{recoveries.dataSource || recoveries.source || 'unknown'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">In Progress Value</div>
-                        <div className="text-sm font-sans font-bold text-white mt-2">
-                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: recoveries.currency }).format(metrics.valueInProgress)}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Approved Count</div>
-                        <div className="text-sm font-sans font-bold text-white mt-2">{metrics.approvedCount ?? 0}</div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Sync Flags</div>
-                        <div className="text-sm font-sans font-bold text-white mt-2">
-                          {recoveries.syncTriggered ? 'sync_triggered' : recoveries.needsSync ? 'needs_sync' : 'healthy'}
-                        </div>
-                      </div>
-                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
