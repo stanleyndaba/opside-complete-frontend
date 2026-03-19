@@ -607,7 +607,7 @@ export default function IntegrationsHub() {
         <Dialog open={showRecoveryReveal} onOpenChange={setShowRecoveryReveal}>
           <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
             <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-sans font-bold tracking-tight">
+              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
                 <Zap className="h-8 w-8 animate-pulse" />
                 Potential Recoveries Found!
               </DialogTitle>
@@ -619,11 +619,11 @@ export default function IntegrationsHub() {
                     <div className="text-6xl font-sans font-bold text-white tracking-tighter">
                       {formatCurrency(recoveryData.totalAmount, recoveryData.currency)}
                     </div>
-                    <div className="text-sm font-sans font-bold text-emerald-500/60 uppercase tracking-tight">
+                    <div className="text-sm font-sans font-bold text-white/35 uppercase tracking-tight">
                       in Potential Amazon Recoveries Identified
                     </div>
                     <div className="mt-4">
-                      <Badge variant="outline" className="bg-emerald-500/10 border-emerald-500/40 text-emerald-400 font-sans font-bold text-[10px] uppercase tracking-tight px-3 py-1">
+                      <Badge variant="outline" className="bg-white/10 border-white/20 text-white/70 font-sans font-bold text-[10px] uppercase tracking-tight px-3 py-1">
                         {recoveryData.claimCount} Distinct Recovery Opportunities
                       </Badge>
                     </div>
@@ -654,7 +654,7 @@ export default function IntegrationsHub() {
               )}
             </div>
             <DialogFooter>
-              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-xs hover:bg-emerald-500 transition-colors">
+              <Button onClick={() => setShowRecoveryReveal(false)} className="w-full h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-xs hover:bg-white/90 transition-colors">
                 Continue to Dashboard
               </Button>
             </DialogFooter>
@@ -665,26 +665,26 @@ export default function IntegrationsHub() {
         <Dialog open={showEvidenceModal} onOpenChange={setShowEvidenceModal}>
           <DialogContent className="max-w-2xl bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
             <DialogHeader>
-              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-emerald-500 font-sans font-bold tracking-tight">
-                <Shield className="h-8 w-8 text-emerald-500" />
+              <DialogTitle className="flex items-center justify-center gap-2 text-2xl text-white font-sans font-bold tracking-tight">
+                <Shield className="h-8 w-8 text-white/70" />
                 Protect Your Revenue
               </DialogTitle>
-              <DialogDescription className="text-center text-gray-400 font-sans font-light tracking-tight italic">
+              <DialogDescription className="text-center text-gray-400 font-sans font-light tracking-tight">
                 Connect your data sources to automate document matching.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-6 py-4">
               <div className="grid grid-cols-2 gap-6">
-                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-emerald-500/30 transition-all group">
-                  <Mail className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-white/20 transition-all group">
+                  <Mail className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-white/70 transition-colors" />
                   <h3 className="font-sans font-bold text-lg mb-2 tracking-tight">Connect Email</h3>
                   <p className="text-xs text-gray-500 mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
                     AUTOMATICALLY SCAN REPOSITORIES FOR INVOICES, POs, AND SHIPMENT CONFIRMATIONS.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                     }}
@@ -693,15 +693,15 @@ export default function IntegrationsHub() {
                   </Button>
                 </div>
 
-                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-emerald-500/30 transition-all group">
-                  <Cloud className="h-12 w-12 mx-auto mb-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 text-center hover:border-white/20 transition-all group">
+                  <Cloud className="h-12 w-12 mx-auto mb-4 text-white/35 group-hover:text-white/70 transition-colors" />
                   <h3 className="font-sans font-bold text-lg mb-2 tracking-tight">Cloud Storage</h3>
                   <p className="text-xs text-gray-500 mb-6 font-sans font-bold leading-relaxed tracking-tight uppercase">
                     INTEGRATE GOOGLE DRIVE AND DROPBOX TO POOL YOUR BUSINESS DOCUMENTS.
                   </p>
                   <Button
                     variant="outline"
-                    className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
                     }}
@@ -712,7 +712,7 @@ export default function IntegrationsHub() {
               </div>
 
               <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-2 text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">
+                <div className="flex items-center justify-center gap-2 text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
                   <Info className="h-3 w-3" />
                   <span>Evidence increases claim approval rates by 300%</span>
                 </div>
@@ -738,8 +738,8 @@ export default function IntegrationsHub() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-8 bg-emerald-500/50" />
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-500/80">Connections</span>
+                  <div className="h-px w-8 bg-white/20" />
+                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Connections</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-sans font-light text-white mb-4 leading-tight tracking-tight">
                   Integrations
@@ -753,7 +753,7 @@ export default function IntegrationsHub() {
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Global Sync Status</span>
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-white/70 animate-pulse" />
                     <span className="text-sm font-medium text-white tracking-tight">Systems Operational</span>
                   </div>
                 </div>
@@ -762,9 +762,9 @@ export default function IntegrationsHub() {
 
             {/* Restored Unified Search */}
             <div className="max-w-2xl mt-4 relative group">
-              <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-lg group-hover:bg-emerald-500/10 transition-all duration-500" />
-              <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-emerald-500/50 transition-all duration-300">
-                <SearchIcon className="h-4 w-4 text-gray-500 ml-4 group-hover:text-emerald-500 transition-colors" />
+              <div className="absolute inset-0 bg-white/[0.03] rounded-xl blur-lg group-hover:bg-white/[0.05] transition-all duration-500" />
+              <div className="relative flex items-center bg-black/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md focus-within:border-white/20 transition-all duration-300">
+                <SearchIcon className="h-4 w-4 text-gray-500 ml-4 group-hover:text-white/70 transition-colors" />
                 <Input
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -784,9 +784,9 @@ export default function IntegrationsHub() {
           >
             {/* Amazon Command Node */}
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12">
-              <div className="h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/10 p-8 flex flex-col relative group transition-all duration-500 hover:border-emerald-500/30">
+              <div className="h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/10 p-8 flex flex-col relative group transition-all duration-500 hover:border-white/20">
                 <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 transition-opacity">
-                  <Database className="w-12 h-12 text-emerald-500/20 group-hover:text-emerald-500/40 transition-colors" />
+                  <Database className="w-12 h-12 text-white/10 group-hover:text-white/20 transition-colors" />
                 </div>
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
@@ -797,7 +797,7 @@ export default function IntegrationsHub() {
                     </div>
                     <div>
                       <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon SP API</h3>
-                      <p className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">Primary Store Connection</p>
+                      <p className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Primary Store Connection</p>
                     </div>
                   </div>
 
@@ -826,7 +826,7 @@ export default function IntegrationsHub() {
                                 placeholder="Alpha-Store-01"
                                 value={newStoreData.name}
                                 onChange={e => setNewStoreData({ ...newStoreData, name: e.target.value })}
-                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12 font-sans font-bold tracking-tight"
+                                className="bg-white/5 border-white/10 focus:border-white/20 text-white h-12 font-sans font-bold tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
@@ -835,13 +835,13 @@ export default function IntegrationsHub() {
                                 placeholder="A3XXXXXXXXXXXX"
                                 value={newStoreData.seller_id}
                                 onChange={e => setNewStoreData({ ...newStoreData, seller_id: e.target.value })}
-                                className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12 font-sans font-bold tracking-tight"
+                                className="bg-white/5 border-white/10 focus:border-white/20 text-white h-12 font-sans font-bold tracking-tight"
                               />
                             </div>
                             <div className="space-y-2">
                               <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Marketplace Region</label>
                               <select
-                                className="w-full h-12 px-3 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight"
+                                className="w-full h-12 px-3 bg-white/5 border-white/10 rounded-md text-sm border focus:border-white/20 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight"
                                 value={newStoreData.marketplace}
                                 onChange={e => setNewStoreData({ ...newStoreData, marketplace: e.target.value })}
                               >
@@ -863,7 +863,7 @@ export default function IntegrationsHub() {
                           <Button
                             onClick={handleAddStore}
                             disabled={addingStore}
-                            className="bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                            className="bg-white hover:bg-white/90 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                           >
                             {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Add Store"}
                           </Button>
@@ -887,7 +887,7 @@ export default function IntegrationsHub() {
                           toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                         }
                       }}
-                      className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-emerald-500 hover:text-black transition-all duration-300 px-8"
+                      className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
                     >
                       Establish Master Connection
                     </Button>
@@ -897,17 +897,17 @@ export default function IntegrationsHub() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {loadingStores ? (
                     <div className="col-span-full flex justify-center py-12">
-                      <RefreshCw className="w-8 h-8 text-emerald-500/30 animate-spin" />
+                      <RefreshCw className="w-8 h-8 text-white/25 animate-spin" />
                     </div>
                   ) : stores.length > 0 ? (
                     stores.map(store => (
-                      <div key={store.id} className="bg-black/40 border border-white/5 rounded-xl p-5 backdrop-blur-sm relative group/card transition-all duration-300 hover:border-emerald-500/20 hover:bg-white/[0.03]">
+                      <div key={store.id} className="bg-black/40 border border-white/5 rounded-xl p-5 backdrop-blur-sm relative group/card transition-all duration-300 hover:border-white/15 hover:bg-white/[0.03]">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex flex-col">
                             <span className="text-white font-bold text-base mb-1 truncate max-w-[150px] tracking-tight">{store.name}</span>
-                            <span className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">{store.marketplace}</span>
+                            <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">{store.marketplace}</span>
                           </div>
-                          <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                          <div className="h-2 w-2 rounded-full bg-white/70" />
                         </div>
 
                         <div className="flex items-center justify-between pt-4 border-t border-white/5">
@@ -926,7 +926,7 @@ export default function IntegrationsHub() {
                       </div>
                     ))
                   ) : (
-                    <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5 font-sans font-light tracking-tight italic">
+                    <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5 font-sans font-light tracking-tight">
                       <p className="text-gray-500 opacity-50">No store nodes detected. Link a store to begin harvesting.</p>
                     </div>
                   )}
@@ -935,7 +935,7 @@ export default function IntegrationsHub() {
                 <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
                   <div className="flex items-center gap-6">
                     <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
-                    <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-emerald-500/50" /> Encrypted</span>
+                    <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-white/35" /> Encrypted</span>
                   </div>
                   <span className="text-gray-400">Security Signature: {Math.random().toString(16).substring(2, 10).toUpperCase()}</span>
                 </div>
@@ -944,10 +944,10 @@ export default function IntegrationsHub() {
 
             {/* INTEGRATION REQUEST: Can't find what you need? */}
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12 mt-6">
-              <div className="bg-white/[0.01] border border-dashed border-white/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-emerald-500/20 transition-all duration-500">
+              <div className="bg-white/[0.01] border border-dashed border-white/10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 group hover:border-white/20 transition-all duration-500">
                 <div className="flex items-center gap-6 text-center md:text-left">
                   <div className="h-14 w-14 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500">
-                    <Plus className="h-6 w-6 text-gray-400 group-hover:text-emerald-500 transition-colors" />
+                    <Plus className="h-6 w-6 text-gray-400 group-hover:text-white transition-colors" />
                   </div>
                   <div>
                     <h3 className="text-xl font-sans font-bold text-white tracking-tight mb-1">Can't find a specific integration?</h3>
@@ -957,7 +957,7 @@ export default function IntegrationsHub() {
                 <Button
                   onClick={() => setShowRequestForm(true)}
                   variant="ghost"
-                  className="h-12 border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5 text-gray-300 hover:text-emerald-500 font-sans font-bold uppercase tracking-tight text-[10px] px-10 transition-all duration-300"
+                  className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 hover:text-white font-sans font-bold uppercase tracking-tight text-[10px] px-10 transition-all duration-300"
                 >
                   Request Integration Node
                 </Button>
@@ -969,7 +969,7 @@ export default function IntegrationsHub() {
               <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Request Integration Protocol</DialogTitle>
-                  <DialogDescription className="text-gray-400 font-sans font-light tracking-tight italic">
+                  <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
                     Specify the platform or repository you wish to integrate into the matrix.
                   </DialogDescription>
                 </DialogHeader>
@@ -981,7 +981,7 @@ export default function IntegrationsHub() {
                         placeholder="e.g., Shopify, Walmart, NetSuite..."
                         value={requestFormData.platform}
                         onChange={e => setRequestFormData({ ...requestFormData, platform: e.target.value })}
-                        className="bg-white/5 border-white/10 focus:border-emerald-500/50 text-white h-12 font-sans font-bold tracking-tight"
+                        className="bg-white/5 border-white/10 focus:border-white/20 text-white h-12 font-sans font-bold tracking-tight"
                       />
                     </div>
                     <div className="space-y-2">
@@ -990,13 +990,13 @@ export default function IntegrationsHub() {
                         placeholder="What data nodes should we extract?"
                         value={requestFormData.description}
                         onChange={e => setRequestFormData({ ...requestFormData, description: e.target.value })}
-                        className="w-full h-32 px-3 py-2 bg-white/5 border-white/10 rounded-md text-sm border focus:border-emerald-500/50 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight resize-none italic"
+                        className="w-full h-32 px-3 py-2 bg-white/5 border-white/10 rounded-md text-sm border focus:border-white/20 focus:ring-0 outline-none text-white font-sans font-bold tracking-tight resize-none"
                       />
                     </div>
                   </div>
-                  <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
-                    <Info className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                    <p className="text-[10px] text-emerald-500/80 font-sans font-bold leading-relaxed uppercase tracking-tight">
+                  <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 flex items-start gap-3">
+                    <Info className="h-5 w-5 text-white/60 shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-white/55 font-sans font-bold leading-relaxed uppercase tracking-tight">
                       Requesting a node adds it to our development queue. You will be notified via encrypted channel once the protocol is stabilized.
                     </p>
                   </div>
@@ -1015,7 +1015,7 @@ export default function IntegrationsHub() {
                       setShowRequestForm(false);
                       setRequestFormData({ platform: '', description: '' });
                     }}
-                    className="bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    className="bg-white hover:bg-white/90 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                   >
                     Submit Request
                   </Button>
@@ -1026,7 +1026,7 @@ export default function IntegrationsHub() {
             {/* Harvesting Nodes Title */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-8 mb-4">
               <div className="flex items-center gap-3">
-                <div className="h-px w-8 bg-emerald-500/30" />
+                <div className="h-px w-8 bg-white/20" />
                 <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Secondary Harvesting Nodes</h3>
               </div>
             </motion.div>
@@ -1037,7 +1037,7 @@ export default function IntegrationsHub() {
                 const providerMeta = {
                   gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
                   outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
-                  gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+                  gdrive: { name: 'Google Drive', icon: '/gd.png', color: 'bg-white/5', border: 'border-white/10' },
                   dropbox: { name: 'Dropbox', icon: '/Dropbox_Icon.svg.png', color: 'bg-blue-600/10', border: 'border-blue-600/20' },
                   slack: { name: 'Slack', icon: '/slack-icon-2019.png', color: 'bg-purple-500/10', border: 'border-purple-500/20' },
                   adobe_sign: { name: 'Adobe Sign', icon: '/dobe.png', color: 'bg-red-600/10', border: 'border-red-600/20' },
@@ -1079,12 +1079,12 @@ export default function IntegrationsHub() {
 
                 return (
                   <motion.div key={p} variants={itemVariants} className="flex-shrink-0 w-[300px]">
-                    <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-emerald-500/20' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
+                    <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-white/15' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
                       <div className="flex items-start justify-between mb-6">
                         <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
                           <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
                         </div>
-                        <div className={`h-2 w-2 rounded-full ${connected ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gray-700'}`} />
+                        <div className={`h-2 w-2 rounded-full ${connected ? 'bg-white/70 animate-pulse' : 'bg-gray-700'}`} />
                       </div>
 
                       <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-1">{meta.name}</h4>
@@ -1119,7 +1119,7 @@ export default function IntegrationsHub() {
                               onClick={() => handleConnectDocSource(p)}
                               disabled={providerLoading === p}
                             >
-                              {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-emerald-500" /> Connect</>}
+                              {providerLoading === p ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <><Link2 className="w-3.5 h-3.5 text-white/70" /> Connect</>}
                             </Button>
                           </div>
                         )}
@@ -1133,7 +1133,7 @@ export default function IntegrationsHub() {
             {/* Logic Overrides Section */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
               <div className="flex items-center gap-3">
-                <div className="h-px w-8 bg-emerald-500/30" />
+                <div className="h-px w-8 bg-white/20" />
                 <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Autonomous Logic Overrides</h3>
               </div>
             </motion.div>
@@ -1141,8 +1141,8 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-8">
               <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8">
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                    <Shield className="h-5 w-5 text-emerald-500" />
+                  <div className="h-10 w-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
+                    <Shield className="h-5 w-5 text-white/60" />
                   </div>
                   <div>
                     <h4 className="text-lg font-sans font-bold text-white tracking-tight">Harvesting Parameters</h4>
@@ -1152,7 +1152,7 @@ export default function IntegrationsHub() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight">Target Sender Patterns</label>
+                    <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Target Sender Patterns</label>
                     <Input
                       value={filters.senderPatterns.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
@@ -1160,7 +1160,7 @@ export default function IntegrationsHub() {
                     />
                   </div>
                   <div className="space-y-4">
-                    <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight">Subject Scopes</label>
+                    <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Subject Scopes</label>
                     <Input
                       value={filters.subjectKeywords.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
@@ -1170,13 +1170,13 @@ export default function IntegrationsHub() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5">
-                  <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight mb-6 block">Artifact Class Selection</label>
+                  <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight mb-6 block">Artifact Class Selection</label>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {Object.entries(filters.fileTypes).map(([type, enabled]) => (
                       <button
                         key={type}
                         onClick={() => setFilters(f => ({ ...f, fileTypes: { ...f.fileTypes, [type]: !enabled } }))}
-                        className={`p-4 rounded-xl border font-sans font-bold text-[10px] uppercase tracking-tight transition-all duration-300 ${enabled ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/5 text-gray-500 hover:border-white/10'}`}
+                        className={`p-4 rounded-xl border font-sans font-bold text-[10px] uppercase tracking-tight transition-all duration-300 ${enabled ? 'bg-white/10 border-white/20 text-white' : 'bg-white/5 border-white/5 text-gray-500 hover:border-white/10'}`}
                       >
                         {type}
                       </button>
@@ -1185,7 +1185,7 @@ export default function IntegrationsHub() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5">
-                  <label className="text-[10px] font-sans font-bold text-emerald-500/70 uppercase tracking-tight mb-3 block">Exclusion Rules</label>
+                  <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight mb-3 block">Exclusion Rules</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Exclude Senders</label>
@@ -1217,7 +1217,7 @@ export default function IntegrationsHub() {
                       setSavingFilters(false);
                     }}
                     disabled={savingFilters}
-                    className="h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold uppercase tracking-tight text-[10px] px-10"
+                    className="h-12 bg-white hover:bg-white/90 text-black font-sans font-bold uppercase tracking-tight text-[10px] px-10"
                   >
                     {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Commit Changes"}
                   </Button>
@@ -1228,8 +1228,8 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-4">
               <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8 h-full flex flex-col">
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                    <RefreshCw className="h-5 w-5 text-emerald-500" />
+                  <div className="h-10 w-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
+                    <RefreshCw className="h-5 w-5 text-white/60" />
                   </div>
                   <div>
                     <h4 className="text-lg font-sans font-bold text-white tracking-tight">Temporal Sync</h4>
@@ -1255,11 +1255,11 @@ export default function IntegrationsHub() {
                         }
                         setUpdatingSchedule(false);
                       }}
-                      className={`w-full p-4 rounded-xl border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-white/5 border-white/5 hover:border-white/10'}`}
+                      className={`w-full p-4 rounded-xl border text-left transition-all duration-300 ${schedule === opt.value ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5 hover:border-white/10'}`}
                     >
                       <div className="flex items-center justify-between">
                         <span className={`text-sm font-bold tracking-tight ${schedule === opt.value ? 'text-white' : 'text-gray-400'}`}>{opt.label}</span>
-                        {schedule === opt.value && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                        {schedule === opt.value && <CheckCircle2 className="w-4 h-4 text-white/70" />}
                       </div>
                     </button>
                   ))}
@@ -1279,9 +1279,9 @@ export default function IntegrationsHub() {
                         if (r.ok) setAutoCollect(next);
                         setUpdatingAutoCollect(false);
                       }}
-                      className={`h-10 w-20 rounded-full border transition-all duration-500 relative ${autoCollect ? 'bg-emerald-500/20 border-emerald-500/50' : 'bg-white/5 border-white/10'}`}
+                      className={`h-10 w-20 rounded-full border transition-all duration-500 relative ${autoCollect ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/10'}`}
                     >
-                      <div className={`absolute top-1 bottom-1 w-8 rounded-full transition-all duration-500 ${autoCollect ? 'right-1 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'left-1 bg-gray-600'}`} />
+                      <div className={`absolute top-1 bottom-1 w-8 rounded-full transition-all duration-500 ${autoCollect ? 'right-1 bg-white' : 'left-1 bg-gray-600'}`} />
                     </button>
                   </div>
                 </div>
@@ -1291,7 +1291,7 @@ export default function IntegrationsHub() {
             {/* Ingestion Trigger */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12">
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-emerald-700 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-white/15 to-white/5 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
                 <button
                   onClick={async () => {
                     setIngestingAll(true);
@@ -1300,10 +1300,10 @@ export default function IntegrationsHub() {
                     setIngestingAll(false);
                   }}
                   disabled={ingestingAll}
-                  className="relative w-full h-32 bg-black rounded-2xl border border-white/10 flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-emerald-500/50"
+                  className="relative w-full h-32 bg-black rounded-2xl border border-white/10 flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-white/20"
                 >
                   {ingestingAll ? (
-                    <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin" />
+                    <RefreshCw className="w-10 h-10 text-white/70 animate-spin" />
                   ) : (
                     <>
                       <div className="text-left">
@@ -1328,7 +1328,7 @@ export default function IntegrationsHub() {
               <div className="flex flex-col">
                 <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Grid Uptime</span>
                 <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-white/70" />
                   <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">99.998%</span>
                 </div>
               </div>
@@ -1343,11 +1343,11 @@ export default function IntegrationsHub() {
             </div>
 
             <div className="flex items-center gap-6">
-              <button onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/evidence-locker'))} className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-emerald-500 transition-colors">
+              <button onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/evidence-locker'))} className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white transition-colors">
                 Evidence Locker
               </button>
               <div className="h-4 w-px bg-white/5" />
-              <button className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-emerald-500 transition-colors">
+              <button className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white transition-colors">
                 Terminal Protocols
               </button>
             </div>

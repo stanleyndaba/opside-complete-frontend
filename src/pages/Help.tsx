@@ -1,56 +1,66 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Search, Mail, Calendar, BookOpen, Video, Phone, ArrowRight, MessageSquare, Shield, Clock, Zap, Search as SearchIcon, ChevronRight, LifeBuoy } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-// FAQ data - Simplified language
 const faqs = [
   {
     id: '1',
     question: 'How do you calculate the service fee?',
-    answer: 'We only charge a 20% fee on what we actually recover for you. If we don\'t find any funds, you don\'t pay a cent. There are no monthly subscriptions or hidden costs.'
+    answer: "We charge a 20% fee only on funds that are actually recovered. If nothing is recovered, there is no fee.",
   },
   {
     id: '2',
-    question: 'Is it safe to link my store?',
-    answer: 'Yes, absolutely. We use a secure connection with restricted access that only lets us view data needed for recoveries. We can\'t change your prices, place orders, or see any of your private financial details.'
+    question: 'Is it safe to connect my store?',
+    answer: 'Yes. The connection is restricted to the data required for recoveries and monitoring. It does not allow store operations like changing listings or placing orders.',
   },
   {
     id: '3',
-    question: 'How long does it take to get my money back?',
-    answer: 'Most requests are completed within 2 to 3 weeks. You\'ll see updates as things progress, and the funds are paid directly into your account.'
+    question: 'How long do recoveries usually take?',
+    answer: 'Most recovery requests resolve within two to three weeks, depending on the claim type and Amazon processing time.',
   },
   {
     id: '4',
-    question: 'Where can I see my history?',
-    answer: 'You can find everything in your sidebar. Click on "Settings" then "Billing" to see your past statements and recoveries.'
+    question: 'Where can I see billing and payout history?',
+    answer: 'Use the Billing page for invoices and the finance pages in the sidebar for payout and history tracking.',
   },
   {
     id: '5',
-    question: 'What kinds of issues do you find?',
-    answer: 'Our systems look for lost inventory, warehouse damage, shipping mistakes, and overcharges. We essentially check everything to make sure you\'re not missing out on revenue.'
+    question: 'What issue types do you monitor?',
+    answer: 'The platform tracks inventory loss, warehouse damage, inbound discrepancies, refunds without return, fee anomalies, and related reimbursement gaps.',
   },
   {
     id: '6',
-    question: 'Do I need to manage the claims myself?',
-    answer: 'No, we handle the entire process from start to finish. Once your store is connected, we monitor it daily and handle all the paperwork for you.'
-  }
+    question: 'Do I need to file claims manually?',
+    answer: 'No. The platform is designed to monitor opportunities and support the filing workflow for you once the required evidence and account setup are in place.',
+  },
 ];
 
-// Getting started steps - Simplified language
-const gettingStartedSteps = [
-  { step: 1, title: 'Link your store', time: '2 min', description: 'Connect your store to start the audit.' },
-  { step: 2, title: 'Check your dashboard', time: '3 min', description: 'See your recovery potential in real-time.' },
-  { step: 3, title: 'View your claims', time: '2 min', description: 'Track every dollar we find for you.' },
-  { step: 4, title: 'Set up alerts', time: '1 min', description: 'Get notified when we find new funds.' }
+const supportLanes = [
+  {
+    label: 'Product Support',
+    detail: 'Dashboard access, broken pages, runtime errors, and onboarding blockers.',
+  },
+  {
+    label: 'Billing Questions',
+    detail: 'Invoices, fees, payout timing, and commission reconciliation.',
+  },
+  {
+    label: 'Claim Support',
+    detail: 'Discrepancies, evidence workflow, filing state, and recovery follow-up.',
+  },
+];
+
+const contactStandards = [
+  'Response target: within one business day',
+  'Use the form for account-specific help',
+  'Use email for operational follow-ups and attachments',
 ];
 
 export default function Help() {
@@ -59,200 +69,221 @@ export default function Help() {
     name: '',
     sellerId: '',
     category: '',
-    message: ''
+    message: '',
   });
   const { toast } = useToast();
 
-  const filteredFaqs = faqs.filter(faq =>
-    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredFaqs = useMemo(
+    () =>
+      faqs.filter((faq) => {
+        const query = searchTerm.trim().toLowerCase();
+        if (!query) return true;
+        return faq.question.toLowerCase().includes(query) || faq.answer.toLowerCase().includes(query);
+      }),
+    [searchTerm]
   );
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!contactForm.name || !contactForm.sellerId || !contactForm.category || !contactForm.message) {
       toast({
-        title: "Please fill in all fields",
-        description: "We need these details to help you out.",
-        variant: "destructive"
+        title: 'Please fill in all fields',
+        description: 'We need complete context before routing your request.',
+        variant: 'destructive',
       });
       return;
     }
+
     toast({
-      title: "Request submitted",
-      description: "Our team will reach out to you shortly.",
+      title: 'Request submitted',
+      description: 'Your request has been recorded. Support will follow up shortly.',
     });
+
     setContactForm({ name: '', sellerId: '', category: '', message: '' });
   };
 
   return (
-    <PageLayout title="Support and Requests" midnight>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
-        {/* Aesthetic Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.06),transparent_70%)] pointer-events-none" />
-        <div className="fixed inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+    <PageLayout title="Help" midnight>
+      <div className="relative min-h-screen overflow-hidden bg-[#050505]">
+        <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="relative z-10 container max-w-6xl mx-auto px-6 py-12">
-          {/* Header Section */}
-          <motion.header
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-16"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <LifeBuoy className="h-5 w-5 text-emerald-500" />
-              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-500/80">Support and Requests</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-sans font-bold text-white mb-6 tracking-tight">
-              How can we <span className="text-white/40">help you today?</span>
+        <div className="relative max-w-7xl mx-auto px-8 py-12">
+          <div className="border-b border-white/10 pb-10 mb-10">
+            <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Support Console</div>
+            <h1 className="mt-2 text-4xl md:text-5xl font-light font-sans text-white tracking-tight">
+              Help <span className="text-white/40">and guidance</span>
             </h1>
-            <p className="text-gray-400 max-w-2xl text-lg leading-relaxed font-sans font-bold italic tracking-tight">
-              Whether you have a question about your account or need help with a specific claim, our team is here to support your business.
+            <p className="mt-4 max-w-3xl text-sm md:text-base font-sans font-bold text-white/45 leading-relaxed tracking-tight">
+              Use this page to find operational answers, route account issues, and contact the Margin Finance team with the right context.
             </p>
-          </motion.header>
-
-          {/* Search Bar */}
-          <div className="relative mb-16 max-w-2xl">
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500 group-focus-within:text-emerald-500 transition-colors" />
-              <Input
-                placeholder="Search for answers..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 py-6 h-14 text-sm border-white/5 bg-white/[0.02] focus:bg-white/[0.05] focus:border-emerald-500/30 text-white rounded-2xl transition-all"
-              />
-            </div>
           </div>
 
-          <div className="flex flex-col gap-12">
-            {/* FAQs Section */}
-            <section className="w-full">
-              <h2 className="text-xs font-sans font-bold uppercase tracking-tight text-gray-500 mb-8 flex items-center gap-3">
-                <div className="h-px w-8 bg-gray-500/30" />
-                Common Questions
-              </h2>
-              <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden backdrop-blur-sm">
-                <Accordion type="single" collapsible className="w-full">
-                  {filteredFaqs.map((faq, index) => (
-                    <AccordionItem
-                      key={faq.id}
-                      value={faq.id}
-                      className={cn(
-                        "px-6 border-white/5 transition-all hover:bg-white/[0.01]",
-                        index !== filteredFaqs.length - 1 ? 'border-b' : 'border-0'
-                      )}
-                    >
-                      <AccordionTrigger className="py-6 text-left hover:no-underline text-sm font-medium text-white/80 hover:text-white transition-colors">
-                        {faq.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="pb-6 text-sm text-gray-400 leading-relaxed font-sans font-bold tracking-tight">
-                        {faq.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-                {filteredFaqs.length === 0 && (
-                  <div className="text-center py-12 text-gray-500 italic font-sans font-bold tracking-tight">
-                    We couldn't find any results matching your search.
-                  </div>
-                )}
-              </div>
-            </section>
-
-
-            {/* Reach Out Section */}
-            <section className="w-full">
-              <h2 className="text-xs font-sans font-bold uppercase tracking-tight text-gray-500 mb-8 flex items-center gap-3">
-                <div className="h-px w-8 bg-gray-500/30" />
-                Reach Out
-              </h2>
-
-              <div className="bg-[#0c0c0c] border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-[0.03] transition-opacity">
-                  <Mail className="h-24 w-24 text-white" />
+          <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
+            <section className="space-y-8">
+              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
+                <div className="border-b border-white/10 px-8 py-6">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Knowledge Base</div>
+                  <div className="mt-2 text-sm font-sans font-bold text-white">Search common operational questions.</div>
                 </div>
 
-                <form onSubmit={handleContactSubmit} className="space-y-6 relative z-10 max-w-2xl">
-                  <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-8">
+                  <div className="relative mb-8">
+                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
+                    <Input
+                      placeholder="Search for an answer"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="h-12 rounded-2xl border-white/10 bg-white/[0.03] pl-11 pr-4 text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
+                    />
+                  </div>
+
+                  <Accordion type="single" collapsible className="w-full space-y-3">
+                    {filteredFaqs.map((faq) => (
+                      <AccordionItem key={faq.id} value={faq.id} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5">
+                        <AccordionTrigger className="py-5 text-left text-sm font-sans font-bold text-white hover:no-underline">
+                          {faq.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="pb-5 text-sm font-sans font-bold text-white/45 leading-relaxed">
+                          {faq.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+
+                  {filteredFaqs.length === 0 && (
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-8 text-center text-sm font-sans font-bold text-white/35">
+                      No help articles matched that search.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
+                <div className="border-b border-white/10 px-8 py-6">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Request</div>
+                  <div className="mt-2 text-sm font-sans font-bold text-white">Send the team a structured issue report.</div>
+                </div>
+
+                <form onSubmit={handleContactSubmit} className="p-8 space-y-6">
+                  <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">Your Name</Label>
+                      <Label htmlFor="name" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                        Your Name
+                      </Label>
                       <Input
                         id="name"
                         value={contactForm.name}
                         onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                         placeholder="Name"
-                        className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:border-emerald-500/30"
+                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="sellerId" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">Store Name or ID</Label>
+                      <Label htmlFor="sellerId" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                        Store Name or ID
+                      </Label>
                       <Input
                         id="sellerId"
                         value={contactForm.sellerId}
                         onChange={(e) => setContactForm({ ...contactForm, sellerId: e.target.value })}
-                        placeholder="Store Name"
-                        className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:border-emerald-500/30"
+                        placeholder="Store or tenant reference"
+                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="category" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">How can we help?</Label>
+                    <Label htmlFor="category" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                      Topic
+                    </Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                      <SelectTrigger className="bg-white/[0.02] border-white/5 h-12 text-sm text-white rounded-xl focus:ring-0 focus:border-emerald-500/30">
-                        <SelectValue placeholder="Select a topic..." />
+                      <SelectTrigger className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white focus:ring-0 focus:border-white/20">
+                        <SelectValue placeholder="Select a topic" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#0c0c0c] border-white/10 text-white rounded-xl">
-                        <SelectItem value="billing">Billing & Payments</SelectItem>
-                        <SelectItem value="technical">App Support</SelectItem>
-                        <SelectItem value="account">Manage My Account</SelectItem>
-                        <SelectItem value="recovery">Help With a Claim</SelectItem>
-                        <SelectItem value="general">Other Questions</SelectItem>
+                      <SelectContent className="rounded-2xl border-white/10 bg-[#0c0c0c] text-white">
+                        <SelectItem value="billing">Billing and invoices</SelectItem>
+                        <SelectItem value="technical">App support</SelectItem>
+                        <SelectItem value="account">Account management</SelectItem>
+                        <SelectItem value="recovery">Claim and recovery support</SelectItem>
+                        <SelectItem value="general">General question</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 ml-1">Tell us more</Label>
+                    <Label htmlFor="message" className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                      Message
+                    </Label>
                     <Textarea
                       id="message"
                       value={contactForm.message}
                       onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                      placeholder="Type your message here..."
-                      rows={4}
-                      className="bg-white/[0.02] border-white/5 text-sm text-white rounded-xl focus:border-emerald-500/30 resize-none"
+                      placeholder="Describe the issue, page, workflow, or claim context."
+                      rows={6}
+                      className="resize-none rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans font-bold text-white placeholder:text-white/15 focus:border-white/20"
                     />
                   </div>
 
-                  <Button type="submit" className="w-full md:w-auto px-12 h-12 bg-emerald-500 hover:bg-emerald-400 text-black font-sans font-bold text-xs uppercase tracking-tight transition-all rounded-xl">
-                    Submit Request
+                  <Button type="submit" className="h-12 rounded-2xl border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[11px] uppercase tracking-tight px-8">
+                    Submit Support Request
                   </Button>
                 </form>
               </div>
+            </section>
 
-              {/* Secondary Contact Info */}
-              <div className="mt-8 grid md:grid-cols-2 gap-4 max-w-2xl">
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
-                  <div className="h-10 w-10 shrink-0 bg-white/5 rounded-xl flex items-center justify-center">
-                    <Mail className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
-                  </div>
-                  <div>
-                    <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Email Support</span>
-                    <span className="text-[11px] text-white/60 font-sans font-bold tracking-tight">support@margin-finance.com</span>
-                  </div>
+            <aside className="space-y-8">
+              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
+                <div className="border-b border-white/10 px-8 py-6">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Lanes</div>
+                  <div className="mt-2 text-sm font-sans font-bold text-white">What each contact path is best for.</div>
                 </div>
-                <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
-                  <div className="h-10 w-10 shrink-0 bg-white/5 rounded-xl flex items-center justify-center">
-                    <MessageSquare className="h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors" />
+                <div className="p-8 space-y-4">
+                  {supportLanes.map((lane) => (
+                    <div key={lane.label} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{lane.label}</div>
+                      <div className="mt-2 text-sm font-sans font-bold text-white/60 leading-relaxed">{lane.detail}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
+                <div className="border-b border-white/10 px-8 py-6">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Direct Contact</div>
+                  <div className="mt-2 text-sm font-sans font-bold text-white">Use this channel for support follow-up.</div>
+                </div>
+                <div className="p-8 space-y-5">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Email</div>
+                    <a
+                      href="mailto:usersupport@margin-finance.com"
+                      className="mt-2 block text-sm font-sans font-bold text-white hover:text-white/80 transition-colors break-all"
+                    >
+                      usersupport@margin-finance.com
+                    </a>
                   </div>
-                  <div>
-                    <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Response Time</span>
-                    <span className="text-[11px] text-white/60 font-sans font-bold tracking-tight">12 Minutes</span>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Response Standard</div>
+                    <div className="mt-2 text-sm font-sans font-bold text-white/60">Within one business day for standard requests.</div>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5">
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Best Practice</div>
+                    <div className="mt-3 space-y-2">
+                      {contactStandards.map((item) => (
+                        <div key={item} className="text-sm font-sans font-bold text-white/55">
+                          {item}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </section>
+            </aside>
           </div>
         </div>
       </div>

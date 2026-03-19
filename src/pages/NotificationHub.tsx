@@ -3,22 +3,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {
-  DollarSign,
-  CheckCircle,
-  FileText,
-  Users,
-  FileCheck,
-  Shield,
-  TrendingUp,
-  Sparkles,
-  RefreshCw,
-  Loader2,
-  CheckCheck,
-  Search,
-  X,
-  Clock
-} from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
@@ -27,7 +12,6 @@ import { formatDistanceToNow, isAfter, subDays, subHours } from 'date-fns';
 interface Notification {
   id: string;
   type: string;
-  icon: React.ElementType;
   message: string;
   timestamp: string;
   created_at: Date;
@@ -40,23 +24,9 @@ interface NotificationPreference {
   title: string;
   description: string;
   category: string;
-  icon: React.ElementType;
   email: boolean;
   inApp: boolean;
 }
-
-// Map notification type to icon component
-const getNotificationIcon = (type: string): React.ElementType => {
-  const typeLower = type.toLowerCase();
-  if (typeLower.includes('payout') || typeLower.includes('payment') || typeLower.includes('funds')) return DollarSign;
-  if (typeLower.includes('recovery') || typeLower.includes('claim')) return CheckCircle;
-  if (typeLower.includes('document') || typeLower.includes('invoice') || typeLower.includes('file')) return FileCheck;
-  if (typeLower.includes('team') || typeLower.includes('user')) return Users;
-  if (typeLower.includes('security') || typeLower.includes('login')) return Shield;
-  if (typeLower.includes('performance') || typeLower.includes('summary')) return TrendingUp;
-  if (typeLower.includes('update') || typeLower.includes('feature')) return Sparkles;
-  return FileText;
-};
 
 // Format timestamp to relative time
 const formatTimestamp = (createdAt: string): string => {
@@ -87,7 +57,7 @@ export default function NotificationHub() {
   const { toast } = useToast();
 
   const { tenant } = useTenant();
-  const activeSlug = tenant?.slug || 'beta';
+  const activeSlug = tenant?.slug || '';
 
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -110,7 +80,6 @@ export default function NotificationHub() {
 
           if (response.ok && Array.isArray(notifData)) {
             const mappedNotifications: Notification[] = notifData.map((notif: any) => {
-              const icon = getNotificationIcon(notif.type || '');
               const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
               const channels: string[] = ['In-App'];
               if (notif.email_sent || notif.sent_via_email) {
@@ -119,7 +88,6 @@ export default function NotificationHub() {
               return {
                 id: notif.id,
                 type: notif.type || 'general',
-                icon,
                 message: notif.message || notif.title || 'New notification',
                 timestamp,
                 created_at: new Date(notif.created_at || new Date().toISOString()),
@@ -267,7 +235,6 @@ export default function NotificationHub() {
 
       if (response.ok && Array.isArray(notifData)) {
         const mappedNotifications: Notification[] = notifData.map((notif: any) => {
-          const icon = getNotificationIcon(notif.type || '');
           const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
           const channels: string[] = ['In-App'];
           if (notif.email_sent || notif.sent_via_email) {
@@ -276,7 +243,6 @@ export default function NotificationHub() {
           return {
             id: notif.id,
             type: notif.type || 'general',
-            icon,
             message: notif.message || notif.title || 'New notification',
             timestamp,
             created_at: new Date(notif.created_at || new Date().toISOString()),
@@ -303,7 +269,6 @@ export default function NotificationHub() {
       title: 'New Recovery is Guaranteed',
       description: 'When our system files a claim and guarantees its value',
       category: 'Financial Milestones',
-      icon: CheckCircle,
       email: true,
       inApp: true
     },
@@ -312,7 +277,6 @@ export default function NotificationHub() {
       title: 'Payout is Confirmed',
       description: 'When Amazon confirms funds have been disbursed',
       category: 'Financial Milestones',
-      icon: DollarSign,
       email: true,
       inApp: true
     },
@@ -321,7 +285,6 @@ export default function NotificationHub() {
       title: 'New Invoice is Issued',
       description: 'When we bill for our performance fee',
       category: 'Financial Milestones',
-      icon: FileText,
       email: true,
       inApp: true
     },
@@ -330,7 +293,6 @@ export default function NotificationHub() {
       title: 'New Team Member Joins',
       description: 'When an invited user accepts their invitation',
       category: 'Account & Security',
-      icon: Users,
       email: true,
       inApp: true
     },
@@ -339,7 +301,6 @@ export default function NotificationHub() {
       title: 'Document Successfully Processed',
       description: 'Confirmation that uploaded invoice has been verified',
       category: 'Account & Security',
-      icon: FileCheck,
       email: false,
       inApp: true
     },
@@ -348,7 +309,6 @@ export default function NotificationHub() {
       title: 'New Device Logs In',
       description: 'Critical security alert for account access',
       category: 'Account & Security',
-      icon: Shield,
       email: true,
       inApp: true
     },
@@ -357,7 +317,6 @@ export default function NotificationHub() {
       title: 'Monthly Performance Summary',
       description: 'Curated digest of total value delivered',
       category: 'Platform & Performance',
-      icon: TrendingUp,
       email: true,
       inApp: false
     },
@@ -366,7 +325,6 @@ export default function NotificationHub() {
       title: 'Product News & Updates',
       description: 'Alerts about new features and improvements',
       category: 'Platform & Performance',
-      icon: Sparkles,
       email: false,
       inApp: true
     }
@@ -432,54 +390,44 @@ export default function NotificationHub() {
 
   return (
     <PageLayout title="Notifications" midnight>
-      <div className="relative min-h-screen">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      <div className="relative min-h-screen overflow-hidden bg-[#050505]">
+        <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
         <div className="relative max-w-[1600px] mx-auto px-8 py-12">
           {/* Analysis Header */}
           <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
-            <div className="flex items-center gap-3">
-              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-              <h1 className="text-4xl font-light text-white tracking-tight font-sans">Notifications <span className="text-white/40">and settings</span></h1>
-            </div>
+            <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Communication Registry</div>
+            <h1 className="text-4xl font-light text-white tracking-tight font-sans mt-2">Notifications <span className="text-white/40">and settings</span></h1>
             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
               Updates and communication preferences.
             </p>
           </div>
 
           {/* Notification Log */}
-          <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl flex flex-col mb-12" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+          <div className="bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl flex flex-col mb-12" style={{ maxHeight: 'calc(100vh - 300px)' }}>
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between flex-shrink-0">
-              <div className="flex items-center gap-3">
-                <RefreshCw className="h-3 w-3 text-emerald-500/50" />
-                <div>
-                  <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                    History
-                  </h2>
-                  <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">
-                    Your update log
-                  </p>
-                </div>
+              <div>
+                <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                  History
+                </h2>
+                <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">
+                  Your update log
+                </p>
               </div>
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleMarkAllRead}
                   disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                  className="px-3 py-1.5 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-emerald-500/10 hover:text-emerald-500 rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-20 uppercase tracking-tight">
-                  <CheckCheck className="h-3.5 w-3.5" />
+                  className="px-3 py-1.5 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all disabled:opacity-20 uppercase tracking-tight">
                   Mark read
                 </button>
                 <button
                   onClick={handleRefresh}
                   disabled={loading}
-                  className="p-1.5 bg-white/[0.02] border border-white/5 rounded-lg hover:border-emerald-500/30 transition-all text-white/40 hover:text-emerald-500 disabled:opacity-20">
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
-                  ) : (
-                    <RefreshCw className="h-4 w-4" />
-                  )}
+                  className="p-1.5 bg-white/[0.02] border border-white/5 rounded-lg hover:border-white/20 transition-all text-white/40 hover:text-white disabled:opacity-20">
+                  <span className="px-2 text-[10px] font-sans font-bold uppercase tracking-tight">{loading ? 'Loading' : 'Refresh'}</span>
                 </button>
               </div>
             </div>
@@ -494,7 +442,7 @@ export default function NotificationHub() {
                     placeholder="Search updates..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-10 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-emerald-500/30 rounded-lg"
+                    className="pl-10 pr-10 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-white/20 rounded-lg"
                   />
                   {searchQuery && (
                     <button
@@ -509,7 +457,7 @@ export default function NotificationHub() {
                 <div className="flex gap-2">
                   {/* Type Filter */}
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="h-10 w-[130px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-tight">
+                    <SelectTrigger className="h-10 w-[130px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-white/20 rounded-lg uppercase tracking-tight">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
@@ -522,7 +470,7 @@ export default function NotificationHub() {
 
                   {/* Date Filter */}
                   <Select value={dateFilter} onValueChange={setDateFilter}>
-                    <SelectTrigger className="h-10 w-[120px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-tight">
+                    <SelectTrigger className="h-10 w-[120px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-white/20 rounded-lg uppercase tracking-tight">
                       <SelectValue placeholder="Date" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
@@ -535,7 +483,7 @@ export default function NotificationHub() {
 
                   {/* Status Filter */}
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-10 w-[110px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-emerald-500/30 rounded-lg uppercase tracking-tight">
+                    <SelectTrigger className="h-10 w-[110px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-white/20 rounded-lg uppercase tracking-tight">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
@@ -568,7 +516,6 @@ export default function NotificationHub() {
             <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
               {loading && (
                 <div className="text-center py-20">
-                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-emerald-500" />
                   <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading updates...</p>
                 </div>
               )}
@@ -587,7 +534,7 @@ export default function NotificationHub() {
               {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
                 <div className="text-center py-20">
                   <p className="text-[11px] font-sans font-bold text-white/20 mb-4 uppercase tracking-tight">No matching results found.</p>
-                  <button onClick={clearFilters} className="text-[10px] font-sans font-bold text-emerald-500 hover:underline uppercase tracking-tight">
+                  <button onClick={clearFilters} className="text-[10px] font-sans font-bold text-white/60 hover:text-white uppercase tracking-tight">
                     Reset filters
                   </button>
                 </div>
@@ -596,36 +543,26 @@ export default function NotificationHub() {
               {!loading && !error && notifications.length === 0 && (
                 <div className="text-center py-20">
                   <p className="text-[11px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Update log empty.</p>
-                  <p className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight italic">Notifications will appear here as events occur.</p>
+                  <p className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">Notifications will appear here as events occur.</p>
                 </div>
               )}
 
               <div className="space-y-3">
                 {filteredNotifications.map((notification) => {
-                  const IconComponent = notification.icon;
                   return (
                     <div
                       key={notification.id}
                       className={`flex items-start gap-4 p-4 border rounded-2xl transition-all cursor-pointer group/item ${!notification.read
-                        ? 'bg-emerald-500/[0.03] border-emerald-500/20'
+                        ? 'bg-white/[0.04] border-white/15'
                         : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/5 hover:border-white/10'
                         }`}
                       onClick={() => !notification.read && handleMarkAsRead(notification.id)}>
-                      <div className="flex-shrink-0 mt-0.5">
-                        <div className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${!notification.read ? 'bg-emerald-500/20 text-emerald-500' : 'bg-white/5 text-white/40 group-hover/item:text-white'}`}>
-                          <IconComponent className="w-4 h-4" />
-                        </div>
-                      </div>
-
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white mb-1.5 leading-relaxed tracking-tight">
                           {renderNotificationMessage(notification.message)}
                         </p>
                         <div className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="h-3 w-3" />
-                            {notification.timestamp}
-                          </span>
+                          <span>{notification.timestamp}</span>
                           <div className="flex gap-2">
                             {notification.channels.map((channel) => (
                               <span key={channel} className="px-2 py-0.5 border border-white/5 text-white/40 bg-white/[0.03] rounded-sm">{channel}</span>
@@ -635,7 +572,7 @@ export default function NotificationHub() {
                       </div>
 
                       {!notification.read && (
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full flex-shrink-0 mt-2.5 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                        <div className="w-2 h-2 bg-white/70 rounded-full flex-shrink-0 mt-2.5"></div>
                       )}
                     </div>
                   );
@@ -645,18 +582,13 @@ export default function NotificationHub() {
           </div>
 
           {/* Notification Preferences */}
-          <div className="bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
+          <div className="bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
             <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-              <div className="flex items-center gap-3">
-                <Shield className="h-3 w-3 text-emerald-500/50" />
-                <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  Settings
-                </h2>
-              </div>
+              <div className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">Settings</div>
               <div className="flex items-center gap-3 mt-1.5">
                 <span className="text-sm font-sans font-medium text-white tracking-tight uppercase">Preferences</span>
                 <div className="h-1.5 w-[1px] bg-white/10" />
-                <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">Configuration Active</span>
+                <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Configuration Active</span>
               </div>
             </div>
 
@@ -667,27 +599,20 @@ export default function NotificationHub() {
                 return (
                   <div key={category} className="space-y-6">
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-[10px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight">
+                      <h3 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
                         {category}
                       </h3>
-                      <p className="text-xs text-white/40 italic font-sans font-bold uppercase tracking-tight">
-                        {category === 'Financial Milestones' && '// High-signal, essential updates about your money'}
-                        {category === 'Account & Security' && '// Important account and security notifications'}
-                        {category === 'Platform & Performance' && '// Updates about platform features and performance'}
+                      <p className="text-xs text-white/40 font-sans font-bold uppercase tracking-tight">
+                        {category === 'Financial Milestones' && 'High-signal, essential updates about your money'}
+                        {category === 'Account & Security' && 'Important account and security notifications'}
+                        {category === 'Platform & Performance' && 'Updates about platform features and performance'}
                       </p>
                     </div>
 
                     <div className="space-y-4">
                       {categoryPrefs.map((pref) => {
-                        const IconComponent = pref.icon;
                         return (
                           <div key={pref.id} className="flex items-start gap-5 p-5 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors rounded-2xl group/pref">
-                            <div className="flex-shrink-0 mt-1">
-                              <div className="w-10 h-10 bg-white/5 flex items-center justify-center rounded-xl group-hover/pref:bg-emerald-500/10 transition-colors">
-                                <IconComponent className="w-5 h-5 text-white/40 group-hover/pref:text-emerald-500 transition-colors" />
-                              </div>
-                            </div>
-
                             <div className="flex-1 min-w-0">
                               <h4 className="text-sm font-medium text-white mb-1 uppercase tracking-tight font-sans">
                                 {pref.title}
@@ -703,7 +628,7 @@ export default function NotificationHub() {
                                     onCheckedChange={(checked) =>
                                       updatePreference(pref.id, 'email', checked)
                                     }
-                                    className="scale-90 data-[state=checked]:bg-emerald-500"
+                                    className="scale-90 data-[state=checked]:bg-white"
                                   />
                                   <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Email</span>
                                 </div>
@@ -714,7 +639,7 @@ export default function NotificationHub() {
                                     onCheckedChange={(checked) =>
                                       updatePreference(pref.id, 'inApp', checked)
                                     }
-                                    className="scale-90 data-[state=checked]:bg-emerald-500"
+                                    className="scale-90 data-[state=checked]:bg-white"
                                   />
                                   <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">In-App</span>
                                 </div>

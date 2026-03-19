@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
+import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -88,8 +87,6 @@ export function Sidebar({
   const [claimCount, setClaimCount] = useState<number | null>(null);
   const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
-
   // States for referral functionality
   const [showReferralPopup, setShowReferralPopup] = useState(false);
   const [showInviteForm, setShowInviteForm] = useState(false);
@@ -470,16 +467,6 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
-            <DropdownMenuItem
-              onClick={toggleTheme}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4 text-amber-500/50" strokeWidth={1.5} />
-              ) : (
-                <Moon className="h-4 w-4 text-indigo-500/50" strokeWidth={1.5} />
-              )}
-              <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
