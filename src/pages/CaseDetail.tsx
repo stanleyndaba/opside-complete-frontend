@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -158,111 +158,6 @@ const escalationPlaybooks: Record<RejectionReason, EscalationPlaybook> = {
   }
 };
 
-// Mock case data (fallback)
-const mockCaseData: Record<string, any> = {
-  'OPS-12345': {
-    id: 'OPS-12345',
-    title: '5 units of Premium Wireless Headphones lost at FTW1',
-    status: 'Guaranteed' as const,
-    guaranteedAmount: 324.50,
-    expectedPayoutDate: '2025-01-15',
-    createdDate: '2025-01-08',
-    amazonCaseId: undefined,
-    sku: 'WH-PREM-001',
-    productName: 'Premium Wireless Headphones - Noise Cancelling',
-    facility: 'FTW1 - Fort Worth, TX',
-    confidence: 95,
-    unitsLost: 5,
-    unitCost: 64.90,
-    anomaly_type: 'lost_warehouse',
-    safety_audit: {
-      score: 98,
-      last_90_days_filings: 12,
-      risk_of_warning: 'Very Low',
-      verified_by: 'Agent 2: Sync Signal'
-    },
-    evidence: {
-      total_receipts: 100,
-      total_returns: 2,
-      total_adjustments: 3,
-      total_input: 105,
-      total_shipments: 95,
-      total_removals: 5,
-      total_output: 100,
-      calculated_stock: 5,
-      ending_warehouse_balance: 0,
-      discrepancy: 5,
-      snippets: [
-        { label: 'Carrier Receipt', text: 'Delivered: 2024-12-01 | Qty: 100', source: 'FedEx-8923' },
-        { label: 'Ledger Entry', text: 'Adjustment Code M | -5 Units', source: 'Amazon-ILR' }
-      ]
-    },
-    warehouse_history: {
-      occurrence_count: 3,
-      last_occurrence: '2024-12-10',
-      total_value_lost: 985.20
-    },
-    events: [
-      {
-        timestamp: '2025-01-08T12:05:00Z',
-        title: 'Discrepancy Detected',
-        description: 'Smart Inventory Sync detected 5 missing units of SKU WH-PREM-001 at FTW1 warehouse',
-        type: 'detection'
-      },
-      {
-        timestamp: '2025-01-08T12:05:30Z',
-        title: 'Evidence Located',
-        description: 'Evidence Engine found matching cost documentation (Invoice #INV-2024-582)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:06:15Z',
-        title: 'True Value Calculated',
-        description: 'True value calculated and verified: $324.50 (5 units × $64.90 per unit)',
-        type: 'analysis'
-      },
-      {
-        timestamp: '2025-01-08T12:07:22Z',
-        title: 'Claim Draft Generated',
-        description: 'Agent 7 (The Lawyer) generated comprehensive claim documentation with supporting evidence',
-        type: 'generation'
-      },
-      {
-        timestamp: '2025-01-08T12:10:45Z',
-        title: 'Ready for Submission',
-        description: 'Case marked as guaranteed and ready for Amazon submission pending user approval',
-        type: 'update'
-      }
-    ] as CaseEvent[]
-  },
-  'OPS-99999': {
-    id: 'OPS-99999',
-    title: 'Damaged Inbound Shipment (12 Units)',
-    status: 'Rejected' as const,
-    guaranteedAmount: 750.00,
-    createdDate: '2024-11-20',
-    amazonCaseId: '1482930411',
-    sku: 'EL-CAM-V3',
-    anomaly_type: 'damaged_warehouse',
-    rejection_reason: 'Amazon claims the items were damaged prior to arrival at the fulfillment center.',
-    rejection_code: 'inbound_damage',
-    events: [
-      {
-        timestamp: '2024-11-20T10:00:00Z',
-        title: 'Case Filed',
-        description: 'Agent 7 submitted claim to Amazon Seller Central',
-        type: 'update'
-      },
-      {
-        timestamp: '2024-11-22T15:30:00Z',
-        title: 'Claim Denied',
-        description: 'Amazon Investigator rejected the claim citing inadequate inbound photos',
-        type: 'update'
-      }
-    ]
-  }
-};
-
 // Classify rejection reason from status/notes
 const classifyRejection = (status: string, notes?: string): RejectionReason => {
   const text = `${status} ${notes || ''}`.toLowerCase();
@@ -331,23 +226,17 @@ const getEventColor = (type: CaseEvent['type']) => {
   }
 };
 
-// Local helpers to derive confidence/evidence in sandbox
-const stableHash = (s: string): number => {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-  return (h >>> 0);
-};
-const deriveConfidence = (id: string): number => {
-  const v = stableHash(id) % 4900; // 0..4899
-  const n = (v + 500) / 100; // 5.00..53.99
-  const c = Math.min(98, Math.max(50, Math.round(n)));
-  return c; // percent 50..98
-};
-const deriveEvidence = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
-  const v = stableHash(id) % 100;
-  if (v >= 70) return 'Ready';
-  if (v >= 40) return 'Needs Docs';
-  return 'Collecting';
+type ObjectType = 'Detection' | 'Case' | 'Recovery';
+
+const resolveObjectType = (value: any): ObjectType => {
+  if (!value) return 'Case';
+  if (value.actual_payout_amount || value.resolution_amount || value.reconciled_at || value.recovery_status === 'paid') {
+    return 'Recovery';
+  }
+  if (value.filing_status || value.case_number || value.provider_case_id || value.amazonCaseId || value.amazon_case_id || value.provider) {
+    return 'Case';
+  }
+  return 'Detection';
 };
 
 // Get required documents based on claim type
@@ -507,33 +396,43 @@ export default function CaseDetail() {
   const [caseData, setCaseData] = useState<any | null>(passedClaim ? {
     id: passedClaim.id,
     title: passedClaim.details || passedClaim.anomaly_type || 'Claim Details',
-    status: passedClaim.status,
-    guaranteedAmount: passedClaim.guaranteedAmount || passedClaim.estimated_value || 0,
-    expectedPayoutDate: passedClaim.expectedPayoutDate || passedClaim.expected_payout_date,
-    createdDate: passedClaim.created || passedClaim.created_at || passedClaim.discovery_date,
-    sku: passedClaim.sku || 'N/A',
+    status: passedClaim.status || '-',
+    guaranteedAmount: passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
+    expectedPayoutDate: passedClaim.expectedPayoutDate || passedClaim.expected_payout_date || null,
+    createdDate: passedClaim.created || passedClaim.created_at || passedClaim.discovery_date || null,
+    sku: passedClaim.sku || passedClaim.evidence?.sku || '-',
+    asin: passedClaim.asin || passedClaim.evidence?.asin || null,
     productName: passedClaim.details || passedClaim.anomaly_type || 'Unknown Product',
-    // Removed random warehouse picker (trust fix)
-    facility: passedClaim.facility || passedClaim.warehouse || null,
-    // Derive units lost
-    unitsLost: passedClaim.unitsLost || passedClaim.units_lost || Math.max(1, Math.round((passedClaim.estimated_value || passedClaim.guaranteedAmount || 100) / 50)),
-    // Label as verified ONLY if backend specifically confirmed it
-    units_is_verified: passedClaim.units_is_verified || false,
-    // Derive unit cost from estimated value and units
-    unitCost: passedClaim.unitCost || passedClaim.unit_cost || (() => {
-      const value = passedClaim.estimated_value || passedClaim.guaranteedAmount || 100;
-      const units = passedClaim.unitsLost || passedClaim.units_lost || Math.max(1, Math.round(value / 50));
-      return Math.round((value / units) * 100) / 100;
-    })(),
-    confidence: passedClaim.confidence_score ? passedClaim.confidence_score * 100 : undefined,
-    evidenceStatus: undefined,
-    documents: passedClaim.matchedDocs || [],
-    events: [] as any[],
+    facility: passedClaim.facility || passedClaim.warehouse || passedClaim.evidence?.fulfillment_center || null,
+    unitsLost: passedClaim.unitsLost ?? passedClaim.units_lost ?? passedClaim.quantity ?? passedClaim.units ?? null,
+    units_is_verified: passedClaim.units_is_verified === true,
+    unitCost: passedClaim.unitCost ?? passedClaim.unit_cost ?? null,
+    confidence: typeof passedClaim.confidence_score === 'number'
+      ? passedClaim.confidence_score * 100
+      : (typeof passedClaim.confidence === 'number' ? passedClaim.confidence : null),
+    evidenceStatus: passedClaim.evidenceStatus || null,
+    documents: passedClaim.documents || passedClaim.matchedDocs || [],
+    events: passedClaim.events || [],
+    evidence: passedClaim.evidence || {},
+    claim_number: passedClaim.claim_number || passedClaim.evidence?.claim_number || null,
   } : null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
   const [selectedMetric, setSelectedMetric] = useState('payout');
   const [activeTab, setActiveTab] = useState<'RECORD' | 'PROTOCOL'>('RECORD');
+  const [statusFeedUnavailable, setStatusFeedUnavailable] = useState(false);
+
+  const formatDateOrDash = (value?: string | null) => {
+    if (!value) return '-';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return '-';
+    return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const formatCurrencyOrDash = (value?: number | null, currency: string = 'USD') => {
+    if (typeof value !== 'number' || Number.isNaN(value)) return '-';
+    return value.toLocaleString('en-US', { style: 'currency', currency });
+  };
 
   const normalizeStatus = (s?: string): 'Open' | 'In Progress' | 'Approved' | 'Denied' | 'Unknown' => {
     const v = (s || '').toLowerCase();
@@ -549,108 +448,55 @@ export default function CaseDetail() {
     (async () => {
       if (!caseId) return;
       setLoading(true);
-      // Try primary detail endpoint
       const res = await api.getRecoveryDetail(caseId, activeSlug);
       if (!cancelled) {
         if (res.ok && res.data) {
-          // Merge API data with existing data, preserving derived fields
           setCaseData((prev: any) => {
             const apiData = res.data as any;
             const base = prev || passedClaim || {};
-            const estimatedValue = apiData.guaranteedAmount || apiData.estimated_value || base.guaranteedAmount || base.estimated_value || 100;
-            const derivedUnits = Math.max(1, Math.round(estimatedValue / 50));
 
             return {
-              // Keep existing derived data as fallback
               ...base,
-              // Override with API data
               ...apiData,
-              // Ensure key display fields have values (derive if missing)
-              // Ensure key display fields have values (derive if missing)
               id: apiData.id || base.id || caseId,
               title: apiData.title || apiData.details || apiData.anomaly_type || base.title || 'Claim Details',
-              status: apiData.status || base.status,
-              guaranteedAmount: apiData.guaranteedAmount || apiData.estimated_value || base.guaranteedAmount || 0,
-              expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || base.expectedPayoutDate,
-              createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || base.createdDate,
-
-              // Smart merge for product details - prefer API but don't overwrite with "N/A" if base is valid
+              status: apiData.status || apiData.filing_status || base.status || '-',
+              guaranteedAmount: apiData.guaranteedAmount ?? apiData.estimated_value ?? base.guaranteedAmount ?? null,
+              expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || base.expectedPayoutDate || null,
+              createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || base.createdDate || null,
               sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
                 (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku :
-                  (base.sku && base.sku !== 'N/A') ? base.sku : 'N/A',
-
-              asin: apiData.asin || apiData.evidence?.asin || base.asin,
-
+                  (base.sku && base.sku !== 'N/A') ? base.sku : '-',
+              asin: apiData.asin || apiData.evidence?.asin || base.asin || null,
               productName: apiData.productName || apiData.details || apiData.anomaly_type || base.productName || 'Unknown Product',
               facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || base.facility || null,
-              unitsLost: apiData.unitsLost || apiData.units_lost || apiData.evidence?.quantity || base.unitsLost || derivedUnits,
-              units_is_verified: apiData.units_is_verified || (apiData.status === 'Approved' || apiData.status === 'Paid'),
-              unitCost: apiData.unitCost || apiData.unit_cost || base.unitCost || Math.round((estimatedValue / derivedUnits) * 100) / 100,
+              unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? base.unitsLost ?? null,
+              units_is_verified: apiData.units_is_verified === true,
+              unitCost: apiData.unitCost ?? apiData.unit_cost ?? base.unitCost ?? null,
               confidence: typeof apiData.confidence_score === 'number'
                 ? apiData.confidence_score * 100
-                : (typeof apiData.confidence === 'number' ? apiData.confidence : base.confidence),
-              evidenceStatus: apiData.evidenceStatus || base.evidenceStatus,
+                : (typeof apiData.confidence === 'number' ? apiData.confidence : base.confidence ?? null),
+              evidenceStatus: apiData.evidenceStatus || base.evidenceStatus || null,
               documents: apiData.documents || base.documents || [],
               events: apiData.events || base.events || [],
-              // Pass through evidence for detail access
               evidence: { ...(base.evidence || {}), ...(apiData.evidence || {}) },
-              // Human-readable claim number
-              claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number,
+              claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number || null,
             };
           });
-          // Initialize matchedDocs from API response if documents exist
           if (Array.isArray((res.data as any)?.documents) && (res.data as any).documents.length > 0) {
             setMatchedDocs((res.data as any).documents);
           }
+          setStatusFeedUnavailable(false);
           setError(null);
         } else {
-          // Fallback: look up claim from list, then synthesize details (do not clear existing data)
-          try {
-            const list = await recoveryApi.getRecoveries(activeSlug).catch(() => [] as any);
-            const row = Array.isArray(list) ? (list as any[]).find((x) => x.id === caseId) : null;
-            if (row) {
-              const estimatedValue = row.guaranteedAmount || row.estimated_value || 100;
-              const derivedUnits = Math.max(1, Math.round(estimatedValue / 50));
-              setCaseData({
-                id: row.id,
-                title: row.details || row.anomaly_type || 'Claim Details',
-                status: row.status,
-                guaranteedAmount: row.guaranteedAmount || row.estimated_value || 0,
-                expectedPayoutDate: row.expectedPayoutDate || row.expected_payout_date,
-                createdDate: row.created || row.created_at || row.discovery_date,
-                sku: row.sku || 'N/A',
-                productName: row.details || row.anomaly_type || 'Unknown Product',
-                // Derive facility deterministically
-                facility: row.facility || row.warehouse || (
-                  ['FTW1 - Fort Worth, TX', 'ONT8 - Moreno Valley, CA', 'BFI4 - Kent, WA', 'MKE1 - Kenosha, WI'][stableHash(row.id || '') % 4]
-                ),
-                unitsLost: row.unitsLost || row.units_lost || derivedUnits,
-                unitCost: row.unitCost || row.unit_cost || Math.round((estimatedValue / derivedUnits) * 100) / 100,
-                confidence: row.confidence_score ? row.confidence_score * 100 : deriveConfidence(row.id),
-                evidenceStatus: deriveEvidence(row.id),
-                documents: row.matchedDocs || [],
-                events: [] as CaseEvent[],
-              });
-              setError(null);
-            } else {
-              // Keep existing caseData (from link state) if mock not available
-              if ((mockCaseData as any)[caseId]) {
-                setCaseData((mockCaseData as any)[caseId]);
-              }
-              setError(res.error || null);
-            }
-          } catch (e: any) {
-            // Keep existing
-            if ((mockCaseData as any)[caseId]) {
-              setCaseData((mockCaseData as any)[caseId]);
-            }
-            setError(res.error || null);
-          }
+          setCaseData(null);
+          setMatchedDocs([]);
+          setError(res.error || 'Case details unavailable');
         }
         setLoading(false);
       }
     })();
-    // Real-time status via SSE with polling fallback
+
     let es: EventSource | null = null;
     try {
       es = new EventSource(`/api/sse/case/${encodeURIComponent(caseId!)}?tenantSlug=${activeSlug}`);
@@ -672,6 +518,7 @@ export default function CaseDetail() {
       if (!caseId) return;
       const statusRes = await api.getRecoveryStatus(caseId, activeSlug);
       if (statusRes.ok && statusRes.data) {
+        setStatusFeedUnavailable(false);
         setCaseData((prev: any) => ({
           ...(prev || {}),
           status: (statusRes.data as any).status ?? prev?.status,
@@ -679,6 +526,12 @@ export default function CaseDetail() {
           amazonCaseId: (statusRes.data as any).amazonCaseId ?? prev?.amazonCaseId,
           events: (statusRes.data as any).events ?? prev?.events,
           progress: (statusRes.data as any).progress ?? prev?.progress,
+        }));
+      } else if (statusRes.status === 404) {
+        setStatusFeedUnavailable(true);
+        setCaseData((prev: any) => ({
+          ...(prev || {}),
+          status: prev?.status || 'Unavailable',
         }));
       }
     }, 15000);
@@ -711,39 +564,44 @@ export default function CaseDetail() {
           }
         }
 
-        // Fallback: try to find documents from getDocuments list
-        const docsRes = await api.getDocuments(activeSlug);
-        const docs = Array.isArray(docsRes) ? docsRes : (docsRes as any)?.data;
-        if (!cancelled && Array.isArray(docs)) {
-          const list = docs.filter((d: any) => {
-            if (Array.isArray(d?.matchedClaims)) return d.matchedClaims.includes(caseId);
-            if (Array.isArray(d?.matched_to)) return d.matched_to.includes(caseId);
-            if (Array.isArray(d?.matches)) return d.matches.some((m: any) => m?.caseId === caseId || m?.id === caseId);
-            return false;
-          });
-          setMatchedDocs(list);
+        if (!cancelled) {
+          setMatchedDocs(Array.isArray(caseData?.documents) ? caseData.documents : []);
         }
       } catch { }
     })();
     return () => { cancelled = true; };
-  }, [caseId, caseData?.evidence_attachments?.document_id, activeSlug]);
+  }, [caseId, caseData?.evidence_attachments?.document_id, caseData?.documents, activeSlug]);
 
-  // Compute effectiveCase BEFORE any early returns (React hooks rule)
-  const effectiveCase = caseData || (mockCaseData as any)[caseId || ''] || passedClaim;
+  const effectiveCase = caseData || passedClaim;
+  const objectType = useMemo<ObjectType>(() => resolveObjectType(effectiveCase), [effectiveCase]);
 
-  // useMemo hooks must be called unconditionally before any returns
-  const derivedConfidencePct = useMemo(() => {
-    if (!effectiveCase || !caseId) return 0;
-    const v = typeof effectiveCase?.confidence === 'number' ? effectiveCase.confidence : deriveConfidence(caseId);
-    return Math.max(0, Math.min(100, Math.round(v)));
+  const derivedConfidencePct = useMemo<number | null>(() => {
+    if (!effectiveCase) return null;
+    const value = typeof effectiveCase?.confidence === 'number'
+      ? effectiveCase.confidence
+      : (typeof effectiveCase?.confidence_score === 'number' ? effectiveCase.confidence_score * 100 : null);
+    if (value === null) return null;
+    return Math.max(0, Math.min(100, Math.round(value)));
   }, [effectiveCase, caseId]);
 
   const derivedEvidence = useMemo(() => {
-    if (!effectiveCase || !caseId) return 'Collecting';
-    return effectiveCase?.evidenceStatus || deriveEvidence(caseId);
-  }, [effectiveCase, caseId]);
+    if (effectiveCase?.evidenceStatus) return effectiveCase.evidenceStatus;
+    if (effectiveCase?.evidence_attachments?.document_id || matchedDocs.length > 0) return 'Available';
+    return 'Awaiting data';
+  }, [effectiveCase, matchedDocs.length]);
 
   const matchedCount = matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0);
+  const resolvedUnitsAffected = effectiveCase?.unitsLost ?? effectiveCase?.units_lost ?? effectiveCase?.quantity ?? effectiveCase?.units ?? null;
+  const resolvedClaimAmount = effectiveCase?.guaranteedAmount ?? effectiveCase?.estimated_value ?? effectiveCase?.amount ?? null;
+  const resolvedValuePerUnit = typeof resolvedClaimAmount === 'number' &&
+    typeof resolvedUnitsAffected === 'number' &&
+    resolvedUnitsAffected > 0
+    ? resolvedClaimAmount / resolvedUnitsAffected
+    : null;
+  const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : '-';
+  const resolvedMatchMethod = effectiveCase?.match_type ? String(effectiveCase.match_type).replace(/_/g, ' ') : '-';
+  const resolvedFacility = effectiveCase?.facility || effectiveCase?.evidence?.fulfillment_center || effectiveCase?.warehouse || null;
+  const resolvedStoreName = effectiveCase?.store_name || effectiveCase?.seller_name || null;
 
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
@@ -810,6 +668,14 @@ export default function CaseDetail() {
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
+                    <Badge variant="outline" className="border-white/10 bg-white/5 text-white/70 text-[9px] uppercase tracking-tight">
+                      {objectType}
+                    </Badge>
+                    {statusFeedUnavailable && (
+                      <Badge variant="outline" className="border-amber-500/20 bg-amber-500/10 text-amber-400 text-[9px] uppercase tracking-tight">
+                        Status Unavailable
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
@@ -963,9 +829,9 @@ export default function CaseDetail() {
                         <div className="flex items-start gap-4">
                           <p className="text-[10px] font-bold text-white/30 w-32 shrink-0 pt-0.5 tracking-tight">ASIN / SKU</p>
                           <p className="text-sm font-sans font-bold text-white">
-                            {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-white/20">Pending</span>}
+                            {effectiveCase.asin && effectiveCase.asin !== 'N/A' ? effectiveCase.asin : <span className="text-white/20">-</span>}
                             <span className="mx-2 text-white/10">/</span>
-                            {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-white/20">Pending</span>}
+                            {effectiveCase.sku && effectiveCase.sku !== 'N/A' ? effectiveCase.sku : <span className="text-white/20">-</span>}
                           </p>
                         </div>
                         <div className="flex items-start gap-4">
@@ -973,9 +839,9 @@ export default function CaseDetail() {
                           <div className="flex items-center gap-2">
                             <MapPin className="h-3.5 w-3.5 text-white/30" />
                             <p className="text-sm font-bold text-white">
-                              {effectiveCase.facility && !effectiveCase.facility.includes('UNKNOWN')
-                                ? effectiveCase.facility
-                                : <span className="text-white/30 animate-pulse">Analyzing fulfillment logs...</span>}
+                              {resolvedFacility && !String(resolvedFacility).includes('UNKNOWN')
+                                ? resolvedFacility
+                                : <span className="text-white/20">-</span>}
                             </p>
                           </div>
                         </div>
@@ -986,7 +852,7 @@ export default function CaseDetail() {
                               <a href={`https://sellercentral.amazon.com/case-log/${effectiveCase.amazonCaseId}`} target="_blank" rel="noreferrer" className="text-xs font-sans font-bold text-emerald-500 hover:underline flex items-center gap-1">
                                 {effectiveCase.amazonCaseId} <ExternalLink className="h-2.5 w-2.5" />
                               </a>
-                            ) : <span className="text-xs text-white/30 italic">Not yet filed</span>}
+                            ) : <span className="text-xs text-white/20">-</span>}
                             {effectiveCase.prior_case_id && (
                               <div className="text-xs text-white/40 font-sans font-bold">Prior: {effectiveCase.prior_case_id}</div>
                             )}
@@ -1030,28 +896,26 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Units Affected</dt>
                           <dd className="flex items-center gap-2 text-xs font-sans font-bold text-white">
-                            {effectiveCase.unitsLost || effectiveCase.units_lost || effectiveCase.quantity || effectiveCase.units || 1}
-                            {effectiveCase.units_is_verified ? (
+                            {typeof resolvedUnitsAffected === 'number' ? resolvedUnitsAffected : <span className="text-white/20">-</span>}
+                            {typeof resolvedUnitsAffected === 'number' && effectiveCase.units_is_verified ? (
                               <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Verified</Badge>
-                            ) : (
+                            ) : typeof resolvedUnitsAffected === 'number' ? (
                               <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[8px] h-3.5 font-bold uppercase tracking-tight px-1.5">Estimated</Badge>
-                            )}
+                            ) : null}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Value Per Unit</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            ${((effectiveCase.guaranteedAmount || effectiveCase.amount || 0) / (effectiveCase.unitsLost || effectiveCase.quantity || 1)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {resolvedValuePerUnit === null
+                              ? '-'
+                              : `$${resolvedValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Confidence Score</dt>
-                          <dd className="text-xs font-sans font-bold text-emerald-500">
-                            {(() => {
-                              const conf = effectiveCase.confidence || effectiveCase.confidence_score || 0.85;
-                              const normalized = conf > 1 ? conf : conf * 100;
-                              return `${Math.min(Math.round(normalized), 100)}%`;
-                            })()}
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {derivedConfidencePct !== null ? `${derivedConfidencePct}%` : '-'}
                           </dd>
                         </div>
                       </div>
@@ -1066,7 +930,7 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Issue Identified</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {new Date(effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            {formatDateOrDash(effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date)}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1082,7 +946,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Policy Status</dt>
-                          <dd className="text-xs font-sans font-bold text-emerald-500">Compliant</dd>
+                          <dd className="text-xs font-sans font-bold text-white">{effectiveCase.status || (statusFeedUnavailable ? 'Unavailable' : '-')}</dd>
                         </div>
                       </div>
                     </div>
@@ -1096,17 +960,17 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Warehouse</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || 'Unknown'}
+                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '-'}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Product Match</dt>
-                          <dd className="text-xs font-sans font-bold text-white">Verified</dd>
+                          <dd className="text-xs font-sans font-bold text-white">{matchedCount > 0 ? 'Available' : '-'}</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Order Reference</dt>
                           <dd className="text-xs font-sans font-bold text-white underline underline-offset-2 decoration-white/20">
-                            {effectiveCase.order_id || 'N/A'}
+                            {effectiveCase.order_id || '-'}
                           </dd>
                         </div>
                       </div>
@@ -1120,11 +984,11 @@ export default function CaseDetail() {
                       <div className="space-y-3">
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Claim Type</dt>
-                          <dd className="text-xs font-sans font-bold text-white capitalize">{(effectiveCase.anomaly_type || 'Discrepancy').replace(/_/g, ' ')}</dd>
+                          <dd className="text-xs font-sans font-bold text-white capitalize">{resolvedClaimType}</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Match Method</dt>
-                          <dd className="text-xs font-sans font-bold text-white capitalize">{(effectiveCase.match_type || 'order_id').replace(/_/g, ' ')}</dd>
+                          <dd className="text-xs font-sans font-bold text-white capitalize">{resolvedMatchMethod}</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Detection</dt>
@@ -1146,15 +1010,15 @@ export default function CaseDetail() {
                               <span className="text-[11px] font-bold text-amber-500">Recurring Pattern Detected</span>
                             </div>
                             <p className="text-[11px] text-white/60 leading-relaxed font-bold">
-                              Warehouse <span className="text-white font-semibold">{effectiveCase.facility?.split(' ')[0] || 'FTW1'}</span> has recorded <span className="text-white font-semibold">{effectiveCase.warehouse_history.occurrence_count} similar discrepancies</span> for you, totaling <span className="text-white font-semibold">${effectiveCase.warehouse_history.total_value_lost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span> in at-risk value.
+                              Warehouse <span className="text-white font-semibold">{resolvedFacility ? String(resolvedFacility).split(' ')[0] : '-'}</span> has recorded <span className="text-white font-semibold">{effectiveCase.warehouse_history.occurrence_count} similar discrepancies</span> for you, totaling <span className="text-white font-semibold">${effectiveCase.warehouse_history.total_value_lost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span> in at-risk value.
                             </p>
-                            <div className="mt-2 text-[9px] text-white/30 font-sans font-bold italic">
-                              Verified by {AGENT_NAMES['learning']}
+                            <div className="mt-2 text-[9px] text-white/30 font-sans font-bold">
+                              {effectiveCase.warehouse_history.source || '-'}
                             </div>
                           </div>
                         ) : (
                           <div className="p-3 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center py-4">
-                            <span className="text-[10px] text-white/30 font-medium italic">No recurring patterns found at this facility</span>
+                            <span className="text-[10px] text-white/20 font-medium">-</span>
                           </div>
                         )}
                       </div>
@@ -1289,16 +1153,16 @@ export default function CaseDetail() {
                               effectiveCase.expectedPayoutDate ? (
                                 (() => {
                                   const d = new Date(effectiveCase.expectedPayoutDate);
-                                  return isNaN(d.getTime()) ? 'Pending' : d.toLocaleDateString('en-US', {
+                                  return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', {
                                     month: 'short', day: 'numeric', year: 'numeric'
                                   });
                                 })()
-                              ) : 'Pending'
+                              ) : '-'
                             )}
-                            {selectedMetric === 'confidence' && `${derivedConfidencePct}%`}
-                            {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '—'} units`}
+                            {selectedMetric === 'confidence' && (derivedConfidencePct === null ? '-' : `${derivedConfidencePct}%`)}
+                            {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '-'} units`}
                             {selectedMetric === 'cost' && (
-                              typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '—'
+                              typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '-'
                             )}
                           </div>
                           <div className="text-[10px] text-white/30 mt-2 font-bold tracking-tight">
@@ -1378,7 +1242,11 @@ export default function CaseDetail() {
                       {matchedDocs.length > 0 ? (
                         <div className="space-y-3">
                           {matchedDocs.slice(0, 4).map((doc: any, idx: number) => {
-                            const confidencePct = Math.round((doc.matchConfidence || doc.confidence_score || 0.85) * 100);
+                            const confidencePct = typeof doc.matchConfidence === 'number'
+                              ? Math.round(doc.matchConfidence * 100)
+                              : (typeof doc.confidence_score === 'number'
+                                ? Math.round((doc.confidence_score > 1 ? doc.confidence_score : doc.confidence_score * 100))
+                                : null);
                             return (
                               <div key={doc.id || idx} className="p-4 bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-white/[0.06] transition-all group flex items-center justify-between rounded-lg">
                                 <div className="flex items-center gap-3">
@@ -1387,18 +1255,18 @@ export default function CaseDetail() {
                                     <p className="text-xs font-bold text-white truncate font-sans">
                                       {doc.name || doc.filename || `Document ${idx + 1}`}
                                     </p>
-                                    <p className="text-[10px] text-white/30">Verified</p>
+                                    <p className="text-[10px] text-white/30">{doc.matchType || 'Attached'}</p>
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-3">
                                   <Badge variant="outline" className="text-[10px] h-4.5 px-2 border-emerald-500/30 text-emerald-500 bg-emerald-500/10">
-                                    {confidencePct}%
+                                    {confidencePct !== null ? `${confidencePct}%` : '-'}
                                   </Badge>
                                   <Button
                                     variant="ghost"
                                     size="sm"
                                     className="h-6 text-[10px] font-bold text-emerald-500 hover:text-emerald-400 p-0"
-                                    onClick={() => window.open(`/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
+                                    onClick={() => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(doc.id)}`, '_blank')}>
                                     View <ArrowRight className="h-2.5 w-2.5 ml-1" />
                                   </Button>
                                 </div>
@@ -1488,7 +1356,7 @@ export default function CaseDetail() {
                             {(!caseData?.events || caseData.events.filter((e: any) => e.type === 'logistics' || e.type === 'claim' || e.type === 'evidence').length === 0) && (
                               <tr>
                                 <td colSpan={4} className="px-4 py-12 text-center text-[10px] font-sans font-bold text-white/20">
-                                  Initializing audit trail...
+                                  -
                                 </td>
                               </tr>
                             )}
@@ -1509,8 +1377,8 @@ export default function CaseDetail() {
                             <ShieldCheck className="h-4 w-4 text-white" />
                           </div>
                           <div>
-                            <h4 className="text-[11px] font-bold text-white tracking-tight">Identity verified</h4>
-                            <p className="text-[10px] text-white/30 font-sans font-bold uppercase tracking-tight">Protocol v1.0</p>
+                            <h4 className="text-[11px] font-bold text-white tracking-tight">Seller Identity</h4>
+                            <p className="text-[10px] text-white/30 font-sans font-bold uppercase tracking-tight">{objectType}</p>
                           </div>
                         </div>
 
@@ -1521,7 +1389,9 @@ export default function CaseDetail() {
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Store Name</dt>
-                            <dd className="text-xs font-bold text-white truncate" title={effectiveCase.store_name || effectiveCase.seller_name}>{effectiveCase.store_name || effectiveCase.seller_name || 'Amazon Seller Account'}</dd>
+                            <dd className="text-xs font-bold text-white truncate" title={resolvedStoreName || '-'}>
+                              {resolvedStoreName || '-'}
+                            </dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">User ID</dt>
@@ -1529,11 +1399,11 @@ export default function CaseDetail() {
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Permission Status</dt>
-                            <dd className="text-xs font-bold text-emerald-500 uppercase tracking-tight">Active</dd>
+                            <dd className="text-xs font-bold text-white uppercase tracking-tight">-</dd>
                           </div>
                           <div>
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Contact Method</dt>
-                            <dd className="text-xs font-bold text-white uppercase tracking-tight">Seller Central</dd>
+                            <dd className="text-xs font-bold text-white uppercase tracking-tight">-</dd>
                           </div>
                         </div>
                       </div>
@@ -1546,8 +1416,8 @@ export default function CaseDetail() {
                         <div className="space-y-3">
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Amazon Case ID</dt>
-                            <dd className="text-xs font-sans font-bold text-emerald-500">
-                              {effectiveCase.amazonCaseId || <span className="text-white/30 font-normal italic">Not filed yet</span>}
+                            <dd className="text-xs font-sans font-bold text-white">
+                              {effectiveCase.amazonCaseId || <span className="text-white/20 font-normal">-</span>}
                             </dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
@@ -1572,8 +1442,8 @@ export default function CaseDetail() {
                           <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 tracking-tight uppercase mb-2">
                             System Health
                           </div>
-                          <p className="text-[11px] text-white/70 leading-relaxed font-bold italic">
-                            Agent 11 is primary observer. Audit cycle synchronization established. Continuous monitoring of FC records enabled.
+                          <p className="text-[11px] text-white/70 leading-relaxed font-bold">
+                            {effectiveCase.autonomous_logic_summary || '-'}
                           </p>
                         </div>
                       </div>
@@ -1647,7 +1517,7 @@ export default function CaseDetail() {
                               >
                                 {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
                               </button>
-                              <p className="text-[9px] text-white/30 text-center italic">
+                              <p className="text-[9px] text-white/30 text-center">
                                 Escalation managed by {AGENT_NAMES['refund_filing']}
                               </p>
                             </div>
@@ -1679,7 +1549,7 @@ export default function CaseDetail() {
                             </div>
                           ))}
                           {(!caseData?.playbook?.steps || caseData.playbook.steps.length === 0) && (
-                            <div className="py-4 text-[11px] text-white/20 italic font-sans font-bold">Synchronizing strategy steps...</div>
+                            <div className="py-4 text-[11px] text-white/20 font-sans font-bold">-</div>
                           )}
                         </div>
 
@@ -1689,7 +1559,7 @@ export default function CaseDetail() {
                               <span className="text-xs font-bold text-white/60">Expected Recovery</span>
                             </div>
                             <span className="text-sm font-sans font-bold text-emerald-500">
-                              {Number(caseData?.guaranteedAmount || caseData?.estimated_value || 0).toLocaleString('en-US', { style: 'currency', currency: caseData?.currency || 'USD' })}
+                              {formatCurrencyOrDash(caseData?.guaranteedAmount || caseData?.estimated_value || null, caseData?.currency || 'USD')}
                             </span>
                           </div>
                         </div>
@@ -1715,7 +1585,7 @@ export default function CaseDetail() {
                             </div>
                           ))}
                           {(!caseData?.protection_protocol || caseData.protection_protocol.length === 0) && (
-                            <div className="py-4 text-[11px] text-white/20 italic font-sans font-bold">Calibrating protection rules...</div>
+                            <div className="py-4 text-[11px] text-white/20 font-sans font-bold">-</div>
                           )}
                         </div>
 
