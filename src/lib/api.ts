@@ -32,6 +32,16 @@ export function buildApiUrl(path: string): string {
     typeof window !== 'undefined' &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
+  const isLocalhostOrigin = (value?: string): boolean => {
+    if (!value) return false;
+    try {
+      const parsed = new URL(value);
+      return parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1';
+    } catch {
+      return false;
+    }
+  };
+
   if (isViteDev) {
     // In Vite dev mode, use relative URL - proxy will route to backend
     // This eliminates CORS issues during development
@@ -42,6 +52,10 @@ export function buildApiUrl(path: string): string {
   // If environment variable is set, validate it before using
   if (envBase && envBase.trim() !== '') {
     const baseUrl = String(envBase).trim().replace(/\/$/, '');
+    if (!isViteDev && isLocalhostOrigin(baseUrl)) {
+      console.warn(`[API] Ignoring localhost API base outside dev mode: ${baseUrl}`);
+      return productionBackend + normalizedPath;
+    }
     console.log(`[API] Using environment variable: ${baseUrl}`);
     return baseUrl + normalizedPath;
   }
@@ -67,6 +81,20 @@ async function requestJsonWithRetry<T>(
   const userId = localStorage.getItem('user_id') || '';
   const tenantId = localStorage.getItem('active_tenant_id') || '';
 
+  const method = (options?.method || 'GET').toUpperCase();
+  const callerHeaders = (options?.headers || {}) as Record<string, string>;
+  const baseHeaders: Record<string, string> = {
+    ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {}),
+    ...(userId ? { 'x-user-id': userId } : {}),
+    ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+  };
+
+  // Avoid forcing JSON content-type on GET/HEAD requests. It creates unnecessary preflights
+  // and pollutes runtime traces for pages that only need reads.
+  if (method !== 'GET' && method !== 'HEAD' && !callerHeaders['Content-Type']) {
+    baseHeaders['Content-Type'] = 'application/json';
+  }
+
   // Use a longer timeout for the first request to allow backend wake-up time
   // Render free tier can take 30-60 seconds to wake up, so we need generous timeouts
   // But we also want to avoid hanging the UI when backend is responsive
@@ -86,12 +114,10 @@ async function requestJsonWithRetry<T>(
     const res = await fetch(url, {
       credentials: 'include',
       signal: controller.signal,
+      cache: 'no-store',
       headers: {
-        'Content-Type': 'application/json',
-        ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {}),
-        ...(userId ? { 'x-user-id': userId } : {}),
-        ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
-        ...options?.headers,
+        ...baseHeaders,
+        ...callerHeaders,
       },
       ...options,
     });

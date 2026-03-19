@@ -290,7 +290,6 @@ export function Dashboard() {
   const [quickNoticeOpen, setQuickNoticeOpen] = useState<boolean>(false);
   // Evidence stats
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
-  const [gmailConnected, setGmailConnected] = useState<boolean>(false);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>('');
   const { toast } = useToast();
@@ -310,7 +309,7 @@ export function Dashboard() {
     totalDetections: number;
     estimatedRecovery: number;
     highConfidence: number;
-    averageConfidence: number;
+    averageConfidence: number | null;
   } | null>(null);
   const [detectionResults, setDetectionResults] = useState<any[]>([]);
   const [loadingDetections, setLoadingDetections] = useState<boolean>(false);
@@ -443,20 +442,26 @@ export function Dashboard() {
   useEffect(() => {
     if (!isReady) return;
     (async () => {
-      const [statusRes, gmailRes, detectionStatsRes] = await Promise.all([
+      const [statusRes, detectionStatsRes] = await Promise.all([
         api.getEvidenceStatus(activeSlug).catch(() => ({ ok: false, data: null })),
-        api.getGmailStatus(activeSlug).catch(() => ({ ok: false, data: null })),
         detectionApi.getDetectionStatistics(undefined, activeSlug).catch(() => ({ ok: false, data: null })),
       ]);
       if (mountedRef.current) {
         if (statusRes.ok && statusRes.data) {
           setEvidenceStatus(statusRes.data);
         }
-        if (gmailRes.ok && gmailRes.data) {
-          setGmailConnected(gmailRes.data.connected);
-        }
         if (detectionStatsRes.ok && detectionStatsRes.data?.statistics) {
-          setDetectionStats(detectionStatsRes.data.statistics);
+          const stats = detectionStatsRes.data.statistics as any;
+          const explicitAverage =
+            typeof stats.average_confidence === 'number' ? stats.average_confidence * 100 :
+              typeof stats.averageConfidence === 'number' ? stats.averageConfidence :
+                null;
+          setDetectionStats({
+            totalDetections: stats.total_anomalies ?? stats.totalDetections ?? 0,
+            estimatedRecovery: stats.total_value ?? stats.estimatedRecovery ?? 0,
+            highConfidence: stats.by_confidence?.high ?? stats.highConfidence ?? 0,
+            averageConfidence: explicitAverage
+          });
         }
       }
     })();
@@ -1293,7 +1298,9 @@ export function Dashboard() {
                         <div className="grid grid-cols-4 divide-x divide-white/5">
                           <div className="p-6">
                             <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Total Claims</div>
-                            <div className="text-xl font-sans font-bold text-white">{detectionStats?.totalDetections || detectionTotal}</div>
+                            <div className="text-xl font-sans font-bold text-white">
+                              {detectionStats ? detectionStats.totalDetections : detectionTotal}
+                            </div>
                           </div>
                           <div className="p-6">
                             <div className="text-xs font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Estimated Results</div>
@@ -1306,11 +1313,17 @@ export function Dashboard() {
                           </div>
                           <div className="p-6">
                             <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Verified Data</div>
-                            <div className="text-xl font-sans font-bold text-white">{detectionStats?.highConfidence || detectionResults.filter(r => r.confidence_score >= 0.8).length}</div>
+                            <div className="text-xl font-sans font-bold text-white">
+                              {detectionStats ? detectionStats.highConfidence : detectionResults.filter(r => r.confidence_score >= 0.8).length}
+                            </div>
                           </div>
                           <div className="p-6">
                             <div className="text-[9px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Confidence Level</div>
-                            <div className="text-xl font-sans font-bold text-white">{(detectionStats?.averageConfidence || 92.4).toFixed(1)}%</div>
+                            <div className="text-xl font-sans font-bold text-white">
+                              {typeof detectionStats?.averageConfidence === 'number'
+                                ? `${detectionStats.averageConfidence.toFixed(1)}%`
+                                : 'N/A'}
+                            </div>
                           </div>
                         </div>
                       </div>

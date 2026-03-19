@@ -499,13 +499,17 @@ const calculateClaimStrength = (claim: RecoveryClaim): ClaimStrength => {
   });
 
   // Factor 4: AI Confidence Score (0-20 points)
-  const confidence = claim.confidence_score ?? claim._confidence ?? 0.5;
-  const confidenceScore = Math.round(confidence * 20);
+  const confidence = typeof claim.confidence_score === 'number'
+    ? claim.confidence_score
+    : (typeof claim._confidence === 'number' ? claim._confidence : null);
+  const confidenceScore = Math.round((confidence ?? 0) * 20);
   factors.push({
     label: 'AI Confidence',
     value: confidenceScore,
     max: 20,
-    reason: confidence >= 0.85 ? 'High certainty' : confidence >= 0.6 ? 'Moderate certainty' : 'Low certainty'
+    reason: confidence === null
+      ? 'No AI confidence available'
+      : confidence >= 0.85 ? 'High certainty' : confidence >= 0.6 ? 'Moderate certainty' : 'Low certainty'
   });
 
   const totalScore = factors.reduce((sum, f) => sum + f.value, 0);
@@ -1377,23 +1381,19 @@ export default function Recoveries() {
   };
 
   // --- Opportunity Radar helpers ---
-  const stableHash = (s: string): number => {
-    let h = 2166136261;
-    for (let i = 0; i < s.length; i++) h = (h ^ s.charCodeAt(i)) * 16777619;
-    return (h >>> 0);
-  };
-  const getConfidence = (id: string): number => {
-    // Stable pseudo-confidence between 0.5 and 0.98
-    const v = stableHash(id) % 4900; // 0..4899
-    return Math.round((v + 500) / 100) / 100; // 0.5 .. 4.99 -> 0.5 .. 4.99, then /? ensure two decimals
-  };
   const getConfidenceTier = (c: number) => c >= 0.85 ? 'high' : c >= 0.6 ? 'medium' : 'low';
   const getConfidenceColor = (c: number) => c >= 0.85 ? 'text-emerald-600' : c >= 0.6 ? 'text-amber-500' : 'text-blue-500';
   const getConfidenceBadge = (c: number) => c >= 0.85 ? 'High' : c >= 0.6 ? 'Medium' : 'Low';
-  const getEvidenceStatus = (id: string): 'Ready' | 'Needs Docs' | 'Collecting' => {
-    const v = stableHash(id) % 100;
-    if (v >= 70) return 'Ready';
-    if (v >= 40) return 'Needs Docs';
+  const getEvidenceStatus = (claim: any): 'Ready' | 'Needs Docs' | 'Collecting' => {
+    const matchedCount =
+      (Array.isArray(claim?.matchedDocs) ? claim.matchedDocs.length : 0) ||
+      claim?.matchedCount ||
+      claim?.evidence_count ||
+      claim?._matchedCount ||
+      0;
+
+    if (matchedCount > 0) return 'Ready';
+    if (claim?.source === 'synced' || claim?.case_id || claim?.case_number) return 'Needs Docs';
     return 'Collecting';
   };
 
@@ -1426,7 +1426,7 @@ export default function Recoveries() {
       order_id: det.evidence?.order_id || det.order_id,
       shipment_id: det.evidence?.shipment_id || det.shipment_id,
       quantity: det.evidence?.quantity || det.quantity,
-      _confidence: det.confidence_score,
+      _confidence: typeof det.confidence_score === 'number' ? det.confidence_score : null,
       _priority: (det.confidence_score || 0) * (det.estimated_value || 0),
       _evidence: det.days_remaining && det.days_remaining <= 7 ? 'Ready' : 'Collecting',
       // Use matched_document_count from backend (enhanced API that queries dispute_evidence_links)
@@ -1441,9 +1441,9 @@ export default function Recoveries() {
       source: 'synced',
       confidence_score: null,
       days_remaining: null,
-      _confidence: getConfidence(rec.id),
-      _priority: getConfidence(rec.id) * (rec.guaranteedAmount || 0),
-      _evidence: getEvidenceStatus(rec.id),
+      _confidence: null,
+      _priority: rec.guaranteedAmount || rec.amount || 0,
+      _evidence: getEvidenceStatus(rec),
       _matchedCount: Array.isArray((rec as any).matchedDocs) ? (rec as any).matchedDocs.length : ((rec as any).matchedCount ?? 0),
     }));
 
@@ -2085,9 +2085,9 @@ export default function Recoveries() {
         const strength = calculateClaimStrength(c);
         return {
           ...c,
-          _confidence: getConfidence(c.id),
-          _priority: getConfidence(c.id) * (c.guaranteedAmount || 0),
-          _evidence: getEvidenceStatus(c.id),
+          _confidence: typeof c.confidence_score === 'number' ? c.confidence_score : null,
+          _priority: c.guaranteedAmount || c.amount || 0,
+          _evidence: getEvidenceStatus(c),
           _matchedCount: Array.isArray((c as any).matchedDocs) ? (c as any).matchedDocs.length : ((c as any).matchedCount ?? 0),
           _strength: strength,
         };
@@ -2095,7 +2095,9 @@ export default function Recoveries() {
       .sort((a, b) => b._priority - a._priority);
 
     // Apply strength filtering: hide low-strength claims unless toggle is on
-    let filtered = showParkedOnly ? base.filter(c => c._confidence < 0.5) : base;
+    let filtered = showParkedOnly
+      ? base.filter(c => typeof c._confidence === 'number' && c._confidence < 0.5)
+      : base;
     if (!showRiskyClaims) {
       filtered = filtered.filter(c => c._strength.tier !== 'low');
     }
@@ -2237,6 +2239,12 @@ export default function Recoveries() {
     return { claimsCount, evidenceMatchingCount, disputeCasesCount };
   }, [claims, mergedRecoveries]);
 
+  const pipelineActiveCount = useMemo(() => {
+    if (typeof amazonClaimCount === 'number' && amazonClaimCount > 0) return amazonClaimCount;
+    if (metrics && typeof (metrics as any).pendingCount === 'number') return (metrics as any).pendingCount;
+    return tabCounts.claimsCount;
+  }, [amazonClaimCount, metrics, tabCounts.claimsCount]);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'New': return 'bg-gray-100 text-gray-700 border border-gray-200';
@@ -2320,7 +2328,7 @@ export default function Recoveries() {
                     ) : (
                       <>
                         <Upload className="h-3.5 w-3.5 mr-2" />
-                        Execute Submission ({selectedIds.size})
+                        Execute Submission ({selectedIds.size} selected)
                       </>
                     )}
                   </Button>
@@ -2367,8 +2375,12 @@ export default function Recoveries() {
                       </div>
                     ) : (
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-sans font-bold text-white/20 tracking-tight uppercase">INITIALIZING</span>
-                        <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">NO_ACTIVE_RECOVERIES</span>
+                        <span className="text-[10px] font-sans font-bold text-white/20 tracking-tight uppercase">
+                          {pipelineActiveCount > 0 ? 'PIPELINE_ACTIVE' : 'INITIALIZING'}
+                        </span>
+                        <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">
+                          {pipelineActiveCount > 0 ? `${pipelineActiveCount} ACTIVE_NODES` : 'NO_ACTIVE_RECOVERIES'}
+                        </span>
                       </div>
                     )}
                   </div>

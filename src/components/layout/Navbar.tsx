@@ -12,7 +12,6 @@ import { NotificationBell } from './NotificationBell';
 import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api } from '@/lib/api';
-import { StoreSelector } from './StoreSelector';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTenant } from '@/contexts/TenantContext';
 interface NavbarProps {
@@ -113,12 +112,13 @@ export function Navbar({
       }
 
       try {
+        const sessionToken = localStorage.getItem('session_token');
         const [meRes, statusRes] = await Promise.all([
-          api.getMe(activeTenantSlug),
+          sessionToken ? api.getMe(activeTenantSlug) : Promise.resolve(null),
           api.getIntegrationsStatus(activeTenantSlug)
         ]);
 
-        if (meRes.ok && meRes.data) {
+        if (meRes?.ok && meRes.data) {
           const me = meRes.data as any;
           const status = statusRes.ok ? statusRes.data as any : null;
           setUserProfile({
@@ -139,10 +139,11 @@ export function Navbar({
           const status = statusRes.data as any;
           setUserProfile((prev) => ({
             ...(prev || {}),
+            id: prev?.id || localStorage.getItem('user_id') || undefined,
             amazon_connected: status.amazon_connected ?? false,
             amazon_seller_id: status.amazon_account?.seller_id,
             name: prev?.name || status.amazon_account?.display_name,
-            email: prev?.email || status.amazon_account?.email
+            email: prev?.email || localStorage.getItem('user_email') || status.amazon_account?.email
           }));
         }
       } catch (e) {
@@ -165,24 +166,21 @@ export function Navbar({
       }
 
       try {
-        const [statusRes, sourcesRes, storesRes] = await Promise.all([
+        const [statusRes, sourcesRes] = await Promise.all([
           api.getIntegrationsStatus(activeTenantSlug),
-          api.getEvidenceSources(activeTenantSlug),
-          api.getStores(activeTenantSlug)
+          api.getEvidenceSources(activeTenantSlug)
         ]);
         
         if (statusRes.ok && sourcesRes.ok) {
           const status = statusRes.data;
           const sources = sourcesRes.data.sources || [];
-          const stores = storesRes.ok && storesRes.data?.stores ? storesRes.data.stores : [];
           let count = 0;
           
           const platforms = ['amazon', 'stripe', 'gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
           
           platforms.forEach((p) => {
             if (p === 'amazon') {
-               // Amazon is connected if flag is true OR if there is at least 1 store
-              if ((status && (status as any)[`${p}_connected`]) || stores.length > 0) count++;
+              if ((status && (status as any)[`${p}_connected`]) || (status as any)?.amazon_connected) count++;
             } else if (p === 'stripe') {
               if (status && (status as any)[`${p}_connected`]) count++;
             } else {
@@ -403,9 +401,6 @@ export function Navbar({
                   </div>
                 )}
               </div>
-
-              <StoreSelector />
-
               {/* Functional Icons Group - Compact Horizontal */}
               <div className="flex items-center gap-x-3 border-l border-white/5 pl-4 ml-3">
 
