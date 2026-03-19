@@ -119,7 +119,7 @@ export function Sidebar({
   };
 
   // Get tenant slug from URL or context
-  const currentTenantSlug = tenantSlug || tenant?.slug || 'default';
+  const currentTenantSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
 
   // Reset state when tenant changes to prevent flicker
   React.useEffect(() => {
@@ -178,7 +178,7 @@ export function Sidebar({
 
   const primaryItems: NavItem[] = [
     { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
-    { title: 'Claims', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
+    { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
     { title: 'Refund Recoveries', icon: Plug, href: tenantRoute(currentTenantSlug, '/upcoming-payments') },

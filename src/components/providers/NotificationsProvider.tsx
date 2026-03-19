@@ -4,6 +4,7 @@ import { usePhase3Notifications } from '@/hooks/use-phase3-notifications';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'react-router-dom';
 
 export interface Notification {
   id: string;
@@ -33,7 +34,9 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const { toast } = useToast();
 
   const { tenant } = useTenant();
-  const activeSlug = tenant?.slug || 'beta';
+  const location = useLocation();
+  const routeSlugMatch = location.pathname.match(/^\/app\/([^/]+)/);
+  const activeSlug = tenant?.slug || routeSlugMatch?.[1] || '';
 
   // Initialize SSE streams
   const { close: closeStatusStream } = useStatusStream(undefined, activeSlug);
@@ -55,7 +58,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [activeSlug]);
 
   // Initial fetch
   useEffect(() => {

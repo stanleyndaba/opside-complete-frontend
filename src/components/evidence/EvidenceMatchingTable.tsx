@@ -3,8 +3,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { api } from '@/lib/api';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
+import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import {
   Eye,
   RefreshCw,
@@ -86,7 +87,7 @@ export function EvidenceMatchingTable() {
   const handleRunMatching = async () => {
     try {
       setRefreshing(true);
-      const response = await api.runEvidenceMatching();
+      const response = await api.runEvidenceMatching(undefined, activeTenantSlug);
 
       if (response.ok) {
         toast({
@@ -119,7 +120,7 @@ export function EvidenceMatchingTable() {
   const handleApproveSmartPrompt = async (matchId: string) => {
     setProcessingIds(prev => new Set(prev).add(matchId));
     try {
-      const response = await api.approveSmartPrompt(matchId);
+      const response = await api.approveSmartPrompt(matchId, activeTenantSlug);
       if (response.ok) {
         toast({
           title: 'Match Approved',
@@ -154,7 +155,7 @@ export function EvidenceMatchingTable() {
   const handleRejectSmartPrompt = async (matchId: string, reason?: string) => {
     setProcessingIds(prev => new Set(prev).add(matchId));
     try {
-      const response = await api.rejectSmartPrompt(matchId, reason);
+      const response = await api.rejectSmartPrompt(matchId, reason, activeTenantSlug);
       if (response.ok) {
         toast({
           title: 'Match Rejected',
@@ -189,7 +190,7 @@ export function EvidenceMatchingTable() {
   const handleRequestMoreEvidence = async (matchId: string) => {
     setProcessingIds(prev => new Set(prev).add(matchId));
     try {
-      const response = await api.requestMoreEvidence(matchId);
+      const response = await api.requestMoreEvidence(matchId, activeTenantSlug);
       if (response.ok) {
         toast({
           title: 'More Evidence Requested',
@@ -221,7 +222,7 @@ export function EvidenceMatchingTable() {
   const handleForceApproveParked = async (claimId: string) => {
     setProcessingIds(prev => new Set(prev).add(claimId));
     try {
-      const response = await api.approveSmartPrompt(claimId);
+      const response = await api.approveSmartPrompt(claimId, activeTenantSlug);
       if (response.ok) {
         toast({
           title: 'Claim Force Approved',
@@ -254,7 +255,7 @@ export function EvidenceMatchingTable() {
   const handleDismissParked = async (claimId: string) => {
     setProcessingIds(prev => new Set(prev).add(claimId));
     try {
-      const response = await api.rejectSmartPrompt(claimId, 'Dismissed by user');
+      const response = await api.rejectSmartPrompt(claimId, 'Dismissed by user', activeTenantSlug);
       if (response.ok) {
         toast({
           title: 'Claim Dismissed',
@@ -298,9 +299,8 @@ export function EvidenceMatchingTable() {
     [matchingResults]
   );
 
-  // TEMPORARY: Show ALL matches in Parked Claims tab for testing UI
   const heldForReview = useMemo(() =>
-    matchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected' || r.action_taken === 'auto_submit' || r.action_taken === 'approved'),
+    matchingResults.filter(r => r.action_taken === 'no_action' || r.action_taken === 'rejected'),
     [matchingResults]
   );
 

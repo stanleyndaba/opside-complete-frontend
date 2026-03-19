@@ -12,11 +12,9 @@ interface TenantLinkProps extends LinkProps {
  */
 export const TenantLink: React.FC<TenantLinkProps> = ({ to, children, ...props }) => {
     const { tenantSlug } = useParams<{ tenantSlug: string }>();
-
-    // Fallback to 'beta' if no slug is in the URL (should ideally come from context)
-    const activeSlug = tenantSlug || 'beta';
-
-    const href = tenantRoute(activeSlug, to);
+    const storedSlug = typeof window !== 'undefined' ? localStorage.getItem('active_tenant_slug') || '' : '';
+    const activeSlug = tenantSlug || storedSlug;
+    const href = activeSlug ? tenantRoute(activeSlug, to) : to;
 
     return (
         <Link to={href} {...props}>

@@ -2286,9 +2286,9 @@ export default function Recoveries() {
                     <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight uppercase">SYSTEM_BUFFER</span>
                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                   </div>
-                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Recoveries, and Cases</h1>
+                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Recovery Pipeline</h1>
                   <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
-                    Active auditing of detected discrepancies and financial reconciliation ledger
+                    Detected discrepancies, evidence readiness, filed disputes, and realized recoveries in one tenant-scoped pipeline view
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-3">
@@ -2445,7 +2445,7 @@ export default function Recoveries() {
             <div className="mb-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px flex-1 bg-white/5" />
-                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Operational_Vectors</h2>
+                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Pipeline_Stages</h2>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
@@ -2454,7 +2454,7 @@ export default function Recoveries() {
                     value="claims"
                     className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
-                      Created Claims
+                      Opportunity Queue
                       {tabCounts.claimsCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.claimsCount}
@@ -2467,7 +2467,7 @@ export default function Recoveries() {
                     value="matching"
                     className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
-                      Evidence Matched
+                      Claims With Evidence
                       {tabCounts.evidenceMatchingCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.evidenceMatchingCount}
@@ -2480,7 +2480,7 @@ export default function Recoveries() {
                     value="cases"
                     className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
-                      Filed Disputes
+                      Dispute Claims
                       {tabCounts.disputeCasesCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.disputeCasesCount}
@@ -2501,8 +2501,8 @@ export default function Recoveries() {
 
                       <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between">
                         <div>
-                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">REVENUE_RECOVERY_LEDGER</h3>
-                          <p className="text-[9px] font-sans font-bold text-white/20 mt-1 uppercase tracking-tight">Real-time audit of finalized reimbursements and recovery nodes</p>
+                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">PIPELINE_OPPORTUNITY_LEDGER</h3>
+                          <p className="text-[9px] font-sans font-bold text-white/20 mt-1 uppercase tracking-tight">Live queue of detections and claims moving toward submission and recovery</p>
                         </div>
                         <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-white/10 uppercase tracking-tight">
                           <Eye className="w-3 h-3" />
@@ -2832,7 +2832,7 @@ export default function Recoveries() {
                                                 className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
                                                 onClick={async () => {
                                                   try {
-                                                    const res = await api.getRecoveryDetail(claim.id);
+                                                    const res = await api.getRecoveryDetail(claim.id, activeSlug);
                                                     const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
                                                     setProofDocs(docs);
                                                     setProofDocsClaim(claim);
@@ -2858,7 +2858,7 @@ export default function Recoveries() {
                                                   className="text-[10px] font-sans font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
                                                   onClick={async () => {
                                                     try {
-                                                      await api.resubmitClaim(claim.id);
+                                                      await recoveryApi.resubmitClaim(claim.id, activeSlug);
                                                       toast({ title: 'Resubmitted', description: 'Claim resubmitted with enhanced evidence.' });
                                                     } catch (e: any) {
                                                       toast({ title: 'Resubmission failed', description: e?.message });
@@ -2973,7 +2973,7 @@ export default function Recoveries() {
                                 setResolveNotes('');
                                 setResolveAmount('');
                                 // Refresh statistics
-                                const statsRes = await detectionApi.getDetectionStatistics();
+                                const statsRes = await detectionApi.getDetectionStatistics(undefined, activeSlug);
                                 if (statsRes.ok && statsRes.data?.statistics) {
                                   setDetectionStats(statsRes.data.statistics);
                                 }
@@ -3243,7 +3243,7 @@ export default function Recoveries() {
                         onClick={async () => {
                           if (!claimToFile) return;
                           try {
-                            await recoveryApi.submitClaim(claimToFile.id);
+                            await recoveryApi.submitClaim(claimToFile.id, activeSlug);
                             setClaims(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
                             setMergedRecoveries(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
                             toast({ title: 'Claim Filed', description: `${claimToFile.id} has been submitted to Amazon.` });

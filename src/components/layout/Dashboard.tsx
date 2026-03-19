@@ -18,7 +18,6 @@ import {
   ChevronDown, Clock, Terminal, MoreVertical, Files
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
-import { supabase } from '@/lib/supabaseClient';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -98,10 +97,9 @@ export function Dashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
           'x-user-id': localStorage.getItem('user_id') || '',
-          'x-tenant-id': localStorage.getItem('active_tenant_id') || localStorage.getItem('active_store_id') || '',
-          'x-store-id': localStorage.getItem('active_store_id') || '',
+          'x-tenant-id': localStorage.getItem('active_tenant_id') || '',
         },
-        body: JSON.stringify({}), // Let backend infer tenant context
+        body: JSON.stringify({ tenantSlug: tenantArg }),
       });
 
       if (!response.ok) {
@@ -157,24 +155,21 @@ export function Dashboard() {
     });
 
     try {
-      // Query Supabase directly for the single claim's data
-      const { data: claim, error } = await supabase
-        .from('detection_results')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error || !claim) throw new Error(error?.message || 'Claim not found');
+      const response = await api.getRecoveryDetail(id, activeSlug);
+      if (!response.ok || !response.data) {
+        throw new Error(response.error || 'Claim not found');
+      }
+      const claim = response.data as any;
 
       // Build a single-row CSV
       const evidence = claim.evidence || {};
       const headers = 'Amazon Order ID,FNSKU,Discrepancy Type,Estimated Owed (USD),Date of Event,Status,Confidence Score';
       const row = [
-        evidence.order_id || claim.sync_id || '',
-        evidence.fnsku || claim.sku || '',
-        (claim.anomaly_type || '').replace(/_/g, ' ').toUpperCase(),
-        typeof claim.estimated_value === 'number' ? claim.estimated_value.toFixed(2) : '',
-        claim.discovery_date ? new Date(claim.discovery_date).toISOString().split('T')[0] : '',
+        evidence.order_id || claim.order_id || claim.sync_id || '',
+        evidence.fnsku || claim.fnsku || claim.sku || '',
+        (claim.anomaly_type || claim.type || '').replace(/_/g, ' ').toUpperCase(),
+        typeof (claim.estimated_value ?? claim.guaranteedAmount) === 'number' ? Number(claim.estimated_value ?? claim.guaranteedAmount).toFixed(2) : '',
+        (claim.discovery_date || claim.createdDate) ? new Date(claim.discovery_date || claim.createdDate).toISOString().split('T')[0] : '',
         (claim.status || '').toUpperCase(),
         claim.confidence_score ? (claim.confidence_score * 100).toFixed(0) + '%' : ''
       ].join(',');
@@ -216,33 +211,10 @@ export function Dashboard() {
     setIsLinkingCase(true);
     try {
       toast({
-        title: "LINKING_AMAZON_CASE",
-        description: `Linking Case ID ${caseIdInput}...`,
+        title: "MANUAL_LINK_UNAVAILABLE",
+        description: "Manual Amazon case linking is hidden until a tenant-safe backend endpoint is available.",
+        variant: "destructive",
       });
-
-      const { error } = await supabase
-        .from('detection_results')
-        .update({
-          amazon_case_id: caseIdInput,
-          status: 'pending' // Flagging claim under Amazon review
-        })
-        .eq('id', activeClaimIdForCase);
-
-      if (error) throw error;
-
-      toast({
-        title: "CASE_LINKED",
-        description: `Successfully linked Amazon Case ID: ${caseIdInput}`,
-      });
-
-      // Optimistic UI update
-      setDetectionResults(prev => prev.map(claim =>
-        claim.id === activeClaimIdForCase
-          ? { ...claim, amazon_case_id: caseIdInput, status: 'pending' }
-          : claim
-      ));
-
-      setCaseIdModalOpen(false);
     } catch (err: any) {
       toast({
         title: "LINK_FAILED",
@@ -255,32 +227,12 @@ export function Dashboard() {
   };
 
   const handleMarkFalsePositive = async (id: string) => {
-    if (!window.confirm("Are you sure you want to mark this claim as a false positive? This cannot be easily undone.")) return;
-
     try {
       toast({
-        title: "UPDATING_CLAIM",
-        description: `Marking claim ${id.substring(0, 8)} as false positive...`,
+        title: "FALSE_POSITIVE_ACTION_UNAVAILABLE",
+        description: `False positive dismissal for ${id.substring(0, 8)} is hidden until a tenant-safe backend endpoint exists.`,
+        variant: "destructive",
       });
-
-      const { error } = await supabase
-        .from('detection_results')
-        .update({ status: 'false_positive' })
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: "CLAIM_DISMISSED",
-        description: `Claim ${id.substring(0, 8)} marked as false positive.`,
-      });
-
-      // Optimistic UI update — remove from active list or mark as processed
-      setDetectionResults(prev => prev.map(claim =>
-        claim.id === id
-          ? { ...claim, status: 'false_positive' }
-          : claim
-      ));
     } catch (err: any) {
       toast({
         title: "UPDATE_FAILED",
@@ -371,26 +323,9 @@ export function Dashboard() {
   const [caseIdInput, setCaseIdInput] = useState("");
   const [isLinkingCase, setIsLinkingCase] = useState(false);
 
-  // Generate synthetic notifications if real ones are missing but we have recovery data
-  // This ensures the "System Activity" panel matches the "Recovered Funds" reality
   const displayNotifications = useMemo(() => {
-    if (notifications.length > 0) return notifications;
-
-    // Fallback: Generate synthetic notifications if we have recovery data but no logs
-    if (recoveredTotal && recoveredTotal > 0) {
-      return [{
-        id: 'synthetic-recovery-root',
-        type: 'funds_deposited',
-        title: 'Audit Performance',
-        message: `Verified total of ${formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)} has been secured across ${reconciledCount || 'active'} settlements.`,
-        status: 'read' as const,
-        priority: 'high' as const,
-        created_at: new Date().toISOString(),
-      }];
-    }
-
-    return [];
-  }, [notifications, recoveredTotal, recoveredCurrency, reconciledCount, formatCurrencyWithSelection]);
+    return notifications;
+  }, [notifications]);
 
   // Helper to intercept and transform notification titles for high-fidelity Amazon lingo
   const enrichNotificationTitle = useCallback((title: any) => {
@@ -1582,7 +1517,7 @@ export function Dashboard() {
                                                   setActiveDiscrepancy(notification);
                                                   setShowDiscrepancyModal(true);
                                                 } else {
-                                                  navigate('/recoveries');
+                                                  navigate(tenantRoute(activeSlug, '/recoveries'));
                                                 }
                                               }}
                                               className="text-xs font-bold text-gray-900 flex items-center gap-1.5 hover:underline">
@@ -1841,21 +1776,6 @@ export function Dashboard() {
                                               >
                                                 <Download className="h-3 w-3 mr-2" />
                                                 Download Claim Evidence
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem
-                                                onClick={() => openCaseIdModal(result.id)}
-                                                className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
-                                              >
-                                                <Link2 className="h-3 w-3 mr-2" />
-                                                Link Amazon Case ID
-                                              </DropdownMenuItem>
-                                              <DropdownMenuSeparator className="bg-white/5" />
-                                              <DropdownMenuItem
-                                                onClick={() => handleMarkFalsePositive(result.id)}
-                                                className="text-[9px] font-sans font-bold uppercase tracking-tight text-red-500/40 hover:text-red-500 focus:text-red-500 focus:bg-red-500/5 cursor-pointer py-2"
-                                              >
-                                                <AlertTriangle className="h-3 w-3 mr-2" />
-                                                Mark as False Positive
                                               </DropdownMenuItem>
                                             </DropdownMenuContent>
                                           </DropdownMenu>

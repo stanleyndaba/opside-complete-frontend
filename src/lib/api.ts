@@ -63,6 +63,9 @@ async function requestJsonWithRetry<T>(
 ): Promise<ApiResponse<T>> {
   const requestStartTime = performance.now();
   const url = buildApiUrl(path);
+  const sessionToken = localStorage.getItem('session_token') || '';
+  const userId = localStorage.getItem('user_id') || '';
+  const tenantId = localStorage.getItem('active_tenant_id') || '';
 
   // Use a longer timeout for the first request to allow backend wake-up time
   // Render free tier can take 30-60 seconds to wake up, so we need generous timeouts
@@ -85,15 +88,9 @@ async function requestJsonWithRetry<T>(
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
-        // Support standard JWT authentication
-        'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
-        // Get user ID from localStorage (set by SessionContext) or fallback to demo-user
-        // This allows API calls to work with the actual authenticated user
-        'x-user-id': localStorage.getItem('user_id') || 'demo-user',
-        // Multi-tenant isolation: x-tenant-id is used by tenantMiddleware.ts
-        // Also send x-store-id for backwards compatibility with older API calls
-        'x-tenant-id': localStorage.getItem('active_tenant_id') || localStorage.getItem('active_store_id') || '',
-        'x-store-id': localStorage.getItem('active_store_id') || '',
+        ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {}),
+        ...(userId ? { 'x-user-id': userId } : {}),
+        ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
         ...options?.headers,
       },
       ...options,
@@ -614,7 +611,7 @@ export const api = {
   },
 
   // Disputes
-  getDisputeBrief: (id: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief`),
+  getDisputeBrief: (id: string, tenantSlug?: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
 
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive', tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for connectDocs");
@@ -1325,24 +1322,24 @@ export const api = {
       total: number;
     }>(`/api/evidence/matching/results${query ? `?${query}` : ''}`);
   },
-  approveSmartPrompt: (matchId: string) => requestJson<{
+  approveSmartPrompt: (matchId: string, tenantSlug?: string) => requestJson<{
     success: boolean;
     message: string;
     caseId?: string;
-  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/approve`, {
+  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/approve${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
     method: 'POST',
   }),
-  rejectSmartPrompt: (matchId: string, reason?: string) => requestJson<{
+  rejectSmartPrompt: (matchId: string, reason?: string, tenantSlug?: string) => requestJson<{
     success: boolean;
     message: string;
-  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/reject`, {
+  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/reject${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
     method: 'POST',
     body: JSON.stringify({ reason }),
   }),
-  requestMoreEvidence: (matchId: string) => requestJson<{
+  requestMoreEvidence: (matchId: string, tenantSlug?: string) => requestJson<{
     success: boolean;
     message: string;
-  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/request-more-evidence`, {
+  }>(`/api/evidence/matching/${encodeURIComponent(matchId)}/request-more-evidence${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
     method: 'POST',
   }),
 

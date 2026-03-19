@@ -4,8 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { api } from '@/lib/api';
-import { recoveryApi } from '@/lib/recoveryApi';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';import {
   RefreshCw, XCircle, Clock, ExternalLink, Loader2,
@@ -19,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { UpgradeModal } from '@/components/modals/UpgradeModal';
+import { TenantLink as Link } from '@/components/navigation/TenantLink';
 
 interface DisputeCase {
   id: string;
@@ -117,7 +117,7 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
     setFilingInProgress(prev => new Set(prev).add(caseId));
     try {
       toast({ title: "SUBMISSION_INITIATED", description: `Dispatched Agent 7 for Case ${caseItem.case_number || caseId.substring(0, 8)}.` });
-      const response = await api.post('/api/disputes/file-now', { dispute_id: caseId, claim_id: caseItem.claim_id });
+      const response = await api.post(`/api/disputes/file-now?tenantSlug=${encodeURIComponent(activeTenantSlug)}`, { dispute_id: caseId, claim_id: caseItem.claim_id });
       if (response.ok) {
         toast({ title: "SUBMISSION_SUCCESS", description: `Case ${response.data?.amazon_case_id || 'locked'} successfully filed.` });
         await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
@@ -136,7 +136,7 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
     setFilingInProgress(prev => new Set(prev).add(caseId));
     try {
       toast({ title: "RECOVERY_INITIATED", description: `Re-calibrating evidence for case ${caseItem.case_number || caseId.substring(0, 8)}...` });
-      const response = await api.post('/api/disputes/retry-filing', { dispute_id: caseId, claim_id: caseItem.claim_id, collect_stronger_evidence: true });
+      const response = await api.post(`/api/disputes/retry-filing?tenantSlug=${encodeURIComponent(activeTenantSlug)}`, { dispute_id: caseId, claim_id: caseItem.claim_id, collect_stronger_evidence: true });
       if (response.ok) {
         toast({ title: "RETRY_QUEUED", description: `Enhanced evidence payload scheduled for resubmission.` });
         await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
@@ -155,7 +155,7 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
     setFilingInProgress(prev => new Set(prev).add(caseId));
     try {
       toast({ title: "APPROVAL_PROCESSING", description: `Bypassing safety locks for claim ${caseItem.case_number || caseId.substring(0, 8)}...` });
-      const response = await api.post('/api/disputes/approve-filing', { dispute_id: caseId, claim_id: caseItem.claim_id });
+      const response = await api.post(`/api/disputes/approve-filing?tenantSlug=${encodeURIComponent(activeTenantSlug)}`, { dispute_id: caseId, claim_id: caseItem.claim_id });
       if (response.ok) {
         toast({ title: "CLAIM_RELEASED", description: `Case approved. Transmitting to Amazon...` });
         await fetchCases(statusFilter !== 'all' ? statusFilter : undefined);
@@ -172,11 +172,12 @@ export function DisputeCasesTable({ isPaidUser: isPaidUserProp, isTenantThrottle
   const handleDownloadBrief = async (caseId: string) => {
     setDownloadingBrief(prev => new Set(prev).add(caseId));
     try {
-      const downloadUrl = api.getDisputeBrief(caseId);
+      const downloadUrl = api.getDisputeBrief(caseId, activeTenantSlug);
       const response = await fetch(downloadUrl, {
         headers: {
-          'x-user-id': localStorage.getItem('user_id') || 'demo-user',
-          'Authorization': `Bearer ${localStorage.getItem('session_token') || ''}`,
+          ...(localStorage.getItem('user_id') ? { 'x-user-id': localStorage.getItem('user_id')! } : {}),
+          ...(localStorage.getItem('session_token') ? { 'Authorization': `Bearer ${localStorage.getItem('session_token')}` } : {}),
+          ...(tenant?.id ? { 'x-tenant-id': tenant.id } : {}),
           'X-Requested-With': 'XMLHttpRequest'
         }
       });
