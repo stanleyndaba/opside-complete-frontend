@@ -439,11 +439,11 @@ export default function DataUpload() {
                     >
                         <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/10">
-                                    <Upload className="h-5 w-5 text-emerald-500" />
+                                <div className="p-2 rounded-xl bg-[#111111] border border-white/10">
+                                    <Upload className="h-5 w-5 text-white/80" />
                                 </div>
                                 <h1 className="text-2xl font-sans font-light tracking-tight">Data Upload</h1>
-                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-emerald-500/30 text-emerald-500 ml-2">
+                                <Badge variant="outline" className="text-[10px] font-sans font-bold tracking-tight uppercase border-white/10 text-white/60 bg-white/[0.02] ml-2">
                                     CSV Ingestion
                                 </Badge>
                             </div>
@@ -468,7 +468,7 @@ export default function DataUpload() {
                             className={`
                 relative cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-300
                 ${isDragOver
-                                    ? 'border-emerald-500/60 bg-emerald-500/[0.06] scale-[1.01]'
+                                    ? 'border-white/20 bg-white/[0.04] scale-[1.01]'
                                     : 'border-white/10 bg-white/[0.01] hover:border-white/20 hover:bg-white/[0.02]'
                                 }
                 ${files.length > 0 ? 'py-8 px-6' : 'py-16 px-6'}
@@ -485,12 +485,12 @@ export default function DataUpload() {
 
                             {files.length === 0 ? (
                                 <div className="flex flex-col items-center gap-4">
-                                    <div className={`p-4 rounded-2xl transition-all duration-300 ${isDragOver ? 'bg-emerald-500/20' : 'bg-white/[0.04]'}`}>
-                                        <FileSpreadsheet className={`h-10 w-10 ${isDragOver ? 'text-emerald-500' : 'text-white/20'}`} />
+                                    <div className={`p-4 rounded-2xl transition-all duration-300 ${isDragOver ? 'bg-white/[0.08]' : 'bg-white/[0.04]'}`}>
+                                        <FileSpreadsheet className={`h-10 w-10 ${isDragOver ? 'text-white/80' : 'text-white/20'}`} />
                                     </div>
                                     <div className="text-center">
                                         <p className="text-sm font-medium text-white/60 mb-1">
-                                            Drop CSV files here or <span className="text-emerald-500 hover:text-emerald-400">browse</span>
+                                            Drop CSV files here or <span className="text-white hover:text-white/80">browse</span>
                                         </p>
                                         <p className="text-xs text-white/25">
                                             We auto-detect each Amazon report by its headers and ingest it for this workspace.
@@ -525,14 +525,14 @@ export default function DataUpload() {
                                                     <p className="text-sm text-white/70 truncate font-sans tracking-tight">{f.file.name}</p>
                                                     <p className="text-[10px] text-white/25">
                                                         {formatSize(f.file.size)}
-                                                        {f.detectedType && <span className="ml-2 text-emerald-500/60">→ {f.detectedType}</span>}
-                                                        {f.rowsInserted !== undefined && <span className="ml-2 text-emerald-400/60">{f.rowsInserted.toLocaleString()} rows</span>}
+                                                        {f.detectedType && <span className="ml-2 text-white/40">→ {f.detectedType}</span>}
+                                                        {f.rowsInserted !== undefined && <span className="ml-2 text-white/45">{f.rowsInserted.toLocaleString()} rows</span>}
                                                     </p>
                                                 </div>
 
                                                 {/* Status indicator */}
-                                                {f.status === 'uploading' && <Loader2 className="h-4 w-4 text-emerald-500 animate-spin flex-shrink-0" />}
-                                                {f.status === 'success' && <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0" />}
+                                                {f.status === 'uploading' && <Loader2 className="h-4 w-4 text-white/70 animate-spin flex-shrink-0" />}
+                                                {f.status === 'success' && <CheckCircle2 className="h-4 w-4 text-white/80 flex-shrink-0" />}
                                                 {f.status === 'skipped' && <Archive className="h-4 w-4 text-amber-400 flex-shrink-0" />}
                                                 {f.status === 'error' && (
                                                     <span title={f.error}>
@@ -557,7 +557,7 @@ export default function DataUpload() {
                                     {!isUploading && !batchResult && (
                                         <button
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="w-full py-2 text-xs text-white/25 hover:text-emerald-500/60 transition-colors font-sans font-bold uppercase tracking-tight"
+                                            className="w-full py-2 text-xs text-white/25 hover:text-white/60 transition-colors font-sans font-bold uppercase tracking-tight"
                                         >
                                             + Add more files
                                         </button>
@@ -576,7 +576,7 @@ export default function DataUpload() {
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-xs font-sans font-bold uppercase tracking-tight text-white/30">UPLOADING & PROCESSING</span>
-                                <span className="text-xs font-sans font-bold tracking-tight text-emerald-500 uppercase">{getStageLabel(uploadStage)}</span>
+                                <span className="text-xs font-sans font-bold tracking-tight text-white/60 uppercase">{getStageLabel(uploadStage)}</span>
                             </div>
                             <Progress value={getStageValue(uploadStage)} className="h-1.5 bg-white/[0.04]" />
                         </motion.div>
@@ -593,7 +593,7 @@ export default function DataUpload() {
                             <Button
                                 onClick={handleUpload}
                                 disabled={files.length === 0 || isUploading}
-                                className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(16,185,129,0.15)] disabled:opacity-30 disabled:shadow-none"
+                                className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)] disabled:opacity-30 disabled:shadow-none"
                             >
                                 {isUploading ? (
                                     <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Processing...</>
@@ -621,11 +621,11 @@ export default function DataUpload() {
                         >
                             {/* Success Banner */}
                             {totalRowsInserted > 0 && (
-                                <div className="rounded-xl bg-gradient-to-r from-emerald-500/[0.08] to-green-500/[0.04] border border-emerald-500/20 p-5 mb-4">
+                                <div className="rounded-xl bg-white/[0.03] border border-white/10 p-5 mb-4">
                                     <div className="flex items-start gap-3">
-                                        <CheckCircle2 className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                                        <CheckCircle2 className="h-5 w-5 text-white/80 mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <h3 className="text-sm font-medium text-emerald-300 mb-1">
+                                            <h3 className="text-sm font-medium text-white mb-1">
                                                 {successCount} file{successCount > 1 ? 's' : ''} ingested successfully
                                             </h3>
                                             <p className="text-xs text-white/40 mb-3">
@@ -683,14 +683,14 @@ export default function DataUpload() {
                                 >
                                     <div className="flex items-center gap-3">
                                         {r.success ? (
-                                            <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0" />
+                                            <CheckCircle2 className="h-4 w-4 text-white/80 flex-shrink-0" />
                                         ) : (
                                             <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
                                         )}
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm text-white/70 font-sans font-bold tracking-tight truncate">{r.fileName}</p>
                                             <p className="text-[10px] text-white/30 mt-0.5">
-                                                Detected as <span className="text-emerald-500/70">{r.csvType}</span>
+                                                Detected as <span className="text-white/50">{r.csvType}</span>
                                                 {' · '}{r.rowsProcessed} rows processed
                                                 {' · '}{r.rowsInserted} inserted
                                                 {(r.rowsSkipped || 0) > 0 && <span className="text-amber-400/70"> · {r.rowsSkipped} skipped</span>}
@@ -741,7 +741,7 @@ export default function DataUpload() {
                                 { step: '4', label: 'Detect', desc: 'Run 26 algorithms' },
                             ].map(s => (
                                 <div key={s.step} className="flex items-center gap-2 py-2 px-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
-                                    <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight uppercase">{s.step}</span>
+                                    <span className="text-[10px] font-sans font-bold text-white/40 tracking-tight uppercase">{s.step}</span>
                                     <div>
                                         <p className="text-[11px] text-white/40 font-sans font-bold tracking-tight uppercase">{s.label}</p>
                                         <p className="text-[9px] text-white/20 font-sans tracking-tight uppercase">{s.desc}</p>
