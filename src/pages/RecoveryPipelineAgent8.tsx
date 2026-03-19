@@ -12,31 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { useToast } from '@/hooks/use-toast';
-import { RefreshCw, AlertTriangle, CircleDollarSign, ShieldCheck, Clock3, Activity, MoreHorizontal, Search } from 'lucide-react';
+import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api, detectionApi } from '@/lib/api';
-
-type Agent8RecoveriesPayload = {
-  totalAmount: number;
-  currency: string;
-  claimCount: number;
-  source?: string;
-  dataSource?: string;
-  message?: string;
-  needsSync?: boolean;
-  syncTriggered?: boolean;
-};
-
-type Agent8MetricsPayload = {
-  success: boolean;
-  totalClaimsFound: number;
-  valueInProgress: number;
-  currentlyInProgress: number;
-  successRate30d: number;
-  avgDaysToRecovery?: number;
-  pendingCount?: number;
-  approvedCount?: number;
-};
 
 type Agent3Detection = {
   id: string;
@@ -75,19 +53,6 @@ type Agent3StatsPayload = {
   };
 };
 
-const isRecoveriesShape = (value: any): value is Agent8RecoveriesPayload =>
-  value &&
-  typeof value.totalAmount === 'number' &&
-  typeof value.currency === 'string' &&
-  typeof value.claimCount === 'number';
-
-const isMetricsShape = (value: any): value is Agent8MetricsPayload =>
-  value &&
-  typeof value.totalClaimsFound === 'number' &&
-  typeof value.valueInProgress === 'number' &&
-  typeof value.currentlyInProgress === 'number' &&
-  typeof value.successRate30d === 'number';
-
 const isDetectionResultsShape = (value: any): value is Agent3ResultsPayload =>
   value &&
   Array.isArray(value.results) &&
@@ -115,8 +80,6 @@ export default function RecoveryPipelineAgent8() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [recoveries, setRecoveries] = useState<Agent8RecoveriesPayload | null>(null);
-  const [metrics, setMetrics] = useState<Agent8MetricsPayload | null>(null);
   const [detectionResults, setDetectionResults] = useState<Agent3Detection[]>([]);
   const [detectionStats, setDetectionStats] = useState<Agent3StatsPayload['statistics'] | null>(null);
   const [activeTab, setActiveTab] = useState<'opportunity-queue'>('opportunity-queue');
@@ -139,51 +102,15 @@ export default function RecoveryPipelineAgent8() {
       setLoading(true);
       setError(null);
 
-      const [recoveriesRes, metricsRes, detectionResultsRes, detectionStatsRes] = await Promise.all([
-        api.getAmazonRecoveries(activeSlug).catch((err) => ({ ok: false, error: err instanceof Error ? err.message : 'Failed to fetch Agent 8 recoveries' })),
-        api.getRecoveriesMetrics(activeSlug).catch((err) => ({ ok: false, error: err instanceof Error ? err.message : 'Failed to fetch Agent 8 metrics' })),
+      const [detectionResultsRes, detectionStatsRes] = await Promise.all([
         detectionApi.getDetectionResults({ limit: 25 }, activeSlug).catch((err) => ({ ok: false, error: err instanceof Error ? err.message : 'Failed to fetch Agent 3 detections' })),
         detectionApi.getDetectionStatistics(undefined, activeSlug).catch((err) => ({ ok: false, error: err instanceof Error ? err.message : 'Failed to fetch Agent 3 statistics' })),
       ]);
 
       if (cancelled) return;
 
-      if (!recoveriesRes.ok) {
-        setError(recoveriesRes.error || 'Failed to fetch Agent 8 recoveries');
-        setRecoveries(null);
-        setMetrics(null);
-        setLoading(false);
-        return;
-      }
-
-      if (!isRecoveriesShape(recoveriesRes.data)) {
-        setError('Agent 8 recoveries response shape is invalid.');
-        setRecoveries(null);
-        setMetrics(null);
-        setLoading(false);
-        return;
-      }
-
-      if (!metricsRes.ok) {
-        setError(metricsRes.error || 'Failed to fetch Agent 8 metrics');
-        setRecoveries(null);
-        setMetrics(null);
-        setLoading(false);
-        return;
-      }
-
-      if (!isMetricsShape(metricsRes.data)) {
-        setError('Agent 8 metrics response shape is invalid.');
-        setRecoveries(null);
-        setMetrics(null);
-        setLoading(false);
-        return;
-      }
-
       if (!detectionResultsRes.ok) {
         setError(detectionResultsRes.error || 'Failed to fetch Agent 3 detections');
-        setRecoveries(null);
-        setMetrics(null);
         setDetectionResults([]);
         setDetectionStats(null);
         setLoading(false);
@@ -192,8 +119,6 @@ export default function RecoveryPipelineAgent8() {
 
       if (!isDetectionResultsShape(detectionResultsRes.data)) {
         setError('Agent 3 detections response shape is invalid.');
-        setRecoveries(null);
-        setMetrics(null);
         setDetectionResults([]);
         setDetectionStats(null);
         setLoading(false);
@@ -202,8 +127,6 @@ export default function RecoveryPipelineAgent8() {
 
       if (!detectionStatsRes.ok) {
         setError(detectionStatsRes.error || 'Failed to fetch Agent 3 statistics');
-        setRecoveries(null);
-        setMetrics(null);
         setDetectionResults([]);
         setDetectionStats(null);
         setLoading(false);
@@ -212,16 +135,12 @@ export default function RecoveryPipelineAgent8() {
 
       if (!isDetectionStatsShape(detectionStatsRes.data)) {
         setError('Agent 3 statistics response shape is invalid.');
-        setRecoveries(null);
-        setMetrics(null);
         setDetectionResults([]);
         setDetectionStats(null);
         setLoading(false);
         return;
       }
 
-      setRecoveries(recoveriesRes.data);
-      setMetrics(metricsRes.data);
       setDetectionResults(detectionResultsRes.data.results);
       setDetectionStats(detectionStatsRes.data.statistics);
       setLoading(false);
@@ -231,56 +150,6 @@ export default function RecoveryPipelineAgent8() {
       cancelled = true;
     };
   }, [isReady, activeSlug]);
-
-  const cards = useMemo(() => {
-    if (!recoveries || !metrics) return [];
-
-    return [
-      {
-        label: 'Recovered Total',
-        value: new Intl.NumberFormat('en-US', { style: 'currency', currency: recoveries.currency }).format(recoveries.totalAmount),
-        icon: CircleDollarSign,
-      },
-      {
-        label: 'Recovery Claims',
-        value: String(recoveries.claimCount),
-        icon: ShieldCheck,
-      },
-      {
-        label: 'Pending Count',
-        value: String(metrics.pendingCount ?? metrics.currentlyInProgress),
-        icon: Clock3,
-      },
-      {
-        label: 'Success Rate 30d',
-        value: `${metrics.successRate30d.toFixed(1)}%`,
-        icon: Activity,
-      },
-    ];
-  }, [recoveries, metrics]);
-
-  const detectionCards = useMemo(() => {
-    if (!detectionStats) return [];
-
-    return [
-      {
-        label: 'Open Opportunities',
-        value: String(detectionStats.total_anomalies ?? detectionResults.length),
-      },
-      {
-        label: 'Estimated Value',
-        value: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(detectionStats.total_value ?? 0),
-      },
-      {
-        label: 'High Confidence',
-        value: String(detectionStats.by_confidence?.high ?? 0),
-      },
-      {
-        label: 'Expiring Soon',
-        value: String(detectionStats.expiring_soon ?? 0),
-      },
-    ];
-  }, [detectionResults.length, detectionStats]);
 
   const buildDetectionClaim = (result: Agent3Detection) => ({
     ...result,
@@ -355,8 +224,6 @@ export default function RecoveryPipelineAgent8() {
               onClick={() => {
                 setLoading(true);
                 setError(null);
-                setRecoveries(null);
-                setMetrics(null);
                 setDetectionResults([]);
                 setDetectionStats(null);
               }}
@@ -391,7 +258,7 @@ export default function RecoveryPipelineAgent8() {
             </Card>
           )}
 
-          {!loading && !error && recoveries && metrics && detectionStats && (
+          {!loading && !error && detectionStats && (
             <Tabs value={activeTab} className="space-y-6">
               <TabsContent value="opportunity-queue" className="space-y-6">
                 <Card className="bg-[#0c0c0c] border-white/10">

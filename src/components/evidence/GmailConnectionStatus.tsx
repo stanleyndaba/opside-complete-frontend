@@ -144,8 +144,8 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
     return (
       <div className="flex items-center gap-4 py-4">
         <div className="relative flex h-5 w-5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
-          <span className="relative inline-flex rounded-full h-5 w-5 bg-emerald-500/40"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/10 opacity-20"></span>
+          <span className="relative inline-flex rounded-full h-5 w-5 bg-white/15"></span>
         </div>
         <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Connecting...</span>
       </div>
@@ -156,17 +156,17 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
     <div className="relative group">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-emerald-500/30 transition-colors">
+          <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-white/15 transition-colors">
             <img src="/G.png" alt="Gmail" className="h-4 w-4" />
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-sans font-bold text-emerald-500/50 uppercase tracking-tight">Data Source</span>
+            <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Data Source</span>
             <h3 className="text-sm font-sans font-bold text-white tracking-tight uppercase">Gmail Connection</h3>
           </div>
         </div>
 
         {status?.connected ? (
-          <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-sans font-bold text-emerald-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
+          <div className="px-2.5 py-1 bg-white/[0.03] border border-white/10 text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
             <CheckCircle2 className="w-3 h-3" />
             Connected
           </div>
@@ -216,7 +216,7 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 px-4 text-[10px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all uppercase tracking-tight rounded-lg"
+                className="h-9 px-4 text-[10px] font-sans font-bold text-white/55 hover:text-white hover:bg-white/[0.04] border border-white/10 hover:border-white/20 transition-all uppercase tracking-tight rounded-lg"
               >
                 Connect Gmail
               </Button>

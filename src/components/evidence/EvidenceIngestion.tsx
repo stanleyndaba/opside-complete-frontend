@@ -303,11 +303,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     <div className="relative group">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-emerald-500/30 transition-colors">
-            <Cloud className="h-4 w-4 text-emerald-500/50" />
+          <div className="p-2.5 bg-white/[0.03] border border-white/10 rounded-xl group-hover:border-white/15 transition-colors">
+            <Cloud className="h-4 w-4 text-white/45" />
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-sans font-bold text-emerald-500/50 uppercase tracking-tight">Collector</span>
+            <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Collector</span>
             <h3 className="text-sm font-sans font-bold text-white tracking-tight uppercase">Scanner</h3>
           </div>
         </div>
@@ -319,7 +319,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <div className={cn("h-1.5 w-1.5 rounded-full", hasConnectedSources ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-rose-500")} />
+            <div className={cn("h-1.5 w-1.5 rounded-full", hasConnectedSources ? "bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" : "bg-rose-500")} />
             <span className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
               {sources.length} Active sources
             </span>
@@ -331,7 +331,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         {!loadingSources && sources.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {sources.map((source) => (
-              <div key={source.id} className="px-2 py-0.5 bg-emerald-500/5 border border-emerald-500/10 text-[9px] font-sans font-bold text-emerald-500/60 uppercase tracking-tight rounded-sm">
+              <div key={source.id} className="px-2 py-0.5 bg-white/[0.03] border border-white/10 text-[9px] font-sans font-bold text-white/55 uppercase tracking-tight rounded-sm">
                 {getProviderName(source.provider)}
               </div>
             ))}
@@ -346,7 +346,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
               "w-full h-10 px-6 text-[11px] font-sans font-bold uppercase tracking-tight rounded-lg transition-all",
               ingesting
                 ? "bg-white/[0.03] text-white/40 border border-white/10"
-                : "bg-emerald-500 hover:bg-emerald-600 text-black border-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                : "bg-white/[0.05] hover:bg-white/[0.08] text-white border border-white/10 shadow-none"
             )}
           >
             {ingesting ? (
@@ -365,7 +365,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           {ingesting && (
             <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-white/5 overflow-hidden rounded-full">
               <div
-                className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] transition-all duration-500"
+                className="h-full bg-white/55 shadow-[0_0_10px_rgba(255,255,255,0.25)] transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -386,7 +386,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-0.5">
                 <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Sync Summary</span>
-                <span className={cn("text-xs font-sans font-bold uppercase", result.success ? "text-emerald-500" : "text-rose-500")}>
+                <span className={cn("text-xs font-sans font-bold uppercase", result.success ? "text-white/70" : "text-rose-500")}>
                   {result.success ? 'Success' : 'Error'}
                 </span>
               </div>
