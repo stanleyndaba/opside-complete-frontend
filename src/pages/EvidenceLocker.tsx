@@ -947,12 +947,12 @@ export default function EvidenceLocker() {
                   <GmailConnectionStatus onStatusChange={setGmailConnected} />
                 </div>
                 <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-6">
-                  <EvidenceIngestion
-                    gmailConnected={gmailConnected}
-                    onLogEvent={(event, delayMs) => addDocLog(event, delayMs)}
-                    onIngestionComplete={() => {
+                    <EvidenceIngestion
+                      gmailConnected={gmailConnected}
+                      onLogEvent={(event, delayMs) => addDocLog(event, delayMs)}
+                      onIngestionComplete={() => {
                       // Refresh documents after ingestion
-                      api.getDocuments().then(res => {
+                      api.getDocuments(activeSlug).then(res => {
                         if (res.ok && Array.isArray(res.data)) {
                           setDocuments(res.data);
                         }
