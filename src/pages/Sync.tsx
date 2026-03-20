@@ -251,7 +251,7 @@ export default function Sync() {
       'orders': { title: 'Order Ledger Check', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
       'shipments': { title: 'Shipment Verification', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
       'returns': { title: 'Returns Analysis', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
-      'settlements': { title: 'Settlement Reconciliation', linkTo: tenantRoute(currentTenantSlug, '/upcoming-payments') },
+      'settlements': { title: 'Settlement Reconciliation', linkTo: tenantRoute(currentTenantSlug, '/billing') },
       'fees': { title: 'Fee Audit', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
       'claims': { title: 'Claim Detection', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },
       'detection': { title: 'Opportunity Detection', linkTo: tenantRoute(currentTenantSlug, '/recoveries') },

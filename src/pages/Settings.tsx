@@ -544,7 +544,7 @@ const Settings = () => {
                   <div className="flex flex-col gap-3">
                     <Button
                       className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/upcoming-payments'))}
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/billing'))}
                     >
                       View Documents
                     </Button>

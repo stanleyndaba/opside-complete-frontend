@@ -8,7 +8,7 @@ import { useTenant } from '@/contexts/TenantContext';
  * Deterministically resolves the active tenant and redirects the user
  * from root-level paths (/app, /dashboard) to their scoped tenant dashboard.
  */
-export function TenantRedirect() {
+export function TenantRedirect({ targetPath = '/dashboard' }: { targetPath?: string }) {
     const navigate = useNavigate();
     const { tenant } = useTenant();
 
@@ -20,8 +20,8 @@ export function TenantRedirect() {
         const storedSlug = localStorage.getItem('active_tenant_slug');
         const resolvedSlug = tenant?.slug || storedSlug || 'beta';
 
-        navigate(`/app/${resolvedSlug}/dashboard`, { replace: true });
-    }, [tenant, navigate]);
+        navigate(`/app/${resolvedSlug}${targetPath.startsWith('/') ? targetPath : `/${targetPath}`}`, { replace: true });
+    }, [tenant, navigate, targetPath]);
 
     return (
         <div className="min-h-screen bg-black flex items-center justify-center">

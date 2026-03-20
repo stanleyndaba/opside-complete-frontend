@@ -49,8 +49,6 @@ const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
 const Privacy = lazy(() => import("./pages/Privacy"));
-const UpcomingPayments = lazy(() => import("./pages/UpcomingPayments"));
-const TransactionHistory = lazy(() => import("./pages/TransactionHistory"));
 const RevenueModel = lazy(() => import("./pages/RevenueModel"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminUsersAndIntegrations = lazy(() => import("./pages/AdminUsersAndIntegrations"));
@@ -164,13 +162,13 @@ const App = () => (
                         <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
                         <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
                         <Route path="/app/:tenantSlug/resolve/:id" element={<ResolveCase />} />
-                        <Route path="/app/:tenantSlug/history" element={<TransactionHistory />} />
+                        <Route path="/app/:tenantSlug/history" element={<Navigate to="../billing" replace />} />
                         <Route path="/app/:tenantSlug/documents" element={<EvidenceLocker />} />
                         <Route path="/app/:tenantSlug/evidence-locker" element={<EvidenceLocker />} />
                         <Route path="/app/:tenantSlug/documents/:id" element={<DocumentDetail />} />
                         <Route path="/app/:tenantSlug/notifications" element={<NotificationHub />} />
                         <Route path="/app/:tenantSlug/settings" element={<Settings />} />
-                        <Route path="/app/:tenantSlug/upcoming-payments" element={<UpcomingPayments />} />
+                        <Route path="/app/:tenantSlug/upcoming-payments" element={<Navigate to="../billing" replace />} />
                         <Route path="/app/:tenantSlug/reconnect-amazon" element={<ReconnectProvider />} />
                         <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={<ReconnectProvider />} />
                         <Route path="/app/:tenantSlug/billing" element={<Billing />} />
@@ -199,7 +197,8 @@ const App = () => (
                         <Route path="/settings" element={<TenantRedirect />} />
                         <Route path="/reconnect-amazon" element={<TenantRedirect />} />
                         <Route path="/billing" element={<TenantRedirect />} />
-                        <Route path="/upcoming-payments" element={<TenantRedirect />} />
+                        <Route path="/history" element={<TenantRedirect targetPath="/billing" />} />
+                        <Route path="/upcoming-payments" element={<TenantRedirect targetPath="/billing" />} />
                         <Route path="/admin/queue" element={<TenantRedirect />} />
                         <Route path="/admin/users-integrations" element={<TenantRedirect />} />
                         <Route path="/pricing-adjust" element={<TenantRedirect />} />

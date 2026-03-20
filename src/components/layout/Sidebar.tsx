@@ -29,9 +29,6 @@ const prefetchRoute = (path: string) => {
       case '/reports':
         import('@/pages/Reports');
         break;
-      case '/upcoming-payments':
-        import('@/pages/UpcomingPayments');
-        break;
       case '/recoveries':
         import('@/pages/Recoveries');
         break;
@@ -49,9 +46,6 @@ const prefetchRoute = (path: string) => {
         break;
       case '/billing':
         import('@/pages/Billing');
-        break;
-      case '/history':
-        import('@/pages/TransactionHistory');
         break;
       default:
         break;
@@ -178,7 +172,6 @@ export function Sidebar({
     { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
-    { title: 'Refund Recoveries', icon: Plug, href: tenantRoute(currentTenantSlug, '/upcoming-payments') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') }
   ];
 
@@ -403,12 +396,6 @@ export function Sidebar({
                 </div>
                 <span>Updates</span>
               </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigate(tenantRoute(currentTenantSlug, '/history'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <BarChart3 className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
-              <span>Transaction History</span>
             </DropdownMenuItem>
             {/* Reports hidden - Beta Roll Out Soon
             <DropdownMenuItem
