@@ -27,7 +27,7 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
                 Active Case: {caseId ? caseId.substring(0, 8).toUpperCase() : 'PENDING_VALIDATION'}
               </p>
               <p className="text-[11px] text-white/40 uppercase font-bold tracking-tight">
-                Subscription: $99.00 / Month
+                One-Time $99 Priority Audit Pass
               </p>
             </div>
             
@@ -42,15 +42,22 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
                 <div className="px-4 py-3 bg-transparent flex items-center gap-3">
                   <div className="w-1 h-1 bg-white/40" />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[10px] font-bold text-white uppercase tracking-tight">Unlimited Auto-Filing</div>
-                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">Zero-Touch Submission Pipeline</div>
+                    <div className="text-[10px] font-bold text-white uppercase tracking-tight">Priority Recovery Cycle</div>
+                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">One-time pass for this recovery cycle</div>
                   </div>
                 </div>
                 <div className="px-4 py-3 bg-transparent flex items-center gap-3">
                   <div className="w-1 h-1 bg-white/40" />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[10px] font-bold text-white uppercase tracking-tight">Handshake Priority</div>
-                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">Amazon Case Management Overlay</div>
+                    <div className="text-[10px] font-bold text-white uppercase tracking-tight">Credited Against Success Fee</div>
+                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">You never pay more than 20% total</div>
+                  </div>
+                </div>
+                <div className="px-4 py-3 bg-transparent flex items-center gap-3">
+                  <div className="w-1 h-1 bg-white/40" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[10px] font-bold text-white uppercase tracking-tight">Confirmed Recovery Billing Only</div>
+                    <div className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tight">Fees only trigger after payout is confirmed</div>
                   </div>
                 </div>
               </div>

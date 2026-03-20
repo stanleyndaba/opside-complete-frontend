@@ -1450,9 +1450,14 @@ export const api = {
         id: string;
         recovery_id: string;
         amount: number;
+        confirmed_recovered_amount: number;
         platform_fee: number;
+        credit_applied: number;
+        amount_due: number;
+        credit_balance_remaining: number;
         seller_payout: number;
         status: string;
+        paypal_invoice_id?: string | null;
         created_at: string;
       }>;
       total: number;
@@ -1472,14 +1477,21 @@ export const api = {
         period_start: string;
         period_end: string;
         total_amount: number;
+        confirmed_recovered_amount: number;
         platform_fee: number;
+        credit_applied: number;
+        amount_due: number;
+        available_credit_balance: number;
         status: string;
+        paypal_invoice_id?: string | null;
       }>;
       total: number;
     }>(`/api/billing/invoices${query ? `?${query}` : ''}`);
   },
-  downloadInvoicePdf: async (invoiceId: string, userId?: string): Promise<void> => {
+  downloadInvoicePdf: async (invoiceId: string, tenantSlug?: string, userId?: string): Promise<void> => {
+    if (!tenantSlug) throw new Error("tenantSlug required for downloadInvoicePdf");
     const queryParams = new URLSearchParams();
+    queryParams.append('tenantSlug', tenantSlug);
     if (userId) queryParams.append('userId', userId);
     const query = queryParams.toString();
     const url = buildApiUrl(`/api/billing/invoices/${encodeURIComponent(invoiceId)}/pdf${query ? `?${query}` : ''}`);
@@ -1503,17 +1515,27 @@ export const api = {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(downloadUrl);
   },
-  getBillingStatus: (userId?: string) => {
-    const query = userId ? `?userId=${encodeURIComponent(userId)}` : '';
+  getBillingStatus: (userId?: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getBillingStatus");
+    const queryParams = new URLSearchParams();
+    queryParams.append('tenantSlug', tenantSlug);
+    if (userId) queryParams.append('userId', userId);
+    const query = queryParams.toString();
     return requestJson<{
       success: boolean;
       status: {
         total_recovered: number;
         total_fees: number;
+        total_credit_applied: number;
+        total_amount_due: number;
         pending_billing: number;
+        available_credit_balance: number;
         last_billing_date?: string;
+        current_recovery_cycle_id?: string | null;
+        current_recovery_cycle_type?: string | null;
+        current_recovery_cycle_started_at?: string | null;
       };
-    }>(`/api/billing/status${query}`);
+    }>(`/api/billing/status?${query}`);
   },
 
   // Agent 10: Notifications endpoints

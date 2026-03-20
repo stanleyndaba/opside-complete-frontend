@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,10 +8,17 @@ import { Check, ArrowRight, Sparkles, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
+import { UpgradeModal } from '@/components/modals/UpgradeModal';
 
 export default function PricingAdjust() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+
+  useEffect(() => {
+    setUpgradeOpen(searchParams.get('priority') === '1');
+  }, [searchParams]);
 
   const handleStandardClick = () => {
     if (tenantSlug) {
@@ -19,6 +26,15 @@ export default function PricingAdjust() {
     } else {
       navigate('/pricing/standard-agreement');
     }
+  };
+
+  const openPriorityCheckout = () => {
+    setSearchParams({ priority: '1' });
+  };
+
+  const closePriorityCheckout = () => {
+    setUpgradeOpen(false);
+    setSearchParams({});
   };
 
   return (
@@ -151,7 +167,7 @@ export default function PricingAdjust() {
                     <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
                       <p className="text-sm font-bold text-white">Cost: One-time $99</p>
-                      <p className="text-[11px] text-emerald-400/60 font-bold uppercase tracking-tight">100% credited against success fees</p>
+                      <p className="text-[11px] text-emerald-400/60 font-bold uppercase tracking-tight">Fully credited against your 20% success fee</p>
                     </div>
                   </div>
 
@@ -172,6 +188,7 @@ export default function PricingAdjust() {
                     <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
                       <p className="text-sm text-white/80">Priority support & case follow ups</p>
+                      <p className="text-[11px] text-white/30 uppercase tracking-normal">Only billed after confirmed recovery</p>
                     </div>
                   </div>
 
@@ -185,15 +202,16 @@ export default function PricingAdjust() {
                 </div>
 
                 <div className="mt-auto flex flex-col gap-6">
-                  <Button 
-                    asChild
+                  <Button
+                    type="button"
+                    onClick={openPriorityCheckout}
                     variant="default"
                     className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                   >
-                    <a href="https://www.paypal.com/ncp/payment/2KZY7JX8MNTPC" target="_blank" rel="noopener noreferrer">
+                    <>
                       Get Priority
                       <ArrowRight className="h-4 w-4" />
-                    </a>
+                    </>
                   </Button>
                   <div className="pt-6 border-t border-white/10">
                     <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
@@ -286,6 +304,7 @@ export default function PricingAdjust() {
           <BrandFooter />
         </div>
       </div>
+      <UpgradeModal isOpen={upgradeOpen} onClose={closePriorityCheckout} />
     </PageLayout>
   );
 }

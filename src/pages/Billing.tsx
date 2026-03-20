@@ -4,120 +4,134 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-
 import { Input } from '@/components/ui/input';
-
 import { useToast } from '@/components/ui/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import {
-  Download,
-  Check,
-  ChevronRight,
-  AlertCircle,
-  Zap,
-  Globe,
-  Lock,
-  History,
-  Mail,
-  Receipt,
-  ArrowUpRight,
-  Scale,
-  X
-} from 'lucide-react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { cn } from '@/lib/utils';
 import { api, detectionApi } from '@/lib/api';
-import { tenantRoute } from '@/lib/routes';
-import { motion, AnimatePresence } from 'framer-motion';
+
+type BillingRowStatus =
+  | 'pending'
+  | 'sent'
+  | 'charged'
+  | 'credited'
+  | 'failed'
+  | 'refunded'
+  | 'due'
+  | 'overdue'
+  | 'paid';
 
 interface InvoiceRecord {
   id: string;
   dateIssued: string;
-  status: 'SETTLED' | 'PENDING' | 'BREACH';
+  status: BillingRowStatus;
   totalRecovered: number;
   commission: number;
+  creditApplied: number;
+  amountDue: number;
+  remainingCreditBalance: number;
   amountCharged: number;
   recoveryClaimIds?: string[];
+  paypalInvoiceId?: string | null;
 }
 
-const getStatusStyles = (status: InvoiceRecord['status']) => {
-  switch (status) {
-    case 'SETTLED':
-      return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
-    case 'PENDING':
-      return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
-    case 'BREACH':
-      return 'bg-rose-500/10 text-rose-500 border-rose-500/20';
-    default:
-      return 'bg-white/5 text-white/40 border-white/10';
-  }
+interface BillingSummary {
+  totalRecovered: number;
+  totalFees: number;
+  totalCreditApplied: number;
+  totalAmountDue: number;
+  pendingBilling: number;
+  availableCreditBalance: number;
+  lastBillingDate?: string;
+  currentRecoveryCycleId?: string | null;
+  currentRecoveryCycleType?: string | null;
+  currentRecoveryCycleStartedAt?: string | null;
+}
+
+const statusLabels: Record<BillingRowStatus, string> = {
+  pending: 'Pending',
+  sent: 'Sent',
+  charged: 'Paid',
+  credited: 'Credited',
+  failed: 'Failed',
+  refunded: 'Refunded',
+  due: 'Due',
+  overdue: 'Overdue',
+  paid: 'Paid',
 };
+
+const statusStyles: Record<BillingRowStatus, string> = {
+  pending: 'border-amber-500/20 bg-amber-500/10 text-amber-300',
+  sent: 'border-sky-500/20 bg-sky-500/10 text-sky-300',
+  charged: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
+  credited: 'border-indigo-500/20 bg-indigo-500/10 text-indigo-300',
+  failed: 'border-rose-500/20 bg-rose-500/10 text-rose-300',
+  refunded: 'border-stone-500/20 bg-stone-500/10 text-stone-300',
+  due: 'border-amber-500/20 bg-amber-500/10 text-amber-300',
+  overdue: 'border-rose-500/20 bg-rose-500/10 text-rose-300',
+  paid: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
+};
+
+const metricCards = [
+  {
+    key: 'availableCreditBalance',
+    label: 'Available credit balance',
+  },
+  {
+    key: 'totalRecovered',
+    label: 'Confirmed recovered amount',
+  },
+  {
+    key: 'totalFees',
+    label: 'Total 20% success fees',
+  },
+  {
+    key: 'totalCreditApplied',
+    label: 'Credit applied',
+  },
+  {
+    key: 'totalAmountDue',
+    label: 'Total amount due',
+  },
+  {
+    key: 'pendingBilling',
+    label: 'Pending billing',
+  },
+] as const;
+
+function formatMoney(value: number) {
+  return `$${value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function normalizeInvoiceStatus(status: unknown): BillingRowStatus {
+  const normalized = String(status || 'pending').toLowerCase();
+  if (normalized === 'settled') return 'paid';
+  if (normalized in statusLabels) return normalized as BillingRowStatus;
+  return 'pending';
+}
 
 export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady, tenant } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || 'beta';
-
   const { toast } = useToast();
-  const navigate = useNavigate();
+
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
+  const [billingSummary, setBillingSummary] = useState<BillingSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Vault Status (Phase 2 Auto-Charge)
   const [vaultedEmail, setVaultedEmail] = useState<string | null>(null);
   const [isVaulting, setIsVaulting] = useState(false);
-
-  // Fetch vaulted status
-  useEffect(() => {
-    if (!isReady) return;
-    (async () => {
-      try {
-        const res = await api.getUserProfile(activeSlug);
-        if (res.ok && res.data && (res.data as any)?.paypal_payment_token) {
-          setVaultedEmail((res.data as any)?.paypal_email || 'Linked Account');
-        }
-      } catch (err) {
-        console.error('Failed to fetch vault status:', err);
-      }
-    })();
-  }, [isReady, activeSlug]);
-
-  const handleLinkPaymentMethod = async () => {
-    setIsVaulting(true);
-    try {
-      // 1. Get Setup Token from Backend
-      const setupRes = await detectionApi.getVaultSetupToken();
-      if (!setupRes.ok) throw new Error(setupRes.error || 'Failed to get setup token');
-      
-      const setupTokenId = setupRes.data?.setupToken?.id;
-
-      // 2. Finalize Vaulting
-      // In production, this would be triggered by a PayPal SDK callback (onApprove/onSuccess)
-      const sellerId = localStorage.getItem('user_id') || 'demo-user';
-      
-      const finalizeRes = await detectionApi.finalizeVaulting(setupTokenId, sellerId);
-      if (finalizeRes.ok) {
-        setVaultedEmail(finalizeRes.data?.paypalEmail || 'Linked Account');
-        toast({ 
-          title: 'Payment Method Linked', 
-          description: `Auto-charge protocol enabled for ${finalizeRes.data?.paypalEmail || 'your account'}.`
-        });
-      } else {
-        throw new Error(finalizeRes.error || 'Failed to finalize vaulting');
-      }
-    } catch (err: any) {
-      toast({ title: 'Vaulting Failed', description: err.message, variant: 'destructive' });
-    } finally {
-      setIsVaulting(false);
-    }
-  };
-
-  // Financial Registration
   const [invoiceRecipients, setInvoiceRecipients] = useState<string[]>([]);
   const [newRecipient, setNewRecipient] = useState('');
   const [taxId, setTaxId] = useState('');
+  const [invoiceSearch, setInvoiceSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | BillingRowStatus>('all');
 
   useEffect(() => {
     try {
@@ -126,598 +140,518 @@ export default function Billing() {
         setInvoiceRecipients(Array.isArray(saved.recipients) ? saved.recipients : []);
         setTaxId(saved.taxId || '');
       }
-    } catch { }
+    } catch {
+      setInvoiceRecipients([]);
+      setTaxId('');
+    }
   }, []);
 
-
-  // Fetch invoices
   useEffect(() => {
     if (!isReady) return;
     let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await api.getUserProfile(activeSlug);
+        const profile = (res.data as any) || {};
+        if (!cancelled && res.ok && profile?.paypal_payment_token) {
+          setVaultedEmail(profile.paypal_email || 'Linked PayPal account');
+        }
+      } catch (fetchError) {
+        console.error('Failed to fetch vault status:', fetchError);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isReady, activeSlug]);
+
+  useEffect(() => {
+    if (!isReady) return;
+    let cancelled = false;
+
     (async () => {
       setLoading(true);
       setError(null);
+
       try {
-        // Try new revenue invoices first
-        const revenueRes = await detectionApi.getRevenueInvoices({ limit: 100 });
-        if (!cancelled && revenueRes.ok && revenueRes.data?.data?.invoices?.length > 0) {
-          const mapped: InvoiceRecord[] = revenueRes.data.data.invoices.map((inv: any) => {
-            let status: 'SETTLED' | 'PENDING' | 'BREACH' = 'PENDING';
-            const s = (inv.status || '').toLowerCase();
-            if (s === 'paid') status = 'SETTLED';
-            else if (s === 'void' || s === 'disputed') status = 'BREACH';
+        const [invoiceRes, statusRes] = await Promise.all([
+          api.getBillingInvoices({ limit: 100 }, activeSlug),
+          api.getBillingStatus(undefined, activeSlug),
+        ]);
 
-            return {
-              id: inv.invoice_number || inv.id,
-              dateIssued: (inv.period_end || inv.created_at || '').split('T')[0],
-              status,
-              totalRecovered: Number(inv.total_reimbursements || 0),
-              commission: Number(inv.commission_amount || 0),
-              amountCharged: Number(inv.commission_amount || 0),
-            };
-          });
-          setInvoices(mapped);
-          return;
+        if (cancelled) return;
+
+        if (!invoiceRes.ok) {
+          throw new Error(invoiceRes.error || 'Failed to load billing history');
         }
 
-        // Fallback to old billing API
-        const response = await api.getBillingInvoices({ limit: 100 }, activeSlug);
-        if (!cancelled) {
-          if (response.ok && response.data?.invoices) {
-            const mappedInvoices: InvoiceRecord[] = response.data.invoices.map((inv: any) => {
-              let status: 'SETTLED' | 'PENDING' | 'BREACH' = 'SETTLED';
-              if (inv.status) {
-                const s = inv.status.toLowerCase();
-                if (s === 'due' || s === 'pending') status = 'PENDING';
-                else if (s === 'overdue') status = 'BREACH';
-                else status = 'SETTLED';
-              }
-
-              const dateIssued = inv.period_end || inv.created_at || inv.date_issued || new Date().toISOString();
-
-              return {
-                id: (inv.id || inv.invoice_id || `TRN-${Date.now()}`).toString(),
-                dateIssued: dateIssued.split('T')[0],
-                status,
-                totalRecovered: Number(inv.total_amount || inv.total_recovered || 0),
-                commission: Number(inv.platform_fee || inv.commission || 0),
-                amountCharged: Number(inv.platform_fee || inv.amount_charged || 0),
-                recoveryClaimIds: inv.recovery_claim_ids || inv.recovery_ids || []
-              };
-            });
-            setInvoices(mappedInvoices);
-          } else {
-            setError(response.error || 'Failed to sync billing data.');
-          }
+        if (!statusRes.ok) {
+          throw new Error(statusRes.error || 'Failed to load billing summary');
         }
-      } catch (err: any) {
-        console.error('Failed to fetch billing data:', err);
+
+        const mappedInvoices: InvoiceRecord[] = (invoiceRes.data?.invoices || []).map((invoice: any) => ({
+          id: String(invoice.id || invoice.invoice_id || ''),
+          dateIssued: String(invoice.period_end || invoice.created_at || new Date().toISOString()).split('T')[0],
+          status: normalizeInvoiceStatus(invoice.status),
+          totalRecovered: Number(invoice.confirmed_recovered_amount || invoice.total_amount || 0),
+          commission: Number(invoice.platform_fee || invoice.commission || 0),
+          creditApplied: Number(invoice.credit_applied || 0),
+          amountDue: Number(invoice.amount_due || 0),
+          remainingCreditBalance: Number(invoice.available_credit_balance || 0),
+          amountCharged: Number(invoice.amount_due || 0),
+          recoveryClaimIds: invoice.recovery_claim_ids || [],
+          paypalInvoiceId: invoice.paypal_invoice_id || null,
+        }));
+
+        setInvoices(mappedInvoices);
+        setBillingSummary({
+          totalRecovered: Number(statusRes.data?.status?.total_recovered || 0),
+          totalFees: Number(statusRes.data?.status?.total_fees || 0),
+          totalCreditApplied: Number(statusRes.data?.status?.total_credit_applied || 0),
+          totalAmountDue: Number(statusRes.data?.status?.total_amount_due || 0),
+          pendingBilling: Number(statusRes.data?.status?.pending_billing || 0),
+          availableCreditBalance: Number(statusRes.data?.status?.available_credit_balance || 0),
+          lastBillingDate: statusRes.data?.status?.last_billing_date,
+          currentRecoveryCycleId: statusRes.data?.status?.current_recovery_cycle_id || null,
+          currentRecoveryCycleType: statusRes.data?.status?.current_recovery_cycle_type || null,
+          currentRecoveryCycleStartedAt: statusRes.data?.status?.current_recovery_cycle_started_at || null,
+        });
+      } catch (fetchError: any) {
+        console.error('Failed to fetch billing data:', fetchError);
         if (!cancelled) {
           setInvoices([]);
-          setError("Billing information temporary unavailable. Please refresh and try again.");
+          setBillingSummary(null);
+          setError(fetchError.message || 'Billing information is temporarily unavailable.');
         }
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+
+    return () => {
+      cancelled = true;
+    };
   }, [isReady, activeSlug]);
+
+  const handleLinkPaymentMethod = async () => {
+    setIsVaulting(true);
+    try {
+      const setupRes = await detectionApi.getVaultSetupToken();
+      if (!setupRes.ok) throw new Error(setupRes.error || 'Failed to start PayPal setup');
+
+      const setupTokenId = setupRes.data?.setupToken?.id;
+      const sellerId = localStorage.getItem('user_id') || 'demo-user';
+      const finalizeRes = await detectionApi.finalizeVaulting(setupTokenId, sellerId);
+      if (!finalizeRes.ok) throw new Error(finalizeRes.error || 'Failed to save PayPal billing method');
+
+      setVaultedEmail(finalizeRes.data?.paypalEmail || 'Linked PayPal account');
+      toast({
+        title: 'Payment method linked',
+        description: 'PayPal can now be used for future confirmed-recovery billing flows.',
+      });
+    } catch (vaultError: any) {
+      toast({
+        title: 'Unable to link payment method',
+        description: vaultError.message || 'PayPal setup failed.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsVaulting(false);
+    }
+  };
 
   const saveBillingSettings = () => {
     localStorage.setItem('clario.billing', JSON.stringify({ recipients: invoiceRecipients, taxId }));
-    toast({ title: 'Settings Updated', description: 'Your billing preferences have been saved.' });
-  };
-
-
-  const exportBillingPDF = async () => {
-    const { default: jsPDF } = await import('jspdf');
-    const autoTable = (await import('jspdf-autotable')).default;
-
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-
-    // Background
-    doc.setFillColor(10, 10, 10);
-    doc.rect(0, 0, 297, 210, 'F');
-
-    // Header
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.text('Billing History', 20, 25);
-
-    doc.setTextColor(120, 120, 120);
-    doc.setFontSize(10);
-    doc.text('Complete log of all recoveries and payments.', 20, 33);
-
-    // Meta line
-    doc.setDrawColor(40, 40, 40);
-    doc.line(20, 38, 277, 38);
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 43);
-    doc.text(`Records: ${invoices.length}`, 250, 43);
-
-    // Table
-    const tableRows = invoices.map(inv => [
-      inv.id,
-      new Date(inv.dateIssued).toLocaleDateString(),
-      inv.status,
-      `$${inv.totalRecovered.toLocaleString()}`,
-      `$${inv.commission.toLocaleString()}`,
-      `$${inv.amountCharged.toLocaleString()}`
-    ]);
-
-    if (tableRows.length === 0) {
-      tableRows.push(['', '', '', 'No billing records found.', '', '']);
-    }
-
-    autoTable(doc, {
-      startY: 48,
-      head: [['Invoice ID', 'Date', 'Status', 'Recovered', 'Fee', 'Charged']],
-      body: tableRows,
-      theme: 'plain',
-      styles: {
-        fillColor: [15, 15, 15],
-        textColor: [180, 180, 180],
-        fontSize: 9,
-        cellPadding: 5,
-        lineColor: [30, 30, 30],
-        lineWidth: 0.1,
-      },
-      headStyles: {
-        fillColor: [20, 20, 20],
-        textColor: [100, 100, 100],
-        fontSize: 7,
-        fontStyle: 'bold',
-        cellPadding: 4,
-      },
-      columnStyles: {
-        3: { halign: 'right' },
-        4: { halign: 'right' },
-        5: { halign: 'right', textColor: [255, 255, 255], fontStyle: 'bold' },
-      },
-      alternateRowStyles: {
-        fillColor: [12, 12, 12],
-      },
+    toast({
+      title: 'Billing settings saved',
+      description: 'Invoice recipients and tax details have been updated locally.',
     });
-
-    // Footer
-    const pageHeight = doc.internal.pageSize.getHeight();
-    doc.setTextColor(60, 60, 60);
-    doc.setFontSize(7);
-    doc.text('MARGIN — BILLING SYSTEM', 148.5, pageHeight - 10, { align: 'center' });
-
-    doc.save(`margin-billing-history-${new Date().toISOString().slice(0, 10)}.pdf`);
-    toast({ title: 'PDF Downloaded', description: 'Your billing history has been saved.' });
   };
-
-  const [invoiceSearch, setInvoiceSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | InvoiceRecord['status']>('ALL');
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
   const filteredInvoices = useMemo(() => {
     const term = invoiceSearch.trim().toLowerCase();
-    return (invoices || [])
-      .filter(inv => {
-        if (!inv) return false;
-        const matchesSearch = !term ||
-          (inv.id && inv.id.toLowerCase().includes(term)) ||
-          (inv.status && inv.status.toLowerCase().includes(term));
-        const matchesStatus = statusFilter === 'ALL' || inv.status === statusFilter;
-        return matchesSearch && matchesStatus;
-      })
-      .sort((a, b) => new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime());
+    return invoices.filter((invoice) => {
+      const matchesSearch =
+        !term ||
+        invoice.id.toLowerCase().includes(term) ||
+        statusLabels[invoice.status].toLowerCase().includes(term) ||
+        (invoice.paypalInvoiceId || '').toLowerCase().includes(term);
+      const matchesStatus = statusFilter === 'all' || invoice.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
   }, [invoices, invoiceSearch, statusFilter]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredInvoices.length / pageSize));
-  const pageData = filteredInvoices.slice((page - 1) * pageSize, page * pageSize);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 }
-  };
-
 
   return (
     <PageLayout title="Billing" midnight>
-      <div className="relative min-h-screen font-sans bg-[#070707] text-white">
-        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-
-        <div className="relative container mx-auto px-4 md:px-8 py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
-          >
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                <Badge variant="outline" className="px-3 py-0.5 border-white/10 bg-white/[0.02] text-white/60 font-sans font-bold text-[9px] tracking-tight uppercase">
-                  Billing System // Active
-                </Badge>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Billing.</h1>
-              <p className="text-white/40 mt-3 font-sans font-bold text-lg max-w-2xl tracking-tight">View your billing history and manage payment settings.</p>
+      <div className="min-h-screen bg-[#070707] text-white">
+        <div className="container mx-auto px-4 py-12 md:px-8">
+          <div className="mb-10 space-y-4">
+            <Badge variant="outline" className="border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-white/60">
+              Billing truth surface
+            </Badge>
+            <div className="space-y-2">
+              <h1 className="text-4xl font-medium tracking-tight text-white">Billing</h1>
+              <p className="max-w-3xl text-sm leading-6 text-white/65">
+                This page shows one-time $99 prepaid credit per recovery cycle, 20% success fees on confirmed recovered money,
+                credit applied against those fees, and any remaining amount due after confirmed payout.
+              </p>
+              <p className="max-w-3xl text-sm leading-6 text-white/50">
+                PayPal handles the upfront checkout and any later collection flow. Billing only happens after confirmed recovery,
+                and you never pay more than the 20% success fee total.
+              </p>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Core Protocol Cards */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mb-16 space-y-6"
-          >
-            {/* PayPal Protocol Status */}
-            <motion.div variants={itemVariants}>
-              <Card className="bg-[#111111]/90 border border-white/10 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full group">
-                <CardHeader className="p-8 pb-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <CardTitle className="text-2xl font-sans font-bold tracking-tight">Billing &amp; Invoices</CardTitle>
-                    </div>
-                    <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-white/60 font-sans font-bold text-[9px] tracking-tight uppercase px-3 py-1">
-                      EXCLUSIVE MODE
-                    </Badge>
-                  </div>
+          <div className="mb-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {metricCards.map((metric) => (
+              <Card key={metric.key} className="border-white/10 bg-[#111111] text-white">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-white/70">{metric.label}</CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 pt-0 space-y-6">
-                  <div className="flex flex-col md:flex-row items-center gap-8 py-4">
-                    <div className="h-24 w-24 flex items-center justify-center rounded-2xl bg-white/[0.02] border border-white/5 p-4">
-                      <svg viewBox="0 0 24 24" className="w-full h-full fill-white/60" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.067 8.178c-.652 4.1-3.6 5.867-7.444 5.867h-.822c-.445 0-.777.334-.845.778l-1.044 6.555a.311.311 0 0 1-.31.278H6.555c-.244 0-.4-.2-.334-.4l2.422-15.356c.067-.4.4-.711.823-.711h6.066c1.867 0 3.378.489 4.156 1.489.266.356.444.8.444 1.289 0 .889-.289 1.622-.067 2.211z" />
-                      </svg>
-                    </div>
-                    <div className="space-y-3">
-                      <p className="text-lg font-sans font-bold text-white/90 tracking-tight leading-snug">
-                        Margin now operates exclusively via PayPal Invoicing.
-                      </p>
-                      <div className="flex flex-wrap items-center gap-3 pt-2">
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                          Payment Infrastructure via PayPal
-                        </div>
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                          AES-256 Encrypted
-                        </div>
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                          Automated Ledger Reconciliation
-                        </div>
-                      </div>
+                <CardContent>
+                  <div className="text-2xl font-medium text-white">
+                    {billingSummary ? formatMoney(billingSummary[metric.key]) : '—'}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mb-10 grid gap-6 lg:grid-cols-2">
+            <Card className="border-white/10 bg-[#111111] text-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-medium">Current recovery cycle</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-white/70">
+                <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-3">
+                  <span>Recovery cycle ID</span>
+                  <span className="text-right text-white/90">
+                    {billingSummary?.currentRecoveryCycleId || 'No active recovery cycle'}
+                  </span>
                 </div>
-              </div>
+                <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-3">
+                  <span>Cycle type</span>
+                  <span className="text-right text-white/90">
+                    {billingSummary?.currentRecoveryCycleType || 'Not available'}
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-6">
+                  <span>Cycle started</span>
+                  <span className="text-right text-white/90">
+                    {billingSummary?.currentRecoveryCycleStartedAt
+                      ? new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()
+                      : 'Not available'}
+                  </span>
+                </div>
+                <p className="pt-2 text-sm leading-6 text-white/55">
+                  The prepaid $99 Priority Audit Pass is attached to a recovery cycle. Any unused credit carries forward until it is
+                  applied against future confirmed-recovery fees.
+                </p>
+              </CardContent>
+            </Card>
 
-              <div className="pt-6 border-t border-white/5">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-sans font-bold text-white/90 tracking-tight">Payment Profile Configuration</span>
-                      </div>
-                      <Badge variant="outline" className={cn(
-                        "text-[9px] font-sans font-bold px-2 py-0.5 tracking-tight uppercase",
-                        vaultedEmail ? "border-emerald-500/20 text-emerald-500 bg-emerald-500/5" : "border-white/10 text-white/20"
-                      )}>
-                        {vaultedEmail ? "ENABLED" : "INACTIVE"}
-                      </Badge>
-                    </div>
-                    
-                    {vaultedEmail ? (
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-emerald-500/5">
-                             <Mail className="h-3 w-3 text-emerald-500" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Linked Account</p>
-                            <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{vaultedEmail}</p>
-                          </div>
-                        </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={handleLinkPaymentMethod}
-                          disabled={isVaulting}
-                          className="text-[9px] font-sans font-bold text-white/20 hover:text-white uppercase tracking-tight"
-                        >
-                          {isVaulting ? "Wait..." : "Update"}
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <Button 
-                          onClick={handleLinkPaymentMethod}
-                          disabled={isVaulting}
-                          className="w-full bg-[#0c0c0c] hover:bg-white/5 text-white border border-white/10 font-sans font-bold text-[10px] uppercase tracking-tight h-10 rounded-xl"
-                        >
-                          {isVaulting ? "Authenticating..." : "Authorize Payment Method"}
-                        </Button>
-                      </div>
-                    )}
+            <Card className="border-white/10 bg-[#111111] text-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-medium">PayPal billing method</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <div className="text-sm text-white/55">Current billing method</div>
+                  <div className="mt-1 text-base font-medium text-white">
+                    {vaultedEmail || 'No linked PayPal account'}
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Billing Settings Card */}
-            <motion.div variants={itemVariants}>
-              <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl backdrop-blur-3xl overflow-hidden h-full">
-                <CardHeader className="p-8 pb-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                      <Receipt className="h-4 w-4 text-white/60" />
-                    </div>
-                  </div>
-                    <CardTitle className="text-2xl font-sans font-bold tracking-tight">Invoice Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="p-8 pt-0 space-y-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                        <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Invoice recipients</label>
-                      <div className="flex gap-2">
-                            <Input
-                              placeholder="Email address"
-                              value={newRecipient}
-                              onChange={(e) => setNewRecipient(e.target.value)}
-                              className="h-10 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20 tracking-tight"
-                            />
-                            <Button
-                              onClick={() => {
-                                if (!newRecipient.trim()) return;
-                                setInvoiceRecipients(prev => [...prev, newRecipient.trim()]);
-                                setNewRecipient('');
-                              }}
-                              variant="outline"
-                              className="h-10 px-4 border-white/10 hover:border-emerald-500/50 text-black bg-white hover:bg-emerald-500 font-sans font-bold text-[10px] tracking-tight"
-                            >
-                              Add
-                            </Button>
-                      </div>
-                      {invoiceRecipients.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {invoiceRecipients.map((r, i) => (
-                              <Badge key={i} variant="outline" className="text-[9px] font-sans font-bold text-white/40 border-white/10 px-3 py-1 gap-2 tracking-tight">
-                              {r}
-                              <button onClick={() => setInvoiceRecipients(prev => prev.filter((_, idx) => idx !== i))} className="text-white/20 hover:text-rose-500">
-                                <X className="h-3 w-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="space-y-3">
-                        <label className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Tax details</label>
-                        <Input
-                          placeholder="Tax ID"
-                          value={taxId}
-                          onChange={(e) => setTaxId(e.target.value)}
-                          className="h-10 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/20 tracking-tight"
-                        />
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-white/5">
-                      <Button
-                        onClick={saveBillingSettings}
-                        className="bg-white text-black hover:bg-emerald-500 rounded-xl font-sans font-bold uppercase text-[10px] tracking-tight h-12 px-8 shadow-[0_0_30px_rgba(255,255,255,0.05)]"
-                      >
-                        Save changes
-                      </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
-
-          {/* Transaction Registry */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
-              <div className="space-y-1">
-                <h2 className="text-2xl font-sans font-bold text-white tracking-tight">Billing History</h2>
-                <p className="text-white/30 text-sm font-sans font-bold italic tracking-tight">Complete log of all recoveries and payments.</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="relative group">
-                  <History className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
-                  <Input
-                    placeholder="Search by ID..."
-                    value={invoiceSearch}
-                    onChange={(e) => setInvoiceSearch(e.target.value)}
-                    className="pl-10 h-11 w-64 bg-white/5 border-white/10 text-xs font-sans font-bold text-white rounded-xl placeholder:text-white/20 focus:ring-emerald-500/20 tracking-tight"
-                  />
+                </div>
+                <div className="text-sm leading-6 text-white/60">
+                  The upfront $99 pass uses PayPal checkout. Later success-fee collection can use PayPal invoicing or an authorized
+                  PayPal billing method after confirmed recovery.
                 </div>
                 <Button
-                  variant="outline"
-                  className="h-11 border-white/10 bg-white text-black hover:bg-emerald-500/10 hover:border-emerald-500 transition-all font-sans font-bold uppercase text-[10px] tracking-tight rounded-xl px-6"
-                  onClick={exportBillingPDF}
+                  onClick={handleLinkPaymentMethod}
+                  disabled={isVaulting}
+                  className="h-11 rounded-xl border border-white/10 bg-white text-black hover:bg-white/90"
                 >
-                  <Download className="h-3.5 w-3.5 mr-2 text-emerald-500" />
-                  Download history
+                  {isVaulting ? 'Linking PayPal...' : vaultedEmail ? 'Update PayPal method' : 'Link PayPal method'}
                 </Button>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl rounded-2xl overflow-hidden backdrop-blur-3xl min-h-[400px]">
+          <div className="mb-10 grid gap-6 lg:grid-cols-2">
+            <Card className="border-white/10 bg-[#0c0c0c] text-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-medium">Billing settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-3">
+                  <label className="text-xs font-medium uppercase tracking-wide text-white/45">Invoice recipients</label>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Email address"
+                      value={newRecipient}
+                      onChange={(event) => setNewRecipient(event.target.value)}
+                      className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30"
+                    />
+                    <Button
+                      variant="outline"
+                      className="h-11 rounded-xl border-white/10 bg-white text-black hover:bg-white/90"
+                      onClick={() => {
+                        if (!newRecipient.trim()) return;
+                        setInvoiceRecipients((current) => [...current, newRecipient.trim()]);
+                        setNewRecipient('');
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  {invoiceRecipients.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {invoiceRecipients.map((recipient, index) => (
+                        <Badge
+                          key={`${recipient}-${index}`}
+                          variant="outline"
+                          className="border-white/10 px-3 py-1 text-xs font-medium text-white/75"
+                        >
+                          {recipient}
+                          <button
+                            type="button"
+                            className="ml-2 text-white/50 hover:text-white"
+                            onClick={() => setInvoiceRecipients((current) => current.filter((_, currentIndex) => currentIndex !== index))}
+                          >
+                            Remove
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  <label className="text-xs font-medium uppercase tracking-wide text-white/45">Tax details</label>
+                  <Input
+                    placeholder="Tax ID"
+                    value={taxId}
+                    onChange={(event) => setTaxId(event.target.value)}
+                    className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30"
+                  />
+                </div>
+
+                <Button
+                  onClick={saveBillingSettings}
+                  className="h-11 rounded-xl border border-white/10 bg-white text-black hover:bg-white/90"
+                >
+                  Save billing settings
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-white/10 bg-[#0c0c0c] text-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-medium">How billing works</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm leading-6 text-white/65">
+                <div>1. A one-time $99 Priority Audit Pass is paid at the start of a recovery cycle.</div>
+                <div>2. When a confirmed payout is reconciled, Margin calculates a 20% success fee from the confirmed recovered amount.</div>
+                <div>3. Any available prepaid credit is applied first, and only the remaining amount can become due.</div>
+                <div>4. If available credit fully covers the fee, no additional charge is issued and leftover credit carries forward.</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="border-white/10 bg-[#0c0c0c] text-white">
+            <CardHeader className="border-b border-white/5 pb-6">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                <div className="space-y-2">
+                  <CardTitle className="text-2xl font-medium">Billing history</CardTitle>
+                  <p className="text-sm leading-6 text-white/55">
+                    One confirmed recovery creates one billing record. Each row shows confirmed recovered amount, fee, credit applied,
+                    amount due, and the remaining credit balance after that billing event.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Input
+                    placeholder="Search by invoice ID, status, or PayPal invoice ID"
+                    value={invoiceSearch}
+                    onChange={(event) => setInvoiceSearch(event.target.value)}
+                    className="h-11 min-w-[280px] rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30"
+                  />
+                  <select
+                    value={statusFilter}
+                    onChange={(event) => setStatusFilter(event.target.value as 'all' | BillingRowStatus)}
+                    className="h-11 rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white"
+                  >
+                    <option value="all">All statuses</option>
+                    {Object.entries(statusLabels).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
               {loading && (
-                <div className="flex flex-col items-center justify-center py-24 gap-4">
-                  <div className="h-8 w-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-                  <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Synchronizing Ledger...</p>
+                <div className="px-8 py-16 text-sm text-white/55">
+                  Loading billing history and credit balance...
                 </div>
               )}
 
               {error && !loading && (
-                <div className="flex flex-col items-center justify-center py-24 gap-4 px-6 text-center">
-                  <AlertCircle className="h-8 w-8 text-rose-500 opacity-50 mb-2" />
-                  <div className="space-y-2">
-                    <p className="text-sm text-white/40 italic font-sans font-bold tracking-tight">"{error}"</p>
-                    <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Error Code: SYNC_NODE_INTERRUPT</p>
-                  </div>
-                  <Button onClick={() => window.location.reload()} variant="outline" className="mt-4 h-10 border-white/10 hover:border-white/20 text-white font-sans font-bold text-[9px] px-6 tracking-tight">RE-ATTEMPT SYNC</Button>
+                <div className="space-y-3 px-8 py-16">
+                  <div className="text-sm text-rose-300">{error}</div>
+                  <Button
+                    variant="outline"
+                    className="rounded-xl border-white/10 bg-transparent text-white hover:bg-white/5"
+                    onClick={() => window.location.reload()}
+                  >
+                    Retry
+                  </Button>
                 </div>
               )}
 
               {!loading && !error && (
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader className="bg-white/[0.02]">
-                      <TableRow className="border-b border-white/5 hover:bg-transparent">
-                        <TableHead className="py-6 px-8 text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight">Invoice ID</TableHead>
-                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight">Date</TableHead>
-                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight">Status</TableHead>
-                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight text-right">Recovered</TableHead>
-                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight text-right">Fee</TableHead>
-                        <TableHead className="text-white/20 font-sans font-bold text-[9px] uppercase tracking-tight text-right">Charged</TableHead>
-                        <TableHead className="pr-8"></TableHead>
+                    <TableHeader>
+                      <TableRow className="border-white/5 hover:bg-transparent">
+                        <TableHead className="px-8 text-xs font-medium uppercase tracking-wide text-white/40">Billing record</TableHead>
+                        <TableHead className="text-xs font-medium uppercase tracking-wide text-white/40">Date</TableHead>
+                        <TableHead className="text-xs font-medium uppercase tracking-wide text-white/40">Status</TableHead>
+                        <TableHead className="text-right text-xs font-medium uppercase tracking-wide text-white/40">Recovered</TableHead>
+                        <TableHead className="text-right text-xs font-medium uppercase tracking-wide text-white/40">20% fee</TableHead>
+                        <TableHead className="text-right text-xs font-medium uppercase tracking-wide text-white/40">Credit applied</TableHead>
+                        <TableHead className="text-right text-xs font-medium uppercase tracking-wide text-white/40">Amount due</TableHead>
+                        <TableHead className="text-right text-xs font-medium uppercase tracking-wide text-white/40">Credit balance</TableHead>
+                        <TableHead className="pr-8 text-right text-xs font-medium uppercase tracking-wide text-white/40">PDF</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <AnimatePresence>
-                        {pageData.length > 0 ? (
-                          pageData.map((invoice, idx) => (
-                            <motion.tr
-                              key={invoice.id}
-                              initial={{ opacity: 0, y: 5 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: idx * 0.05 }}
-                              className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group"
-                            >
-                              <TableCell className="py-6 px-8">
-                                <span className="text-[11px] font-sans font-bold text-white/60 group-hover:text-emerald-500 transition-colors tracking-tight">
-                                  {invoice.id}
-                                </span>
-                              </TableCell>
-                              <TableCell className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                                {new Date(invoice.dateIssued).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline" className={cn("text-[9px] font-sans font-bold px-3 py-0.5 tracking-tight", getStatusStyles(invoice.status))}>
-                                  {invoice.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-right text-[11px] font-sans font-bold text-white/80 tracking-tight">
-                                ${invoice.totalRecovered.toLocaleString()}
-                              </TableCell>
-                              <TableCell className="text-right text-[11px] font-sans font-bold text-white/30 tracking-tight">
-                                ${invoice.commission.toLocaleString()}
-                              </TableCell>
-                              <TableCell className="text-right text-[12px] font-sans font-bold text-white tracking-tight">
-                                ${invoice.amountCharged.toLocaleString()}
-                              </TableCell>
-                              <TableCell className="pr-8">
-                                <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    className="h-8 w-8 text-white/20 hover:text-emerald-500"
-                                    onClick={async () => {
-                                      try {
-                                        await api.downloadInvoicePdf(invoice.id);
-                                        toast({ title: 'Download Initialized', description: `Record ${invoice.id} archived.` });
-                                      } catch {
-                                        toast({ title: 'Transmission Error', description: 'Could not fetch record PDF.', variant: 'destructive' });
-                                      }
-                                    }}
-                                  >
-                                    <Download className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            </motion.tr>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell colSpan={7} className="py-32 text-center border-none">
-                              <div className="flex flex-col items-center justify-center space-y-3 opacity-20">
-                                <Receipt className="h-8 w-8 mb-2" />
-                                <p className="text-[10px] font-sans font-bold uppercase tracking-tight">Transaction registry empty.</p>
-                                <p className="text-xs italic font-sans font-bold tracking-tight">"No capital synchronization events detected on this node."</p>
-                              </div>
+                      {filteredInvoices.length > 0 ? (
+                        filteredInvoices.map((invoice) => (
+                          <TableRow key={invoice.id} className="border-white/5">
+                            <TableCell className="px-8 py-5 text-sm text-white/85">
+                              <div>{invoice.id}</div>
+                              {invoice.paypalInvoiceId && (
+                                <div className="mt-1 text-xs text-white/45">PayPal invoice {invoice.paypalInvoiceId}</div>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-sm text-white/65">
+                              {new Date(invoice.dateIssued).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant="outline"
+                                className={cn('px-3 py-1 text-xs font-medium', statusStyles[invoice.status])}
+                              >
+                                {statusLabels[invoice.status]}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right text-sm text-white/85">
+                              {formatMoney(invoice.totalRecovered)}
+                            </TableCell>
+                            <TableCell className="text-right text-sm text-white/70">
+                              {formatMoney(invoice.commission)}
+                            </TableCell>
+                            <TableCell className="text-right text-sm text-white/70">
+                              {formatMoney(invoice.creditApplied)}
+                            </TableCell>
+                            <TableCell className="text-right text-sm text-white">
+                              {formatMoney(invoice.amountDue)}
+                            </TableCell>
+                            <TableCell className="text-right text-sm text-white/70">
+                              {formatMoney(invoice.remainingCreditBalance)}
+                            </TableCell>
+                            <TableCell className="pr-8 text-right">
+                              <Button
+                                variant="outline"
+                                className="rounded-xl border-white/10 bg-transparent text-white hover:bg-white/5"
+                                onClick={async () => {
+                                  try {
+                                    await api.downloadInvoicePdf(invoice.id, activeSlug);
+                                    toast({
+                                      title: 'Invoice download started',
+                                      description: `Invoice ${invoice.id} is being downloaded.`,
+                                    });
+                                  } catch {
+                                    toast({
+                                      title: 'Unable to download invoice PDF',
+                                      description: 'The invoice PDF could not be generated.',
+                                      variant: 'destructive',
+                                    });
+                                  }
+                                }}
+                              >
+                                Download
+                              </Button>
                             </TableCell>
                           </TableRow>
-                        )}
-                      </AnimatePresence>
+                        ))
+                      ) : (
+                        <TableRow className="border-white/5">
+                          <TableCell colSpan={9} className="px-8 py-16 text-center text-sm text-white/45">
+                            No billing records match the current filters.
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                 </div>
               )}
-            </Card>
+            </CardContent>
+          </Card>
 
-            {/* Pagination */}
-            <div className="flex flex-col md:flex-row items-center justify-between pt-10 gap-6">
-              <div className="flex items-center gap-6">
-                <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Showing {pageData.length} records</p>
-                <div className="h-4 w-[1px] bg-white/5" />
-                <div className="flex gap-4">
-                  <Button
-                    disabled={page === 1}
-                    onClick={() => setPage(p => Math.max(1, p - 1))}
-                    variant="ghost"
-                    className="text-[10px] font-sans font-bold text-white/40 uppercase hover:text-white tracking-tight"
-                  >
-                    Previous //
-                  </Button>
-                  <Button
-                    disabled={page === totalPages}
-                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                    variant="ghost"
-                    className="text-[10px] font-sans font-bold text-white/40 uppercase hover:text-white tracking-tight"
-                  >
-                        // Next
-                  </Button>
-                </div>
-              </div>
-              <div className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">
-                Financial Access: GRANTED
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Institutional FAQ */}
-          <div className="mt-32 max-w-4xl mx-auto space-y-12">
-            <div className="text-center space-y-4">
-              <Badge variant="outline" className="text-white/20 border-white/5 font-sans font-bold text-[9px] tracking-tight uppercase">
-                Governance Docs
+          <div className="mx-auto mt-16 max-w-4xl">
+            <div className="mb-6 space-y-2 text-center">
+              <Badge variant="outline" className="border-white/10 px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-white/60">
+                Billing FAQ
               </Badge>
-              <h3 className="text-3xl font-sans font-bold text-white italic tracking-tight">Financial Protocol Inquiries</h3>
+              <h2 className="text-3xl font-medium tracking-tight text-white">Billing model</h2>
             </div>
             <Accordion type="single" collapsible className="space-y-4">
               {[
-                { q: "Execution Timelines", a: "Yield settlements are generated upon cycle completion and processed within seven standard verification intervals." },
-                { q: "Recovery Reversals", a: "In the rare event of asset reclamation by platform entities, counter-credits are autonomously applied to the subsequent ledger cycle." },
-                { q: "Sovereignty & Security", a: "Margin utilizes PayPal Invoicing for all financial transfers. We never store or transmit sensitive credit card data on our servers." },
-                { q: "Commission Rate", a: "Margin takes a 20% commission on Amazon reimbursements recovered through Margin-filed claims. You only pay when Amazon pays you." }
-              ].map((item, i) => (
-                <AccordionItem key={i} value={`item-${i}`} className="border-white/5 bg-white/[0.01] rounded-2xl px-6 md:px-8 overflow-hidden">
-                  <AccordionTrigger className="text-sm font-sans font-bold text-white/80 hover:text-white transition-colors py-6 uppercase tracking-tight hover:no-underline">
+                {
+                  q: 'What is the $99 payment?',
+                  a: 'The $99 payment is a one-time Priority Audit Pass for a recovery cycle. It is stored as prepaid credit and linked to the recovery cycle in the billing system.',
+                },
+                {
+                  q: 'When is the 20% fee billed?',
+                  a: 'The 20% success fee is only billed after a payout has been confirmed and reconciled. Approved or expected money does not create a billing record by itself.',
+                },
+                {
+                  q: 'How is credit applied?',
+                  a: 'When a confirmed recovery creates a billing record, available prepaid credit is applied first. The remaining amount, if any, becomes the amount due.',
+                },
+                {
+                  q: 'Can I pay more than 20% total?',
+                  a: 'No. The $99 prepaid pass is part of the 20% success fee, not an additional fee on top of it.',
+                },
+                {
+                  q: 'What happens if my available credit is larger than the fee?',
+                  a: 'The billing record is marked as credited, no extra charge is issued, and the unused balance carries forward to future confirmed-recovery fees.',
+                },
+                {
+                  q: 'How does PayPal fit into billing?',
+                  a: 'PayPal handles the upfront checkout and later collection flows. Depending on the billing path, Margin can use PayPal checkout, PayPal invoicing, or an authorized PayPal payment method.',
+                },
+              ].map((item, index) => (
+                <AccordionItem key={index} value={`item-${index}`} className="rounded-2xl border border-white/10 bg-white/[0.02] px-6">
+                  <AccordionTrigger className="py-6 text-left text-sm font-medium text-white/85 hover:no-underline">
                     {item.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/40 font-sans font-bold italic text-base pb-6 leading-relaxed tracking-tight">
-                    "{item.a}"
+                  <AccordionContent className="pb-6 text-sm leading-6 text-white/60">
+                    {item.a}
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
           </div>
 
-          {/* Support Link */}
-          <div className="text-center pt-32 pb-16">
-            <p className="text-white/20 font-sans font-bold text-[10px] uppercase tracking-tight">
-              Need direct protocol assistance?{' '}
-              <a href="mailto:billing@margin-finance.com" className="text-emerald-500 hover:text-emerald-400 font-bold ml-2">billing@margin-finance.com</a>
-            </p>
+          <div className="pt-16 text-center text-sm text-white/45">
+            Need billing help? billing@margin-finance.com
           </div>
         </div>
-
-
       </div>
     </PageLayout>
   );
