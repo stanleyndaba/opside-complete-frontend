@@ -286,18 +286,18 @@ export default function Billing() {
   return (
     <PageLayout title="Billing" midnight>
       <div className="min-h-screen bg-[#070707] text-white">
-        <div className="container mx-auto px-4 pt-24 pb-12 md:px-8 md:pt-28">
-          <div className="mb-12">
-            <div className="max-w-4xl space-y-3">
+        <div className="container mx-auto px-4 pt-20 pb-12 md:px-8 md:pt-24">
+          <div className="relative z-10 mb-8 max-w-4xl rounded-lg border border-white/10 bg-[#0d0d0d] px-6 py-5">
+            <div className="space-y-2">
               <h1 className="text-4xl font-medium tracking-tight text-white">Billing &amp; Recoveries</h1>
-              <p className="text-sm leading-6 text-white/70">
+              <p className="text-sm leading-6 text-white/72">
                 You only pay after confirmed recovery. 20% success fee, with any $99 prepaid credit automatically applied.
               </p>
-              <p className="text-sm leading-6 text-white/55">
+              <p className="text-sm leading-6 text-white/56">
                 You will never pay more than 20% of recovered funds. Unused credit carries forward.
               </p>
               {billingSummary?.currentRecoveryCycleType && billingSummary?.currentRecoveryCycleStartedAt && (
-                <p className="text-sm leading-6 text-white/45">
+                <p className="text-sm leading-6 text-white/42">
                   Current recovery cycle: {billingSummary.currentRecoveryCycleType} • Started{' '}
                   {new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()}
                 </p>
