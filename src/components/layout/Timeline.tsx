@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, CheckCircle, DollarSign, AlertTriangle } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useTenant } from '@/contexts/TenantContext';
 
 interface EventItem {
   id: string;
@@ -30,6 +31,8 @@ function iconFor(type: string, status?: string) {
 export function Timeline({ claimId }: { claimId: string }) {
   const [events, setEvents] = useState<EventItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { tenant } = useTenant();
+  const activeSlug = tenant?.slug || 'beta';
 
   useEffect(() => {
     let cancelled = false;
@@ -62,7 +65,7 @@ export function Timeline({ claimId }: { claimId: string }) {
                 {evt.type}{evt.status ? ` • ${evt.status}` : ''}
               </div>
             </div>
-            <div className="text-[whitesmoke]/40 font-mono italic">{new Date(evt.at).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+            <div className="text-[whitesmoke]/40 font-mono">{new Date(evt.at).toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
             {evt.message && <div className="text-[whitesmoke]/80 font-medium leading-relaxed">{evt.message}</div>}
             {money && <div className="text-emerald-500 font-bold font-mono">Amount: {money}</div>}
             {Array.isArray(evt.docIds) && evt.docIds.length > 0 && (

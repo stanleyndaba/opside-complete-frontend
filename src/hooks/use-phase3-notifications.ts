@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 
 export type Phase3NotificationEvent =
   | { type: 'claim_expiring'; data: Phase3ClaimExpiringEvent }
@@ -61,6 +62,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
   const reconnectDelay = 3000; // 3 seconds
+  const handledPayloadsRef = useRef<Set<string>>(new Set());
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -81,15 +83,17 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
       const url = api.buildApiUrl(`/api/sse/notifications?tenantSlug=${slug}`);
       const eventSource = new EventSource(url, { withCredentials: true } as any);
 
-      eventSource.onopen = () => {
-        console.log('[Phase3 Notifications] SSE connection opened');
-        reconnectAttemptsRef.current = 0;
-      };
-
-      eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          const eventType = event.type || data.type || 'unknown';
+      const processIncomingEvent = (rawType: string, data: any) => {
+        const eventType = rawType === 'message' ? (data?.event_type || data?.type || 'unknown') : rawType;
+        const dedupeKey = `${eventType}:${data?.id || data?.notification_id || data?.timestamp || ''}`;
+        if (handledPayloadsRef.current.has(dedupeKey)) {
+          return;
+        }
+        handledPayloadsRef.current.add(dedupeKey);
+        if (handledPayloadsRef.current.size > 200) {
+          const values = Array.from(handledPayloadsRef.current).slice(-100);
+          handledPayloadsRef.current = new Set(values);
+        }
 
           let notificationEvent: Phase3NotificationEvent | null = null;
 
@@ -218,7 +222,33 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
                 // Silent - just keep connection alive
                 break;
             }
-          }
+        }
+      };
+
+      eventSource.onopen = () => {
+        console.log('[Phase3 Notifications] SSE connection opened');
+        reconnectAttemptsRef.current = 0;
+      };
+
+      const removeNamedListeners = registerNamedSSEListeners(
+        eventSource,
+        [
+          'notification',
+          'claim_expiring',
+          'detection_resolved',
+          'detection_status_changed',
+          'sync_complete',
+          'sync_failed',
+          'heartbeat',
+          'connected'
+        ],
+        (eventName, payload) => processIncomingEvent(eventName, payload)
+      );
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data = parseDefaultSSEMessage(event);
+          processIncomingEvent('message', data);
         } catch (error) {
           console.error('[Phase3 Notifications] Failed to parse event:', error);
         }
@@ -247,6 +277,12 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
       };
 
       eventSourceRef.current = eventSource;
+
+      const originalClose = eventSource.close.bind(eventSource);
+      eventSource.close = () => {
+        removeNamedListeners();
+        originalClose();
+      };
     } catch (error) {
       console.error('[Phase3 Notifications] Failed to create EventSource:', error);
     }

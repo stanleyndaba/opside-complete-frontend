@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
@@ -34,6 +34,7 @@ import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { ClaimPdfService } from '@/services/ClaimPdfService';
+import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 
 interface CaseEvent {
   timestamp: string;
@@ -443,75 +444,112 @@ export default function CaseDetail() {
     return 'Unknown';
   };
 
+  const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
+    if (!currentCaseId) return;
+    if (showLoading) setLoading(true);
+
+    const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
+    if (res.ok && res.data) {
+      setCaseData((prev: any) => {
+        const apiData = res.data as any;
+        const base = prev || passedClaim || {};
+
+        return {
+          ...base,
+          ...apiData,
+          id: apiData.id || base.id || currentCaseId,
+          title: apiData.title || apiData.details || apiData.anomaly_type || base.title || 'Claim Details',
+          status: apiData.status || apiData.filing_status || base.status || '-',
+          guaranteedAmount: apiData.guaranteedAmount ?? apiData.estimated_value ?? base.guaranteedAmount ?? null,
+          expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || base.expectedPayoutDate || null,
+          createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || base.createdDate || null,
+          sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
+            (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku :
+              (base.sku && base.sku !== 'N/A') ? base.sku : '-',
+          asin: apiData.asin || apiData.evidence?.asin || base.asin || null,
+          productName: apiData.productName || apiData.details || apiData.anomaly_type || base.productName || 'Unknown Product',
+          facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || base.facility || null,
+          unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? base.unitsLost ?? null,
+          units_is_verified: apiData.units_is_verified === true,
+          unitCost: apiData.unitCost ?? apiData.unit_cost ?? base.unitCost ?? null,
+          confidence: typeof apiData.confidence_score === 'number'
+            ? apiData.confidence_score * 100
+            : (typeof apiData.confidence === 'number' ? apiData.confidence : base.confidence ?? null),
+          evidenceStatus: apiData.evidenceStatus || base.evidenceStatus || null,
+          documents: apiData.documents || base.documents || [],
+          events: apiData.events || base.events || [],
+          evidence: { ...(base.evidence || {}), ...(apiData.evidence || {}) },
+          claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number || null,
+        };
+      });
+      if (Array.isArray((res.data as any)?.documents)) {
+        setMatchedDocs((res.data as any).documents);
+      }
+      setStatusFeedUnavailable(false);
+      setError(null);
+    } else {
+      setCaseData(null);
+      setMatchedDocs([]);
+      setError(res.error || 'Case details unavailable');
+    }
+
+    if (showLoading) setLoading(false);
+  }, [activeSlug, passedClaim]);
+
+  const matchesRealtimeEvent = useCallback((payload: any, currentCaseId: string) => {
+    const ids = [
+      payload?.entity_id,
+      payload?.dispute_case_id,
+      payload?.case_id,
+      payload?.disputeId,
+      payload?.dispute_id,
+      payload?.detection_id,
+      payload?.claim_id,
+      payload?.claimId,
+      payload?.data?.entity_id,
+      payload?.data?.dispute_case_id,
+      payload?.data?.case_id,
+      payload?.data?.disputeId,
+      payload?.data?.dispute_id,
+      payload?.data?.detection_id,
+      payload?.data?.claim_id,
+      payload?.data?.claimId
+    ].filter(Boolean);
+
+    return ids.includes(currentCaseId);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
       if (!caseId) return;
-      setLoading(true);
-      const res = await api.getRecoveryDetail(caseId, activeSlug);
-      if (!cancelled) {
-        if (res.ok && res.data) {
-          setCaseData((prev: any) => {
-            const apiData = res.data as any;
-            const base = prev || passedClaim || {};
-
-            return {
-              ...base,
-              ...apiData,
-              id: apiData.id || base.id || caseId,
-              title: apiData.title || apiData.details || apiData.anomaly_type || base.title || 'Claim Details',
-              status: apiData.status || apiData.filing_status || base.status || '-',
-              guaranteedAmount: apiData.guaranteedAmount ?? apiData.estimated_value ?? base.guaranteedAmount ?? null,
-              expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || base.expectedPayoutDate || null,
-              createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || base.createdDate || null,
-              sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
-                (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku :
-                  (base.sku && base.sku !== 'N/A') ? base.sku : '-',
-              asin: apiData.asin || apiData.evidence?.asin || base.asin || null,
-              productName: apiData.productName || apiData.details || apiData.anomaly_type || base.productName || 'Unknown Product',
-              facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || base.facility || null,
-              unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? base.unitsLost ?? null,
-              units_is_verified: apiData.units_is_verified === true,
-              unitCost: apiData.unitCost ?? apiData.unit_cost ?? base.unitCost ?? null,
-              confidence: typeof apiData.confidence_score === 'number'
-                ? apiData.confidence_score * 100
-                : (typeof apiData.confidence === 'number' ? apiData.confidence : base.confidence ?? null),
-              evidenceStatus: apiData.evidenceStatus || base.evidenceStatus || null,
-              documents: apiData.documents || base.documents || [],
-              events: apiData.events || base.events || [],
-              evidence: { ...(base.evidence || {}), ...(apiData.evidence || {}) },
-              claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number || null,
-            };
-          });
-          if (Array.isArray((res.data as any)?.documents) && (res.data as any).documents.length > 0) {
-            setMatchedDocs((res.data as any).documents);
-          }
-          setStatusFeedUnavailable(false);
-          setError(null);
-        } else {
-          setCaseData(null);
-          setMatchedDocs([]);
-          setError(res.error || 'Case details unavailable');
-        }
-        setLoading(false);
-      }
+      await refreshCaseDetail(caseId, { showLoading: true });
     })();
 
     let es: EventSource | null = null;
     try {
-      es = new EventSource(`/api/sse/case/${encodeURIComponent(caseId!)}?tenantSlug=${activeSlug}`);
-      es.onmessage = (e) => {
-        try {
-          const data = JSON.parse(e.data);
-          setCaseData((prev: any) => ({
-            ...(prev || {}),
-            status: data.status ?? prev?.status,
-            expectedPayoutDate: data.expected_payout_date ?? prev?.expectedPayoutDate,
-            amazonCaseId: data.amazonCaseId ?? prev?.amazonCaseId,
-            events: data.events ?? prev?.events,
-            progress: typeof data.progress === 'number' ? data.progress : prev?.progress,
-          }));
-        } catch { }
+      es = new EventSource(api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`), { withCredentials: true } as any);
+      const handleRealtimePayload = (payload: any) => {
+        if (!caseId || !matchesRealtimeEvent(payload, caseId)) {
+          return;
+        }
+        refreshCaseDetail(caseId);
+      };
+
+      const removeNamedListeners = registerNamedSSEListeners(
+        es,
+        ['notification', 'message', 'matching_completed', 'parsing_completed', 'evidence_upload_completed', 'evidence_ingestion_completed', 'payment_approved', 'payment_reconciled'],
+        (_eventName, payload) => handleRealtimePayload(payload)
+      );
+
+      es.onmessage = (event) => {
+        handleRealtimePayload(parseDefaultSSEMessage(event));
+      };
+
+      const originalClose = es.close.bind(es);
+      es.close = () => {
+        removeNamedListeners();
+        originalClose();
       };
     } catch { }
     const interval = setInterval(async () => {
@@ -536,7 +574,7 @@ export default function CaseDetail() {
       }
     }, 15000);
     return () => { cancelled = true; if (es) es.close(); clearInterval(interval); };
-  }, [caseId, activeSlug]);
+  }, [caseId, activeSlug, matchesRealtimeEvent, refreshCaseDetail]);
 
   // Attempt to fetch matched documents for this case
   useEffect(() => {

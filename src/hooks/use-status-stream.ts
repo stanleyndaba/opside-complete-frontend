@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 
 export type StatusEvent = {
   type: 'sync' | 'detection' | 'claim' | 'evidence' | 'refund' | 'filing' | 'status_updated' | 'recovery';
@@ -12,6 +13,7 @@ import { api } from '@/lib/api';
 
 export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSlug?: string) => {
   const eventSourceRef = useRef<EventSource | null>(null);
+  const handledPayloadsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const slug = tenantSlug;
@@ -21,9 +23,27 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
     const sseUrl = api.buildApiUrl(`/api/sse/status?tenantSlug=${slug}`);
     const eventSource = new EventSource(sseUrl, { withCredentials: true } as any);
 
-    eventSource.onmessage = (event) => {
+    const processStatusEvent = (rawType: string, payload: any) => {
       try {
-        const statusEvent: StatusEvent = JSON.parse(event.data);
+        const eventName = rawType === 'message' ? (payload?.event_type || payload?.type || 'message') : rawType;
+        const parts = String(eventName).split(/[.:]/);
+        const normalizedType = (parts[0] || payload?.type || 'status_updated') as StatusEvent['type'];
+        const normalizedStatus = (parts[1] || payload?.status || 'progress') as StatusEvent['status'];
+        const dedupeKey = `${eventName}:${payload?.id || payload?.entity_id || payload?.timestamp || ''}`;
+        if (handledPayloadsRef.current.has(dedupeKey)) {
+          return;
+        }
+        handledPayloadsRef.current.add(dedupeKey);
+        if (handledPayloadsRef.current.size > 300) {
+          handledPayloadsRef.current = new Set(Array.from(handledPayloadsRef.current).slice(-150));
+        }
+
+        const statusEvent: StatusEvent = {
+          type: normalizedType,
+          status: normalizedStatus,
+          data: payload,
+          timestamp: payload?.timestamp || new Date().toISOString()
+        };
         onEvent?.(statusEvent);
 
         // Map important events to user-friendly toasts
@@ -63,6 +83,40 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
       }
     };
 
+    const removeNamedListeners = registerNamedSSEListeners(
+      eventSource,
+      [
+        'connected',
+        'notification',
+        'message',
+        'sync.started',
+        'sync.completed',
+        'sync.failed',
+        'sync_progress',
+        'detection.completed',
+        'claim_expiring',
+        'detection_resolved',
+        'detection_status_changed',
+        'evidence_ingestion_started',
+        'evidence_ingestion_completed',
+        'evidence_ingestion_failed',
+        'evidence_upload_completed',
+        'evidence_upload_failed',
+        'parsing_started',
+        'parsing_completed',
+        'matching_completed',
+        'evidence_matching_completed',
+        'recovery_detected',
+        'payment_approved',
+        'payment_reconciled'
+      ],
+      (eventName, payload) => processStatusEvent(eventName, payload)
+    );
+
+    eventSource.onmessage = (event) => {
+      processStatusEvent('message', parseDefaultSSEMessage(event));
+    };
+
     eventSource.onerror = (error) => {
       console.error('Status stream error:', error);
     };
@@ -70,6 +124,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
     eventSourceRef.current = eventSource;
 
     return () => {
+      removeNamedListeners();
       eventSource.close();
     };
   }, [onEvent, tenantSlug]);
