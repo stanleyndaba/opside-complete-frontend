@@ -287,37 +287,58 @@ export default function Billing() {
     <PageLayout title="Billing" midnight>
       <div className="min-h-screen bg-[#070707] text-white">
         <div className="container mx-auto px-4 py-12 md:px-8">
-          <div className="mb-10 space-y-4">
-            <Badge variant="outline" className="border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-white/60">
-              Billing truth surface
-            </Badge>
-            <div className="space-y-2">
-              <h1 className="text-4xl font-medium tracking-tight text-white">Billing</h1>
-              <p className="max-w-3xl text-sm leading-6 text-white/65">
-                This page shows one-time $99 prepaid credit per recovery cycle, 20% success fees on confirmed recovered money,
-                credit applied against those fees, and any remaining amount due after confirmed payout.
+          <div className="mb-16 pt-6">
+            <div className="max-w-4xl space-y-3">
+              <h1 className="text-4xl font-medium tracking-tight text-white">Billing &amp; Recoveries</h1>
+              <p className="text-sm leading-6 text-white/70">
+                You only pay after confirmed recovery. 20% success fee, with any $99 prepaid credit automatically applied.
               </p>
-              <p className="max-w-3xl text-sm leading-6 text-white/50">
-                PayPal handles the upfront checkout and any later collection flow. Billing only happens after confirmed recovery,
-                and you never pay more than the 20% success fee total.
+              <p className="text-sm leading-6 text-white/55">
+                You will never pay more than 20% of recovered funds. Unused credit carries forward.
               </p>
+              {billingSummary?.currentRecoveryCycleType && billingSummary?.currentRecoveryCycleStartedAt && (
+                <p className="text-sm leading-6 text-white/45">
+                  Current recovery cycle: {billingSummary.currentRecoveryCycleType} • Started{' '}
+                  {new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="mb-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {metricCards.map((metric) => (
-              <Card key={metric.key} className="border-white/10 bg-[#111111] text-white">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-white/70">{metric.label}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-medium text-white">
-                    {billingSummary ? formatMoney(billingSummary[metric.key]) : '—'}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Card className="mb-10 overflow-hidden border-white/10 bg-[#111111] text-white">
+            <CardHeader className="border-b border-white/5 pb-4">
+              <CardTitle className="text-lg font-medium">Billing summary</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-white/5 hover:bg-transparent">
+                      {metricCards.map((metric) => (
+                        <TableHead
+                          key={metric.key}
+                          className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wide text-white/45"
+                        >
+                          {metric.label}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow className="border-white/5">
+                      {metricCards.map((metric) => (
+                        <TableCell key={metric.key} className="px-6 py-6 text-left">
+                          <div className="text-2xl font-medium text-white">
+                            {billingSummary ? formatMoney(billingSummary[metric.key]) : '—'}
+                          </div>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="mb-10 grid gap-6 lg:grid-cols-2">
             <Card className="border-white/10 bg-[#111111] text-white">
@@ -378,7 +399,7 @@ export default function Billing() {
             </Card>
           </div>
 
-          <div className="mb-10 grid gap-6 lg:grid-cols-2">
+          <div className="mb-10">
             <Card className="border-white/10 bg-[#0c0c0c] text-white">
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-medium">Billing settings</CardTitle>
@@ -443,18 +464,6 @@ export default function Billing() {
                 >
                   Save billing settings
                 </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-white/10 bg-[#0c0c0c] text-white">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-medium">How billing works</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm leading-6 text-white/65">
-                <div>1. A one-time $99 Priority Audit Pass is paid at the start of a recovery cycle.</div>
-                <div>2. When a confirmed payout is reconciled, Margin calculates a 20% success fee from the confirmed recovered amount.</div>
-                <div>3. Any available prepaid credit is applied first, and only the remaining amount can become due.</div>
-                <div>4. If available credit fully covers the fee, no additional charge is issued and leftover credit carries forward.</div>
               </CardContent>
             </Card>
           </div>
