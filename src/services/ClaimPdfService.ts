@@ -214,14 +214,6 @@ export const ClaimPdfService = {
         }
 
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8.5);
-        doc.setTextColor(COLORS.ink);
-        doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, 21);
-        doc.setFontSize(6.5);
-        doc.setTextColor(COLORS.soft);
-        doc.text('CASE REPORT', MARGIN, 27.5);
-
-        doc.setFont('helvetica', 'normal');
         doc.setFontSize(7.5);
         const rightColX = pageWidth - 72;
         const valX = pageWidth - MARGIN;
@@ -242,29 +234,29 @@ export const ClaimPdfService = {
 
         doc.setDrawColor(COLORS.line);
         doc.setLineWidth(0.1);
-        doc.line(MARGIN, 33, pageWidth - MARGIN, 33);
+        doc.line(MARGIN, 26.5, pageWidth - MARGIN, 26.5);
 
-        yPos = 47;
+        yPos = 34;
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(15);
+        doc.setFontSize(8.5);
         doc.setTextColor(COLORS.ink);
-        doc.text('CASE REPORT', MARGIN, yPos);
+        doc.text('Case Overview', MARGIN, yPos);
 
-        const metricY = 61;
-        const metricValueY = 73;
-        const separatorOneX = MARGIN + 56;
-        const separatorTwoX = MARGIN + 118;
-        const secondColumnX = separatorOneX + 5;
-        const thirdColumnX = separatorTwoX + 5;
+        const metricY = 44;
+        const metricValueY = 56;
+        const separatorOneX = MARGIN + 39;
+        const separatorTwoX = MARGIN + 95;
+        const secondColumnX = separatorOneX + 4;
+        const thirdColumnX = separatorTwoX + 4;
 
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
+        doc.setFontSize(6.5);
         doc.setTextColor(COLORS.soft);
         doc.text('REQUESTED AMOUNT', MARGIN, metricY);
         doc.text('PRIMARY DISCREPANCY', secondColumnX, metricY);
         doc.text('CONFIDENCE', thirdColumnX, metricY);
 
-        doc.setFontSize(8.5);
+        doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
         doc.setFont('courier', 'bold');
         doc.text(requestedAmount, MARGIN, metricValueY);
@@ -276,7 +268,7 @@ export const ClaimPdfService = {
         doc.setTextColor(confidenceLabel === 'Not available' ? COLORS.ink : COLORS.accent);
         doc.text(confidenceLabel, thirdColumnX, metricValueY);
 
-        yPos = 95;
+        yPos = 72;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
