@@ -15,14 +15,6 @@ import {
   Zap, ShieldAlert
 } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -811,52 +803,6 @@ export default function CaseDetail() {
                 </div>
               </div>
               <div className="hidden md:flex items-center gap-4">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white transition-colors border-none px-4"
-                    >
-                      Review Discrepancy
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl bg-[#0a0a0a] border-white/10 text-white">
-                    <DialogHeader>
-                        <DialogTitle className="text-xl font-sans font-bold text-white flex items-center gap-2">
-                          {AGENT_NAMES['refund_filing'] || 'AI'}: Generated Filing Draft
-                        </DialogTitle>
-                        <DialogDescription className="text-white/40 text-xs font-sans font-bold tracking-tight">
-                          Generated guidance from backend case state • Case {effectiveCase.id?.slice(0, 12)}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="mt-6 p-6 bg-white/[0.03] border border-white/10 rounded-xl">
-                      <div className="space-y-6">
-                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                          <span className="text-[10px] uppercase font-bold text-white/30 tracking-tight">Generated Claim Logic</span>
-                          <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[9px] font-bold">{nextStep?.title || 'Generated Context'}</Badge>
-                        </div>
-                        <p className="text-sm leading-relaxed text-white/80 font-bold tracking-tight italic">
-                          "{generateNarrative(effectiveCase)}"
-                        </p>
-                        <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                          <div className="text-[10px] text-white/20 font-sans font-bold tracking-tight">
-                            {nextStep?.description || generatedContext?.summaryLabel || 'Generated from the latest backend case fields.'}
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-[10px] font-bold text-emerald-500 p-0 h-auto hover:bg-transparent"
-                            onClick={async () => await ClaimPdfService.generate(effectiveCase)}
-                          >
-                            Export as PDF <ArrowRight className="h-3 w-3 ml-1" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
                 <Button
                   variant="outline"
                   size="sm"
@@ -1281,7 +1227,7 @@ export default function CaseDetail() {
                   <div className="flex flex-col md:flex-row gap-12 items-start">
                     <div className="min-w-[240px]">
                       <div className="text-[10px] text-white/30 font-bold mb-3 tracking-tight">Requested Claim Amount</div>
-                      <div className="text-2xl font-bold text-emerald-500 font-sans tracking-tight">
+                      <div className="text-2xl font-bold text-white font-sans tracking-tight">
                         {formatCurrencyOrDash(requestedAmount, effectiveCase?.currency || 'USD')}
                       </div>
 
@@ -1557,8 +1503,8 @@ export default function CaseDetail() {
                         </div>
 
                         <div className="flex items-center gap-3 mb-6 bg-white/5 p-3 border border-white/10 rounded-lg">
-                          <div className="p-2 bg-emerald-500 rounded-lg">
-                            <ShieldCheck className="h-4 w-4 text-white" />
+                          <div className="p-2 bg-white/5 border border-white/10 rounded-lg">
+                            <ShieldCheck className="h-4 w-4 text-white/60" />
                           </div>
                           <div>
                             <h4 className="text-[11px] font-bold text-white tracking-tight">Seller Identity</h4>
