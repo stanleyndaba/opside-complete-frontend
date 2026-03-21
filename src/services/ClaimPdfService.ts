@@ -49,6 +49,16 @@ const formatConfidence = (value: any) => {
     return `${Math.round(bounded)}%`;
 };
 
+const slugify = (value: any, fallback = 'case') => {
+    const text = String(value ?? '').trim().toLowerCase();
+    if (!text) return fallback;
+    const slug = text
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .replace(/-{2,}/g, '-');
+    return slug || fallback;
+};
+
 const buildGeneratedSummary = (data: any) => {
     const caseType = String(data.anomaly_type || data.claim_type || data.case_type || '').toLowerCase();
     const amount = formatCurrency(data.requested_amount ?? data.guaranteedAmount ?? data.estimated_claim_value, data.currency || 'USD');
@@ -217,24 +227,27 @@ export const ClaimPdfService = {
         doc.setFontSize(7.5);
         const rightColX = pageWidth - 72;
         const valX = pageWidth - MARGIN;
+        const metaY1 = 15;
+        const metaY2 = 19;
+        const metaY3 = 23;
         doc.setTextColor(COLORS.soft);
-        doc.text('Reference ID', rightColX, 15);
+        doc.text('Reference ID', rightColX, metaY1);
         doc.setFont('courier', 'bold');
         doc.setTextColor(COLORS.ink);
-        doc.text(caseId.length > 20 ? `${caseId.slice(0, 8)}...${caseId.slice(-8)}` : caseId, valX, 15, { align: 'right' });
+        doc.text(caseId.length > 20 ? `${caseId.slice(0, 8)}...${caseId.slice(-8)}` : caseId, valX, metaY1, { align: 'right' });
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(COLORS.soft);
-        doc.text('Object Type', rightColX, 21);
+        doc.text('Object Type', rightColX, metaY2);
         doc.setTextColor(COLORS.ink);
-        doc.text(sanitize(data.object_type), valX, 20, { align: 'right' });
+        doc.text(sanitize(data.object_type), valX, metaY2, { align: 'right' });
         doc.setTextColor(COLORS.soft);
-        doc.text('Current Status', rightColX, 27);
+        doc.text('Current Status', rightColX, metaY3);
         doc.setTextColor(COLORS.ink);
-        doc.text(toStatusLabel(data.status), valX, 25, { align: 'right' });
+        doc.text(toStatusLabel(data.status), valX, metaY3, { align: 'right' });
 
         doc.setDrawColor(COLORS.line);
         doc.setLineWidth(0.1);
-        doc.line(MARGIN, 31.5, pageWidth - MARGIN, 31.5);
+        doc.line(MARGIN, 27.5, pageWidth - MARGIN, 27.5);
 
         yPos = 46;
         doc.setFont('helvetica', 'bold');
@@ -500,7 +513,11 @@ export const ClaimPdfService = {
             doc.text(`PAGE 3 OF 3 | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
         }
 
-        const safeId = sanitize(data.dispute_case_id || data.id, 'case').replace(/[^a-zA-Z0-9_-]/g, '_');
-        doc.save(`case-detail-${safeId}-${statementDate}.pdf`);
+        const caseIdentifier = data.case_number
+            || data.claim_number
+            || String(data.dispute_case_id || data.id || 'case').slice(0, 8);
+        const caseTypeSlug = slugify(data.case_type || data.anomaly_type || data.claim_type, 'case');
+        const caseIdentifierSlug = slugify(caseIdentifier, 'case');
+        doc.save(`margin-case-report-${caseIdentifierSlug}-${caseTypeSlug}-${statementDate}.pdf`);
     }
 };
