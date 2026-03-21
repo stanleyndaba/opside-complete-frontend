@@ -26,7 +26,104 @@ interface NotificationPreference {
   category: string;
   email: boolean;
   inApp: boolean;
+  supported: boolean;
+  supportNote?: string;
 }
+
+const DEFAULT_PREFERENCES: NotificationPreference[] = [
+  {
+    id: 'recovery-guaranteed',
+    title: 'Recovery Is Guaranteed',
+    description: 'Filed and approved recovery milestones.',
+    category: 'Financial Milestones',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'payout-confirmed',
+    title: 'Payout Is Confirmed',
+    description: 'When confirmed recovered funds are deposited.',
+    category: 'Financial Milestones',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'invoice-issued',
+    title: 'New Invoice Is Issued',
+    description: 'Billing notification when a payment_processed event is emitted.',
+    category: 'Financial Milestones',
+    email: true,
+    inApp: true,
+    supported: false,
+    supportNote: 'Not yet enforced by a live billing notification event.'
+  },
+  {
+    id: 'team-member-joins',
+    title: 'New Team Member Joins',
+    description: 'When an invited user accepts their invitation.',
+    category: 'Account & Security',
+    email: true,
+    inApp: true,
+    supported: false,
+    supportNote: 'Not yet enforced by backend events.'
+  },
+  {
+    id: 'document-processed',
+    title: 'Document Successfully Processed',
+    description: 'Confirmation that evidence was processed and attached.',
+    category: 'Account & Security',
+    email: false,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'device-login',
+    title: 'New Device Logs In',
+    description: 'Critical security alert for account access.',
+    category: 'Account & Security',
+    email: true,
+    inApp: true,
+    supported: false,
+    supportNote: 'Not yet enforced by backend events.'
+  },
+  {
+    id: 'weekly-summary',
+    title: 'Weekly Performance Summary',
+    description: 'Curated weekly digest of delivered value.',
+    category: 'Platform & Performance',
+    email: true,
+    inApp: false,
+    supported: true
+  },
+  {
+    id: 'product-updates',
+    title: 'Product News & Updates',
+    description: 'Alerts about new features and improvements.',
+    category: 'Platform & Performance',
+    email: false,
+    inApp: true,
+    supported: false,
+    supportNote: 'Not yet enforced by backend events.'
+  }
+];
+
+const mergePreferencesWithDefaults = (
+  saved: Record<string, { email?: boolean; inApp?: boolean }>
+): NotificationPreference[] => {
+  return DEFAULT_PREFERENCES.map((pref) => {
+    const persisted = saved[pref.id] || (pref.id === 'weekly-summary' ? saved['monthly-summary'] : undefined);
+    if (!persisted) {
+      return pref;
+    }
+    return {
+      ...pref,
+      email: persisted.email ?? pref.email,
+      inApp: persisted.inApp ?? pref.inApp
+    };
+  });
+};
 
 // Format timestamp to relative time
 const formatTimestamp = (createdAt: string): string => {
@@ -54,6 +151,9 @@ export default function NotificationHub() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState<NotificationPreference[]>(DEFAULT_PREFERENCES);
+  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
+  const [preferencesError, setPreferencesError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const { tenant } = useTenant();
@@ -81,8 +181,12 @@ export default function NotificationHub() {
           if (response.ok && Array.isArray(notifData)) {
             const mappedNotifications: Notification[] = notifData.map((notif: any) => {
               const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
-              const channels: string[] = ['In-App'];
-              if (notif.email_sent || notif.sent_via_email) {
+              const channel = notif.channel || 'in_app';
+              const channels: string[] = [];
+              if (channel === 'in_app' || channel === 'both') {
+                channels.push('In-App');
+              }
+              if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email) {
                 channels.push('Email');
               }
               return {
@@ -236,8 +340,12 @@ export default function NotificationHub() {
       if (response.ok && Array.isArray(notifData)) {
         const mappedNotifications: Notification[] = notifData.map((notif: any) => {
           const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
-          const channels: string[] = ['In-App'];
-          if (notif.email_sent || notif.sent_via_email) {
+          const channel = notif.channel || 'in_app';
+          const channels: string[] = [];
+          if (channel === 'in_app' || channel === 'both') {
+            channels.push('In-App');
+          }
+          if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email) {
             channels.push('Email');
           }
           return {
@@ -263,122 +371,67 @@ export default function NotificationHub() {
     });
   };
 
-  const [preferences, setPreferences] = useState<NotificationPreference[]>([
-    {
-      id: 'recovery-guaranteed',
-      title: 'New Recovery is Guaranteed',
-      description: 'When our system files a claim and guarantees its value',
-      category: 'Financial Milestones',
-      email: true,
-      inApp: true
-    },
-    {
-      id: 'payout-confirmed',
-      title: 'Payout is Confirmed',
-      description: 'When Amazon confirms funds have been disbursed',
-      category: 'Financial Milestones',
-      email: true,
-      inApp: true
-    },
-    {
-      id: 'invoice-issued',
-      title: 'New Invoice is Issued',
-      description: 'When we bill for our performance fee',
-      category: 'Financial Milestones',
-      email: true,
-      inApp: true
-    },
-    {
-      id: 'team-member-joins',
-      title: 'New Team Member Joins',
-      description: 'When an invited user accepts their invitation',
-      category: 'Account & Security',
-      email: true,
-      inApp: true
-    },
-    {
-      id: 'document-processed',
-      title: 'Document Successfully Processed',
-      description: 'Confirmation that uploaded invoice has been verified',
-      category: 'Account & Security',
-      email: false,
-      inApp: true
-    },
-    {
-      id: 'device-login',
-      title: 'New Device Logs In',
-      description: 'Critical security alert for account access',
-      category: 'Account & Security',
-      email: true,
-      inApp: true
-    },
-    {
-      id: 'monthly-summary',
-      title: 'Monthly Performance Summary',
-      description: 'Curated digest of total value delivered',
-      category: 'Platform & Performance',
-      email: true,
-      inApp: false
-    },
-    {
-      id: 'product-updates',
-      title: 'Product News & Updates',
-      description: 'Alerts about new features and improvements',
-      category: 'Platform & Performance',
-      email: false,
-      inApp: true
+  const loadPreferences = async () => {
+    try {
+      setPreferencesError(null);
+      const response = await api.getNotificationPreferences();
+      if (response.ok && response.data) {
+        setPreferences(mergePreferencesWithDefaults(response.data));
+        setPreferencesLoaded(true);
+        return true;
+      }
+
+      setPreferencesLoaded(false);
+      setPreferences(DEFAULT_PREFERENCES);
+      setPreferencesError(response.error || 'Failed to load saved preferences');
+      return false;
+    } catch (err: any) {
+      console.warn('Failed to load notification preferences:', err);
+      setPreferencesLoaded(false);
+      setPreferences(DEFAULT_PREFERENCES);
+      setPreferencesError(err.message || 'Failed to load saved preferences');
+      return false;
     }
-  ]);
+  };
 
   // Load preferences from backend on mount
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const response = await api.getNotificationPreferences();
-        if (!cancelled && response.ok && response.data) {
-          setPreferences(prev => prev.map(pref => {
-            const saved = response.data[pref.id];
-            if (saved) {
-              return {
-                ...pref,
-                email: saved.email ?? pref.email,
-                inApp: saved.inApp ?? pref.inApp
-              };
-            }
-            return pref;
-          }));
-        }
-      } catch (err) {
-        console.warn('Failed to load notification preferences:', err);
-      }
-    })();
-    return () => { cancelled = true; };
+    void loadPreferences();
   }, []);
 
   const updatePreference = async (id: string, channel: 'email' | 'inApp', value: boolean) => {
-    setPreferences(prev => prev.map(pref =>
+    const previousPreferences = preferences;
+    const nextPreferences = preferences.map(pref =>
       pref.id === id ? { ...pref, [channel]: value } : pref
-    ));
+    );
+
+    setPreferences(nextPreferences);
+    setPreferencesError(null);
 
     const prefsToSave: Record<string, { email: boolean; inApp: boolean }> = {};
-    preferences.forEach(pref => {
-      if (pref.id === id) {
-        prefsToSave[pref.id] = { ...{ email: pref.email, inApp: pref.inApp }, [channel]: value };
-      } else {
-        prefsToSave[pref.id] = { email: pref.email, inApp: pref.inApp };
-      }
+    nextPreferences.forEach(pref => {
+      prefsToSave[pref.id] = { email: pref.email, inApp: pref.inApp };
     });
 
     try {
       const response = await api.saveNotificationPreferences(prefsToSave);
       if (response.ok) {
-        toast({ title: 'Preferences saved' });
+        const reloaded = await loadPreferences();
+        if (reloaded) {
+          toast({ title: 'Preferences saved' });
+        } else {
+          setPreferences(previousPreferences);
+          toast({ title: 'Failed to reload saved preferences', variant: 'destructive' });
+        }
       } else {
+        setPreferences(previousPreferences);
+        setPreferencesError(response.error || 'Failed to save preferences');
         toast({ title: 'Failed to save', description: response.error || 'Please try again', variant: 'destructive' });
       }
-    } catch (err) {
-      toast({ title: 'Failed to save', description: 'Network error - preferences saved locally only', variant: 'destructive' });
+    } catch (err: any) {
+      setPreferences(previousPreferences);
+      setPreferencesError(err.message || 'Failed to save preferences');
+      toast({ title: 'Failed to save', description: 'Preferences were not saved', variant: 'destructive' });
     }
   };
 
@@ -593,6 +646,13 @@ export default function NotificationHub() {
             </div>
 
             <div className="p-8 space-y-12">
+              {preferencesError && (
+                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 px-5 py-4">
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-rose-300">
+                    Saved preferences are unavailable right now. Toggles are locked until the page reloads from backend truth.
+                  </p>
+                </div>
+              )}
               {categories.map((category, catIdx) => {
                 const categoryPrefs = preferences.filter(pref => pref.category === category);
 
@@ -620,11 +680,17 @@ export default function NotificationHub() {
                               <p className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight mb-4 leading-relaxed">
                                 {pref.description}
                               </p>
+                              {!pref.supported && (
+                                <p className="text-[10px] font-sans font-bold text-amber-300/80 uppercase tracking-tight mb-4">
+                                  {pref.supportNote}
+                                </p>
+                              )}
 
                               <div className="flex items-center gap-8">
                                 <div className="flex items-center gap-3">
                                   <Switch
                                     checked={pref.email}
+                                    disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
                                     onCheckedChange={(checked) =>
                                       updatePreference(pref.id, 'email', checked)
                                     }
@@ -636,6 +702,7 @@ export default function NotificationHub() {
                                 <div className="flex items-center gap-3">
                                   <Switch
                                     checked={pref.inApp}
+                                    disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
                                     onCheckedChange={(checked) =>
                                       updatePreference(pref.id, 'inApp', checked)
                                     }
