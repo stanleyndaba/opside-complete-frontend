@@ -213,7 +213,6 @@ const Settings = () => {
     { id: 'billing' as SettingsSection, label: 'Billing', icon: CreditCard },
     // { id: 'api' as SettingsSection, label: 'API Keys', icon: Key },
     { id: 'integrations' as SettingsSection, label: 'Integrations', icon: Box },
-    { id: 'notifications' as SettingsSection, label: 'Notifications', icon: Bell },
     // { id: 'security' as SettingsSection, label: 'Security', icon: Shield },
     // { id: 'careers' as SettingsSection, label: 'Careers', icon: Briefcase }
   ];
