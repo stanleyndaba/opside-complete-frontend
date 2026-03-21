@@ -237,18 +237,18 @@ export const ClaimPdfService = {
         doc.line(MARGIN, 26.5, pageWidth - MARGIN, 26.5);
 
         yPos = 34;
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('helvetica', 'bold');
         doc.setFontSize(8.5);
         doc.setTextColor(COLORS.ink);
-        doc.text('CASE SNAPSHOT', MARGIN, yPos);
+        doc.text('Case Overview', MARGIN, yPos);
         doc.setDrawColor(COLORS.line);
         doc.setLineWidth(0.1);
-        doc.line(MARGIN, yPos + 3, MARGIN + 58, yPos + 3);
+        doc.line(MARGIN, yPos + 3, MARGIN + 56, yPos + 3);
 
         const labelX = MARGIN;
         const valueX = MARGIN + 42;
-        const metricStartY = 43;
-        const metricRowGap = 8;
+        const metricStartY = 40;
+        const metricRowGap = 3.2;
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6.5);
@@ -265,13 +265,13 @@ export const ClaimPdfService = {
         doc.text(primaryDiscrepancy, valueX, metricStartY + metricRowGap);
         doc.text(confidenceLabel, valueX, metricStartY + (metricRowGap * 2));
 
-        yPos = 68;
-        doc.setFont('times', 'bold');
-        doc.setFontSize(10);
+        yPos = 54;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9.5);
         doc.setTextColor(COLORS.ink);
-        doc.text('1. DISCREPANCY', MARGIN, yPos);
+        doc.text('Discrepancy', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
-        yPos += 8;
+        yPos += 7;
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8.5);
         const generatedSummary = buildGeneratedSummary(data);
