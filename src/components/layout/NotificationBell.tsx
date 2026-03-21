@@ -23,18 +23,6 @@ interface NotificationBellProps {
   iconClassName?: string;
 }
 
-// Helper to render bold text from "**text**" markdown
-const renderFormattedMessage = (message: string): React.ReactNode => {
-  if (!message || typeof message !== 'string') return '';
-  const parts = message.split(/(\*\*.*?\*\*)/g);
-  return parts.map((part, index) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return <span key={index} className="font-sans font-bold text-gray-900 tracking-tight">{part.slice(2, -2)}</span>;
-    }
-    return <span key={index}>{part}</span>;
-  });
-};
-
 // Helper to strip emojis from text
 const stripEmojis = (text: any) => {
   if (!text || typeof text !== 'string') return '';
@@ -102,7 +90,7 @@ export function NotificationBell({
     // Extract "Villain" (Anomaly Type)
     const villain = toTitleCase(payload.anomaly_type || payload.type || n.type || 'Discrepancy');
 
-    let weaponizedHeader = n.type.replace(/_/g, ' ');
+    let weaponizedHeader = toTitleCase(n.type || 'Notification');
     let weaponizedSubtitle = n.message;
 
     if (n.type === 'claim_detected' || n.type === 'anomaly_detected') {
@@ -204,7 +192,7 @@ export function NotificationBell({
         sideOffset={12}
         className="w-[380px] max-h-[480px] bg-[#0c0c0c] border border-white/10 shadow-3xl z-50 rounded-2xl flex flex-col overflow-hidden p-0 backdrop-blur-3xl">
         {/* Header - Fixed, Institutional Style */}
-        <div className="px-6 py-5 border-b border-white/5 flex-shrink-0 bg-white/[0.01]">
+        <div className="px-6 py-4 border-b border-white/5 flex-shrink-0 bg-white/[0.01]">
           <div className="flex items-center justify-between">
             <h3 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">
               Updates
@@ -214,7 +202,7 @@ export function NotificationBell({
                 <button
                   onClick={handleMarkAllRead}
                   className="text-[10px] font-sans font-bold text-white/20 hover:text-white transition-colors uppercase tracking-tight">
-                  Purge_All
+                  Read All
                 </button>
               )}
               {unreadCount > 0 && (
@@ -237,33 +225,33 @@ export function NotificationBell({
               const content = (
                 <div
                   className={cn(
-                    'group relative px-6 py-5 transition-all duration-300 cursor-pointer border-r-2 border-transparent hover:bg-white/[0.03]',
-                    !notification.read ? 'bg-white/[0.01]' : 'bg-transparent'
+                    'group relative px-6 py-3 transition-all duration-300 cursor-pointer border-r-2 border-transparent hover:bg-white/[0.02]',
+                    !notification.read ? 'bg-white/[0.015]' : 'bg-transparent'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}>
 
                   {/* Hover Accent Bar */}
-                  <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  <div className="flex items-center justify-between gap-3 mb-1.5">
-                    <div className="flex items-center gap-3 overflow-hidden min-w-0">
-                      <div className={cn("h-1.5 w-1.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.3)]", !notification.read ? "bg-emerald-500" : "bg-white/10")} />
+                  <div className="flex items-center justify-between gap-3 mb-0.5">
+                    <div className="flex items-center gap-2 overflow-hidden min-w-0">
+                      <div className={cn("h-1.5 w-1.5 rounded-full shrink-0", !notification.read ? "bg-white/70" : "bg-white/20")} />
                       <p className={cn(
                         'text-[13px] truncate flex items-center gap-2 font-sans font-bold tracking-tight',
-                        !notification.read ? 'text-white' : 'text-white/40 group-hover:text-white'
+                        !notification.read ? 'text-white' : 'text-white/55 group-hover:text-white/80'
                       )}>
                         {notification.header}
                       </p>
                     </div>
-                    <span className="text-[10px] text-white/20 font-sans font-bold text-right shrink-0 pt-0.5 whitespace-nowrap uppercase tracking-tight">
+                    <span className="text-[10px] text-white/22 font-sans font-bold text-right shrink-0 whitespace-nowrap uppercase tracking-tight">
                       {notification.timestamp}
                     </span>
                   </div>
 
-                  <div className="flex items-baseline justify-between gap-4 ml-4.5">
+                  <div className="flex items-center justify-between gap-3 ml-[14px]">
                     <p className={cn(
-                      'text-[12px] leading-relaxed font-sans font-bold truncate tracking-tight',
-                      !notification.read ? 'text-white/60' : 'text-white/20 group-hover:text-white/40'
+                      'text-[12px] leading-snug font-sans font-medium truncate tracking-tight',
+                      !notification.read ? 'text-white/68' : 'text-white/32 group-hover:text-white/48'
                     )}>
                       {stripEmojis(notification.message)}
                     </p>
@@ -277,9 +265,9 @@ export function NotificationBell({
 
                       return (
                         <span className={cn(
-                          "text-[9px] font-sans font-bold shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] px-1.5 py-0.5 rounded border tracking-tight",
-                          notification.type === 'funds_deposited' ? "text-emerald-500 border-emerald-500/20 bg-emerald-500/5" :
-                            notification.type === 'case_filed' ? "text-blue-400 border-blue-400/20 bg-blue-400/5" : "text-white/20 border-white/5"
+                          "text-[9px] font-sans font-bold shrink-0 px-1.5 py-0.5 rounded border tracking-tight",
+                          notification.type === 'funds_deposited' ? "text-white/70 border-white/10 bg-white/[0.03]" :
+                            notification.type === 'case_filed' ? "text-blue-400 border-blue-400/20 bg-blue-400/5" : "text-white/30 border-white/8 bg-white/[0.02]"
                         )}>
                           {statusText}
                         </span>
@@ -310,7 +298,7 @@ export function NotificationBell({
         {/* Footer - Institutional Style */}
         <div className="px-6 py-4 border-t border-white/5 flex-shrink-0 bg-white/[0.01]">
           <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
-            <button className="w-full text-center text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-tight">
+            <button className="w-full text-center text-[10px] font-sans font-bold text-white/20 hover:text-white/70 transition-colors uppercase tracking-tight">
               All Notifications
             </button>
           </Link>
