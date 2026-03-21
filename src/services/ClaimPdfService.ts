@@ -234,9 +234,9 @@ export const ClaimPdfService = {
 
         doc.setDrawColor(COLORS.line);
         doc.setLineWidth(0.1);
-        doc.line(MARGIN, 26.5, pageWidth - MARGIN, 26.5);
+        doc.line(MARGIN, 31.5, pageWidth - MARGIN, 31.5);
 
-        yPos = 34;
+        yPos = 46;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8.5);
         doc.setTextColor(COLORS.ink);
@@ -247,7 +247,7 @@ export const ClaimPdfService = {
 
         const labelX = MARGIN;
         const valueX = MARGIN + 42;
-        const metricStartY = 40;
+        const metricStartY = 52;
         const metricRowGap = 3.2;
 
         doc.setFont('helvetica', 'normal');
@@ -265,7 +265,7 @@ export const ClaimPdfService = {
         doc.text(primaryDiscrepancy, valueX, metricStartY + metricRowGap);
         doc.text(confidenceLabel, valueX, metricStartY + (metricRowGap * 2));
 
-        yPos = 54;
+        yPos = 67;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9.5);
         doc.setTextColor(COLORS.ink);
@@ -277,10 +277,10 @@ export const ClaimPdfService = {
         const generatedSummary = buildGeneratedSummary(data);
         doc.text(doc.splitTextToSize(generatedSummary, pageWidth - (MARGIN * 2)), MARGIN, yPos);
 
-        yPos = 138;
+        yPos = 112;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('2. LIFECYCLE STATE', MARGIN, yPos);
+        doc.text('1. LIFECYCLE STATE', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -298,7 +298,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3. AMOUNT SNAPSHOT', MARGIN, yPos);
+        doc.text('2. AMOUNT SNAPSHOT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -316,7 +316,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('4. CASE REFERENCES', MARGIN, yPos);
+        doc.text('3. CASE REFERENCES', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -368,10 +368,7 @@ export const ClaimPdfService = {
             }
         }
 
-        doc.setTextColor(COLORS.ink);
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'normal');
-        doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, 22);
+        doc.setTextColor(COLORS.soft);
         doc.setFontSize(7);
         doc.setTextColor(COLORS.soft);
         doc.text('APPENDIX: CASE EVIDENCE & EVENT SUMMARY [EXHIBIT A]', MARGIN, 29);
@@ -380,7 +377,7 @@ export const ClaimPdfService = {
         yPos = 40;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('5. ASSET & EVIDENCE SNAPSHOT', MARGIN, yPos);
+        doc.text('4. ASSET & EVIDENCE SNAPSHOT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -398,7 +395,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('6. LINKED EVIDENCE DOCUMENTS', MARGIN, yPos);
+        doc.text('5. LINKED EVIDENCE DOCUMENTS', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -414,7 +411,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('7. GENERATED EVENT SUMMARY', MARGIN, yPos);
+        doc.text('6. GENERATED EVENT SUMMARY', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
@@ -441,7 +438,7 @@ export const ClaimPdfService = {
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
-        doc.text('8. CASE TRACE REFERENCES', MARGIN, yPos);
+        doc.text('7. CASE TRACE REFERENCES', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         doc.setFont('courier', 'normal');
         doc.setFontSize(7);
