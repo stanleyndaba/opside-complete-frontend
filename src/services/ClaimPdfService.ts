@@ -156,7 +156,7 @@ export const ClaimPdfService = {
                 reader.onloadend = () => {
                     if (reader.result) {
                         try {
-                            doc.addImage(reader.result as string, 'PNG', MARGIN, 12, 12, 6);
+                            doc.addImage(reader.result as string, 'PNG', MARGIN, 12, 8, 4);
                             logoLoaded = true;
                         } catch (e) {
                             console.warn('Could not add logo to PDF:', e);
@@ -172,21 +172,24 @@ export const ClaimPdfService = {
 
         if (!logoLoaded) {
             doc.setFillColor(COLORS.ink);
-            doc.rect(MARGIN, 12, 3, 8, 'F');
-            doc.rect(MARGIN + 4, 12, 3, 8, 'F');
+            doc.rect(MARGIN, 12, 2.5, 5, 'F');
+            doc.rect(MARGIN + 3.5, 12, 2.5, 5, 'F');
         }
 
         doc.setDrawColor(COLORS.line);
         doc.setLineWidth(0.1);
         doc.line(MARGIN, 28, pageWidth - MARGIN, 28);
 
-        doc.setFont('times', 'bold');
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
         doc.text('MARGIN', MARGIN, 22);
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
-        doc.text('INTERNAL CASE EXPORT', MARGIN, 25.5);
+        doc.text('INTERNAL CASE REPORT', MARGIN, 25.5);
+        doc.setFontSize(7);
+        doc.setTextColor(COLORS.soft);
+        doc.text('CASE REPORT', MARGIN, 32);
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
@@ -202,9 +205,10 @@ export const ClaimPdfService = {
         doc.text(toStatusLabel(data.status), valX, 25, { align: 'right' });
 
         yPos = 58;
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(11);
-        doc.text('GENERATED CASE SUMMARY // BACKEND CASE EXPORT', MARGIN, yPos);
+        doc.setTextColor(COLORS.ink);
+        doc.text('CASE REPORT', MARGIN, yPos);
 
         yPos = 65;
         doc.setFillColor(COLORS.panel);
@@ -226,10 +230,6 @@ export const ClaimPdfService = {
         doc.setTextColor(COLORS.accent);
         doc.text(formatConfidence(data.confidence ?? data.confidence_score), MARGIN + (summaryWidth * 2), yPos + 17);
         doc.setTextColor(COLORS.soft);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(6.5);
-        doc.text('Derived from backend case confidence when available', MARGIN + (summaryWidth * 2), yPos + 24);
-
         yPos = 103;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
@@ -322,7 +322,7 @@ export const ClaimPdfService = {
                 await new Promise<void>((resolve) => {
                     logoReader.onloadend = () => {
                         if (logoReader.result) {
-                            doc.addImage(logoReader.result as string, 'PNG', MARGIN, 12, 12, 6);
+                            doc.addImage(logoReader.result as string, 'PNG', MARGIN, 12, 8, 4);
                         }
                         resolve();
                     };
