@@ -529,6 +529,7 @@ export default function CaseDetail() {
     let es: EventSource | null = null;
     try {
       es = new EventSource(api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`), { withCredentials: true } as any);
+      es.onopen = () => setStatusFeedUnavailable(false);
       const handleRealtimePayload = (payload: any) => {
         if (!caseId || !matchesRealtimeEvent(payload, caseId)) {
           return;
@@ -546,34 +547,17 @@ export default function CaseDetail() {
         handleRealtimePayload(parseDefaultSSEMessage(event));
       };
 
+      es.onerror = () => {
+        setStatusFeedUnavailable(true);
+      };
+
       const originalClose = es.close.bind(es);
       es.close = () => {
         removeNamedListeners();
         originalClose();
       };
     } catch { }
-    const interval = setInterval(async () => {
-      if (!caseId) return;
-      const statusRes = await api.getRecoveryStatus(caseId, activeSlug);
-      if (statusRes.ok && statusRes.data) {
-        setStatusFeedUnavailable(false);
-        setCaseData((prev: any) => ({
-          ...(prev || {}),
-          status: (statusRes.data as any).status ?? prev?.status,
-          expectedPayoutDate: (statusRes.data as any).expected_payout_date ?? prev?.expectedPayoutDate,
-          amazonCaseId: (statusRes.data as any).amazonCaseId ?? prev?.amazonCaseId,
-          events: (statusRes.data as any).events ?? prev?.events,
-          progress: (statusRes.data as any).progress ?? prev?.progress,
-        }));
-      } else if (statusRes.status === 404) {
-        setStatusFeedUnavailable(true);
-        setCaseData((prev: any) => ({
-          ...(prev || {}),
-          status: prev?.status || 'Unavailable',
-        }));
-      }
-    }, 15000);
-    return () => { cancelled = true; if (es) es.close(); clearInterval(interval); };
+    return () => { cancelled = true; if (es) es.close(); };
   }, [caseId, activeSlug, matchesRealtimeEvent, refreshCaseDetail]);
 
   // Attempt to fetch matched documents for this case
