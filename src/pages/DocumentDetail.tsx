@@ -12,12 +12,8 @@ import {
   Check,
   Download,
   RefreshCw,
-  Mail,
   Cloud,
   Calendar,
-  Package,
-  Truck,
-  DollarSign,
   Hash,
   AlertCircle,
   CheckCircle2,
@@ -152,13 +148,6 @@ export default function DocumentDetail() {
     } finally {
       setTriggeringParse(false);
     }
-  };
-
-  const getSourceIcon = (source: string) => {
-    const lower = source?.toLowerCase() || '';
-    if (lower.includes('gmail') || lower.includes('email')) return <Mail className="w-3.5 h-3.5" />;
-    if (lower.includes('drive') || lower.includes('dropbox')) return <Cloud className="w-3.5 h-3.5" />;
-    return <FileText className="w-3.5 h-3.5" />;
   };
 
   const getParserStatusBadge = (status: string) => {
@@ -382,13 +371,13 @@ export default function DocumentDetail() {
                       {/* Two-Column Key-Value Table */}
                       <div className="px-8 py-6">
                         <div className="border border-white/5 rounded-lg overflow-hidden bg-white/[0.01]">
-                          {[
-                            { id: '01', label: 'ORDER_IDENTIFIERS', data: extracted.order_ids, icon: Hash, type: 'tags' },
-                            { id: '02', label: 'ASIN_SKU_RESOURCES', data: [...(extracted.asins || []), ...(extracted.skus || [])], icon: Package, type: 'tags' },
-                            { id: '03', label: 'FINANCIAL_VALUES', data: extracted.amounts, icon: DollarSign, type: 'currency' },
-                            { id: '04', label: 'LOGISTICS_TRACKING', data: extracted.tracking_numbers, icon: Truck, type: 'tags' },
-                            { id: '05', label: 'INVOICE_REFERENCES', data: extracted.invoice_numbers, icon: FileText, type: 'tags' },
-                            { id: '06', label: 'TEMPORAL_MARKERS', data: extracted.dates, icon: Calendar, type: 'tags' }
+                          {[ 
+                            { id: '01', label: 'ORDER_IDENTIFIERS', data: extracted.order_ids, type: 'tags' },
+                            { id: '02', label: 'ASIN_SKU_RESOURCES', data: [...(extracted.asins || []), ...(extracted.skus || [])], type: 'tags' },
+                            { id: '03', label: 'FINANCIAL_VALUES', data: extracted.amounts, type: 'currency' },
+                            { id: '04', label: 'LOGISTICS_TRACKING', data: extracted.tracking_numbers, type: 'tags' },
+                            { id: '05', label: 'INVOICE_REFERENCES', data: extracted.invoice_numbers, type: 'tags' },
+                            { id: '06', label: 'TEMPORAL_MARKERS', data: extracted.dates, type: 'tags' }
                           ].map((row, idx) => (
                             <div
                               key={row.id}
@@ -398,8 +387,7 @@ export default function DocumentDetail() {
                               )}
                             >
                               {/* Left Column - Label */}
-                              <div className="w-[220px] flex-shrink-0 px-5 py-4 bg-white/[0.02] border-r border-white/5 flex items-center gap-3">
-                                <row.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-blue-400 transition-colors" />
+                              <div className="w-[220px] flex-shrink-0 px-5 py-4 bg-white/[0.02] border-r border-white/5 flex items-center">
                                 <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight group-hover:text-white/60 transition-colors">
                                   {row.label}
                                 </span>
