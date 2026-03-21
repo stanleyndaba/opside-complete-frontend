@@ -46,6 +46,14 @@ interface CaseEvent {
 // Rejection reason classification
 type RejectionReason = 'missing_evidence' | 'wrong_category' | 'expired_window' | 'amount_disputed' | 'generic_denial' | 'duplicate_claim' | 'insufficient_info' | 'inbound_damage';
 
+const REJECTION_CATEGORY_TO_PLAYBOOK: Record<string, RejectionReason> = {
+  MISSING_DOCUMENT: 'missing_evidence',
+  OUT_OF_WINDOW: 'expired_window',
+  ALREADY_REIMBURSED: 'duplicate_claim',
+  INSUFFICIENT_EVIDENCE: 'insufficient_info',
+  INVALID_CLAIM: 'generic_denial',
+};
+
 const POLICY_MAP: Record<string, { code: string; title: string; link: string; clause?: string }> = {
   lost_warehouse: {
     code: 'FBA 9.1',
@@ -231,13 +239,77 @@ type ObjectType = 'Detection' | 'Case' | 'Recovery';
 
 const resolveObjectType = (value: any): ObjectType => {
   if (!value) return 'Case';
-  if (value.actual_payout_amount || value.resolution_amount || value.reconciled_at || value.recovery_status === 'paid') {
+  if (value.actual_payout_amount || value.resolution_amount || value.reconciled_at || value.recovery_status === 'reconciled') {
     return 'Recovery';
   }
   if (value.filing_status || value.case_number || value.provider_case_id || value.amazonCaseId || value.amazon_case_id || value.provider) {
     return 'Case';
   }
   return 'Detection';
+};
+
+const toStatusLabel = (value?: string | null) => {
+  if (!value) return '-';
+  return String(value).replace(/_/g, ' ');
+};
+
+const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
+  ...apiData,
+  id: apiData.id || fallbackId || null,
+  dispute_case_id: apiData.dispute_case_id || (apiData.object_type === 'case' ? apiData.id : null),
+  detection_result_id: apiData.detection_result_id || (apiData.object_type === 'detection' ? apiData.id : null),
+  title: apiData.title || apiData.details || apiData.anomaly_type || 'Claim Details',
+  status: apiData.status || null,
+  filing_status: apiData.filing_status || null,
+  recovery_status: apiData.recovery_status || null,
+  billing_status: apiData.billing_status || null,
+  updated_at: apiData.updated_at || apiData.created_at || apiData.createdDate || null,
+  guaranteedAmount: apiData.guaranteedAmount ?? apiData.requested_amount ?? apiData.claim_amount ?? apiData.estimated_claim_value ?? apiData.estimated_value ?? null,
+  estimated_claim_value: apiData.estimated_claim_value ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null,
+  requested_amount: apiData.requested_amount ?? apiData.claim_amount ?? apiData.guaranteedAmount ?? null,
+  approved_amount: apiData.approved_amount ?? apiData.recovery_amount ?? null,
+  actual_payout_amount: apiData.actual_payout_amount ?? null,
+  billed_amount: apiData.billed_amount ?? null,
+  expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || null,
+  createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || null,
+  sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
+    (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku : '-',
+  asin: apiData.asin || apiData.evidence?.asin || null,
+  productName: apiData.productName || apiData.details || apiData.anomaly_type || 'Unknown Product',
+  facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || null,
+  unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? null,
+  units_is_verified: apiData.units_is_verified === true,
+  unitCost: apiData.unitCost ?? apiData.unit_cost ?? null,
+  confidence: typeof apiData.confidence_score === 'number'
+    ? apiData.confidence_score * 100
+    : (typeof apiData.confidence === 'number' ? apiData.confidence : null),
+  evidenceStatus: apiData.evidenceStatus || null,
+  documents: Array.isArray(apiData.documents) ? apiData.documents : [],
+  events: Array.isArray(apiData.events) ? apiData.events : [],
+  evidence: apiData.evidence || {},
+  evidence_summary: apiData.evidence_summary || {},
+  evidence_attachments: apiData.evidence_attachments || null,
+  claim_number: apiData.claim_number || apiData.evidence?.claim_number || null,
+  generated_context: apiData.generated_context || null,
+  next_step_context: apiData.next_step_context || null,
+  rejection_category: apiData.rejection_category || apiData.evidence_attachments?.rejection_category || null,
+  rejection_reason: apiData.rejection_reason || apiData.evidence_attachments?.raw_reason_text || null,
+});
+
+const isEvidenceRelatedEvent = (event: any) => {
+  const type = String(event?.type || '').toLowerCase();
+  const status = String(event?.status || '').toLowerCase();
+  const eventType = String(event?.eventType || '').toLowerCase();
+  return Boolean(
+    (Array.isArray(event?.docIds) && event.docIds.length > 0) ||
+    type === 'evidence' ||
+    status === 'verified' ||
+    status === 'matched' ||
+    eventType.includes('evidence') ||
+    eventType.includes('matching') ||
+    eventType.includes('parsing') ||
+    eventType.includes('ingestion')
+  );
 };
 
 // Get required documents based on claim type
@@ -396,11 +468,22 @@ export default function CaseDetail() {
   const [error, setError] = useState<string | null>(null);
   const [caseData, setCaseData] = useState<any | null>(passedClaim ? {
     id: passedClaim.id,
+    dispute_case_id: passedClaim.dispute_case_id || null,
+    detection_result_id: passedClaim.detection_result_id || null,
     title: passedClaim.details || passedClaim.anomaly_type || 'Claim Details',
     status: passedClaim.status || '-',
+    filing_status: passedClaim.filing_status || null,
+    recovery_status: passedClaim.recovery_status || null,
+    billing_status: passedClaim.billing_status || null,
     guaranteedAmount: passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
+    estimated_claim_value: passedClaim.estimated_claim_value ?? passedClaim.estimated_value ?? passedClaim.guaranteedAmount ?? null,
+    requested_amount: passedClaim.requested_amount ?? passedClaim.claim_amount ?? passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
+    approved_amount: passedClaim.approved_amount ?? passedClaim.recovery_amount ?? null,
+    actual_payout_amount: passedClaim.actual_payout_amount ?? null,
+    billed_amount: passedClaim.billed_amount ?? null,
     expectedPayoutDate: passedClaim.expectedPayoutDate || passedClaim.expected_payout_date || null,
     createdDate: passedClaim.created || passedClaim.created_at || passedClaim.discovery_date || null,
+    updated_at: passedClaim.updated_at || passedClaim.created_at || passedClaim.created || null,
     sku: passedClaim.sku || passedClaim.evidence?.sku || '-',
     asin: passedClaim.asin || passedClaim.evidence?.asin || null,
     productName: passedClaim.details || passedClaim.anomaly_type || 'Unknown Product',
@@ -415,7 +498,13 @@ export default function CaseDetail() {
     documents: passedClaim.documents || passedClaim.matchedDocs || [],
     events: passedClaim.events || [],
     evidence: passedClaim.evidence || {},
+    evidence_summary: passedClaim.evidence_summary || {},
+    evidence_attachments: passedClaim.evidence_attachments || null,
     claim_number: passedClaim.claim_number || passedClaim.evidence?.claim_number || null,
+    next_step_context: passedClaim.next_step_context || null,
+    generated_context: passedClaim.generated_context || null,
+    rejection_category: passedClaim.rejection_category || passedClaim.evidence_attachments?.rejection_category || null,
+    rejection_reason: passedClaim.rejection_reason || passedClaim.evidence_attachments?.raw_reason_text || null,
   } : null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
@@ -450,38 +539,9 @@ export default function CaseDetail() {
 
     const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
     if (res.ok && res.data) {
-      setCaseData((prev: any) => {
-        const apiData = res.data as any;
-        const base = prev || passedClaim || {};
-
-        return {
-          ...base,
-          ...apiData,
-          id: apiData.id || base.id || currentCaseId,
-          title: apiData.title || apiData.details || apiData.anomaly_type || base.title || 'Claim Details',
-          status: apiData.status || apiData.filing_status || base.status || '-',
-          guaranteedAmount: apiData.guaranteedAmount ?? apiData.estimated_value ?? base.guaranteedAmount ?? null,
-          expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || base.expectedPayoutDate || null,
-          createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || base.createdDate || null,
-          sku: (apiData.sku && apiData.sku !== 'N/A') ? apiData.sku :
-            (apiData.evidence?.sku && apiData.evidence?.sku !== 'N/A') ? apiData.evidence.sku :
-              (base.sku && base.sku !== 'N/A') ? base.sku : '-',
-          asin: apiData.asin || apiData.evidence?.asin || base.asin || null,
-          productName: apiData.productName || apiData.details || apiData.anomaly_type || base.productName || 'Unknown Product',
-          facility: apiData.facility || apiData.evidence?.fulfillment_center || apiData.warehouse || base.facility || null,
-          unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? base.unitsLost ?? null,
-          units_is_verified: apiData.units_is_verified === true,
-          unitCost: apiData.unitCost ?? apiData.unit_cost ?? base.unitCost ?? null,
-          confidence: typeof apiData.confidence_score === 'number'
-            ? apiData.confidence_score * 100
-            : (typeof apiData.confidence === 'number' ? apiData.confidence : base.confidence ?? null),
-          evidenceStatus: apiData.evidenceStatus || base.evidenceStatus || null,
-          documents: apiData.documents || base.documents || [],
-          events: apiData.events || base.events || [],
-          evidence: { ...(base.evidence || {}), ...(apiData.evidence || {}) },
-          claim_number: apiData.claim_number || apiData.evidence?.claim_number || base.claim_number || null,
-        };
-      });
+      const apiData = res.data as any;
+      const normalized = normalizeCaseDetailData(apiData, currentCaseId);
+      setCaseData(normalized);
       if (Array.isArray((res.data as any)?.documents)) {
         setMatchedDocs((res.data as any).documents);
       }
@@ -496,8 +556,20 @@ export default function CaseDetail() {
     if (showLoading) setLoading(false);
   }, [activeSlug, passedClaim]);
 
-  const matchesRealtimeEvent = useCallback((payload: any, currentCaseId: string) => {
-    const ids = [
+  const resolvedIdentityIds = useMemo(() => {
+    return Array.from(new Set([
+      caseId,
+      caseData?.id,
+      caseData?.dispute_case_id,
+      caseData?.detection_result_id,
+      passedClaim?.id,
+      passedClaim?.dispute_case_id,
+      passedClaim?.detection_result_id,
+    ].filter(Boolean)));
+  }, [caseId, caseData?.id, caseData?.dispute_case_id, caseData?.detection_result_id, passedClaim?.id, passedClaim?.dispute_case_id, passedClaim?.detection_result_id]);
+
+  const matchesRealtimeEvent = useCallback((payload: any) => {
+    const ids = new Set([
       payload?.entity_id,
       payload?.dispute_case_id,
       payload?.case_id,
@@ -514,10 +586,10 @@ export default function CaseDetail() {
       payload?.data?.detection_id,
       payload?.data?.claim_id,
       payload?.data?.claimId
-    ].filter(Boolean);
+    ].filter(Boolean));
 
-    return ids.includes(currentCaseId);
-  }, []);
+    return resolvedIdentityIds.some((id) => ids.has(id));
+  }, [resolvedIdentityIds]);
 
   useEffect(() => {
     let cancelled = false;
@@ -531,7 +603,7 @@ export default function CaseDetail() {
       es = new EventSource(api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`), { withCredentials: true } as any);
       es.onopen = () => setStatusFeedUnavailable(false);
       const handleRealtimePayload = (payload: any) => {
-        if (!caseId || !matchesRealtimeEvent(payload, caseId)) {
+        if (!caseId || !matchesRealtimeEvent(payload)) {
           return;
         }
         refreshCaseDetail(caseId);
@@ -581,7 +653,11 @@ export default function CaseDetail() {
               matchedFields: caseData?.evidence_attachments?.matched_fields,
               matchedAt: caseData?.evidence_attachments?.matched_at,
             };
-            setMatchedDocs([docWithMatchInfo]);
+            const existingDocs = Array.isArray(caseData?.documents) ? caseData.documents : [];
+            const mergedDocs = existingDocs.some((doc: any) => doc.id === docWithMatchInfo.id)
+              ? existingDocs.map((doc: any) => doc.id === docWithMatchInfo.id ? { ...doc, ...docWithMatchInfo } : doc)
+              : [...existingDocs, docWithMatchInfo];
+            setMatchedDocs(mergedDocs);
             return;
           }
         }
@@ -614,16 +690,49 @@ export default function CaseDetail() {
 
   const matchedCount = matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0);
   const resolvedUnitsAffected = effectiveCase?.unitsLost ?? effectiveCase?.units_lost ?? effectiveCase?.quantity ?? effectiveCase?.units ?? null;
-  const resolvedClaimAmount = effectiveCase?.guaranteedAmount ?? effectiveCase?.estimated_value ?? effectiveCase?.amount ?? null;
+  const estimatedClaimValue = effectiveCase?.estimated_claim_value ?? effectiveCase?.estimated_value ?? null;
+  const requestedAmount = effectiveCase?.requested_amount ?? effectiveCase?.guaranteedAmount ?? effectiveCase?.claim_amount ?? effectiveCase?.amount ?? null;
+  const approvedAmount = effectiveCase?.approved_amount ?? effectiveCase?.recovery_amount ?? null;
+  const recoveredAmount = effectiveCase?.actual_payout_amount ?? null;
+  const billedAmount = effectiveCase?.billed_amount ?? null;
+  const resolvedClaimAmount = requestedAmount ?? estimatedClaimValue ?? null;
   const resolvedValuePerUnit = typeof resolvedClaimAmount === 'number' &&
     typeof resolvedUnitsAffected === 'number' &&
     resolvedUnitsAffected > 0
     ? resolvedClaimAmount / resolvedUnitsAffected
     : null;
   const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : '-';
-  const resolvedMatchMethod = effectiveCase?.match_type ? String(effectiveCase.match_type).replace(/_/g, ' ') : '-';
+  const resolvedMatchMethod = effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type
+    ? String(effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type).replace(/_/g, ' ')
+    : '-';
   const resolvedFacility = effectiveCase?.facility || effectiveCase?.evidence?.fulfillment_center || effectiveCase?.warehouse || null;
   const resolvedStoreName = effectiveCase?.store_name || effectiveCase?.seller_name || null;
+  const nextStep = effectiveCase?.next_step_context || null;
+  const generatedContext = effectiveCase?.generated_context || null;
+  const evidenceEvents = useMemo(() => (Array.isArray(caseData?.events) ? caseData.events.filter(isEvidenceRelatedEvent) : []), [caseData?.events]);
+  const rejectionPlaybookReason = useMemo<RejectionReason | null>(() => {
+    const category = effectiveCase?.rejection_category;
+    if (category && REJECTION_CATEGORY_TO_PLAYBOOK[category]) {
+      return REJECTION_CATEGORY_TO_PLAYBOOK[category];
+    }
+    const legacy = effectiveCase?.rejection_code;
+    return legacy && escalationPlaybooks[legacy as RejectionReason] ? legacy as RejectionReason : null;
+  }, [effectiveCase?.rejection_category, effectiveCase?.rejection_code]);
+  const lifecycleSteps = useMemo(() => {
+    const currentStatus = String(effectiveCase?.status || '').toLowerCase();
+    const filingStatus = String(effectiveCase?.filing_status || '').toLowerCase();
+    const recoveryStatus = String(effectiveCase?.recovery_status || '').toLowerCase();
+    const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
+    const hasEvidence = matchedCount > 0;
+    return [
+      { label: 'Detected', active: Boolean(effectiveCase?.id) },
+      { label: 'Evidence', active: hasEvidence },
+      { label: 'Filed', active: ['filed', 'submitted', 'resubmitted', 'filing'].includes(filingStatus) || ['submitted', 'under review', 'under_review', 'in_progress', 'processing', 'approved', 'rejected', 'denied'].includes(currentStatus) },
+      { label: 'Approved', active: ['approved'].includes(currentStatus) || ['reconciled', 'discrepancy'].includes(recoveryStatus) },
+      { label: 'Recovered', active: ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
+      { label: 'Billed', active: ['pending', 'completed'].includes(billingStatus) }
+    ];
+  }, [effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
 
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
@@ -689,7 +798,7 @@ export default function CaseDetail() {
                 </Link>
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
+                    <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.case_number || effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                     <Badge variant="outline" className="border-white/10 bg-white/5 text-white/70 text-[9px] uppercase tracking-tight">
                       {objectType}
                     </Badge>
@@ -714,25 +823,25 @@ export default function CaseDetail() {
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-[#0a0a0a] border-white/10 text-white">
                     <DialogHeader>
-                      <DialogTitle className="text-xl font-sans font-bold text-white flex items-center gap-2">
-                        {AGENT_NAMES['refund_filing'] || 'AI'}: Recovery Draft
-                      </DialogTitle>
-                      <DialogDescription className="text-white/40 text-xs font-sans font-bold tracking-tight">
-                        Generated by Recovery Agent Engine • Case {effectiveCase.id?.slice(0, 12)}
-                      </DialogDescription>
+                        <DialogTitle className="text-xl font-sans font-bold text-white flex items-center gap-2">
+                          {AGENT_NAMES['refund_filing'] || 'AI'}: Generated Filing Draft
+                        </DialogTitle>
+                        <DialogDescription className="text-white/40 text-xs font-sans font-bold tracking-tight">
+                          Generated guidance from backend case state • Case {effectiveCase.id?.slice(0, 12)}
+                        </DialogDescription>
                     </DialogHeader>
                     <div className="mt-6 p-6 bg-white/[0.03] border border-white/10 rounded-xl">
                       <div className="space-y-6">
                         <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                          <span className="text-[10px] uppercase font-bold text-white/30 tracking-tight">Formal Claim Logic</span>
-                          <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-bold">READY TO FILE</Badge>
+                          <span className="text-[10px] uppercase font-bold text-white/30 tracking-tight">Generated Claim Logic</span>
+                          <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[9px] font-bold">{nextStep?.title || 'Generated Context'}</Badge>
                         </div>
                         <p className="text-sm leading-relaxed text-white/80 font-bold tracking-tight italic">
                           "{generateNarrative(effectiveCase)}"
                         </p>
                         <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                           <div className="text-[10px] text-white/20 font-sans font-bold tracking-tight">
-                            Auto-filing scheduled; verification complete.
+                            {nextStep?.description || generatedContext?.summaryLabel || 'Generated from the latest backend case fields.'}
                           </div>
                           <Button
                             variant="ghost"
@@ -761,12 +870,14 @@ export default function CaseDetail() {
             </div>
 
             {/* Trust Banner - Policy & Confidence */}
-            {(POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit) && (
-              <div className="flex flex-wrap items-center gap-6 py-2 mb-4 lowercase">
+            {(POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit || matchedCount > 0 || nextStep) && (
+              <div className="flex flex-wrap items-center gap-6 py-2 mb-4">
                 {POLICY_MAP[effectiveCase.anomaly_type] && (
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-white/30 font-bold uppercase tracking-tight">Legal Basis</span>
+                      <span className="text-[10px] text-white/30 font-bold uppercase tracking-tight">
+                        Generated Policy Reference
+                      </span>
                       <a
                         href={POLICY_MAP[effectiveCase.anomaly_type].link}
                         target="_blank"
@@ -794,6 +905,26 @@ export default function CaseDetail() {
                     </div>
                   </>
                 )}
+
+                {!effectiveCase.safety_audit && (
+                  <>
+                    <div className="h-4 w-[1px] bg-white/10" />
+                    <div className="flex items-center gap-2 px-2.5 py-1 bg-white/5 border border-white/10 rounded">
+                      <Info className="h-3.5 w-3.5 text-white/40" />
+                      <span className="text-[10px] font-bold text-white/60 uppercase tracking-tight">
+                        {generatedContext?.trustLabel || 'Generated risk guidance'}
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                <div className="h-4 w-[1px] bg-white/10" />
+                <div className="flex items-center gap-2 px-2.5 py-1 bg-white/5 border border-white/10 rounded">
+                  <FileText className="h-3.5 w-3.5 text-white/40" />
+                  <span className="text-[10px] font-bold text-white/70 uppercase tracking-tight">
+                    {matchedCount} matched docs
+                  </span>
+                </div>
               </div>
             )}
 
@@ -830,7 +961,10 @@ export default function CaseDetail() {
                 {/* Tile 1: Audit Narrative & Logistics */}
                 <div className="p-8 bg-white/[0.02]">
                   <div className="mb-6">
-                    <h3 className="text-sm font-bold text-white">Case Summary</h3>
+                    <h3 className="text-sm font-bold text-white">Generated Case Summary</h3>
+                    <p className="text-[10px] text-white/30 uppercase tracking-tight font-bold mt-1">
+                      {generatedContext?.summaryLabel || 'Generated context from backend case fields'}
+                    </p>
                   </div>
                   <div className="space-y-8">
                     <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
@@ -943,12 +1077,32 @@ export default function CaseDetail() {
                       </div>
                     </div>
 
-                    {/* Timeline */}
+                    {/* Lifecycle */}
                     <div className="space-y-4">
                       <h4 className="flex items-center gap-2 text-[10px] font-bold text-white/30 border-b border-white/10 pb-2.5 tracking-tight">
-                        <div className="h-1 w-2 bg-blue-500 rounded-full" /> Timeline
+                        <div className="h-1 w-2 bg-blue-500 rounded-full" /> Lifecycle State
                       </h4>
                       <div className="space-y-3">
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Current Status</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {toStatusLabel(effectiveCase.status || (statusFeedUnavailable ? 'unavailable' : '-'))}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Filing Status</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {toStatusLabel(effectiveCase.filing_status)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Recovery Status</dt>
+                          <dd className="text-xs font-sans font-bold text-white">{toStatusLabel(effectiveCase.recovery_status)}</dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Billing Status</dt>
+                          <dd className="text-xs font-sans font-bold text-white">{toStatusLabel(effectiveCase.billing_status)}</dd>
+                        </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Issue Identified</dt>
                           <dd className="text-xs font-sans font-bold text-white">
@@ -956,19 +1110,10 @@ export default function CaseDetail() {
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium">Days Since Detection</dt>
+                          <dt className="text-[11px] text-white/40 font-medium">Last Updated</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {(() => {
-                              const created = effectiveCase.created_at || effectiveCase.createdDate;
-                              if (!created) return '—';
-                              const days = Math.floor((Date.now() - new Date(created).getTime()) / (1000 * 60 * 60 * 24));
-                              return isNaN(days) ? '—' : `${days} days`;
-                            })()}
+                            {formatDateOrDash(effectiveCase.updated_at || effectiveCase.created_at || effectiveCase.createdDate)}
                           </dd>
-                        </div>
-                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
-                          <dt className="text-[11px] text-white/40 font-medium">Policy Status</dt>
-                          <dd className="text-xs font-sans font-bold text-white">{effectiveCase.status || (statusFeedUnavailable ? 'Unavailable' : '-')}</dd>
                         </div>
                       </div>
                     </div>
@@ -987,7 +1132,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Product Match</dt>
-                          <dd className="text-xs font-sans font-bold text-white">{matchedCount > 0 ? 'Available' : '-'}</dd>
+                          <dd className="text-xs font-sans font-bold text-white">{derivedEvidence}</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Order Reference</dt>
@@ -1135,19 +1280,38 @@ export default function CaseDetail() {
 
                   <div className="flex flex-col md:flex-row gap-12 items-start">
                     <div className="min-w-[240px]">
-                      <div className="text-[10px] text-white/30 font-bold mb-3 tracking-tight">Recovery Amount</div>
+                      <div className="text-[10px] text-white/30 font-bold mb-3 tracking-tight">Requested Claim Amount</div>
                       <div className="text-2xl font-bold text-emerald-500 font-sans tracking-tight">
-                        ${effectiveCase.guaranteedAmount?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || '0.00'}
+                        {formatCurrencyOrDash(requestedAmount, effectiveCase?.currency || 'USD')}
                       </div>
 
-                      {effectiveCase.actual_payout_amount && (
+                      <div className="mt-4 space-y-2 text-[11px]">
+                        <div className="flex items-center justify-between text-white/60">
+                          <span>Estimated Claim Value</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(estimatedClaimValue, effectiveCase?.currency || 'USD')}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-white/60">
+                          <span>Approved Amount</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(approvedAmount, effectiveCase?.currency || 'USD')}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-white/60">
+                          <span>Recovered Amount</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(recoveredAmount, effectiveCase?.currency || 'USD')}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-white/60">
+                          <span>Billed Amount</span>
+                          <span className="font-sans font-bold text-white">{formatCurrencyOrDash(billedAmount, effectiveCase?.currency || 'USD')}</span>
+                        </div>
+                      </div>
+
+                      {typeof recoveredAmount === 'number' && (
                         <div className="mt-6 p-4 bg-white/5 border border-white/10 rounded-lg inline-block min-w-[200px]">
                           <div className="flex justify-between items-center mb-1.5">
                             <span className="text-[11px] text-white/40 font-bold uppercase">Actual Payout</span>
-                            <span className="text-xs font-sans font-bold text-blue-400">${effectiveCase.actual_payout_amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                            <span className="text-xs font-sans font-bold text-blue-400">{formatCurrencyOrDash(recoveredAmount, effectiveCase?.currency || 'USD')}</span>
                           </div>
                           <div className="flex items-center gap-1.5 text-[10px] text-emerald-500 font-bold tracking-tight">
-                            <CheckCircle className="h-3 w-3" /> Reconciled
+                            <CheckCircle className="h-3 w-3" /> {toStatusLabel(effectiveCase.recovery_status || 'reconciled')}
                           </div>
                         </div>
                       )}
@@ -1188,7 +1352,7 @@ export default function CaseDetail() {
                             )}
                           </div>
                           <div className="text-[10px] text-white/30 mt-2 font-bold tracking-tight">
-                            {selectedMetric === 'payout' && 'Scheduled Settlement'}
+                            {selectedMetric === 'payout' && 'Expected Payout Date'}
                             {selectedMetric === 'confidence' && 'Analysis Precision'}
                             {selectedMetric === 'units' && 'Inventory Units'}
                             {selectedMetric === 'cost' && 'Verified Cost Basis'}
@@ -1214,35 +1378,36 @@ export default function CaseDetail() {
                     <div className="relative pt-2 pb-2 px-4">
                       <div className="absolute top-[18px] left-0 right-0 h-[1px] bg-white/10" />
                       <div className="flex justify-between relative z-10">
-                        {['Detected', 'Prepared', 'Submitted', 'Paid', 'Follow-up'].map((step, idx) => {
-                          const status = (effectiveCase.status || '').toLowerCase();
-                          const active = (step === 'Detected') ||
-                            (step === 'Prepared' && ['guaranteed', 'submitted', 'under review', 'under_review', 'filed', 'pending', 'in progress', 'in_progress', 'paid out', 'paid_out', 'approved', 'paid', 'denied', 'rejected'].includes(status)) ||
-                            (step === 'Submitted' && ['submitted', 'under review', 'under_review', 'filed', 'paid out', 'paid_out', 'approved', 'paid', 'denied', 'rejected'].includes(status)) ||
-                            (step === 'Paid' && ['paid out', 'paid_out', 'approved', 'paid', 'completed', 'reconciled'].includes(status)) ||
-                            (step === 'Follow-up' && ['denied', 'rejected', 'unresolved'].includes(status));
-
+                        {lifecycleSteps.map((step, idx) => {
                           return (
-                            <div key={step} className="flex flex-col items-center gap-2">
+                            <div key={step.label} className="flex flex-col items-center gap-2">
                               <div className={cn(
                                 "w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all shrink-0",
-                                active ? "bg-blue-600 border-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]" : "bg-[#0a0a0a] border-white/10 text-white/30"
+                                step.active ? "bg-blue-600 border-blue-600 text-white shadow-[0_0_10px_rgba(37,99,235,0.3)]" : "bg-[#0a0a0a] border-white/10 text-white/30"
                               )}>
                                 {idx + 1}
                               </div>
                               <span className={cn(
                                 "text-[11px] font-bold tracking-tight uppercase",
-                                active ? "text-blue-500" : "text-white/20"
-                              )}>{step}</span>
+                                step.active ? "text-blue-500" : "text-white/20"
+                              )}>{step.label}</span>
                             </div>
                           );
                         })}
                       </div>
                     </div>
 
+                    <div className="p-4 bg-white/[0.03] border border-white/10 rounded-lg">
+                      <div className="text-[10px] text-white/30 font-bold uppercase tracking-tight mb-2">Next System Step</div>
+                      <div className="text-sm font-bold text-white">{nextStep?.title || 'Unknown next step'}</div>
+                      <div className="text-[11px] text-white/60 mt-1 leading-relaxed">
+                        {nextStep?.description || 'The backend did not return next-step context for this case.'}
+                      </div>
+                    </div>
+
                     {/* Timeline View */}
                     <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-lg">
-                      <Timeline claimId={effectiveCase.id} />
+                      <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} />
                     </div>
 
                   </div>
@@ -1263,7 +1428,7 @@ export default function CaseDetail() {
 
                       {matchedDocs.length > 0 ? (
                         <div className="space-y-3">
-                          {matchedDocs.slice(0, 4).map((doc: any, idx: number) => {
+                          {matchedDocs.map((doc: any, idx: number) => {
                             const confidencePct = typeof doc.matchConfidence === 'number'
                               ? Math.round(doc.matchConfidence * 100)
                               : (typeof doc.confidence_score === 'number'
@@ -1335,10 +1500,9 @@ export default function CaseDetail() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
-                            {caseData?.events?.filter((e: any) => e.type === 'logistics' || e.type === 'claim' || e.type === 'evidence').map((event: any, idx: number) => {
-                              const isLogistics = event.type === 'logistics';
-                              const isClaim = event.type === 'claim';
-                              const isEvidence = event.type === 'evidence';
+                            {evidenceEvents.map((event: any, idx: number) => {
+                              const statusLabel = toStatusLabel(event.status || event.eventType || event.type);
+                              const confirmation = event.source === 'agent_event' ? 'SYSTEM_EVENT' : 'NOTIFICATION_EVENT';
 
                               return (
                                 <tr key={event.id || idx} className="hover:bg-white/[0.04] transition-colors group">
@@ -1351,31 +1515,29 @@ export default function CaseDetail() {
                                   </td>
                                   <td className="px-4 py-3">
                                     <div className="flex items-center gap-2">
-                                      {isLogistics && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />}
-                                      {isClaim && <div className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />}
-                                      {isEvidence && <div className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />}
+                                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />
                                       <span className="text-[10px] font-bold text-white/80 font-sans uppercase tracking-tight">
-                                        {event.status || event.type}
+                                        {statusLabel}
                                       </span>
                                     </div>
                                   </td>
                                   <td className="px-4 py-3 text-[10px] font-sans font-bold text-white/40">
-                                    {event.reference || event.claimId || '--'}
+                                    {event.claimId || event.id || '--'}
                                   </td>
                                   <td className="px-4 py-3">
                                     <Badge variant="outline" className={cn(
                                       "text-[9px] h-4.5 px-2 border-white/10 font-sans font-bold uppercase tracking-tight",
-                                      event.confirmation === 'AMAZON_CONFIRMED' ? "bg-emerald-500/10 text-emerald-500/80 border-emerald-500/20" :
-                                        event.confirmation === 'SELLER_CONFIRMED' ? "bg-blue-500/10 text-blue-500/80 border-blue-500/20" :
+                                      confirmation === 'AMAZON_CONFIRMED' ? "bg-emerald-500/10 text-emerald-500/80 border-emerald-500/20" :
+                                        confirmation === 'SELLER_CONFIRMED' ? "bg-blue-500/10 text-blue-500/80 border-blue-500/20" :
                                           "bg-white/5 text-white/40"
                                     )}>
-                                      {event.confirmation || 'SYSTEM_LOG'}
+                                      {confirmation}
                                     </Badge>
                                   </td>
                                 </tr>
                               );
                             })}
-                            {(!caseData?.events || caseData.events.filter((e: any) => e.type === 'logistics' || e.type === 'claim' || e.type === 'evidence').length === 0) && (
+                            {evidenceEvents.length === 0 && (
                               <tr>
                                 <td colSpan={4} className="px-4 py-12 text-center text-[10px] font-sans font-bold text-white/20">
                                   -
@@ -1417,7 +1579,7 @@ export default function CaseDetail() {
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">User ID</dt>
-                            <dd className="text-xs font-sans font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || 'Not mapped'}</dd>
+                            <dd className="text-xs font-sans font-bold text-white">{effectiveCase.user_id || effectiveCase.seller_id || 'Not mapped'}</dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Permission Status</dt>
@@ -1457,15 +1619,15 @@ export default function CaseDetail() {
 
                       <div className="space-y-4">
                         <div className="text-[10px] text-white/30 font-bold mb-4 flex items-center gap-2 tracking-tight uppercase">
-                          Autonomous Logic
+                          Generated System Guidance
                           <div className="h-px flex-1 bg-white/10" />
                         </div>
                         <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
                           <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 tracking-tight uppercase mb-2">
-                            System Health
+                            {generatedContext?.strategyLabel || 'Generated guidance'}
                           </div>
                           <p className="text-[11px] text-white/70 leading-relaxed font-bold">
-                            {effectiveCase.autonomous_logic_summary || '-'}
+                            {effectiveCase.autonomous_logic_summary || nextStep?.description || '-'}
                           </p>
                         </div>
                       </div>
@@ -1500,7 +1662,7 @@ export default function CaseDetail() {
 
                   <div className="space-y-12">
                     {/* Rejection Master / Escalation Playbook */}
-                    {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && effectiveCase.rejection_code && escalationPlaybooks[effectiveCase.rejection_code as RejectionReason] && (
+                    {['rejected', 'denied'].includes((effectiveCase.status || '').toLowerCase()) && rejectionPlaybookReason && escalationPlaybooks[rejectionPlaybookReason] && (
                       <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-xl relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                           <ShieldAlert className="h-24 w-24 text-red-500" />
@@ -1511,18 +1673,18 @@ export default function CaseDetail() {
                               <Zap className="h-4 w-4 text-red-500" />
                             </div>
                             <div>
-                              <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].label}</h4>
-                              <p className="text-[10px] text-red-400 font-sans font-bold uppercase tracking-tight mt-0.5">Automated Recovery Strategy v2.4</p>
+                              <h4 className="text-sm font-bold text-white tracking-tight">Escalation Playbook: {escalationPlaybooks[rejectionPlaybookReason].label}</h4>
+                              <p className="text-[10px] text-red-400 font-sans font-bold uppercase tracking-tight mt-0.5">Generated guidance from stored rejection memory</p>
                             </div>
                           </div>
                           <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-lg font-bold tracking-tight">
-                            {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].description} Amazon often uses boilerplate denials for this case type. Follow the steps below to force manual re-review.
+                            {effectiveCase.rejection_reason || escalationPlaybooks[rejectionPlaybookReason].description}
                           </p>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-4">
                               <h5 className="text-[10px] font-bold text-white/30 uppercase tracking-tight">Required Maneuver</h5>
                               <ul className="space-y-2.5">
-                                {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].actions.map((action, aIdx) => (
+                                {escalationPlaybooks[rejectionPlaybookReason].actions.map((action, aIdx) => (
                                   <li key={aIdx} className="flex items-start gap-3">
                                     <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] font-bold text-red-500 shrink-0 mt-0.5">{aIdx + 1}</div>
                                     <span className="text-[11px] text-white/80 font-medium">{action}</span>
@@ -1537,7 +1699,7 @@ export default function CaseDetail() {
                                   recoveryApi.resubmitClaim(effectiveCase.id, activeSlug).catch(() => { });
                                 }}
                               >
-                                {escalationPlaybooks[effectiveCase.rejection_code as RejectionReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
+                                {escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
                               </button>
                               <p className="text-[9px] text-white/30 text-center">
                                 Escalation managed by {AGENT_NAMES['refund_filing']}
@@ -1557,7 +1719,7 @@ export default function CaseDetail() {
                           </div>
                           <div>
                             <h4 className="text-xs font-bold text-white tracking-tight uppercase">Tactical Playbook</h4>
-                            <p className="text-[9px] text-white/30 font-sans font-bold">Agent Logic Directives</p>
+                            <p className="text-[9px] text-white/30 font-sans font-bold">{generatedContext?.strategyLabel || 'Generated strategy from backend state'}</p>
                           </div>
                         </div>
 
@@ -1578,10 +1740,10 @@ export default function CaseDetail() {
                         <div className="pt-6 border-t border-white/5">
                           <div className="flex items-center justify-between p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-xl">
                             <div className="flex items-center gap-3">
-                              <span className="text-xs font-bold text-white/60">Expected Recovery</span>
+                              <span className="text-xs font-bold text-white/60">Requested Claim Amount</span>
                             </div>
                             <span className="text-sm font-sans font-bold text-emerald-500">
-                              {formatCurrencyOrDash(caseData?.guaranteedAmount || caseData?.estimated_value || null, caseData?.currency || 'USD')}
+                              {formatCurrencyOrDash(requestedAmount, effectiveCase?.currency || 'USD')}
                             </span>
                           </div>
                         </div>
@@ -1595,7 +1757,7 @@ export default function CaseDetail() {
                           </div>
                           <div>
                             <h4 className="text-xs font-bold text-white tracking-tight uppercase">Continuous Protection</h4>
-                            <p className="text-[9px] text-white/30 font-sans font-bold">Agent 11 Prevention Protocol</p>
+                            <p className="text-[9px] text-white/30 font-sans font-bold">{generatedContext?.trustLabel || 'Generated risk guidance from backend signals'}</p>
                           </div>
                         </div>
 
@@ -1615,8 +1777,8 @@ export default function CaseDetail() {
                           <div className="flex items-center gap-3 p-4 bg-blue-500/[0.03] border border-blue-500/10 rounded-xl">
                             <CheckCircle className="h-4 w-4 text-blue-400" />
                             <div className="flex flex-col">
-                              <span className="text-xs font-bold text-white/60 uppercase tracking-tight">System Shielding Active</span>
-                              <span className="text-[9px] text-white/30 font-sans font-bold uppercase">Predictive Loss Prevention Enabled</span>
+                              <span className="text-xs font-bold text-white/60 uppercase tracking-tight">Current Next Step</span>
+                              <span className="text-[9px] text-white/30 font-sans font-bold uppercase">{nextStep?.title || 'Generated context unavailable'}</span>
                             </div>
                           </div>
                         </div>

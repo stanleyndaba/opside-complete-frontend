@@ -28,17 +28,17 @@ function iconFor(type: string, status?: string) {
   return AlertTriangle;
 }
 
-export function Timeline({ claimId }: { claimId: string }) {
+export function Timeline({ claimId, tenantSlug }: { claimId: string; tenantSlug?: string }) {
   const [events, setEvents] = useState<EventItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { tenant } = useTenant();
-  const activeSlug = tenant?.slug || 'beta';
+  const activeSlug = tenantSlug || tenant?.slug || 'default';
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await api.get(`/api/recoveries/${encodeURIComponent(claimId)}/events`);
+        const res = await api.get(`/api/recoveries/${encodeURIComponent(claimId)}/events?tenantSlug=${encodeURIComponent(activeSlug)}`);
         if (!cancelled) {
           if (res.ok && Array.isArray(res.data)) setEvents(res.data as any);
           else setError(res.error || 'Events unavailable');
@@ -48,7 +48,7 @@ export function Timeline({ claimId }: { claimId: string }) {
       }
     })();
     return () => { cancelled = true; };
-  }, [claimId]);
+  }, [claimId, activeSlug]);
 
   if (error) return <div className="text-xs text-red-400">{error}</div>;
   if (!events) return <div className="text-xs text-gray-400">Loading...</div>;
