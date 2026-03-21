@@ -650,8 +650,8 @@ export const api = {
     const backendProvider = provider === 'gdrive' ? 'gdrive' : provider;
 
     return requestJson<{ success?: boolean; authUrl?: string; auth_url?: string; state?: string; message?: string; sandbox?: boolean }>(
-      `/api/v1/integrations/${encodeURIComponent(backendProvider)}/auth?frontend_url=${encodeURIComponent(frontendUrl)}&redirect_uri=${encodeURIComponent(redirectUri)}&tenant_slug=${slug}`,
-      { method: 'GET' }
+      `/api/v1/integrations/${encodeURIComponent(backendProvider)}/connect?frontend_url=${encodeURIComponent(frontendUrl)}&redirect_uri=${encodeURIComponent(redirectUri)}&tenant_slug=${encodeURIComponent(slug)}`,
+      { method: 'POST' }
     ).then(response => {
       if (response.ok && response.data) {
         const authUrl = response.data.authUrl || response.data.auth_url;
@@ -797,7 +797,7 @@ export const api = {
       }),
     }),
   // Unified ingestion - RECOMMENDED: Use this for all sources in parallel
-  ingestAllEvidence: (options?: { providers?: string[]; query?: string; maxResults?: number; autoParse?: boolean; folderId?: string; folderPath?: string }) =>
+  ingestAllEvidence: (options?: { providers?: string[]; query?: string; maxResults?: number; autoParse?: boolean; folderId?: string; folderPath?: string }, tenantSlug?: string) =>
     requestJson<{
       success: boolean;
       totalDocumentsIngested: number;
@@ -810,7 +810,7 @@ export const api = {
         dropbox?: { success: boolean; documentsIngested: number; filesProcessed: number; errors: string[] };
       };
       message: string;
-    }>('/api/evidence/ingest/all', {
+    }>(`/api/evidence/ingest/all${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
       method: 'POST',
       body: JSON.stringify({
         providers: options?.providers,
@@ -1074,6 +1074,26 @@ export const api = {
       docs_connected: boolean;
       lastSync?: string;
       lastIngest?: string;
+      evidenceSettings?: {
+        autoCollect: boolean;
+        schedule: string;
+        filters: Record<string, any>;
+      };
+      providers?: Record<string, {
+        provider: string;
+        source_id?: string;
+        connected: boolean;
+        auth_valid: boolean;
+        needs_reconnect: boolean;
+        last_ingest_at?: string;
+        last_success_at?: string;
+        error_state?: string;
+        error_message?: string;
+        ingestion_state: string;
+        has_data: boolean;
+        account_email?: string;
+        scopes?: string[];
+      }>;
       providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }>;
     }>(`/api/v1/integrations/status?tenantSlug=${slug}`);
   },
@@ -1252,8 +1272,8 @@ export const api = {
   setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
   setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
   setEvidenceFilters: (filters: { 
-    senderPatterns?: string[]; 
-    excludeSenders?: string[]; 
+    senderPatterns?: string[];
+    excludeSenders?: string[];
     subjectKeywords?: string[];
     excludeSubjects?: string[];
     fileTypes?: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean }; 
@@ -1262,7 +1282,7 @@ export const api = {
     dateRange?: string;
     skipDuplicates?: boolean;
     skipExisting?: boolean;
-  }) => requestJson<any>('/api/evidence/filters', { method: 'POST', body: JSON.stringify(filters) }),
+  }, tenantSlug?: string) => requestJson<any>(`/api/evidence/filters${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, { method: 'POST', body: JSON.stringify(filters) }),
   // Legacy endpoint - now uses unified orchestrator
   startEvidenceIngest: () => requestJson<any>('/api/evidence/ingest/all', { method: 'POST', body: JSON.stringify({ maxResults: 50, autoParse: true }) }),
   disconnectIntegration: (provider: string, purge = false) =>
@@ -2081,18 +2101,18 @@ export const detectionApi = {
     totalDocuments?: number;
   }>('/api/admin/evidence/settings'),
 
-  setEvidenceAutoCollect: (enabled: boolean) => requestJson<{
+  setEvidenceAutoCollect: (enabled: boolean, tenantSlug?: string) => requestJson<{
     success: boolean;
     message: string;
-  }>('/api/admin/evidence/auto-collect', {
+  }>(`/api/evidence/auto-collect${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
     method: 'POST',
     body: JSON.stringify({ enabled })
   }),
 
-  setEvidenceSchedule: (schedule: string) => requestJson<{
+  setEvidenceSchedule: (schedule: string, tenantSlug?: string) => requestJson<{
     success: boolean;
     message: string;
-  }>('/api/admin/evidence/schedule', {
+  }>(`/api/evidence/schedule${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
     method: 'POST',
     body: JSON.stringify({ schedule })
   }),
@@ -2128,13 +2148,13 @@ export const detectionApi = {
     if (!tenantSlug) throw new Error("tenantSlug required for getStores");
     return requestJson<{ success: boolean; stores: any[] }>(`/api/v1/stores?tenantSlug=${tenantSlug}`);
   },
-  createStore: (data: { name: string; marketplace: string; seller_id?: string }) =>
-    requestJson<{ success: boolean; store: any }>('/api/v1/stores', {
+  createStore: (data: { name: string; marketplace: string; seller_id?: string }, tenantSlug?: string) =>
+    requestJson<{ success: boolean; store: any }>(`/api/v1/stores${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
       method: 'POST',
       body: JSON.stringify(data)
     }),
-  deleteStore: (id: string) => requestJson<{ success: boolean }>('/api/v1/stores/' + id, { method: 'DELETE' }),
-  getStore: (id: string) => requestJson<{ success: boolean; store: any }>('/api/v1/stores/' + id),
+  deleteStore: (id: string, tenantSlug?: string) => requestJson<{ success: boolean }>(`/api/v1/stores/${encodeURIComponent(id)}${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, { method: 'DELETE' }),
+  getStore: (id: string, tenantSlug?: string) => requestJson<{ success: boolean; store: any }>(`/api/v1/stores/${encodeURIComponent(id)}${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
 
 
   getRevenueInvoices: (params?: { status?: string; limit?: number }) => {

@@ -25,15 +25,65 @@ import { useTenant } from '@/contexts/TenantContext';
 
 // ... (existing constants)
 
+type ProviderKey = 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive';
+
+type IntegrationProviderStatus = {
+  provider: ProviderKey;
+  source_id?: string;
+  connected: boolean;
+  auth_valid: boolean;
+  needs_reconnect: boolean;
+  last_ingest_at?: string;
+  last_success_at?: string;
+  error_state?: string;
+  error_message?: string;
+  ingestion_state: 'disconnected' | 'unverified' | 'no_data' | 'stale' | 'current' | 'failed';
+  has_data: boolean;
+  account_email?: string;
+  scopes?: string[];
+};
+
+type IntegrationStatusDTO = {
+  amazon_connected: boolean;
+  docs_connected: boolean;
+  lastIngest?: string | null;
+  lastSync?: string | null;
+  tenantName?: string;
+  amazon_account?: {
+    seller_id?: string;
+    display_name?: string;
+    email?: string;
+    marketplaces?: string[];
+  } | null;
+  evidenceSettings?: {
+    autoCollect: boolean;
+    schedule: string;
+    filters: {
+      senderPatterns: string[];
+      excludeSenders: string[];
+      subjectKeywords: string[];
+      excludeSubjects: string[];
+      fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean };
+      fileNamePatterns: string[];
+      folders: string[];
+      dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'last_18_months' | 'since_last_sync' | 'all';
+      skipDuplicates: boolean;
+      skipExisting: boolean;
+    };
+  };
+  providers?: Record<string, IntegrationProviderStatus>;
+};
+
+const SECONDARY_PROVIDERS: ProviderKey[] = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
+
 export default function IntegrationsHub() {
   const navigate = useNavigate();
   const location = useLocation();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady, tenant } = useTenant();
-  const activeSlug = tenantSlug || tenant?.slug || 'beta';
+  const activeSlug = tenantSlug || tenant?.slug || null;
   const { toast } = useToast();
-  const [lastSyncTime, setLastSyncTime] = useState('Just now');
-  const [status, setStatus] = useState<{ amazon_connected: boolean; docs_connected: boolean; providers?: Record<string, boolean>; lastIngest?: string; lastSync?: string; providerIngest?: Record<string, { connected: boolean; lastIngest?: string; error?: string; scopes?: string[] }> } | null>(null);
+  const [status, setStatus] = useState<IntegrationStatusDTO | null>(null);
   const [stores, setStores] = useState<any[]>([]);
   const [loadingStores, setLoadingStores] = useState(true);
   const [showAddStore, setShowAddStore] = useState(false);
@@ -153,7 +203,7 @@ export default function IntegrationsHub() {
 
   // Check if we just connected Amazon and should show the reveal
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !activeSlug) return;
     const amazonConnected = searchParams.get('amazon_connected');
 
     if (amazonConnected === 'true' && !showRecoveryReveal) {
@@ -205,15 +255,30 @@ export default function IntegrationsHub() {
       currency: currency || 'USD'
     }).format(amount);
   };
-  const [evidenceSources, setEvidenceSources] = useState<Array<{
-    id: string;
-    provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive';
-    account_email: string;
-    status: 'connected' | 'disconnected' | 'error';
-    last_sync_at: string | null;
-    created_at: string;
-    metadata: Record<string, any>;
-  }>>([]);
+
+  const refreshIntegrationTruth = async () => {
+    if (!activeSlug) return;
+
+    const [statusRes, storesRes] = await Promise.all([
+      api.getIntegrationsStatus(activeSlug),
+      api.getStores(activeSlug)
+    ]);
+
+    if (statusRes.ok && statusRes.data) {
+      const nextStatus = statusRes.data as IntegrationStatusDTO;
+      setStatus(nextStatus);
+      if (nextStatus.evidenceSettings) {
+        setAutoCollect(nextStatus.evidenceSettings.autoCollect);
+        setSchedule(nextStatus.evidenceSettings.schedule);
+        setFilters(nextStatus.evidenceSettings.filters);
+      }
+    }
+
+    if (storesRes.ok && storesRes.data?.stores) {
+      setStores(storesRes.data.stores);
+    }
+  };
+
   const handleConnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive') => {
     const providerName = provider === 'gdrive' ? 'Google Drive'
       : provider === 'gmail' ? 'Gmail'
@@ -224,6 +289,7 @@ export default function IntegrationsHub() {
           : 'Outlook';
     try {
       setProviderLoading(provider);
+      if (!activeSlug) throw new Error('Tenant context is required');
       const r = await api.connectDocs(provider, activeSlug);
       if (r.ok && r.data?.auth_url) {
         toast({
@@ -261,33 +327,20 @@ export default function IntegrationsHub() {
           
     try {
       setDisconnectingProvider(provider);
-      
-      const source = evidenceSources.find(s => {
-        const sLower = s.provider.toLowerCase();
-        const pLower = provider.toLowerCase();
-        return sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive');
-      });
-      
-      let res;
-      if (source?.id) {
-        res = await api.disconnectEvidenceSource(source.id);
-      } else {
-        res = await api.disconnectIntegration(provider);
+      const providerState = status?.providers?.[provider];
+      if (!providerState?.source_id) {
+        throw new Error('No tenant-scoped connection record found for this provider');
       }
+
+      const res = await api.disconnectEvidenceSource(providerState.source_id);
       
       if (res.ok) {
         toast({
           title: `${providerName} Disconnected`,
           description: `Your ${providerName} account has been disconnected.`,
         });
-        
-        const [statusRes, sourcesRes] = await Promise.all([
-          api.getIntegrationsStatus(activeSlug),
-          api.getEvidenceSources(activeSlug)
-        ]);
-        
-        if (statusRes.ok) setStatus(statusRes.data);
-        if (sourcesRes.ok) setEvidenceSources(sourcesRes.data.sources || []);
+
+        await refreshIntegrationTruth();
       } else {
         toast({
           title: 'Disconnection Failed',
@@ -307,19 +360,9 @@ export default function IntegrationsHub() {
     }
   };
 
-  // Real-time sync simulation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const seconds = now.getSeconds();
-      setLastSyncTime('Just now'); // Simplified
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   // SSE for live ingest/detection events
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !activeSlug) return;
     let es: EventSource | null = null;
     try {
       es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
@@ -332,12 +375,7 @@ export default function IntegrationsHub() {
                 title: 'Ingestion Complete',
                 description: evt.message || 'Evidence ingestion has completed. Documents are available in Evidence Locker.'
               });
-              // Refresh status to update lastIngest and provider status
-              api.getIntegrationsStatus(activeSlug).then(res => {
-                if (res.ok && res.data) {
-                  setStatus(res.data);
-                }
-              });
+              refreshIntegrationTruth().catch(() => undefined);
             } else {
               toast({
                 title: 'Ingestion Update',
@@ -380,17 +418,7 @@ export default function IntegrationsHub() {
       });
 
       // Refresh integration status and evidence sources in parallel to update UI
-      Promise.all([
-        api.getIntegrationsStatus(activeSlug),
-        api.getEvidenceSources(activeSlug)
-      ]).then(([statusRes, sourcesRes]) => {
-        if (statusRes.ok && statusRes.data) {
-          setStatus(statusRes.data);
-        }
-        if (sourcesRes.ok && sourcesRes.data) {
-          setEvidenceSources(sourcesRes.data.sources || []);
-        }
-      });
+      refreshIntegrationTruth().catch(() => undefined);
 
       // Clean up URL by removing query parameters after processing
       const cleanUrl = location.pathname;
@@ -398,7 +426,7 @@ export default function IntegrationsHub() {
 
       // Auto-redirect to sync page after 2-3 seconds to show the live dialogue logs
       setTimeout(() => {
-        navigate(tenantRoute(tenantSlug || 'default', '/sync'));
+        navigate(tenantRoute(activeSlug || 'default', '/sync'));
       }, 2500);
       return; // Exit early to avoid processing other providers
     }
@@ -432,17 +460,7 @@ export default function IntegrationsHub() {
 
       // Refresh integration status to update UI
       // Refresh integration status and evidence sources in parallel to update UI
-      Promise.all([
-        api.getIntegrationsStatus(activeSlug),
-        api.getEvidenceSources(activeSlug)
-      ]).then(([statusRes, sourcesRes]) => {
-        if (statusRes.ok && statusRes.data) {
-          setStatus(statusRes.data);
-        }
-        if (sourcesRes.ok && sourcesRes.data) {
-          setEvidenceSources(sourcesRes.data.sources || []);
-        }
-      });
+      refreshIntegrationTruth().catch(() => undefined);
 
       // Clean up URL by removing query parameters after processing (optional)
       const cleanUrl = location.pathname;
@@ -470,56 +488,19 @@ export default function IntegrationsHub() {
       });
 
       // Refresh integration status and evidence sources in parallel to update UI
-      Promise.all([
-        api.getIntegrationsStatus(activeSlug),
-        api.getEvidenceSources(activeSlug)
-      ]).then(([statusRes, sourcesRes]) => {
-        if (statusRes.ok && statusRes.data) {
-          setStatus(statusRes.data);
-        }
-        if (sourcesRes.ok && sourcesRes.data) {
-          setEvidenceSources(sourcesRes.data.sources || []);
-        }
-      });
+      refreshIntegrationTruth().catch(() => undefined);
 
       // Clean up URL
       const cleanUrl = location.pathname;
       navigate(cleanUrl, { replace: true });
     }
-  }, [location.search, navigate, toast]);
+  }, [location.search, navigate, toast, activeSlug]);
 
   useEffect(() => {
-    if (!isReady) return;
-    let cancelled = false;
+    if (!isReady || !activeSlug) return;
     (async () => {
-      const res = await api.getIntegrationsStatus(activeSlug);
-      if (!cancelled) {
-        if (res.ok && res.data) {
-          setStatus(res.data);
-          if (typeof (res.data as any).autoCollect === 'boolean') setAutoCollect((res.data as any).autoCollect);
-          if ((res.data as any).schedule) setSchedule((res.data as any).schedule);
-          if ((res.data as any).filters) setFilters((res.data as any).filters);
-        }
-      }
+      await refreshIntegrationTruth();
     })();
-    return () => { cancelled = true };
-  }, [isReady, activeSlug]);
-
-  // Load evidence sources
-  useEffect(() => {
-    if (!isReady) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await api.getEvidenceSources(activeSlug);
-        if (!cancelled && res.ok && res.data) {
-          setEvidenceSources(res.data.sources || []);
-        }
-      } catch (error) {
-        console.error('Failed to load evidence sources:', error);
-      }
-    })();
-    return () => { cancelled = true };
   }, [isReady, activeSlug]);
 
   // Load stores
@@ -595,6 +576,67 @@ export default function IntegrationsHub() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
+
+  const getProviderState = (provider: ProviderKey): IntegrationProviderStatus => {
+    return status?.providers?.[provider] || {
+      provider,
+      connected: false,
+      auth_valid: false,
+      needs_reconnect: false,
+      ingestion_state: 'disconnected',
+      has_data: false
+    };
+  };
+
+  const formatDateTime = (value?: string | null) => {
+    if (!value) return 'Not available';
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? 'Not available' : parsed.toLocaleString();
+  };
+
+  const describeProviderState = (providerStatus: IntegrationProviderStatus) => {
+    if (!providerStatus.connected) return 'Disconnected';
+    if (providerStatus.needs_reconnect || !providerStatus.auth_valid) return 'Needs reconnect';
+    if (providerStatus.error_state || providerStatus.ingestion_state === 'failed') return 'Ingest failed';
+    if (providerStatus.ingestion_state === 'stale') return 'Connected, stale';
+    if (!providerStatus.has_data) return providerStatus.last_ingest_at ? 'Connected, no data' : 'Connected, unverified';
+    return 'Connected';
+  };
+
+  const getStoreOperationalState = (store: any) => {
+    const amazonStatus = getProviderState('amazon');
+    if (!amazonStatus.connected) return 'Status unavailable';
+    if (!store?.seller_id) return 'Unverified';
+    return 'Connected';
+  };
+
+  const connectedSecondaryProviders = SECONDARY_PROVIDERS.filter(provider => getProviderState(provider).connected);
+  const blockingProviders = SECONDARY_PROVIDERS.filter(provider => {
+    const providerState = getProviderState(provider);
+    return providerState.needs_reconnect || providerState.ingestion_state === 'failed' || providerState.ingestion_state === 'stale';
+  });
+  const pageOperationalState = !getProviderState('amazon').connected
+    ? 'Amazon connection required'
+    : blockingProviders.length > 0
+      ? 'Attention required'
+      : connectedSecondaryProviders.length > 0
+        ? 'Operational with active repositories'
+        : 'Operational, no evidence repositories connected';
+
+  if (isReady && !activeSlug) {
+    return (
+      <PageLayout title="Integrations" midnight>
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
+          <div className="max-w-xl w-full bg-white/[0.02] border border-white/10 rounded-2xl p-8 text-center">
+            <h1 className="text-2xl font-sans font-bold text-white tracking-tight mb-3">Workspace context required</h1>
+            <p className="text-sm text-gray-400 font-sans leading-relaxed">
+              Integration status is tenant-scoped. Select a real workspace before viewing or changing connection state.
+            </p>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="Integrations" midnight>
@@ -687,6 +729,7 @@ export default function IntegrationsHub() {
                     className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
+                      handleConnectDocSource('gmail');
                     }}
                   >
                     Link Account
@@ -704,6 +747,7 @@ export default function IntegrationsHub() {
                     className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => {
                       setShowEvidenceModal(false);
+                      handleConnectDocSource('gdrive');
                     }}
                   >
                     Link Storage
@@ -751,10 +795,10 @@ export default function IntegrationsHub() {
 
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-end">
-                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Global Sync Status</span>
+                  <span className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-1">Operational State</span>
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-white/70 animate-pulse" />
-                    <span className="text-sm font-medium text-white tracking-tight">Systems Operational</span>
+                    <div className={`h-1.5 w-1.5 rounded-full ${pageOperationalState === 'Attention required' || pageOperationalState === 'Amazon connection required' ? 'bg-orange-400' : 'bg-white/70'}`} />
+                    <span className="text-sm font-medium text-white tracking-tight">{pageOperationalState}</span>
                   </div>
                 </div>
               </div>
@@ -875,7 +919,11 @@ export default function IntegrationsHub() {
                       onClick={async () => {
                         toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon Seller Central Authorization...' });
                         try {
-                          const res = await api.connectAmazon(undefined, false, tenantSlug || 'beta');
+                          if (!activeSlug) {
+                            toast({ title: 'Workspace Required', description: 'Select a workspace before connecting Amazon.', variant: 'destructive' });
+                            return;
+                          }
+                          const res = await api.connectAmazon(undefined, false, activeSlug);
                           const url = res.data?.auth_url || res.data?.authUrl;
                           if (res.ok && url) {
                             window.location.assign(url);
@@ -913,7 +961,7 @@ export default function IntegrationsHub() {
                         <div className="flex items-center justify-between pt-4 border-t border-white/5">
                           <div className="flex flex-col">
                             <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Status</span>
-                            <span className="text-[10px] text-gray-300 font-bold tracking-tight">Synced</span>
+                            <span className="text-[10px] text-gray-300 font-bold tracking-tight">{getStoreOperationalState(store)}</span>
                           </div>
                           <button
                             onClick={() => handleDeleteStore(store.id)}
@@ -937,7 +985,7 @@ export default function IntegrationsHub() {
                     <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
                     <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-white/35" /> Encrypted</span>
                   </div>
-                  <span className="text-gray-400">Security Signature: {Math.random().toString(16).substring(2, 10).toUpperCase()}</span>
+                  <span className="text-gray-400">Last ingest: {formatDateTime(status?.lastIngest)}</span>
                 </div>
               </div>
             </motion.div>
@@ -997,7 +1045,7 @@ export default function IntegrationsHub() {
                   <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 flex items-start gap-3">
                     <Info className="h-5 w-5 text-white/60 shrink-0 mt-0.5" />
                     <p className="text-[10px] text-white/55 font-sans font-bold leading-relaxed uppercase tracking-tight">
-                      Requesting a node adds it to our development queue. You will be notified via encrypted channel once the protocol is stabilized.
+                      Custom integration request capture is not wired in this build. Contact support if you need a new provider added.
                     </p>
                   </div>
                 </div>
@@ -1010,14 +1058,10 @@ export default function IntegrationsHub() {
                     Cancel
                   </Button>
                   <Button
-                    onClick={() => {
-                      toast({ title: "Request Cached", description: "Our engineering matrix has received your integration request." });
-                      setShowRequestForm(false);
-                      setRequestFormData({ platform: '', description: '' });
-                    }}
+                    disabled
                     className="bg-white hover:bg-white/90 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                   >
-                    Submit Request
+                    Unavailable
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -1033,7 +1077,7 @@ export default function IntegrationsHub() {
 
             <div className="lg:col-span-12 flex gap-6 overflow-x-auto pb-6 -mx-4 px-4 no-scrollbar scroll-smooth">
 
-              {(['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'] as const).map((p) => {
+              {SECONDARY_PROVIDERS.map((p) => {
                 const providerMeta = {
                   gmail: { name: 'Gmail', icon: '/gmailicon.png', color: 'bg-red-500/10', border: 'border-red-500/20' },
                   outlook: { name: 'Outlook', icon: '/outlookicon.webp', color: 'bg-blue-500/10', border: 'border-blue-500/20' },
@@ -1044,37 +1088,8 @@ export default function IntegrationsHub() {
                   onedrive: { name: 'OneDrive', icon: '/onedriive.png', color: 'bg-sky-500/10', border: 'border-sky-500/20' },
                 } as const;
 
-                const isConnected = () => {
-                  try {
-                    const statusObj = status as any;
-                    if (statusObj?.providerIngest?.[p]?.connected === true) return true;
-                    
-                    const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                    if (statusObj?.providerIngest?.[capitalized]?.connected === true) return true;
-                    
-                    if (statusObj?.providers?.[p] === true) return true;
-                    if (statusObj?.providers?.[capitalized] === true) return true;
-                    
-                    if (p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) return true;
-                    if (p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) return true;
-                    
-                    const providerConnectedKey = `${p}_connected`;
-                    if (statusObj && statusObj[providerConnectedKey] === true) return true;
-                    
-                    if (evidenceSources.some(s => {
-                      const sLower = s.provider.toLowerCase();
-                      const pLower = p.toLowerCase();
-                      return s.status === 'connected' && 
-                             (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
-                    })) return true;
-                    
-                  } catch (e) {
-                    console.error("Error checking connection status for", p, e);
-                  }
-                  return false;
-                };
-
-                const connected = isConnected();
+                const providerState = getProviderState(p);
+                const connected = providerState.connected;
                 const meta = providerMeta[p];
 
                 return (
@@ -1094,15 +1109,21 @@ export default function IntegrationsHub() {
                         {connected ? (
                           <div className="space-y-4">
                             <div className="bg-black/40 rounded-lg p-3 border border-white/5">
-                              <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-1 tracking-tight">Target Account</span>
+                              <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-1 tracking-tight">Operational State</span>
                               <span className="text-xs text-gray-300 truncate block font-sans font-bold tracking-tight">
-                                {evidenceSources.find(s => s.provider === p)?.account_email || 'Active Stream'}
+                                {describeProviderState(providerState)}
+                              </span>
+                              <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
+                                {providerState.account_email || providerState.error_message || 'Account not available'}
+                              </span>
+                              <span className="text-[10px] text-gray-500 block mt-1 font-sans tracking-tight">
+                                Last ingest: {formatDateTime(providerState.last_ingest_at)}
                               </span>
                             </div>
                             <Button
                               variant="ghost"
                               size="sm"
-                              disabled={disconnectingProvider === p}
+                              disabled={disconnectingProvider === p || !providerState.source_id}
                               className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-sans font-bold uppercase tracking-tight"
                               onClick={() => handleDisconnectDocSource(p)}
                             >
@@ -1112,7 +1133,7 @@ export default function IntegrationsHub() {
                         ) : (
                           <div className="space-y-4">
                             <p className="text-xs text-gray-500 leading-relaxed mb-4">
-                              Establish persistent monitoring of this repository for financial artifacts.
+                              {providerState.needs_reconnect ? 'Reconnect this repository to restore evidence ingestion.' : 'Establish persistent monitoring of this repository for financial artifacts.'}
                             </p>
                             <Button
                               className="w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-sans font-bold uppercase tracking-tight gap-2"
@@ -1212,8 +1233,13 @@ export default function IntegrationsHub() {
                   <Button
                     onClick={async () => {
                       setSavingFilters(true);
-                      const r = await api.setEvidenceFilters(filters);
-                      if (r.ok) toast({ title: "Filters Committed", description: "Harvesting parameters updated across grid." });
+                      const r = activeSlug ? await api.setEvidenceFilters(filters, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
+                      if (r.ok) {
+                        toast({ title: "Filters Committed", description: "Harvesting parameters updated across this workspace." });
+                        await refreshIntegrationTruth();
+                      } else {
+                        toast({ title: "Save Failed", description: r.error || 'Failed to save harvesting parameters.', variant: 'destructive' });
+                      }
                       setSavingFilters(false);
                     }}
                     disabled={savingFilters}
@@ -1248,10 +1274,13 @@ export default function IntegrationsHub() {
                       key={opt.value}
                       onClick={async () => {
                         setUpdatingSchedule(true);
-                        const r = await api.setEvidenceSchedule(opt.value);
+                        const r = activeSlug ? await api.setEvidenceSchedule(opt.value, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
                         if (r.ok) {
                           setSchedule(opt.value);
                           toast({ title: "Temporal Shift", description: `Sync set to ${opt.label}` });
+                          await refreshIntegrationTruth();
+                        } else {
+                          toast({ title: "Save Failed", description: r.error || 'Failed to update schedule.', variant: 'destructive' });
                         }
                         setUpdatingSchedule(false);
                       }}
@@ -1275,8 +1304,13 @@ export default function IntegrationsHub() {
                       onClick={async () => {
                         setUpdatingAutoCollect(true);
                         const next = !autoCollect;
-                        const r = await api.setEvidenceAutoCollect(next);
-                        if (r.ok) setAutoCollect(next);
+                        const r = activeSlug ? await api.setEvidenceAutoCollect(next, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
+                        if (r.ok) {
+                          setAutoCollect(next);
+                          await refreshIntegrationTruth();
+                        } else {
+                          toast({ title: "Save Failed", description: r.error || 'Failed to update auto-harvesting.', variant: 'destructive' });
+                        }
                         setUpdatingAutoCollect(false);
                       }}
                       className={`h-10 w-20 rounded-full border transition-all duration-500 relative ${autoCollect ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/10'}`}
@@ -1295,8 +1329,12 @@ export default function IntegrationsHub() {
                 <button
                   onClick={async () => {
                     setIngestingAll(true);
-                    const r = await api.ingestAllEvidence();
-                    if (r.ok) toast({ title: "Harvesting Initiated", description: "Processing all secondary repositories." });
+                    const r = activeSlug ? await api.ingestAllEvidence(undefined, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
+                    if (r.ok) {
+                      toast({ title: "Harvesting Initiated", description: "Processing all connected repositories for this workspace." });
+                    } else {
+                      toast({ title: "Ingestion Failed", description: r.error || 'Failed to start ingestion.', variant: 'destructive' });
+                    }
                     setIngestingAll(false);
                   }}
                   disabled={ingestingAll}
@@ -1326,30 +1364,27 @@ export default function IntegrationsHub() {
           >
             <div className="flex items-center gap-12">
               <div className="flex flex-col">
-                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Grid Uptime</span>
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-white/70" />
-                  <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">99.998%</span>
-                </div>
+                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Amazon</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{describeProviderState(getProviderState('amazon'))}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Repositories</span>
-                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{evidenceSources.length} Active Node{evidenceSources.length !== 1 ? 's' : ''}</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{connectedSecondaryProviders.length} Connected Node{connectedSecondaryProviders.length !== 1 ? 's' : ''}</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Last Sync</span>
-                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{status?.lastIngest || 'Never'}</span>
+                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Last Ingest</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{formatDateTime(status?.lastIngest)}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-6">
-              <button onClick={() => navigate(tenantRoute(tenantSlug || 'default', '/evidence-locker'))} className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white transition-colors">
+              <button onClick={() => navigate(tenantRoute(activeSlug || 'default', '/evidence-locker'))} className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white transition-colors">
                 Evidence Locker
               </button>
               <div className="h-4 w-px bg-white/5" />
-              <button className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500 hover:text-white transition-colors">
-                Terminal Protocols
-              </button>
+              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                Protocols unavailable
+              </span>
             </div>
           </motion.div>
         </div>
