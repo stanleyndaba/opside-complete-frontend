@@ -165,7 +165,7 @@ export default function DocumentDetail() {
     switch (status?.toLowerCase()) {
       case 'completed':
         return (
-          <div className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
+          <div className="px-2.5 py-1 bg-white/5 border border-white/10 text-[10px] font-sans font-bold text-white/80 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
             <CheckCircle2 className="w-3 h-3" />
             VALIDATED
           </div>
@@ -245,8 +245,8 @@ export default function DocumentDetail() {
               {loading ? (
                 <div className="text-center">
                   <div className="relative flex h-8 w-8 mx-auto mb-6">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
-                    <span className="relative inline-flex rounded-full h-8 w-8 bg-emerald-500/40"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/20 opacity-20"></span>
+                    <span className="relative inline-flex rounded-full h-8 w-8 bg-white/10 border border-white/10"></span>
                   </div>
                   <div className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">LOADING...</div>
                 </div>
@@ -292,12 +292,12 @@ export default function DocumentDetail() {
                     </Button>
                   </Link>
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight uppercase">DOCUMENT_DETAILS</span>
+                    <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">DOCUMENT_DETAILS</span>
                     <div className="flex items-center gap-3">
                       <h1 className="text-xl font-sans font-bold text-white tracking-tight uppercase">
                         {documentData?.name?.replace(' ', '_') || 'UNNAMED_DOCUMENT'}
                       </h1>
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-white/40" />
                     </div>
                   </div>
                 </div>
@@ -308,7 +308,7 @@ export default function DocumentDetail() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-10 px-5 text-[10px] font-sans font-bold text-white/40 hover:text-emerald-500 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg"
+                    className="h-10 px-5 text-[10px] font-sans font-bold text-white/40 hover:text-blue-400 hover:bg-blue-500/10 border border-white/5 hover:border-blue-500/20 transition-all uppercase tracking-tight rounded-lg"
                     onClick={handleTriggerParsing}
                     disabled={triggeringParse}>
                     {triggeringParse ? <RefreshCw className="w-3.5 h-3.5 mr-2 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5 mr-2" />}
@@ -340,29 +340,28 @@ export default function DocumentDetail() {
               {/* Main Matrix Tabs */}
               <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                 <Tabs defaultValue="extracted" className="p-0">
-                  <div className="px-8 bg-white/[0.02] border-b border-white/5">
-                    <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto scrollbar-hide">
-                      {[
-                        { value: 'extracted', label: 'EXTRACTED_DATA', icon: Database },
-                        { value: 'matches', label: 'LINKED_CASES', icon: Link2, count: matchedClaims.length },
-                        { value: 'raw', label: 'TEXT_PREVIEW', icon: Terminal },
-                        { value: 'parsing', label: 'STATUS', icon: Activity }
+                      <div className="px-8 bg-white/[0.02] border-b border-white/5">
+                        <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto scrollbar-hide">
+                          {[
+                        { value: 'extracted', label: 'EXTRACTED_DATA' },
+                        { value: 'matches', label: 'LINKED_CASES', count: matchedClaims.length },
+                        { value: 'raw', label: 'TEXT_PREVIEW' },
+                            { value: 'parsing', label: 'STATUS' }
                       ].map((tab) => (
                         <TabsTrigger
                           key={tab.value}
                           value={tab.value}
-                          className="relative h-16 px-0 text-[11px] font-sans font-bold text-white/20 bg-transparent data-[state=active]:bg-transparent rounded-none border-0 shadow-none transition-all hover:text-white group data-[state=active]:text-emerald-500 uppercase tracking-tight"
+                          className="relative h-16 px-0 text-[11px] font-sans font-bold text-white/20 bg-transparent data-[state=active]:bg-transparent rounded-none border-0 shadow-none transition-all hover:text-white group data-[state=active]:text-blue-400 uppercase tracking-tight"
                         >
                           <div className="flex items-center gap-2.5">
-                            <tab.icon className="h-3.5 w-3.5 opacity-40 group-data-[state=active]:opacity-100" />
                             {tab.label}
                             {tab.count !== undefined && (
-                              <span className="text-[9px] px-1.5 py-0.5 bg-white/5 rounded-full text-white/40 group-data-[state=active]:bg-emerald-500/10 group-data-[state=active]:text-emerald-500">
+                              <span className="text-[9px] px-1.5 py-0.5 bg-white/5 rounded-full text-white/40 group-data-[state=active]:bg-blue-500/10 group-data-[state=active]:text-blue-400">
                                 {tab.count}
                               </span>
                             )}
                           </div>
-                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500 opacity-0 group-data-[state=active]:opacity-100 shadow-[0_0_10px_rgba(16,185,129,0.8)] transition-all" />
+                          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500 opacity-0 group-data-[state=active]:opacity-100 shadow-[0_0_10px_rgba(59,130,246,0.45)] transition-all" />
                         </TabsTrigger>
                       ))}
                     </TabsList>
@@ -374,10 +373,9 @@ export default function DocumentDetail() {
                       {/* Header */}
                       <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          <Database className="h-3.5 w-3.5 text-emerald-500" />
                           <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">INTELLIGENCE_STREAM</span>
                           <div className="h-3 w-[1px] bg-white/10 mx-2" />
-                          <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight">FORENSIC_DATA_POINTS</span>
+                          <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">FORENSIC_DATA_POINTS</span>
                         </div>
                       </div>
 
@@ -401,7 +399,7 @@ export default function DocumentDetail() {
                             >
                               {/* Left Column - Label */}
                               <div className="w-[220px] flex-shrink-0 px-5 py-4 bg-white/[0.02] border-r border-white/5 flex items-center gap-3">
-                                <row.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-colors" />
+                                <row.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-blue-400 transition-colors" />
                                 <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight group-hover:text-white/60 transition-colors">
                                   {row.label}
                                 </span>
@@ -415,7 +413,7 @@ export default function DocumentDetail() {
                                     <div className="flex items-center gap-3">
                                       {row.data.map((val: any, i: number) => (
                                         <React.Fragment key={i}>
-                                          <span className="text-base font-sans font-bold text-emerald-500 tracking-tight">
+                                          <span className="text-base font-sans font-bold text-white tracking-tight">
                                             ${typeof val === 'number' ? val.toFixed(2) : val}
                                           </span>
                                           {i < row.data.length - 1 && (
@@ -452,8 +450,8 @@ export default function DocumentDetail() {
                           <div className="flex flex-col gap-1">
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">EXTRACT_CONFIDENCE</span>
                             <div className="flex items-center gap-2">
-                              <div className={cn("h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]", parserConfidence != null ? "bg-emerald-500" : "bg-white/20 shadow-none")} />
-                              <span className={cn("text-lg font-sans font-bold tracking-tight", parserConfidence != null ? "text-emerald-500" : "text-white/60")}>
+                              <div className={cn("h-1.5 w-1.5 rounded-full", parserConfidence != null ? "bg-blue-400" : "bg-white/20")} />
+                              <span className={cn("text-lg font-sans font-bold tracking-tight", parserConfidence != null ? "text-white" : "text-white/60")}>
                                 {parserConfidenceLabel}
                               </span>
                             </div>
@@ -463,7 +461,7 @@ export default function DocumentDetail() {
 
                           <div className="flex flex-col gap-1">
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">USABLE_AS_EVIDENCE</span>
-                            <span className={cn("text-lg font-sans font-bold tracking-tight", evidenceDecision.usable ? "text-emerald-500" : "text-rose-400")}>
+                            <span className={cn("text-lg font-sans font-bold tracking-tight", evidenceDecision.usable ? "text-white" : "text-rose-400")}>
                               {evidenceDecision.label}
                             </span>
                             <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">{evidenceDecision.reason}</span>
@@ -502,18 +500,18 @@ export default function DocumentDetail() {
                         <div className="divide-y divide-white/5">
                           {matchedClaims.map((match, idx) => (
                             <div key={idx} className="group relative flex items-center justify-between py-8 px-8 hover:bg-white/[0.02] transition-all duration-300">
-                              <div className="absolute left-0 top-4 bottom-4 w-[2px] bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                              <div className="absolute left-0 top-4 bottom-4 w-[2px] bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.45)] opacity-0 group-hover:opacity-100 transition-opacity" />
 
                               <div className="flex items-start gap-8">
                                 <div className="mt-1.5 p-3 rounded-xl bg-white/5 border border-white/10">
-                                  <Shield className="h-5 w-5 text-emerald-500" />
+                                  <Shield className="h-5 w-5 text-white/70" />
                                 </div>
 
                                 <div className="space-y-4">
                                   <div className="flex items-center gap-6">
                                     <div className="flex flex-col gap-1">
                                       <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">ASSOCIATED_CLAIM</span>
-                                      <span className="text-sm font-sans font-bold text-white group-hover:text-emerald-500 transition-colors uppercase tracking-tight">
+                                      <span className="text-sm font-sans font-bold text-white group-hover:text-blue-400 transition-colors uppercase tracking-tight">
                                         {match.claimNumber || `CLAIM_${match.claimId?.slice(0, 8)}`}
                                       </span>
                                     </div>
@@ -527,7 +525,7 @@ export default function DocumentDetail() {
                                   </div>
 
                                   <div className="flex items-center gap-4">
-                                    <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight rounded-full">
+                                    <div className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-[10px] font-sans font-bold text-blue-400 uppercase tracking-tight rounded-full">
                                       {match.confidence != null ? `${(match.confidence * 100).toFixed(0)}%_CONFIDENCE` : 'UNKNOWN_CONFIDENCE'}
                                     </div>
                                     <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
@@ -577,7 +575,7 @@ export default function DocumentDetail() {
                             <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_EXTRACTED_TEXT_AVAILABLE</span>
                             <Button
                               variant="ghost"
-                              className="mt-8 text-[11px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 uppercase tracking-tight"
+                              className="mt-8 text-[11px] font-sans font-bold text-white/40 hover:text-blue-400 hover:bg-blue-500/10 border border-white/10 hover:border-blue-500/20 uppercase tracking-tight"
                               onClick={handleTriggerParsing}
                               disabled={triggeringParse}
                             >
@@ -590,17 +588,17 @@ export default function DocumentDetail() {
                           <>
                             <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
                               <div className="flex items-center gap-4">
-                                <Terminal className="h-3.5 w-3.5 text-emerald-500" />
+                                <Terminal className="h-3.5 w-3.5 text-white/70" />
                                 <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">PREVIEW_OF_EXTRACTED_TEXT</span>
                                 <div className="h-3 w-[1px] bg-white/10 mx-2" />
-                                <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight">{lines.length} LINES</span>
+                                <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">{lines.length} LINES</span>
                               </div>
                               <button
                                 onClick={() => {
                                   navigator.clipboard.writeText(rawText);
                                   toast({ title: 'Stream Data Copied', description: 'Raw intelligence output has been copied to clipboard.' });
                                 }}
-                                className="text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-colors uppercase tracking-tight flex items-center gap-2"
+                                className="text-[10px] font-sans font-bold text-white/20 hover:text-blue-400 transition-colors uppercase tracking-tight flex items-center gap-2"
                               >
                                 <Copy className="h-3.5 w-3.5" />
                                 COPY_ALL
@@ -618,7 +616,7 @@ export default function DocumentDetail() {
                               <div className="flex-1 overflow-auto p-6 text-white/60 whitespace-pre scrollbar-thin scrollbar-thumb-white/10">
                                 {lines.map((text, i) => (
                                   <div key={i} className="h-5 hover:bg-white/[0.03] transition-colors px-2 -mx-2 rounded-sm group relative">
-                                    <div className="absolute left-0 w-1 h-full bg-emerald-500 opacity-0 group-hover:opacity-100" />
+                                    <div className="absolute left-0 w-1 h-full bg-blue-500 opacity-0 group-hover:opacity-100" />
                                     {text || ' '}
                                   </div>
                                 ))}
@@ -645,7 +643,7 @@ export default function DocumentDetail() {
                       <div className="rounded-xl border border-white/5 overflow-hidden shadow-2xl">
                         <div className="bg-white/[0.03] border-b border-white/10 py-5 px-6 flex items-center justify-between backdrop-blur-md">
                           <div className="flex items-center gap-4">
-                            <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                            <Clock className="w-3.5 h-3.5 text-white/70" />
                             <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">DOCUMENT_HISTORY</h4>
                           </div>
                           <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
@@ -659,7 +657,7 @@ export default function DocumentDetail() {
                               {documentHistory.map((event) => (
                                 <div key={event.id} className="border border-white/5 rounded-lg p-4 bg-white/[0.02]">
                                   <div className="flex items-center justify-between gap-4 mb-2">
-                                    <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
+                                    <span className="text-[10px] font-sans font-bold text-white/80 uppercase tracking-tight">
                                       {String(event.eventType || 'unknown').replace(/_/g, ' ')}
                                     </span>
                                     <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
@@ -699,7 +697,7 @@ export default function DocumentDetail() {
                 ].map((item, i) => (
                   <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5 group hover:border-white/10 transition-all">
                     <div className="flex items-center gap-3 mb-4">
-                      <item.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-emerald-500 transition-colors" />
+                      <item.icon className="h-3.5 w-3.5 text-white/20 group-hover:text-blue-400 transition-colors" />
                       <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">{item.label}</span>
                     </div>
                     <div className="font-sans font-bold text-[11px] text-white/60 group-hover:text-white transition-colors truncate tracking-tight">

@@ -134,7 +134,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
     switch (statusState.status) {
       case 'completed':
         return (
-          <div className="flex items-center gap-2 text-emerald-500">
+          <div className="flex items-center gap-2 text-white/80">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span className="text-[10px] font-sans font-bold tracking-tight uppercase">INTELLIGENCE_VERIFIED</span>
           </div>
@@ -178,7 +178,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
     return (
       <div className="flex items-center justify-center p-12">
         <div className="text-center">
-          <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-4 text-emerald-500/30" />
+          <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-4 text-white/30" />
           <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">SYNCHRONIZING_STATUS...</span>
         </div>
       </div>
@@ -204,7 +204,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
               <div className="flex items-center gap-4">
                 <div className="h-4 w-[1px] bg-white/10" />
                 <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  CONFIDENCE: <span className="text-emerald-500 font-bold">{(effectiveStatus.confidence_score * 100).toFixed(1)}%</span>
+                  CONFIDENCE: <span className="text-white font-bold">{(effectiveStatus.confidence_score * 100).toFixed(1)}%</span>
                 </span>
               </div>
             )}
@@ -220,7 +220,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
             void fetchParsingStatus();
           }}
           disabled={loading}
-          className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/30 hover:text-emerald-500 transition-all uppercase tracking-tight group"
+          className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/30 hover:text-blue-400 transition-all uppercase tracking-tight group"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
           FORCE_REFRESH
@@ -256,7 +256,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
           <div className="space-y-10">
             <div className="space-y-6">
               <div className="flex items-center gap-4">
-                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                <div className="h-1.5 w-1.5 rounded-full bg-white/40" />
                 <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">SUMMARY_INTELLIGENCE</h4>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
@@ -270,7 +270,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
                 ].map((item, i) => item.value && (
                   <div key={i} className="space-y-2">
                     <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">{item.label}</span>
-                    <span className={`text-sm tracking-tight font-sans font-bold ${item.highlight ? 'text-emerald-500' : 'text-white/80'}`}>
+                    <span className={`text-sm tracking-tight font-sans font-bold ${item.highlight ? 'text-white' : 'text-white/80'}`}>
                       {item.value}
                     </span>
                   </div>
@@ -302,10 +302,10 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
                           <td className="px-6 py-4 text-xs font-bold text-white/70 tracking-tight">{item.description}</td>
                           <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 tracking-tight">{item.quantity}</td>
                           <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 text-right tracking-tight">
-                            {parsedData.currency || '$'}{item.unit_price?.toFixed(2)}
+                            {effectiveParsedData.currency || '$'}{item.unit_price?.toFixed(2)}
                           </td>
-                          <td className="px-6 py-4 text-xs font-sans font-bold text-white group-hover:text-emerald-500 transition-colors text-right tracking-tight">
-                            {parsedData.currency || '$'}{item.total?.toFixed(2)}
+                          <td className="px-6 py-4 text-xs font-sans font-bold text-white group-hover:text-blue-400 transition-colors text-right tracking-tight">
+                            {effectiveParsedData.currency || '$'}{item.total?.toFixed(2)}
                           </td>
                         </tr>
                       ))}
