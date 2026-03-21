@@ -179,6 +179,9 @@ export const ClaimPdfService = {
         const pageHeight = doc.internal.pageSize.getHeight();
         const statementDate = new Date().toISOString().split('T')[0];
         const caseId = sanitize(data.dispute_case_id || data.id, 'case');
+        const primaryDiscrepancy = sanitize((data.case_type || data.anomaly_type || '').replace?.(/_/g, ' ') || data.anomaly_type || data.case_type);
+        const requestedAmount = formatCurrency(data.requested_amount ?? data.guaranteedAmount, data.currency || 'USD');
+        const confidenceLabel = formatConfidence(data.confidence ?? data.confidence_score);
         let yPos = 20;
         let logoLoaded = false;
 
@@ -190,7 +193,7 @@ export const ClaimPdfService = {
                 reader.onloadend = () => {
                     if (reader.result) {
                         try {
-                            doc.addImage(reader.result as string, 'PNG', MARGIN, 12, 8, 4);
+                            doc.addImage(reader.result as string, 'PNG', MARGIN, 12, 6.5, 3.25);
                             logoLoaded = true;
                         } catch (e) {
                             console.warn('Could not add logo to PDF:', e);
@@ -206,66 +209,78 @@ export const ClaimPdfService = {
 
         if (!logoLoaded) {
             doc.setFillColor(COLORS.ink);
-            doc.rect(MARGIN, 12, 2.5, 5, 'F');
-            doc.rect(MARGIN + 3.5, 12, 2.5, 5, 'F');
+            doc.rect(MARGIN, 12, 2.1, 4.1, 'F');
+            doc.rect(MARGIN + 3.0, 12, 2.1, 4.1, 'F');
         }
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.setTextColor(COLORS.ink);
+        doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, 21);
+        doc.setFontSize(6.5);
+        doc.setTextColor(COLORS.soft);
+        doc.text('CASE REPORT', MARGIN, 27.5);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        const rightColX = pageWidth - 72;
+        const valX = pageWidth - MARGIN;
+        doc.setTextColor(COLORS.soft);
+        doc.text('Reference ID', rightColX, 15);
+        doc.setFont('courier', 'bold');
+        doc.setTextColor(COLORS.ink);
+        doc.text(caseId.length > 20 ? `${caseId.slice(0, 8)}...${caseId.slice(-8)}` : caseId, valX, 15, { align: 'right' });
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(COLORS.soft);
+        doc.text('Object Type', rightColX, 21);
+        doc.setTextColor(COLORS.ink);
+        doc.text(sanitize(data.object_type), valX, 20, { align: 'right' });
+        doc.setTextColor(COLORS.soft);
+        doc.text('Current Status', rightColX, 27);
+        doc.setTextColor(COLORS.ink);
+        doc.text(toStatusLabel(data.status), valX, 25, { align: 'right' });
 
         doc.setDrawColor(COLORS.line);
         doc.setLineWidth(0.1);
-        doc.line(MARGIN, 28, pageWidth - MARGIN, 28);
+        doc.line(MARGIN, 33, pageWidth - MARGIN, 33);
 
+        yPos = 47;
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(COLORS.ink);
-        doc.text('Margin - Internal Case Export', MARGIN, 22);
-        doc.setFontSize(7);
-        doc.setTextColor(COLORS.soft);
-        doc.text('CASE REPORT', MARGIN, 29);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        const rightColX = pageWidth - 72;
-        const valX = pageWidth - MARGIN;
-        doc.text('Reference ID:', rightColX, 15);
-        doc.setFont('courier', 'bold');
-        doc.text(caseId.length > 20 ? `${caseId.slice(0, 8)}...${caseId.slice(-8)}` : caseId, valX, 15, { align: 'right' });
-        doc.setFont('helvetica', 'normal');
-        doc.text('Object Type:', rightColX, 20);
-        doc.text(sanitize(data.object_type), valX, 20, { align: 'right' });
-        doc.text('Current Status:', rightColX, 25);
-        doc.text(toStatusLabel(data.status), valX, 25, { align: 'right' });
-
-        yPos = 58;
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(11);
+        doc.setFontSize(15);
         doc.setTextColor(COLORS.ink);
         doc.text('CASE REPORT', MARGIN, yPos);
 
-        yPos = 65;
-        doc.setFillColor(COLORS.panel);
-        doc.rect(MARGIN, yPos, pageWidth - (MARGIN * 2), 28, 'F');
+        const metricY = 61;
+        const metricValueY = 73;
+        const separatorOneX = MARGIN + 56;
+        const separatorTwoX = MARGIN + 118;
+        const secondColumnX = separatorOneX + 5;
+        const thirdColumnX = separatorTwoX + 5;
 
-        const summaryWidth = (pageWidth - (MARGIN * 2)) / 3;
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.setTextColor(COLORS.soft);
-        doc.text('REQUESTED AMOUNT', MARGIN + 5, yPos + 8);
-        doc.text('PRIMARY DISCREPANCY', MARGIN + summaryWidth, yPos + 8);
-        doc.text('CONFIDENCE', MARGIN + (summaryWidth * 2), yPos + 8);
+        doc.text('REQUESTED AMOUNT', MARGIN, metricY);
+        doc.text('PRIMARY DISCREPANCY', secondColumnX, metricY);
+        doc.text('CONFIDENCE', thirdColumnX, metricY);
+
+        doc.setFontSize(8.5);
         doc.setTextColor(COLORS.ink);
         doc.setFont('courier', 'bold');
-        doc.setFontSize(11);
-        doc.text(formatCurrency(data.requested_amount ?? data.guaranteedAmount, data.currency || 'USD'), MARGIN + 5, yPos + 17);
-        doc.setFontSize(8);
-        doc.text(sanitize((data.case_type || data.anomaly_type || '').replace?.(/_/g, ' ') || data.anomaly_type || data.case_type), MARGIN + summaryWidth, yPos + 17);
-        doc.setTextColor(COLORS.accent);
-        doc.text(formatConfidence(data.confidence ?? data.confidence_score), MARGIN + (summaryWidth * 2), yPos + 17);
-        doc.setTextColor(COLORS.soft);
-        yPos = 103;
+        doc.text(requestedAmount, MARGIN, metricValueY);
+        doc.text('|', separatorOneX, metricValueY);
+        doc.setFont('helvetica', 'normal');
+        doc.text(primaryDiscrepancy, secondColumnX, metricValueY);
+        doc.setFont('courier', 'bold');
+        doc.text('|', separatorTwoX, metricValueY);
+        doc.setTextColor(confidenceLabel === 'Not available' ? COLORS.ink : COLORS.accent);
+        doc.text(confidenceLabel, thirdColumnX, metricValueY);
+
+        yPos = 95;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
-        doc.text('1 GENERATED SUMMARY & ANALYSIS', MARGIN, yPos);
+        doc.text('1. DISCREPANCY', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         yPos += 8;
         doc.setFont('helvetica', 'normal');
@@ -276,7 +291,7 @@ export const ClaimPdfService = {
         yPos = 138;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('2 LIFECYCLE STATE', MARGIN, yPos);
+        doc.text('2. LIFECYCLE STATE', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -294,7 +309,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3 AMOUNT SNAPSHOT', MARGIN, yPos);
+        doc.text('3. AMOUNT SNAPSHOT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -312,7 +327,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('4 CASE REFERENCES', MARGIN, yPos);
+        doc.text('4. CASE REFERENCES', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -337,7 +352,7 @@ export const ClaimPdfService = {
         doc.setFont('times', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
-        doc.text('Margin - Internal Case Export', MARGIN, footerY + 11);
+        doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, footerY + 11);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.text(`PAGE 1 OF ${data.evidence_image ? 3 : 2} | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
@@ -367,7 +382,7 @@ export const ClaimPdfService = {
         doc.setTextColor(COLORS.ink);
         doc.setFontSize(8);
         doc.setFont('helvetica', 'normal');
-        doc.text('Margin - Internal Case Export', MARGIN, 22);
+        doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, 22);
         doc.setFontSize(7);
         doc.setTextColor(COLORS.soft);
         doc.text('APPENDIX: CASE EVIDENCE & EVENT SUMMARY [EXHIBIT A]', MARGIN, 29);
@@ -376,7 +391,7 @@ export const ClaimPdfService = {
         yPos = 40;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('5 ASSET & EVIDENCE SNAPSHOT', MARGIN, yPos);
+        doc.text('5. ASSET & EVIDENCE SNAPSHOT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -394,7 +409,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('6 LINKED EVIDENCE DOCUMENTS', MARGIN, yPos);
+        doc.text('6. LINKED EVIDENCE DOCUMENTS', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -410,7 +425,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('7 GENERATED EVENT SUMMARY', MARGIN, yPos);
+        doc.text('7. GENERATED EVENT SUMMARY', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
@@ -437,7 +452,7 @@ export const ClaimPdfService = {
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
-        doc.text('8 CASE TRACE REFERENCES', MARGIN, yPos);
+        doc.text('8. CASE TRACE REFERENCES', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         doc.setFont('courier', 'normal');
         doc.setFontSize(7);
@@ -455,7 +470,7 @@ export const ClaimPdfService = {
         doc.setFont('times', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
-        doc.text('Margin - Internal Case Export', MARGIN, footerY + 11);
+        doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, footerY + 11);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.text(`PAGE 2 OF ${data.evidence_image ? 3 : 2} | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
@@ -493,7 +508,7 @@ export const ClaimPdfService = {
             doc.setFont('times', 'bold');
             doc.setFontSize(8);
             doc.setTextColor(COLORS.ink);
-            doc.text('Margin - Internal Case Export', MARGIN, footerY + 11);
+            doc.text('MARGIN - INTERNAL CASE EXPORT', MARGIN, footerY + 11);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(7);
             doc.text(`PAGE 3 OF 3 | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
