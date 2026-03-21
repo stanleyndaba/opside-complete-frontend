@@ -50,17 +50,51 @@ const formatConfidence = (value: any) => {
 };
 
 const buildGeneratedSummary = (data: any) => {
-    const fragments = [
-        `Generated on ${new Date().toISOString().split('T')[0]} from backend-backed case detail data.`,
-        `Current status is ${toStatusLabel(data.status)}.`,
-        data.filing_status ? `Filing status is ${toStatusLabel(data.filing_status)}.` : null,
-        data.recovery_status ? `Recovery status is ${toStatusLabel(data.recovery_status)}.` : null,
-        data.billing_status ? `Billing status is ${toStatusLabel(data.billing_status)}.` : null,
-        data.next_step_context?.description || null,
-        data.rejection_reason ? `Stored rejection reason: ${data.rejection_reason}.` : null,
-    ].filter(Boolean);
+    const caseType = String(data.anomaly_type || data.claim_type || data.case_type || '').toLowerCase();
+    const amount = formatCurrency(data.requested_amount ?? data.guaranteedAmount ?? data.estimated_claim_value, data.currency || 'USD');
+    const sku = sanitize(data.sku, 'Not available');
+    const asin = sanitize(data.asin, 'Not available');
+    const orderId = sanitize(data.order_id, 'Not available');
+    const facility = sanitize(data.facility, 'Not available');
+    const units = sanitize(data.unitsLost ?? data.units_lost ?? data.quantity ?? data.units, 'inventory');
+    const detectionDate = formatDateTime(data.createdDate || data.created_at || data.discovery_date);
 
-    return fragments.join(' ');
+    const isFeeCase = caseType.includes('fee') || caseType.includes('overcharge') || caseType.includes('commission') || caseType.includes('storage') || caseType.includes('lts');
+    const isLostCase = caseType.includes('lost') || caseType.includes('missing') || caseType.includes('shipment') || caseType.includes('shortage') || caseType.includes('discrepancy') || caseType.includes('inbound');
+    const isDamagedCase = caseType.includes('damaged') || caseType.includes('damage') || caseType.includes('carrier');
+    const isRefundCase = caseType.includes('refund') || caseType.includes('return') || caseType.includes('switcheroo') || caseType.includes('wrong_item') || caseType.includes('empty_box');
+    const isChargebackCase = caseType.includes('chargeback') || caseType.includes('dispute') || caseType.includes('atoz');
+
+    if (isFeeCase) {
+        if (caseType.includes('storage') || caseType.includes('lts')) {
+            return `Amazon's fee records show storage-related overcharges affecting SKU ${sku}. The case indicates fee calculations inconsistent with the product's expected storage profile. The amount currently tracked for review is ${amount}.`;
+        }
+        if (caseType.includes('commission')) {
+            return `Amazon's fee records show referral-fee or commission discrepancies affecting SKU ${sku}. The case indicates an incorrect fee rate may have been applied. The amount currently tracked for review is ${amount}.`;
+        }
+        return `Amazon's fee records show fulfillment-fee discrepancies affecting SKU ${sku}. The case indicates dimensional or catalog-based fee classification may be inconsistent with the current product profile. The amount currently tracked for review is ${amount}.`;
+    }
+
+    if (isLostCase) {
+        if (caseType.includes('inbound') || caseType.includes('shipment')) {
+            return `Amazon's inventory management system shows inbound inventory for SKU ${sku} as not fully checked into fulfillment center ${facility}. The case tracks ${units} associated with this shipment discrepancy and a current requested amount of ${amount}.`;
+        }
+        return `Amazon's inventory management system shows inventory of SKU ${sku} as missing from fulfillment center ${facility}. These units were properly received but have since disappeared from available inventory without corresponding customer orders or removals. This inventory discrepancy represents a recoverable value of ${amount}.`;
+    }
+
+    if (isDamagedCase) {
+        return `Amazon's case data shows damaged inventory affecting SKU ${sku} at fulfillment center ${facility}. The case currently tracks ${units} impacted by warehouse or transit damage, with an amount under review of ${amount}.`;
+    }
+
+    if (isRefundCase) {
+        return `Amazon's return and refund records show a reimbursement-related discrepancy for order ${orderId}. The case indicates SKU ${sku} may not have been properly recovered through the normal return workflow. The amount currently tracked for review is ${amount}.`;
+    }
+
+    if (isChargebackCase) {
+        return `Amazon's dispute records show a payment or guarantee dispute affecting order ${orderId}. The current case tracks the contested value for SKU ${sku} at ${amount}.`;
+    }
+
+    return `This generated summary reflects the current backend case data for SKU ${sku}${asin !== 'Not available' ? ` (ASIN ${asin})` : ''}. The case was identified on ${detectionDate}, and the amount currently tracked for review is ${amount}.`;
 };
 
 const buildLifecycleRows = (data: any) => [
@@ -183,13 +217,10 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
-        doc.text('MARGIN', MARGIN, 22);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.text('INTERNAL CASE REPORT', MARGIN, 25.5);
+        doc.text('Margin - Internal Case Export', MARGIN, 22);
         doc.setFontSize(7);
         doc.setTextColor(COLORS.soft);
-        doc.text('CASE REPORT', MARGIN, 32);
+        doc.text('CASE REPORT', MARGIN, 29);
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
@@ -234,7 +265,7 @@ export const ClaimPdfService = {
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
-        doc.text('1.0 GENERATED SUMMARY & ANALYSIS', MARGIN, yPos);
+        doc.text('1 GENERATED SUMMARY & ANALYSIS', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         yPos += 8;
         doc.setFont('helvetica', 'normal');
@@ -245,7 +276,7 @@ export const ClaimPdfService = {
         yPos = 138;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('2.0 LIFECYCLE STATE', MARGIN, yPos);
+        doc.text('2 LIFECYCLE STATE', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -263,7 +294,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('3.0 AMOUNT SNAPSHOT', MARGIN, yPos);
+        doc.text('3 AMOUNT SNAPSHOT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -281,7 +312,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('4.0 CASE REFERENCES', MARGIN, yPos);
+        doc.text('4 CASE REFERENCES', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -302,11 +333,11 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6);
         doc.setTextColor(COLORS.soft);
-        doc.text('Generated from backend case detail data. This export is not a filed notice or legal certification.', MARGIN, footerY + 5);
+        doc.text('This document is an internal case report generated from system data. It does not constitute a filed claim, legal notice, or certification.', MARGIN, footerY + 5);
         doc.setFont('times', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
-        doc.text('MARGIN // INTERNAL CASE EXPORT', MARGIN, footerY + 11);
+        doc.text('Margin - Internal Case Export', MARGIN, footerY + 11);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.text(`PAGE 1 OF ${data.evidence_image ? 3 : 2} | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
@@ -335,17 +366,17 @@ export const ClaimPdfService = {
 
         doc.setTextColor(COLORS.ink);
         doc.setFontSize(8);
-        doc.setFont('times', 'bold');
-        doc.text('MARGIN', MARGIN, 22);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Margin - Internal Case Export', MARGIN, 22);
         doc.setFontSize(7);
-        doc.setFont('helvetica', 'bold');
-        doc.text('APPENDIX: CASE EVIDENCE & EVENT SUMMARY [EXHIBIT A]', MARGIN, 25.5);
+        doc.setTextColor(COLORS.soft);
+        doc.text('APPENDIX: CASE EVIDENCE & EVENT SUMMARY [EXHIBIT A]', MARGIN, 29);
         doc.line(MARGIN, 30, pageWidth - MARGIN, 30);
 
         yPos = 40;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('5.0 ASSET & EVIDENCE SNAPSHOT', MARGIN, yPos);
+        doc.text('5 ASSET & EVIDENCE SNAPSHOT', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -363,7 +394,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('6.0 LINKED EVIDENCE DOCUMENTS', MARGIN, yPos);
+        doc.text('6 LINKED EVIDENCE DOCUMENTS', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
 
         autoTable(doc, {
@@ -379,7 +410,7 @@ export const ClaimPdfService = {
         yPos = (doc as any).lastAutoTable.finalY + 10;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
-        doc.text('7.0 GENERATED EVENT SUMMARY', MARGIN, yPos);
+        doc.text('7 GENERATED EVENT SUMMARY', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
@@ -406,7 +437,7 @@ export const ClaimPdfService = {
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
-        doc.text('8.0 CASE TRACE REFERENCES', MARGIN, yPos);
+        doc.text('8 CASE TRACE REFERENCES', MARGIN, yPos);
         doc.line(MARGIN, yPos + 2, pageWidth - MARGIN, yPos + 2);
         doc.setFont('courier', 'normal');
         doc.setFontSize(7);
@@ -420,11 +451,11 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6);
         doc.setTextColor(COLORS.soft);
-        doc.text('Evidence and events shown here come from the current backend case DTO and persisted case history.', MARGIN, footerY + 5);
+        doc.text('This document is an internal case report generated from system data. It does not constitute a filed claim, legal notice, or certification.', MARGIN, footerY + 5);
         doc.setFont('times', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
-        doc.text('MARGIN // EXHIBIT A', MARGIN, footerY + 11);
+        doc.text('Margin - Internal Case Export', MARGIN, footerY + 11);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.text(`PAGE 2 OF ${data.evidence_image ? 3 : 2} | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
@@ -462,7 +493,7 @@ export const ClaimPdfService = {
             doc.setFont('times', 'bold');
             doc.setFontSize(8);
             doc.setTextColor(COLORS.ink);
-            doc.text('MARGIN // EXHIBIT B', MARGIN, footerY + 11);
+            doc.text('Margin - Internal Case Export', MARGIN, footerY + 11);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(7);
             doc.text(`PAGE 3 OF 3 | ${statementDate}`, pageWidth - MARGIN, footerY + 11, { align: 'right' });
