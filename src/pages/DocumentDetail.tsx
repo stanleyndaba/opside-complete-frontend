@@ -33,8 +33,7 @@ import {
   Search,
   Database,
   Terminal,
-  ArrowRight,
-  ChevronRight
+  ArrowRight
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { ParsingStatus } from '@/components/evidence/ParsingStatus';
@@ -68,50 +67,63 @@ export default function DocumentDetail() {
   const [documentData, setDocumentData] = useState<any>(null);
   const [parsedData, setParsedData] = useState<any>(null);
   const [matchedClaims, setMatchedClaims] = useState<any[]>([]);
+  const [documentHistory, setDocumentHistory] = useState<any[]>([]);
   const [triggeringParse, setTriggeringParse] = useState(false);
-  const [summaryOpen, setSummaryOpen] = useState(true);
+  const fetchDocumentDetail = async (setLoadingState = true) => {
+    if (!docId || !activeTenantSlug) return;
+
+    if (setLoadingState) setLoading(true);
+    try {
+      const [docRes, linkedClaimsRes, auditRes] = await Promise.all([
+        api.getDocumentWithParsedData(docId, activeTenantSlug),
+        api.getDocumentLinkedClaims(docId, activeTenantSlug),
+        api.getDocumentAuditTrail(docId, activeTenantSlug)
+      ]);
+
+      if (docRes.ok && docRes.data) {
+        setDocumentData(docRes.data);
+        setParsedData(docRes.data.parsed_metadata || null);
+        setError(null);
+      } else {
+        setError(docRes.error || 'Failed to load document');
+      }
+
+      if (linkedClaimsRes.ok && linkedClaimsRes.data?.linkedClaims) {
+        setMatchedClaims(linkedClaimsRes.data.linkedClaims);
+      } else {
+        setMatchedClaims([]);
+      }
+
+      if (auditRes.ok && auditRes.data?.events) {
+        const events = [...auditRes.data.events].sort((a, b) =>
+          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        );
+        setDocumentHistory(events);
+      } else {
+        setDocumentHistory([]);
+      }
+    } catch (e: any) {
+      setError(e?.message || 'Failed to load document');
+    } finally {
+      if (setLoadingState) setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!isReady || !docId) return;
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      try {
-        // Fetch document data (backend now returns all parsed data in one call)
-        console.log('[DocumentDetail] Fetching document:', docId);
-        const docRes = await api.getDocument(docId, activeTenantSlug);
-
-        console.log('[DocumentDetail] Response:', docRes);
-
-        if (!cancelled) {
-          if (docRes.ok && docRes.data) {
-            console.log('[DocumentDetail] Document data:', docRes.data);
-            setDocumentData(docRes.data as any);
-            setParsedData(docRes.data); // Same data now includes parsed fields
-            setError(null);
-          } else {
-            console.error('[DocumentDetail] Failed to load document:', docRes.error);
-            setError(docRes.error || 'Failed to load document');
-          }
-
-          // Fetch matched claims for this document
-          try {
-            const matchRes = await api.getDocumentMatchingResults(docId, activeTenantSlug);
-            if (matchRes.ok && matchRes.data?.results) {
-              setMatchedClaims(matchRes.data.results);
-            }
-          } catch (e) {
-            console.log('No matching results for document');
-          }
-        }
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message || 'Failed to load document');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => { cancelled = true };
+    if (!isReady || !docId || !activeTenantSlug) return;
+    void fetchDocumentDetail(true);
   }, [docId, isReady, activeTenantSlug]);
+
+  useEffect(() => {
+    const status = documentData?.parser_status || documentData?.processing_status;
+    if (!docId || !activeTenantSlug || (status !== 'pending' && status !== 'processing')) return;
+
+    const interval = setInterval(() => {
+      void fetchDocumentDetail(false);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [docId, activeTenantSlug, documentData?.parser_status, documentData?.processing_status]);
 
   const handleTriggerParsing = async () => {
     if (!docId) return;
@@ -119,9 +131,10 @@ export default function DocumentDetail() {
     try {
       const res = await api.reparseDocument(docId, activeTenantSlug);
       if (res.ok) {
+        await fetchDocumentDetail(false);
         toast({
           title: 'Parsing Triggered',
-          description: 'Document parsing has been initiated. Refresh to see results.',
+          description: 'Document parsing has been initiated. The page will refresh from backend truth.',
         });
       } else {
         toast({
@@ -182,6 +195,41 @@ export default function DocumentDetail() {
   };
 
   const extracted = documentData?.extracted || parsedData?.extracted || {};
+  const parserConfidence = documentData?.parser_confidence;
+  const parserConfidenceLabel = parserConfidence != null
+    ? `${(parserConfidence * 100).toFixed(0)}%`
+    : 'Unknown';
+  const extractedDataPointCount =
+    (extracted.order_ids?.length || 0) +
+    (extracted.asins?.length || 0) +
+    (extracted.skus?.length || 0) +
+    (extracted.amounts?.length || 0) +
+    (extracted.tracking_numbers?.length || 0) +
+    (extracted.invoice_numbers?.length || 0) +
+    (extracted.dates?.length || 0);
+
+  const evidenceDecision = (() => {
+    const status = documentData?.parser_status || documentData?.processing_status;
+    if (status === 'pending' || status === 'processing') {
+      return { usable: false, label: 'NO', reason: 'Parsing is still in progress', nextStep: 'Wait for parsing to complete before using this document as evidence.' };
+    }
+    if (status === 'failed') {
+      return { usable: false, label: 'NO', reason: documentData?.parser_error || 'Parsing failed', nextStep: 'Re-run parsing or manually review the source document.' };
+    }
+    if (extractedDataPointCount === 0 && !(parsedData?.line_items?.length > 0)) {
+      return { usable: false, label: 'NO', reason: 'No structured fields were extracted', nextStep: 'Review the file manually or re-run parsing with a better source document.' };
+    }
+    if (matchedClaims.length === 0) {
+      return { usable: false, label: 'NO', reason: 'Not linked to any case yet', nextStep: 'Wait for matching or link this document to the correct case manually.' };
+    }
+    if (parserConfidence == null) {
+      return { usable: false, label: 'NO', reason: 'Extraction confidence is unknown', nextStep: 'Review extracted fields manually before relying on this as evidence.' };
+    }
+    if (parserConfidence < 0.5) {
+      return { usable: false, label: 'NO', reason: 'Extraction confidence is low', nextStep: 'Manual review is required before this document supports filing.' };
+    }
+    return { usable: true, label: 'YES', reason: 'Structured extraction completed and linked to a case', nextStep: 'Document can support case review and filing readiness checks.' };
+  })();
 
   if (loading || error) {
     return (
@@ -296,8 +344,8 @@ export default function DocumentDetail() {
                     <TabsList className="flex h-16 items-center justify-start gap-12 bg-transparent rounded-none p-0 overflow-x-auto scrollbar-hide">
                       {[
                         { value: 'extracted', label: 'EXTRACTED_DATA', icon: Database },
-                        { value: 'matches', label: 'MATCHED_CLAIMS', icon: Link2, count: matchedClaims.length },
-                        { value: 'raw', label: 'RAW_DATA', icon: Terminal },
+                        { value: 'matches', label: 'LINKED_CASES', icon: Link2, count: matchedClaims.length },
+                        { value: 'raw', label: 'TEXT_PREVIEW', icon: Terminal },
                         { value: 'parsing', label: 'STATUS', icon: Activity }
                       ].map((tab) => (
                         <TabsTrigger
@@ -404,9 +452,9 @@ export default function DocumentDetail() {
                           <div className="flex flex-col gap-1">
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">EXTRACT_CONFIDENCE</span>
                             <div className="flex items-center gap-2">
-                              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                              <span className="text-lg font-sans font-bold text-emerald-500 tracking-tight">
-                                {documentData?.parser_confidence !== undefined ? `${(documentData.parser_confidence * 100).toFixed(0)}%` : '—'}
+                              <div className={cn("h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]", parserConfidence != null ? "bg-emerald-500" : "bg-white/20 shadow-none")} />
+                              <span className={cn("text-lg font-sans font-bold tracking-tight", parserConfidence != null ? "text-emerald-500" : "text-white/60")}>
+                                {parserConfidenceLabel}
                               </span>
                             </div>
                           </div>
@@ -414,10 +462,11 @@ export default function DocumentDetail() {
                           <div className="h-8 w-[1px] bg-white/5" />
 
                           <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">RECOVERY_POTENTIAL</span>
-                            <span className="text-lg font-sans font-bold text-white tracking-tight">
-                              {extracted.amounts?.length > 0 ? `$${Math.max(...extracted.amounts.filter((a: any) => typeof a === 'number')).toFixed(2)}` : '—'}
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">USABLE_AS_EVIDENCE</span>
+                            <span className={cn("text-lg font-sans font-bold tracking-tight", evidenceDecision.usable ? "text-emerald-500" : "text-rose-400")}>
+                              {evidenceDecision.label}
                             </span>
+                            <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">{evidenceDecision.reason}</span>
                           </div>
 
                           <div className="h-8 w-[1px] bg-white/5" />
@@ -436,12 +485,12 @@ export default function DocumentDetail() {
                           </div>
                         </div>
 
-                          <button className="h-10 px-6 text-[10px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/5 border border-white/5 hover:border-emerald-500/20 transition-all uppercase tracking-tight rounded-lg group/btn"
-                          onClick={() => setSummaryOpen(!summaryOpen)}
-                        >
-                          {summaryOpen ? 'COLLAPSE' : 'EXPAND_LOG'}
-                          <ChevronRight className={cn("ml-2 h-3.5 w-3.5 transition-transform", summaryOpen ? "rotate-90" : "group-hover/btn:translate-x-0.5")} />
-                        </button>
+                        <div className="max-w-sm text-right">
+                          <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mb-1">NEXT_STEP</div>
+                          <div className="text-[11px] font-sans font-bold text-white/60 tracking-tight leading-relaxed">
+                            {evidenceDecision.nextStep}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </TabsContent>
@@ -465,39 +514,34 @@ export default function DocumentDetail() {
                                     <div className="flex flex-col gap-1">
                                       <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">ASSOCIATED_CLAIM</span>
                                       <span className="text-sm font-sans font-bold text-white group-hover:text-emerald-500 transition-colors uppercase tracking-tight">
-                                        CLAIM_{match.claim_id?.slice(0, 8)}
+                                        {match.claimNumber || `CLAIM_${match.claimId?.slice(0, 8)}`}
                                       </span>
                                     </div>
                                     <div className="h-8 w-[1px] bg-white/5" />
                                     <div className="flex flex-col gap-1">
                                       <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">MATCH_METHOD</span>
                                       <span className="text-xs font-sans font-bold text-white/60 tracking-tight">
-                                        {match.match_type?.replace(/_/g, ' ') || 'FUZZY_MATCH'}
+                                        {match.matchType?.replace(/_/g, ' ') || 'LINKED'}
                                       </span>
                                     </div>
                                   </div>
 
                                   <div className="flex items-center gap-4">
                                     <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight rounded-full">
-                                      {(match.confidence_score * 100).toFixed(0)}%_CONFIDENCE
+                                      {match.confidence != null ? `${(match.confidence * 100).toFixed(0)}%_CONFIDENCE` : 'UNKNOWN_CONFIDENCE'}
                                     </div>
                                     <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-                                      DATA_POINTS: <span className="text-white/60">{match.matched_fields?.join(', ') || 'NONE'}</span>
+                                      CASE_TYPE: <span className="text-white/60">{match.claimType || 'UNKNOWN'}</span>
                                     </div>
                                   </div>
 
-                                  {match.reasoning && (
-                                    <div className="flex gap-4 p-4 bg-white/[0.01] border border-white/5 rounded-xl max-w-2xl">
-                                      <div className="mt-1"><Terminal className="h-3.5 w-3.5 text-white/20" /></div>
-                                      <p className="text-[11px] text-white/40 font-sans font-bold leading-relaxed italic tracking-tight">
-                                        "{match.reasoning}"
-                                      </p>
-                                    </div>
-                                  )}
+                                  <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                                    LINKED_AT: <span className="text-white/60">{match.linkDate ? format(new Date(match.linkDate), 'yyyy-MM-dd HH:mm') : 'UNKNOWN'}</span>
+                                  </div>
                                 </div>
                               </div>
 
-                              <Link to={tenantRoute(activeTenantSlug, `/recoveries/${match.claim_id}`)}>
+                              <Link to={tenantRoute(activeTenantSlug, `/recoveries/${match.claimId}`)}>
                                 <Button variant="ghost" className="h-12 px-6 text-[11px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 border border-white/5 rounded-xl transition-all uppercase tracking-tight group/btn">
                                   VIEW_CLAIM
                                   <ArrowRight className="ml-3 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
@@ -511,8 +555,8 @@ export default function DocumentDetail() {
                           <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
                             <Link2 className="h-8 w-8 text-white/10" />
                           </div>
-                          <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_MATCHED_CLAIMS</span>
-                          <p className="text-xs text-white/10 mt-4 font-sans font-bold uppercase tracking-tight">Awaiting match engine synchronization...</p>
+                          <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_LINKED_CASES</span>
+                          <p className="text-xs text-white/10 mt-4 font-sans font-bold uppercase tracking-tight">This document is not linked to a case yet.</p>
                         </div>
                       )}
                     </div>
@@ -530,7 +574,7 @@ export default function DocumentDetail() {
                             <div className="p-6 rounded-full bg-white/5 border border-white/10 mb-8">
                               <Terminal className="h-8 w-8 text-white/10" />
                             </div>
-                            <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_DATA_FOUND</span>
+                            <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_EXTRACTED_TEXT_AVAILABLE</span>
                             <Button
                               variant="ghost"
                               className="mt-8 text-[11px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 hover:bg-emerald-500/10 border border-emerald-500/10 uppercase tracking-tight"
@@ -547,7 +591,7 @@ export default function DocumentDetail() {
                             <div className="px-8 py-4 bg-white/[0.02] border-b border-white/5 flex items-center justify-between">
                               <div className="flex items-center gap-4">
                                 <Terminal className="h-3.5 w-3.5 text-emerald-500" />
-                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">DOCUMENT_STREAM</span>
+                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">PREVIEW_OF_EXTRACTED_TEXT</span>
                                 <div className="h-3 w-[1px] bg-white/10 mx-2" />
                                 <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight">{lines.length} LINES</span>
                               </div>
@@ -588,8 +632,58 @@ export default function DocumentDetail() {
 
                   {/* Node Status Tab */}
                   <TabsContent value="parsing" className="p-8 m-0 outline-none">
-                    <div className="max-w-4xl mx-auto">
-                      {docId && <ParsingStatus documentId={docId} autoPoll={true} />}
+                    <div className="max-w-4xl mx-auto space-y-8">
+                      {docId && (
+                        <ParsingStatus
+                          documentId={docId}
+                          autoPoll={false}
+                          documentData={documentData}
+                          onRefresh={() => fetchDocumentDetail(false)}
+                        />
+                      )}
+
+                      <div className="rounded-xl border border-white/5 overflow-hidden shadow-2xl">
+                        <div className="bg-white/[0.03] border-b border-white/10 py-5 px-6 flex items-center justify-between backdrop-blur-md">
+                          <div className="flex items-center gap-4">
+                            <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                            <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">DOCUMENT_HISTORY</h4>
+                          </div>
+                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
+                            {documentHistory.length} EVENTS
+                          </span>
+                        </div>
+
+                        <div className="bg-[#0a0a0a] p-6">
+                          {documentHistory.length > 0 ? (
+                            <div className="space-y-4">
+                              {documentHistory.map((event) => (
+                                <div key={event.id} className="border border-white/5 rounded-lg p-4 bg-white/[0.02]">
+                                  <div className="flex items-center justify-between gap-4 mb-2">
+                                    <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
+                                      {String(event.eventType || 'unknown').replace(/_/g, ' ')}
+                                    </span>
+                                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                                      {event.timestamp ? format(new Date(event.timestamp), 'yyyy-MM-dd HH:mm:ss') : 'UNKNOWN'}
+                                    </span>
+                                  </div>
+                                  <p className="text-sm font-sans font-bold text-white/70 tracking-tight leading-relaxed">
+                                    {event.narrative}
+                                  </p>
+                                  {event.actor && (
+                                    <div className="mt-2 text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                                      Actor: <span className="text-white/60 normal-case">{event.actor}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-center py-10">
+                              <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">NO_DOCUMENT_HISTORY</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -599,9 +693,9 @@ export default function DocumentDetail() {
               <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8">
                 {[
                   { label: 'DOCUMENT_ID', value: docId, icon: Hash },
-                  { label: 'DOCUMENT_TYPE', value: documentData?.mime_type || 'application/pdf', icon: Database },
-                  { label: 'SOURCE', value: documentData?.source || 'MANUAL_INGESTION', icon: Cloud },
-                  { label: 'CREATED_AT', value: documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'N/A', icon: Calendar }
+                  { label: 'DOCUMENT_TYPE', value: documentData?.content_type || documentData?.type || 'Not available', icon: Database },
+                  { label: 'SOURCE', value: documentData?.source || documentData?.provider || 'Not available', icon: Cloud },
+                  { label: 'CREATED_AT', value: documentData?.created_at ? format(new Date(documentData.created_at), 'yyyy-MM-dd HH:mm:ss') : 'Not available', icon: Calendar }
                 ].map((item, i) => (
                   <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5 group hover:border-white/10 transition-all">
                     <div className="flex items-center gap-3 mb-4">

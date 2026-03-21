@@ -939,9 +939,17 @@ export const api = {
     return requestJson<{
       id: string;
       filename: string;
+      original_filename?: string;
       processing_status: 'pending' | 'processing' | 'completed' | 'failed';
       parser_status?: 'pending' | 'processing' | 'completed' | 'failed';
-      parser_confidence?: number;
+      parser_confidence?: number | null;
+      parser_error?: string | null;
+      created_at?: string;
+      updated_at?: string;
+      content_type?: string;
+      source?: string | null;
+      provider?: string | null;
+      seller_id?: string;
       parsed_metadata?: {
         supplier_name?: string;
         invoice_number?: string;
@@ -954,7 +962,7 @@ export const api = {
           unit_price: number;
           total: number;
         }>;
-        confidence_score?: number;
+        confidence_score?: number | null;
       };
       // Agent 5 extracted data from PDF/OCR
       extracted?: {
@@ -971,6 +979,50 @@ export const api = {
       };
       raw_text_preview?: string;
     }>(`/api/v1/evidence/documents/${encodeURIComponent(documentId)}?tenantSlug=${tenantSlug}`);
+  },
+  getDocumentLinkedClaims: (documentId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocumentLinkedClaims");
+    return requestJson<{
+      success: boolean;
+      documentId: string;
+      linkedClaimCount: number;
+      linkedClaims: Array<{
+        claimId: string;
+        claimNumber?: string;
+        claimType: string;
+        amount: number;
+        currency: string;
+        linkDate: string;
+        matchType: string;
+        confidence: number;
+      }>;
+      reuseMessage?: string | null;
+    }>(`/api/evidence/documents/${encodeURIComponent(documentId)}/linked-claims?tenantSlug=${tenantSlug}`);
+  },
+  getDocumentAuditTrail: (documentId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocumentAuditTrail");
+    return requestJson<{
+      success: boolean;
+      documentId: string;
+      filename: string;
+      events: Array<{
+        id: string;
+        documentId: string;
+        eventType: string;
+        timestamp: string;
+        actor?: string;
+        details?: Record<string, any>;
+        narrative: string;
+      }>;
+      summary: {
+        ingestedAt?: string;
+        ingestedFrom?: string;
+        parsedAt?: string;
+        parserVersion?: string;
+        linkedClaims: number;
+        lastActivity: string;
+      };
+    }>(`/api/evidence/documents/${encodeURIComponent(documentId)}/audit?tenantSlug=${tenantSlug}`);
   },
 
   // Delete a single document

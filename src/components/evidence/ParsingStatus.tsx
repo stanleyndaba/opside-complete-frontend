@@ -11,9 +11,11 @@ interface ParsingStatusProps {
   documentId: string;
   autoPoll?: boolean;
   onStatusChange?: (status: string) => void;
+  documentData?: any;
+  onRefresh?: () => Promise<void> | void;
 }
 
-export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: ParsingStatusProps) {
+export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, documentData, onRefresh }: ParsingStatusProps) {
   const [jobStatus, setJobStatus] = useState<{
     status: 'pending' | 'processing' | 'completed' | 'failed';
     progress?: number;
@@ -26,8 +28,20 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const activeSlug = tenantSlug || 'beta';
+  const usingExternalData = !!documentData;
 
   useEffect(() => {
+    if (usingExternalData) {
+      return () => {
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current);
+        }
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+    }
+
     if (documentId) {
       fetchParsingStatus();
     }
@@ -40,7 +54,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [documentId]);
+  }, [documentId, usingExternalData]);
 
   const fetchParsingStatus = async () => {
     try {
@@ -84,6 +98,8 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   };
 
   const startPolling = () => {
+    if (usingExternalData) return;
+
     // Clear existing polling
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
@@ -104,9 +120,18 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
   };
 
   const getStatusIndicator = () => {
-    if (!jobStatus) return null;
+    const statusState = usingExternalData
+      ? {
+          status: documentData?.parser_status || documentData?.processing_status || 'pending',
+          progress: documentData?.parser_status === 'processing' ? 50 : documentData?.parser_status === 'completed' ? 100 : 0,
+          confidence_score: documentData?.parser_confidence,
+          error: documentData?.parser_error,
+        }
+      : jobStatus;
 
-    switch (jobStatus.status) {
+    if (!statusState) return null;
+
+    switch (statusState.status) {
       case 'completed':
         return (
           <div className="flex items-center gap-2 text-emerald-500">
@@ -139,7 +164,17 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
     }
   };
 
-  if (loading && !jobStatus) {
+  const effectiveStatus = usingExternalData
+    ? {
+        status: documentData?.parser_status || documentData?.processing_status || 'pending',
+        progress: documentData?.parser_status === 'processing' ? 50 : documentData?.parser_status === 'completed' ? 100 : 0,
+        confidence_score: documentData?.parser_confidence,
+        error: documentData?.parser_error,
+      }
+    : jobStatus;
+  const effectiveParsedData = usingExternalData ? documentData?.parsed_metadata : parsedData;
+
+  if (loading && !effectiveStatus) {
     return (
       <div className="flex items-center justify-center p-12">
         <div className="text-center">
@@ -150,7 +185,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
     );
   }
 
-  if (!jobStatus) {
+  if (!effectiveStatus) {
     return null;
   }
 
@@ -165,11 +200,11 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
           <div className="h-4 w-[1px] bg-white/10" />
           <div className="flex items-center gap-6">
             {getStatusIndicator()}
-            {jobStatus.confidence_score !== undefined && (
+            {effectiveStatus.confidence_score != null && (
               <div className="flex items-center gap-4">
                 <div className="h-4 w-[1px] bg-white/10" />
                 <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  CONFIDENCE: <span className="text-emerald-500 font-bold">{(jobStatus.confidence_score * 100).toFixed(1)}%</span>
+                  CONFIDENCE: <span className="text-emerald-500 font-bold">{(effectiveStatus.confidence_score * 100).toFixed(1)}%</span>
                 </span>
               </div>
             )}
@@ -177,7 +212,13 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
         </div>
 
         <button
-          onClick={fetchParsingStatus}
+          onClick={() => {
+            if (usingExternalData) {
+              void onRefresh?.();
+              return;
+            }
+            void fetchParsingStatus();
+          }}
           disabled={loading}
           className="flex items-center gap-2 text-[10px] font-sans font-bold text-white/30 hover:text-emerald-500 transition-all uppercase tracking-tight group"
         >
@@ -187,31 +228,31 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
       </div>
 
       <div className="bg-[#0a0a0a] p-8 space-y-10">
-        {jobStatus.status === 'processing' && jobStatus.progress !== undefined && (
+        {effectiveStatus.status === 'processing' && effectiveStatus.progress !== undefined && (
           <div className="space-y-4 max-w-xl">
             <div className="flex justify-between items-end mb-1">
               <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">EXTRACTION_PROGRESS</span>
-              <span className="text-sm font-sans font-bold text-amber-500">{jobStatus.progress}%</span>
+              <span className="text-sm font-sans font-bold text-amber-500">{effectiveStatus.progress}%</span>
             </div>
-            <Progress value={jobStatus.progress} className="h-1.5 bg-white/5" />
+            <Progress value={effectiveStatus.progress} className="h-1.5 bg-white/5" />
             <p className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight leading-relaxed">
               Synchronizing document nodes with neural intelligence engine...
             </p>
           </div>
         )}
 
-        {jobStatus.status === 'failed' && jobStatus.error && (
+        {effectiveStatus.status === 'failed' && effectiveStatus.error && (
           <div className="flex items-start gap-4 p-5 bg-rose-500/5 border border-rose-500/20 rounded-lg">
             <AlertTriangle className="w-5 h-5 text-rose-500/50 mt-0.5" />
             <div className="space-y-2">
               <span className="text-[10px] font-sans font-bold text-rose-500 uppercase tracking-tight leading-none block">EXTRACTION_FAULT_DETECTED</span>
-              <p className="text-xs text-rose-500/40 leading-relaxed font-sans font-bold tracking-tight">{jobStatus.error}</p>
+              <p className="text-xs text-rose-500/40 leading-relaxed font-sans font-bold tracking-tight">{effectiveStatus.error}</p>
             </div>
           </div>
         )}
 
         {/* Parsed Metadata - Dictionary View */}
-        {parsedData && jobStatus.status === 'completed' && (
+        {effectiveParsedData && effectiveStatus.status === 'completed' && (
           <div className="space-y-10">
             <div className="space-y-6">
               <div className="flex items-center gap-4">
@@ -222,10 +263,10 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                 {[
-                  { label: 'Supplier Entity', value: parsedData.supplier_name },
-                  { label: 'Reference Code', value: parsedData.invoice_number, mono: true },
-                  { label: 'Temporal Date', value: parsedData.invoice_date ? new Date(parsedData.invoice_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : null },
-                  { label: 'Validated Total', value: parsedData.total_amount !== undefined ? `${parsedData.currency || '$'}${parsedData.total_amount.toFixed(2)}` : null, highlight: true }
+                  { label: 'Supplier Entity', value: effectiveParsedData.supplier_name },
+                  { label: 'Reference Code', value: effectiveParsedData.invoice_number, mono: true },
+                  { label: 'Temporal Date', value: effectiveParsedData.invoice_date ? new Date(effectiveParsedData.invoice_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : null },
+                  { label: 'Validated Total', value: effectiveParsedData.total_amount !== undefined ? `${effectiveParsedData.currency || '$'}${effectiveParsedData.total_amount.toFixed(2)}` : null, highlight: true }
                 ].map((item, i) => item.value && (
                   <div key={i} className="space-y-2">
                     <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">{item.label}</span>
@@ -237,7 +278,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
               </div>
             </div>
 
-            {parsedData.line_items && parsedData.line_items.length > 0 && (
+            {effectiveParsedData.line_items && effectiveParsedData.line_items.length > 0 && (
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
@@ -256,7 +297,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange }: P
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                      {parsedData.line_items.map((item: any, idx: number) => (
+                      {effectiveParsedData.line_items.map((item: any, idx: number) => (
                         <tr key={idx} className="hover:bg-white/[0.02] transition-colors group">
                           <td className="px-6 py-4 text-xs font-bold text-white/70 tracking-tight">{item.description}</td>
                           <td className="px-6 py-4 text-xs font-sans font-bold text-white/40 tracking-tight">{item.quantity}</td>
