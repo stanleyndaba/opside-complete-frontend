@@ -240,35 +240,32 @@ export const ClaimPdfService = {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8.5);
         doc.setTextColor(COLORS.ink);
-        doc.text('Case Overview', MARGIN, yPos);
+        doc.text('CASE SNAPSHOT', MARGIN, yPos);
+        doc.setDrawColor(COLORS.line);
+        doc.setLineWidth(0.1);
+        doc.line(MARGIN, yPos + 3, MARGIN + 58, yPos + 3);
 
-        const metricY = 44;
-        const metricValueY = 56;
-        const separatorOneX = MARGIN + 39;
-        const separatorTwoX = MARGIN + 95;
-        const secondColumnX = separatorOneX + 4;
-        const thirdColumnX = separatorTwoX + 4;
+        const labelX = MARGIN;
+        const valueX = MARGIN + 42;
+        const metricStartY = 43;
+        const metricRowGap = 8;
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6.5);
         doc.setTextColor(COLORS.soft);
-        doc.text('REQUESTED AMOUNT', MARGIN, metricY);
-        doc.text('PRIMARY DISCREPANCY', secondColumnX, metricY);
-        doc.text('CONFIDENCE', thirdColumnX, metricY);
+        doc.text('Requested Amount', labelX, metricStartY);
+        doc.text('Primary Discrepancy', labelX, metricStartY + metricRowGap);
+        doc.text('Confidence', labelX, metricStartY + (metricRowGap * 2));
 
         doc.setFontSize(8);
         doc.setTextColor(COLORS.ink);
         doc.setFont('courier', 'bold');
-        doc.text(requestedAmount, MARGIN, metricValueY);
-        doc.text('|', separatorOneX, metricValueY);
-        doc.setFont('helvetica', 'normal');
-        doc.text(primaryDiscrepancy, secondColumnX, metricValueY);
-        doc.setFont('courier', 'bold');
-        doc.text('|', separatorTwoX, metricValueY);
-        doc.setTextColor(confidenceLabel === 'Not available' ? COLORS.ink : COLORS.accent);
-        doc.text(confidenceLabel, thirdColumnX, metricValueY);
+        doc.text(requestedAmount, valueX, metricStartY);
+        doc.setTextColor(COLORS.ink);
+        doc.text(primaryDiscrepancy, valueX, metricStartY + metricRowGap);
+        doc.text(confidenceLabel, valueX, metricStartY + (metricRowGap * 2));
 
-        yPos = 72;
+        yPos = 68;
         doc.setFont('times', 'bold');
         doc.setFontSize(10);
         doc.setTextColor(COLORS.ink);
