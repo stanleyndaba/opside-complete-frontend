@@ -1,565 +1,427 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { useToast } from '@/hooks/use-toast';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
-import { api, detectionApi } from '@/lib/api';
+import { api } from '@/lib/api';
 
-type Agent3Detection = {
-  id: string;
-  anomaly_type: string;
-  severity: string;
-  estimated_value: number;
+type Blocker = { key: string; label: string; count: number; severity: 'low' | 'medium' | 'high' };
+type Summary = {
+  approved_count: number;
+  pending_payout_count: number;
+  reconciled_count: number;
+  partial_recovery_count: number;
+  unreconciled_count: number;
+  investigation_required_count: number;
+  billing_pending_count: number;
+  recovered_cash_total: number;
+  approved_value_total: number;
+  pending_payout_total: number;
+  billed_revenue_total: number;
+  last_updated_at: string | null;
+  blockers: Blocker[];
+};
+type Row = {
+  recovery_id: string;
+  dispute_case_id: string;
+  detection_result_id: string | null;
+  case_number: string;
+  provider_case_id: string | null;
+  merchant_reference: string | null;
+  status: string | null;
+  recovery_status: string | null;
+  billing_status: string | null;
+  approved_amount: number | null;
+  actual_payout_amount: number | null;
+  expected_payout_amount: number | null;
+  billed_revenue_amount: number | null;
+  reconciliation_status: string;
+  operator_state: string;
+  investigation_required: boolean;
   currency: string;
-  confidence_score: number;
-  status: string;
-  discovery_date: string;
-  deadline_date: string;
-  days_remaining: number;
-  claim_number?: string;
-  sku?: string;
-  asin?: string;
-  details?: string;
+  expected_payout_date: string | null;
+  last_updated_at: string | null;
 };
-
-type Agent3ResultsPayload = {
+type Ledger = {
   success: boolean;
-  results: Agent3Detection[];
-  total: number;
+  summary: Summary;
+  rows: Row[];
+  pagination: { page: number; page_size: number; total_filtered: number; total_pages: number; total_rows: number };
+};
+type ProofDocument = {
+  id: string;
+  name?: string;
+  filename?: string;
+  type?: string;
+  doc_type?: string;
+  uploadDate?: string;
+  created_at?: string;
+  url?: string;
+  supplier?: string;
+  invoice_number?: string;
+  amount?: number;
 };
 
-type Agent3StatsPayload = {
-  success: boolean;
-  statistics: {
-    total_anomalies?: number;
-    total_value?: number;
-    by_confidence?: {
-      high: number;
-      medium: number;
-      low: number;
-    };
-    expiring_soon?: number;
-  };
+const PAGE_SIZE = 10;
+const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
+const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
+const billingOptions = [['all', 'All Billing States'], ['pending', 'Pending'], ['sent', 'Sent'], ['charged', 'Charged'], ['credited', 'Credited'], ['paid', 'Paid']];
+const sortOptions = [['last_updated_at', 'Last Updated'], ['actual_payout_amount', 'Actual Payout'], ['approved_amount', 'Approved Value'], ['expected_payout_amount', 'Pending Payout'], ['case_number', 'Case Reference']];
+const dateRanges = [['30', 'Last 30 Days'], ['90', 'Last 90 Days'], ['365', 'This Year'], ['all', 'All Time']];
+
+const money = (value: number | null | undefined, currency = 'USD') =>
+  typeof value === 'number' && !Number.isNaN(value)
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value)
+    : 'Not available';
+
+const stamp = (value: string | null | undefined) => {
+  if (!value) return 'Not available';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Not available';
+  return date.toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
 };
 
-const isDetectionResultsShape = (value: any): value is Agent3ResultsPayload =>
-  value &&
-  Array.isArray(value.results) &&
-  typeof value.total === 'number';
+const label = (value: string | null | undefined) =>
+  value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : 'Unknown';
 
-const isDetectionStatsShape = (value: any): value is Agent3StatsPayload =>
-  value &&
-  value.statistics &&
-  typeof value.statistics === 'object';
+const severityTone = (severity: Blocker['severity']) =>
+  severity === 'high'
+    ? 'border-red-500/25 bg-red-500/10 text-red-200'
+    : severity === 'medium'
+      ? 'border-amber-500/25 bg-amber-500/10 text-amber-100'
+      : 'border-blue-500/25 bg-blue-500/10 text-blue-100';
 
-const formatAnomalyLabel = (value: string) =>
-  value
-    .replace(/[_:]+/g, ' ')
-    .trim()
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+const badgeTone = (value: string | null | undefined) => {
+  const normalized = String(value || '').toLowerCase();
+  if (['reconciled', 'billing_complete', 'paid', 'charged', 'credited', 'complete', 'completed'].includes(normalized)) return 'border-blue-500/20 bg-blue-500/10 text-blue-100';
+  if (['partial_recovery', 'partial_payout_review', 'payout_detected', 'payout_detected_not_reconciled', 'waiting_for_payout', 'billing_pending', 'pending', 'pending_payout'].includes(normalized)) return 'border-amber-500/20 bg-amber-500/10 text-amber-100';
+  if (['investigation_required', 'failed', 'rejected', 'denied', 'lost'].includes(normalized)) return 'border-red-500/20 bg-red-500/10 text-red-200';
+  return 'border-white/10 bg-white/[0.04] text-white/70';
+};
+
+function Metric({ labelText, value, sublabel }: { labelText: string; value: string; sublabel: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{labelText}</div>
+      <div className="mt-3 text-[22px] font-sans font-semibold tracking-tight text-white">{value}</div>
+      <div className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">{sublabel}</div>
+    </div>
+  );
+}
 
 export default function RecoveryPipelineAgent8() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
-  const activeSlug = tenantSlug;
-
-  if (!activeSlug && isReady) {
-    throw new Error('tenantSlug required for Recovery Pipeline');
-  }
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [detectionResults, setDetectionResults] = useState<Agent3Detection[]>([]);
-  const [detectionStats, setDetectionStats] = useState<Agent3StatsPayload['statistics'] | null>(null);
-  const [activeTab, setActiveTab] = useState<'opportunity-queue'>('opportunity-queue');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [datePreset, setDatePreset] = useState<'30' | '90' | '365' | 'all'>('30');
-  const [severityFilter, setSeverityFilter] = useState<'all' | string>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | string>('all');
-  const [evidencePackOpen, setEvidencePackOpen] = useState(false);
-  const [evidencePackClaim, setEvidencePackClaim] = useState<any | null>(null);
-  const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
-  const [proofDocsClaim, setProofDocsClaim] = useState<any | null>(null);
-  const [proofDocs, setProofDocs] = useState<any[]>([]);
+  const activeSlug = (tenantSlug || '').trim();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [ledger, setLedger] = useState<Ledger | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateRange, setDateRange] = useState('30');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [reconciliationFilter, setReconciliationFilter] = useState('all');
+  const [billingFilter, setBillingFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('last_updated_at');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const [page, setPage] = useState(1);
+  const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
+  const [proofDocsClaim, setProofDocsClaim] = useState<{ id: string; claim_number?: string } | null>(null);
+  const [proofDocs, setProofDocs] = useState<ProofDocument[]>([]);
+
+  const fetchLedger = useCallback(async (mode: 'load' | 'refresh' = 'load') => {
+    if (!activeSlug) return;
+    if (mode === 'load') setLoading(true); else setRefreshing(true);
+    setError(null);
+    try {
+      const response = await api.getRecoveriesLedger({
+        search: searchTerm || undefined,
+        status: statusFilter,
+        reconciliation_status: reconciliationFilter,
+        billing_status: billingFilter,
+        date_range: dateRange,
+        sort_by: sortBy,
+        sort_dir: sortDir,
+        page,
+        page_size: PAGE_SIZE,
+      }, activeSlug);
+      if (!response.ok || !response.data?.success) throw new Error(response.error || 'Failed to load recoveries.');
+      setLedger(response.data as Ledger);
+    } catch (err: any) {
+      setLedger(null);
+      setError(err?.message || 'Failed to load recoveries.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [activeSlug, billingFilter, dateRange, page, reconciliationFilter, searchTerm, sortBy, sortDir, statusFilter]);
 
   useEffect(() => {
     if (!isReady || !activeSlug) return;
-    let cancelled = false;
+    fetchLedger('load');
+  }, [activeSlug, fetchLedger, isReady]);
 
-    (async () => {
-      setLoading(true);
-      setError(null);
+  const summary = ledger?.summary || null;
+  const rows = ledger?.rows || [];
+  const pagination = ledger?.pagination || null;
+  const filteredLabel = useMemo(() => pagination ? `${pagination.total_filtered} filtered results of ${pagination.total_rows}` : '', [pagination]);
 
-      const [detectionResultsRes, detectionStatsRes] = await Promise.all([
-        detectionApi.getDetectionResults({ limit: 25 }, activeSlug).catch((err) => ({ ok: false, error: err instanceof Error ? err.message : 'Failed to fetch Agent 3 detections' })),
-        detectionApi.getDetectionStatistics(undefined, activeSlug).catch((err) => ({ ok: false, error: err instanceof Error ? err.message : 'Failed to fetch Agent 3 statistics' })),
-      ]);
-
-      if (cancelled) return;
-
-      if (!detectionResultsRes.ok) {
-        setError(detectionResultsRes.error || 'Failed to fetch Agent 3 detections');
-        setDetectionResults([]);
-        setDetectionStats(null);
-        setLoading(false);
-        return;
+  const openProofDocuments = async (row: Row) => {
+    try {
+      const res = await api.getRecoveryDetail(row.dispute_case_id || row.recovery_id, activeSlug);
+      if (!res.ok) {
+        throw new Error(res.error || 'Unable to load proof documents.');
       }
+      setProofDocs(Array.isArray(res.data?.documents) ? res.data.documents : []);
+      setProofDocsClaim({ id: row.dispute_case_id || row.recovery_id, claim_number: row.case_number });
+      setProofDocsModalOpen(true);
+    } catch (err: any) {
+      toast({ title: 'Unable to load proof documents', description: err?.message || 'The linked evidence documents could not be loaded.' });
+    }
+  };
 
-      if (!isDetectionResultsShape(detectionResultsRes.data)) {
-        setError('Agent 3 detections response shape is invalid.');
-        setDetectionResults([]);
-        setDetectionStats(null);
-        setLoading(false);
-        return;
-      }
-
-      if (!detectionStatsRes.ok) {
-        setError(detectionStatsRes.error || 'Failed to fetch Agent 3 statistics');
-        setDetectionResults([]);
-        setDetectionStats(null);
-        setLoading(false);
-        return;
-      }
-
-      if (!isDetectionStatsShape(detectionStatsRes.data)) {
-        setError('Agent 3 statistics response shape is invalid.');
-        setDetectionResults([]);
-        setDetectionStats(null);
-        setLoading(false);
-        return;
-      }
-
-      setDetectionResults(detectionResultsRes.data.results);
-      setDetectionStats(detectionStatsRes.data.statistics);
-      setLoading(false);
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isReady, activeSlug]);
-
-  const buildDetectionClaim = (result: Agent3Detection) => ({
-    ...result,
-    guaranteedAmount: result.estimated_value,
-    claim_number: result.claim_number || result.id,
-    details: result.details || formatAnomalyLabel(result.anomaly_type),
-  });
-
-  const filteredDetectionResults = useMemo(() => {
-    const now = Date.now();
-    const maxAgeDays = datePreset === 'all' ? null : Number(datePreset);
-
-    return detectionResults.filter((result) => {
-      const haystack = [
-        result.id,
-        result.claim_number,
-        result.sku,
-        result.asin,
-        result.anomaly_type,
-        result.details,
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
-
-      const searchMatch = !searchTerm.trim() || haystack.includes(searchTerm.trim().toLowerCase());
-      const severityMatch = severityFilter === 'all' || String(result.severity || '').toLowerCase() === severityFilter.toLowerCase();
-      const statusMatch = statusFilter === 'all' || String(result.status || '').toLowerCase() === statusFilter.toLowerCase();
-
-      let dateMatch = true;
-      if (maxAgeDays !== null) {
-        const candidateDate = result.discovery_date ? new Date(result.discovery_date).getTime() : Number.NaN;
-        if (Number.isNaN(candidateDate)) {
-          dateMatch = false;
-        } else {
-          const ageInDays = (now - candidateDate) / (1000 * 60 * 60 * 24);
-          dateMatch = ageInDays <= maxAgeDays;
-        }
-      }
-
-      return searchMatch && severityMatch && statusMatch && dateMatch;
-    });
-  }, [datePreset, detectionResults, searchTerm, severityFilter, statusFilter]);
-
-  const availableSeverities = useMemo(() => {
-    return Array.from(new Set(detectionResults.map((result) => String(result.severity || '').trim()).filter(Boolean)));
-  }, [detectionResults]);
-
-  const availableStatuses = useMemo(() => {
-    return Array.from(new Set(detectionResults.map((result) => String(result.status || '').trim()).filter(Boolean)));
-  }, [detectionResults]);
+  if (isReady && !activeSlug) {
+    return (
+      <PageLayout title="Recovery Pipeline" midnight>
+        <Card className="border-red-500/20 bg-[#0c0c0c]">
+          <CardContent className="flex items-start gap-4 p-8">
+            <AlertTriangle className="mt-0.5 h-5 w-5 text-red-400" />
+            <div>
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Tenant Required</div>
+              <div className="mt-2 text-sm font-sans font-bold text-white">Recovery truth is blocked until a real tenant context is present.</div>
+            </div>
+          </CardContent>
+        </Card>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout title="Recovery Pipeline" midnight>
-      <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-
       <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
         <div className="relative w-full max-w-full px-8 pt-8 pb-24">
-          <div className="border-b border-white/10 pb-8 mb-8">
-            <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Agents 3 + 8</div>
-            <h1 className="text-4xl font-light font-sans text-white mt-2 tracking-tight">Recovery Pipeline</h1>
-            <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-2xl leading-relaxed mt-3">
-              Opportunity Queue is bound to Agent 3 detections. Recoveries is bound to Agent 8 payout truth. No cross-agent merging.
-            </p>
+          <div className="mb-8 border-b border-white/10 pb-8">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Agent 8 Recovery Ledger</div>
+            <div className="mt-3 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+              <div>
+                <h1 className="text-4xl font-light tracking-tight text-white">Recovery Pipeline</h1>
+                <p className="mt-3 max-w-3xl text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">
+                  Approved claims, pending payouts, reconciliations, and billed recoveries for this tenant. Recovered cash is only shown from actual payout records.
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                {summary?.last_updated_at ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">Updated {stamp(summary.last_updated_at)}</div> : null}
+                <Button variant="outline" className="h-10 rounded-lg border-white/10 bg-white/5 px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" onClick={() => fetchLedger('refresh')} disabled={loading || refreshing}>
+                  <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  Refresh Recoveries
+                </Button>
+              </div>
+            </div>
           </div>
 
-          <div className="mb-8 flex justify-end">
-            <Button
-              variant="outline"
-              className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-sans font-bold text-[9px] uppercase tracking-tight rounded-lg px-4 gap-3"
-              onClick={() => {
-                setLoading(true);
-                setError(null);
-                setDetectionResults([]);
-                setDetectionStats(null);
-              }}
-            >
-              <RefreshCw className={loading ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} />
-              Refresh Pipeline
-            </Button>
-          </div>
-
-          {loading && (
-            <Card className="bg-[#0c0c0c] border-white/10">
-              <CardContent className="p-8 space-y-6">
-                <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-5">
-                  <Skeleton className="h-4 w-40 bg-white/10" />
-                  <Skeleton className="h-10 w-28 rounded-lg bg-white/10" />
+          {loading ? (
+            <Card className="border-white/10 bg-[#0c0c0c]">
+              <CardContent className="space-y-6 p-8">
+                <div className="grid gap-4 xl:grid-cols-4">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 rounded-2xl bg-white/10" />)}</div>
+                <Skeleton className="h-24 rounded-2xl bg-white/10" />
+                <Skeleton className="h-80 rounded-2xl bg-white/10" />
+              </CardContent>
+            </Card>
+          ) : error ? (
+            <Card className="border-red-500/20 bg-[#0c0c0c]">
+              <CardContent className="flex items-start gap-4 p-8">
+                <AlertTriangle className="mt-0.5 h-5 w-5 text-red-400" />
+                <div>
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Recovery Error</div>
+                  <div className="mt-2 text-sm font-sans font-bold text-white">{error}</div>
                 </div>
+              </CardContent>
+            </Card>
+          ) : summary && pagination ? (
+            <div className="space-y-6">
+              <div className="grid gap-4 xl:grid-cols-4">
+                <Metric labelText="Recovered Cash" value={money(summary.recovered_cash_total)} sublabel={`${summary.reconciled_count} reconciled, ${summary.unreconciled_count} unreconciled`} />
+                <Metric labelText="Pending Payout" value={money(summary.pending_payout_total)} sublabel={`${summary.pending_payout_count} waiting for payout`} />
+                <Metric labelText="Approved Value" value={money(summary.approved_value_total)} sublabel={`${summary.approved_count} approved cases`} />
+                <Metric labelText="Billed Revenue" value={money(summary.billed_revenue_total)} sublabel={`${summary.billing_pending_count} billing pending`} />
+              </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
+              <Card className="border-white/10 bg-[#0c0c0c]">
+                <CardContent className="space-y-5 p-6">
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                    <Skeleton className="h-12 w-full xl:max-w-xl rounded-xl bg-white/10" />
+                    <div>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Recovery State Summary</div>
+                      <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">{filteredLabel}</div>
+                    </div>
                     <div className="flex flex-wrap gap-2">
-                      {Array.from({ length: 4 }).map((_, index) => (
-                        <Skeleton key={index} className="h-9 w-28 rounded-full bg-white/10" />
+                      {[['Reconciled', summary.reconciled_count], ['Partial Recovery', summary.partial_recovery_count], ['Unreconciled', summary.unreconciled_count], ['Investigation Required', summary.investigation_required_count]].map(([text, value]) => (
+                        <div key={String(text)} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+                          {text}: <span className="text-white">{value}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <Skeleton className="h-11 rounded-xl bg-white/10" />
-                    <Skeleton className="h-11 rounded-xl bg-white/10" />
-                  </div>
-                </div>
+                  {summary.blockers.length > 0 ? <div className="flex flex-wrap gap-3 border-t border-white/10 pt-5">{summary.blockers.map((blocker) => <div key={blocker.key} className={`rounded-full border px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight ${severityTone(blocker.severity)}`}>{blocker.label}: {blocker.count}</div>)}</div> : null}
+                </CardContent>
+              </Card>
 
-                <div className="overflow-hidden rounded-2xl border border-white/10">
-                  <div className="border-b border-white/10 px-6 py-4">
-                    <Skeleton className="h-4 w-64 bg-white/10" />
-                  </div>
-                  <div className="divide-y divide-white/[0.06]">
-                    {Array.from({ length: 4 }).map((_, index) => (
-                      <div key={index} className="grid grid-cols-[1.8fr_0.8fr_0.5fr_0.35fr] gap-4 px-6 py-5">
-                        <div className="space-y-3">
-                          <Skeleton className="h-4 w-56 bg-white/10" />
-                          <Skeleton className="h-3 w-80 bg-white/10" />
-                          <Skeleton className="h-3 w-36 bg-white/10" />
+              <Card className="border-white/10 bg-[#0c0c0c]">
+                <CardContent className="space-y-6 p-8">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                        <div className="relative w-full xl:max-w-xl">
+                          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
+                          <Input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }} placeholder="Search by case reference, provider case ID, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
                         </div>
-                        <div className="space-y-2">
-                          <Skeleton className="h-3 w-24 bg-white/10" />
-                          <Skeleton className="h-3 w-20 bg-white/10" />
-                        </div>
-                        <div className="space-y-2 text-right">
-                          <Skeleton className="ml-auto h-4 w-20 bg-white/10" />
-                          <Skeleton className="ml-auto h-3 w-16 bg-white/10" />
-                        </div>
-                        <div className="flex items-start justify-end">
-                          <Skeleton className="h-8 w-8 rounded-lg bg-white/10" />
+                        <div className="flex flex-wrap gap-2">
+                          {dateRanges.map(([value, text]) => (
+                            <Button key={value} type="button" variant="outline" className={`h-9 rounded-full px-4 text-[10px] font-sans font-bold uppercase tracking-tight ${dateRange === value ? 'border-white/30 bg-white text-black hover:bg-white/90' : 'border-white/10 bg-white/[0.03] text-white/50 hover:bg-white/[0.06] hover:text-white'}`} onClick={() => { setDateRange(value); setPage(1); }}>
+                              {text}
+                            </Button>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
 
-          {!loading && error && (
-            <Card className="bg-[#0c0c0c] border-red-500/20">
-              <CardContent className="p-8 flex items-start gap-4">
-                <AlertTriangle className="h-5 w-5 text-red-400 mt-0.5" />
-                <div>
-                  <div className="text-[10px] font-sans font-bold text-red-400 uppercase tracking-tight">Pipeline Error</div>
-                  <div className="text-sm font-sans font-bold text-white mt-2">{error}</div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {!loading && !error && detectionStats && (
-            <Tabs value={activeTab} className="space-y-6">
-              <TabsContent value="opportunity-queue" className="space-y-6">
-                <Card className="bg-[#0c0c0c] border-white/10">
-                  <CardContent className="p-8">
-                    <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-5 mb-5">
-                      <div>
-                        <div className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Agent 3 Opportunity Queue</div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-sans font-bold text-[9px] uppercase tracking-tight rounded-lg px-4"
-                        onClick={() => {
-                          window.location.href = `/app/${activeSlug}/dashboard?tab=discrepancies`;
-                        }}
-                      >
-                        Open Audits
-                      </Button>
-                    </div>
-
-                    <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                      <div className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                          <div className="relative w-full xl:max-w-xl">
-                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
-                            <Input
-                              value={searchTerm}
-                              onChange={(event) => setSearchTerm(event.target.value)}
-                              placeholder="Search by claim ID, SKU, ASIN, or anomaly type"
-                              className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20"
-                            />
-                          </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            {[
-                              { label: 'Last 30 Days', value: '30' as const },
-                              { label: 'Last 90 Days', value: '90' as const },
-                              { label: 'This Year', value: '365' as const },
-                              { label: 'Max Historical', value: 'all' as const },
-                            ].map((preset) => (
-                              <Button
-                                key={preset.value}
-                                type="button"
-                                variant="outline"
-                                className={`h-9 rounded-full px-4 text-[10px] font-sans font-bold uppercase tracking-tight ${
-                                  datePreset === preset.value
-                                    ? 'border-white/30 bg-white text-black hover:bg-white/90'
-                                    : 'border-white/10 bg-white/[0.03] text-white/50 hover:bg-white/[0.06] hover:text-white'
-                                }`}
-                                onClick={() => setDatePreset(preset.value)}
-                              >
-                                {preset.label}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                          <Select value={severityFilter} onValueChange={setSeverityFilter}>
-                            <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
-                              <SelectValue placeholder="Severity" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white rounded-xl">
-                              <SelectItem value="all" className="text-[10px] font-sans font-bold uppercase tracking-tight">Spectrum All</SelectItem>
-                              {availableSeverities.map((severity) => (
-                                <SelectItem key={severity} value={severity} className="text-[10px] font-sans font-bold uppercase tracking-tight">
-                                  {severity}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
+                      <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
+                        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+                          <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Recovery state" /></SelectTrigger>
+                          <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{statusOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                        </Select>
+                        <Select value={reconciliationFilter} onValueChange={(v) => { setReconciliationFilter(v); setPage(1); }}>
+                          <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Reconciliation" /></SelectTrigger>
+                          <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{reconciliationOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                        </Select>
+                        <Select value={billingFilter} onValueChange={(v) => { setBillingFilter(v); setPage(1); }}>
+                          <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Billing" /></SelectTrigger>
+                          <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{billingOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
+                        </Select>
+                        <div className="flex gap-3">
+                          <Select value={sortBy} onValueChange={(v) => { setSortBy(v); setPage(1); }}>
+                            <SelectTrigger className="h-11 flex-1 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"><SelectValue placeholder="Sort by" /></SelectTrigger>
+                            <SelectContent className="rounded-xl border border-white/10 bg-[#0c0c0c] text-white">{sortOptions.map(([value, text]) => <SelectItem key={value} value={value} className="text-[10px] font-sans font-bold uppercase tracking-tight">{text}</SelectItem>)}</SelectContent>
                           </Select>
-
-                          <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="h-11 rounded-xl border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
-                              <SelectValue placeholder="Status" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-[#0c0c0c] border border-white/10 text-white rounded-xl">
-                              <SelectItem value="all" className="text-[10px] font-sans font-bold uppercase tracking-tight">Status All</SelectItem>
-                              {availableStatuses.map((status) => (
-                                <SelectItem key={status} value={status} className="text-[10px] font-sans font-bold uppercase tracking-tight">
-                                  {status}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-1">
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">
-                            {filteredDetectionResults.length} visible nodes
-                          </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            className="h-8 px-0 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30 hover:text-white"
-                            onClick={() => {
-                              setSearchTerm('');
-                              setDatePreset('30');
-                              setSeverityFilter('all');
-                              setStatusFilter('all');
-                            }}
-                          >
-                            Reset Filters
+                          <Button type="button" variant="outline" className="h-11 rounded-xl border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" onClick={() => { setSortDir((current) => current === 'asc' ? 'desc' : 'asc'); setPage(1); }}>
+                            {sortDir === 'asc' ? 'Asc' : 'Desc'}
                           </Button>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {filteredDetectionResults.length === 0 ? (
-                      <div className="text-sm font-sans font-bold text-white/50">No open detection opportunities for this tenant right now.</div>
-                    ) : (
+                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No recovery rows match the current backend filters.</div> : (
+                    <>
                       <div className="overflow-x-auto">
-                        <table className="w-full min-w-[960px] border-collapse">
+                        <table className="w-full min-w-[1120px] border-collapse">
                           <thead>
                             <tr className="border-b border-white/10">
-                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Node</th>
-                              <th className="py-3 px-4 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Signal</th>
-                              <th className="py-3 px-4 text-right text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Value</th>
-                              <th className="py-3 pl-4 text-right text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Actions</th>
+                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Recovery Case</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Recovery State</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Money</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Billing</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Currentness</th>
+                              <th className="pl-4 py-3 text-right text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {filteredDetectionResults.slice(0, 10).map((result) => (
-                              <tr key={result.id} className="border-b border-white/[0.06] align-top">
+                            {rows.map((row) => (
+                              <tr key={row.recovery_id} className="border-b border-white/[0.06] align-top">
                                 <td className="py-5 pr-4">
-                                  <div className="flex items-start gap-4">
-                                    <div className="mt-1 h-4 w-4 rounded border border-white/15 bg-transparent" />
-                                    <div className="mt-0.5 flex h-5 min-w-5 items-center justify-center rounded-md border border-white/10 bg-white/[0.02] px-1.5 text-[9px] font-sans font-medium text-white/35">
-                                      {Math.round((result.confidence_score || 0) * 10)}
+                                  <div className="space-y-3">
+                                    <div className="flex flex-wrap items-center gap-3">
+                                      <span className="text-[11px] font-sans font-semibold tracking-tight text-white/92">{row.case_number}</span>
+                                      <span className="text-[10px] font-sans font-medium text-white/22">{row.provider_case_id ? `Amazon Case ${row.provider_case_id}` : 'Provider case not available'}</span>
                                     </div>
-                                    <div className="min-w-0">
-                                      <div className="flex flex-wrap items-center gap-3">
-                                        <span className="text-[11px] font-sans font-semibold tracking-tight text-white/92">
-                                          {result.claim_number || result.id}
-                                        </span>
-                                        <span className="text-[10px] font-sans font-medium text-white/22">
-                                          {result.discovery_date ? new Date(result.discovery_date).toLocaleString('en-US', {
-                                            month: 'short',
-                                            day: '2-digit',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: false,
-                                          }) : '-'}
-                                        </span>
-                                      </div>
-                                      <div className="mt-2 flex flex-wrap items-center gap-3 text-[10px] font-sans font-medium tracking-tight text-white/45">
-                                        <span className="uppercase">{formatAnomalyLabel(result.anomaly_type)} detected with {Math.round((result.confidence_score || 0) * 100)}% confidence</span>
-                                        <span className="text-white/12">|</span>
-                                        <span className="uppercase">SKU FX: {result.sku || '-'}</span>
-                                      </div>
-                                      <div className="mt-3 flex flex-wrap items-center gap-3">
-                                        <span className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/48">
-                                          {String(result.status || '-').replace(/_/g, ' ')}
-                                        </span>
-                                        <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">
-                                          Expiry in {typeof result.days_remaining === 'number' ? `${result.days_remaining}d` : '-'}
-                                        </span>
-                                      </div>
-                                    </div>
+                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">{row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant reference not available'}</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">Detection {row.detection_result_id ? row.detection_result_id.slice(0, 8) : 'not linked'}</div>
                                   </div>
                                 </td>
-                                <td className="py-5 px-4">
-                                  <div className="space-y-2 text-left">
-                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/52">
-                                      {String(result.severity || '-')}
-                                    </div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">
-                                      Agent 3 discrepancy
-                                    </div>
+                                <td className="px-4 py-5">
+                                  <div className="flex flex-col gap-2">
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Case Status: {label(row.status)}</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Recovery Status: {label(row.recovery_status)}</div>
                                   </div>
                                 </td>
-                                <td className="py-5 px-4 text-right">
+                                <td className="px-4 py-5">
                                   <div className="space-y-2">
-                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">
-                                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: result.currency || 'USD' }).format(result.estimated_value || 0)}
-                                    </div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">
-                                      Recovery Value
-                                    </div>
+                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Approved Value</div>
+                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
+                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Actual Payout</div>
+                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.actual_payout_amount, row.currency)}</div>
+                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Pending Payout</div>
+                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.expected_payout_amount, row.currency)}</div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-5">
+                                  <div className="space-y-2">
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.billing_status)}`}>{label(row.billing_status)}</span>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Billed Revenue</div>
+                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.billed_revenue_amount, row.currency)}</div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-5">
+                                  <div className="space-y-2">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Updated</div>
+                                    <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.last_updated_at)}</div>
+                                    <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Expected Payout Date</div>
+                                    <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.expected_payout_date)}</div>
                                   </div>
                                 </td>
                                 <td className="py-5 pl-4 text-right">
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8 text-white/26 hover:text-white hover:bg-white/5 rounded-lg"
-                                      >
+                                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-white/26 hover:bg-white/5 hover:text-white">
                                         <MoreHorizontal className="h-4 w-4" />
                                       </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="w-56 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-1">
-                                      <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-1 uppercase tracking-tight">ACTION_VECTOR</div>
-                                      <DropdownMenuItem asChild className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight">
-                                        <Link to={`/app/${activeSlug}/recoveries/${result.id}`} state={{ claim: buildDetectionClaim(result) }}>
-                                          VIEW_PARAMETERS
-                                        </Link>
+                                    <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
+                                      <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Recovery Actions</div>
+                                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                        <Link to={`/app/${activeSlug}/recoveries/${row.dispute_case_id}`}>View Case Detail</Link>
                                       </DropdownMenuItem>
-                                      <DropdownMenuItem
-                                        className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
-                                        onClick={async () => {
-                                          try {
-                                            const res = await api.getRecoveryDetail(result.id, activeSlug);
-                                            const docs = (res && res.ok && Array.isArray((res as any).data?.documents)) ? (res as any).data!.documents : [];
-                                            setProofDocs(docs);
-                                            setProofDocsClaim(buildDetectionClaim(result));
-                                            setProofDocsModalOpen(true);
-                                          } catch (e: any) {
-                                            toast({ title: 'Error loading documents', description: e?.message || 'Unable to load proof documents.' });
-                                          }
-                                        }}
-                                      >
-                                        PROOF_OF_DOCUMENT_RETRIEVAL
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem
-                                        className="text-[10px] font-sans font-bold text-white/60 hover:text-white rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
-                                        onClick={() => {
-                                          setEvidencePackClaim(buildDetectionClaim(result));
-                                          setEvidencePackOpen(true);
-                                        }}
-                                      >
-                                        AUDIT_PACKAGE_VIEW
+                                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
+                                        Proof Documents
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
-                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">
-                                    Node Spec
-                                  </div>
+                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : label(row.operator_state)}</div>
                                 </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          )}
+
+                      <div className="flex items-center justify-between border-t border-white/10 pt-5">
+                        <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Page {pagination.page} of {pagination.total_pages}</div>
+                        <div className="flex items-center gap-3">
+                          <Button type="button" variant="outline" className="h-9 rounded-lg border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" disabled={pagination.page <= 1} onClick={() => setPage((current) => Math.max(1, current - 1))}>Previous</Button>
+                          <Button type="button" variant="outline" className="h-9 rounded-lg border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" disabled={pagination.page >= pagination.total_pages} onClick={() => setPage((current) => current + 1)}>Next</Button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      {evidencePackClaim && (
-        <EvidencePackView
-          open={evidencePackOpen}
-          onOpenChange={setEvidencePackOpen}
-          claim={evidencePackClaim}
-          tenantSlug={activeSlug}
-        />
-      )}
-
-      <ProofDocumentsModal
-        open={proofDocsModalOpen}
-        onOpenChange={setProofDocsModalOpen}
-        claimId={proofDocsClaim?.id || ''}
-        claimNumber={proofDocsClaim?.claim_number}
-        documents={proofDocs}
-      />
+      <ProofDocumentsModal open={proofDocsModalOpen} onClose={() => setProofDocsModalOpen(false)} claimId={proofDocsClaim?.id || ''} claimNumber={proofDocsClaim?.claim_number} documents={proofDocs} />
     </PageLayout>
   );
 }

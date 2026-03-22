@@ -739,6 +739,34 @@ export const api = {
   resubmitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/resubmit`, { method: 'POST' }),
   getRecoveryStatus: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
   getRecoveryDetail: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
+  getRecoveriesLedger: (
+    params?: {
+      search?: string;
+      status?: string;
+      reconciliation_status?: string;
+      billing_status?: string;
+      date_range?: string;
+      sort_by?: string;
+      sort_dir?: 'asc' | 'desc';
+      page?: number;
+      page_size?: number;
+    },
+    tenantSlug?: string
+  ) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getRecoveriesLedger");
+    const query = new URLSearchParams();
+    query.append('tenantSlug', tenantSlug);
+    if (params?.search) query.append('search', params.search);
+    if (params?.status) query.append('status', params.status);
+    if (params?.reconciliation_status) query.append('reconciliation_status', params.reconciliation_status);
+    if (params?.billing_status) query.append('billing_status', params.billing_status);
+    if (params?.date_range) query.append('date_range', params.date_range);
+    if (params?.sort_by) query.append('sort_by', params.sort_by);
+    if (params?.sort_dir) query.append('sort_dir', params.sort_dir);
+    if (params?.page) query.append('page', String(params.page));
+    if (params?.page_size) query.append('page_size', String(params.page_size));
+    return requestJson<any>(`/api/recoveries/ledger?${query.toString()}`);
+  },
   getRecoveryDocumentUrl: (id: string) => buildApiUrl(`/api/recoveries/${encodeURIComponent(id)}/document`),
   getDocumentViewUrl: (docId: string) => buildApiUrl(`/api/documents/${encodeURIComponent(docId)}/view`),
 
