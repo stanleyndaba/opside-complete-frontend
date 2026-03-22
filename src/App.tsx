@@ -23,6 +23,7 @@ const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/RecoveryPipelineAgent8"));
+const DisputeCases = lazy(() => import("./pages/DisputeCases"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
 const ResolveCase = lazy(() => import("./pages/ResolveCase"));
 const DataUpload = lazy(() => import("./pages/DataUpload"));
@@ -160,6 +161,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/auth/success" element={<OAuthSuccess />} />
                         <Route path="/app/:tenantSlug/integrations-hub" element={<IntegrationsHub />} />
                         <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
+                        <Route path="/app/:tenantSlug/dispute-cases" element={<DisputeCases />} />
                         <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
                         <Route path="/app/:tenantSlug/resolve/:id" element={<ResolveCase />} />
                         <Route path="/app/:tenantSlug/history" element={<Navigate to="../billing" replace />} />
@@ -193,6 +195,7 @@ const App = () => (
                         {/* LEGACY REDIRECTS */}
                         <Route path="/integrations-hub" element={<TenantRedirect />} />
                         <Route path="/recoveries" element={<TenantRedirect />} />
+                        <Route path="/dispute-cases" element={<TenantRedirect />} />
                         <Route path="/sync" element={<TenantRedirect />} />
                         <Route path="/settings" element={<TenantRedirect />} />
                         <Route path="/reconnect-amazon" element={<TenantRedirect />} />

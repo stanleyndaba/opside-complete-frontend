@@ -1628,6 +1628,81 @@ export const api = {
   }),
 
   // Agent 7: Refund Filing endpoints (dispute cases)
+  getDisputeCaseQueue: (params: {
+    search?: string;
+    status?: string;
+    filing_status?: string;
+    recovery_status?: string;
+    billing_status?: string;
+    evidence_state?: string;
+    rejection_category?: string;
+    sort_by?: string;
+    sort_order?: 'asc' | 'desc';
+    page?: number;
+    page_size?: number;
+  } = {}, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDisputeCaseQueue");
+    const queryParams = new URLSearchParams();
+    queryParams.append('tenantSlug', tenantSlug);
+    if (params.search) queryParams.append('search', params.search);
+    if (params.status) queryParams.append('status', params.status);
+    if (params.filing_status) queryParams.append('filing_status', params.filing_status);
+    if (params.recovery_status) queryParams.append('recovery_status', params.recovery_status);
+    if (params.billing_status) queryParams.append('billing_status', params.billing_status);
+    if (params.evidence_state) queryParams.append('evidence_state', params.evidence_state);
+    if (params.rejection_category) queryParams.append('rejection_category', params.rejection_category);
+    if (params.sort_by) queryParams.append('sort_by', params.sort_by);
+    if (params.sort_order) queryParams.append('sort_order', params.sort_order);
+    if (params.page) queryParams.append('page', String(params.page));
+    if (params.page_size) queryParams.append('page_size', String(params.page_size));
+    return requestJson<{
+      success: boolean;
+      total_cases: number;
+      filtered_results: number;
+      blocked_count: number;
+      ready_to_file_count: number;
+      filed_count: number;
+      rejected_count: number;
+      approved_pending_payout_count: number;
+      recovered_count: number;
+      billing_pending_count: number;
+      last_updated_at: string | null;
+      page: number;
+      page_size: number;
+      rows: Array<{
+        dispute_case_id: string;
+        detection_result_id: string | null;
+        case_number: string | null;
+        claim_number: string | null;
+        case_type: string | null;
+        anomaly_type: string | null;
+        status: string | null;
+        filing_status: string | null;
+        recovery_status: string | null;
+        billing_status: string | null;
+        requested_amount: number | null;
+        approved_amount: number | null;
+        actual_payout_amount: number | null;
+        billed_amount: number | null;
+        currency: string;
+        evidence_state: string;
+        matched_document_count: number;
+        rejection_category: string | null;
+        rejection_reason: string | null;
+        created_at: string | null;
+        updated_at: string | null;
+        amazon_case_id: string | null;
+        store_name: string | null;
+        order_id: string | null;
+        sku: string | null;
+        asin: string | null;
+        expected_payout_amount: number | null;
+        expected_payout_date: string | null;
+        next_action: string;
+      }>;
+    }>(`/api/dispute-cases?${queryParams.toString()}`);
+  },
+
   getDisputeCases: (params?: { userId?: string; status?: string; limit?: number }, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDisputeCases");
     const queryParams = new URLSearchParams();
