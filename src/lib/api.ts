@@ -345,6 +345,40 @@ export const api = {
     body: JSON.stringify({ content })
   }),
 
+  // Support
+  createSupportRequest: (body: {
+    category: string;
+    subject: string;
+    message: string;
+    severity?: string;
+    additional_context?: string;
+    source_page?: string;
+    metadata?: Record<string, any>;
+  }) => requestJson<{
+    success: boolean;
+    request: {
+      request_id: string;
+      status: string;
+      created_at: string;
+      category: string;
+      subject: string;
+    };
+  }>('/api/support/requests', {
+    method: 'POST',
+    body: JSON.stringify(body)
+  }),
+  getSupportRequests: (limit = 10) => requestJson<{
+    success: boolean;
+    requests: Array<{
+      request_id: string;
+      status: string;
+      category: string;
+      subject: string;
+      severity?: string | null;
+      created_at: string;
+    }>;
+  }>(`/api/support/requests?limit=${limit}`),
+
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
   post: <T = any>(path: string, body?: unknown) => requestJson<T>(path, { method: 'POST', body: body !== undefined ? JSON.stringify(body) : undefined }),
