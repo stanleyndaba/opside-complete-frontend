@@ -151,6 +151,7 @@ const App = () => (
                         <Route path="/amazon-sandbox" element={<AmazonSandbox />} />
                         <Route path="/analyzing" element={<AnalyzingScreen />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
+                        <Route path="/app" element={<TenantRedirect />} />
                         <Route path="/app/:tenantSlug" element={<Dashboard />} />
                         <Route path="/app/:tenantSlug/dashboard" element={<Dashboard />} />
                         <Route path="/app/:tenantSlug/reports" element={<Reports />} />

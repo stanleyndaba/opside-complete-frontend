@@ -130,20 +130,15 @@ export function TenantProvider({ children }: TenantProviderProps) {
             const url = tenantSlug ? `/api/tenant/current?slug=${tenantSlug}` : '/api/tenant/current';
             const currentResponse = await api.get(url);
 
+            let fetchedTenantForRecovery: Tenant | null = null;
+
             if (currentResponse.data.success && currentResponse.data.tenant) {
                 const fetchedTenant = currentResponse.data.tenant;
+                fetchedTenantForRecovery = fetchedTenant;
                 setTenant(fetchedTenant);
                 // Persist to localStorage for API header usage
                 localStorage.setItem('active_tenant_id', fetchedTenant.id);
                 localStorage.setItem('active_tenant_slug', fetchedTenant.slug);
-
-                if (paramsSlug && !normalizeTenantSlug(paramsSlug) && location.pathname.startsWith('/app/')) {
-                    const correctedPath = location.pathname.replace(/^\/app\/[^\/]+/, `/app/${fetchedTenant.slug}`);
-                    const fullPath = `${correctedPath}${location.search}${location.hash}`;
-                    if (fullPath !== `${location.pathname}${location.search}${location.hash}`) {
-                        navigate(fullPath, { replace: true });
-                    }
-                }
             } else if (tenantSlug) {
                 // If specific slug requested but not found/accessible
                 setError('Workspace not found or access denied');
@@ -152,7 +147,31 @@ export function TenantProvider({ children }: TenantProviderProps) {
             // Get all user's tenants
             const listResponse = await api.get('/api/tenant/list');
             if (listResponse.data.success) {
-                setTenants(listResponse.data.tenants);
+                const tenantList = listResponse.data.tenants || [];
+                setTenants(tenantList);
+
+                if (!fetchedTenantForRecovery && tenantList.length > 0) {
+                    fetchedTenantForRecovery = tenantList[0];
+                    setTenant(tenantList[0]);
+                    localStorage.setItem('active_tenant_id', tenantList[0].id);
+                    localStorage.setItem('active_tenant_slug', tenantList[0].slug);
+                }
+            }
+
+            const invalidRouteSlug = paramsSlug && !normalizeTenantSlug(paramsSlug) && location.pathname.startsWith('/app/');
+            const missingWorkspaceRoute = location.pathname === '/app' || location.pathname === '/app/';
+            const recoveryTenantSlug = fetchedTenantForRecovery?.slug || null;
+
+            if ((invalidRouteSlug || missingWorkspaceRoute) && recoveryTenantSlug) {
+                const correctedPath = invalidRouteSlug
+                    ? location.pathname.replace(/^\/app\/[^\/]+/, `/app/${recoveryTenantSlug}`)
+                    : tenantRoute(recoveryTenantSlug, '/dashboard');
+                const fullPath = invalidRouteSlug
+                    ? `${correctedPath}${location.search}${location.hash}`
+                    : correctedPath;
+                if (fullPath !== `${location.pathname}${location.search}${location.hash}`) {
+                    navigate(fullPath, { replace: true });
+                }
             }
 
             // Get plan limits

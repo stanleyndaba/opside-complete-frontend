@@ -11,24 +11,28 @@ import { normalizeTenantSlug } from '@/lib/routes';
  */
 export function TenantRedirect({ targetPath = '/dashboard' }: { targetPath?: string }) {
     const navigate = useNavigate();
-    const { tenant } = useTenant();
+    const { tenant, tenants, isReady } = useTenant();
     const storedSlug = typeof window !== 'undefined' ? normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) : null;
-    const resolvedSlug = normalizeTenantSlug(tenant?.slug) || storedSlug;
+    const fallbackTenantSlug = tenants.find((item) => normalizeTenantSlug(item.slug))?.slug || null;
+    const resolvedSlug = normalizeTenantSlug(tenant?.slug) || storedSlug || fallbackTenantSlug;
 
     useEffect(() => {
         if (!resolvedSlug) {
+            if (isReady) {
+                navigate('/', { replace: true });
+            }
             return;
         }
 
         navigate(`/app/${resolvedSlug}${targetPath.startsWith('/') ? targetPath : `/${targetPath}`}`, { replace: true });
-    }, [navigate, resolvedSlug, targetPath]);
+    }, [isReady, navigate, resolvedSlug, targetPath]);
 
     return (
         <div className="min-h-screen bg-black flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
                 <div className="h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
                 <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">
-                    {resolvedSlug ? 'Resolving Tenant Context...' : 'Waiting For Workspace Context...'}
+                    {resolvedSlug ? 'Resolving Tenant Context...' : isReady ? 'Redirecting To Home...' : 'Waiting For Workspace Context...'}
                 </span>
             </div>
         </div>
