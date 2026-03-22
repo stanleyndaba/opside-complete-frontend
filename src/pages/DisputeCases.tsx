@@ -20,6 +20,226 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
 type LegacyCase = NonNullable<Awaited<ReturnType<typeof api.getDisputeCases>>['data']>['cases'][number];
 
+const PREVIEW_ROWS: QueueRow[] = [
+  {
+    dispute_case_id: 'preview-case-1001',
+    detection_result_id: 'preview-detection-1001',
+    case_number: 'DMO-CASE-1001',
+    claim_number: 'DMO-CLAIM-1001',
+    case_type: 'amazon_fba',
+    anomaly_type: 'missing_unit',
+    status: 'pending',
+    filing_status: 'pending',
+    recovery_status: 'pending',
+    billing_status: 'pending',
+    requested_amount: 128.4,
+    approved_amount: null,
+    actual_payout_amount: null,
+    billed_amount: null,
+    currency: 'USD',
+    evidence_state: 'Missing Evidence',
+    matched_document_count: 0,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: '2026-03-15T09:15:00.000Z',
+    updated_at: '2026-03-16T11:00:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1001',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1001',
+    sku: 'DEMO-SKU-01',
+    asin: 'B0DEMO0001',
+    expected_payout_amount: null,
+    expected_payout_date: null,
+    next_action: 'Waiting for evidence'
+  },
+  {
+    dispute_case_id: 'preview-case-1002',
+    detection_result_id: 'preview-detection-1002',
+    case_number: 'DMO-CASE-1002',
+    claim_number: 'DMO-CLAIM-1002',
+    case_type: 'amazon_fba',
+    anomaly_type: 'incorrect_fee',
+    status: 'pending',
+    filing_status: 'pending',
+    recovery_status: 'pending',
+    billing_status: 'pending',
+    requested_amount: 74.15,
+    approved_amount: null,
+    actual_payout_amount: null,
+    billed_amount: null,
+    currency: 'USD',
+    evidence_state: 'Ready',
+    matched_document_count: 1,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: '2026-03-14T12:30:00.000Z',
+    updated_at: '2026-03-16T09:40:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1002',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1002',
+    sku: 'DEMO-SKU-02',
+    asin: 'B0DEMO0002',
+    expected_payout_amount: 74.15,
+    expected_payout_date: '2026-03-28T00:00:00.000Z',
+    next_action: 'Ready to file'
+  },
+  {
+    dispute_case_id: 'preview-case-1003',
+    detection_result_id: 'preview-detection-1003',
+    case_number: 'DMO-CASE-1003',
+    claim_number: 'DMO-CLAIM-1003',
+    case_type: 'amazon_fba',
+    anomaly_type: 'overcharge',
+    status: 'submitted',
+    filing_status: 'filed',
+    recovery_status: 'pending',
+    billing_status: 'pending',
+    requested_amount: 162.75,
+    approved_amount: null,
+    actual_payout_amount: null,
+    billed_amount: null,
+    currency: 'USD',
+    evidence_state: 'Matched',
+    matched_document_count: 2,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: '2026-03-13T08:20:00.000Z',
+    updated_at: '2026-03-17T10:05:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1003',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1003',
+    sku: 'DEMO-SKU-03',
+    asin: 'B0DEMO0003',
+    expected_payout_amount: 162.75,
+    expected_payout_date: '2026-03-27T00:00:00.000Z',
+    next_action: 'Filed / awaiting Amazon'
+  },
+  {
+    dispute_case_id: 'preview-case-1004',
+    detection_result_id: 'preview-detection-1004',
+    case_number: 'DMO-CASE-1004',
+    claim_number: 'DMO-CLAIM-1004',
+    case_type: 'amazon_fba',
+    anomaly_type: 'damaged_stock',
+    status: 'rejected',
+    filing_status: 'failed',
+    recovery_status: 'pending',
+    billing_status: 'pending',
+    requested_amount: 93.2,
+    approved_amount: null,
+    actual_payout_amount: null,
+    billed_amount: null,
+    currency: 'USD',
+    evidence_state: 'Needs Review',
+    matched_document_count: 1,
+    rejection_category: 'insufficient_evidence',
+    rejection_reason: 'Invoice date did not match the reimbursement window.',
+    created_at: '2026-03-12T13:45:00.000Z',
+    updated_at: '2026-03-18T14:20:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1004',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1004',
+    sku: 'DEMO-SKU-04',
+    asin: 'B0DEMO0004',
+    expected_payout_amount: null,
+    expected_payout_date: null,
+    next_action: 'Review rejection'
+  },
+  {
+    dispute_case_id: 'preview-case-1005',
+    detection_result_id: 'preview-detection-1005',
+    case_number: 'DMO-CASE-1005',
+    claim_number: 'DMO-CLAIM-1005',
+    case_type: 'amazon_fba',
+    anomaly_type: 'duplicate_charge',
+    status: 'approved',
+    filing_status: 'filed',
+    recovery_status: 'pending',
+    billing_status: 'pending',
+    requested_amount: 145.9,
+    approved_amount: 145.9,
+    actual_payout_amount: null,
+    billed_amount: null,
+    currency: 'USD',
+    evidence_state: 'Matched',
+    matched_document_count: 1,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: '2026-03-11T15:10:00.000Z',
+    updated_at: '2026-03-19T12:00:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1005',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1005',
+    sku: 'DEMO-SKU-05',
+    asin: 'B0DEMO0005',
+    expected_payout_amount: 145.9,
+    expected_payout_date: '2026-03-25T00:00:00.000Z',
+    next_action: 'Waiting for payout'
+  },
+  {
+    dispute_case_id: 'preview-case-1006',
+    detection_result_id: 'preview-detection-1006',
+    case_number: 'DMO-CASE-1006',
+    claim_number: 'DMO-CLAIM-1006',
+    case_type: 'amazon_fba',
+    anomaly_type: 'incorrect_fee',
+    status: 'approved',
+    filing_status: 'filed',
+    recovery_status: 'reconciled',
+    billing_status: 'pending',
+    requested_amount: 112.75,
+    approved_amount: 112.75,
+    actual_payout_amount: 112.75,
+    billed_amount: null,
+    currency: 'USD',
+    evidence_state: 'Matched',
+    matched_document_count: 1,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: '2026-03-10T10:05:00.000Z',
+    updated_at: '2026-03-20T08:45:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1006',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1006',
+    sku: 'DEMO-SKU-06',
+    asin: 'B0DEMO0006',
+    expected_payout_amount: null,
+    expected_payout_date: null,
+    next_action: 'Billing pending'
+  },
+  {
+    dispute_case_id: 'preview-case-1007',
+    detection_result_id: 'preview-detection-1007',
+    case_number: 'DMO-CASE-1007',
+    claim_number: 'DMO-CLAIM-1007',
+    case_type: 'amazon_fba',
+    anomaly_type: 'overcharge',
+    status: 'approved',
+    filing_status: 'filed',
+    recovery_status: 'reconciled',
+    billing_status: 'credited',
+    requested_amount: 189.2,
+    approved_amount: 189.2,
+    actual_payout_amount: 189.2,
+    billed_amount: 37.84,
+    currency: 'USD',
+    evidence_state: 'Matched',
+    matched_document_count: 2,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: '2026-03-09T16:50:00.000Z',
+    updated_at: '2026-03-21T07:20:00.000Z',
+    amazon_case_id: 'AMZ-DEMO-1007',
+    store_name: 'Preview Workspace',
+    order_id: 'ORDER-DEMO-1007',
+    sku: 'DEMO-SKU-07',
+    asin: 'B0DEMO0007',
+    expected_payout_amount: null,
+    expected_payout_date: null,
+    next_action: 'Billing complete'
+  }
+];
+
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
   filed: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
@@ -132,7 +352,7 @@ export default function DisputeCases() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [dataSource, setDataSource] = useState<'authoritative' | 'legacy'>('authoritative');
+  const [dataSource, setDataSource] = useState<'authoritative' | 'legacy' | 'preview'>('authoritative');
   const [sourceNote, setSourceNote] = useState<string | null>(null);
   const [sourceCounts, setSourceCounts] = useState<{ authoritative: number | null; legacy: number | null }>({
     authoritative: null,
@@ -272,7 +492,17 @@ export default function DisputeCases() {
         });
         setDataSource('authoritative');
         if ((response.data.total_cases || 0) === 0) {
-          setSourceNote('Both authoritative queue and legacy dispute list returned zero cases for this tenant context.');
+          const previewRows = PREVIEW_ROWS.slice((page - 1) * pageSize, page * pageSize);
+          setRows(previewRows);
+          setSummary({
+            ...summarizeRows(PREVIEW_ROWS),
+            total_cases: PREVIEW_ROWS.length,
+            filtered_results: PREVIEW_ROWS.length,
+            page,
+            page_size: pageSize
+          });
+          setDataSource('preview');
+          setSourceNote('Both live dispute sources returned zero cases, so preview fixtures are being shown for UI iteration only.');
         }
       } catch (err: any) {
         if (!cancelled) {
@@ -298,9 +528,17 @@ export default function DisputeCases() {
             // Keep original error below if both sources fail.
           }
 
-          setError(err.message || 'Failed to load dispute cases');
-          setRows([]);
-          setDataSource('authoritative');
+          setRows(PREVIEW_ROWS.slice((page - 1) * pageSize, page * pageSize));
+          setSummary({
+            ...summarizeRows(PREVIEW_ROWS),
+            total_cases: PREVIEW_ROWS.length,
+            filtered_results: PREVIEW_ROWS.length,
+            page,
+            page_size: pageSize
+          });
+          setDataSource('preview');
+          setSourceNote('Live dispute data could not be loaded, so preview fixtures are being shown for UI iteration only.');
+          setError(null);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -410,10 +648,14 @@ export default function DisputeCases() {
                 variant="outline"
                 className={cn(
                   'border text-white/70',
-                  dataSource === 'legacy' ? 'border-amber-500/20 bg-amber-500/10 text-amber-300' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300'
+                  dataSource === 'legacy'
+                    ? 'border-amber-500/20 bg-amber-500/10 text-amber-300'
+                    : dataSource === 'preview'
+                      ? 'border-blue-500/20 bg-blue-500/10 text-blue-300'
+                      : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300'
                 )}
               >
-                Source: {dataSource === 'legacy' ? 'Legacy fallback' : 'Authoritative queue'}
+                Source: {dataSource === 'legacy' ? 'Legacy fallback' : dataSource === 'preview' ? 'Preview fixtures' : 'Authoritative queue'}
               </Badge>
               <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
                 Strict: {sourceCounts.authoritative ?? 'n/a'}
