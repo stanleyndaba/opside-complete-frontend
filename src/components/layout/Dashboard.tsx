@@ -440,57 +440,6 @@ export function Dashboard() {
     { id: 'security_setup', label: 'Security', subtitle: 'Lock access' },
   ];
 
-  const executeQuickAction = useCallback(async (actionId: string) => {
-    if (!activeSlug) return;
-
-    if (actionId === 'connect_evidence') {
-      navigate(tenantRoute(activeSlug, '/integrations-hub'));
-      return;
-    }
-
-    if (actionId === 'invite_teammate') {
-      setInviteOpen(true);
-      return;
-    }
-
-    if (actionId === 'evidence_locker') {
-      navigate(tenantRoute(activeSlug, '/evidence-locker'));
-      return;
-    }
-
-    if (actionId === 'upcoming_payments') {
-      navigate(tenantRoute(activeSlug, '/billing'));
-      return;
-    }
-
-    if (actionId === 'ingest_now') {
-      try {
-        const response = await api.ingestAllEvidence({ maxResults: 50, autoParse: true }, activeSlug);
-        if (!response.ok) {
-          throw new Error(response.error || 'Evidence ingestion failed');
-        }
-        toast({
-          title: 'INGESTION_STARTED',
-          description: response.data?.message || 'Evidence ingestion started successfully.'
-        });
-        await fetchDashboardSummary();
-      } catch (error: any) {
-        toast({
-          title: 'INGESTION_FAILED',
-          description: error?.message || 'Evidence ingestion could not be started.',
-          variant: 'destructive'
-        });
-      }
-      return;
-    }
-
-    toast({
-      title: 'ACTION_UNAVAILABLE',
-      description: `${actionId.replace(/_/g, ' ')} is not available from the dashboard until a tenant-safe action is wired.`,
-      variant: 'destructive'
-    });
-  }, [activeSlug, fetchDashboardSummary, navigate, toast]);
-
   // Handle OAuth redirect from backend (e.g., /dashboard?amazon_connected=true)
   useEffect(() => {
     if (!activeSlug) return;
@@ -541,6 +490,57 @@ export function Dashboard() {
       console.error('Failed to fetch dashboard summary:', error);
     }
   }, [activeSlug, isReady]);
+
+  const executeQuickAction = useCallback(async (actionId: string) => {
+    if (!activeSlug) return;
+
+    if (actionId === 'connect_evidence') {
+      navigate(tenantRoute(activeSlug, '/integrations-hub'));
+      return;
+    }
+
+    if (actionId === 'invite_teammate') {
+      setInviteOpen(true);
+      return;
+    }
+
+    if (actionId === 'evidence_locker') {
+      navigate(tenantRoute(activeSlug, '/evidence-locker'));
+      return;
+    }
+
+    if (actionId === 'upcoming_payments') {
+      navigate(tenantRoute(activeSlug, '/billing'));
+      return;
+    }
+
+    if (actionId === 'ingest_now') {
+      try {
+        const response = await api.ingestAllEvidence({ maxResults: 50, autoParse: true }, activeSlug);
+        if (!response.ok) {
+          throw new Error(response.error || 'Evidence ingestion failed');
+        }
+        toast({
+          title: 'INGESTION_STARTED',
+          description: response.data?.message || 'Evidence ingestion started successfully.'
+        });
+        await fetchDashboardSummary();
+      } catch (error: any) {
+        toast({
+          title: 'INGESTION_FAILED',
+          description: error?.message || 'Evidence ingestion could not be started.',
+          variant: 'destructive'
+        });
+      }
+      return;
+    }
+
+    toast({
+      title: 'ACTION_UNAVAILABLE',
+      description: `${actionId.replace(/_/g, ' ')} is not available from the dashboard until a tenant-safe action is wired.`,
+      variant: 'destructive'
+    });
+  }, [activeSlug, fetchDashboardSummary, navigate, toast]);
 
   useEffect(() => {
     if (!isReady || !activeSlug) return;
