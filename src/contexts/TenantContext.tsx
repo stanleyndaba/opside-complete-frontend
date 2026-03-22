@@ -9,13 +9,17 @@ import React, { createContext, useContext, useEffect, useState, useCallback, Rea
 import { api } from '@/lib/api';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { tenantRoute } from '@/lib/routes';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 
 /**
  * Get the stored tenant slug from localStorage
  */
 export const getStoredTenantSlug = (): string | null => {
-    return localStorage.getItem('active_tenant_slug');
+    const storedSlug = normalizeTenantSlug(localStorage.getItem('active_tenant_slug'));
+    if (!storedSlug) {
+        localStorage.removeItem('active_tenant_slug');
+    }
+    return storedSlug;
 };
 
 /**
@@ -108,9 +112,9 @@ export function TenantProvider({ children }: TenantProviderProps) {
 
     // Fallback: Parse slug from URL if useParams is empty (occurs if provider is outside Routes)
     const tenantSlug = useMemo(() => {
-        if (paramsSlug) return paramsSlug;
+        if (paramsSlug) return normalizeTenantSlug(paramsSlug);
         const match = location.pathname.match(/^\/app\/([^\/]+)/);
-        return match ? match[1] : null;
+        return match ? normalizeTenantSlug(match[1]) : null;
     }, [paramsSlug, location.pathname]);
 
     /**
@@ -132,6 +136,14 @@ export function TenantProvider({ children }: TenantProviderProps) {
                 // Persist to localStorage for API header usage
                 localStorage.setItem('active_tenant_id', fetchedTenant.id);
                 localStorage.setItem('active_tenant_slug', fetchedTenant.slug);
+
+                if (paramsSlug && !normalizeTenantSlug(paramsSlug) && location.pathname.startsWith('/app/')) {
+                    const correctedPath = location.pathname.replace(/^\/app\/[^\/]+/, `/app/${fetchedTenant.slug}`);
+                    const fullPath = `${correctedPath}${location.search}${location.hash}`;
+                    if (fullPath !== `${location.pathname}${location.search}${location.hash}`) {
+                        navigate(fullPath, { replace: true });
+                    }
+                }
             } else if (tenantSlug) {
                 // If specific slug requested but not found/accessible
                 setError('Workspace not found or access denied');
@@ -160,7 +172,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
             setIsLoading(false);
             setIsReady(true);
         }
-    }, [tenantSlug]);
+    }, [location.hash, location.pathname, location.search, navigate, paramsSlug, tenantSlug]);
 
     /**
      * Handle URL-based tenant switching

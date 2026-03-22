@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
+import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 
 interface DisputeCasesTableProps {
@@ -34,7 +35,7 @@ function formatMoney(amount: number | null | undefined, currency = 'USD') {
 export function DisputeCasesTable(_props: DisputeCasesTableProps) {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant } = useTenant();
-  const activeTenantSlug = tenantSlug || tenant?.slug || null;
+  const activeTenantSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
 
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [loading, setLoading] = useState(true);

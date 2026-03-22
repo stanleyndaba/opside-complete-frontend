@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, LinkProps, useParams } from 'react-router-dom';
-import { tenantRoute } from '@/lib/routes';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 
 interface TenantLinkProps extends LinkProps {
     to: string;
@@ -12,8 +12,8 @@ interface TenantLinkProps extends LinkProps {
  */
 export const TenantLink: React.FC<TenantLinkProps> = ({ to, children, ...props }) => {
     const { tenantSlug } = useParams<{ tenantSlug: string }>();
-    const storedSlug = typeof window !== 'undefined' ? localStorage.getItem('active_tenant_slug') || '' : '';
-    const activeSlug = tenantSlug || storedSlug;
+    const storedSlug = typeof window !== 'undefined' ? normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) : null;
+    const activeSlug = normalizeTenantSlug(tenantSlug) || storedSlug;
     const href = activeSlug ? tenantRoute(activeSlug, to) : to;
 
     return (

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
@@ -57,7 +58,7 @@ export default function DisputeCases() {
   const { isPaidUser } = useSession();
   const { toast } = useToast();
 
-  const activeTenantSlug = tenantSlug || tenant?.slug || null;
+  const activeTenantSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -8,6 +8,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useCallback } from 'react';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 
 /**
  * Hook that provides tenant-aware navigation functions
@@ -18,7 +19,7 @@ export function useTenantNavigation() {
     const { tenant } = useTenant();
 
     // Get current tenant slug from URL or context
-    const currentTenantSlug = tenantSlug || tenant?.slug || 'default';
+    const currentTenantSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
 
     /**
      * Navigate to a tenant-scoped path
@@ -36,7 +37,7 @@ export function useTenantNavigation() {
             } else {
                 // Ensure path doesn't already have tenant prefix
                 const cleanPath = path.startsWith('/app/') ? path.replace(/^\/app\/[^\/]+/, '') : path;
-                const tenantPath = `/app/${currentTenantSlug}${cleanPath}`;
+                const tenantPath = tenantRoute(currentTenantSlug, cleanPath);
                 navigate(tenantPath, options);
             }
         },
@@ -54,7 +55,7 @@ export function useTenantNavigation() {
                 return path;
             }
             const cleanPath = path.startsWith('/app/') ? path.replace(/^\/app\/[^\/]+/, '') : path;
-            return `/app/${currentTenantSlug}${cleanPath}`;
+            return tenantRoute(currentTenantSlug, cleanPath);
         },
         [currentTenantSlug]
     );

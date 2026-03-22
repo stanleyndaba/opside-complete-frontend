@@ -2,13 +2,21 @@
  * Centralized route utility for tenant-aware navigation
  */
 
+const INVALID_TENANT_SLUGS = new Set(['default', 'beta', 'null', 'undefined']);
+
+export const normalizeTenantSlug = (tenantSlug?: string | null): string | null => {
+    const slug = String(tenantSlug || '').trim();
+    if (!slug) return null;
+    return INVALID_TENANT_SLUGS.has(slug.toLowerCase()) ? null : slug;
+};
+
 /**
  * Generates a tenant-prefixed route
  * @param tenantSlug The current tenant slug
  * @param path The relative path (e.g., '/dashboard' or 'dashboard')
  * @returns The full tenant-prefixed path (e.g., '/app/beta/dashboard')
  */
-export const tenantRoute = (tenantSlug: string, path: string) => {
+export const tenantRoute = (tenantSlug: string | null | undefined, path: string) => {
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
 
     // Public routes or already prefixed routes should not be changed
@@ -16,7 +24,12 @@ export const tenantRoute = (tenantSlug: string, path: string) => {
         return path;
     }
 
-    return `/app/${tenantSlug}${cleanPath}`;
+    const normalizedTenantSlug = normalizeTenantSlug(tenantSlug);
+    if (!normalizedTenantSlug) {
+        return cleanPath;
+    }
+
+    return `/app/${normalizedTenantSlug}${cleanPath}`;
 };
 
 /**

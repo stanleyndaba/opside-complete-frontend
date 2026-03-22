@@ -12,7 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
-import { tenantRoute } from '@/lib/routes';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -115,7 +115,11 @@ export function Sidebar({
   };
 
   // Get tenant slug from URL or context
-  const currentTenantSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
+  const currentTenantSlug =
+    normalizeTenantSlug(tenantSlug) ||
+    normalizeTenantSlug(tenant?.slug) ||
+    normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) ||
+    '';
 
   // Reset state when tenant changes to prevent flicker
   React.useEffect(() => {
