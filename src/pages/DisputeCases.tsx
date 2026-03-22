@@ -134,6 +134,10 @@ export default function DisputeCases() {
   const [error, setError] = useState<string | null>(null);
   const [dataSource, setDataSource] = useState<'authoritative' | 'legacy'>('authoritative');
   const [sourceNote, setSourceNote] = useState<string | null>(null);
+  const [sourceCounts, setSourceCounts] = useState<{ authoritative: number | null; legacy: number | null }>({
+    authoritative: null,
+    legacy: null
+  });
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const [rows, setRows] = useState<QueueRow[]>([]);
@@ -185,8 +189,9 @@ export default function DisputeCases() {
       setLoading(true);
       setError(null);
       setSourceNote(null);
+      setSourceCounts({ authoritative: null, legacy: null });
       try {
-        const response = await api.getDisputeCaseQueue({
+        const queuePromise = api.getDisputeCaseQueue({
           search: searchTerm || undefined,
           status: status !== 'all' ? status : undefined,
           filing_status: filingStatus !== 'all' ? filingStatus : undefined,
@@ -199,23 +204,16 @@ export default function DisputeCases() {
           page,
           page_size: pageSize
         }, activeTenantSlug);
+        const legacyPromise = api.getDisputeCases({ limit: 500 }, activeTenantSlug);
+
+        const [response, legacyResponse] = await Promise.all([queuePromise, legacyPromise]);
+
+        setSourceCounts({
+          authoritative: response.ok && response.data ? response.data.total_cases : null,
+          legacy: legacyResponse.ok && legacyResponse.data ? legacyResponse.data.total || legacyResponse.data.cases?.length || 0 : null
+        });
 
         if (!response.ok || !response.data) {
-          throw new Error(response.error || 'Failed to load dispute cases');
-        }
-
-        const hasActiveFilters = Boolean(
-          searchTerm ||
-          status !== 'all' ||
-          filingStatus !== 'all' ||
-          recoveryStatus !== 'all' ||
-          billingStatus !== 'all' ||
-          evidenceState !== 'all' ||
-          rejectionCategory !== 'all'
-        );
-
-        if (!hasActiveFilters && (response.data.total_cases || 0) === 0) {
-          const legacyResponse = await api.getDisputeCases({ limit: 500 }, activeTenantSlug);
           if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
             if (cancelled) return;
             const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
@@ -228,9 +226,31 @@ export default function DisputeCases() {
               page_size: pageSize
             });
             setDataSource('legacy');
-            setSourceNote('Strict queue returned no cases; showing legacy dispute list for launch visibility.');
+            setSourceNote('Strict queue failed; showing legacy dispute list for launch visibility.');
             return;
           }
+
+          throw new Error(response.error || 'Failed to load dispute cases');
+        }
+
+        if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
+          if (cancelled) return;
+          const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
+          setRows(legacyRows.slice((page - 1) * pageSize, page * pageSize));
+          setSummary({
+            ...summarizeRows(legacyRows),
+            total_cases: legacyResponse.data.total || legacyRows.length,
+            filtered_results: legacyResponse.data.total || legacyRows.length,
+            page,
+            page_size: pageSize
+          });
+          setDataSource('legacy');
+          setSourceNote(
+            (response.data.total_cases || 0) === 0
+              ? 'Strict queue returned no cases; showing legacy dispute list for launch visibility.'
+              : 'Showing legacy dispute list for launch visibility while the strict queue is still being reconciled.'
+          );
+          return;
         }
 
         if (cancelled) return;
@@ -251,6 +271,9 @@ export default function DisputeCases() {
           page_size: response.data.page_size
         });
         setDataSource('authoritative');
+        if ((response.data.total_cases || 0) === 0) {
+          setSourceNote('Both authoritative queue and legacy dispute list returned zero cases for this tenant context.');
+        }
       } catch (err: any) {
         if (!cancelled) {
           try {
@@ -391,6 +414,12 @@ export default function DisputeCases() {
                 )}
               >
                 Source: {dataSource === 'legacy' ? 'Legacy fallback' : 'Authoritative queue'}
+              </Badge>
+              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
+                Strict: {sourceCounts.authoritative ?? 'n/a'}
+              </Badge>
+              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
+                Legacy: {sourceCounts.legacy ?? 'n/a'}
               </Badge>
               <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
                 {summary.last_updated_at ? `Updated ${formatDistanceToNow(new Date(summary.last_updated_at), { addSuffix: true })}` : 'Update time unavailable'}
