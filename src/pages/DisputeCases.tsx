@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
+type LegacyCase = NonNullable<Awaited<ReturnType<typeof api.getDisputeCases>>['data']>['cases'][number];
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
@@ -52,6 +53,75 @@ function badgeClass(value: string | null | undefined) {
   return STATUS_BADGE_STYLES[key] || STATUS_BADGE_STYLES.default;
 }
 
+function deriveLegacyNextAction(status: string | null | undefined) {
+  const normalizedStatus = String(status || '').toLowerCase();
+  if (['paid', 'complete', 'completed'].includes(normalizedStatus)) return 'Recovered';
+  if (['approved', 'resolved', 'won'].includes(normalizedStatus)) return 'Waiting for payout';
+  if (['submitted', 'under review', 'in review'].includes(normalizedStatus)) return 'Filed / awaiting Amazon';
+  if (['rejected', 'denied', 'lost'].includes(normalizedStatus)) return 'Review rejection';
+  if (['pending'].includes(normalizedStatus)) return 'Ready to file';
+  return 'Manual review';
+}
+
+function toQueueRowFromLegacy(item: LegacyCase): QueueRow {
+  const normalizedStatus = String(item.status || '').toLowerCase();
+  const approvedAmount = ['approved', 'resolved', 'won', 'paid', 'complete', 'completed'].includes(normalizedStatus)
+    ? item.amount
+    : null;
+  const actualPayoutAmount = ['paid', 'complete', 'completed'].includes(normalizedStatus)
+    ? item.amount
+    : null;
+
+  return {
+    dispute_case_id: item.id,
+    detection_result_id: item.claim_id || null,
+    case_number: item.case_number || item.id,
+    claim_number: item.claim_id || null,
+    case_type: null,
+    anomaly_type: null,
+    status: item.status || null,
+    filing_status: null,
+    recovery_status: actualPayoutAmount != null ? 'reconciled' : null,
+    billing_status: null,
+    requested_amount: item.amount ?? null,
+    approved_amount: approvedAmount,
+    actual_payout_amount: actualPayoutAmount,
+    billed_amount: null,
+    currency: item.currency || 'USD',
+    evidence_state: 'Not available',
+    matched_document_count: 0,
+    rejection_category: null,
+    rejection_reason: null,
+    created_at: item.created_at || null,
+    updated_at: item.created_at || null,
+    amazon_case_id: null,
+    store_name: null,
+    order_id: null,
+    sku: null,
+    asin: null,
+    expected_payout_amount: actualPayoutAmount == null && (item.expected_payout_date || item.expectedPayoutDate) ? item.amount ?? null : null,
+    expected_payout_date: item.expected_payout_date || item.expectedPayoutDate || null,
+    next_action: deriveLegacyNextAction(item.status),
+  };
+}
+
+function summarizeRows(rows: QueueRow[]) {
+  return {
+    total_cases: rows.length,
+    filtered_results: rows.length,
+    blocked_count: rows.filter((row) => ['Waiting for evidence', 'Needs review', 'Review rejection'].includes(row.next_action)).length,
+    ready_to_file_count: rows.filter((row) => row.next_action === 'Ready to file').length,
+    filed_count: rows.filter((row) => row.next_action === 'Filed / awaiting Amazon').length,
+    rejected_count: rows.filter((row) => ['rejected', 'denied', 'lost'].includes(String(row.status || '').toLowerCase())).length,
+    approved_pending_payout_count: rows.filter((row) => ['approved', 'resolved', 'won'].includes(String(row.status || '').toLowerCase()) && row.actual_payout_amount == null).length,
+    recovered_count: rows.filter((row) => row.actual_payout_amount != null || String(row.recovery_status || '').toLowerCase() === 'reconciled').length,
+    billing_pending_count: rows.filter((row) => row.next_action === 'Billing pending').length,
+    last_updated_at: rows.map((row) => row.updated_at || row.created_at).filter(Boolean).sort().reverse()[0] || null,
+    page: 1,
+    page_size: 25
+  };
+}
+
 export default function DisputeCases() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant, isReady, isThrottled } = useTenant();
@@ -62,6 +132,8 @@ export default function DisputeCases() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [dataSource, setDataSource] = useState<'authoritative' | 'legacy'>('authoritative');
+  const [sourceNote, setSourceNote] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const [rows, setRows] = useState<QueueRow[]>([]);
@@ -112,6 +184,7 @@ export default function DisputeCases() {
     const loadQueue = async () => {
       setLoading(true);
       setError(null);
+      setSourceNote(null);
       try {
         const response = await api.getDisputeCaseQueue({
           search: searchTerm || undefined,
@@ -131,6 +204,35 @@ export default function DisputeCases() {
           throw new Error(response.error || 'Failed to load dispute cases');
         }
 
+        const hasActiveFilters = Boolean(
+          searchTerm ||
+          status !== 'all' ||
+          filingStatus !== 'all' ||
+          recoveryStatus !== 'all' ||
+          billingStatus !== 'all' ||
+          evidenceState !== 'all' ||
+          rejectionCategory !== 'all'
+        );
+
+        if (!hasActiveFilters && (response.data.total_cases || 0) === 0) {
+          const legacyResponse = await api.getDisputeCases({ limit: 500 }, activeTenantSlug);
+          if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
+            if (cancelled) return;
+            const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
+            setRows(legacyRows.slice((page - 1) * pageSize, page * pageSize));
+            setSummary({
+              ...summarizeRows(legacyRows),
+              total_cases: legacyResponse.data.total || legacyRows.length,
+              filtered_results: legacyResponse.data.total || legacyRows.length,
+              page,
+              page_size: pageSize
+            });
+            setDataSource('legacy');
+            setSourceNote('Strict queue returned no cases; showing legacy dispute list for launch visibility.');
+            return;
+          }
+        }
+
         if (cancelled) return;
 
         setRows(response.data.rows || []);
@@ -148,10 +250,34 @@ export default function DisputeCases() {
           page: response.data.page,
           page_size: response.data.page_size
         });
+        setDataSource('authoritative');
       } catch (err: any) {
         if (!cancelled) {
+          try {
+            const legacyResponse = await api.getDisputeCases({ limit: 500 }, activeTenantSlug);
+            if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
+              if (cancelled) return;
+              const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
+              setRows(legacyRows.slice((page - 1) * pageSize, page * pageSize));
+              setSummary({
+                ...summarizeRows(legacyRows),
+                total_cases: legacyResponse.data.total || legacyRows.length,
+                filtered_results: legacyResponse.data.total || legacyRows.length,
+                page,
+                page_size: pageSize
+              });
+              setDataSource('legacy');
+              setSourceNote('Strict queue failed; showing legacy dispute list while the queue route stabilizes.');
+              setError(null);
+              return;
+            }
+          } catch {
+            // Keep original error below if both sources fail.
+          }
+
           setError(err.message || 'Failed to load dispute cases');
           setRows([]);
+          setDataSource('authoritative');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -255,6 +381,18 @@ export default function DisputeCases() {
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
+                Tenant: {activeTenantSlug || 'Unavailable'}
+              </Badge>
+              <Badge
+                variant="outline"
+                className={cn(
+                  'border text-white/70',
+                  dataSource === 'legacy' ? 'border-amber-500/20 bg-amber-500/10 text-amber-300' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300'
+                )}
+              >
+                Source: {dataSource === 'legacy' ? 'Legacy fallback' : 'Authoritative queue'}
+              </Badge>
+              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
                 {summary.last_updated_at ? `Updated ${formatDistanceToNow(new Date(summary.last_updated_at), { addSuffix: true })}` : 'Update time unavailable'}
               </Badge>
               <Button
@@ -277,6 +415,18 @@ export default function DisputeCases() {
               </Card>
             ))}
           </div>
+
+          {sourceNote ? (
+            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
+              <CardContent className="px-5 py-4 flex items-center gap-3">
+                <AlertCircle className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                <div className="space-y-1">
+                  <p className="text-[11px] font-sans font-bold uppercase tracking-tight text-amber-300">Launch visibility mode</p>
+                  <p className="text-xs font-sans text-white/55">{sourceNote}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : null}
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
