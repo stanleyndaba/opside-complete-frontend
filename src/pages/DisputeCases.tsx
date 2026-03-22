@@ -584,8 +584,8 @@ export default function DisputeCases() {
       }
 
       toast({
-        title: mode === 'approve' ? 'Case approved' : mode === 'retry' ? 'Retry queued' : 'Case filed',
-        description: row.case_number || row.dispute_case_id
+        title: mode === 'approve' ? 'Approval queued' : mode === 'retry' ? 'Retry queued' : 'Case queued',
+        description: response.data?.message || row.case_number || row.dispute_case_id
       });
       refresh();
     } catch (err: any) {

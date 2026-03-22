@@ -257,10 +257,11 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   billing_status: apiData.billing_status || null,
   updated_at: apiData.updated_at || apiData.created_at || apiData.createdDate || null,
   guaranteedAmount: apiData.guaranteedAmount ?? apiData.requested_amount ?? apiData.claim_amount ?? apiData.estimated_claim_value ?? apiData.estimated_value ?? null,
-  estimated_claim_value: apiData.estimated_claim_value ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null,
+  estimated_claim_value: apiData.estimated_claim_value ?? apiData.estimated_recovery_amount ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null,
   requested_amount: apiData.requested_amount ?? apiData.claim_amount ?? apiData.guaranteedAmount ?? null,
-  approved_amount: apiData.approved_amount ?? apiData.recovery_amount ?? null,
-  actual_payout_amount: apiData.actual_payout_amount ?? null,
+  approved_amount: apiData.approved_amount ?? null,
+  recovered_amount: apiData.recovered_amount ?? apiData.actual_payout_amount ?? null,
+  actual_payout_amount: apiData.actual_payout_amount ?? apiData.recovered_amount ?? null,
   billed_amount: apiData.billed_amount ?? null,
   expectedPayoutDate: apiData.expectedPayoutDate || apiData.expected_payout_date || null,
   createdDate: apiData.createdDate || apiData.created_at || apiData.discovery_date || null,
@@ -285,7 +286,7 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   generated_context: apiData.generated_context || null,
   next_step_context: apiData.next_step_context || null,
   rejection_category: apiData.rejection_category || apiData.evidence_attachments?.rejection_category || null,
-  rejection_reason: apiData.rejection_reason || apiData.evidence_attachments?.raw_reason_text || null,
+  rejection_reason: apiData.rejection_reason || null,
 });
 
 const isEvidenceRelatedEvent = (event: any) => {
@@ -468,10 +469,11 @@ export default function CaseDetail() {
     recovery_status: passedClaim.recovery_status || null,
     billing_status: passedClaim.billing_status || null,
     guaranteedAmount: passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
-    estimated_claim_value: passedClaim.estimated_claim_value ?? passedClaim.estimated_value ?? passedClaim.guaranteedAmount ?? null,
+    estimated_claim_value: passedClaim.estimated_claim_value ?? passedClaim.estimated_recovery_amount ?? passedClaim.estimated_value ?? passedClaim.guaranteedAmount ?? null,
     requested_amount: passedClaim.requested_amount ?? passedClaim.claim_amount ?? passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
-    approved_amount: passedClaim.approved_amount ?? passedClaim.recovery_amount ?? null,
-    actual_payout_amount: passedClaim.actual_payout_amount ?? null,
+    approved_amount: passedClaim.approved_amount ?? null,
+    recovered_amount: passedClaim.recovered_amount ?? passedClaim.actual_payout_amount ?? null,
+    actual_payout_amount: passedClaim.actual_payout_amount ?? passedClaim.recovered_amount ?? null,
     billed_amount: passedClaim.billed_amount ?? null,
     expectedPayoutDate: passedClaim.expectedPayoutDate || passedClaim.expected_payout_date || null,
     createdDate: passedClaim.created || passedClaim.created_at || passedClaim.discovery_date || null,
@@ -496,7 +498,7 @@ export default function CaseDetail() {
     next_step_context: passedClaim.next_step_context || null,
     generated_context: passedClaim.generated_context || null,
     rejection_category: passedClaim.rejection_category || passedClaim.evidence_attachments?.rejection_category || null,
-    rejection_reason: passedClaim.rejection_reason || passedClaim.evidence_attachments?.raw_reason_text || null,
+    rejection_reason: passedClaim.rejection_reason || null,
   } : null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
@@ -684,8 +686,8 @@ export default function CaseDetail() {
   const resolvedUnitsAffected = effectiveCase?.unitsLost ?? effectiveCase?.units_lost ?? effectiveCase?.quantity ?? effectiveCase?.units ?? null;
   const estimatedClaimValue = effectiveCase?.estimated_claim_value ?? effectiveCase?.estimated_value ?? null;
   const requestedAmount = effectiveCase?.requested_amount ?? effectiveCase?.guaranteedAmount ?? effectiveCase?.claim_amount ?? effectiveCase?.amount ?? null;
-  const approvedAmount = effectiveCase?.approved_amount ?? effectiveCase?.recovery_amount ?? null;
-  const recoveredAmount = effectiveCase?.actual_payout_amount ?? null;
+  const approvedAmount = effectiveCase?.approved_amount ?? null;
+  const recoveredAmount = effectiveCase?.recovered_amount ?? effectiveCase?.actual_payout_amount ?? null;
   const billedAmount = effectiveCase?.billed_amount ?? null;
   const resolvedClaimAmount = requestedAmount ?? estimatedClaimValue ?? null;
   const resolvedValuePerUnit = typeof resolvedClaimAmount === 'number' &&
@@ -719,12 +721,12 @@ export default function CaseDetail() {
     return [
       { label: 'Detected', active: Boolean(effectiveCase?.id) },
       { label: 'Evidence', active: hasEvidence },
-      { label: 'Filed', active: ['filed', 'submitted', 'resubmitted', 'filing'].includes(filingStatus) || ['submitted', 'under review', 'under_review', 'in_progress', 'processing', 'approved', 'rejected', 'denied'].includes(currentStatus) },
-      { label: 'Approved', active: ['approved'].includes(currentStatus) || ['reconciled', 'discrepancy'].includes(recoveryStatus) },
+      { label: 'Filed', active: ['filed', 'submitted', 'resubmitted'].includes(filingStatus) },
+      { label: 'Approved', active: ['approved'].includes(currentStatus) || typeof approvedAmount === 'number' },
       { label: 'Recovered', active: ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
       { label: 'Billed', active: ['pending', 'completed'].includes(billingStatus) }
     ];
-  }, [effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
+  }, [approvedAmount, effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
 
   // Early return guards (all hooks must be called before these)
   if (!caseId) {

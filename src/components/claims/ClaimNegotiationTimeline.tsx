@@ -208,74 +208,6 @@ const getEventColor = (action: TimelineEvent['action']) => {
     }
 };
 
-// Generate mock timeline if not provided
-const generateMockTimeline = (claim: ClaimNegotiationTimelineProps['claim']): TimelineEvent[] => {
-    const timeline: TimelineEvent[] = [];
-    const baseDate = claim.created || claim.created_at || claim.discovery_date || new Date().toISOString();
-
-    // Initial filing
-    timeline.push({
-        id: '1',
-        date: baseDate,
-        action: 'filed',
-        description: 'Claim filed automatically by detection agent',
-        amount: claim.guaranteedAmount || claim.amount
-    });
-
-    const status = claim.status?.toLowerCase() || '';
-
-    if (status === 'submitted' || status === 'pending') {
-        timeline.push({
-            id: '2',
-            date: new Date(new Date(baseDate).getTime() + 86400000).toISOString(),
-            action: 'auto_submitted',
-            description: 'Evidence package submitted to Amazon'
-        });
-    }
-
-    if (status === 'denied' || status === 'rejected') {
-        timeline.push({
-            id: '2',
-            date: new Date(new Date(baseDate).getTime() + 86400000 * 3).toISOString(),
-            action: 'denied',
-            description: 'Claim denied by Amazon',
-            rejectionReason: classifyRejection(claim.rejection_reason || status)
-        });
-
-        if ((claim.escalation_count || 0)> 0) {
-            timeline.push({
-                id: '3',
-                date: new Date(new Date(baseDate).getTime() + 86400000 * 5).toISOString(),
-                action: 'escalated',
-                description: 'Escalation initiated with additional evidence',
-                escalationRound: 1
-            });
-        }
-    }
-
-    if (status === 'approved' || status === 'paid' || status === 'resolved') {
-        timeline.push({
-            id: '2',
-            date: new Date(new Date(baseDate).getTime() + 86400000 * 7).toISOString(),
-            action: 'approved',
-            description: 'Claim approved by Amazon',
-            amount: claim.guaranteedAmount || claim.amount
-        });
-    }
-
-    if (status.includes('partial')) {
-        timeline.push({
-            id: '2',
-            date: new Date(new Date(baseDate).getTime() + 86400000 * 5).toISOString(),
-            action: 'partially_approved',
-            description: 'Partial reimbursement approved',
-            amount: (claim.guaranteedAmount || claim.amount || 0) * 0.7
-        });
-    }
-
-    return timeline;
-};
-
 export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2 }: ClaimNegotiationTimelineProps) {
     // State for fetched timeline
     const [fetchedTimeline, setFetchedTimeline] = useState<TimelineEvent[] | null>(null);
@@ -306,13 +238,12 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
                     }));
                     setFetchedTimeline(mappedTimeline);
                 } else {
-                    // No timeline from API, will use generated mock
-                    setFetchedTimeline(null);
+                    setFetchedTimeline([]);
                 }
             } catch (err: any) {
                 console.error('[ClaimTimeline] Error fetching timeline:', err);
                 setError(err?.message || 'Failed to load timeline');
-                setFetchedTimeline(null);
+                setFetchedTimeline([]);
             } finally {
                 setLoading(false);
             }
@@ -320,11 +251,11 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
         fetchTimeline();
     }, [claim.id]);
 
-    // Get or generate timeline - prefer prop, then fetched, then mock
+    // Prefer explicit claim timeline, then fetched backend events, otherwise show an honest empty state.
     const timeline = useMemo(() => {
         if (claim.timeline && claim.timeline.length> 0) return claim.timeline;
         if (fetchedTimeline && fetchedTimeline.length> 0) return fetchedTimeline;
-        return generateMockTimeline(claim);
+        return [];
     }, [claim, fetchedTimeline]);
 
     // Get current rejection reason if denied
@@ -357,57 +288,54 @@ export function ClaimNegotiationTimeline({ claim, onEscalate, maxEscalations = 2
 
             {/* Visual Timeline */}
             <div className="relative">
-                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
-                <div className="space-y-4">
-                    {timeline.map((event, index) => (
-                        <div key={event.id} className="relative flex gap-4">
-                            {/* Timeline dot */}
-                            <div className={cn(
-                                "relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2",
-                                getEventColor(event.action)
-                            )}>
-                                {getEventIcon(event.action)}
-                            </div>
+                {loading ? (
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Loading real timeline events...
+                    </div>
+                ) : timeline.length === 0 ? (
+                    <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-sm text-gray-500">
+                        {error ? 'Timeline unavailable. No verified claim events are available right now.' : 'No verified claim timeline events are available yet.'}
+                    </div>
+                ) : (
+                    <>
+                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+                        <div className="space-y-4">
+                            {timeline.map((event) => (
+                                <div key={event.id} className="relative flex gap-4">
+                                    <div className={cn(
+                                        "relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2",
+                                        getEventColor(event.action)
+                                    )}>
+                                        {getEventIcon(event.action)}
+                                    </div>
 
-                            {/* Event content */}
-                            <div className="flex-1 pb-4">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm font-medium text-gray-900">
-                                        {event.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                    </span>
-                                    {event.amount && (
-                                        <Badge variant="outline" className="text-xs">
-                                            ${event.amount.toFixed(2)}
-                                        </Badge>
-                                    )}
-                                    {event.escalationRound && (
-                                        <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
-                                            Round {event.escalationRound}
-                                        </span>
-                                    )}
+                                    <div className="flex-1 pb-4">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-medium text-gray-900">
+                                                {event.action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                            </span>
+                                            {event.amount && (
+                                                <Badge variant="outline" className="text-xs">
+                                                    ${event.amount.toFixed(2)}
+                                                </Badge>
+                                            )}
+                                            {event.escalationRound && (
+                                                <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded-sm">
+                                                    Round {event.escalationRound}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-sm text-gray-600 mt-1">{event.description}</p>
+                                        <p className="text-xs text-gray-400 mt-1">
+                                            {format(new Date(event.date), 'MMM dd, yyyy \'at\' h:mm a')}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p className="text-sm text-gray-600 mt-1">{event.description}</p>
-                                <p className="text-xs text-gray-400 mt-1">
-                                    {format(new Date(event.date), 'MMM dd, yyyy \'at\' h:mm a')}
-                                </p>
-                            </div>
+                            ))}
                         </div>
-                    ))}
-
-                    {/* Pending indicator */}
-                    {claim.status?.toLowerCase() !== 'approved' &&
-                        claim.status?.toLowerCase() !== 'paid' &&
-                        claim.status?.toLowerCase() !== 'resolved' && (
-                            <div className="relative flex gap-4">
-                                <div className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-white">
-                                    <Clock className="h-4 w-4 text-gray-400" />
-                                </div>
-                                <div className="flex-1">
-                                    <span className="text-sm text-gray-500 italic">Awaiting resolution...</span>
-                                </div>
-                            </div>
-                        )}
-                </div>
+                    </>
+                )}
             </div>
 
             {/* Rejection Analysis & Escalation Playbook */}
