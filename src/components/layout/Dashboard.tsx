@@ -59,12 +59,47 @@ const stripEmojis = (text: any) => {
   return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{231A}-\u{231B}\u{23E9}-\u{23F3}\u{23F8}-\u{23FA}\u{25AA}-\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2702}\u{2705}\u{2708}-\u{270D}\u{270F}]/gu, '').trim();
 };
 
+interface DashboardBlocker {
+  key: string;
+  label: string;
+  count: number;
+  severity: 'low' | 'medium' | 'high';
+}
+
+interface DashboardSummary {
+  detections_count: number;
+  cases_count: number;
+  filed_count: number;
+  approved_count: number;
+  recovered_count: number;
+  billed_count: number;
+  estimated_value_total: number;
+  filed_value_total: number;
+  approved_value_total: number;
+  recovered_cash_total: number;
+  billed_revenue_total: number;
+  last_updated_at: string;
+  integrations_summary: {
+    connected_count: number;
+    stale_count: number;
+    last_ingest_at: string | null;
+  };
+  evidence_summary: {
+    total_documents: number;
+    parsed_documents: number;
+    matched_documents: number;
+    failed_documents: number;
+    needs_review_documents: number;
+  };
+  blockers: DashboardBlocker[];
+}
+
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes' | 'evidence'>('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
-  const activeSlug = tenantSlug || tenant?.slug || 'default';
+  const activeSlug = tenantSlug || tenant?.slug || '';
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
@@ -78,6 +113,7 @@ export function Dashboard() {
   };
 
   const [isExporting, setIsExporting] = useState(false);
+  const [dashboardSummary, setDashboardSummary] = useState<DashboardSummary | null>(null);
 
   const handleBatchExport = async () => {
     if (isExporting) return;
@@ -404,8 +440,60 @@ export function Dashboard() {
     { id: 'security_setup', label: 'Security', subtitle: 'Lock access' },
   ];
 
+  const executeQuickAction = useCallback(async (actionId: string) => {
+    if (!activeSlug) return;
+
+    if (actionId === 'connect_evidence') {
+      navigate(tenantRoute(activeSlug, '/integrations-hub'));
+      return;
+    }
+
+    if (actionId === 'invite_teammate') {
+      setInviteOpen(true);
+      return;
+    }
+
+    if (actionId === 'evidence_locker') {
+      navigate(tenantRoute(activeSlug, '/evidence-locker'));
+      return;
+    }
+
+    if (actionId === 'upcoming_payments') {
+      navigate(tenantRoute(activeSlug, '/billing'));
+      return;
+    }
+
+    if (actionId === 'ingest_now') {
+      try {
+        const response = await api.ingestAllEvidence({ maxResults: 50, autoParse: true }, activeSlug);
+        if (!response.ok) {
+          throw new Error(response.error || 'Evidence ingestion failed');
+        }
+        toast({
+          title: 'INGESTION_STARTED',
+          description: response.data?.message || 'Evidence ingestion started successfully.'
+        });
+        await fetchDashboardSummary();
+      } catch (error: any) {
+        toast({
+          title: 'INGESTION_FAILED',
+          description: error?.message || 'Evidence ingestion could not be started.',
+          variant: 'destructive'
+        });
+      }
+      return;
+    }
+
+    toast({
+      title: 'ACTION_UNAVAILABLE',
+      description: `${actionId.replace(/_/g, ' ')} is not available from the dashboard until a tenant-safe action is wired.`,
+      variant: 'destructive'
+    });
+  }, [activeSlug, fetchDashboardSummary, navigate, toast]);
+
   // Handle OAuth redirect from backend (e.g., /dashboard?amazon_connected=true)
   useEffect(() => {
+    if (!activeSlug) return;
     const amazonConnected = searchParams.get('amazon_connected');
     if (amazonConnected === 'true') {
       toast({
@@ -421,6 +509,7 @@ export function Dashboard() {
 
   // Reset metrics when activeSlug changes to prevent "old data flash"
   useEffect(() => {
+    setDashboardSummary(null);
     setRecoveredTotal(null);
     setSubmittedClaimsCount(null);
     setPendingRecoveryAmount(null);
@@ -436,11 +525,38 @@ export function Dashboard() {
     setDetectionStats(null);
     setEvidenceStatus(null);
     setDetectionResults([]);
+    setLastUpdated('');
   }, [activeSlug]);
+
+  const fetchDashboardSummary = useCallback(async () => {
+    if (!isReady || !activeSlug) return;
+    try {
+      const response = await api.getDashboardSummary(activeSlug);
+      if (!mountedRef.current) return;
+      if (response.ok && response.data?.summary) {
+        setDashboardSummary(response.data.summary as DashboardSummary);
+        setLastUpdated((response.data.summary as DashboardSummary).last_updated_at);
+      }
+    } catch (error) {
+      console.error('Failed to fetch dashboard summary:', error);
+    }
+  }, [activeSlug, isReady]);
+
+  useEffect(() => {
+    if (!isReady || !activeSlug) return;
+
+    let pollTimer: number | null = null;
+    fetchDashboardSummary();
+    pollTimer = window.setInterval(fetchDashboardSummary, 30000);
+
+    return () => {
+      if (pollTimer) clearInterval(pollTimer);
+    };
+  }, [activeSlug, fetchDashboardSummary, isReady]);
 
   // Fetch evidence status and detection statistics
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !activeSlug) return;
     (async () => {
       const [statusRes, detectionStatsRes] = await Promise.all([
         api.getEvidenceStatus(activeSlug).catch(() => ({ ok: false, data: null })),
@@ -469,7 +585,7 @@ export function Dashboard() {
 
   // Fetch detection results for anomaly ledger counter
   useEffect(() => {
-    if (!isReady || detectionResults.length !== 0) return;
+    if (!isReady || !activeSlug || detectionResults.length !== 0) return;
     const fetchDetections = async () => {
       setLoadingDetections(true);
       try {
@@ -490,7 +606,7 @@ export function Dashboard() {
       }
     };
     fetchDetections();
-  }, [detectionResults.length, toast, isReady]);
+  }, [activeSlug, detectionResults.length, toast, isReady]);
 
   const updateUpcomingMetrics = useCallback((payments: any[]) => {
     upcomingPaymentsLoadedRef.current = true;
@@ -595,16 +711,9 @@ export function Dashboard() {
 
   // Fetch recoveries
   useEffect(() => {
-    if (!isReady) return;
-    let pollTimer: number | null = null;
-
-    fetchRecoveriesOnce();
-    pollTimer = window.setInterval(fetchRecoveriesOnce, 30000);
-
-    return () => {
-      if (pollTimer) clearInterval(pollTimer);
-    };
-  }, [isReady, fetchRecoveriesOnce]);
+    if (!isReady || !activeSlug) return;
+    void checkAndMonitorSync();
+  }, [activeSlug, isReady]);
 
   // Function to check sync status and monitor completion
   async function checkAndMonitorSync() {
@@ -634,9 +743,7 @@ export function Dashboard() {
         // Check for completed status (including legacy 'complete' value)
         if (lastSyncStatus === 'completed' || lastSyncStatus === 'complete') {
           // Sync completed, refresh data
-          await fetchRecoveriesOnce();
-          await fetchMetrics();
-          await fetchDisputeMetrics();
+          await fetchDashboardSummary();
           setSyncTriggered(false);
           setNeedsSync(false);
           setSyncMessage(null);
@@ -721,9 +828,7 @@ export function Dashboard() {
         // Check for completed status (including legacy 'complete' value)
         if (status.status === 'completed' || status.status === 'complete') {
           // Sync completed, refresh data
-          await fetchRecoveriesOnce();
-          await fetchMetrics();
-          await fetchDisputeMetrics();
+          await fetchDashboardSummary();
           setSyncTriggered(false);
           setNeedsSync(false);
           setSyncMessage('Sync completed successfully!');
@@ -738,7 +843,7 @@ export function Dashboard() {
           setSyncTriggered(false);
           setNeedsSync(true);
           setSyncMessage('Sync failed. Please try again.');
-          await fetchDisputeMetrics();
+          await fetchDashboardSummary();
 
           toast({
             title: 'Sync Failed',
@@ -915,15 +1020,13 @@ export function Dashboard() {
 
   // Effect to manage polling and SSE logic
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !activeSlug) return;
     let pollTimer: number | null = null;
     let es: EventSource | null = null;
 
     // Initial fetch immediately on mount
     const initFetch = async () => {
-      await fetchRecoveriesOnce();
-      await fetchMetrics();
-      await fetchDisputeMetrics();
+      await fetchDashboardSummary();
     };
 
     initFetch();
@@ -931,13 +1034,7 @@ export function Dashboard() {
 
     // Short burst polling to show numbers populate quickly
     pollTimer = window.setInterval(async () => {
-      await fetchRecoveriesOnce();
-      await fetchMetrics();
-      await fetchDisputeMetrics();
-      // The original code had a `polls` counter and `if (polls >= 12)` condition.
-      // This logic was removed to simplify, assuming the interval will run indefinitely
-      // until the component unmounts or `isReady` becomes false.
-      // If the original `polls` logic is critical, it should be re-added.
+      await fetchDashboardSummary();
     }, 5000) as unknown as number;
 
     // Listen for backend sync/detection events
@@ -947,10 +1044,8 @@ export function Dashboard() {
         if (!mountedRef.current) return;
         try {
           const evt = JSON.parse(e.data);
-          if (evt?.type === 'sync' || evt?.type === 'detection') {
-            await fetchRecoveriesOnce();
-            await fetchMetrics();
-            await fetchDisputeMetrics();
+          if (evt?.type === 'sync' || evt?.type === 'detection' || evt?.type === 'impact' || evt?.type === 'evidence') {
+            await fetchDashboardSummary();
           }
         } catch { }
       };
@@ -968,31 +1063,47 @@ export function Dashboard() {
         syncCheckTimeoutRef.current = null;
       }
     };
-  }, [toast, navigate, activeSlug, isReady]);
+  }, [activeSlug, fetchDashboardSummary, isReady]);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
-  const computedApproved = approvedRecoveryAmount != null
-    ? approvedRecoveryAmount
-    : Math.max((recoveredTotal ?? 0) - (pendingRecoveryAmount ?? 0), 0);
-  const effectivePendingClaims = pendingClaimsCount ?? submittedClaimsCount ?? 0;
-  const hasPendingClaimsData = pendingClaimsCount != null || submittedClaimsCount != null;
-  const detectedOpportunitiesCount = detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
-  const filedClaimsCount = submittedClaimsCount ?? effectivePendingClaims ?? detectionResults.filter((r: any) => r.status === 'filed' || r.status === 'resolved' || r.status === 'converted').length;
-  const approvedClaimsCount = approvedClaimsThisMonth ?? 0;
-  const upcomingPayoutCopy = (() => {
-    if (nextPaymentDate) {
-      const payoutDate = new Date(nextPaymentDate);
-      if (!Number.isNaN(payoutDate.getTime())) {
-        const diffDays = Math.max(1, Math.ceil((payoutDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
-        const rangeStart = Math.max(1, diffDays - 1);
-        const rangeEnd = Math.max(rangeStart, diffDays + 1);
-        return `Expected in ${rangeStart}-${rangeEnd} days`;
-      }
-    }
-    if ((nextPaymentAmount ?? 0) > 0) return 'Expected in 3-5 days';
-    return 'Processing reimbursements...';
-  })();
+  const detectedOpportunitiesCount = dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
+  const filedClaimsCount = dashboardSummary?.filed_count ?? 0;
+  const approvedClaimsCount = dashboardSummary?.approved_count ?? 0;
+  const recoveredCashTotal = dashboardSummary?.recovered_cash_total ?? 0;
+  const estimatedValueTotal = dashboardSummary?.estimated_value_total ?? 0;
+  const filedValueTotal = dashboardSummary?.filed_value_total ?? 0;
+  const approvedValueTotal = dashboardSummary?.approved_value_total ?? 0;
+  const billedRevenueTotal = dashboardSummary?.billed_revenue_total ?? 0;
+  const activeBlockers = dashboardSummary?.blockers ?? [];
+  const primaryBlocker = activeBlockers[0] || null;
+  const formattedLastUpdated = useMemo(() => {
+    if (!dashboardSummary?.last_updated_at) return 'Unavailable';
+    const timestamp = new Date(dashboardSummary.last_updated_at);
+    if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
+    return formatDistanceToNow(timestamp, { addSuffix: true });
+  }, [dashboardSummary?.last_updated_at]);
+
+  if (!activeSlug) {
+    return (
+      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+        <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+        <div className="flex-1 flex h-full overflow-hidden">
+          <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+          <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+            <div className="relative pt-8 px-8">
+              <div className="rounded-2xl border border-white/10 bg-[#111111]/90 p-8 text-white">
+                <h1 className="text-lg font-sans font-bold tracking-tight">Tenant context required</h1>
+                <p className="mt-3 text-sm text-white/55 font-sans">
+                  Dashboard metrics are blocked until a real tenant workspace is selected.
+                </p>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -1033,14 +1144,9 @@ export function Dashboard() {
                         )}
                       >
                         Audits
-                        {(() => {
-                          const count = detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed').length;
-                          return (
-                            <span className="flex items-center justify-center min-w-[16px] h-4 px-1.5 bg-[#1a1a1a] text-white text-[9px] font-bold rounded-full border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-                              {count}
-                            </span>
-                          );
-                        })()}
+                        <span className="flex items-center justify-center min-w-[16px] h-4 px-1.5 bg-[#1a1a1a] text-white text-[9px] font-bold rounded-full border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                          {detectedOpportunitiesCount}
+                        </span>
                       </button>
                       <button
                         onClick={() => handleTabChange('disputes')}
@@ -1052,9 +1158,9 @@ export function Dashboard() {
                         )}
                       >
                         Dispute Claims
-                        {effectivePendingClaims > 0 && (
+                        {filedClaimsCount > 0 && (
                           <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-emerald-500 text-[9px] font-bold rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
-                            {effectivePendingClaims > 99 ? '99+' : effectivePendingClaims}
+                            {filedClaimsCount > 99 ? '99+' : filedClaimsCount}
                           </span>
                         )}
                       </button>
@@ -1101,18 +1207,18 @@ export function Dashboard() {
                       <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">REIMBURSEMENT OVERVIEW</h2>
+                            <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">RECOVERY SUMMARY</h2>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-sans font-bold text-white tracking-tight">Recovered Margins</span>
+                              <span className="text-sm font-sans font-bold text-white tracking-tight">Recovered Cash</span>
                             </div>
                           </div>
                         </div>
-                        {submittedClaimsCount != null && submittedClaimsCount > 0 && (
+                        {dashboardSummary && dashboardSummary.filed_count > 0 && (
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex items-center gap-3 transition-all group"
                           >
-                            <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{submittedClaimsCount} Active Claims</span>
+                            <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
                             <ArrowRight className="h-3 w-3 text-white/20 group-hover:text-white/65" />
                           </button>
                         )}
@@ -1120,7 +1226,7 @@ export function Dashboard() {
 
                       <div className="p-10">
                         <div className="flex flex-col">
-                          {recoveredTotal === null ? (
+                          {!dashboardSummary ? (
                             <div className="space-y-4 py-2">
                               <div className="flex items-center gap-3">
                                 <Skeleton className="h-4 w-4 rounded-full bg-white/10" />
@@ -1129,28 +1235,31 @@ export function Dashboard() {
                               <Skeleton className="h-14 w-48 bg-white/10" />
                               <Skeleton className="h-4 w-64 bg-white/10" />
                             </div>
-                          ) : recoveredTotal > 0 ? (
+                          ) : recoveredCashTotal > 0 ? (
                             <>
                               <div className="text-5xl font-sans font-bold text-white tracking-tight mb-4 flex items-baseline gap-2">
-                                {formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)}
+                                {formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)}
                                 <span className="text-sm font-sans font-bold text-white/40 animate-pulse">_</span>
                               </div>
-                              {reconciledCount != null && reconciledCount > 0 && (
-                                <div className="flex items-center gap-3 w-fit">
+                              <div className="flex flex-wrap items-center gap-5 w-fit">
+                                <div className="flex items-center gap-3">
                                   <div className="h-1 w-1 rounded-full bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" />
                                   <span className="text-[10px] font-sans font-bold text-white/65 uppercase tracking-tight">
-                                    {reconciledCount} Verified Records
+                                    {dashboardSummary.recovered_count} Reconciled Cases
                                   </span>
                                 </div>
-                              )}
+                                <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
+                                  Billed Revenue {formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency)}
+                                </span>
+                              </div>
                             </>
-                          ) : recoveredTotal !== null ? (
+                          ) : dashboardSummary ? (
                             <div className="flex flex-col gap-6 py-2">
                               <div className="text-5xl font-sans font-bold text-white/20 tracking-tight">
                                 $0.00
                               </div>
                               <p className="text-xs text-white/30 font-sans font-bold leading-relaxed max-w-sm">
-                                No recoveries found yet. Upload your Amazon CSV data to start the detection pipeline.
+                                No reconciled recoveries are recorded for this tenant yet.
                               </p>
                             </div>
                           ) : (
@@ -1177,18 +1286,18 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Estimated Payout</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Estimated Value</div>
                               <div className="text-2xl font-sans font-bold text-white tracking-tight">
-                                {nextPaymentAmount === null && !upcomingPaymentsLoadedRef.current ? (
+                                {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
-                                  formatCurrencyWithSelection((nextPaymentAmount ?? 0), recoveredCurrency)
+                                  formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)
                                 )}
                               </div>
                               <div className="mt-4 flex items-center gap-2">
                                 <Clock className="h-3 w-3 text-white/25" />
                                 <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
-                                  {upcomingPayoutCopy}
+                                  Detected discrepancy value
                                 </span>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
@@ -1201,7 +1310,7 @@ export function Dashboard() {
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Payout Details</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
-                                Capital currently verified and queued for the primary settlement ledger. Disbursement typically occurs within the standard 14-day protocol.
+                                Estimated Value sums tenant detection estimates. It is potential value, not approved or recovered cash.
                               </p>
                             </div>
                           </HoverCardContent>
@@ -1210,20 +1319,20 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Pending Recovery</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Filed Value</div>
                               <div className="text-2xl font-sans font-bold text-white tracking-tight">
-                                {pendingRecoveryAmount === null && !upcomingPaymentsLoadedRef.current ? (
+                                {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
-                                  formatCurrencyWithSelection((pendingRecoveryAmount ?? 0), recoveredCurrency)
+                                  formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)
                                 )}
                               </div>
                               <div className="mt-4 space-y-1.5">
                                 <div className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
-                                  {(pendingRecoveryAmount ?? 0) > 0 ? 'Currently Being Recovered' : 'In Progress'}
+                                  Submitted or post-submission case value
                                 </div>
                                 <div className="text-[10px] font-sans font-bold text-white/25 tracking-tight">
-                                  {effectivePendingClaims > 0 ? `Across ${effectivePendingClaims} Active Claims` : 'Monitoring active claims...'}
+                                  {dashboardSummary ? `Across ${dashboardSummary.filed_count} Filed Cases` : 'Loading filed case value...'}
                                 </div>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
@@ -1236,7 +1345,7 @@ export function Dashboard() {
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Activity Log</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
-                                High-probability discrepancies currently undergoing active forensic verification across the global marketplace nodes.
+                                Filed Value reflects case amounts that entered the filing pipeline. It is not approved value or recovered cash.
                               </p>
                             </div>
                           </HoverCardContent>
@@ -1245,7 +1354,14 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Brief</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Approved Value</div>
+                              <div className="text-2xl font-sans font-bold text-white tracking-tight">
+                                {!dashboardSummary ? (
+                                  <Skeleton className="h-8 w-32 bg-white/10" />
+                                ) : (
+                                  formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)
+                                )}
+                              </div>
                               <div className="space-y-2.5">
                                 <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
                                   Opportunities Found (Detected): <span className="text-white">{detectedOpportunitiesCount}</span>
@@ -1255,6 +1371,9 @@ export function Dashboard() {
                                 </div>
                                 <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
                                   Approved: <span className="text-white">{approvedClaimsCount}</span>
+                                </div>
+                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                  Billed: <span className="text-white">{dashboardSummary?.billed_count ?? 0}</span>
                                 </div>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
@@ -1267,18 +1386,18 @@ export function Dashboard() {
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Success Metrics</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
-                                The ratio of successfully closed settlement cycles relative to initiated recovery protocols.
+                                Approved Value reflects case amounts with approved dispute status. Recovered cash and billed revenue are tracked separately.
                               </p>
                             </div>
                           </HoverCardContent>
                         </HoverCard>
                       </div>
 
-                      {/* Emotional Anchor Line */}
+                      {/* Blocker Summary */}
                       <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                         <p className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">
-                          Store Monitoring Active
+                          {primaryBlocker ? `${primaryBlocker.label} · ${primaryBlocker.count}` : 'No active blockers in current summary'}
                         </p>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                       </div>
@@ -1314,10 +1433,7 @@ export function Dashboard() {
                               <button
                                 key={actionId}
                                 onClick={() => {
-                                  if (actionId === 'connect_evidence') navigate(tenantRoute(activeSlug, '/integrations-hub'));
-                                  else if (actionId === 'invite_teammate') setInviteOpen(true);
-                                  else if (actionId === 'ingest_now') api.startEvidenceIngest().then(() => toast({ title: 'Processing Data...' }));
-                                  else navigate(tenantRoute(activeSlug, `/${actionId.replace(/_/g, '-')}`));
+                                  void executeQuickAction(actionId);
                                 }}
                                 className="group flex flex-col p-8 hover:bg-white/[0.02] transition-all text-left border-b border-white/5 relative overflow-hidden">
                                 <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -1342,7 +1458,12 @@ export function Dashboard() {
 
                       <div className="px-5 py-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between w-full transition-all group">
                         <div className="flex items-center gap-4">
-                          <h3 className="text-[12px] font-medium text-white tracking-wide">Margin Updates</h3>
+                          <div>
+                            <h3 className="text-[12px] font-medium text-white tracking-wide">Your Notifications</h3>
+                            <p className="text-[10px] font-sans font-bold text-white/25 uppercase tracking-tight mt-1">
+                              User-scoped activity
+                            </p>
+                          </div>
                         </div>
                       </div>
 
@@ -1355,8 +1476,7 @@ export function Dashboard() {
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
                                   <span className="relative inline-flex rounded-full h-3 w-3 bg-white/35"></span>
                                 </div>
-                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">No recent activity</p>
-                                <p className="text-[10px] text-white/10 mt-2 font-serif">Operational baseline maintained.</p>
+                                <p className="text-[10px] text-white/20 font-mono uppercase tracking-[0.2em]">No recent notifications</p>
                               </div>
                             ) : (
                               <div className="flex flex-col">
@@ -1366,13 +1486,9 @@ export function Dashboard() {
                                   const isValidDate = notificationDate instanceof Date && !isNaN(notificationDate.getTime());
                                   const timeAgo = isValidDate
                                     ? formatDistanceToNow(notificationDate, { addSuffix: true })
-                                    : 'just_now';
-
-                                  let statusText = '';
-                                  if (notification.type === 'funds_deposited') statusText = 'SETTLED';
-                                  else if (notification.type === 'case_filed') statusText = 'ACTIVE';
-                                  else if (notification.type === 'claim_detected') statusText = 'IDENTIFIED';
-                                  else statusText = 'LOG';
+                                    : 'time unavailable';
+                                  const typeLabel = (notification.type || 'notification').replace(/_/g, ' ');
+                                  const notificationLabel = stripEmojis(notification.title) || 'Notification';
 
                                   return (
                                     <HoverCard key={notification.id} openDelay={100} closeDelay={100}>
@@ -1393,30 +1509,8 @@ export function Dashboard() {
                                                 "text-[11px] tracking-tight truncate font-semibold",
                                                 isUnread ? "text-white" : "text-white/40 group-hover:text-white transition-colors"
                                               )}>
-                                                {(() => {
-                                                  const enriched = enrichNotificationTitle(notification.title);
-                                                  const { label } = extractAmountFromTitle(enriched);
-                                                  const toTitleCase = (str: string) => str.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-                                                  return toTitleCase(label) || toTitleCase(enriched);
-                                                })()}
+                                                {notificationLabel}
                                               </p>
-
-                                              {(() => {
-                                                const { amount } = extractAmountFromTitle(enrichNotificationTitle(notification.title));
-                                                if (amount) {
-                                                  return (
-                                                    <span className={cn(
-                                                      "text-[12px] font-mono font-bold tabular-nums shrink-0",
-                                                      notification.type === 'funds_deposited' || notification.type === 'refund_approved'
-                                                        ? "text-white"
-                                                        : "text-white"
-                                                    )}>
-                                                      +{amount}
-                                                    </span>
-                                                  );
-                                                }
-                                                return null;
-                                              })()}
                                             </div>
 
                                             <div className="flex items-center justify-between">
@@ -1425,20 +1519,11 @@ export function Dashboard() {
                                                   "text-[9px] font-mono font-bold",
                                                   isUnread ? "text-white/45" : "text-white/10"
                                                 )}>
-                                                  {statusText}
+                                                  {typeLabel}
                                                 </span>
                                                 <span className="text-white/5 h-2 w-[1px] bg-white/10" />
                                                 <span className="text-[9px] text-white/10 font-mono uppercase">
-                                                  {(() => {
-                                                    const idStr = notification.id.substring(0, 4).toUpperCase();
-                                                    if (notification.type === 'funds_deposited' || notification.type === 'reimbursement_payout') {
-                                                      return `CASE 149${Array.from(notification.id.substring(0, 7)).map(c => c.charCodeAt(0) % 10).join('')}`;
-                                                    }
-                                                    if (notification.type === 'claim_detected' || notification.type === 'anomaly_detected') {
-                                                      return `FBA17B${idStr}Q`;
-                                                    }
-                                                    return `ACT_${idStr}`;
-                                                  })()}
+                                                  {notification.id.substring(0, 8).toUpperCase()}
                                                 </span>
                                               </div>
                                               <span className="text-[9px] text-white/20 font-mono tabular-nums">
@@ -1508,7 +1593,7 @@ export function Dashboard() {
                               onClick={() => navigate(tenantRoute(activeSlug, '/notifications'))}
                               className="w-full h-8 text-[10px] font-mono font-bold text-white/40 hover:text-white uppercase tracking-widest transition-colors"
                             >
-                              All Activity Logs
+                              All Notifications
                             </Button>
                           </div>
                         </>
@@ -1533,9 +1618,9 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-12">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">DISCREPANCIES</span>
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">DETECTIONS</span>
                             <span className="text-lg font-sans font-bold text-white leading-none mt-1">
-                              {detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed').length}
+                              {detectedOpportunitiesCount}
                             </span>
                           </div>
 
@@ -1546,7 +1631,7 @@ export function Dashboard() {
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight group-hover:text-emerald-500/50">CLAIMS</span>
                             <div className="flex items-center gap-2 mt-1">
                               <span className="text-lg font-sans font-bold text-white leading-none group-hover:text-emerald-500">
-                                {submittedClaimsCount || effectivePendingClaims || detectionResults.filter(r => r.status === 'filed' || r.status === 'resolved' || r.status === 'converted').length}
+                                {filedClaimsCount}
                               </span>
                               <ArrowRight className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                             </div>
@@ -1555,12 +1640,9 @@ export function Dashboard() {
                           <div className="flex flex-col">
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">RECOVERED</span>
                             <span className="text-lg font-sans font-bold text-white leading-none mt-1">
-                              {formatCurrencyWithSelection(
-                                recoveredTotal || detectionResults
-                                  .filter(r => r.status === 'resolved' || r.status === 'converted')
-                                  .reduce((sum, r) => sum + (r.estimated_value || 0), 0),
-                                recoveredCurrency
-                              )}
+                              {dashboardSummary
+                                ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
+                                : 'Unavailable'}
                             </span>
                           </div>
                         </div>
@@ -1582,17 +1664,16 @@ export function Dashboard() {
                             <Shield className="h-8 w-8 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
                           </div>
                         </div>
-                        <h3 className="text-sm font-sans font-bold text-white uppercase tracking-tight">Status: <span className="text-emerald-500">All Clear</span></h3>
+                        <h3 className="text-sm font-sans font-bold text-white uppercase tracking-tight">No open discrepancies in this view</h3>
                         <p className="text-[10px] text-white/30 mt-3 font-sans font-bold max-w-sm mx-auto leading-relaxed">
-                          No new errors found in the last 24 hours.<br />
-                          We are monitoring your account in real-time.
+                          No unresolved detections are currently loaded for this tenant queue.
                         </p>
                         <button
                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                           className="mt-8 flex items-center gap-3 px-6 py-2 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all rounded-lg group"
                         >
                           <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
-                            View {submittedClaimsCount || 0} Active Claims in Recovery
+                            View {filedClaimsCount} Filed Cases
                           </span>
                           <ArrowRight className="h-3 w-3 text-emerald-500/40 group-hover:translate-x-1 transition-transform" />
                         </button>
@@ -1761,22 +1842,22 @@ export function Dashboard() {
                         <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
                           <div className="flex items-center gap-6">
                             <div className="flex items-center gap-2">
-                              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+                              <div className="h-1 w-1 rounded-full bg-white/40" />
                               <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                                ENGINE_Status: <span className="text-emerald-500">MONITORING</span>
+                                Open detections loaded: <span className="text-white/40">{detectionResults.length}</span>
                               </span>
                             </div>
                             <span className="text-white/5 font-mono">|</span>
                             <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                              Last Updated: <span className="text-white/40">{lastUpdated || 'Just Now'}</span>
+                              Last Updated: <span className="text-white/40">{formattedLastUpdated}</span>
                             </div>
                             <span className="text-white/5 font-mono">|</span>
                             <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                              Account Shielded: <span className="text-white/40">Global FBA</span>
+                              Scope: <span className="text-white/40">Tenant Summary</span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/10 uppercase tracking-[0.2em]">
-                            Audit Engine v4.2
+                            Notification feed is user-scoped
                           </div>
                         </div>
                       </div>

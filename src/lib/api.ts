@@ -686,6 +686,46 @@ export const api = {
       }).toString()}`
     );
   },
+  getDashboardSummary: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDashboardSummary");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<{
+      success: boolean;
+      summary: {
+        detections_count: number;
+        cases_count: number;
+        filed_count: number;
+        approved_count: number;
+        recovered_count: number;
+        billed_count: number;
+        estimated_value_total: number;
+        filed_value_total: number;
+        approved_value_total: number;
+        recovered_cash_total: number;
+        billed_revenue_total: number;
+        last_updated_at: string;
+        integrations_summary: {
+          connected_count: number;
+          stale_count: number;
+          last_ingest_at: string | null;
+        };
+        evidence_summary: {
+          total_documents: number;
+          parsed_documents: number;
+          matched_documents: number;
+          failed_documents: number;
+          needs_review_documents: number;
+        };
+        blockers: Array<{
+          key: string;
+          label: string;
+          count: number;
+          severity: 'low' | 'medium' | 'high';
+        }>;
+      };
+    }>(`/api/metrics/dashboard-summary?tenantSlug=${encodeURIComponent(slug)}`);
+  },
   getRecoveriesMetrics: (tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getRecoveriesMetrics");
     const slug = tenantSlug;
