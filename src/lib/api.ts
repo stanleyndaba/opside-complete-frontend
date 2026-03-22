@@ -709,6 +709,90 @@ export const api = {
     if (!slug) throw new Error("Tenant slug required for scoped API call");
     return requestJson<any[]>('/api/documents?tenantSlug=' + slug);
   },
+  getDocumentInventory: (params?: {
+    q?: string;
+    parserStatus?: string;
+    provider?: string;
+    linked?: 'linked' | 'unlinked';
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
+    page?: number;
+    pageSize?: number;
+  }, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDocumentInventory");
+    const queryParams = new URLSearchParams();
+    queryParams.append('tenantSlug', tenantSlug);
+    if (params?.q) queryParams.append('q', params.q);
+    if (params?.parserStatus) queryParams.append('parserStatus', params.parserStatus);
+    if (params?.provider) queryParams.append('provider', params.provider);
+    if (params?.linked) queryParams.append('linked', params.linked);
+    if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
+    if (params?.sortDir) queryParams.append('sortDir', params.sortDir);
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.pageSize) queryParams.append('pageSize', params.pageSize.toString());
+
+    return requestJson<{
+      success: boolean;
+      documents: Array<{
+        id: string;
+        name: string;
+        filename: string;
+        original_filename?: string | null;
+        created_at: string;
+        updated_at?: string;
+        uploadDate: string;
+        status: string;
+        processing_status?: string;
+        parser_status?: string;
+        parser_confidence?: number | null;
+        parser_error?: string | null;
+        extraction_signal_count?: number;
+        source?: string | null;
+        provider?: string | null;
+        source_display?: string | null;
+        content_type?: string | null;
+        size_bytes?: number | null;
+        supplier?: string | null;
+        invoice?: string | null;
+        amount?: number | null;
+        parsedVia?: string | null;
+        parsed_metadata?: any;
+        extracted?: any;
+        linked_case_count: number;
+        linked_case_ids: string[];
+        linked_case_refs: string[];
+        strongest_match_confidence?: number | null;
+        strongest_match_type?: string | null;
+        linkage_strength: 'none' | 'weak' | 'strong';
+        evidence_state: string;
+        usable_as_evidence: boolean;
+        usability_reason: string;
+        needs_review: boolean;
+      }>;
+      metrics: {
+        totalDocuments: number;
+        filteredResults: number;
+        parsed: number;
+        matched: number;
+        failed: number;
+        needsReview: number;
+      };
+      pagination: {
+        page: number;
+        pageSize: number;
+        totalPages: number;
+        totalResults: number;
+      };
+      recentEvents: Array<{
+        id: string;
+        documentId: string;
+        filename: string;
+        eventType: string;
+        timestamp: string;
+        narrative: string;
+      }>;
+    }>(`/api/documents/inventory?${queryParams.toString()}`);
+  },
   getDocument: (id: string, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDocument");
     const slug = tenantSlug;

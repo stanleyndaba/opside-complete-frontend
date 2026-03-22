@@ -1,740 +1,335 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
-import { Upload, FileText, Search, Mail, Check, AlertTriangle, Clock, Eye, Download, ExternalLink, Loader2, FolderSearch, ScanLine, FileCheck, Link2, Trash2, MoreHorizontal, RefreshCw, Hexagon, CheckCircle2, XCircle, Activity, AlertCircle, ArrowRight, Shield, Terminal, Cloud, Database } from 'lucide-react';
+import { Search, Clock, Eye, Download, Trash2, MoreHorizontal, RefreshCw, Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { useErrorToast } from '@/hooks/use-error-toast';
 import { api } from '@/lib/api';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ParsingStatus } from '@/components/evidence/ParsingStatus';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { DocumentReuseInfo } from '@/components/evidence/DocumentReuseInfo';
-
-// Document Log entry type 
-interface DocLogEntry {
+interface LockerDocumentRow {
   id: string;
-  timestamp: Date;
-  type: 'info' | 'success' | 'warning' | 'error' | 'progress' | 'thinking';
-  category: 'upload' | 'parse' | 'match' | 'system';
-  message: string;
-  thinkingDuration?: number;
-  // Seller-friendly story fields
-  storyMessage?: string;
-  moneyImpact?: number;
-  claimsAffected?: number;
-  isDevLog?: boolean;
+  name: string;
+  filename: string;
+  original_filename?: string | null;
+  created_at: string;
+  updated_at?: string;
+  uploadDate: string;
+  status: string;
+  processing_status?: string;
+  parser_status?: string;
+  parser_confidence?: number | null;
+  parser_error?: string | null;
+  extraction_signal_count?: number;
+  source?: string | null;
+  provider?: string | null;
+  source_display?: string | null;
+  content_type?: string | null;
+  size_bytes?: number | null;
+  supplier?: string | null;
+  invoice?: string | null;
+  amount?: number | null;
+  parsedVia?: string | null;
+  parsed_metadata?: any;
+  extracted?: any;
+  linked_case_count: number;
+  linked_case_ids: string[];
+  linked_case_refs: string[];
+  strongest_match_confidence?: number | null;
+  strongest_match_type?: string | null;
+  linkage_strength: 'none' | 'weak' | 'strong';
+  evidence_state: string;
+  usable_as_evidence: boolean;
+  usability_reason: string;
+  needs_review: boolean;
 }
 
-// Story-style message templates for seller-friendly logs
-const generateStoryMessage = (
-  eventType: string,
-  data: {
-    source?: string;
-    count?: number;
-    matched?: number;
-    unmatched?: number;
-    asin?: string;
-    sku?: string;
-    lineItems?: number;
-    claimsLinked?: number;
-    claimType?: string;
-    docsAttached?: number;
-    moneyAtRisk?: number;
-    filename?: string;
-    supplier?: string;
-  }
-): { story: string; money?: number; claims?: number } => {
+interface LockerAuditEvent {
+  id: string;
+  documentId: string;
+  filename: string;
+  eventType: string;
+  timestamp: string;
+  narrative: string;
+}
+
+const getAuditEventColor = (eventType: string) => {
   switch (eventType) {
-    case 'gmail_scan':
-      return {
-        story: `📧 Found ${data.count || 0} new invoice${(data.count || 0) !== 1 ? 's' : ''} in ${data.source || 'Gmail'} – ${data.matched || 0} matched to ${data.asin ? `ASIN ${data.asin}` : 'claims'}, ${data.unmatched || 0} unmatched`,
-        claims: data.matched
-      };
-    case 'invoice_parsed':
-      return {
-        story: `📄 Parsed ${data.supplier ? `${data.supplier} invoice` : 'supplier invoice'} – extracted ${data.lineItems || 0} line item${(data.lineItems || 0) !== 1 ? 's' : ''}, ${data.claimsLinked || 0} linked to open claims`,
-        claims: data.claimsLinked
-      };
-    case 'claim_packet':
-      return {
-        story: `📦 Generated claim packet for ${data.claimType || 'Lost Inventory'} – ${data.docsAttached || 0} doc${(data.docsAttached || 0) !== 1 ? 's' : ''} attached`,
-        claims: 1
-      };
-    case 'invoice_linked':
-      return {
-        story: `💰 New invoice linked → strengthens ${data.claimsLinked || 0} claim${(data.claimsLinked || 0) !== 1 ? 's' : ''} (+$${(data.moneyAtRisk || 0).toLocaleString()} at risk if missing)`,
-        money: data.moneyAtRisk,
-        claims: data.claimsLinked
-      };
-    case 'doc_upload':
-      return {
-        story: `📤 Uploaded "${data.filename || 'document'}" – scanning for order IDs, ASINs & amounts...`
-      };
-    case 'match_found':
-      return {
-        story: `✅ Match found! ${data.sku ? `SKU ${data.sku}` : 'Document'} linked to ${data.claimsLinked || 1} claim${(data.claimsLinked || 1) !== 1 ? 's' : ''} (+$${(data.moneyAtRisk || 0).toFixed(0)} recovery potential)`,
-        money: data.moneyAtRisk,
-        claims: data.claimsLinked
-      };
-    case 'no_match':
-      return {
-        story: `⏳ "${data.filename || 'Document'}" parsed but no claim match yet – will auto-link when matching claim detected`
-      };
-    case 'approval_boost':
-      return {
-        story: `📈 Evidence complete! ${data.claimsLinked || 0} claim${(data.claimsLinked || 0) !== 1 ? 's' : ''} now at "Auto-Submit" strength (was "Needs Evidence")`,
-        claims: data.claimsLinked
-      };
+    case 'parsed':
+    case 'verified':
+      return 'text-white';
+    case 'linked':
+    case 'filed':
+      return 'text-white/80';
+    case 'error':
+      return 'text-rose-500';
     default:
-      return { story: data.filename || 'Processing...' };
+      return 'text-white/60';
   }
 };
 
+const formatBytes = (value?: number | null) => {
+  if (typeof value !== 'number' || Number.isNaN(value) || value <= 0) {
+    return 'Not available';
+  }
 
-// Category icons for document logs
-const getDocCategoryIcon = (category: DocLogEntry['category']) => {
-  switch (category) {
-    case 'upload': return <Upload className="h-3.5 w-3.5" />;
-    case 'parse': return <ScanLine className="h-3.5 w-3.5" />;
-    case 'match': return <Link2 className="h-3.5 w-3.5" />;
-    case 'system': return <FolderSearch className="h-3.5 w-3.5" />;
+  if (value < 1024) return `${value} B`;
+  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
+  if (value < 1024 * 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  return `${(value / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+};
+
+const getEvidenceStateIcon = (state: string) => {
+  switch (state) {
+    case 'Usable':
+      return <CheckCircle2 className="h-3 w-3" />;
+    case 'Parsing Failed':
+      return <FileWarning className="h-3 w-3" />;
+    case 'Linked Strongly':
+    case 'Linked Weakly':
+      return <Link2 className="h-3 w-3" />;
+    default:
+      return <CircleDashed className="h-3 w-3" />;
   }
 };
 
-// Get log color for the Matrix Terminal
-const getDocLogColor = (type: DocLogEntry['type']) => {
-  switch (type) {
-    case 'success': return 'text-white font-medium';
-    case 'error': return 'text-rose-500';
-    case 'warning': return 'text-amber-500';
-    case 'progress': return 'text-white/60';
-    case 'thinking': return 'text-white/40 italic';
-    default: return 'text-white/60';
+const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
+  if (doc.usable_as_evidence) {
+    return 'bg-white/10 text-white/80 border-white/15';
   }
-};
 
-// Format timestamp
-const formatDocTimestamp = (date: Date) => {
-  return date.toISOString().replace('T', ' ').slice(0, 23);
+  switch (doc.evidence_state) {
+    case 'Parsing Failed':
+      return 'bg-rose-500/10 text-rose-500 border-rose-500/20';
+    case 'Parsing Partial':
+    case 'Linked Weakly':
+    case 'Linked Strongly':
+      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+    case 'Unmatched':
+    case 'Not Parsed':
+    default:
+      return 'bg-white/5 text-white/55 border-white/10';
+  }
 };
 export default function EvidenceLocker() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
-  const activeSlug = tenantSlug || 'beta';
+  const activeSlug = tenantSlug;
   const toggleSidebar = useCallback(() => setIsSidebarCollapsed(prev => !prev), []);
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
   const [dragActive, setDragActive] = useState(false);
-  const [expandedDocId, setExpandedDocId] = useState<string | null>(null);
-
-  // Fetch count of connected platforms
-  const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchConnectionsCount = async () => {
-      try {
-        const [statusRes, sourcesRes, storesRes] = await Promise.all([
-          api.getIntegrationsStatus(activeSlug),
-          api.getEvidenceSources(activeSlug),
-          api.getStores(activeSlug)
-        ]);
-        
-        if (statusRes.ok && sourcesRes.ok) {
-          const status = statusRes.data;
-          const sources = sourcesRes.data.sources || [];
-          const stores = storesRes.ok && storesRes.data?.stores ? storesRes.data.stores : [];
-          let count = 0;
-          
-          const platforms = ['amazon', 'stripe', 'gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
-          
-          platforms.forEach((p) => {
-            if (p === 'amazon') {
-               // Amazon is connected if flag is true OR if there is at least 1 store
-              if ((status && (status as any)[`${p}_connected`]) || stores.length > 0) count++;
-            } else if (p === 'stripe') {
-              if (status && (status as any)[`${p}_connected`]) count++;
-            } else {
-              let isConnected = false;
-              try {
-                const statusObj = status as any;
-                if (statusObj?.providerIngest?.[p]?.connected === true) isConnected = true;
-                const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-                if (!isConnected && statusObj?.providerIngest?.[capitalized]?.connected === true) isConnected = true;
-                if (!isConnected && statusObj?.providers?.[p] === true) isConnected = true;
-                if (!isConnected && statusObj?.providers?.[capitalized] === true) isConnected = true;
-                if (!isConnected && p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) isConnected = true;
-                if (!isConnected && p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) isConnected = true;
-                if (!isConnected && statusObj && statusObj[`${p}_connected`] === true) isConnected = true;
-                if (!isConnected && sources.some((s: any) => {
-                  const sLower = s.provider?.toLowerCase() || '';
-                  const pLower = p.toLowerCase();
-                  return s.status === 'connected' && 
-                         (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
-                })) {
-                  isConnected = true;
-                }
-              } catch (e) {
-                console.error("Error checking connection status for", p, e);
-              }
-              if (isConnected) count++;
-            }
-          });
-          
-          setConnectedPlatformsCount(count);
-        }
-      } catch (e) {
-        console.error("Failed to fetch connections count", e);
-      }
-    };
-    
-    fetchConnectionsCount();
-  }, [activeSlug]);
-
-  const [documents, setDocuments] = useState<Array<{
-    id: string;
-    name: string;
-    uploadDate: string;
-    status: string;
-    linkedSKUs?: number;
-    supplier?: string;
-    invoice?: string;
-    amount?: number;
-    parsedVia?: 'regex' | 'ocr' | 'ml';
-    matchedClaims?: string[];
-    type?: string;
-    parser_status?: string;
-    parser_confidence?: number;
-    parsed_metadata?: any;
-    match_confidence?: number;
-    match_status?: 'auto_submit' | 'smart_prompt' | 'hold' | null;
-    // Agent 5 extracted data
-    extracted?: {
-      order_ids?: string[];
-      asins?: string[];
-      skus?: string[];
-      fnskus?: string[];
-      tracking_numbers?: string[];
-      amounts?: string[];
-      invoice_numbers?: string[];
-      dates?: string[];
-      extraction_method?: string;
-    };
-    match_reasoning?: string;
-    matched_fields?: string[];
-  }>>([]);
-
-  // Helper: Get match status based on confidence threshold
-  const getMatchStatus = (confidence?: number): 'auto_submit' | 'smart_prompt' | 'hold' | null => {
-    if (!confidence || confidence === 0) return null;
-    if (confidence >= 0.85) return 'auto_submit';
-    if (confidence >= 0.5) return 'smart_prompt';
-    return 'hold';
-  };
-
-  // Helper: Get match confidence badge
-  const getMatchConfidenceBadge = (confidence?: number) => {
-    if (!confidence || confidence === 0) return <span className="text-gray-400">—</span>;
-
-    const percentage = Math.round(confidence * 100);
-    const status = getMatchStatus(confidence);
-
-    let colorClass = '';
-    if (status === 'auto_submit') colorClass = 'bg-white/10 text-white/75 border-white/15';
-    else if (status === 'smart_prompt') colorClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-    else colorClass = 'bg-red-500/10 text-red-400 border-red-500/20';
-
-    return (
-      <Badge className={colorClass}>
-        {percentage}%
-      </Badge>
-    );
-  };
-
-  // Helper: Get match status badge
-  const getMatchStatusBadge = (confidence?: number) => {
-    const status = getMatchStatus(confidence);
-    if (!status) return <span className="text-gray-400">—</span>;
-
-    switch (status) {
-      case 'auto_submit':
-        return <Badge className="bg-white/10 text-white/75 border-white/15">
-          <Check className="w-3 h-3 mr-1" />
-          Auto-Submit
-        </Badge>;
-      case 'smart_prompt':
-        return <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20">
-          <AlertTriangle className="w-3 h-3 mr-1" />
-          Smart Prompt
-        </Badge>;
-      case 'hold':
-        return <Badge className="bg-red-500/10 text-red-400 border-red-500/20">
-          <Clock className="w-3 h-3 mr-1" />
-          Hold
-        </Badge>;
-    }
-  };
+  const [documents, setDocuments] = useState<LockerDocumentRow[]>([]);
+  const [recentEvents, setRecentEvents] = useState<LockerAuditEvent[]>([]);
+  const [metrics, setMetrics] = useState({
+    totalDocuments: 0,
+    filteredResults: 0,
+    parsed: 0,
+    matched: 0,
+    failed: 0,
+    needsReview: 0
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [gmailConnected, setGmailConnected] = useState(false);
-  const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [q, setQ] = useState('');
-  const [supplier, setSupplier] = useState('');
-  const [type, setType] = useState('');
-  const [amountMin, setAmountMin] = useState('');
-  const [amountMax, setAmountMax] = useState('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
-  const [sortBy, setSortBy] = useState<keyof any>('uploadDate');
+  const [docLogSearch, setDocLogSearch] = useState('');
+  const [sortBy] = useState('created_at');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+    totalPages: 1,
+    totalResults: 0
+  });
   const { toast } = useToast();
+
+  const docLogContainerRef = useRef<HTMLDivElement>(null);
+
+  const refreshInventory = useCallback(async () => {
+    if (!activeSlug) {
+      setError('Tenant context is required to load the Evidence Locker.');
+      return;
+    }
+
+    const inventoryRes = await api.getDocumentInventory({
+      q: q.trim() || undefined,
+      sortBy,
+      sortDir,
+      page,
+      pageSize
+    }, activeSlug);
+
+    if (inventoryRes.ok && inventoryRes.data) {
+      setDocuments(inventoryRes.data.documents);
+      setMetrics(inventoryRes.data.metrics);
+      setPagination(inventoryRes.data.pagination);
+      setRecentEvents(inventoryRes.data.recentEvents);
+      setError(null);
+    } else {
+      setError(inventoryRes.error || 'Failed to load document inventory');
+    }
+  }, [activeSlug, page, pageSize, q, sortBy, sortDir]);
 
   // Unified upload protocol for Ingestion Nodes
   const handleFileUpload = async (files: File[]) => {
+    if (!activeSlug) {
+      toast({
+        title: 'Tenant Required',
+        description: 'Open the Evidence Locker from a tenant workspace before uploading.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     if (!files || files.length === 0) {
       toast({
         title: 'Empty upload',
         description: 'Please select at least one document to upload.',
         variant: 'destructive'
       });
-      addDocLog({ type: 'warning', category: 'upload', message: 'No documents selected' }, 0);
       return;
     }
 
-    addDocLog({ type: 'info', category: 'upload', message: `Receiving ${files.length} document object(s)...`, thinkingDuration: 1 }, 0);
-    addDocLog({ type: 'thinking', category: 'upload', message: `Analyzing: ${files.map(f => f.name).slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}` }, 600);
-
     toast({
-      title: 'Initiating Ingestion',
+      title: 'Uploading documents',
       description: `Processing ${files.length} document(s)...`
     });
 
     try {
       setLoading(true);
-      const uploadUrls = [
-        api.buildApiUrl(`/api/documents/upload?tenantSlug=${activeSlug}`),
-        api.buildApiUrl(`/api/evidence/upload?tenantSlug=${activeSlug}`)
-      ];
-
-      let lastError: Error | null = null;
-      let res: Response | null = null;
-      let successfulUrl: string | null = null;
-
-      for (const uploadUrl of uploadUrls) {
-        try {
-          const form = new FormData();
-          for (const f of files) {
-            form.append('file', f);
-          }
-          res = await fetch(uploadUrl, { method: 'POST', credentials: 'include', body: form });
-          if (res.ok) { successfulUrl = uploadUrl; break; }
-          else {
-            const errorText = await res.text();
-            lastError = new Error(`Connection error: ${res.status} - ${errorText}`);
-          }
-        } catch (err: any) { lastError = err; }
+      const form = new FormData();
+      for (const file of files) {
+        form.append('file', file);
       }
 
-      if (!res || !res.ok) throw lastError || new Error('Upload failed');
+      const response = await fetch(api.buildApiUrl(`/api/documents/upload?tenantSlug=${activeSlug}`), {
+        method: 'POST',
+        credentials: 'include',
+        body: form
+      });
 
-      addDocLog({ type: 'success', category: 'upload', message: `Successfully uploaded ${files.length} documents` }, 400);
-      addDocLog({ type: 'thinking', category: 'parse', message: 'Identifying document details...' }, 800);
-      addDocLog({ type: 'progress', category: 'parse', message: 'Scanning for dates, amounts, and IDs...', thinkingDuration: 2 }, 1000);
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      await refreshInventory();
 
       toast({
         title: 'Upload successful',
-        description: `${files.length} document(s) uploaded. Scanning for details...`,
+        description: `${files.length} document(s) uploaded.`
       });
-
-      const refresh = await api.getDocuments(activeSlug);
-      if (refresh.ok && Array.isArray(refresh.data)) {
-        const previousCount = documents.length;
-        setDocuments(refresh.data);
-        if (refresh.data.length > previousCount) {
-          const newCount = refresh.data.length - previousCount;
-          addDocLog({ type: 'success', category: 'parse', message: `New entries identified: ${newCount}` }, 1200);
-        }
-      }
-
-      const statusRes = await api.getEvidenceStatus(activeSlug);
-      if (statusRes.ok && statusRes.data) setEvidenceStatus(statusRes.data);
     } catch (err: any) {
-      addDocLog({ type: 'error', category: 'upload', message: `Upload error: ${err?.message || 'Unknown error'}` }, 0);
-      toast({ title: 'Upload failed', description: err?.message || 'Check your connection and try again.', variant: 'destructive' });
+      toast({
+        title: 'Upload failed',
+        description: err?.message || 'Check your connection and try again.',
+        variant: 'destructive'
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  // Document Activity Log state
-  const [docLogs, setDocLogs] = useState<DocLogEntry[]>([]);
-  const [docLogSearch, setDocLogSearch] = useState('');
-  const [showDevLogs, setShowDevLogs] = useState(false); // Toggle for dev-level logs vs human-friendly stories
-  const docLogContainerRef = useRef<HTMLDivElement>(null);
-  const docLogQueueRef = useRef<Array<{ entry: Omit<DocLogEntry, 'id' | 'timestamp'>; delay: number }>>([]);
-  const isProcessingDocQueueRef = useRef(false);
-
-  // Add a log entry immediately
-  const addDocLogImmediate = (entry: Omit<DocLogEntry, 'id' | 'timestamp'>) => {
-    const newEntry: DocLogEntry = {
-      ...entry,
-      id: `doclog_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date(),
-    };
-    setDocLogs(prev => [...prev, newEntry]);
-  };
-
-  // Process the log queue with delays
-  const processDocLogQueue = async () => {
-    if (isProcessingDocQueueRef.current) return;
-    isProcessingDocQueueRef.current = true;
-
-    while (docLogQueueRef.current.length > 0) {
-      const item = docLogQueueRef.current.shift();
-      if (item) {
-        await new Promise(resolve => setTimeout(resolve, item.delay));
-        addDocLogImmediate(item.entry);
-      }
-    }
-
-    isProcessingDocQueueRef.current = false;
-  };
-
-  // Add a log entry with optional delay (queued)
-  const addDocLog = (entry: Omit<DocLogEntry, 'id' | 'timestamp'>, delayMs: number = 0) => {
-    if (delayMs === 0 && docLogQueueRef.current.length === 0) {
-      addDocLogImmediate(entry);
-    } else {
-      const baseDelay = entry.type === 'thinking' ? 800 : 400;
-      const thinkingDelay = entry.thinkingDuration ? entry.thinkingDuration * 300 : 0;
-      docLogQueueRef.current.push({ entry, delay: delayMs || baseDelay + thinkingDelay });
-      processDocLogQueue();
-    }
-  };
-
-  // Scroll to bottom of logs
   useEffect(() => {
-    if (docLogContainerRef.current) {
-      docLogContainerRef.current.scrollTop = docLogContainerRef.current.scrollHeight;
-    }
-  }, [docLogs]);
+    if (!docLogContainerRef.current) return;
+    docLogContainerRef.current.scrollTop = 0;
+  }, [recentEvents]);
 
-  // Filter logs based on search
   const filteredDocLogs = useMemo(() => {
-    if (!docLogSearch.trim()) return docLogs;
-    const searchLower = docLogSearch.toLowerCase();
-    return docLogs.filter(log =>
-      log.message.toLowerCase().includes(searchLower) ||
-      log.category.toLowerCase().includes(searchLower)
+    if (!docLogSearch.trim()) return recentEvents;
+    const term = docLogSearch.trim().toLowerCase();
+    return recentEvents.filter(event =>
+      event.narrative.toLowerCase().includes(term) ||
+      event.eventType.toLowerCase().includes(term) ||
+      event.filename.toLowerCase().includes(term)
     );
-  }, [docLogs, docLogSearch]);
-
-  // Initialize with welcome logs
-  useEffect(() => {
-    addDocLog({ type: 'info', category: 'system', message: 'Evidence Locker initialized...', thinkingDuration: 2 }, 0);
-    addDocLog({ type: 'thinking', category: 'system', message: 'Ready to process invoices, receipts, and purchase orders' }, 1200);
-    addDocLog({ type: 'info', category: 'system', message: 'Waiting for documents...' }, 1000);
-  }, []);
+  }, [docLogSearch, recentEvents]);
 
   useEffect(() => {
     let cancelled = false;
 
-    // Fetch documents and evidence status
     (async () => {
       if (!isReady) return;
+      if (!activeSlug) {
+        setError('Tenant context is required to load the Evidence Locker.');
+        return;
+      }
+
       setLoading(true);
-      const [docRes, statusRes, gmailRes] = await Promise.all([
-        api.getDocuments(activeSlug),
-        api.getEvidenceStatus(activeSlug),
-        api.getGmailStatus(activeSlug),
+      const [inventoryRes, gmailRes] = await Promise.all([
+        api.getDocumentInventory({
+          q: q.trim() || undefined,
+          sortBy,
+          sortDir,
+          page,
+          pageSize
+        }, activeSlug),
+        api.getGmailStatus(activeSlug)
       ]);
 
-      if (!cancelled) {
-        if (docRes.ok && Array.isArray(docRes.data)) {
-          // Enhance documents with parsed data and matching results
-          const enhancedDocs = await Promise.all(
-            docRes.data.map(async (doc: any) => {
-              let enhancedDoc = { ...doc };
+      if (cancelled) return;
 
-              // Try to get parsed data for each document
-              try {
-                const parsedRes = await api.getDocumentWithParsedData(doc.id, activeSlug);
-                if (parsedRes.ok && parsedRes.data) {
-                  enhancedDoc = {
-                    ...enhancedDoc,
-                    parser_status: parsedRes.data.parser_status,
-                    parser_confidence: parsedRes.data.parser_confidence,
-                    parsed_metadata: parsedRes.data.parsed_metadata,
-                    // Include extracted data from Agent 5
-                    extracted: parsedRes.data.extracted,
-                  };
-                }
-              } catch (e) {
-                // Ignore errors for individual documents
-              }
-
-              // Try to get matching results for each document
-              try {
-                const matchRes = await api.getDocumentMatchingResults(doc.id, activeSlug);
-                if (matchRes.ok && matchRes.data?.results) {
-                  const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                  const highestConfidence = matchRes.data.results.length > 0
-                    ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
-                    : 0;
-                  // Get match details from best match
-                  const bestMatch = matchRes.data.results.find((r: any) => (r.confidence || 0) === highestConfidence);
-                  enhancedDoc = {
-                    ...enhancedDoc,
-                    matchedClaims: claimIds,
-                    match_confidence: highestConfidence,
-                    match_status: getMatchStatus(highestConfidence),
-                    match_reasoning: bestMatch?.reasoning,
-                    matched_fields: bestMatch?.matched_fields,
-                  };
-                }
-              } catch (e) {
-                // Ignore errors for matching results
-              }
-
-              return enhancedDoc;
-            })
-          );
-          setDocuments(enhancedDocs);
-          setError(null);
-        } else {
-          setError(docRes.error || 'Failed to load documents');
-        }
-
-        if (statusRes.ok && statusRes.data) {
-          setEvidenceStatus(statusRes.data);
-        }
-
-        if (gmailRes.ok && gmailRes.data) {
-          setGmailConnected(gmailRes.data.connected);
-        }
-
-        setLoading(false);
+      if (inventoryRes.ok && inventoryRes.data) {
+        setDocuments(inventoryRes.data.documents);
+        setMetrics(inventoryRes.data.metrics);
+        setPagination(inventoryRes.data.pagination);
+        setRecentEvents(inventoryRes.data.recentEvents);
+        setError(null);
+      } else {
+        setError(inventoryRes.error || 'Failed to load document inventory');
       }
+
+      if (gmailRes.ok && gmailRes.data) {
+        setGmailConnected(gmailRes.data.connected);
+      }
+
+      setLoading(false);
     })();
 
-    // SSE for ingest updates
     let es: EventSource | null = null;
-    if (!isReady) return;
+    if (!isReady || !activeSlug) {
+      return () => { cancelled = true; };
+    }
+
     try {
       es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);
           if (evt?.type === 'evidence' && evt?.status === 'completed') {
-            const story = generateStoryMessage('gmail_scan', { source: 'Gmail', count: evt.count || 1, matched: evt.matched || 0, unmatched: evt.unmatched || 0 });
-            addDocLog({ type: 'success', category: 'system', message: 'New documents found in Gmail', storyMessage: story.story, claimsAffected: story.claims }, 500);
-            toast({ title: 'Scan complete', description: 'New documents have been added.' });
-            // Refresh documents
-            api.getDocuments(activeSlug).then(res => {
-              if (res.ok && Array.isArray(res.data)) {
-                setDocuments(res.data);
-              }
-            });
+            toast({ title: 'Scan complete', description: 'Evidence inventory refreshed.' });
+            void refreshInventory();
           }
-          if (evt?.type === 'parsing' && evt?.status === 'completed') {
-            const parseStory = generateStoryMessage('invoice_parsed', { lineItems: evt.lineItems || 0, claimsLinked: evt.claimsLinked || 0, supplier: evt.supplier });
-            addDocLog({ type: 'success', category: 'parse', message: `Document scanning finished`, storyMessage: parseStory.story, claimsAffected: parseStory.claims }, 600);
-            addDocLog({ type: 'thinking', category: 'match', message: 'Connecting to claims...', storyMessage: '🔍 Looking for matching claims...' }, 900);
-            // Refresh document with parsed data
-            if (evt?.document_id) {
-              api.getDocumentWithParsedData(evt.document_id, activeSlug).then(res => {
-                if (res.ok && res.data) {
-                  const confidence = res.data.parser_confidence ? `${(res.data.parser_confidence * 100).toFixed(0)}%` : 'N/A';
-                  addDocLog({ type: 'info', category: 'parse', message: `Extraction confidence: ${confidence}` }, 800);
-                  setDocuments(prev => prev.map(doc =>
-                    doc.id === evt.document_id
-                      ? { ...doc, parser_status: res.data!.parser_status, parser_confidence: res.data!.parser_confidence, parsed_metadata: res.data!.parsed_metadata }
-                      : doc
-                  ));
-                }
-              });
-
-              // Auto-trigger evidence matching after parsing completes
-              addDocLog({ type: 'progress', category: 'match', message: 'Running evidence matching...', thinkingDuration: 2 }, 1200);
-              api.runEvidenceMatching(undefined, activeSlug).then(matchRes => {
-                if (matchRes.ok) {
-                  addDocLog({ type: 'info', category: 'match', message: 'Matching engine analyzing document-claim correlations...' }, 1500);
-                  toast({
-                    title: 'Evidence Matching Started',
-                    description: 'Looking for claims that match this document...'
-                  });
-                } else {
-                  addDocLog({ type: 'warning', category: 'match', message: 'Could not start matching - will retry later' }, 1500);
-                }
-              }).catch(() => {
-                addDocLog({ type: 'warning', category: 'match', message: 'Matching service unavailable - will retry later' }, 1500);
-              });
-            }
+          if (evt?.type === 'parsing' && (evt?.status === 'completed' || evt?.status === 'failed')) {
+            void refreshInventory();
           }
-          // Handle matching completion event (this is a general message handler, specific event listener below is preferred)
           if (evt?.type === 'matching' && evt?.status === 'completed') {
-            const matches = evt.matches || 0;
-            const autoSubmitted = evt.autoSubmitted || 0;
-            const smartPrompts = evt.smartPromptsCreated || 0;
-            const held = evt.held || 0;
-
-            const matchStory = generateStoryMessage('match_found', { claimsLinked: matches, moneyAtRisk: evt.moneyAtRisk || 0 });
-            addDocLog({ type: 'success', category: 'match', message: `Found ${matches} match(es)`, storyMessage: matchStory.story, moneyImpact: matchStory.money, claimsAffected: matchStory.claims }, 600);
-
-            if (autoSubmitted > 0) {
-              const boostStory = generateStoryMessage('approval_boost', { claimsLinked: autoSubmitted });
-              addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence`, storyMessage: boostStory.story, claimsAffected: autoSubmitted }, 800);
-            }
-            if (smartPrompts > 0) {
-              addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review`, storyMessage: `👀 ${smartPrompts} claim${smartPrompts !== 1 ? 's' : ''} need your review before submission` }, 800);
-            }
-            if (held > 0) {
-              addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)`, storyMessage: `⏸️ ${held} low-confidence match${held !== 1 ? 'es' : ''} held – may need more evidence` }, 800);
-            }
-
-            // Refresh documents to show updated matched claims
-            api.getDocuments(activeSlug).then(res => {
-              if (res.ok && Array.isArray(res.data)) {
-                // Fetch matching results for each document to populate matchedClaims
-                Promise.all(
-                  res.data.map(async (doc: any) => {
-                    try {
-                      const matchRes = await api.getDocumentMatchingResults(doc.id, activeSlug);
-                      if (matchRes.ok && matchRes.data?.results) {
-                        const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                        const highestConfidence = matchRes.data.results.length > 0
-                          ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
-                          : 0;
-                        return {
-                          ...doc,
-                          matchedClaims: claimIds,
-                          match_confidence: highestConfidence,
-                          match_status: getMatchStatus(highestConfidence),
-                        };
-                      }
-                      return doc;
-                    } catch {
-                      return doc;
-                    }
-                  })
-                ).then(enhancedDocs => {
-                  setDocuments(enhancedDocs);
-                });
-              }
-            });
+            void refreshInventory();
           }
-        } catch { }
+        } catch {
+          // Ignore malformed SSE payloads
+        }
       };
-
-      // Listen for matching start event
-      es.addEventListener('matching', (e: MessageEvent) => {
-        try {
-          const evt = JSON.parse(e.data);
-          if (evt?.type === 'matching' && evt?.status === 'started') {
-            addDocLog({
-              type: 'info',
-              category: 'match',
-              message: `Searching for claim matches in ${evt.documentCount || 0} document(s)...`
-            }, 400);
-          }
-        } catch { }
-      });
-
-      // Listen for specific matching_completed event
-      es.addEventListener('matching_completed', (e: MessageEvent) => {
-        try {
-          const evt = JSON.parse(e.data);
-          if (evt?.type === 'matching' && evt?.status === 'completed') {
-            const matches = evt.matches || 0;
-            const autoSubmitted = evt.autoSubmitted || 0;
-            const smartPrompts = evt.smartPromptsCreated || 0;
-            const held = evt.held || 0;
-
-            addDocLog({ type: 'success', category: 'match', message: `Found ${matches} match(es)` }, 600);
-
-            if (autoSubmitted > 0) {
-              addDocLog({ type: 'success', category: 'match', message: `${autoSubmitted} claim(s) auto-submitted with high confidence` }, 800);
-            }
-            if (smartPrompts > 0) {
-              addDocLog({ type: 'info', category: 'match', message: `${smartPrompts} smart prompt(s) created for review` }, 800);
-            }
-            if (held > 0) {
-              addDocLog({ type: 'warning', category: 'match', message: `${held} match(es) held for manual review (low confidence)` }, 800);
-            }
-
-            // Refresh documents to show updated matched claims
-            api.getDocuments(activeSlug).then(res => {
-              if (res.ok && Array.isArray(res.data)) {
-                // Fetch matching results for each document to populate matchedClaims
-                Promise.all(
-                  res.data.map(async (doc: any) => {
-                    try {
-                      const matchRes = await api.getDocumentMatchingResults(doc.id, activeSlug);
-                      if (matchRes.ok && matchRes.data?.results) {
-                        const claimIds = matchRes.data.results.map((r: any) => r.claim_id);
-                        const highestConfidence = matchRes.data.results.length > 0
-                          ? Math.max(...matchRes.data.results.map((r: any) => r.confidence || 0))
-                          : 0;
-                        return {
-                          ...doc,
-                          matchedClaims: claimIds,
-                          match_confidence: highestConfidence,
-                          match_status: getMatchStatus(highestConfidence),
-                        };
-                      }
-                      return doc;
-                    } catch {
-                      return doc;
-                    }
-                  })
-                ).then(enhancedDocs => {
-                  setDocuments(enhancedDocs);
-                });
-              }
-            });
-          }
-        } catch { }
-      });
-    } catch { }
-
-    return () => { cancelled = true; if (es) es.close(); };
-  }, [activeSlug, isReady]);
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'verified':
-        return <Badge className="bg-success/10 text-success border-success/20">
-          <Check className="w-3 h-3 mr-1" />
-          Verified
-        </Badge>;
-      case 'processing':
-        return <Badge className="bg-primary/10 text-primary border-primary/20">
-          <Clock className="w-3 h-3 mr-1" />
-          Processing
-        </Badge>;
-      case 'action-required':
-        return <Badge className="bg-warning/10 text-warning border-warning/20">
-          <AlertTriangle className="w-3 h-3 mr-1" />
-          Action Required
-        </Badge>;
-      default:
-        return null;
+    } catch {
+      // Ignore SSE setup failures and rely on manual refresh/actions
     }
-  };
+
+    return () => {
+      cancelled = true;
+      if (es) es.close();
+    };
+  }, [activeSlug, isReady, page, pageSize, q, refreshInventory, sortBy, sortDir]);
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -751,80 +346,44 @@ export default function EvidenceLocker() {
     const files = Array.from(e.dataTransfer.files || []);
     handleFileUpload(files);
   };
-  const filtered = useMemo(() => {
-    const term = q.trim().toLowerCase();
-    return documents.filter(d => {
-      // Search across all text fields including extracted data
-      const searchableText = [
-        d.name || '',
-        d.supplier || '',
-        d.invoice || '',
-        ...(d.matchedClaims || []),
-        // Extracted fields for comprehensive search
-        ...(d.extracted?.order_ids || []),
-        ...(d.extracted?.asins || []),
-        ...(d.extracted?.skus || []),
-        ...(d.extracted?.fnskus || []),
-        ...(d.extracted?.tracking_numbers || []),
-        ...(d.extracted?.invoice_numbers || []),
-      ].join(' ').toLowerCase();
+  const exportCsv = async () => {
+    if (!activeSlug) return;
 
-      const matchQ = !term || searchableText.includes(term);
-      const matchSupplier = !supplier || (d.supplier || '').toLowerCase().includes(supplier.toLowerCase());
-      const matchType = !type || (d.type || '').toLowerCase() === type.toLowerCase();
-      const amt = typeof d.amount === 'number' ? d.amount : undefined;
-      const matchAmtMin = !amountMin || (amt !== undefined && amt >= parseFloat(amountMin));
-      const matchAmtMax = !amountMax || (amt !== undefined && amt <= parseFloat(amountMax));
-      const date = d.uploadDate ? new Date(d.uploadDate) : null;
-      const matchDateFrom = !dateFrom || (date && date >= new Date(dateFrom));
-      const matchDateTo = !dateTo || (date && date <= new Date(dateTo));
-      return matchQ && matchSupplier && matchType && matchAmtMin && matchAmtMax && matchDateFrom && matchDateTo;
-    });
-  }, [q, supplier, type, amountMin, amountMax, dateFrom, dateTo, documents]);
+    const res = await api.getDocumentInventory({
+      q: q.trim() || undefined,
+      sortBy,
+      sortDir,
+      page: 1,
+      pageSize: 5000
+    }, activeSlug);
 
-  const sorted = useMemo(() => {
-    const arr = [...filtered];
-    arr.sort((a: any, b: any) => {
-      const va = a[sortBy];
-      const vb = b[sortBy];
-      let cmp = 0;
-      if (sortBy === 'uploadDate') cmp = new Date(va).getTime() - new Date(vb).getTime();
-      else if (sortBy === 'amount') cmp = (va ?? 0) - (vb ?? 0);
-      else if (sortBy === 'matchedClaims') cmp = (a.matchedClaims?.length || 0) - (b.matchedClaims?.length || 0);
-      else if (sortBy === 'match_confidence') cmp = (a.match_confidence ?? 0) - (b.match_confidence ?? 0);
-      else if (typeof va === 'string' && typeof vb === 'string') cmp = va.localeCompare(vb);
-      else cmp = String(va ?? '').localeCompare(String(vb ?? ''));
-      return sortDir === 'asc' ? cmp : -cmp;
-    });
-    return arr;
-  }, [filtered, sortBy, sortDir]);
+    if (!res.ok || !res.data) {
+      toast({
+        title: 'Export failed',
+        description: res.error || 'Could not export the current inventory view.',
+        variant: 'destructive'
+      });
+      return;
+    }
 
-  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
-  const pageData = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return sorted.slice(start, start + pageSize);
-  }, [sorted, page, pageSize]);
-
-  const toggleSort = (key: keyof any) => {
-    if (sortBy === key) setSortDir(prev => (prev === 'asc' ? 'desc' : 'asc'));
-    else { setSortBy(key); setSortDir('asc'); }
-  };
-
-  const exportCsv = () => {
-    const rows = sorted.map(d => ({
+    const rows = res.data.documents.map(d => ({
       id: d.id,
-      name: d.name,
+      filename: d.filename,
+      source: d.source_display || '',
+      content_type: d.content_type || '',
+      size_bytes: d.size_bytes ?? '',
+      uploaded_at: d.created_at,
+      parser_status: d.parser_status || '',
+      parser_confidence: d.parser_confidence != null ? `${(d.parser_confidence * 100).toFixed(0)}%` : 'Unknown',
+      evidence_state: d.evidence_state,
+      usable_as_evidence: d.usable_as_evidence ? 'Yes' : 'No',
+      linked_case_count: d.linked_case_count,
+      strongest_match_confidence: d.strongest_match_confidence != null ? `${(d.strongest_match_confidence * 100).toFixed(0)}%` : 'Unknown',
       supplier: d.supplier || '',
       invoice: d.invoice || '',
-      uploadDate: d.uploadDate,
-      status: d.status,
-      parsedVia: d.parsedVia || '',
-      amount: typeof d.amount === 'number' ? d.amount.toFixed(2) : '',
-      matchedClaims: (d.matchedClaims || []).join('|'),
-      match_confidence: typeof d.match_confidence === 'number' ? (d.match_confidence * 100).toFixed(0) + '%' : '',
-      match_status: d.match_status || '',
-      linkedSKUs: d.linkedSKUs ?? '',
+      amount: typeof d.amount === 'number' ? d.amount.toFixed(2) : ''
     }));
+
     const header = Object.keys(rows[0] || { id: '', name: '' }).join(',');
     const lines = rows.map(r => Object.values(r).map(v => String(v).includes(',') ? `"${String(v).replace(/"/g, '""')}"` : v).join(','));
     const csv = [header, ...lines].join('\n');
@@ -836,6 +395,7 @@ export default function EvidenceLocker() {
   };
 
   const downloadDoc = async (id: string) => {
+    if (!activeSlug) return;
     try {
       const response = await api.getDocumentDownload(id, activeSlug);
       if (response.ok && response.data?.url) {
@@ -859,47 +419,69 @@ export default function EvidenceLocker() {
 
   // Delete a single document
   const handleDeleteDocument = async (docId: string, docName: string) => {
+    if (!activeSlug) return;
     if (!confirm(`Are you sure you want to delete "${docName}"?`)) {
       return;
     }
 
     try {
-      addDocLog({ type: 'progress', category: 'system', message: `Deleting document: ${docName}...` }, 0);
       const res = await api.deleteDocument(docId, activeSlug);
       if (res.ok) {
-        setDocuments(prev => prev.filter(d => d.id !== docId));
-        addDocLog({ type: 'success', category: 'system', message: `Document deleted: ${docName}` }, 400);
+        await refreshInventory();
         toast({ title: 'Document Deleted', description: `"${docName}" has been deleted.` });
       } else {
         throw new Error(res.error || 'Failed to delete document');
       }
     } catch (error: any) {
-      addDocLog({ type: 'error', category: 'system', message: `Delete failed: ${error.message}` }, 0);
       toast({ title: 'Delete Failed', description: error.message, variant: 'destructive' });
     }
   };
 
   // Delete all documents
   const handleDeleteAllDocuments = async () => {
-    if (!confirm(`Are you sure you want to delete ALL ${documents.length} document(s)? This cannot be undone.`)) {
+    if (!activeSlug) return;
+    if (!confirm(`Are you sure you want to delete ALL ${metrics.totalDocuments} document(s) in this workspace? This cannot be undone.`)) {
       return;
     }
 
     try {
-      addDocLog({ type: 'progress', category: 'system', message: `Deleting all ${documents.length} documents...` }, 0);
       const res = await api.deleteAllDocuments(activeSlug);
       if (res.ok) {
-        setDocuments([]);
-        addDocLog({ type: 'success', category: 'system', message: `Deleted ${res.data?.deletedCount || documents.length} document(s)` }, 400);
-        toast({ title: 'All Documents Deleted', description: `${res.data?.deletedCount || documents.length} document(s) have been deleted.` });
+        await refreshInventory();
+        toast({ title: 'All Documents Deleted', description: `${res.data?.deletedCount || 0} document(s) have been deleted.` });
       } else {
         throw new Error(res.error || 'Failed to delete documents');
       }
     } catch (error: any) {
-      addDocLog({ type: 'error', category: 'system', message: `Delete all failed: ${error.message}` }, 0);
       toast({ title: 'Delete Failed', description: error.message, variant: 'destructive' });
     }
   };
+
+  if (!activeSlug) {
+    return (
+      <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+        <div className="flex-1 flex h-full overflow-hidden">
+          <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+          <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
+            <div className="relative pt-8">
+              <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
+                <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-10">
+                  <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight mb-4">Evidence Locker.</h1>
+                  <p className="text-white/60 text-sm font-sans font-bold uppercase tracking-tight">Tenant context required</p>
+                  <p className="text-white/35 mt-3 font-sans text-sm max-w-xl">
+                    The Evidence Locker only renders inside a real tenant workspace. Open this page from a tenant-scoped route to load document inventory truthfully.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
@@ -917,7 +499,7 @@ export default function EvidenceLocker() {
               <div className="flex items-center justify-between mb-10">
                 <div className="flex flex-col gap-2">
                   <Badge variant="outline" className="w-fit px-3 py-0.5 border-white/15 bg-white/5 text-white/75 font-sans font-bold text-[9px] tracking-tight uppercase">
-                    Evidence System // Active
+                    Evidence Inventory
                   </Badge>
                   <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Evidence Locker.</h1>
                   <p className="text-white/40 mt-1 font-sans font-light italic text-lg max-w-2xl">Manage your uploaded documents and evidence artifacts.</p>
@@ -926,13 +508,16 @@ export default function EvidenceLocker() {
                 {/* Evidence Stats Badges */}
                 <div className="hidden xl:flex items-center gap-10">
                   {[
-                    { label: 'Total_Archive', value: evidenceStatus?.documentsCount || documents.length, icon: Database },
-                    { label: 'Ingestion_Active', value: connectedPlatformsCount, icon: RefreshCw, pulse: connectedPlatformsCount > 0 }
+                    { label: 'Total_Documents', value: metrics.totalDocuments, icon: Database },
+                    { label: 'Filtered_Results', value: metrics.filteredResults, icon: Search },
+                    { label: 'Parsed', value: metrics.parsed, icon: CheckCircle2 },
+                    { label: 'Matched', value: metrics.matched, icon: Link2 },
+                    { label: 'Needs_Review', value: metrics.needsReview, icon: FileWarning }
                   ].map((stat, idx) => (
                     <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
                       <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">{stat.label}</span>
                       <div className="flex items-center gap-3">
-                        <stat.icon className={cn("h-3 w-3", stat.pulse ? "text-white/75 animate-spin" : "text-white/20")} />
+                        <stat.icon className="h-3 w-3 text-white/20" />
                         <span className="text-lg font-sans font-bold text-white tracking-tight">
                           {stat.value}
                         </span>
@@ -949,19 +534,8 @@ export default function EvidenceLocker() {
                 <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-6">
                     <EvidenceIngestion
                       gmailConnected={gmailConnected}
-                      onLogEvent={(event, delayMs) => addDocLog(event, delayMs)}
                       onIngestionComplete={() => {
-                      // Refresh documents after ingestion
-                      api.getDocuments(activeSlug).then(res => {
-                        if (res.ok && Array.isArray(res.data)) {
-                          setDocuments(res.data);
-                        }
-                      });
-                      api.getEvidenceStatus(activeSlug).then(res => {
-                        if (res.ok && res.data) {
-                          setEvidenceStatus(res.data);
-                        }
-                      });
+                      void refreshInventory();
                     }}
                   />
                 </div>
@@ -973,20 +547,9 @@ export default function EvidenceLocker() {
                 <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Terminal className="h-3 w-3 text-white/40" />
-                    <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Activity Log</h2>
+                    <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Document History</h2>
                   </div>
-                  <div className="flex items-center gap-6">
-                    <label className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-white/40 cursor-pointer transition-colors uppercase tracking-tight">
-                      <input
-                        type="checkbox"
-                        checked={showDevLogs}
-                        onChange={(e) => setShowDevLogs(e.target.checked)}
-                        className="w-2.5 h-2.5 rounded border-white/10 bg-transparent text-white focus:ring-0"
-                      />
-                      Detailed Logs
-                    </label>
-                    <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">{filteredDocLogs.length} entries</span>
-                  </div>
+                  <span className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">{filteredDocLogs.length} entries</span>
                 </div>
 
                 <div className="p-8">
@@ -997,9 +560,9 @@ export default function EvidenceLocker() {
                     </div>
                     <Input
                       type="text"
-                      placeholder="Search activity..."
+                      placeholder="Search document history..."
                       value={docLogSearch}
-                      onChange={(e) => setQ(e.target.value)}
+                      onChange={(e) => setDocLogSearch(e.target.value)}
                       className="pl-8 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-white/20 rounded-lg tracking-tight"
                     />
                   </div>
@@ -1013,8 +576,8 @@ export default function EvidenceLocker() {
 
                     {filteredDocLogs.length === 0 ? (
                       <div className="text-white/10 flex items-center justify-center h-full gap-3">
-                        <Loader2 className="h-3 w-3 animate-spin opacity-20" />
-                        <span className="uppercase tracking-tight">Initializing...</span>
+                        <Clock className="h-3 w-3 opacity-20" />
+                        <span className="uppercase tracking-tight">No audit events for the current inventory view.</span>
                       </div>
                     ) : (
                       <div className="relative space-y-1.5">
@@ -1022,46 +585,21 @@ export default function EvidenceLocker() {
                           <div key={log.id} className="flex flex-col group/log">
                             <div className="flex items-start gap-4 hover:bg-white/[0.02] -mx-2 px-2 py-1 rounded transition-colors">
                               <span className="text-white/10 shrink-0 select-none tabular-nums group-hover/log:text-white/20 transition-colors">
-                                [{log.timestamp.toLocaleTimeString()}]
+                                [{new Date(log.timestamp).toLocaleTimeString()}]
                               </span>
                               <div className="flex items-center gap-2 shrink-0">
-                                <Shield className="h-2.5 w-2.5 text-white/25" />
-                                <span className="text-white/60 font-bold uppercase tracking-tight">System</span>
+                                <span className="text-white/60 font-bold uppercase tracking-tight">{log.eventType}</span>
                               </div>
-                              <span className={cn("flex-1 break-words leading-relaxed", getDocLogColor(log.type))}>
+                              <span className={cn("flex-1 break-words leading-relaxed", getAuditEventColor(log.eventType))}>
                                 <span className="mr-2 opacity-50">{">>"}</span>
-                                {showDevLogs ? log.message : (log.storyMessage || log.message)}
-
-                                {!showDevLogs && log.moneyImpact && log.moneyImpact > 0 && (
-                                  <span className="ml-2 text-white/80 bg-white/10 px-1 border border-white/15 rounded-sm font-bold">
-                                    +${log.moneyImpact.toLocaleString()}
-                                  </span>
-                                )}
-                                {!showDevLogs && log.claimsAffected && log.claimsAffected > 0 && (
-                                  <span className="ml-2 text-white/30 border-l border-white/10 pl-2">
-                                    {log.claimsAffected} claims
-                                  </span>
-                                )}
+                                {log.narrative}
+                                <span className="ml-2 text-white/30 border-l border-white/10 pl-2">
+                                  {log.filename}
+                                </span>
                               </span>
                             </div>
-                            {log.thinkingDuration && showDevLogs && (
-                              <div className="ml-14 mb-1">
-                                <span className="text-[9px] text-white/10 italic font-sans font-light tracking-tight">
-                                  Duration: {log.thinkingDuration}ms
-                                </span>
-                              </div>
-                            )}
                           </div>
                         ))}
-                        {loading && (
-                          <div className="flex items-center gap-4 text-white/40 animate-pulse mt-1 px-1">
-                            <span className="text-white/10 shrink-0 select-none tabular-nums">[{new Date().toLocaleTimeString()}]</span>
-                            <div className="flex items-center gap-2">
-                              <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                              <span className="font-bold uppercase tracking-tight">Scanning documents...</span>
-                            </div>
-                          </div>
-                        )}
                       </div>
                     )}
                   </div>
@@ -1109,7 +647,7 @@ export default function EvidenceLocker() {
                         <Mail className="w-3.5 h-3.5" />
                         <span className="text-[10px] font-sans font-bold uppercase tracking-tight">store@invoices.margin.app</span>
                       </div>
-                      <Link to="/integrations-hub" className="text-[10px] font-sans font-bold text-white/50 hover:text-white uppercase tracking-tight transition-colors">
+                      <Link to={`/app/${activeSlug}/integrations-hub`} className="text-[10px] font-sans font-bold text-white/50 hover:text-white uppercase tracking-tight transition-colors">
                         Connect sources {">>"}
                       </Link>
                     </div>
@@ -1124,9 +662,9 @@ export default function EvidenceLocker() {
                   <div>
                     <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">Document Library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">{sorted.length} documents</span>
+                      <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">{metrics.filteredResults} results</span>
                       <div className="h-1.5 w-[1px] bg-white/10" />
-                      <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">AI Analysis Enabled</span>
+                      <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Total archive: {metrics.totalDocuments}</span>
                     </div>
                   </div>
 
@@ -1136,7 +674,10 @@ export default function EvidenceLocker() {
                       <Input
                         placeholder="Search documents..."
                         value={q}
-                        onChange={(e) => setQ(e.target.value)}
+                        onChange={(e) => {
+                          setQ(e.target.value);
+                          setPage(1);
+                        }}
                         className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-sans font-bold pl-9 focus:border-white/20 transition-all rounded-lg placeholder:text-white/10 tracking-tight"
                       />
                     </div>
@@ -1151,7 +692,7 @@ export default function EvidenceLocker() {
                       EXPORT
                     </Button>
 
-                    {documents.length > 0 && (
+                    {metrics.totalDocuments > 0 && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -1189,8 +730,16 @@ export default function EvidenceLocker() {
                     </div>
                   ) : (
                     <>
+                      {documents.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-28">
+                          <CircleDashed className="h-6 w-6 text-white/15 mb-4" />
+                          <span className="text-[11px] font-sans font-bold text-white/30 uppercase tracking-tight">
+                            {metrics.totalDocuments === 0 ? 'No documents in this workspace' : 'No documents match the current search'}
+                          </span>
+                        </div>
+                      ) : (
                       <div className="divide-y divide-white/5 overflow-hidden">
-                        {pageData.map((doc) => (
+                        {documents.map((doc) => (
                           <div
                             key={doc.id}
                             className="group relative flex items-center justify-between py-6 px-8 hover:bg-white/[0.02] transition-all duration-300"
@@ -1218,18 +767,24 @@ export default function EvidenceLocker() {
                                   <span className="text-sm font-bold text-white tracking-tight truncate uppercase group-hover:text-white/80 transition-colors">
                                     {doc.name}
                                   </span>
-                                  {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                                  <Badge className={cn("text-[9px] font-sans font-bold uppercase tracking-tight flex items-center gap-1.5", getEvidenceStateBadgeClass(doc))}>
+                                    {getEvidenceStateIcon(doc.evidence_state)}
+                                    {doc.evidence_state}
+                                  </Badge>
+                                  {doc.linked_case_count > 0 && (
                                     <div className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/75 uppercase tracking-tight flex items-center gap-1.5">
                                       <Link2 className="h-2.5 w-2.5" />
-                                      {doc.matchedClaims.length} linked claims
+                                      {doc.linked_case_count} linked cases
                                     </div>
                                   )}
                                 </div>
 
                                 <div className="flex items-center text-[10px] font-sans font-bold text-white/20 gap-4 uppercase tracking-tight">
-                                  <span className="text-white/40">{doc.supplier || "Vendor unknown"}</span>
+                                  <span className="text-white/40">{doc.source_display || "Unknown source"}</span>
                                   <span className="text-white/5">|</span>
-                                  <span className="text-white/40">{doc.invoice || "No reference"}</span>
+                                  <span className="text-white/40">{doc.content_type || "Type unavailable"}</span>
+                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/40">{formatBytes(doc.size_bytes)}</span>
                                   <span className="text-white/5">|</span>
                                   <div className="flex items-center gap-2">
                                     <div className={cn(
@@ -1247,7 +802,7 @@ export default function EvidenceLocker() {
                                   </div>
                                   <span className="text-white/5">|</span>
                                   <span className="text-white/40">
-                                    {doc.parser_confidence !== undefined ? `${(doc.parser_confidence * 100).toFixed(0)}%_CONF` : "CONF_TBD"}
+                                    {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}% confidence` : "Confidence unknown"}
                                   </span>
                                   <span className="text-white/5">|</span>
                                   <span className="text-white font-bold">
@@ -1258,16 +813,24 @@ export default function EvidenceLocker() {
                                     {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
                                   </span>
                                 </div>
+
+                                <div className="flex items-center text-[10px] font-sans font-bold text-white/20 gap-4 tracking-tight">
+                                  <span className="text-white/40">Supplier: {doc.supplier || "Not available"}</span>
+                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/40">Invoice: {doc.invoice || "Not available"}</span>
+                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/40">{doc.usability_reason}</span>
+                                </div>
                               </div>
                             </div>
 
                             <div className="flex items-center gap-4">
-                              {doc.matchedClaims && doc.matchedClaims.length > 0 && (
+                              {doc.linked_case_count > 0 && (
                                 <Link
-                                  to={`/case/${doc.matchedClaims[0]}`}
+                                  to={`/app/${activeSlug}/recoveries/${encodeURIComponent(doc.linked_case_ids[0])}`}
                                   className="text-[10px] font-sans font-bold text-white/20 hover:text-white transition-colors uppercase tracking-tight flex items-center gap-2"
                                 >
-                                  ID_{doc.matchedClaims[0].slice(0, 8)}
+                                  {doc.linked_case_refs[0] || `ID_${doc.linked_case_ids[0].slice(0, 8)}`}
                                   <ArrowRight className="h-3 w-3" />
                                 </Link>
                               )}
@@ -1306,15 +869,16 @@ export default function EvidenceLocker() {
                           </div>
                         ))}
                       </div>
+                      )}
 
                       {/* Ledger Pagination */}
                       <div className="px-8 py-6 flex items-center justify-between border-t border-white/5 bg-white/[0.01]">
                         <div className="flex items-center gap-6">
                           <div className="flex items-center gap-3">
-                            <Checkbox
-                              checked={selectedIds.size > 0 && selectedIds.size === pageData.length}
+                              <Checkbox
+                              checked={selectedIds.size > 0 && selectedIds.size === documents.length}
                               onCheckedChange={(c) => {
-                                if (c) setSelectedIds(new Set(pageData.map(d => d.id)));
+                                if (c) setSelectedIds(new Set(documents.map(d => d.id)));
                                 else setSelectedIds(new Set());
                               }}
                               className="h-3 w-3 border-white/10 rounded-sm"
@@ -1323,7 +887,7 @@ export default function EvidenceLocker() {
                           </div>
                           <span className="text-white/5 h-3 w-[1px]" />
                           <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                            PAGE {page} OF {totalPages}
+                            PAGE {pagination.page} OF {pagination.totalPages}
                           </span>
                         </div>
 
@@ -1345,16 +909,16 @@ export default function EvidenceLocker() {
                             <Button
                               variant="ghost"
                               className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10 tracking-tight"
-                              disabled={page <= 1}
-                              onClick={() => setPage(p => Math.max(1, p - 1))}
+                              disabled={pagination.page <= 1}
+                              onClick={() => setPage(p => Math.max(1, (pagination.page || p) - 1))}
                             >
                               PREVIOUS
                             </Button>
                             <Button
                               variant="ghost"
                               className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10 tracking-tight"
-                              disabled={page >= totalPages}
-                              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                              disabled={pagination.page >= pagination.totalPages}
+                              onClick={() => setPage(p => Math.min(pagination.totalPages, (pagination.page || p) + 1))}
                             >
                               NEXT_CYCLE
                             </Button>
