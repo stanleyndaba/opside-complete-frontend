@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
+import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { useToast } from '@/hooks/use-toast';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
@@ -70,6 +71,28 @@ type ProofDocument = {
   supplier?: string;
   invoice_number?: string;
   amount?: number;
+};
+
+type EvidencePackClaim = {
+  id: string;
+  claim_number?: string;
+  type?: string;
+  anomaly_type?: string;
+  status: string;
+  guaranteedAmount?: number;
+  amount?: number;
+  created?: string;
+  created_at?: string;
+  discovery_date?: string;
+  details?: string;
+  matchedDocs?: Array<{
+    id: string;
+    name: string;
+    type?: string;
+    uploadDate?: string;
+  }>;
+  matchedCount?: number;
+  confidence_score?: number;
 };
 
 const PAGE_SIZE = 10;
@@ -161,6 +184,8 @@ export default function RecoveryPipelineAgent8() {
   const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
   const [proofDocsClaim, setProofDocsClaim] = useState<{ id: string; claim_number?: string } | null>(null);
   const [proofDocs, setProofDocs] = useState<ProofDocument[]>([]);
+  const [evidencePackOpen, setEvidencePackOpen] = useState(false);
+  const [evidencePackClaim, setEvidencePackClaim] = useState<EvidencePackClaim | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<Row | null>(null);
 
@@ -218,6 +243,37 @@ export default function RecoveryPipelineAgent8() {
   const openRecoveryDetails = (row: Row) => {
     setDetailsRow(row);
     setDetailsOpen(true);
+  };
+
+  const openEvidencePacket = async (row: Row) => {
+    try {
+      const res = await api.getRecoveryDetail(row.dispute_case_id || row.recovery_id, activeSlug);
+      if (!res.ok) {
+        throw new Error(res.error || 'Unable to load evidence packet.');
+      }
+
+      const documents = Array.isArray(res.data?.documents) ? res.data.documents : [];
+      setEvidencePackClaim({
+        id: row.dispute_case_id || row.recovery_id,
+        claim_number: row.case_number,
+        anomaly_type: row.status || undefined,
+        status: label(row.operator_state || row.status),
+        guaranteedAmount: row.approved_amount ?? row.expected_payout_amount ?? row.actual_payout_amount ?? undefined,
+        amount: row.approved_amount ?? row.expected_payout_amount ?? row.actual_payout_amount ?? undefined,
+        created_at: row.last_updated_at ?? undefined,
+        details: row.merchant_reference || undefined,
+        matchedDocs: documents.map((doc: any) => ({
+          id: doc.id,
+          name: doc.name || doc.filename || 'Document',
+          type: doc.type || doc.doc_type,
+          uploadDate: doc.uploadDate || doc.created_at,
+        })),
+        matchedCount: documents.length,
+      });
+      setEvidencePackOpen(true);
+    } catch (err: any) {
+      toast({ title: 'Unable to load evidence packet', description: err?.message || 'The recovery packet could not be loaded.' });
+    }
   };
 
   if (isReady && !activeSlug) {
@@ -417,6 +473,9 @@ export default function RecoveryPipelineAgent8() {
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
                                         Proof Documents
                                       </DropdownMenuItem>
+                                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openEvidencePacket(row)}>
+                                        Evidence Packet
+                                      </DropdownMenuItem>
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openRecoveryDetails(row)}>
                                         Recovery Details
                                       </DropdownMenuItem>
@@ -447,6 +506,9 @@ export default function RecoveryPipelineAgent8() {
       </div>
 
       <ProofDocumentsModal open={proofDocsModalOpen} onClose={() => setProofDocsModalOpen(false)} claimId={proofDocsClaim?.id || ''} claimNumber={proofDocsClaim?.claim_number} documents={proofDocs} />
+      {evidencePackClaim ? (
+        <EvidencePackView open={evidencePackOpen} onClose={() => setEvidencePackOpen(false)} claim={evidencePackClaim} />
+      ) : null}
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
         <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
           <DialogHeader className="border-b border-white/5 pb-5">
