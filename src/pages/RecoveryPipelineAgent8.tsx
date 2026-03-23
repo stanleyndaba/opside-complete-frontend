@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
@@ -118,6 +119,28 @@ function Metric({ labelText, value, sublabel }: { labelText: string; value: stri
   );
 }
 
+function DetailSection({
+  title,
+  rows,
+}: {
+  title: string;
+  rows: Array<{ label: string; value: string }>;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{title}</div>
+      <div className="mt-4 space-y-3">
+        {rows.map((row) => (
+          <div key={`${title}-${row.label}`} className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-3 last:border-0 last:pb-0">
+            <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{row.label}</span>
+            <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/86">{row.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function RecoveryPipelineAgent8() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
@@ -138,6 +161,8 @@ export default function RecoveryPipelineAgent8() {
   const [proofDocsModalOpen, setProofDocsModalOpen] = useState(false);
   const [proofDocsClaim, setProofDocsClaim] = useState<{ id: string; claim_number?: string } | null>(null);
   const [proofDocs, setProofDocs] = useState<ProofDocument[]>([]);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [detailsRow, setDetailsRow] = useState<Row | null>(null);
 
   const fetchLedger = useCallback(async (mode: 'load' | 'refresh' = 'load') => {
     if (!activeSlug) return;
@@ -188,6 +213,11 @@ export default function RecoveryPipelineAgent8() {
     } catch (err: any) {
       toast({ title: 'Unable to load proof documents', description: err?.message || 'The linked evidence documents could not be loaded.' });
     }
+  };
+
+  const openRecoveryDetails = (row: Row) => {
+    setDetailsRow(row);
+    setDetailsOpen(true);
   };
 
   if (isReady && !activeSlug) {
@@ -338,21 +368,17 @@ export default function RecoveryPipelineAgent8() {
                             {rows.map((row) => (
                               <tr key={row.recovery_id} className="border-b border-white/[0.06] align-top">
                                 <td className="py-5 pr-4">
-                                  <div className="space-y-3">
-                                    <div className="flex flex-wrap items-center gap-3">
-                                      <span className="text-[11px] font-sans font-semibold tracking-tight text-white/92">{row.case_number}</span>
-                                      <span className="text-[10px] font-sans font-medium text-white/22">{row.provider_case_id ? `Amazon Case ${row.provider_case_id}` : 'Provider case not available'}</span>
+                                  <div className="space-y-2">
+                                    <div className="text-[11px] font-sans font-semibold tracking-tight text-white/92">{row.case_number}</div>
+                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
+                                      {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant reference not available'}
                                     </div>
-                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">{row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant reference not available'}</div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">Detection {row.detection_result_id ? row.detection_result_id.slice(0, 8) : 'not linked'}</div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="flex flex-col gap-2">
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Case Status: {label(row.status)}</div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Recovery Status: {label(row.recovery_status)}</div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -361,8 +387,6 @@ export default function RecoveryPipelineAgent8() {
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
                                     <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Actual Payout</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.actual_payout_amount, row.currency)}</div>
-                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Pending Payout</div>
-                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.expected_payout_amount, row.currency)}</div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -376,8 +400,6 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="space-y-2">
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Updated</div>
                                     <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.last_updated_at)}</div>
-                                    <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Expected Payout Date</div>
-                                    <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.expected_payout_date)}</div>
                                   </div>
                                 </td>
                                 <td className="py-5 pl-4 text-right">
@@ -394,6 +416,9 @@ export default function RecoveryPipelineAgent8() {
                                       </DropdownMenuItem>
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
                                         Proof Documents
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openRecoveryDetails(row)}>
+                                        Recovery Details
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
@@ -422,6 +447,64 @@ export default function RecoveryPipelineAgent8() {
       </div>
 
       <ProofDocumentsModal open={proofDocsModalOpen} onClose={() => setProofDocsModalOpen(false)} claimId={proofDocsClaim?.id || ''} claimNumber={proofDocsClaim?.claim_number} documents={proofDocs} />
+      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+        <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
+          <DialogHeader className="border-b border-white/5 pb-5">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Recovery Details</div>
+            <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
+              {detailsRow?.case_number || 'Recovery Case'}
+            </DialogTitle>
+          </DialogHeader>
+          {detailsRow ? (
+            <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
+              <DetailSection
+                title="Case"
+                rows={[
+                  { label: 'Case Number', value: detailsRow.case_number || 'Not available' },
+                  { label: 'Merchant Reference', value: detailsRow.merchant_reference || 'Not available' },
+                  { label: 'Provider Case', value: detailsRow.provider_case_id || 'Not available' },
+                  { label: 'Detection Reference', value: detailsRow.detection_result_id || 'Not available' },
+                  { label: 'Dispute Case ID', value: detailsRow.dispute_case_id || 'Not available' },
+                ]}
+              />
+              <DetailSection
+                title="Status"
+                rows={[
+                  { label: 'Operator State', value: label(detailsRow.operator_state) },
+                  { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
+                  { label: 'Case Status', value: label(detailsRow.status) },
+                  { label: 'Recovery Status', value: label(detailsRow.recovery_status) },
+                  { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
+                ]}
+              />
+              <DetailSection
+                title="Money"
+                rows={[
+                  { label: 'Approved Value', value: money(detailsRow.approved_amount, detailsRow.currency) },
+                  { label: 'Actual Payout', value: money(detailsRow.actual_payout_amount, detailsRow.currency) },
+                  { label: 'Pending Payout', value: money(detailsRow.expected_payout_amount, detailsRow.currency) },
+                ]}
+              />
+              <DetailSection
+                title="Billing"
+                rows={[
+                  { label: 'Billing Status', value: label(detailsRow.billing_status) },
+                  { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
+                  { label: 'Currency', value: detailsRow.currency || 'USD' },
+                ]}
+              />
+              <DetailSection
+                title="Currentness"
+                rows={[
+                  { label: 'Last Updated', value: stamp(detailsRow.last_updated_at) },
+                  { label: 'Expected Payout Date', value: stamp(detailsRow.expected_payout_date) },
+                  { label: 'Recovery ID', value: detailsRow.recovery_id || 'Not available' },
+                ]}
+              />
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }
