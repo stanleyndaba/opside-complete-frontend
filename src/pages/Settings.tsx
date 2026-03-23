@@ -217,9 +217,6 @@ const Settings = () => {
               >
                 <div>
                   <h2 className="text-xl font-sans font-bold text-white tracking-tight">Seller Profile</h2>
-                  <p className="text-[10px] text-white/40 font-sans font-bold uppercase tracking-tight mt-1">
-                    IDENTITY_MANAGEMENT // LIVE_ACCOUNT_TRUTH
-                  </p>
                   <p className="text-sm text-white/50 font-sans mt-3 max-w-2xl">
                     This page currently shows live account and workspace information. Editable settings that are not yet backed by real persistence have been removed.
                   </p>

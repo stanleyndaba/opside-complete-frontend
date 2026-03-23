@@ -840,7 +840,7 @@ export default function IntegrationsHub() {
                       <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon SP API</h3>
+                      <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon Store</h3>
                       <p className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Primary Store Connection</p>
                     </div>
                   </div>
@@ -937,7 +937,7 @@ export default function IntegrationsHub() {
                       }}
                       className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
                     >
-                      Establish Master Connection
+                      Connect Amazon
                     </Button>
                   </div>
                 </div>
@@ -1071,7 +1071,7 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-8 mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-px w-8 bg-white/20" />
-                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Secondary Harvesting Nodes</h3>
+                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Secondary Platforms</h3>
               </div>
             </motion.div>
 
@@ -1155,16 +1155,13 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-px w-8 bg-white/20" />
-                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Autonomous Logic Overrides</h3>
+                <h3 className="text-sm font-sans font-bold uppercase tracking-tight text-gray-500">Auto-Ingest from Sources</h3>
               </div>
             </motion.div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-8">
               <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8">
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="h-10 w-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
-                    <Shield className="h-5 w-5 text-white/60" />
-                  </div>
                   <div>
                     <h4 className="text-lg font-sans font-bold text-white tracking-tight">Harvesting Parameters</h4>
                     <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-0.5">Global Filter Configuration</p>
@@ -1173,19 +1170,19 @@ export default function IntegrationsHub() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Target Sender Patterns</label>
+                    <label className="text-[10px] font-sans text-white/35 uppercase tracking-tight">Target Sender Patterns</label>
                     <Input
                       value={filters.senderPatterns.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, senderPatterns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                      className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-12 tracking-tight"
+                      className="bg-black/40 border-white/10 text-white font-sans text-xs h-12 tracking-tight"
                     />
                   </div>
                   <div className="space-y-4">
-                    <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Subject Scopes</label>
+                    <label className="text-[10px] font-sans text-white/35 uppercase tracking-tight">Subject Scopes</label>
                     <Input
                       value={filters.subjectKeywords.join(', ')}
                       onChange={(e) => setFilters(f => ({ ...f, subjectKeywords: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                      className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-12 tracking-tight"
+                      className="bg-black/40 border-white/10 text-white font-sans text-xs h-12 tracking-tight"
                     />
                   </div>
                 </div>
@@ -1206,24 +1203,24 @@ export default function IntegrationsHub() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-white/5">
-                  <label className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight mb-3 block">Exclusion Rules</label>
+                  <label className="text-[10px] font-sans text-white/35 uppercase tracking-tight mb-3 block">Exclusion Rules</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Exclude Senders</label>
+                      <label className="text-[10px] font-sans text-gray-500 uppercase tracking-tight">Exclude Senders</label>
                       <Input
                         placeholder="newsletter, marketing"
                         value={filters.excludeSenders.join(', ')}
                         onChange={(e) => setFilters(f => ({ ...f, excludeSenders: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                        className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-10 tracking-tight"
+                        className="bg-black/40 border-white/10 text-white font-sans text-xs h-10 tracking-tight"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">Exclude Subjects</label>
+                      <label className="text-[10px] font-sans text-gray-500 uppercase tracking-tight">Exclude Subjects</label>
                       <Input
                         placeholder="unsubscribe, promotional"
                         value={filters.excludeSubjects.join(', ')}
                         onChange={(e) => setFilters(f => ({ ...f, excludeSubjects: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                        className="bg-black/40 border-white/10 text-white font-sans font-bold text-xs h-10 tracking-tight"
+                        className="bg-black/40 border-white/10 text-white font-sans text-xs h-10 tracking-tight"
                       />
                     </div>
                   </div>
@@ -1245,7 +1242,7 @@ export default function IntegrationsHub() {
                     disabled={savingFilters}
                     className="h-12 bg-white hover:bg-white/90 text-black font-sans font-bold uppercase tracking-tight text-[10px] px-10"
                   >
-                    {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Commit Changes"}
+                    {savingFilters ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Changes"}
                   </Button>
                 </div>
               </div>
@@ -1254,11 +1251,8 @@ export default function IntegrationsHub() {
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-4">
               <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8 h-full flex flex-col">
                 <div className="flex items-center gap-4 mb-8">
-                  <div className="h-10 w-10 rounded-lg bg-white/5 flex items-center justify-center border border-white/10">
-                    <RefreshCw className="h-5 w-5 text-white/60" />
-                  </div>
                   <div>
-                    <h4 className="text-lg font-sans font-bold text-white tracking-tight">Temporal Sync</h4>
+                    <h4 className="text-lg font-sans font-bold text-white tracking-tight">Schedules</h4>
                     <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-0.5">Scheduling Engine</p>
                   </div>
                 </div>
@@ -1345,7 +1339,7 @@ export default function IntegrationsHub() {
                   ) : (
                     <>
                       <div className="text-left">
-                        <span className="block text-3xl font-sans font-bold text-white tracking-tight">Ingest from all Sources</span>
+                        <span className="block text-3xl font-sans font-bold text-white tracking-tight">Retrieve from all Sources</span>
                         <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">Sync data from all connected accounts</span>
                       </div>
                     </>
