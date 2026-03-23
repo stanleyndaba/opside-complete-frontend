@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
-import { AlertCircle, ArrowRight, FileText, Loader2, RefreshCw, Search, ShieldAlert } from 'lucide-react';
+import { AlertCircle, FileText, Loader2, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
@@ -273,6 +275,28 @@ function badgeClass(value: string | null | undefined) {
   return STATUS_BADGE_STYLES[key] || STATUS_BADGE_STYLES.default;
 }
 
+function DetailSection({
+  title,
+  rows,
+}: {
+  title: string;
+  rows: Array<{ label: string; value: string }>;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{title}</div>
+      <div className="mt-4 space-y-3">
+        {rows.map((row) => (
+          <div key={`${title}-${row.label}`} className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-3 last:border-0 last:pb-0">
+            <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{row.label}</span>
+            <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/86">{row.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function deriveLegacyNextAction(status: string | null | undefined) {
   const normalizedStatus = String(status || '').toLowerCase();
   if (['paid', 'complete', 'completed'].includes(normalizedStatus)) return 'Recovered';
@@ -387,6 +411,8 @@ export default function DisputeCases() {
   const [sortBy, setSortBy] = useState('updated_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [detailsRow, setDetailsRow] = useState<QueueRow | null>(null);
   const pageSize = 25;
 
   useEffect(() => {
@@ -552,6 +578,11 @@ export default function DisputeCases() {
   const totalPages = Math.max(1, Math.ceil(summary.filtered_results / pageSize));
 
   const refresh = () => setRefreshKey((value) => value + 1);
+
+  const openCaseDetails = (row: QueueRow) => {
+    setDetailsRow(row);
+    setDetailsOpen(true);
+  };
 
   const handleBriefDownload = (row: QueueRow) => {
     if (!activeTenantSlug) return;
@@ -886,26 +917,22 @@ export default function DisputeCases() {
                         return (
                           <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
                             <td className="px-6 py-5">
-                              <div className="space-y-2 min-w-[240px]">
+                              <div className="space-y-2 min-w-[220px]">
                                 <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
                                   {row.case_number || row.dispute_case_id}
-                                  <ArrowRight className="w-3 h-3" />
                                 </Link>
                                 <div className="space-y-1 text-[11px] text-white/50 font-sans">
-                                  <div>Case Type: {row.case_type || row.anomaly_type || 'Not available'}</div>
-                                  <div>Detection Ref: {row.detection_result_id || 'Not available'}</div>
-                                  <div>Amazon Case: {row.amazon_case_id || 'Not available'}</div>
                                   <div>Store: {row.store_name || 'Not available'}</div>
+                                  <div>Type: {row.case_type || row.anomaly_type || 'Not available'}</div>
                                 </div>
                               </div>
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="grid grid-cols-2 gap-2 min-w-[320px]">
+                              <div className="grid grid-cols-2 gap-2 min-w-[280px]">
                                 <Badge variant="outline" className={cn('justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
                                 <Badge variant="outline" className={cn('justify-start border', badgeClass(row.filing_status))}>Filing: {formatLabel(row.filing_status)}</Badge>
                                 <Badge variant="outline" className={cn('justify-start border', badgeClass(row.recovery_status))}>Recovery: {formatLabel(row.recovery_status)}</Badge>
-                                <Badge variant="outline" className={cn('justify-start border', badgeClass(row.billing_status))}>Billing: {formatLabel(row.billing_status)}</Badge>
                               </div>
                             </td>
 
@@ -914,67 +941,74 @@ export default function DisputeCases() {
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Approved</span><span>{formatMoney(row.approved_amount, row.currency)}</span></div>
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Recovered</span><span>{formatMoney(row.actual_payout_amount, row.currency)}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-white/35">Billed</span><span>{formatMoney(row.billed_amount, row.currency)}</span></div>
                               </div>
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="space-y-2 min-w-[220px]">
+                              <div className="space-y-2 min-w-[180px]">
                                 <Badge variant="outline" className={cn('border', badgeClass(row.evidence_state))}>
                                   {row.evidence_state}
                                 </Badge>
                                 <div className="text-[11px] text-white/50 font-sans space-y-1">
                                   <div>Matched Docs: {row.matched_document_count}</div>
-                                  <div>Rejection Category: {row.rejection_category || 'Not available'}</div>
-                                  {row.rejection_reason && (
-                                    <div className="text-red-300/80 flex items-start gap-2">
-                                      <ShieldAlert className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                                      <span>{row.rejection_reason}</span>
-                                    </div>
-                                  )}
                                 </div>
                               </div>
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="min-w-[220px] space-y-2">
+                              <div className="min-w-[200px] space-y-2">
                                 <p className="text-sm font-sans font-bold text-white">{row.next_action}</p>
-                                <p className="text-[11px] font-sans text-white/50">
-                                  {row.expected_payout_date ? `Expected payout date: ${format(new Date(row.expected_payout_date), 'yyyy/MM/dd')}` : 'No payout estimate available'}
-                                </p>
                               </div>
                             </td>
 
                             <td className="px-6 py-5">
                               <div className="min-w-[160px] space-y-1 text-[11px] text-white/50 font-sans">
-                                <div>Created: {row.created_at ? format(new Date(row.created_at), 'yyyy/MM/dd HH:mm') : 'Not available'}</div>
                                 <div>Updated: {row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not available'}</div>
                               </div>
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="flex flex-col gap-2 min-w-[150px]">
-                                <Button asChild className="h-9 text-[10px] font-sans font-bold uppercase tracking-tight bg-white text-black hover:bg-emerald-500 rounded-lg">
-                                  <Link to={`/recoveries/${row.dispute_case_id}`}>Open Case</Link>
-                                </Button>
-                                <Button
-                                  onClick={() => handleBriefDownload(row)}
-                                  disabled={dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')}
-                                  className="h-9 text-[10px] font-sans font-bold uppercase tracking-tight bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 rounded-lg"
-                                >
-                                  <FileText className="w-3 h-3 mr-2" />
-                                  Brief PDF
-                                </Button>
-                                {actionButton ? (
-                                  <Button
-                                    onClick={() => handleFilingAction(row, actionButton.mode)}
-                                    disabled={isProcessing || !row.detection_result_id}
-                                    className="h-9 text-[10px] font-sans font-bold uppercase tracking-tight bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 rounded-lg"
-                                  >
-                                    {isProcessing ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : null}
-                                    {actionButton.label}
-                                  </Button>
-                                ) : null}
+                              <div className="flex justify-end min-w-[88px]">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-9 w-9 rounded-lg text-white/35 hover:bg-white/5 hover:text-white"
+                                    >
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
+                                    <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Case Actions</div>
+                                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                      <Link to={`/recoveries/${row.dispute_case_id}`}>Open Case</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+                                      disabled={dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')}
+                                      onClick={() => handleBriefDownload(row)}
+                                    >
+                                      Brief PDF
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+                                      onClick={() => openCaseDetails(row)}
+                                    >
+                                      Case Details
+                                    </DropdownMenuItem>
+                                    {actionButton ? (
+                                      <DropdownMenuItem
+                                        className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
+                                        disabled={isProcessing || !row.detection_result_id}
+                                        onClick={() => handleFilingAction(row, actionButton.mode)}
+                                      >
+                                        {isProcessing ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : null}
+                                        {actionButton.label}
+                                      </DropdownMenuItem>
+                                    ) : null}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </td>
                           </tr>
@@ -1012,6 +1046,72 @@ export default function DisputeCases() {
           </div>
         </div>
       </div>
+
+      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+        <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
+          <DialogHeader className="border-b border-white/5 pb-5">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Case Details</div>
+            <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
+              {detailsRow?.case_number || 'Dispute Case'}
+            </DialogTitle>
+          </DialogHeader>
+          {detailsRow ? (
+            <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
+              <DetailSection
+                title="Case"
+                rows={[
+                  { label: 'Case Number', value: detailsRow.case_number || 'Not available' },
+                  { label: 'Claim Number', value: detailsRow.claim_number || 'Not available' },
+                  { label: 'Dispute Case ID', value: detailsRow.dispute_case_id || 'Not available' },
+                  { label: 'Detection Reference', value: detailsRow.detection_result_id || 'Not available' },
+                  { label: 'Amazon Case', value: detailsRow.amazon_case_id || 'Not available' },
+                  { label: 'Store', value: detailsRow.store_name || 'Not available' },
+                  { label: 'Case Type', value: detailsRow.case_type || detailsRow.anomaly_type || 'Not available' },
+                ]}
+              />
+              <DetailSection
+                title="Lifecycle"
+                rows={[
+                  { label: 'Status', value: formatLabel(detailsRow.status) },
+                  { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
+                  { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
+                  { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
+                  { label: 'Next Action', value: detailsRow.next_action || 'Not available' },
+                ]}
+              />
+              <DetailSection
+                title="Money"
+                rows={[
+                  { label: 'Requested Amount', value: formatMoney(detailsRow.requested_amount, detailsRow.currency) },
+                  { label: 'Approved Amount', value: formatMoney(detailsRow.approved_amount, detailsRow.currency) },
+                  { label: 'Recovered Amount', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
+                  { label: 'Billed Amount', value: formatMoney(detailsRow.billed_amount, detailsRow.currency) },
+                  { label: 'Expected Payout', value: formatMoney(detailsRow.expected_payout_amount, detailsRow.currency) },
+                ]}
+              />
+              <DetailSection
+                title="Evidence"
+                rows={[
+                  { label: 'Evidence State', value: detailsRow.evidence_state || 'Not available' },
+                  { label: 'Matched Documents', value: String(detailsRow.matched_document_count ?? 0) },
+                  { label: 'Rejection Category', value: detailsRow.rejection_category || 'Not available' },
+                  { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not available' },
+                ]}
+              />
+              <DetailSection
+                title="Currentness"
+                rows={[
+                  { label: 'Created', value: detailsRow.created_at ? format(new Date(detailsRow.created_at), 'yyyy/MM/dd HH:mm') : 'Not available' },
+                  { label: 'Updated', value: detailsRow.updated_at ? format(new Date(detailsRow.updated_at), 'yyyy/MM/dd HH:mm') : 'Not available' },
+                  { label: 'Expected Payout Date', value: detailsRow.expected_payout_date ? format(new Date(detailsRow.expected_payout_date), 'yyyy/MM/dd') : 'Not available' },
+                  { label: 'Order ID', value: detailsRow.order_id || 'Not available' },
+                  { label: 'SKU / ASIN', value: [detailsRow.sku, detailsRow.asin].filter(Boolean).join(' / ') || 'Not available' },
+                ]}
+              />
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }
