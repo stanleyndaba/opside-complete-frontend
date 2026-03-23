@@ -645,16 +645,16 @@ export default function DisputeCases() {
   };
 
   const primarySummaryCards = useMemo(() => ([
-    { label: 'Total Cases', value: summary.total_cases },
-    { label: 'Ready to File', value: summary.ready_to_file_count },
-    { label: 'Approved / Pending Payout', value: summary.approved_pending_payout_count },
+    { label: 'Cases', value: summary.total_cases },
+    { label: 'Ready', value: summary.ready_to_file_count },
+    { label: 'Payout Pending', value: summary.approved_pending_payout_count },
   ]), [summary]);
 
   const secondarySummaryCards = useMemo(() => ([
     { label: 'Filed', value: summary.filed_count },
     { label: 'Rejected', value: summary.rejected_count },
     { label: 'Recovered', value: summary.recovered_count },
-    { label: 'Billing Pending', value: summary.billing_pending_count },
+    { label: 'Billing', value: summary.billing_pending_count },
   ]), [summary]);
 
   if (isReady && !activeTenantSlug) {
@@ -685,35 +685,13 @@ export default function DisputeCases() {
             <div className="space-y-2">
               <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Dispute Cases</h1>
               <p className="text-sm text-white/50 font-sans max-w-3xl">
-                Tenant-scoped operator queue of dispute cases. Case identity, lifecycle, money, evidence posture, and next action are shown from backend case truth.
+                View your dispute cases, current status, evidence, and next steps in one place.
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
-                Tenant: {activeTenantSlug || 'Unavailable'}
-              </Badge>
-              <Badge
-                variant="outline"
-                className={cn(
-                  'border text-white/70',
-                  dataSource === 'legacy'
-                    ? 'border-amber-500/20 bg-amber-500/10 text-amber-300'
-                    : dataSource === 'preview'
-                      ? 'border-blue-500/20 bg-blue-500/10 text-blue-300'
-                      : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300'
-                )}
-              >
-                Source: {dataSource === 'legacy' ? 'Legacy fallback' : dataSource === 'preview' ? 'Preview fixtures' : 'Authoritative queue'}
-              </Badge>
-              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
-                Strict: {sourceCounts.authoritative ?? 'n/a'}
-              </Badge>
-              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
-                Legacy: {sourceCounts.legacy ?? 'n/a'}
-              </Badge>
-              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
                 {summary.last_updated_at ? `Updated ${formatDistanceToNow(new Date(summary.last_updated_at), { addSuffix: true })}` : 'Update time unavailable'}
-              </Badge>
+              </div>
               <Button
                 onClick={refresh}
                 className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"
@@ -729,19 +707,19 @@ export default function DisputeCases() {
               <div className="flex flex-col xl:flex-row xl:items-stretch">
                 <div className="grid flex-1 grid-cols-1 sm:grid-cols-3">
                   {primarySummaryCards.map((card) => (
-                    <div key={card.label} className="px-7 py-5 border-b sm:border-b-0 sm:border-r last:border-r-0 border-white/5">
+                    <div key={card.label} className="px-4 py-3 border-b sm:border-b-0 sm:border-r last:border-r-0 border-white/5">
                       <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                      <p className="mt-2 text-2xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                      <p className="mt-1 text-2xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                     </div>
                   ))}
                 </div>
-                <div className="border-t xl:border-t-0 xl:border-l border-white/5 px-7 py-5 xl:min-w-[42%]">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/22">Queue Breakdown</div>
-                  <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-3">
+                <div className="border-t xl:border-t-0 xl:border-l border-white/5 px-4 py-3 xl:min-w-[42%]">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/22">Breakdown</div>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2">
                     {secondarySummaryCards.map((card) => (
-                      <div key={card.label} className="min-w-[120px]">
+                      <div key={card.label} className="min-w-[96px]">
                         <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                        <p className="mt-1 text-xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                        <p className="mt-0.5 text-xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                       </div>
                     ))}
                   </div>
