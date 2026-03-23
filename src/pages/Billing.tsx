@@ -82,7 +82,7 @@ const metricCards = [
   },
   {
     key: 'totalRecovered',
-    label: 'Confirmed recovered amount',
+    label: 'Recovered amount',
   },
   {
     key: 'totalFees',

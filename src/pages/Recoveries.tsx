@@ -2296,7 +2296,7 @@ export default function Recoveries() {
                   </div>
                   <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Recovery Pipeline</h1>
                   <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
-                    Detected discrepancies, evidence readiness, filed disputes, and realized recoveries in one tenant-scoped pipeline view
+                    Approved claims, pending payouts, reconciliations, and billed recoveries for this tenant.
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-3">

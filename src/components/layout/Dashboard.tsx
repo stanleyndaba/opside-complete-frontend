@@ -33,7 +33,7 @@ import {
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
@@ -1083,6 +1083,12 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
     return formatDistanceToNow(timestamp, { addSuffix: true });
   }, [dashboardSummary?.last_updated_at]);
+  const formattedLastUpdatedAbsolute = useMemo(() => {
+    if (!dashboardSummary?.last_updated_at) return 'Unavailable';
+    const timestamp = new Date(dashboardSummary.last_updated_at);
+    if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
+    return `Updated ${format(timestamp, 'MMM dd, yyyy, HH:mm')}`;
+  }, [dashboardSummary?.last_updated_at]);
 
   if (!activeSlug) {
     return (
@@ -1218,7 +1224,12 @@ export function Dashboard() {
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex items-center gap-3 transition-all group"
                           >
-                            <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
+                            <div className="flex flex-col items-end">
+                              <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
+                              <span className="text-[9px] font-sans font-bold text-white/30 group-hover:text-white/55 uppercase tracking-tight">
+                                {formattedLastUpdatedAbsolute}
+                              </span>
+                            </div>
                             <ArrowRight className="h-3 w-3 text-white/20 group-hover:text-white/65" />
                           </button>
                         )}
