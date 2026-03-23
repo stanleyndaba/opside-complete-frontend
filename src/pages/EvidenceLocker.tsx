@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -121,8 +121,10 @@ const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
 export default function EvidenceLocker() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isReady } = useTenant();
   const activeSlug = tenantSlug;
+  const urlQuery = (searchParams.get('q') || '').trim();
   const toggleSidebar = useCallback(() => setIsSidebarCollapsed(prev => !prev), []);
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
@@ -156,6 +158,27 @@ export default function EvidenceLocker() {
   const { toast } = useToast();
 
   const docLogContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (q !== urlQuery) {
+      setQ(urlQuery);
+      setPage(1);
+    }
+  }, [q, urlQuery]);
+
+  useEffect(() => {
+    const normalizedSearch = q.trim();
+    const currentQuery = (searchParams.get('q') || '').trim();
+    if (normalizedSearch === currentQuery) return;
+
+    const nextParams = new URLSearchParams(searchParams);
+    if (normalizedSearch) {
+      nextParams.set('q', normalizedSearch);
+    } else {
+      nextParams.delete('q');
+    }
+    setSearchParams(nextParams, { replace: true });
+  }, [q, searchParams, setSearchParams]);
 
   const refreshInventory = useCallback(async () => {
     if (!activeSlug) {

@@ -256,27 +256,30 @@ export function Navbar({
 
   // Handle search submission
   const handleSearch = useCallback((query: string) => {
-    if (!query.trim()) return;
+    const normalizedQuery = query.trim();
+    if (!normalizedQuery) return;
 
     // Save to recent searches
-    const updatedRecent = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+    const updatedRecent = [normalizedQuery, ...recentSearches.filter(s => s !== normalizedQuery)].slice(0, 5);
     setRecentSearches(updatedRecent);
     localStorage.setItem('recentSearches', JSON.stringify(updatedRecent));
 
     // Navigate to appropriate search page based on context
     setIsSearchFocused(false);
+    const encodedQuery = encodeURIComponent(normalizedQuery);
+    const loweredQuery = normalizedQuery.toLowerCase();
 
     // Search in Evidence Locker for documents
-    if (query.toLowerCase().includes('invoice') || query.toLowerCase().includes('doc') || query.toLowerCase().includes('receipt')) {
-      navigate(tenantRoute(activeTenantSlug, `/evidence-locker?q=${encodeURIComponent(query)}`));
+    if (loweredQuery.includes('invoice') || loweredQuery.includes('doc') || loweredQuery.includes('receipt')) {
+      navigate(tenantRoute(activeTenantSlug, `/evidence-locker?q=${encodedQuery}`));
     }
     // Search in Recoveries for claims
-    else if (query.toLowerCase().includes('claim') || query.toLowerCase().includes('recovery') || query.toLowerCase().includes('fba')) {
-      navigate(tenantRoute(activeTenantSlug, `/recoveries?q=${encodeURIComponent(query)}`));
+    else if (loweredQuery.includes('claim') || loweredQuery.includes('recovery') || loweredQuery.includes('fba')) {
+      navigate(tenantRoute(activeTenantSlug, `/recoveries?q=${encodedQuery}`));
     }
     // Default: search in Recoveries (main page for searching claims)
     else {
-      navigate(tenantRoute(activeTenantSlug, `/recoveries?q=${encodeURIComponent(query)}`));
+      navigate(tenantRoute(activeTenantSlug, `/recoveries?q=${encodedQuery}`));
     }
   }, [activeTenantSlug, navigate, recentSearches]);
 

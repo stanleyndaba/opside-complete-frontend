@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
@@ -166,9 +166,11 @@ function DetailSection({
 
 export default function RecoveryPipelineAgent8() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isReady } = useTenant();
   const activeSlug = (tenantSlug || '').trim();
   const { toast } = useToast();
+  const urlQuery = (searchParams.get('q') || '').trim();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -188,6 +190,27 @@ export default function RecoveryPipelineAgent8() {
   const [evidencePackClaim, setEvidencePackClaim] = useState<EvidencePackClaim | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<Row | null>(null);
+
+  useEffect(() => {
+    if (searchTerm !== urlQuery) {
+      setSearchTerm(urlQuery);
+      setPage(1);
+    }
+  }, [searchTerm, urlQuery]);
+
+  useEffect(() => {
+    const normalizedSearch = searchTerm.trim();
+    const currentQuery = (searchParams.get('q') || '').trim();
+    if (normalizedSearch === currentQuery) return;
+
+    const nextParams = new URLSearchParams(searchParams);
+    if (normalizedSearch) {
+      nextParams.set('q', normalizedSearch);
+    } else {
+      nextParams.delete('q');
+    }
+    setSearchParams(nextParams, { replace: true });
+  }, [searchParams, searchTerm, setSearchParams]);
 
   const fetchLedger = useCallback(async (mode: 'load' | 'refresh' = 'load') => {
     if (!activeSlug) return;
