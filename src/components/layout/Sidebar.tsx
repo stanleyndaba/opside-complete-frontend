@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -177,7 +177,7 @@ export function Sidebar({
   const primaryItems: NavItem[] = [
     { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
     { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
-    { title: 'Dispute Cases', icon: FileText, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
+    { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') }
@@ -243,7 +243,13 @@ export function Sidebar({
                     className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
                   />
                 )}
-                <item.icon className="h-5 w-5" strokeWidth={isActive ? 2 : 1.5} />
+                <item.icon
+                  className={cn(
+                    "h-5 w-5 transition-colors duration-300",
+                    isActive ? "text-foreground/35" : "text-foreground/20 group-hover:text-foreground/35"
+                  )}
+                  strokeWidth={isActive ? 2 : 1.5}
+                />
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-popover border border-border text-emerald-500 text-[11px] font-sans font-bold uppercase tracking-tight px-3 py-1.5 backdrop-blur-xl">
@@ -273,7 +279,13 @@ export function Sidebar({
         {!isActive && (
           <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        <item.icon strokeWidth={isActive ? 2 : 1.5} className={cn("h-4 w-4 shrink-0 transition-all duration-300", isActive ? "text-emerald-500 scale-110" : "text-foreground/20 group-hover:text-foreground")} />
+        <item.icon
+          strokeWidth={isActive ? 2 : 1.5}
+          className={cn(
+            "h-4 w-4 shrink-0 transition-all duration-300",
+            isActive ? "text-foreground/35 scale-110" : "text-foreground/20 group-hover:text-foreground/35"
+          )}
+        />
         <span className={cn(
           "text-[11px] font-sans transition-colors tracking-tight uppercase",
           isActive ? "font-bold text-foreground" : "font-light"
@@ -380,7 +392,7 @@ export function Sidebar({
                   ? "justify-center p-3 rounded-xl hover:bg-foreground/5"
                   : "gap-3 px-6 py-3 text-left hover:bg-foreground/[0.02] text-foreground/50 hover:text-foreground"
               )}>
-              <Menu className={cn("h-4 w-4 transition-colors", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              <Menu className={cn("h-4 w-4 transition-colors text-foreground/20", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
               {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
             </button>
           </DropdownMenuTrigger>
@@ -388,7 +400,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <LifeBuoy className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+              <LifeBuoy className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
               <span>Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -396,7 +408,7 @@ export function Sidebar({
               className="flex items-center justify-between px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <Mail className="h-4 w-4 text-emerald-500/50" strokeWidth={1.5} />
+                  <Mail className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
                   <div className={cn(
                     "absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full",
                     unreadCount > 0 ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-white/10"
@@ -419,7 +431,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <Sparkles className="h-4 w-4 text-orange-400/50" strokeWidth={1.5} />
+              <Sparkles className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
               <span>Patch_Notes</span>
             </DropdownMenuItem>
 
