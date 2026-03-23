@@ -929,10 +929,8 @@ export default function DisputeCases() {
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="grid grid-cols-2 gap-2 min-w-[280px]">
+                              <div className="grid grid-cols-1 gap-2 min-w-[220px]">
                                 <Badge variant="outline" className={cn('justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
-                                <Badge variant="outline" className={cn('justify-start border', badgeClass(row.filing_status))}>Filing: {formatLabel(row.filing_status)}</Badge>
-                                <Badge variant="outline" className={cn('justify-start border', badgeClass(row.recovery_status))}>Recovery: {formatLabel(row.recovery_status)}</Badge>
                               </div>
                             </td>
 
@@ -957,7 +955,7 @@ export default function DisputeCases() {
 
                             <td className="px-6 py-5">
                               <div className="min-w-[200px] space-y-2">
-                                <p className="text-sm font-sans font-bold text-white">{row.next_action}</p>
+                                <p className="text-[13px] font-sans font-bold tracking-tight text-white">{row.next_action}</p>
                               </div>
                             </td>
 
@@ -1054,6 +1052,11 @@ export default function DisputeCases() {
             <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
               {detailsRow?.case_number || 'Dispute Case'}
             </DialogTitle>
+            {detailsRow ? (
+              <div className="pt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">
+                Filing: {formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
+              </div>
+            ) : null}
           </DialogHeader>
           {detailsRow ? (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
