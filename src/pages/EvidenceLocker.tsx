@@ -496,34 +496,13 @@ export default function EvidenceLocker() {
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
               {/* Institutional Header */}
-              <div className="flex items-center justify-between mb-10">
+              <div className="mb-10">
                 <div className="flex flex-col gap-2">
                   <Badge variant="outline" className="w-fit px-3 py-0.5 border-white/15 bg-white/5 text-white/75 font-sans font-bold text-[9px] tracking-tight uppercase">
                     Evidence Inventory
                   </Badge>
                   <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Evidence Locker.</h1>
                   <p className="text-white/40 mt-1 font-sans font-light italic text-lg max-w-2xl">Manage your uploaded documents and evidence artifacts.</p>
-                </div>
-
-                {/* Evidence Stats Badges */}
-                <div className="hidden xl:flex items-center gap-10">
-                  {[
-                    { label: 'Total_Documents', value: metrics.totalDocuments, icon: Database },
-                    { label: 'Filtered_Results', value: metrics.filteredResults, icon: Search },
-                    { label: 'Parsed', value: metrics.parsed, icon: CheckCircle2 },
-                    { label: 'Matched', value: metrics.matched, icon: Link2 },
-                    { label: 'Needs_Review', value: metrics.needsReview, icon: FileWarning }
-                  ].map((stat, idx) => (
-                    <div key={idx} className="flex flex-col gap-1.5 pl-8 border-l border-white/5 first:border-0 first:pl-0">
-                      <span className="text-[9px] font-sans font-bold text-white/20 tracking-tight uppercase">{stat.label}</span>
-                      <div className="flex items-center gap-3">
-                        <stat.icon className="h-3 w-3 text-white/20" />
-                        <span className="text-lg font-sans font-bold text-white tracking-tight">
-                          {stat.value}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
 

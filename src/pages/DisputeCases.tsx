@@ -712,25 +712,19 @@ export default function DisputeCases() {
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardContent className="px-0 py-0">
-              <div className="flex flex-col xl:flex-row xl:items-stretch">
-                <div className="grid flex-1 grid-cols-1 sm:grid-cols-3">
-                  {primarySummaryCards.map((card) => (
-                    <div key={card.label} className="px-3 py-2 border-b sm:border-b-0 sm:border-r last:border-r-0 border-white/5">
-                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                      <p className="mt-0.5 text-[26px] leading-none font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="border-t xl:border-t-0 xl:border-l border-white/5 px-3 py-2 xl:min-w-[42%]">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                    {secondarySummaryCards.map((card) => (
-                      <div key={card.label} className="min-w-[82px]">
-                        <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                        <p className="mt-0 text-[22px] leading-none font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
-                      </div>
-                    ))}
+              <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7">
+                {[...primarySummaryCards, ...secondarySummaryCards].map((card, index, allCards) => (
+                  <div
+                    key={card.label}
+                    className={cn(
+                      'px-2 py-2 md:px-2.5 border-white/5',
+                      index < allCards.length - 1 ? 'border-b md:border-b-0 md:border-r' : ''
+                    )}
+                  >
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
+                    <p className="mt-0 text-[22px] leading-none font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                   </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>

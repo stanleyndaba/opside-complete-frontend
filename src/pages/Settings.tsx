@@ -175,8 +175,7 @@ const Settings = () => {
 
   return (
     <PageLayout title="Account Control Center" midnight>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
+      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -184,22 +183,23 @@ const Settings = () => {
               'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
           }}
         />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="relative container mx-auto px-8 pt-10 pb-20">
+        <div className="relative z-10 container mx-auto px-8 pt-10 pb-20">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             <div className="lg:col-span-1">
               <div className="lg:sticky lg:top-24 space-y-8">
                 <div>
-                  <h1 className="text-2xl font-sans font-bold text-white tracking-tight mb-1">Settings</h1>
+                  <h1 className="text-2xl font-sans font-light text-white tracking-tight mb-1">Settings</h1>
                   <p className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
                     SYSTEM_CONFIG // READ_ONLY
                   </p>
                 </div>
 
                 <nav className="space-y-1">
-                  <div className="group relative w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-                    <div className="absolute left-0 w-1 h-4 bg-emerald-500 rounded-full" />
-                    <Building2 className="h-4.5 w-4.5 text-emerald-500" />
+                  <div className="group relative w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-[#111111] border border-white/10 text-white/80">
+                    <Building2 className="h-4.5 w-4.5 text-white/50" />
                     <span className="text-[11px] font-sans font-bold uppercase tracking-tight">
                       Seller Profile
                     </span>
@@ -225,11 +225,11 @@ const Settings = () => {
                   </p>
                 </div>
 
-                <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group hover:border-emerald-500/20 transition-all duration-500">
+                <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group transition-all duration-500">
                   <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
-                    <Building2 className="h-48 w-48 text-emerald-500 rotate-12" />
+                    <Building2 className="h-48 w-48 text-white rotate-12" />
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent pointer-events-none" />
 
                   <CardContent className="p-8 relative z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -244,7 +244,7 @@ const Settings = () => {
                               className={cn(
                                 'text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1',
                                 isAmazonConnected
-                                  ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                                  ? 'bg-white/5 text-white border-white/10'
                                   : 'bg-white/5 text-white/40 border-white/10'
                               )}
                             >
@@ -276,7 +276,7 @@ const Settings = () => {
 
                       <div className="flex flex-col gap-3">
                         <Button
-                          className="bg-white text-black hover:bg-emerald-500 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                          className="bg-white text-black hover:bg-white/90 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                           onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
                           disabled={!activeTenantSlug}
                         >
@@ -293,7 +293,7 @@ const Settings = () => {
                       <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 space-y-4">
-                      <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
+                      <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl transition-all">
                         <div className="flex items-center gap-3">
                           <Store className="h-4 w-4 text-white/40" />
                           <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Amazon SP-API</span>
@@ -303,7 +303,7 @@ const Settings = () => {
                           className={cn(
                             'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5',
                             isAmazonConnected
-                              ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                              ? 'bg-white/5 text-white border-white/10'
                               : 'bg-white/5 text-white/40 border-white/10'
                           )}
                         >
@@ -311,7 +311,7 @@ const Settings = () => {
                         </Badge>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:border-emerald-500/20 transition-all">
+                      <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl transition-all">
                         <div className="flex items-center gap-3">
                           <CreditCard className="h-4 w-4 text-white/40" />
                           <span className="text-xs font-sans font-bold text-white/80 tracking-tight">PayPal Billing</span>
@@ -321,7 +321,7 @@ const Settings = () => {
                           className={cn(
                             'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5',
                             paypalActive
-                              ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                              ? 'bg-white/5 text-white border-white/10'
                               : 'bg-white/5 text-white/40 border-white/10'
                           )}
                         >
@@ -379,7 +379,7 @@ const Settings = () => {
 
                       <Button
                         variant="outline"
-                        className="w-full h-10 border-white/10 hover:border-emerald-500/50 text-emerald-500 bg-emerald-500/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                        className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/[0.03] font-sans font-bold text-[10px] uppercase tracking-tight"
                         onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
                         disabled={!activeTenantSlug}
                       >

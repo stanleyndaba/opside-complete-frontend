@@ -78,7 +78,7 @@ const statusStyles: Record<BillingRowStatus, string> = {
 const metricCards = [
   {
     key: 'availableCreditBalance',
-    label: 'Available credit balance',
+    label: 'Credit balance',
   },
   {
     key: 'totalRecovered',
@@ -86,7 +86,7 @@ const metricCards = [
   },
   {
     key: 'totalFees',
-    label: 'Total 20% success fees',
+    label: '20% success fees',
   },
   {
     key: 'totalCreditApplied',
