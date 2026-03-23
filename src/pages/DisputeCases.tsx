@@ -553,6 +553,20 @@ export default function DisputeCases() {
 
   const refresh = () => setRefreshKey((value) => value + 1);
 
+  const handleBriefDownload = (row: QueueRow) => {
+    if (!activeTenantSlug) return;
+    if (dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')) {
+      toast({
+        title: 'Brief unavailable',
+        description: 'Preview fixtures do not have a real backend dispute brief.'
+      });
+      return;
+    }
+
+    const briefUrl = api.getDisputeBrief(row.dispute_case_id, activeTenantSlug);
+    window.open(briefUrl, '_blank', 'noopener,noreferrer');
+  };
+
   const handleFilingAction = async (row: QueueRow, mode: 'file' | 'retry' | 'approve') => {
     if (!activeTenantSlug) return;
     if (!isPaidUser && mode === 'file') {
@@ -942,6 +956,14 @@ export default function DisputeCases() {
                               <div className="flex flex-col gap-2 min-w-[150px]">
                                 <Button asChild className="h-9 text-[10px] font-sans font-bold uppercase tracking-tight bg-white text-black hover:bg-emerald-500 rounded-lg">
                                   <Link to={`/recoveries/${row.dispute_case_id}`}>Open Case</Link>
+                                </Button>
+                                <Button
+                                  onClick={() => handleBriefDownload(row)}
+                                  disabled={dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')}
+                                  className="h-9 text-[10px] font-sans font-bold uppercase tracking-tight bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 rounded-lg"
+                                >
+                                  <FileText className="w-3 h-3 mr-2" />
+                                  Brief PDF
                                 </Button>
                                 {actionButton ? (
                                   <Button

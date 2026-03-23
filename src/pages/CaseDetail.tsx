@@ -728,6 +728,12 @@ export default function CaseDetail() {
     ];
   }, [approvedAmount, effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
 
+  const handleBriefDownload = useCallback(() => {
+    if (!activeSlug || !effectiveCase?.id) return;
+    const briefUrl = api.getDisputeBrief(String(effectiveCase.id), activeSlug);
+    window.open(briefUrl, '_blank', 'noopener,noreferrer');
+  }, [activeSlug, effectiveCase?.id]);
+
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
     return (
@@ -809,10 +815,19 @@ export default function CaseDetail() {
                   variant="outline"
                   size="sm"
                   className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
+                  onClick={handleBriefDownload}
+                >
+                  <FileText className="h-3.5 w-3.5 mr-2" />
+                  Brief PDF
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
                   onClick={async () => await ClaimPdfService.generate(effectiveCase)}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
-                  Get PDF
+                  Case PDF
                 </Button>
               </div>
             </div>
