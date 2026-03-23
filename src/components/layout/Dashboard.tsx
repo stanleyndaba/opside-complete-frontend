@@ -1226,7 +1226,7 @@ export function Dashboard() {
                           >
                             <div className="flex flex-col items-end">
                               <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
-                              <span className="text-[9px] font-sans font-bold text-white/30 group-hover:text-white/55 uppercase tracking-tight">
+                              <span className="text-[9px] font-sans font-bold text-white group-hover:text-white uppercase tracking-tight">
                                 {formattedLastUpdatedAbsolute}
                               </span>
                             </div>

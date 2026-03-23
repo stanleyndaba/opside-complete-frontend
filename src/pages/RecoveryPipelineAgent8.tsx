@@ -212,12 +212,12 @@ export default function RecoveryPipelineAgent8() {
       <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
         <div className="relative w-full max-w-full px-8 pt-8 pb-24">
           <div className="mb-8 border-b border-white/10 pb-8">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Agent 8 Recovery Ledger</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovery Ledger</div>
             <div className="mt-3 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
                 <h1 className="text-4xl font-light tracking-tight text-white">Recovery Pipeline</h1>
                 <p className="mt-3 max-w-3xl text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">
-                  Approved claims, pending payouts, reconciliations, and billed recoveries for this tenant. Recovered cash is only shown from actual payout records.
+                  Approved claims, pending payouts, reconciliations, and billed recoveries for your account.
                 </p>
               </div>
               <div className="flex items-center gap-3">
