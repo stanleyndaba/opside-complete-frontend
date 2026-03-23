@@ -644,12 +644,15 @@ export default function DisputeCases() {
     }
   };
 
-  const summaryCards = useMemo(() => ([
+  const primarySummaryCards = useMemo(() => ([
     { label: 'Total Cases', value: summary.total_cases },
     { label: 'Ready to File', value: summary.ready_to_file_count },
+    { label: 'Approved / Pending Payout', value: summary.approved_pending_payout_count },
+  ]), [summary]);
+
+  const secondarySummaryCards = useMemo(() => ([
     { label: 'Filed', value: summary.filed_count },
     { label: 'Rejected', value: summary.rejected_count },
-    { label: 'Approved / Pending Payout', value: summary.approved_pending_payout_count },
     { label: 'Recovered', value: summary.recovered_count },
     { label: 'Billing Pending', value: summary.billing_pending_count },
   ]), [summary]);
@@ -721,16 +724,31 @@ export default function DisputeCases() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 xl:grid-cols-7 gap-3">
-            {summaryCards.map((card) => (
-              <Card key={card.label} className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
-                <CardContent className="p-5 space-y-2">
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{card.label}</p>
-                  <p className="text-2xl font-sans font-bold text-white tracking-tight tabular-nums">{card.value}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
+            <CardContent className="p-0">
+              <div className="grid gap-0 xl:grid-cols-[1.2fr_1fr]">
+                <div className="grid grid-cols-1 md:grid-cols-3 border-b xl:border-b-0 xl:border-r border-white/5">
+                  {primarySummaryCards.map((card) => (
+                    <div key={card.label} className="p-6 border-b md:border-b-0 md:border-r last:border-r-0 border-white/5">
+                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{card.label}</p>
+                      <p className="mt-3 text-4xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-6">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/22">Queue Breakdown</div>
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    {secondarySummaryCards.map((card) => (
+                      <div key={card.label} className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+                        <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{card.label}</p>
+                        <p className="mt-2 text-2xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {sourceNote ? (
             <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
@@ -930,7 +948,7 @@ export default function DisputeCases() {
 
                             <td className="px-6 py-5">
                               <div className="grid grid-cols-1 gap-2 min-w-[220px]">
-                                <Badge variant="outline" className={cn('justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
+                                <Badge variant="outline" className={cn('w-fit justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
                               </div>
                             </td>
 
