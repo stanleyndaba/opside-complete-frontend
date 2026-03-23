@@ -393,7 +393,6 @@ export function Navbar({
                             navigate(tenantRoute(activeTenantSlug, link.path));
                           }}
                           className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-sans font-bold uppercase tracking-tight group">
-                          <link.icon className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
                           {link.label}
                         </button>
                       ))}
