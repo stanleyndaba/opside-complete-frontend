@@ -73,28 +73,6 @@ type ProofDocument = {
   amount?: number;
 };
 
-type EvidencePackClaim = {
-  id: string;
-  claim_number?: string;
-  type?: string;
-  anomaly_type?: string;
-  status: string;
-  guaranteedAmount?: number;
-  amount?: number;
-  created?: string;
-  created_at?: string;
-  discovery_date?: string;
-  details?: string;
-  matchedDocs?: Array<{
-    id: string;
-    name: string;
-    type?: string;
-    uploadDate?: string;
-  }>;
-  matchedCount?: number;
-  confidence_score?: number;
-};
-
 const PAGE_SIZE = 10;
 const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
 const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
@@ -187,7 +165,7 @@ export default function RecoveryPipelineAgent8() {
   const [proofDocsClaim, setProofDocsClaim] = useState<{ id: string; claim_number?: string } | null>(null);
   const [proofDocs, setProofDocs] = useState<ProofDocument[]>([]);
   const [evidencePackOpen, setEvidencePackOpen] = useState(false);
-  const [evidencePackClaim, setEvidencePackClaim] = useState<EvidencePackClaim | null>(null);
+  const [evidencePackClaimId, setEvidencePackClaimId] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<Row | null>(null);
 
@@ -268,35 +246,9 @@ export default function RecoveryPipelineAgent8() {
     setDetailsOpen(true);
   };
 
-  const openEvidencePacket = async (row: Row) => {
-    try {
-      const res = await api.getRecoveryDetail(row.dispute_case_id || row.recovery_id, activeSlug);
-      if (!res.ok) {
-        throw new Error(res.error || 'Unable to load evidence packet.');
-      }
-
-      const documents = Array.isArray(res.data?.documents) ? res.data.documents : [];
-      setEvidencePackClaim({
-        id: row.dispute_case_id || row.recovery_id,
-        claim_number: row.case_number,
-        anomaly_type: row.status || undefined,
-        status: label(row.operator_state || row.status),
-        guaranteedAmount: row.approved_amount ?? row.expected_payout_amount ?? row.actual_payout_amount ?? undefined,
-        amount: row.approved_amount ?? row.expected_payout_amount ?? row.actual_payout_amount ?? undefined,
-        created_at: row.last_updated_at ?? undefined,
-        details: row.merchant_reference || undefined,
-        matchedDocs: documents.map((doc: any) => ({
-          id: doc.id,
-          name: doc.name || doc.filename || 'Document',
-          type: doc.type || doc.doc_type,
-          uploadDate: doc.uploadDate || doc.created_at,
-        })),
-        matchedCount: documents.length,
-      });
-      setEvidencePackOpen(true);
-    } catch (err: any) {
-      toast({ title: 'Unable to load evidence packet', description: err?.message || 'The recovery packet could not be loaded.' });
-    }
+  const openEvidencePacket = (row: Row) => {
+    setEvidencePackClaimId(row.dispute_case_id || row.recovery_id);
+    setEvidencePackOpen(true);
   };
 
   if (isReady && !activeSlug) {
@@ -529,8 +481,16 @@ export default function RecoveryPipelineAgent8() {
       </div>
 
       <ProofDocumentsModal open={proofDocsModalOpen} onClose={() => setProofDocsModalOpen(false)} claimId={proofDocsClaim?.id || ''} claimNumber={proofDocsClaim?.claim_number} documents={proofDocs} />
-      {evidencePackClaim ? (
-        <EvidencePackView open={evidencePackOpen} onClose={() => setEvidencePackOpen(false)} claim={evidencePackClaim} />
+      {evidencePackClaimId ? (
+        <EvidencePackView
+          open={evidencePackOpen}
+          onClose={() => {
+            setEvidencePackOpen(false);
+            setEvidencePackClaimId(null);
+          }}
+          claimId={evidencePackClaimId}
+          tenantSlug={activeSlug}
+        />
       ) : null}
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
         <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">

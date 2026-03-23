@@ -157,7 +157,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
     if (timeline.length === 0) {
         return (
             <div className="p-4 bg-white/5 rounded-lg text-white/40 text-sm">
-                No audit events recorded for this evidence.
+                No linked evidence events are currently available.
             </div>
         );
     }
@@ -314,8 +314,7 @@ export function EvidenceAuditTrail({ claimId, documentId, compact = false }: Evi
 
                         {/* Footer */}
                         <div className="mt-4 pt-3 border-t border-white/5 text-xs text-white/20 text-center">
-                            <Shield className="h-3 w-3 inline mr-1" />
-                            Legal-grade audit trail • All events are immutable and timestamped
+                            Recorded linked evidence events currently available
                         </div>
                     </CardContent>
                 </CollapsibleContent>

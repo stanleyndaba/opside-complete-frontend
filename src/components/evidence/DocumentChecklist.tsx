@@ -106,7 +106,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
         return (
             <div className="flex items-center gap-2 px-4 py-3 text-white/40 text-xs">
                 <div className="w-3 h-3 border border-white/20 border-t-white/60 rounded-full animate-spin" />
-                Checking proof requirements...
+                Checking current proof checklist...
             </div>
         );
     }
@@ -114,7 +114,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
     if (error || !checklist) {
         return (
             <div className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white/40 text-xs">
-                Unable to check proof requirements
+                Unable to load proof checklist
             </div>
         );
     }
@@ -134,7 +134,7 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
             <Collapsible open={expanded} onOpenChange={setExpanded}>
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-3 w-full px-4 py-3 bg-transparent border border-white/10 rounded-lg text-left hover:bg-white/5 transition-colors">
-                        <span className="text-xs font-bold text-white/80 tracking-tight">Amazon Proof Requirements</span>
+                        <span className="text-xs font-bold text-white/80 tracking-tight">Current Proof Checklist</span>
                         <div className="flex-1" />
                         <span className="text-xs text-white/40">{completeCount}/4</span>
                         <ChevronRight className="h-3.5 w-3.5 text-white/20" />
@@ -151,10 +151,10 @@ export function DocumentChecklist({ claimId, compact = false }: DocumentChecklis
                 <CollapsibleTrigger asChild>
                     <button className="flex items-center gap-3 w-full px-4 py-2 bg-white/5 border-b border-white/10 text-left hover:bg-white/10 transition-colors">
                         <h4 className="text-xs font-bold text-white/80 tracking-tight uppercase">
-                            Amazon Proof Requirements
+                            Current Proof Checklist
                         </h4>
                         <span className="text-xs text-white/40 ml-auto mr-2">
-                            {checklist.overallScore}% Complete
+                            {checklist.overallScore}% Coverage
                         </span>
                         {expanded ? (
                             <ChevronDown className="h-3.5 w-3.5 text-white/20" />
