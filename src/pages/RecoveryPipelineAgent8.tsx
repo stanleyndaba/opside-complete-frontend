@@ -356,12 +356,12 @@ export default function RecoveryPipelineAgent8() {
                         <table className="w-full min-w-[1120px] border-collapse">
                           <thead>
                             <tr className="border-b border-white/10">
-                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Recovery Case</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Recovery State</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Money</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Billing</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Currentness</th>
-                              <th className="pl-4 py-3 text-right text-[9px] font-sans font-medium uppercase tracking-[0.18em] text-white/18">Actions</th>
+                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Recovery Case</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Recovery State</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Money</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Billing</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Currentness</th>
+                              <th className="pl-4 py-3 text-right text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
