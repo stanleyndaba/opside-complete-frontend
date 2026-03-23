@@ -678,9 +678,17 @@ export default function DisputeCases() {
 
   return (
     <PageLayout title="Dispute Cases" midnight>
-      <div className="min-h-screen bg-[#050505] relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.08),transparent_70%)] pointer-events-none" />
-        <div className="relative container mx-auto px-8 pt-10 pb-20 space-y-8">
+      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage:
+              `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+          }}
+        />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Dispute Cases</h1>
@@ -707,19 +715,18 @@ export default function DisputeCases() {
               <div className="flex flex-col xl:flex-row xl:items-stretch">
                 <div className="grid flex-1 grid-cols-1 sm:grid-cols-3">
                   {primarySummaryCards.map((card) => (
-                    <div key={card.label} className="px-4 py-3 border-b sm:border-b-0 sm:border-r last:border-r-0 border-white/5">
+                    <div key={card.label} className="px-3 py-2 border-b sm:border-b-0 sm:border-r last:border-r-0 border-white/5">
                       <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                      <p className="mt-1 text-2xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                      <p className="mt-0.5 text-[26px] leading-none font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                     </div>
                   ))}
                 </div>
-                <div className="border-t xl:border-t-0 xl:border-l border-white/5 px-4 py-3 xl:min-w-[42%]">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/22">Breakdown</div>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2">
+                <div className="border-t xl:border-t-0 xl:border-l border-white/5 px-3 py-2 xl:min-w-[42%]">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                     {secondarySummaryCards.map((card) => (
-                      <div key={card.label} className="min-w-[96px]">
+                      <div key={card.label} className="min-w-[82px]">
                         <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                        <p className="mt-0.5 text-xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                        <p className="mt-0 text-[22px] leading-none font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                       </div>
                     ))}
                   </div>
@@ -727,18 +734,6 @@ export default function DisputeCases() {
               </div>
             </CardContent>
           </Card>
-
-          {sourceNote ? (
-            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
-              <CardContent className="px-5 py-4 flex items-center gap-3">
-                <AlertCircle className="w-4 h-4 text-amber-300 flex-shrink-0" />
-                <div className="space-y-1">
-                  <p className="text-[11px] font-sans font-bold uppercase tracking-tight text-amber-300">Launch visibility mode</p>
-                  <p className="text-xs font-sans text-white/55">{sourceNote}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ) : null}
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
