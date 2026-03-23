@@ -725,23 +725,23 @@ export default function DisputeCases() {
           </div>
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-            <CardContent className="p-0">
-              <div className="grid gap-0 xl:grid-cols-[1.2fr_1fr]">
-                <div className="grid grid-cols-1 md:grid-cols-3 border-b xl:border-b-0 xl:border-r border-white/5">
+            <CardContent className="px-0 py-0">
+              <div className="flex flex-col xl:flex-row xl:items-stretch">
+                <div className="grid flex-1 grid-cols-1 sm:grid-cols-3">
                   {primarySummaryCards.map((card) => (
-                    <div key={card.label} className="p-6 border-b md:border-b-0 md:border-r last:border-r-0 border-white/5">
-                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{card.label}</p>
-                      <p className="mt-3 text-4xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                    <div key={card.label} className="px-7 py-5 border-b sm:border-b-0 sm:border-r last:border-r-0 border-white/5">
+                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
+                      <p className="mt-2 text-2xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                     </div>
                   ))}
                 </div>
-                <div className="p-6">
+                <div className="border-t xl:border-t-0 xl:border-l border-white/5 px-7 py-5 xl:min-w-[42%]">
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/22">Queue Breakdown</div>
-                  <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-3">
                     {secondarySummaryCards.map((card) => (
-                      <div key={card.label} className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-                        <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{card.label}</p>
-                        <p className="mt-2 text-2xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
+                      <div key={card.label} className="min-w-[120px]">
+                        <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
+                        <p className="mt-1 text-xl font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
                       </div>
                     ))}
                   </div>
