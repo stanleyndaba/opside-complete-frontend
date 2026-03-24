@@ -1990,6 +1990,23 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(preferences),
     }),
+  getAutoFilePreference: () => requestJson<{
+    success: boolean;
+    data: {
+      enabled: boolean;
+    };
+  }>('/api/notifications/preferences/filing'),
+  saveAutoFilePreference: (enabled: boolean) =>
+    requestJson<{
+      success: boolean;
+      message: string;
+      data: {
+        enabled: boolean;
+      };
+    }>('/api/notifications/preferences/filing', {
+      method: 'PUT',
+      body: JSON.stringify({ enabled }),
+    }),
 
 
   // Agent 11: Learning endpoints

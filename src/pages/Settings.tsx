@@ -6,6 +6,7 @@ import { Building2, CreditCard, Store } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
@@ -43,6 +44,10 @@ const Settings = () => {
   const activeTenantSlug = tenantSlug || tenant?.slug || null;
   const [sellerProfile, setSellerProfile] = useState<SellerProfile>({});
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const [autoFileEnabled, setAutoFileEnabled] = useState(true);
+  const [loadingAutoFile, setLoadingAutoFile] = useState(true);
+  const [savingAutoFile, setSavingAutoFile] = useState(false);
+  const [autoFileError, setAutoFileError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!activeTenantSlug) {
@@ -101,6 +106,55 @@ const Settings = () => {
 
     void loadSellerProfile();
   }, [activeTenantSlug]);
+
+  useEffect(() => {
+    if (!activeTenantSlug) {
+      setLoadingAutoFile(false);
+      return;
+    }
+
+    const loadAutoFilePreference = async () => {
+      setLoadingAutoFile(true);
+      setAutoFileError(null);
+
+      try {
+        const response = await api.getAutoFilePreference();
+        if (response.ok && response.data) {
+          setAutoFileEnabled(response.data.enabled);
+        } else {
+          setAutoFileError(response.error || 'Failed to load auto-file setting');
+        }
+      } catch (error) {
+        console.error('Failed to load auto-file preference:', error);
+        setAutoFileError('Failed to load auto-file setting');
+      } finally {
+        setLoadingAutoFile(false);
+      }
+    };
+
+    void loadAutoFilePreference();
+  }, [activeTenantSlug]);
+
+  const handleAutoFileChange = async (enabled: boolean) => {
+    const previousValue = autoFileEnabled;
+    setAutoFileEnabled(enabled);
+    setSavingAutoFile(true);
+    setAutoFileError(null);
+
+    try {
+      const response = await api.saveAutoFilePreference(enabled);
+      if (!response.ok) {
+        setAutoFileEnabled(previousValue);
+        setAutoFileError(response.error || 'Failed to save auto-file setting');
+      }
+    } catch (error) {
+      console.error('Failed to save auto-file preference:', error);
+      setAutoFileEnabled(previousValue);
+      setAutoFileError('Failed to save auto-file setting');
+    } finally {
+      setSavingAutoFile(false);
+    }
+  };
 
   const supportTier = planLimits?.supportTier ? SUPPORT_TIER_COPY[planLimits.supportTier] : 'Not available';
   const isAmazonConnected = sellerProfile.amazon_connected ?? false;
@@ -190,7 +244,7 @@ const Settings = () => {
             </div>
             <h1 className="mt-3 text-4xl font-sans font-light text-white tracking-tight">Settings</h1>
             <p className="mt-4 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
-              This page currently shows live account and workspace information. Editable settings that are not yet backed by real persistence have been removed.
+              This page shows live account details and only the controls that are backed by real persistence.
             </p>
           </div>
 
@@ -352,9 +406,48 @@ const Settings = () => {
                   </section>
 
                   <section className="space-y-6 border-t border-white/10 pt-8 md:border-t-0 md:border-l md:pl-10">
-                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</div>
+                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Filing Controls</div>
 
                     <div className="space-y-6">
+                      <div className="flex items-start justify-between gap-6 py-3 border-b border-white/10">
+                        <div className="space-y-2 max-w-md">
+                          <p className="text-sm font-sans font-bold text-white tracking-tight">Auto-File</p>
+                          <p className="text-xs text-white/45 font-sans leading-relaxed">
+                            Auto-file cases. Turn this off if you want your cases reviewed before filing.
+                          </p>
+                          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+                            {loadingAutoFile
+                              ? 'Loading filing preference'
+                              : savingAutoFile
+                                ? 'Saving filing preference'
+                                : autoFileEnabled
+                                  ? 'Eligible cases can file automatically'
+                                  : 'Cases will wait for review before filing'}
+                          </p>
+                          {autoFileError && (
+                            <p className="text-xs text-[#d0b673] font-sans leading-relaxed">
+                              {autoFileError}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col items-end gap-3">
+                          <Switch
+                            checked={autoFileEnabled}
+                            onCheckedChange={(checked) => {
+                              void handleAutoFileChange(checked);
+                            }}
+                            disabled={loadingAutoFile || savingAutoFile}
+                            className="data-[state=checked]:bg-white data-[state=unchecked]:bg-white/20"
+                          />
+                          <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                            {autoFileEnabled ? 'On' : 'Off'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</div>
+
                       <div className="space-y-2">
                         <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Current Tier</p>
                         <p className="text-lg font-sans font-bold text-white tracking-tight">{supportTier}</p>
