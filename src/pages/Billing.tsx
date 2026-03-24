@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -286,68 +285,77 @@ export default function Billing() {
 
   return (
     <PageLayout title="Billing" midnight>
-      <div className="min-h-screen bg-[#050505] text-white relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-[720px] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.045),transparent_72%)] pointer-events-none" />
-        <div className="relative container mx-auto px-8 pt-10 pb-20 space-y-8">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <div className="space-y-2 max-w-4xl">
-              <h1 className="text-3xl font-sans font-bold tracking-tight text-white">Billing &amp; Recoveries</h1>
-              <p className="text-sm font-sans leading-6 text-white/55">
-                You only pay after confirmed recovery. 20% success fee, with any $99 prepaid credit automatically applied.
-              </p>
-              <p className="text-sm font-sans leading-6 text-white/42">
-                You will never pay more than 20% of recovered funds. Unused credit carries forward.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
+      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
+          }}
+        />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="relative container mx-auto px-8 pt-10 pb-20 space-y-10">
+          <div className="border-b border-white/10 pb-10">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Recovery Billing // Live State</div>
+            <div className="mt-4 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+              <div className="space-y-3 max-w-4xl">
+                <h1 className="text-4xl font-sans font-light tracking-tight text-white">Billing &amp; Recoveries</h1>
+                <p className="text-sm font-sans leading-6 text-white/55">
+                  You only pay after confirmed recovery. 20% success fee, with any $99 prepaid credit automatically applied.
+                </p>
+                <p className="text-sm font-sans leading-6 text-white/42">
+                  You will never pay more than 20% of recovered funds. Unused credit carries forward.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
                 Tenant: {activeSlug || 'Unavailable'}
-              </Badge>
-              <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
+                </Badge>
+                <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
                 {billingSummary?.lastBillingDate
                   ? `Last billed ${new Date(billingSummary.lastBillingDate).toLocaleDateString()}`
                   : 'Billing date unavailable'}
-              </Badge>
-              {billingSummary?.currentRecoveryCycleType && billingSummary?.currentRecoveryCycleStartedAt ? (
-                <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5">
-                  Cycle: {billingSummary.currentRecoveryCycleType} • Started {new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()}
                 </Badge>
-              ) : null}
+                {billingSummary?.currentRecoveryCycleType && billingSummary?.currentRecoveryCycleStartedAt ? (
+                  <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
+                    Cycle: {billingSummary.currentRecoveryCycleType} • Started {new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()}
+                  </Badge>
+                ) : null}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 xl:grid-cols-6 gap-3">
+          <section className="border-t border-white/10 pt-10">
+            <div className="grid grid-cols-2 xl:grid-cols-6 gap-8">
             {metricCards.map((metric) => (
-              <Card key={metric.key} className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
-                <CardContent className="p-5 space-y-2">
+              <div key={metric.key} className="space-y-2">
                   <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{metric.label}</p>
                   <p className="text-2xl font-sans font-bold text-white tracking-tight tabular-nums">
                     {billingSummary ? formatMoney(billingSummary[metric.key]) : '—'}
                   </p>
-                </CardContent>
-              </Card>
+              </div>
             ))}
-          </div>
+            </div>
+          </section>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
-                <CardTitle className="text-[11px] font-sans font-bold uppercase tracking-tight text-white/60">Current recovery cycle</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 space-y-4 text-[13px] font-sans text-white/70">
-                <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-4">
+          <div className="grid gap-10 lg:grid-cols-2 border-t border-white/10 pt-10">
+            <section className="space-y-6">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Current recovery cycle</div>
+              <div className="space-y-4 text-[13px] font-sans text-white/70">
+                <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4">
                   <span className="text-white/40">Recovery cycle ID</span>
                   <span className="text-right text-white/90 font-bold tracking-tight">
                     {billingSummary?.currentRecoveryCycleId || 'No active recovery cycle'}
                   </span>
                 </div>
-                <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-4">
+                <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4">
                   <span className="text-white/40">Cycle type</span>
                   <span className="text-right text-white/90 font-bold tracking-tight">
                     {billingSummary?.currentRecoveryCycleType || 'Not available'}
                   </span>
                 </div>
-                <div className="flex items-start justify-between gap-6">
+                <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4">
                   <span className="text-white/40">Cycle started</span>
                   <span className="text-right text-white/90 font-bold tracking-tight">
                     {billingSummary?.currentRecoveryCycleStartedAt
@@ -359,17 +367,15 @@ export default function Billing() {
                   The prepaid $99 Priority Audit Pass is attached to a recovery cycle. Any unused credit carries forward until it is
                   applied against future confirmed-recovery fees.
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </section>
 
-            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
-                <CardTitle className="text-[11px] font-sans font-bold uppercase tracking-tight text-white/60">PayPal billing method</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 space-y-4">
-                <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <section className="space-y-6 border-t border-white/10 pt-8 lg:border-t-0 lg:border-l lg:pl-10">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">PayPal billing method</div>
+              <div className="space-y-4">
+                <div className="space-y-2">
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Current billing method</div>
-                  <div className="mt-2 text-sm font-sans font-bold text-white tracking-tight">
+                  <div className="text-sm font-sans font-bold text-white tracking-tight">
                     {vaultedEmail || 'No linked PayPal account'}
                   </div>
                 </div>
@@ -380,20 +386,23 @@ export default function Billing() {
                 <Button
                   onClick={handleLinkPaymentMethod}
                   disabled={isVaulting}
-                  className="h-10 rounded-lg border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
+                  className="h-10 rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
                 >
                   {isVaulting ? 'Linking PayPal...' : vaultedEmail ? 'Update PayPal method' : 'Link PayPal method'}
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </section>
           </div>
 
-          <div>
-            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-              <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
-                <CardTitle className="text-[11px] font-sans font-bold uppercase tracking-tight text-white/60">Billing settings</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 space-y-6">
+          <section className="border-t border-white/10 pt-10">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(320px,1fr)]">
+              <div className="space-y-3">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Billing settings</div>
+                <p className="text-sm font-sans leading-6 text-white/50">
+                  Invoice recipient and tax-detail preferences are still saved locally on this machine.
+                </p>
+              </div>
+              <div className="space-y-6">
                 <div className="space-y-3">
                   <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Invoice recipients</label>
                   <div className="flex gap-2">
@@ -401,11 +410,11 @@ export default function Billing() {
                       placeholder="Email address"
                       value={newRecipient}
                       onChange={(event) => setNewRecipient(event.target.value)}
-                      className="h-10 rounded-lg border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans"
+                      className="h-10 rounded-none border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans"
                     />
                     <Button
                       variant="outline"
-                      className="h-10 rounded-lg border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
+                      className="h-10 rounded-none border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
                       onClick={() => {
                         if (!newRecipient.trim()) return;
                         setInvoiceRecipients((current) => [...current, newRecipient.trim()]);
@@ -421,7 +430,7 @@ export default function Billing() {
                         <Badge
                           key={`${recipient}-${index}`}
                           variant="outline"
-                          className="border-white/10 bg-white/5 px-3 py-1 text-[11px] font-sans font-bold text-white/75 tracking-tight"
+                          className="border-white/10 bg-white/5 px-3 py-1 text-[11px] font-sans font-bold text-white/75 tracking-tight rounded-none"
                         >
                           {recipient}
                           <button
@@ -443,66 +452,65 @@ export default function Billing() {
                     placeholder="Tax ID"
                     value={taxId}
                     onChange={(event) => setTaxId(event.target.value)}
-                    className="h-10 rounded-lg border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans"
+                    className="h-10 rounded-none border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans"
                   />
                 </div>
 
                 <Button
                   onClick={saveBillingSettings}
-                  className="h-10 rounded-lg border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
+                  className="h-10 rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
                 >
                   Save billing settings
                 </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-            <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <div className="space-y-2">
-                  <CardTitle className="text-xl font-sans font-bold tracking-tight">Billing history</CardTitle>
-                  <p className="text-[13px] font-sans leading-6 text-white/50">
-                    One confirmed recovery creates one billing record. Each row shows confirmed recovered amount, fee, credit applied,
-                    amount due, and the remaining credit balance after that billing event.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <Input
-                    placeholder="Search by invoice ID, status, or PayPal invoice ID"
-                    value={invoiceSearch}
-                    onChange={(event) => setInvoiceSearch(event.target.value)}
-                    className="h-10 min-w-[280px] rounded-lg border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans"
-                  />
-                  <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as 'all' | BillingRowStatus)}>
-                    <SelectTrigger className="h-10 min-w-[180px] rounded-lg border-white/10 bg-white/5 text-white font-sans">
-                      <SelectValue placeholder="All statuses" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-black border-white/10 text-white">
-                      <SelectItem value="all">All statuses</SelectItem>
-                      {Object.entries(statusLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
-            </CardHeader>
-            <CardContent className="p-0">
+            </div>
+          </section>
+
+          <section className="border-t border-white/10 pt-10">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="space-y-2">
+                <h2 className="text-xl font-sans font-bold tracking-tight text-white">Billing history</h2>
+                <p className="text-[13px] font-sans leading-6 text-white/50">
+                  One confirmed recovery creates one billing record. Each row shows confirmed recovered amount, fee, credit applied,
+                  amount due, and the remaining credit balance after that billing event.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Input
+                  placeholder="Search by invoice ID, status, or PayPal invoice ID"
+                  value={invoiceSearch}
+                  onChange={(event) => setInvoiceSearch(event.target.value)}
+                  className="h-10 min-w-[280px] rounded-none border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans"
+                />
+                <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as 'all' | BillingRowStatus)}>
+                  <SelectTrigger className="h-10 min-w-[180px] rounded-none border-white/10 bg-white/5 text-white font-sans">
+                    <SelectValue placeholder="All statuses" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-black border-white/10 text-white">
+                    <SelectItem value="all">All statuses</SelectItem>
+                    {Object.entries(statusLabels).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="mt-8 border-t border-white/10">
               {loading && (
-                <div className="px-8 py-16 text-sm font-sans text-white/50">
+                <div className="py-16 text-sm font-sans text-white/50">
                   Loading billing history and credit balance...
                 </div>
               )}
 
               {error && !loading && (
-                <div className="space-y-3 px-8 py-16">
+                <div className="space-y-3 py-16">
                   <div className="text-sm font-sans text-rose-300">{error}</div>
                   <Button
                     variant="outline"
-                    className="rounded-lg border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                    className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                     onClick={() => window.location.reload()}
                   >
                     Retry
@@ -514,8 +522,8 @@ export default function Billing() {
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="border-white/5 hover:bg-transparent">
-                        <TableHead className="px-8 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Billing record</TableHead>
+                      <TableRow className="border-white/10 hover:bg-transparent">
+                        <TableHead className="px-0 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Billing record</TableHead>
                         <TableHead className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Date</TableHead>
                         <TableHead className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Status</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovered</TableHead>
@@ -523,14 +531,14 @@ export default function Billing() {
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Credit applied</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amount due</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Credit balance</TableHead>
-                        <TableHead className="pr-8 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">PDF</TableHead>
+                        <TableHead className="pr-0 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">PDF</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredInvoices.length > 0 ? (
                         filteredInvoices.map((invoice) => (
-                          <TableRow key={invoice.id} className="border-white/5">
-                            <TableCell className="px-8 py-5 text-[13px] font-sans text-white/85">
+                          <TableRow key={invoice.id} className="border-white/10">
+                            <TableCell className="px-0 py-5 text-[13px] font-sans text-white/85">
                               <div className="font-bold tracking-tight">{invoice.id}</div>
                               {invoice.paypalInvoiceId && (
                                 <div className="mt-1 text-[11px] text-white/45">PayPal invoice {invoice.paypalInvoiceId}</div>
@@ -542,7 +550,7 @@ export default function Billing() {
                             <TableCell>
                               <Badge
                                 variant="outline"
-                                className={cn('px-3 py-1 text-[11px] font-sans font-bold tracking-tight', statusStyles[invoice.status])}
+                                className={cn('px-3 py-1 text-[11px] font-sans font-bold tracking-tight rounded-none', statusStyles[invoice.status])}
                               >
                                 {statusLabels[invoice.status]}
                               </Badge>
@@ -562,10 +570,10 @@ export default function Billing() {
                             <TableCell className="text-right text-[13px] font-sans text-white/70">
                               {formatMoney(invoice.remainingCreditBalance)}
                             </TableCell>
-                            <TableCell className="pr-8 text-right">
+                            <TableCell className="pr-0 text-right">
                               <Button
                                 variant="outline"
-                                className="rounded-lg border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
+                                className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
                                 onClick={async () => {
                                   try {
                                     await api.downloadInvoicePdf(invoice.id, activeSlug);
@@ -588,8 +596,8 @@ export default function Billing() {
                           </TableRow>
                         ))
                       ) : (
-                        <TableRow className="border-white/5">
-                          <TableCell colSpan={9} className="px-8 py-16 text-center text-[13px] font-sans text-white/45">
+                        <TableRow className="border-white/10">
+                          <TableCell colSpan={9} className="px-0 py-16 text-center text-[13px] font-sans text-white/45">
                             No billing records match the current filters.
                           </TableCell>
                         </TableRow>
@@ -598,17 +606,17 @@ export default function Billing() {
                   </Table>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </section>
 
-          <div className="mx-auto mt-12 max-w-4xl">
-            <div className="mb-6 space-y-2 text-center">
-              <Badge variant="outline" className="border-white/10 bg-white/5 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+          <section className="border-t border-white/10 pt-10">
+            <div className="mb-6 space-y-2">
+              <Badge variant="outline" className="border-white/10 bg-white/5 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 rounded-none">
                 Billing FAQ
               </Badge>
-              <h2 className="text-[28px] font-sans font-bold tracking-tight text-white">Billing model</h2>
+              <h2 className="text-[28px] font-sans font-light tracking-tight text-white">Billing model</h2>
             </div>
-            <Accordion type="single" collapsible className="space-y-4">
+            <Accordion type="single" collapsible className="space-y-0 border-t border-white/10">
               {[
                 {
                   q: 'What is the $99 payment?',
@@ -635,7 +643,7 @@ export default function Billing() {
                   a: 'PayPal handles the upfront checkout and later collection flows. Depending on the billing path, Margin can use PayPal checkout, PayPal invoicing, or an authorized PayPal payment method.',
                 },
               ].map((item, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="rounded-2xl border border-white/5 bg-[#0c0c0c] px-6">
+                <AccordionItem key={index} value={`item-${index}`} className="border-b border-white/10">
                   <AccordionTrigger className="py-6 text-left text-[13px] font-sans font-bold tracking-tight text-white/85 hover:no-underline">
                     {item.q}
                   </AccordionTrigger>
@@ -645,9 +653,9 @@ export default function Billing() {
                 </AccordionItem>
               ))}
             </Accordion>
-          </div>
+          </section>
 
-          <div className="pt-10 text-center text-sm font-sans text-white/45">
+          <div className="border-t border-white/10 pt-10 text-sm font-sans text-white/45">
             Need billing help? billing@margin-finance.com
           </div>
         </div>

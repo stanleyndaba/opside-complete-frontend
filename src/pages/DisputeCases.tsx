@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
-import { AlertCircle, FileText, Loader2, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
+import { AlertCircle, ChevronDown, ChevronUp, FileText, Loader2, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -384,6 +384,7 @@ export default function DisputeCases() {
   });
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [summary, setSummary] = useState({
     total_cases: 0,
@@ -710,24 +711,50 @@ export default function DisputeCases() {
             </div>
           </div>
 
-          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
-            <CardContent className="px-0 py-0">
-              <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7">
-                {[...primarySummaryCards, ...secondarySummaryCards].map((card, index, allCards) => (
-                  <div
-                    key={card.label}
-                    className={cn(
-                      'px-2 py-2 md:px-2.5 border-white/5',
-                      index < allCards.length - 1 ? 'border-b md:border-b-0 md:border-r' : ''
-                    )}
-                  >
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">{card.label}</p>
-                    <p className="mt-0 text-[22px] leading-none font-sans font-bold tracking-tight text-white tabular-nums">{card.value}</p>
-                  </div>
-                ))}
+          <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#0c0c0c] text-white">
+            <button
+              type="button"
+              aria-expanded={summaryExpanded}
+              onClick={() => setSummaryExpanded((current) => !current)}
+              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.02]"
+            >
+              <div className="min-w-0">
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Summary</p>
+                <p className="mt-2 text-xs font-sans text-white">Tap to view live dispute counts</p>
               </div>
-            </CardContent>
-          </Card>
+
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="text-left">
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Cases</p>
+                  <p className="mt-1 text-lg leading-none font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
+                    {summary.total_cases}
+                  </p>
+                </div>
+                {summaryExpanded ? (
+                  <ChevronUp className="h-4 w-4 text-white/55" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-white/55" />
+                )}
+              </div>
+            </button>
+
+            {summaryExpanded && (
+              <div className="border-t border-white/8 px-5 py-4">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                  {[...primarySummaryCards, ...secondarySummaryCards].map((card) => (
+                    <div key={card.label} className="flex items-center gap-3">
+                      <div className="min-w-[2.5rem] text-left text-sm font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
+                        {card.value}
+                      </div>
+                      <div className="text-xs font-sans font-medium tracking-tight text-white">
+                        {card.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
