@@ -32,48 +32,76 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     public render() {
         if (this.state.hasError) {
             return (
-                <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 font-montserrat">
-                    <div className="max-w-md w-full bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden">
-                        {/* Background effects */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500/20 via-emerald-500 to-emerald-500/20" />
-                        <div className="absolute -top-[100px] -right-[100px] w-[200px] h-[200px] bg-emerald-500/10 blur-[80px]" />
+                <div className="min-h-screen bg-[#070707] text-white relative font-montserrat">
+                    <div
+                        className="fixed inset-0 pointer-events-none opacity-[0.03]"
+                        style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-                        <div className="relative z-10 flex flex-col items-center">
-                            <div className="h-16 w-16 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
-                                <AlertTriangle className="h-8 w-8 text-red-500" />
-                            </div>
-
-                            <h1 className="text-2xl font-bold text-white mb-2">System Interruption</h1>
-                            <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-                                The application encountered an unexpected state. Our monitoring system has been notified.
-                            </p>
-
-                            <div className="w-full space-y-3">
-                                <Button
-                                    onClick={this.handleReload}
-                                    className="w-full bg-white text-black hover:bg-gray-200 font-semibold"
-                                >
-                                    <RefreshCw className="mr-2 h-4 w-4" />
-                                    Reload Application
-                                </Button>
-
-                                <Button
-                                    variant="ghost"
-                                    onClick={() => window.location.href = '/'}
-                                    className="w-full text-gray-500 hover:text-white"
-                                >
-                                    Return to Home
-                                </Button>
-                            </div>
-
-                            {process.env.NODE_ENV === 'development' && this.state.error && (
-                                <div className="mt-8 p-4 bg-black/50 rounded-lg border border-white/5 w-full text-left overflow-hidden">
-                                    <p className="text-xs font-mono text-red-400 mb-2">Error Details (Dev Only):</p>
-                                    <pre className="text-[10px] text-gray-500 font-mono whitespace-pre-wrap break-all">
-                                        {this.state.error.toString()}
-                                    </pre>
+                    <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl items-center px-6 py-10 lg:px-10">
+                        <div className="w-full">
+                            <div className="border-b border-white/8 pb-8">
+                                <div className="mb-4 flex items-center gap-3">
+                                    <div className="rounded-xl border border-white/10 bg-[#111111] p-2">
+                                        <AlertTriangle className="h-5 w-5 text-white/70" />
+                                    </div>
+                                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                                        System Error
+                                    </p>
                                 </div>
-                            )}
+                                <h1 className="text-3xl font-sans font-light tracking-tight text-white">
+                                    The application hit an unexpected state.
+                                </h1>
+                                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/40">
+                                    This page is intentionally simple. Refresh the application to restore a clean session.
+                                </p>
+                            </div>
+
+                            <div className="grid gap-8 pt-8 lg:grid-cols-[1.2fr_0.8fr]">
+                                <div className="space-y-6">
+                                    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] px-5 py-5">
+                                        <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+                                            Recovery Guidance
+                                        </p>
+                                        <p className="mt-3 text-base font-medium tracking-tight text-white">
+                                            Reload the application to retry the current workspace state.
+                                        </p>
+                                        <p className="mt-2 text-sm leading-relaxed text-white/40">
+                                            We removed the extra branchy actions here so the fallback stays calm and direct.
+                                        </p>
+                                    </div>
+
+                                    {process.env.NODE_ENV === 'development' && this.state.error && (
+                                        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] px-5 py-5 text-left overflow-hidden">
+                                            <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-300/80">
+                                                Error Details
+                                            </p>
+                                            <pre className="mt-3 whitespace-pre-wrap break-all text-[11px] font-mono leading-relaxed text-white/45">
+                                                {this.state.error.toString()}
+                                            </pre>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="border-t border-white/8 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+                                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                                        Action
+                                    </p>
+                                    <div className="mt-4">
+                                        <Button
+                                            onClick={this.handleReload}
+                                            className="h-11 w-full justify-between border border-white/10 bg-[#141414] px-4 text-white shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)] hover:bg-[#1b1b1b]"
+                                        >
+                                            <span className="font-sans font-medium tracking-tight">Reload Application</span>
+                                            <RefreshCw className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
