@@ -362,6 +362,7 @@ export const api = {
       created_at: string;
       category: string;
       subject: string;
+      message: string;
     };
   }>('/api/support/requests', {
     method: 'POST',
@@ -374,6 +375,7 @@ export const api = {
       status: string;
       category: string;
       subject: string;
+      message: string;
       severity?: string | null;
       created_at: string;
     }>;

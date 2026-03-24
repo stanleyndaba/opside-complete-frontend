@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
@@ -49,6 +49,7 @@ type SupportHistoryItem = {
   status: string;
   category: string;
   subject: string;
+  message: string;
   severity?: string | null;
   created_at: string;
 };
@@ -104,6 +105,7 @@ export default function Help() {
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [requests, setRequests] = useState<SupportHistoryItem[]>([]);
   const [lastSubmitted, setLastSubmitted] = useState<SupportHistoryItem | null>(null);
+  const [expandedRequests, setExpandedRequests] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
   const { tenant, planLimits, isReady } = useTenant();
 
@@ -118,6 +120,13 @@ export default function Help() {
   );
 
   const tier = planLimits?.supportTier || 'community';
+
+  const toggleRequest = (requestId: string) => {
+    setExpandedRequests((current) => ({
+      ...current,
+      [requestId]: !current[requestId],
+    }));
+  };
 
   useEffect(() => {
     if (!isReady || !tenant) return;
@@ -220,72 +229,78 @@ export default function Help() {
         <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="relative max-w-5xl mx-auto px-8 py-12">
-          <div className="border-b border-white/10 pb-10 mb-10 text-center">
-            <div className="text-[10px] font-sans font-medium text-white/30 tracking-tight uppercase">Support Console</div>
-            <h1 className="mt-2 text-4xl md:text-5xl font-light font-sans text-white tracking-tight">
+        <div className="relative max-w-6xl mx-auto px-8 py-12">
+          <div className="border-b border-white/10 pb-10">
+            <div className="text-[10px] font-sans font-medium text-white/30 tracking-[0.24em] uppercase">Support Console</div>
+            <h1 className="mt-3 text-4xl md:text-5xl font-light font-sans text-white tracking-tight">
               Help <span className="text-white/40">and guidance</span>
             </h1>
-            <p className="mt-4 max-w-3xl mx-auto text-sm md:text-base font-sans text-white/45 leading-relaxed tracking-tight">
+            <p className="mt-5 max-w-4xl text-sm md:text-base font-sans text-white/45 leading-relaxed tracking-tight">
               Use this page for static help guidance, tracked support requests, and direct email contact. Tracked requests are persisted to your active workspace.
             </p>
           </div>
 
-          <div className="space-y-8">
-            <section className="space-y-8">
-              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
-                <div className="border-b border-white/10 px-8 py-6">
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Static Help Guidance</div>
-                  <div className="mt-2 text-sm font-sans text-white">Search local knowledge-base guidance. This section is static help content, not live support workflow status.</div>
+          <div className="space-y-14 pt-10">
+            <section className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
+              <div className="space-y-8">
+                <div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Static Help Guidance</div>
+                  <div className="mt-3 text-sm font-sans text-white">Search local knowledge-base guidance. This section is static help content, not live support workflow status.</div>
                 </div>
 
-                <div className="p-8">
-                  <div className="relative mb-8">
-                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
-                    <Input
-                      placeholder="Search help guidance"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="h-12 rounded-2xl border-white/10 bg-white/[0.03] pl-11 pr-4 text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
-                    />
+                <div className="relative">
+                  <Search className="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
+                  <Input
+                    placeholder="Search help guidance"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-14 rounded-none border-0 border-b border-white/10 bg-transparent pl-8 pr-0 text-sm font-sans text-white placeholder:text-white/15 focus-visible:ring-0 focus-visible:border-white/30"
+                  />
+                </div>
+
+                <Accordion type="single" collapsible className="w-full border-t border-white/10">
+                  {filteredFaqs.map((faq) => (
+                    <AccordionItem key={faq.id} value={faq.id} className="border-b border-white/10">
+                      <AccordionTrigger className="py-5 text-left text-sm font-sans text-white hover:no-underline">
+                        {faq.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-5 pr-10 text-sm font-sans text-white/45 leading-relaxed">
+                        {faq.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+
+                {filteredFaqs.length === 0 && (
+                  <div className="border-b border-t border-white/10 py-8 text-sm font-sans text-white/35">
+                    No help guidance matched that search.
                   </div>
+                )}
+              </div>
 
-                  <Accordion type="single" collapsible className="w-full space-y-3">
-                    {filteredFaqs.map((faq) => (
-                      <AccordionItem key={faq.id} value={faq.id} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5">
-                        <AccordionTrigger className="py-5 text-left text-sm font-sans text-white hover:no-underline">
-                          {faq.question}
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-5 text-sm font-sans text-white/45 leading-relaxed">
-                          {faq.answer}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
+              <div className="border-t border-white/10 pt-8 lg:border-t-0 lg:border-l lg:pl-10">
+                <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Support Tier</div>
+                <div className="mt-4 text-2xl font-sans font-light text-white tracking-tight">{supportTierText[tier].title}</div>
+                <div className="mt-3 text-sm font-sans text-white/55 leading-relaxed">{supportTierText[tier].detail}</div>
+                {tenant ? <div className="mt-5 text-sm font-sans text-white/35">Workspace: {tenant.name}</div> : null}
+              </div>
+            </section>
 
-                  {filteredFaqs.length === 0 && (
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-8 text-center text-sm font-sans text-white/35">
-                      No help guidance matched that search.
-                    </div>
-                  )}
+            <section className="border-t border-white/10 pt-10">
+              <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(260px,0.55fr)]">
+                <div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Support Request</div>
+                  <div className="mt-3 text-sm font-sans text-white">Submit a tracked support request bound to your active tenant and user context.</div>
+                </div>
+                <div className="text-sm font-sans text-white/45 leading-relaxed">
+                  Tracked requests are persisted to your active workspace and surfaced below with their current request status.
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
-                <div className="border-b border-white/10 px-8 py-6">
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Support Request</div>
-                  <div className="mt-2 text-sm font-sans text-white">Submit a tracked support request bound to your active tenant and user context.</div>
-                  <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-sans text-white/60">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Support Tier</div>
-                    <div className="mt-2 text-white">{supportTierText[tier].title}</div>
-                    <div className="mt-1 text-white/55">{supportTierText[tier].detail}</div>
-                    {tenant ? <div className="mt-2 text-white/35">Workspace: {tenant.name}</div> : null}
-                  </div>
-                </div>
-
-                <form onSubmit={handleContactSubmit} className="p-8 space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
+              <form onSubmit={handleContactSubmit} className="mt-10 space-y-8">
+                <div className="grid gap-8 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <Label htmlFor="subject" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
                       Subject
                     </Label>
                     <Input
@@ -293,129 +308,158 @@ export default function Help() {
                       value={contactForm.subject}
                       onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
                       placeholder="Short summary of the issue"
-                      className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
+                      className="h-14 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-sm font-sans text-white placeholder:text-white/15 focus-visible:ring-0 focus-visible:border-white/30"
                     />
                   </div>
 
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="category" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
-                        Topic
-                      </Label>
-                      <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
-                        <SelectTrigger className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white focus:ring-0 focus:border-white/20">
-                          <SelectValue placeholder="Select a topic" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-white/10 bg-[#0c0c0c] text-white">
-                          <SelectItem value="billing">Billing and invoices</SelectItem>
-                          <SelectItem value="technical">App support</SelectItem>
-                          <SelectItem value="account">Account management</SelectItem>
-                          <SelectItem value="recovery">Claim and recovery support</SelectItem>
-                          <SelectItem value="general">General question</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="additional-context" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
-                        Additional Context
-                      </Label>
-                      <Input
-                        id="additional-context"
-                        value={contactForm.additionalContext}
-                        onChange={(e) => setContactForm({ ...contactForm, additionalContext: e.target.value })}
-                        placeholder="Optional case, invoice, or workflow reference"
-                        className="h-12 rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
-                      Message
+                  <div className="space-y-3">
+                    <Label htmlFor="category" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                      Topic
                     </Label>
-                    <Textarea
-                      id="message"
-                      value={contactForm.message}
-                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                      placeholder="Describe the issue, page, workflow, or claim context."
-                      rows={6}
-                      className="resize-none rounded-2xl border-white/10 bg-white/[0.03] text-sm font-sans text-white placeholder:text-white/15 focus:border-white/20"
-                    />
+                    <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
+                      <SelectTrigger className="h-14 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-sm font-sans text-white focus:ring-0 focus:border-white/30">
+                        <SelectValue placeholder="Select a topic" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-none border-white/10 bg-[#0c0c0c] text-white">
+                        <SelectItem value="billing">Billing and invoices</SelectItem>
+                        <SelectItem value="technical">App support</SelectItem>
+                        <SelectItem value="account">Account management</SelectItem>
+                        <SelectItem value="recovery">Claim and recovery support</SelectItem>
+                        <SelectItem value="general">General question</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+                </div>
 
+                <div className="space-y-3">
+                  <Label htmlFor="additional-context" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                    Additional Context
+                  </Label>
+                  <Input
+                    id="additional-context"
+                    value={contactForm.additionalContext}
+                    onChange={(e) => setContactForm({ ...contactForm, additionalContext: e.target.value })}
+                    placeholder="Optional case, invoice, or workflow reference"
+                    className="h-14 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-sm font-sans text-white placeholder:text-white/15 focus-visible:ring-0 focus-visible:border-white/30"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <Label htmlFor="message" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                    Message
+                  </Label>
+                  <Textarea
+                    id="message"
+                    value={contactForm.message}
+                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                    placeholder="Describe the issue, page, workflow, or claim context."
+                    rows={7}
+                    className="resize-none rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-sm font-sans text-white placeholder:text-white/15 focus-visible:ring-0 focus-visible:border-white/30"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-6 border-t border-white/10 pt-8">
                   <Button
                     type="submit"
                     disabled={submitting || !isReady || !tenant}
-                    className="h-12 rounded-2xl border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-medium text-[11px] uppercase tracking-tight px-8"
+                    className="h-12 w-full rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-medium text-[11px] uppercase tracking-[0.22em] md:w-auto md:min-w-[240px]"
                   >
                     {submitting ? 'Submitting Request' : 'Submit Support Request'}
                   </Button>
 
                   {lastSubmitted && (
-                    <div className="rounded-2xl border border-blue-500/20 bg-blue-500/10 px-5 py-4 text-sm font-sans text-blue-100">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-blue-200/80">Latest Request</div>
-                      <div className="mt-2">Request ID: {lastSubmitted.request_id}</div>
+                    <div className="border-l border-blue-500/40 pl-5 text-sm font-sans text-blue-100">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-[0.24em] text-blue-200/70">Latest Request</div>
+                      <div className="mt-3">Request ID: {lastSubmitted.request_id}</div>
                       <div className="mt-1">Status: {formatLabel(lastSubmitted.status)}</div>
-                      <div className="mt-1 text-blue-100/75">Submitted {formatTimestamp(lastSubmitted.created_at)}. Follow-up happens through recorded support handling, not a live chat workflow on this page.</div>
+                      <div className="mt-2 text-blue-100/75">Submitted {formatTimestamp(lastSubmitted.created_at)}. Follow-up happens through recorded support handling, not a live chat workflow on this page.</div>
                     </div>
                   )}
-                </form>
+                </div>
+              </form>
+            </section>
+
+            <section className="border-t border-white/10 pt-10">
+              <div>
+                <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Recent Requests</div>
+                <div className="mt-3 text-sm font-sans text-white">This list shows real persisted support requests for the current user in the active tenant.</div>
+              </div>
+
+              <div className="mt-8">
+                {loadingHistory ? (
+                  <div className="py-6 text-sm font-sans text-white/45">Loading support requests...</div>
+                ) : historyError ? (
+                  <div className="py-6 text-sm font-sans text-red-300">{historyError}</div>
+                ) : requests.length === 0 ? (
+                  <div className="py-6 text-sm font-sans text-white/45">No tracked support requests exist for this tenant/user yet.</div>
+                ) : (
+                  <div className="border-t border-white/10">
+                    {requests.map((request) => (
+                      <div key={request.request_id} className="border-b border-white/10 py-6">
+                        <div className="flex flex-col gap-4">
+                          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                            <div>
+                              <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-white/30">{request.request_id}</div>
+                              <div className="mt-3 text-xl font-sans font-light text-white tracking-tight">{request.subject}</div>
+                              <div className="mt-2 text-xs font-sans text-white/45 uppercase tracking-[0.18em]">{formatLabel(request.category)}</div>
+                            </div>
+                            <div className="flex items-center gap-5 md:items-start">
+                              <div className="text-left md:text-right">
+                                <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-white/35">{formatLabel(request.status)}</div>
+                                <div className="mt-3 text-xs font-sans text-white/45">{formatTimestamp(request.created_at)}</div>
+                              </div>
+                              <button
+                                type="button"
+                                aria-expanded={!!expandedRequests[request.request_id]}
+                                aria-label={expandedRequests[request.request_id] ? 'Hide request message' : 'Show request message'}
+                                onClick={() => toggleRequest(request.request_id)}
+                                className="inline-flex h-10 w-10 items-center justify-center text-white/55 transition-colors hover:text-white"
+                              >
+                                {expandedRequests[request.request_id] ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+
+                          {expandedRequests[request.request_id] && (
+                            <div className="max-w-3xl text-sm font-sans text-white/65 leading-relaxed">
+                              {request.message}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
 
-            <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl">
-              <div className="border-b border-white/10 px-8 py-6">
-                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Recent Requests</div>
-                <div className="mt-2 text-sm font-sans text-white">This list shows real persisted support requests for the current user in the active tenant.</div>
-              </div>
-              <div className="p-8 space-y-4">
-                {loadingHistory ? (
-                  <div className="text-sm font-sans text-white/45">Loading support requests...</div>
-                ) : historyError ? (
-                  <div className="text-sm font-sans text-red-300">{historyError}</div>
-                ) : requests.length === 0 ? (
-                  <div className="text-sm font-sans text-white/45">No tracked support requests exist for this tenant/user yet.</div>
-                ) : (
-                  requests.map((request) => (
-                    <div key={request.request_id} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-4">
-                      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                        <div>
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{request.request_id}</div>
-                          <div className="mt-2 text-sm font-sans text-white">{request.subject}</div>
-                          <div className="mt-1 text-xs font-sans text-white/45">{formatLabel(request.category)}</div>
-                        </div>
-                        <div className="text-left md:text-right">
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{formatLabel(request.status)}</div>
-                          <div className="mt-2 text-xs font-sans text-white/45">{formatTimestamp(request.created_at)}</div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            <section className="border-t border-white/10 pt-10">
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(320px,1fr)]">
+                <div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Direct Email Contact</div>
+                  <div className="mt-3 text-sm font-sans text-white">This opens your email client. It is a direct email action, not an in-app tracked ticket workflow.</div>
+                </div>
 
-            <div className="rounded-3xl border border-white/10 bg-[#0c0c0c] overflow-hidden shadow-2xl text-center">
-              <div className="border-b border-white/10 px-8 py-6">
-                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Direct Email Contact</div>
-                <div className="mt-2 text-sm font-sans text-white">This opens your email client. It is a direct email action, not an in-app tracked ticket workflow.</div>
-              </div>
-              <div className="p-8 space-y-6">
-                <a
-                  href="mailto:usersupport@margin-finance.com"
-                  className="block text-lg font-sans text-white hover:text-white/80 transition-colors break-all"
-                >
-                  usersupport@margin-finance.com
-                </a>
-                <div className="text-sm font-sans text-white/60">For tracked request IDs and request status, use the support request form above.</div>
-                <div className="space-y-2">
-                  <div className="text-sm font-sans text-white/55">Direct email is available as a manual contact channel.</div>
-                  <div className="text-sm font-sans text-white/55">Support handling varies by tenant support tier.</div>
-                  <div className="text-sm font-sans text-white/55">This page does not claim live chat, phone support, or guaranteed response timing.</div>
+                <div className="space-y-5">
+                  <a
+                    href="mailto:usersupport@margin-finance.com"
+                    className="block text-2xl font-sans font-light text-white tracking-tight hover:text-white/80 transition-colors break-all"
+                  >
+                    usersupport@margin-finance.com
+                  </a>
+                  <div className="text-sm font-sans text-white/60">For tracked request IDs and request status, use the support request form above.</div>
+                  <div className="space-y-2 text-sm font-sans text-white/55">
+                    <div>Direct email is available as a manual contact channel.</div>
+                    <div>Support handling varies by tenant support tier.</div>
+                    <div>This page does not claim live chat, phone support, or guaranteed response timing.</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         </div>
       </div>
