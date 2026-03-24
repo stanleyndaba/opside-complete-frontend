@@ -3,16 +3,13 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { api, detectionApi } from '@/lib/api';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
-    Package, Truck, RotateCcw, DollarSign, Archive, Target,
-    Zap, ChevronRight, Info, Coins
+    Archive, Target, Info
 } from 'lucide-react';
 
 // File state
@@ -56,9 +53,6 @@ interface SupportedCsvType {
     description?: string;
 }
 
-type UploadStage = 'idle' | 'preparing' | 'uploading' | 'processing' | 'complete';
-
-
 interface PreviewDetectionResult {
     id: string;
     seller_id: string;
@@ -73,6 +67,14 @@ interface PreviewDetectionResult {
     discovery_date: string;
     deadline_date: string;
     days_remaining: number;
+}
+
+interface UploadDetectionState {
+    syncId: string | null;
+    status: 'pending' | 'processing' | 'completed' | 'failed' | null;
+    processedAt?: string | null;
+    errorMessage?: string | null;
+    isSandbox: boolean;
 }
 
 const ANOMALY_LABELS: Record<string, string> = {
@@ -93,14 +95,6 @@ const ANOMALY_LABELS: Record<string, string> = {
 const formatAnomalyType = (type: string) => ANOMALY_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 const FALLBACK_SUPPORTED_TYPES = ['orders', 'shipments', 'returns', 'settlements', 'inventory', 'financial_events', 'fees', 'transfers'];
 const formatCsvTypeLabel = (type: string) => type.replace(/_/g, ' ');
-const getStageValue = (stage: UploadStage) => ({ idle: 0, preparing: 20, uploading: 55, processing: 85, complete: 100 }[stage]);
-const getStageLabel = (stage: UploadStage) => ({
-    idle: 'ready',
-    preparing: 'preparing files',
-    uploading: 'sending to backend',
-    processing: 'waiting for persistence result',
-    complete: 'backend finished',
-}[stage]);
 
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
@@ -110,17 +104,53 @@ export default function DataUpload() {
 
     const [files, setFiles] = useState<UploadFile[]>([]);
     const [isUploading, setIsUploading] = useState(false);
-    const [uploadStage, setUploadStage] = useState<UploadStage>('idle');
     const [batchResult, setBatchResult] = useState<BatchResult | null>(null);
     const [isDragOver, setIsDragOver] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [previewResults, setPreviewResults] = useState<PreviewDetectionResult[]>([]);
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
-    const [disputeCases, setDisputeCases] = useState<any[]>([]);
+    const [previewState, setPreviewState] = useState<UploadDetectionState>({
+        syncId: null,
+        status: null,
+        processedAt: null,
+        errorMessage: null,
+        isSandbox: false,
+    });
+    const [previewMessage, setPreviewMessage] = useState<string | null>(null);
     const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const activeUserId = localStorage.getItem('user_id') || '';
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
+
+    const pollForUploadDetections = useCallback(async (syncId: string) => {
+        const maxAttempts = 15;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            try {
+                const statusRes = await detectionApi.getDetectionStatus(syncId, currentTenantSlug);
+                if (!statusRes?.ok || !statusRes.data) {
+                    continue;
+                }
+
+                setPreviewState({
+                    syncId,
+                    status: statusRes.data.status,
+                    processedAt: statusRes.data.processed_at || null,
+                    errorMessage: statusRes.data.error_message || null,
+                    isSandbox: !!statusRes.data.is_sandbox,
+                });
+
+                if (statusRes.data.status === 'completed' || statusRes.data.status === 'failed' || statusRes.data.results.claimsFound > 0) {
+                    setIsPreviewOpen(true);
+                    return;
+                }
+            } catch (_error) {
+                // Keep polling until the upload-scoped detection status is ready.
+            }
+        }
+    }, [currentTenantSlug]);
 
     useEffect(() => {
         let cancelled = false;
@@ -159,62 +189,85 @@ export default function DataUpload() {
         [supportedCsvTypes]
     );
 
-    // Fetch detection data when preview drawer opens
+    const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
+
+    // Fetch detection data for the current upload only
     useEffect(() => {
         if (!isPreviewOpen) return;
+        if (!currentUploadSyncId) {
+            setPreviewResults([]);
+            setPreviewMessage('No results available for this upload.');
+            setPreviewState(prev => ({ ...prev, syncId: null, status: null, processedAt: null, errorMessage: null, isSandbox: false }));
+            return;
+        }
+
         let cancelled = false;
         const fetchPreviewData = async () => {
             setIsPreviewLoading(true);
             try {
-                const res = await detectionApi.getDetectionResults({ limit: 500 }, currentTenantSlug);
-                if (!cancelled && res?.ok && res.data?.results && res.data.results.length > 0) {
-                    const all = res.data.results;
-                    // Find the most recent sync_id (latest detection batch)
-                    const latestSyncId = all
-                        .filter((r: any) => r.sync_id)
-                        .sort((a: any, b: any) => new Date(b.discovery_date || b.created_at || 0).getTime() - new Date(a.discovery_date || a.created_at || 0).getTime())
-                        [0]?.sync_id;
-                    // Show only results from the latest batch
-                    const filtered = latestSyncId ? all.filter((r: any) => r.sync_id === latestSyncId) : all;
-                    setPreviewResults(filtered.length > 0 ? filtered : all);
-                } else if (!cancelled) {
+                const [statusRes, resultsRes] = await Promise.all([
+                    detectionApi.getDetectionStatus(currentUploadSyncId, currentTenantSlug),
+                    detectionApi.getDetectionResults({ limit: 500, syncId: currentUploadSyncId }, currentTenantSlug),
+                ]);
+
+                if (cancelled) return;
+
+                if (statusRes?.ok && statusRes.data) {
+                    setPreviewState({
+                        syncId: currentUploadSyncId,
+                        status: statusRes.data.status,
+                        processedAt: statusRes.data.processed_at || null,
+                        errorMessage: statusRes.data.error_message || null,
+                        isSandbox: !!statusRes.data.is_sandbox,
+                    });
+                } else {
+                    setPreviewState(prev => ({
+                        ...prev,
+                        syncId: currentUploadSyncId,
+                        status: null,
+                        processedAt: null,
+                        errorMessage: statusRes?.error || null,
+                        isSandbox: false,
+                    }));
+                }
+
+                if (resultsRes?.ok && Array.isArray(resultsRes.data?.results)) {
+                    setPreviewResults(resultsRes.data.results);
+                    if (resultsRes.data.results.length > 0) {
+                        setPreviewMessage(null);
+                    } else if (statusRes?.ok && statusRes.data?.status === 'completed') {
+                        setPreviewMessage('No detections found for this upload yet.');
+                    } else if (statusRes?.ok && statusRes.data?.status === 'failed') {
+                        setPreviewMessage(statusRes.data.error_message || 'Detection failed for this upload.');
+                    } else {
+                        setPreviewMessage('No results available for this upload.');
+                    }
+                } else {
                     setPreviewResults([]);
+                    setPreviewMessage('No results available for this upload.');
                 }
             } catch (err) {
                 console.error('Failed to fetch preview data:', err);
-                if (!cancelled) setPreviewResults([]);
+                if (!cancelled) {
+                    setPreviewResults([]);
+                    setPreviewMessage('No results available for this upload.');
+                }
             } finally {
                 if (!cancelled) setIsPreviewLoading(false);
             }
         };
         fetchPreviewData();
         return () => { cancelled = true; };
-    }, [isPreviewOpen, currentTenantSlug, batchResult]);
-
-    // Fetch dispute cases when preview drawer opens
-    useEffect(() => {
-        if (!isPreviewOpen) return;
-        let cancelled = false;
-        (async () => {
-            try {
-                const res = await api.getDisputeCases({ limit: 5 }, currentTenantSlug);
-                if (!cancelled && res?.ok) {
-                    const cases = res.data?.cases || (Array.isArray(res.data) ? res.data : []);
-                    setDisputeCases(cases.slice(0, 5));
-                }
-            } catch (_e) { /* silent */ }
-        })();
-        return () => { cancelled = true; };
-    }, [isPreviewOpen, currentTenantSlug]);
+    }, [isPreviewOpen, currentTenantSlug, currentUploadSyncId]);
 
     // Computed preview values
     const previewTotalRecovery = useMemo(() => previewResults.reduce((s, r) => s + (r.estimated_value || 0), 0), [previewResults]);
     const previewCurrency = previewResults[0]?.currency || 'USD';
     const fmt = useCallback((val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: previewCurrency }).format(val), [previewCurrency]);
     const previewTopTypes = useMemo(() => {
-        const groups: Record<string, { count: number; value: number; status: string }> = {};
+        const groups: Record<string, { count: number; value: number }> = {};
         previewResults.forEach(r => {
-            if (!groups[r.anomaly_type]) groups[r.anomaly_type] = { count: 0, value: 0, status: r.status };
+            if (!groups[r.anomaly_type]) groups[r.anomaly_type] = { count: 0, value: 0 };
             groups[r.anomaly_type].count++;
             groups[r.anomaly_type].value += r.estimated_value || 0;
         });
@@ -297,8 +350,16 @@ export default function DataUpload() {
         }
 
         setIsUploading(true);
-        setUploadStage('preparing');
         setBatchResult(null);
+        setPreviewResults([]);
+        setPreviewMessage(null);
+        setPreviewState({
+            syncId: null,
+            status: null,
+            processedAt: null,
+            errorMessage: null,
+            isSandbox: false,
+        });
 
         // Mark all files as uploading
         setFiles(prev => prev.map(f => ({ ...f, status: 'uploading' as const })));
@@ -308,8 +369,6 @@ export default function DataUpload() {
             files.forEach(f => formData.append('files', f.file));
 
             const endpoint = `/api/csv-upload/ingest?tenantSlug=${encodeURIComponent(currentTenantSlug)}`;
-
-            setUploadStage('uploading');
 
             const url = api.buildApiUrl(endpoint);
             const response = await fetch(url, {
@@ -322,15 +381,19 @@ export default function DataUpload() {
                 body: formData,
             });
 
-            setUploadStage('processing');
             const result: BatchResult = await response.json();
             if (!response.ok || !result) {
                 const reason = (result as any)?.error || `Server returned ${response.status}`;
                 throw new Error(reason);
             }
             setBatchResult(result);
-
-            setUploadStage('complete');
+            setPreviewState({
+                syncId: result.syncId || null,
+                status: result.detectionTriggered ? 'pending' : null,
+                processedAt: null,
+                errorMessage: null,
+                isSandbox: false,
+            });
 
             // Update individual file statuses
             setFiles(prev => prev.map(f => {
@@ -360,26 +423,11 @@ export default function DataUpload() {
             if (insertedFileCount > 0) {
                 toast({
                     title: `${insertedFileCount} file${insertedFileCount > 1 ? 's' : ''} imported`,
-                    description: `${totalRows.toLocaleString()} rows persisted${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${failedCount > 0 ? ` · ${failedCount} file${failedCount > 1 ? 's' : ''} need attention` : ''}${result.detectionTriggered ? ' · Detection running...' : ''}`,
+                    description: `${totalRows.toLocaleString()} rows persisted${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${failedCount > 0 ? ` · ${failedCount} file${failedCount > 1 ? 's' : ''} need attention` : ''}${result.detectionTriggered ? ' · Detection queued for this upload.' : ''}`,
                 });
 
-                // Auto-open preview drawer after detection completes
-                if (result.detectionTriggered) {
-                    const pollAndOpen = async () => {
-                        const maxAttempts = 15;
-                        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-                            await new Promise(resolve => setTimeout(resolve, 2000));
-                            try {
-                                const statusRes = await detectionApi.getDetectionResults({ limit: 1 }, currentTenantSlug);
-                                if (statusRes?.ok && statusRes.data?.results?.length > 0) {
-                                    setIsPreviewOpen(true);
-                                    return;
-                                }
-                            } catch (_e) { /* keep polling */ }
-                        }
-                        setIsPreviewOpen(true);
-                    };
-                    pollAndOpen();
+                if (result.detectionTriggered && result.syncId) {
+                    pollForUploadDetections(result.syncId);
                 }
             } else if (skippedOnlyCount > 0 && failedCount === 0) {
                 toast({
@@ -405,7 +453,16 @@ export default function DataUpload() {
     const handleReset = () => {
         setFiles([]);
         setBatchResult(null);
-        setUploadStage('idle');
+        setIsPreviewOpen(false);
+        setPreviewResults([]);
+        setPreviewMessage(null);
+        setPreviewState({
+            syncId: null,
+            status: null,
+            processedAt: null,
+            errorMessage: null,
+            isSandbox: false,
+        });
     };
 
     // Format file size
@@ -574,11 +631,13 @@ export default function DataUpload() {
                             animate={{ opacity: 1, y: 0 }}
                             className="mt-6"
                         >
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs font-sans font-bold uppercase tracking-tight text-white/30">UPLOADING & PROCESSING</span>
-                                <span className="text-xs font-sans font-bold tracking-tight text-white/60 uppercase">{getStageLabel(uploadStage)}</span>
+                            <div className="rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3 flex items-center gap-3">
+                                <Loader2 className="h-4 w-4 text-white/60 animate-spin flex-shrink-0" />
+                                <div>
+                                    <p className="text-xs font-sans font-bold uppercase tracking-tight text-white/50">Upload In Progress</p>
+                                    <p className="text-[11px] text-white/35 font-sans">Sending CSV files to the backend for ingestion.</p>
+                                </div>
                             </div>
-                            <Progress value={getStageValue(uploadStage)} className="h-1.5 bg-white/[0.04]" />
                         </motion.div>
                     )}
 
@@ -779,52 +838,23 @@ export default function DataUpload() {
                                         <div className="flex items-center gap-2.5 mb-1">
                                             <img src="/logoimagetwo.png" alt="Margin Finance" className="h-3.5 w-auto object-contain brightness-0" />
                                             <span className="text-gray-200 font-light text-sm">|</span>
-                                            <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Audit Report</h2>
+                                            <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Upload Results</h2>
                                         </div>
                                         <div className="flex flex-col px-0.5">
-                                            <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Reimbursement seller account overview</p>
+                                            <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Current upload detection summary</p>
                                             <p className="text-[11px] font-bold text-gray-900 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `Recovery: ${fmt(previewTotalRecovery)}`}</p>
+                                            {previewState.syncId && (
+                                                <p className="mt-1 text-[10px] font-sans text-gray-400 tracking-tight">
+                                                    Sync ID: <span className="font-semibold text-gray-600">{previewState.syncId}</span>
+                                                </p>
+                                            )}
+                                            {previewState.isSandbox && (
+                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-600 tracking-tight">
+                                                    Simulated detection results (sandbox mode)
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
-                                    {disputeCases.length > 0 && (
-                                    <div className="flex-1 mx-6">
-                                        <Select defaultValue={disputeCases[0]?.id || 'none'}>
-                                            <SelectTrigger className="h-9 w-full bg-gray-50/50 border-gray-200 text-[11px] font-medium text-gray-600 rounded-lg">
-                                                <SelectValue placeholder="Disputes (Margin)" />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-white border-gray-100 shadow-xl z-[200]">
-                                                {disputeCases.map(c => {
-                                                    const dateStr = c.created_at ? new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                                                    return (
-                                                    <SelectItem key={c.id} value={c.id} className="text-[11px] focus:bg-gray-50">
-                                                        <span className="flex items-center gap-2">
-                                                            <span className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${c.status === 'approved' || c.status === 'paid' || c.status === 'won' ? 'bg-emerald-500' : c.status === 'rejected' || c.status === 'denied' ? 'bg-red-400' : c.status === 'pending' || c.status === 'submitted' ? 'bg-amber-400' : 'bg-gray-300'}`} />
-                                                            <span className="font-semibold truncate">{c.case_number || c.id?.substring(0, 8)}</span>
-                                                            <span className="text-gray-300">·</span>
-                                                            <span className="text-gray-400 uppercase text-[9px]">{(c.status || 'open').replace(/_/g, ' ')}</span>
-                                                            <span className="text-gray-300">·</span>
-                                                            <span className="font-bold text-gray-700">{new Intl.NumberFormat('en-US', { style: 'currency', currency: c.currency || 'USD' }).format(c.amount || 0)}</span>
-                                                            {c.amount > 100 && (
-                                                                <>
-                                                                    <span className="text-gray-300">·</span>
-                                                                    <span className="text-amber-500 font-medium text-[9px] uppercase tracking-wider">Awaiting for your review</span>
-                                                                </>
-                                                            )}
-                                                            {dateStr && <><span className="text-gray-300">·</span><span className="text-gray-400 text-[9px]">{dateStr}</span></>}
-                                                        </span>
-                                                    </SelectItem>
-                                                    );
-                                                })}
-                                                <div className="border-t border-gray-100 mt-1 pt-1">
-                                                    <Link to={`/${currentTenantSlug}/recoveries`} className="flex items-center justify-between w-full px-2 py-1.5 text-[11px] font-semibold text-gray-800 hover:bg-gray-50 hover:text-gray-900 rounded cursor-pointer transition-colors group">
-                                                        <span>See more</span>
-                                                        <ChevronRight className="h-3 w-3 text-gray-400 group-hover:text-gray-800 transition-colors" />
-                                                    </Link>
-                                                </div>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    )}
                                     <div className="flex items-center">
                                         <button onClick={() => setIsPreviewOpen(false)} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors">
                                             <X className="h-5 w-5" />
@@ -838,30 +868,38 @@ export default function DataUpload() {
                                         <div className="flex items-center justify-center h-full">
                                             <div className="flex flex-col items-center gap-3">
                                                 <Loader2 className="h-8 w-8 text-violet-400 animate-spin" />
-                                                <p className="text-sm text-gray-400 font-sans">Loading your audit report...</p>
+                                                <p className="text-sm text-gray-400 font-sans">Loading results for this upload...</p>
                                             </div>
                                         </div>
                                     ) : previewResults.length === 0 ? (
                                         <div className="flex items-center justify-center h-full">
                                             <div className="flex flex-col items-center gap-3 text-center max-w-sm">
                                                 <div className="p-4 rounded-2xl bg-gray-50"><Target className="h-10 w-10 text-gray-300" /></div>
-                                                <h3 className="text-sm font-semibold text-gray-700 font-sans">No detections found yet</h3>
-                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">Upload your Amazon CSV reports and run the ingestion pipeline. Once data is ingested, Agent 3 will automatically scan for recoverable claims.</p>
+                                                <h3 className="text-sm font-semibold text-gray-700 font-sans">No detections found for this upload yet</h3>
+                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">{previewMessage || 'No results available for this upload.'}</p>
                                             </div>
                                         </div>
                                     ) : (
                                     <div className="flex h-full w-full">
                                         <div className="w-1/3 border-r border-gray-100 flex flex-col">
                                             <div className="px-5 py-3.5 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-1.5">Seller details</h3>
+                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-1.5">Upload summary</h3>
                                                 <ul className="space-y-0">
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Account:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{tenant?.name || currentTenantSlug} (ID: ***{previewResults[0]?.seller_id?.slice(-4) || '----'})</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Claims found:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewResults.length} Discrepancies</span>
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Sync ID:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{previewState.syncId || 'Unavailable'}</span>
+                                                    </li>
+                                                    <li className="flex items-baseline gap-2">
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detection state:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewState.status || 'Unavailable'}</span>
+                                                    </li>
+                                                    <li className="flex items-baseline gap-2">
+                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detections:</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewResults.length}</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Est. Recovery:</span>
@@ -872,7 +910,6 @@ export default function DataUpload() {
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewDates ? `${previewDates.from} to ${previewDates.to}` : 'All available data'}</span>
                                                     </li>
                                                 </ul>
-                                                <p className="mt-1 text-[9px] font-sans font-bold text-gray-400 italic leading-tight uppercase tracking-tight">based on your uploaded CSVs and Amazon's reimbursement policies.</p>
                                             </div>
                                             <div className="px-5 py-4 border-b border-gray-100">
                                                 <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Detection breakdown</h3>
@@ -882,9 +919,8 @@ export default function DataUpload() {
                                                         <div key={idx} className="flex items-start justify-between">
                                                             <div className="flex-1 min-w-0 mr-4">
                                                                 <p className="text-[10px] font-bold text-gray-900 leading-none">{formatAnomalyType(type)}</p>
-                                                                <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{data.count} case{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
+                                                                <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{data.count} detection{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
                                                             </div>
-                                                            <div className="px-1.5 py-0.5 bg-gray-50 border border-gray-100 rounded text-[8px] font-sans font-bold text-gray-400 uppercase shrink-0 tracking-tight">{data.status === 'resolved' ? 'Resolved' : data.status === 'disputed' ? 'Disputed' : 'Flagged'}</div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -894,21 +930,11 @@ export default function DataUpload() {
                                                 </div>
                                                 )}
                                             </div>
-                                            <div className="px-5 py-4 bg-gray-50/50">
-                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2.5">Policy reference</h3>
-                                                <p className="text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight mb-2">Policy basis</p>
-                                                <div className="space-y-2">
-                                                    <p className="text-[9px] font-sans text-gray-500 leading-relaxed italic tracking-tight font-light">
-                                                        <span className="font-bold text-gray-400 not-italic mr-1 uppercase">Policy:</span>
-                                                        "These opportunities are identified using Amazon's published reimbursement policies for lost, damaged, and incorrectly charged FBA inventory. We prepare claims that match what Seller Support expects to see."
-                                                    </p>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div className="flex-1 flex flex-col">
                                             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
                                                 <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Full Data</h3>
-                                                <p className="text-[10px] text-gray-400 font-sans">{previewResults.length} detection result{previewResults.length !== 1 ? 's' : ''} — your full cost breakdown</p>
+                                                <p className="text-[10px] text-gray-400 font-sans">{previewResults.length} detection result{previewResults.length !== 1 ? 's' : ''} for this upload</p>
                                             </div>
                                             <div className="flex-1 overflow-auto p-6">
                                                 <div className="w-full">

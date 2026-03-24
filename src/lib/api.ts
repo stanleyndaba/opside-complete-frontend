@@ -1507,10 +1507,15 @@ export const api = {
     if (!tenantSlug) throw new Error("tenantSlug required for getDetectionStatus");
     return requestJson<{
       success: boolean;
-      status: 'in_progress' | 'complete' | 'failed';
-      detection_id: string;
-      total_detected?: number;
-      summary?: any;
+      sync_id: string;
+      status: 'pending' | 'processing' | 'completed' | 'failed';
+      processed_at?: string | null;
+      error_message?: string | null;
+      is_sandbox?: boolean;
+      results: {
+        claimsFound: number;
+        estimatedRecovery: number;
+      };
     }>(`/api/detections/status/${encodeURIComponent(detectionId)}?tenantSlug=${tenantSlug}`);
   },
 
@@ -2173,13 +2178,14 @@ export const api = {
 // Phase 3: Detection/Claims API methods
 export const detectionApi = {
   // Get all detection results
-  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string }, tenantSlug?: string) => {
+  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string; syncId?: string }, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDetectionResults");
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append('status', params.status);
     if (params?.limit) queryParams.append('limit', params.limit.toString());
     if (params?.offset) queryParams.append('offset', params.offset.toString());
     if (params?.userId) queryParams.append('userId', params.userId);
+    if (params?.syncId) queryParams.append('syncId', params.syncId);
     queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
@@ -2200,6 +2206,13 @@ export const detectionApi = {
         days_remaining: number;
       }>;
       total: number;
+      meta?: {
+        syncId: string;
+        status: 'pending' | 'processing' | 'completed' | 'failed';
+        processedAt?: string | null;
+        errorMessage?: string | null;
+        isSandbox?: boolean;
+      };
     }>(`/api/detections/results${query ? `?${query}` : ''}`);
   },
 
