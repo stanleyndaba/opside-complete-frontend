@@ -376,7 +376,7 @@ export default function DisputeCases() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [dataSource, setDataSource] = useState<'authoritative' | 'legacy' | 'preview'>('authoritative');
+  const [dataSource, setDataSource] = useState<'authoritative' | 'legacy'>('authoritative');
   const [sourceNote, setSourceNote] = useState<string | null>(null);
   const [sourceCounts, setSourceCounts] = useState<{ authoritative: number | null; legacy: number | null }>({
     authoritative: null,
@@ -418,7 +418,6 @@ export default function DisputeCases() {
   const [briefPreviewLoading, setBriefPreviewLoading] = useState(false);
   const [briefPreviewUrl, setBriefPreviewUrl] = useState<string | null>(null);
   const [briefPreviewRow, setBriefPreviewRow] = useState<QueueRow | null>(null);
-  const [briefPreviewNotice, setBriefPreviewNotice] = useState<string | null>(null);
   const pageSize = 25;
 
   useEffect(() => {
@@ -523,19 +522,6 @@ export default function DisputeCases() {
           page_size: response.data.page_size
         });
         setDataSource('authoritative');
-        if ((response.data.total_cases || 0) === 0) {
-          const previewRows = PREVIEW_ROWS.slice((page - 1) * pageSize, page * pageSize);
-          setRows(previewRows);
-          setSummary({
-            ...summarizeRows(PREVIEW_ROWS),
-            total_cases: PREVIEW_ROWS.length,
-            filtered_results: PREVIEW_ROWS.length,
-            page,
-            page_size: pageSize
-          });
-          setDataSource('preview');
-          setSourceNote('Both live dispute sources returned zero cases, so preview fixtures are being shown for UI iteration only.');
-        }
       } catch (err: any) {
         if (!cancelled) {
           try {
@@ -560,17 +546,24 @@ export default function DisputeCases() {
             // Keep original error below if both sources fail.
           }
 
-          setRows(PREVIEW_ROWS.slice((page - 1) * pageSize, page * pageSize));
+          setRows([]);
           setSummary({
-            ...summarizeRows(PREVIEW_ROWS),
-            total_cases: PREVIEW_ROWS.length,
-            filtered_results: PREVIEW_ROWS.length,
+            total_cases: 0,
+            filtered_results: 0,
+            blocked_count: 0,
+            ready_to_file_count: 0,
+            filed_count: 0,
+            rejected_count: 0,
+            approved_pending_payout_count: 0,
+            recovered_count: 0,
+            billing_pending_count: 0,
+            last_updated_at: null,
             page,
             page_size: pageSize
           });
-          setDataSource('preview');
-          setSourceNote('Live dispute data could not be loaded, so preview fixtures are being shown for UI iteration only.');
-          setError(null);
+          setDataSource('authoritative');
+          setSourceNote(null);
+          setError(err?.message || 'Failed to load dispute cases');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -602,7 +595,6 @@ export default function DisputeCases() {
     setBriefPreviewOpen(false);
     setBriefPreviewLoading(false);
     setBriefPreviewRow(null);
-    setBriefPreviewNotice(null);
     setBriefPreviewUrl((current) => {
       if (current) URL.revokeObjectURL(current);
       return null;
@@ -614,12 +606,6 @@ export default function DisputeCases() {
     setBriefPreviewOpen(true);
     setBriefPreviewLoading(false);
     setBriefPreviewRow(row);
-    setBriefPreviewNotice(null);
-
-    if (dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')) {
-      setBriefPreviewNotice('This row is a preview fixture. No real backend dispute brief exists for it.');
-      return;
-    }
 
     setBriefPreviewLoading(true);
 
@@ -1193,7 +1179,7 @@ export default function DisputeCases() {
                   {briefPreviewRow?.case_number || 'Dispute Brief'}
                 </DialogTitle>
                 <div className="text-[11px] font-sans text-white/45">
-                  {briefPreviewNotice || 'Scroll in the preview and use the browser PDF controls to zoom.'}
+                  Scroll in the preview and use the browser PDF controls to zoom.
                 </div>
               </div>
 
@@ -1233,7 +1219,7 @@ export default function DisputeCases() {
               />
             ) : (
               <div className="flex h-full items-center justify-center px-8 text-center text-sm font-sans text-white/50">
-                {briefPreviewNotice || 'Preview unavailable.'}
+                Preview unavailable.
               </div>
             )}
           </div>
