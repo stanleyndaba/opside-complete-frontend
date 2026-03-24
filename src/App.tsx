@@ -46,6 +46,7 @@ const OAuthProviderSandbox = lazy(() => import("./pages/OAuthProviderSandbox"));
 const OAuthCallback = lazy(() => import("./pages/OAuthCallback"));
 const OAuthCallbackRedirect = lazy(() => import("./pages/OAuthCallbackRedirect"));
 const OAuthSuccess = lazy(() => import("./pages/OAuthSuccess"));
+const SystemErrorPreview = lazy(() => import("./pages/SystemErrorPreview"));
 const StripeCallback = lazy(() => import("./pages/StripeCallback"));
 const Careers = lazy(() => import("./pages/Careers"));
 const Docs = lazy(() => import("./pages/Docs"));
@@ -147,6 +148,7 @@ const App = () => (
                         <Route path="/auth/success" element={<OAuthSuccess />} />
                         <Route path="/auth/amazon-sandbox" element={<OAuthProviderSandbox />} />
                         <Route path="/auth/sandbox-callback" element={<OAuthCallback />} />
+                        <Route path="/system-error-preview" element={<SystemErrorPreview />} />
                         <Route path="/stripe/callback" element={<StripeCallback />} />
                         <Route path="/amazon-sandbox" element={<AmazonSandbox />} />
                         <Route path="/analyzing" element={<AnalyzingScreen />} />
