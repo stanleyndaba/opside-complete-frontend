@@ -1066,6 +1066,8 @@ export const api = {
       status: 'disconnected';
     };
   }>(`/api/evidence/sources/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  disconnectDocsProvider: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox') =>
+    requestJson<any>(`/api/v1/integrations/${encodeURIComponent(provider)}/disconnect`, { method: 'POST' }),
 
   getMatchingMetrics: (days?: number) =>
     requestJson<{

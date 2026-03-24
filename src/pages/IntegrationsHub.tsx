@@ -328,11 +328,12 @@ export default function IntegrationsHub() {
     try {
       setDisconnectingProvider(provider);
       const providerState = status?.providers?.[provider];
-      if (!providerState?.source_id) {
-        throw new Error('No tenant-scoped connection record found for this provider');
-      }
-
-      const res = await api.disconnectEvidenceSource(providerState.source_id);
+      const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox';
+      const res = providerState?.source_id
+        ? await api.disconnectEvidenceSource(providerState.source_id)
+        : supportsDirectProviderDisconnect
+          ? await api.disconnectDocsProvider(provider)
+          : { ok: false, error: 'No tenant-scoped connection record found for this provider' };
       
       if (res.ok) {
         toast({
@@ -1123,7 +1124,7 @@ export default function IntegrationsHub() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              disabled={disconnectingProvider === p || !providerState.source_id}
+                              disabled={disconnectingProvider === p}
                               className="w-full h-9 border border-red-500/10 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-[10px] font-sans font-bold uppercase tracking-tight"
                               onClick={() => handleDisconnectDocSource(p)}
                             >
