@@ -5,6 +5,13 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+export interface BlobApiResponse {
+  ok: boolean;
+  status: number;
+  blob?: Blob;
+  error?: string;
+}
+
 export function buildApiUrl(path: string): string {
   // Normalize provided path
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -264,6 +271,44 @@ async function requestJsonWithRetry<T>(
       error: details,
     };
   }
+}
+
+async function requestBlob(
+  path: string,
+  options?: RequestInit
+): Promise<BlobApiResponse> {
+  const url = buildApiUrl(path);
+  const sessionToken = localStorage.getItem('session_token') || '';
+  const userId = localStorage.getItem('user_id') || '';
+  const tenantId = localStorage.getItem('active_tenant_id') || '';
+  const callerHeaders = (options?.headers || {}) as Record<string, string>;
+
+  const res = await fetch(url, {
+    credentials: 'include',
+    cache: 'no-store',
+    headers: {
+      ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+      ...(userId ? { 'x-user-id': userId } : {}),
+      ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+      ...callerHeaders,
+    },
+    ...options,
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    return {
+      ok: false,
+      status: res.status,
+      error: text || res.statusText || 'Request failed',
+    };
+  }
+
+  return {
+    ok: true,
+    status: res.status,
+    blob: await res.blob(),
+  };
 }
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<ApiResponse<T>> {
@@ -674,6 +719,10 @@ export const api = {
 
   // Disputes
   getDisputeBrief: (id: string, tenantSlug?: string) => buildApiUrl(`/api/disputes/${encodeURIComponent(id)}/brief${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
+  fetchDisputeBriefPdf: (id: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for fetchDisputeBriefPdf");
+    return requestBlob(`/api/disputes/${encodeURIComponent(id)}/brief?tenantSlug=${encodeURIComponent(tenantSlug)}`);
+  },
 
   connectDocs: (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive', tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for connectDocs");

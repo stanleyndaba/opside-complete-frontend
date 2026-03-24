@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
-import { AlertCircle, ChevronDown, ChevronUp, FileText, Loader2, MoreHorizontal, RefreshCw, Search } from 'lucide-react';
+import { AlertCircle, ChevronDown, ChevronUp, Download, FileText, Loader2, MoreHorizontal, RefreshCw, Search, X } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -414,6 +414,10 @@ export default function DisputeCases() {
   const [page, setPage] = useState(1);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<QueueRow | null>(null);
+  const [briefPreviewOpen, setBriefPreviewOpen] = useState(false);
+  const [briefPreviewLoading, setBriefPreviewLoading] = useState(false);
+  const [briefPreviewUrl, setBriefPreviewUrl] = useState<string | null>(null);
+  const [briefPreviewRow, setBriefPreviewRow] = useState<QueueRow | null>(null);
   const pageSize = 25;
 
   useEffect(() => {
@@ -580,12 +584,30 @@ export default function DisputeCases() {
 
   const refresh = () => setRefreshKey((value) => value + 1);
 
+  useEffect(() => {
+    return () => {
+      if (briefPreviewUrl) {
+        URL.revokeObjectURL(briefPreviewUrl);
+      }
+    };
+  }, [briefPreviewUrl]);
+
   const openCaseDetails = (row: QueueRow) => {
     setDetailsRow(row);
     setDetailsOpen(true);
   };
 
-  const handleBriefDownload = (row: QueueRow) => {
+  const closeBriefPreview = () => {
+    setBriefPreviewOpen(false);
+    setBriefPreviewLoading(false);
+    setBriefPreviewRow(null);
+    setBriefPreviewUrl((current) => {
+      if (current) URL.revokeObjectURL(current);
+      return null;
+    });
+  };
+
+  const handleBriefPreview = async (row: QueueRow) => {
     if (!activeTenantSlug) return;
     if (dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')) {
       toast({
@@ -595,8 +617,40 @@ export default function DisputeCases() {
       return;
     }
 
-    const briefUrl = api.getDisputeBrief(row.dispute_case_id, activeTenantSlug);
-    window.open(briefUrl, '_blank', 'noopener,noreferrer');
+    setBriefPreviewOpen(true);
+    setBriefPreviewLoading(true);
+    setBriefPreviewRow(row);
+
+    try {
+      const response = await api.fetchDisputeBriefPdf(row.dispute_case_id, activeTenantSlug);
+      if (!response.ok || !response.blob) {
+        throw new Error(response.error || 'Unable to load dispute brief preview.');
+      }
+
+      setBriefPreviewUrl((current) => {
+        if (current) URL.revokeObjectURL(current);
+        return URL.createObjectURL(response.blob);
+      });
+    } catch (err: any) {
+      closeBriefPreview();
+      toast({
+        variant: 'destructive',
+        title: 'Brief preview failed',
+        description: err?.message || 'Unable to load the dispute brief PDF.'
+      });
+    } finally {
+      setBriefPreviewLoading(false);
+    }
+  };
+
+  const downloadBriefPreview = () => {
+    if (!briefPreviewUrl || !briefPreviewRow) return;
+    const anchor = document.createElement('a');
+    anchor.href = briefPreviewUrl;
+    anchor.download = `dispute-brief-${briefPreviewRow.dispute_case_id}.pdf`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
   };
 
   const handleFilingAction = async (row: QueueRow, mode: 'file' | 'retry' | 'approve') => {
@@ -997,7 +1051,7 @@ export default function DisputeCases() {
                                     <DropdownMenuItem
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
                                       disabled={dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')}
-                                      onClick={() => handleBriefDownload(row)}
+                                      onClick={() => handleBriefPreview(row)}
                                     >
                                       Brief PDF
                                     </DropdownMenuItem>
@@ -1125,6 +1179,63 @@ export default function DisputeCases() {
               />
             </div>
           ) : null}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={briefPreviewOpen} onOpenChange={(open) => (open ? setBriefPreviewOpen(true) : closeBriefPreview())}>
+        <DialogContent className="max-w-6xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
+          <DialogHeader className="border-b border-white/5 pb-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Brief PDF Preview</div>
+                <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
+                  {briefPreviewRow?.case_number || 'Dispute Brief'}
+                </DialogTitle>
+                <div className="text-[11px] font-sans text-white/45">
+                  Scroll in the preview and use the browser PDF controls to zoom.
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!briefPreviewUrl}
+                  onClick={downloadBriefPreview}
+                  className="h-10 rounded-none border-white/10 bg-transparent px-3 text-white hover:bg-white/5"
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={closeBriefPreview}
+                  className="h-10 rounded-none border-white/10 bg-transparent px-3 text-white hover:bg-white/5"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <div className="h-[78vh] overflow-hidden">
+            {briefPreviewLoading ? (
+              <div className="flex h-full items-center justify-center gap-3 text-sm font-sans text-white/60">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading brief preview...
+              </div>
+            ) : briefPreviewUrl ? (
+              <iframe
+                title="Dispute brief PDF preview"
+                src={`${briefPreviewUrl}#toolbar=1&navpanes=0&view=FitH`}
+                className="h-full w-full rounded-none bg-white"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm font-sans text-white/50">
+                Preview unavailable.
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </PageLayout>
