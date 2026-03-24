@@ -1738,6 +1738,8 @@ export const api = {
         filing_status: string | null;
         recovery_status: string | null;
         billing_status: string | null;
+        eligible_to_file: boolean | null;
+        block_reasons: string[];
         requested_amount: number | null;
         approved_amount: number | null;
         actual_payout_amount: number | null;

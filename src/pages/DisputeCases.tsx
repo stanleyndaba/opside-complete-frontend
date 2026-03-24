@@ -22,226 +22,6 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
 type LegacyCase = NonNullable<Awaited<ReturnType<typeof api.getDisputeCases>>['data']>['cases'][number];
 
-const PREVIEW_ROWS: QueueRow[] = [
-  {
-    dispute_case_id: 'preview-case-1001',
-    detection_result_id: 'preview-detection-1001',
-    case_number: 'DMO-CASE-1001',
-    claim_number: 'DMO-CLAIM-1001',
-    case_type: 'amazon_fba',
-    anomaly_type: 'missing_unit',
-    status: 'pending',
-    filing_status: 'pending',
-    recovery_status: 'pending',
-    billing_status: 'pending',
-    requested_amount: 128.4,
-    approved_amount: null,
-    actual_payout_amount: null,
-    billed_amount: null,
-    currency: 'USD',
-    evidence_state: 'Missing Evidence',
-    matched_document_count: 0,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: '2026-03-15T09:15:00.000Z',
-    updated_at: '2026-03-16T11:00:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1001',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1001',
-    sku: 'DEMO-SKU-01',
-    asin: 'B0DEMO0001',
-    expected_payout_amount: null,
-    expected_payout_date: null,
-    next_action: 'Waiting for evidence'
-  },
-  {
-    dispute_case_id: 'preview-case-1002',
-    detection_result_id: 'preview-detection-1002',
-    case_number: 'DMO-CASE-1002',
-    claim_number: 'DMO-CLAIM-1002',
-    case_type: 'amazon_fba',
-    anomaly_type: 'incorrect_fee',
-    status: 'pending',
-    filing_status: 'pending',
-    recovery_status: 'pending',
-    billing_status: 'pending',
-    requested_amount: 74.15,
-    approved_amount: null,
-    actual_payout_amount: null,
-    billed_amount: null,
-    currency: 'USD',
-    evidence_state: 'Ready',
-    matched_document_count: 1,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: '2026-03-14T12:30:00.000Z',
-    updated_at: '2026-03-16T09:40:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1002',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1002',
-    sku: 'DEMO-SKU-02',
-    asin: 'B0DEMO0002',
-    expected_payout_amount: 74.15,
-    expected_payout_date: '2026-03-28T00:00:00.000Z',
-    next_action: 'Ready to file'
-  },
-  {
-    dispute_case_id: 'preview-case-1003',
-    detection_result_id: 'preview-detection-1003',
-    case_number: 'DMO-CASE-1003',
-    claim_number: 'DMO-CLAIM-1003',
-    case_type: 'amazon_fba',
-    anomaly_type: 'overcharge',
-    status: 'submitted',
-    filing_status: 'filed',
-    recovery_status: 'pending',
-    billing_status: 'pending',
-    requested_amount: 162.75,
-    approved_amount: null,
-    actual_payout_amount: null,
-    billed_amount: null,
-    currency: 'USD',
-    evidence_state: 'Matched',
-    matched_document_count: 2,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: '2026-03-13T08:20:00.000Z',
-    updated_at: '2026-03-17T10:05:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1003',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1003',
-    sku: 'DEMO-SKU-03',
-    asin: 'B0DEMO0003',
-    expected_payout_amount: 162.75,
-    expected_payout_date: '2026-03-27T00:00:00.000Z',
-    next_action: 'Filed / awaiting Amazon'
-  },
-  {
-    dispute_case_id: 'preview-case-1004',
-    detection_result_id: 'preview-detection-1004',
-    case_number: 'DMO-CASE-1004',
-    claim_number: 'DMO-CLAIM-1004',
-    case_type: 'amazon_fba',
-    anomaly_type: 'damaged_stock',
-    status: 'rejected',
-    filing_status: 'failed',
-    recovery_status: 'pending',
-    billing_status: 'pending',
-    requested_amount: 93.2,
-    approved_amount: null,
-    actual_payout_amount: null,
-    billed_amount: null,
-    currency: 'USD',
-    evidence_state: 'Needs Review',
-    matched_document_count: 1,
-    rejection_category: 'insufficient_evidence',
-    rejection_reason: 'Invoice date did not match the reimbursement window.',
-    created_at: '2026-03-12T13:45:00.000Z',
-    updated_at: '2026-03-18T14:20:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1004',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1004',
-    sku: 'DEMO-SKU-04',
-    asin: 'B0DEMO0004',
-    expected_payout_amount: null,
-    expected_payout_date: null,
-    next_action: 'Review rejection'
-  },
-  {
-    dispute_case_id: 'preview-case-1005',
-    detection_result_id: 'preview-detection-1005',
-    case_number: 'DMO-CASE-1005',
-    claim_number: 'DMO-CLAIM-1005',
-    case_type: 'amazon_fba',
-    anomaly_type: 'duplicate_charge',
-    status: 'approved',
-    filing_status: 'filed',
-    recovery_status: 'pending',
-    billing_status: 'pending',
-    requested_amount: 145.9,
-    approved_amount: 145.9,
-    actual_payout_amount: null,
-    billed_amount: null,
-    currency: 'USD',
-    evidence_state: 'Matched',
-    matched_document_count: 1,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: '2026-03-11T15:10:00.000Z',
-    updated_at: '2026-03-19T12:00:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1005',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1005',
-    sku: 'DEMO-SKU-05',
-    asin: 'B0DEMO0005',
-    expected_payout_amount: 145.9,
-    expected_payout_date: '2026-03-25T00:00:00.000Z',
-    next_action: 'Waiting for payout'
-  },
-  {
-    dispute_case_id: 'preview-case-1006',
-    detection_result_id: 'preview-detection-1006',
-    case_number: 'DMO-CASE-1006',
-    claim_number: 'DMO-CLAIM-1006',
-    case_type: 'amazon_fba',
-    anomaly_type: 'incorrect_fee',
-    status: 'approved',
-    filing_status: 'filed',
-    recovery_status: 'reconciled',
-    billing_status: 'pending',
-    requested_amount: 112.75,
-    approved_amount: 112.75,
-    actual_payout_amount: 112.75,
-    billed_amount: null,
-    currency: 'USD',
-    evidence_state: 'Matched',
-    matched_document_count: 1,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: '2026-03-10T10:05:00.000Z',
-    updated_at: '2026-03-20T08:45:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1006',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1006',
-    sku: 'DEMO-SKU-06',
-    asin: 'B0DEMO0006',
-    expected_payout_amount: null,
-    expected_payout_date: null,
-    next_action: 'Billing pending'
-  },
-  {
-    dispute_case_id: 'preview-case-1007',
-    detection_result_id: 'preview-detection-1007',
-    case_number: 'DMO-CASE-1007',
-    claim_number: 'DMO-CLAIM-1007',
-    case_type: 'amazon_fba',
-    anomaly_type: 'overcharge',
-    status: 'approved',
-    filing_status: 'filed',
-    recovery_status: 'reconciled',
-    billing_status: 'credited',
-    requested_amount: 189.2,
-    approved_amount: 189.2,
-    actual_payout_amount: 189.2,
-    billed_amount: 37.84,
-    currency: 'USD',
-    evidence_state: 'Matched',
-    matched_document_count: 2,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: '2026-03-09T16:50:00.000Z',
-    updated_at: '2026-03-21T07:20:00.000Z',
-    amazon_case_id: 'AMZ-DEMO-1007',
-    store_name: 'Preview Workspace',
-    order_id: 'ORDER-DEMO-1007',
-    sku: 'DEMO-SKU-07',
-    asin: 'B0DEMO0007',
-    expected_payout_amount: null,
-    expected_payout_date: null,
-    next_action: 'Billing complete'
-  }
-];
-
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
   filed: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
@@ -273,6 +53,176 @@ function formatMoney(amount: number | null | undefined, currency = 'USD') {
 function badgeClass(value: string | null | undefined) {
   const key = String(value || '').toLowerCase();
   return STATUS_BADGE_STYLES[key] || STATUS_BADGE_STYLES.default;
+}
+
+function formatBlockReason(value: string) {
+  const mapped: Record<string, string> = {
+    rejected_by_amazon: 'Rejected before',
+    rejected_without_reason: 'Rejected before',
+    missing_evidence_links: 'Missing evidence',
+    wrong_claim_type: 'Wrong claim type',
+    invalid_invoice_date: 'Invoice date mismatch',
+    weak_pod_evidence: 'Weak POD evidence',
+    amount_mismatch: 'Amount mismatch',
+    dimension_proof_required: 'Dimension proof required',
+    duplicate_active_claim_for_order: 'Duplicate active claim',
+    already_reimbursed: 'Already reimbursed',
+    claim_below_minimum_threshold: 'Below filing threshold',
+    manual_approval_required_high_value: 'Manual approval required',
+    dangerous_document_filename: 'Unsafe document filename',
+    dangerous_document_content: 'Unsafe document content',
+  };
+
+  return mapped[value] || formatLabel(value);
+}
+
+function formatCompactDate(value: string | null | undefined) {
+  if (!value) return 'Unavailable';
+  return format(new Date(value), 'yyyy/MM/dd');
+}
+
+type FilingPosture = {
+  tone: 'ready' | 'attention' | 'blocked' | 'in_flight' | 'resolved';
+  headline: string;
+  detail: string;
+  strengths: string[];
+  risks: string[];
+};
+
+function deriveFilingPosture(row: QueueRow): FilingPosture {
+  const filingStatus = String(row.filing_status || '').toLowerCase();
+  const status = String(row.status || '').toLowerCase();
+  const recoveryStatus = String(row.recovery_status || '').toLowerCase();
+  const billingStatus = String(row.billing_status || '').toLowerCase();
+  const evidenceState = String(row.evidence_state || '').toLowerCase();
+  const blockReasons = Array.isArray(row.block_reasons) ? row.block_reasons : [];
+
+  const strengths: string[] = [];
+  const risks: string[] = [];
+
+  const identifierCount = [row.order_id, row.amazon_case_id, row.sku, row.asin].filter(Boolean).length;
+  if (identifierCount >= 2) {
+    strengths.push('Identifiers present');
+  } else if (identifierCount === 1) {
+    risks.push('Thin identifier trail');
+  } else {
+    risks.push('Identifier gap');
+  }
+
+  if (row.matched_document_count >= 2) {
+    strengths.push(`${row.matched_document_count} docs linked`);
+  } else if (row.matched_document_count === 1) {
+    strengths.push('1 doc linked');
+  } else {
+    risks.push('No matched docs');
+  }
+
+  if (['matched', 'ready', 'usable', 'linked strongly'].includes(evidenceState)) {
+    strengths.push(`Evidence ${row.evidence_state}`);
+  } else if (row.evidence_state) {
+    risks.push(row.evidence_state);
+  }
+
+  if (blockReasons.length) {
+    risks.push(...blockReasons.map(formatBlockReason));
+  }
+
+  if (row.rejection_reason) {
+    risks.push('Prior rejection to address');
+  }
+
+  if (row.expected_payout_date && row.approved_amount != null && row.actual_payout_amount == null) {
+    strengths.push(`Payout target ${formatCompactDate(row.expected_payout_date)}`);
+  }
+
+  if (row.actual_payout_amount != null || recoveryStatus === 'reconciled') {
+    if (billingStatus === 'credited' || billingStatus === 'completed' || row.billed_amount != null) {
+      strengths.push('Billing reconciled');
+    }
+    return {
+      tone: 'resolved',
+      headline: 'Recovered',
+      detail: row.billed_amount != null ? 'Recovery landed and billing has entered reconciliation.' : 'Recovery has been recorded for this case.',
+      strengths: strengths.slice(0, 3),
+      risks: []
+    };
+  }
+
+  if (row.approved_amount != null && row.actual_payout_amount == null) {
+    return {
+      tone: 'in_flight',
+      headline: 'Payout pending',
+      detail: row.expected_payout_date
+        ? `Amazon approval is in place. Track payout timing against ${formatCompactDate(row.expected_payout_date)}.`
+        : 'Amazon approval is in place. The remaining risk is payout timing, not filing readiness.',
+      strengths: strengths.slice(0, 3),
+      risks: risks.slice(0, 2)
+    };
+  }
+
+  if (['filed', 'submitting', 'recovering', 'payment_required'].includes(filingStatus) || ['submitted', 'under review', 'in review'].includes(status)) {
+    return {
+      tone: 'in_flight',
+      headline: 'In Amazon review',
+      detail: 'Submission has moved out of seller control. Focus on any rejection history or evidence gaps before retrying.',
+      strengths: strengths.slice(0, 3),
+      risks: risks.slice(0, 2)
+    };
+  }
+
+  if (['rejected', 'denied', 'lost'].includes(status) || filingStatus === 'failed') {
+    return {
+      tone: 'blocked',
+      headline: 'Rejection risk is live',
+      detail: row.rejection_reason
+        ? `Amazon has already objected to this case. Fix the recorded reason before retrying.`
+        : 'This case was rejected or failed in filing. Review the evidence and filing posture before resubmission.',
+      strengths: strengths.slice(0, 2),
+      risks: risks.slice(0, 3)
+    };
+  }
+
+  if (filingStatus === 'blocked' || row.eligible_to_file === false) {
+    return {
+      tone: 'blocked',
+      headline: 'Blocked before filing',
+      detail: blockReasons.length
+        ? 'The gate has already identified issues that should be fixed before submission.'
+        : 'This case is not currently eligible to file.',
+      strengths: strengths.slice(0, 2),
+      risks: risks.slice(0, 3)
+    };
+  }
+
+  if (row.eligible_to_file === true && ['pending', 'retrying'].includes(filingStatus)) {
+    return {
+      tone: 'ready',
+      headline: 'Ready to file',
+      detail: 'The current gate is open. Seller-controlled quality now comes down to keeping identifiers and evidence clean.',
+      strengths: strengths.slice(0, 3),
+      risks: risks.slice(0, 2)
+    };
+  }
+
+  return {
+    tone: 'attention',
+    headline: 'Needs seller review',
+    detail: 'The case exists, but the current record still has gaps or ambiguity that can dilute filing strength.',
+    strengths: strengths.slice(0, 2),
+    risks: risks.slice(0, 3)
+  };
+}
+
+function postureBadgeClass(tone: FilingPosture['tone']) {
+  const map: Record<FilingPosture['tone'], string> = {
+    ready: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
+    attention: 'border-amber-500/20 bg-amber-500/10 text-amber-300',
+    blocked: 'border-red-500/20 bg-red-500/10 text-red-300',
+    in_flight: 'border-blue-500/20 bg-blue-500/10 text-blue-300',
+    resolved: 'border-white/15 bg-white/10 text-white/75',
+  };
+
+  return map[tone];
 }
 
 function DetailSection({
@@ -327,6 +277,8 @@ function toQueueRowFromLegacy(item: LegacyCase): QueueRow {
     filing_status: null,
     recovery_status: actualPayoutAmount != null ? 'reconciled' : null,
     billing_status: null,
+    eligible_to_file: null,
+    block_reasons: [],
     requested_amount: item.amount ?? null,
     approved_amount: approvedAmount,
     actual_payout_amount: actualPayoutAmount,
@@ -948,7 +900,7 @@ export default function DisputeCases() {
                   <table className="w-full min-w-[1440px]">
                     <thead className="bg-white/[0.02] border-b border-white/5">
                       <tr className="text-left">
-                        {['Case', 'Lifecycle', 'Money', 'Evidence', 'Next Action', 'Updated', 'Actions'].map((header) => (
+                        {['Case', 'Lifecycle', 'Money', 'Evidence', 'Filing Posture', 'Updated', 'Actions'].map((header) => (
                           <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
                             {header}
                           </th>
@@ -959,6 +911,7 @@ export default function DisputeCases() {
                       {rows.map((row) => {
                         const filingValue = String(row.filing_status || '').toLowerCase();
                         const isProcessing = filingInProgress.has(row.dispute_case_id);
+                        const posture = deriveFilingPosture(row);
                         const actionButton =
                           filingValue === 'pending_approval'
                             ? { label: 'Approve', mode: 'approve' as const }
@@ -1008,8 +961,38 @@ export default function DisputeCases() {
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="min-w-[200px] space-y-2">
-                                <p className="text-[13px] font-sans font-bold tracking-tight text-white">{row.next_action}</p>
+                              <div className="min-w-[280px] space-y-3">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <p className="text-[13px] font-sans font-bold tracking-tight text-white">{row.next_action}</p>
+                                  <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>
+                                    {posture.headline}
+                                  </Badge>
+                                </div>
+                                <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
+                                {posture.strengths.length ? (
+                                  <div className="flex flex-wrap gap-2">
+                                    {posture.strengths.map((item) => (
+                                      <span
+                                        key={`${row.dispute_case_id}-strength-${item}`}
+                                        className="rounded-full border border-emerald-500/15 bg-emerald-500/[0.08] px-2.5 py-1 text-[10px] font-sans font-semibold tracking-tight text-emerald-200/85"
+                                      >
+                                        {item}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : null}
+                                {posture.risks.length ? (
+                                  <div className="flex flex-wrap gap-2">
+                                    {posture.risks.map((item) => (
+                                      <span
+                                        key={`${row.dispute_case_id}-risk-${item}`}
+                                        className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-semibold tracking-tight text-white/62"
+                                      >
+                                        {item}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : null}
                               </div>
                             </td>
 
@@ -1133,6 +1116,15 @@ export default function DisputeCases() {
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
                   { label: 'Next Action', value: detailsRow.next_action || 'Not available' },
+                ]}
+              />
+              <DetailSection
+                title="Filing Posture"
+                rows={[
+                  { label: 'Posture', value: deriveFilingPosture(detailsRow).headline },
+                  { label: 'Detail', value: deriveFilingPosture(detailsRow).detail },
+                  { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Unavailable' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
+                  { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'None recorded' },
                 ]}
               />
               <DetailSection
