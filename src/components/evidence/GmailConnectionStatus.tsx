@@ -75,10 +75,21 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
 
       const connected = isGmailConnected();
 
-      // Get email from either endpoint
-      const email = gmailRes?.ok && gmailRes.data?.email
-        ? gmailRes.data.email
+      const gmailSource = sourcesRes?.ok && Array.isArray(sourcesRes.data?.sources)
+        ? sourcesRes.data.sources.find((s: any) => s.provider?.toLowerCase() === 'gmail' && s.status === 'connected')
+        : null;
+
+      const integrationsEmail = integrationsRes?.ok && integrationsRes.data
+        ? ((integrationsRes.data as any)?.providers?.gmail?.account_email ||
+           (integrationsRes.data as any)?.providerIngest?.gmail?.email)
         : undefined;
+
+      // Recover the best real email available across all truth sources.
+      const email = (
+        (gmailRes?.ok && gmailRes.data?.email ? gmailRes.data.email : undefined) ||
+        (typeof integrationsEmail === 'string' && integrationsEmail.trim() ? integrationsEmail.trim() : undefined) ||
+        (gmailSource?.account_email && gmailSource.account_email !== 'unknown' ? gmailSource.account_email : undefined)
+      );
 
       // Get lastSync from either endpoint — backend returns lastSync not last_sync_at
       const lastSync = gmailRes?.ok && (gmailRes.data as any)?.lastSync
@@ -152,6 +163,14 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
     );
   }
 
+  const connectedIdentityLabel = status?.connected
+    ? (status.email ? 'Connected Email' : 'Connection Status')
+    : 'Connected Email';
+
+  const connectedIdentityValue = status?.connected
+    ? (status.email || 'Authorized Gmail connection active')
+    : 'Not authorized';
+
   return (
     <div className="relative group">
       <div className="flex items-center justify-between mb-8">
@@ -181,10 +200,10 @@ export function GmailConnectionStatus({ onStatusChange, showActions = true }: Gm
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">Connected Email</span>
+            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight block">{connectedIdentityLabel}</span>
             <div className="flex items-center gap-2">
               <span className="text-xs font-sans font-bold text-white/60 tracking-tight">
-                {status?.email || 'Not authorized'}
+                {connectedIdentityValue}
               </span>
             </div>
           </div>
