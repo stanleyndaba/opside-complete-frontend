@@ -183,7 +183,7 @@ const buildEvidenceRows = (documents: any[]) => {
 };
 
 export const ClaimPdfService = {
-    generate: async (data: any) => {
+    generate: async (data: any, options?: { mode?: 'download' | 'blob' }) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
@@ -518,6 +518,10 @@ export const ClaimPdfService = {
             || String(data.dispute_case_id || data.id || 'case').slice(0, 8);
         const caseTypeSlug = slugify(data.case_type || data.anomaly_type || data.claim_type, 'case');
         const caseIdentifierSlug = slugify(caseIdentifier, 'case');
+        if (options?.mode === 'blob') {
+            return doc.output('blob');
+        }
         doc.save(`margin-case-report-${caseIdentifierSlug}-${caseTypeSlug}-${statementDate}.pdf`);
+        return null;
     }
 };

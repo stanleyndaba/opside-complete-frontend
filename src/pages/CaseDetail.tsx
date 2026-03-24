@@ -7,12 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import {
   ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle,
   Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown, ShieldCheck, Activity,
   BarChart3, Database, History, ArrowRight, Upload, ChevronRight, Scale, Info,
-  Zap, ShieldAlert
+  Zap, ShieldAlert, Download, Loader2, X
 } from 'lucide-react';
 import {
   Select,
@@ -459,6 +460,11 @@ export default function CaseDetail() {
   const passedClaim = (location && location.state && (location.state as any).claim) || null;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
+  const [pdfPreviewLoading, setPdfPreviewLoading] = useState(false);
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
+  const [pdfPreviewTitle, setPdfPreviewTitle] = useState('PDF Preview');
+  const [pdfPreviewLabel, setPdfPreviewLabel] = useState('Document Preview');
   const [caseData, setCaseData] = useState<any | null>(passedClaim ? {
     id: passedClaim.id,
     dispute_case_id: passedClaim.dispute_case_id || null,
@@ -728,11 +734,93 @@ export default function CaseDetail() {
     ];
   }, [approvedAmount, effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
 
-  const handleBriefDownload = useCallback(() => {
+  useEffect(() => {
+    return () => {
+      if (pdfPreviewUrl) {
+        URL.revokeObjectURL(pdfPreviewUrl);
+      }
+    };
+  }, [pdfPreviewUrl]);
+
+  const closePdfPreview = useCallback(() => {
+    setPdfPreviewOpen(false);
+    setPdfPreviewLoading(false);
+    setPdfPreviewTitle('PDF Preview');
+    setPdfPreviewLabel('Document Preview');
+    setPdfPreviewUrl((current) => {
+      if (current) URL.revokeObjectURL(current);
+      return null;
+    });
+  }, []);
+
+  const openPdfPreview = useCallback((title: string, label: string) => {
+    setPdfPreviewTitle(title);
+    setPdfPreviewLabel(label);
+    setPdfPreviewOpen(true);
+    setPdfPreviewLoading(true);
+  }, []);
+
+  const handleBriefPreview = useCallback(async () => {
     if (!activeSlug || !effectiveCase?.id) return;
-    const briefUrl = api.getDisputeBrief(String(effectiveCase.id), activeSlug);
-    window.open(briefUrl, '_blank', 'noopener,noreferrer');
-  }, [activeSlug, effectiveCase?.id]);
+    openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Dispute Brief', 'Brief PDF Preview');
+
+    try {
+      const response = await api.fetchDisputeBriefPdf(String(effectiveCase.id), activeSlug);
+      if (!response.ok || !response.blob) {
+        throw new Error(response.error || 'Unable to load dispute brief preview.');
+      }
+
+      setPdfPreviewUrl((current) => {
+        if (current) URL.revokeObjectURL(current);
+        return URL.createObjectURL(response.blob);
+      });
+    } catch (err: any) {
+      closePdfPreview();
+      toast({
+        variant: 'destructive',
+        title: 'Brief preview failed',
+        description: err?.message || 'Unable to load the dispute brief PDF.',
+      });
+    } finally {
+      setPdfPreviewLoading(false);
+    }
+  }, [activeSlug, closePdfPreview, effectiveCase, openPdfPreview, toast]);
+
+  const handleCasePdfPreview = useCallback(async () => {
+    if (!effectiveCase) return;
+    openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Case PDF', 'Case PDF Preview');
+
+    try {
+      const pdfBlob = await ClaimPdfService.generate(effectiveCase, { mode: 'blob' });
+      if (!pdfBlob) {
+        throw new Error('Unable to generate the case PDF preview.');
+      }
+
+      setPdfPreviewUrl((current) => {
+        if (current) URL.revokeObjectURL(current);
+        return URL.createObjectURL(pdfBlob);
+      });
+    } catch (err: any) {
+      closePdfPreview();
+      toast({
+        variant: 'destructive',
+        title: 'Case PDF preview failed',
+        description: err?.message || 'Unable to generate the case PDF preview.',
+      });
+    } finally {
+      setPdfPreviewLoading(false);
+    }
+  }, [closePdfPreview, effectiveCase, openPdfPreview, toast]);
+
+  const downloadPdfPreview = useCallback(() => {
+    if (!pdfPreviewUrl) return;
+    const anchor = document.createElement('a');
+    anchor.href = pdfPreviewUrl;
+    anchor.download = `${pdfPreviewTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'document'}.pdf`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }, [pdfPreviewTitle, pdfPreviewUrl]);
 
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
@@ -815,7 +903,7 @@ export default function CaseDetail() {
                   variant="outline"
                   size="sm"
                   className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
-                  onClick={handleBriefDownload}
+                  onClick={handleBriefPreview}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
                   Brief PDF
@@ -824,7 +912,7 @@ export default function CaseDetail() {
                   variant="outline"
                   size="sm"
                   className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
-                  onClick={async () => await ClaimPdfService.generate(effectiveCase)}
+                  onClick={handleCasePdfPreview}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
                   Case PDF
@@ -1754,6 +1842,64 @@ export default function CaseDetail() {
           </div>
         </div>
       </div>
+
+      <Dialog open={pdfPreviewOpen} onOpenChange={(open) => (open ? setPdfPreviewOpen(true) : closePdfPreview())}>
+        <DialogContent className="grid h-[94vh] w-[98vw] max-w-none gap-0 overflow-hidden border-0 bg-transparent p-0 text-white shadow-none sm:rounded-none [&>button:last-child]:hidden">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{pdfPreviewTitle}</DialogTitle>
+          </DialogHeader>
+
+          <div className="relative h-full w-full">
+            <div className="pointer-events-none absolute left-6 top-5 z-10 max-w-[60vw] space-y-1">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{pdfPreviewLabel}</div>
+              <div className="truncate text-2xl font-sans font-light tracking-tight text-white">
+                {pdfPreviewTitle}
+              </div>
+            </div>
+
+            <div className="absolute right-6 top-5 z-10 flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!pdfPreviewUrl}
+                onClick={downloadPdfPreview}
+                className="h-11 rounded-full border-white/15 bg-black/25 px-3 text-white backdrop-blur-md hover:bg-white/10"
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={closePdfPreview}
+                className="h-11 rounded-full border-white/15 bg-black/25 px-3 text-white backdrop-blur-md hover:bg-white/10"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="flex h-full items-center justify-center px-3 pb-4 pt-20 md:px-6 md:pb-6 md:pt-24">
+              {pdfPreviewLoading ? (
+                <div className="flex h-full w-full items-center justify-center gap-3 text-sm font-sans text-white/60">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading PDF preview...
+                </div>
+              ) : pdfPreviewUrl ? (
+                <div className="h-full w-full overflow-hidden rounded-[10px] bg-white shadow-[0_24px_90px_rgba(0,0,0,0.40)]">
+                  <iframe
+                    title={pdfPreviewTitle}
+                    src={`${pdfPreviewUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                    className="h-full w-full bg-white"
+                  />
+                </div>
+              ) : (
+                <div className="flex h-full w-full items-center justify-center px-8 text-center text-sm font-sans text-white/50">
+                  Preview unavailable.
+                </div>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }
