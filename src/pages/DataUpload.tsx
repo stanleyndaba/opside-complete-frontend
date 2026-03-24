@@ -119,8 +119,36 @@ export default function DataUpload() {
     const [previewMessage, setPreviewMessage] = useState<string | null>(null);
     const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const activeUserId = localStorage.getItem('user_id') || '';
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
+
+    const resolveSessionIdentity = useCallback(async () => {
+        let resolvedUserId = localStorage.getItem('user_id') || '';
+        let resolvedTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
+
+        if (!resolvedUserId || !resolvedTenantId) {
+            try {
+                const me = await api.getMe(currentTenantSlug);
+                if (me?.ok && me.data) {
+                    const profile = me.data as any;
+                    if (!resolvedUserId && profile.id) {
+                        resolvedUserId = String(profile.id);
+                        localStorage.setItem('user_id', resolvedUserId);
+                    }
+                    if (!resolvedTenantId && profile.tenant_id) {
+                        resolvedTenantId = String(profile.tenant_id);
+                        localStorage.setItem('active_tenant_id', resolvedTenantId);
+                    }
+                }
+            } catch (_error) {
+                // Fall through to honest validation below.
+            }
+        }
+
+        return {
+            userId: resolvedUserId,
+            tenantId: resolvedTenantId,
+        };
+    }, [currentTenantSlug, tenant?.id]);
 
     const pollForUploadDetections = useCallback(async (syncId: string) => {
         const maxAttempts = 15;
@@ -332,7 +360,9 @@ export default function DataUpload() {
     // Upload files to backend
     const handleUpload = async () => {
         if (files.length === 0 || isUploading) return;
-        if (!activeUserId) {
+        const { userId: resolvedUserId, tenantId: resolvedTenantId } = await resolveSessionIdentity();
+
+        if (!resolvedUserId) {
             toast({
                 title: 'Sign in required',
                 description: 'CSV upload needs a real signed-in user. Refresh your session and try again.',
@@ -340,7 +370,7 @@ export default function DataUpload() {
             });
             return;
         }
-        if (!activeTenantId) {
+        if (!currentTenantSlug && !resolvedTenantId) {
             toast({
                 title: 'Workspace context missing',
                 description: 'CSV upload needs an active workspace before it can write tenant-scoped data.',
@@ -375,8 +405,8 @@ export default function DataUpload() {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'x-user-id': activeUserId,
-                    'x-tenant-id': activeTenantId,
+                    ...(resolvedUserId ? { 'x-user-id': resolvedUserId } : {}),
+                    ...(resolvedTenantId ? { 'x-tenant-id': resolvedTenantId } : {}),
                 },
                 body: formData,
             });
