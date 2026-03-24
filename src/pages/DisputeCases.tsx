@@ -1170,60 +1170,59 @@ export default function DisputeCases() {
       </Dialog>
 
       <Dialog open={briefPreviewOpen} onOpenChange={(open) => (open ? setBriefPreviewOpen(true) : closeBriefPreview())}>
-        <DialogContent className="grid h-[90vh] w-[94vw] max-w-[1320px] gap-0 overflow-hidden border border-white/10 bg-black/35 p-0 text-white shadow-[0_40px_120px_rgba(0,0,0,0.55)] backdrop-blur-2xl sm:rounded-[28px] [&>button:last-child]:hidden">
-          <DialogHeader className="border-b border-white/10 px-6 py-5">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0 space-y-2">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Brief PDF Preview</div>
-                <DialogTitle className="truncate text-2xl font-sans font-light tracking-tight text-white">
-                  {briefPreviewRow?.case_number || 'Dispute Brief'}
-                </DialogTitle>
-                <div className="text-[11px] font-sans text-white/50">
-                  Scroll in the preview and use the browser PDF controls to zoom.
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={!briefPreviewUrl}
-                  onClick={downloadBriefPreview}
-                  className="h-10 rounded-full border-white/15 bg-white/5 px-3 text-white hover:bg-white/10"
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={closeBriefPreview}
-                  className="h-10 rounded-full border-white/15 bg-white/5 px-3 text-white hover:bg-white/10"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+        <DialogContent className="grid h-[94vh] w-[98vw] max-w-none gap-0 overflow-hidden border-0 bg-transparent p-0 text-white shadow-none sm:rounded-none [&>button:last-child]:hidden">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{briefPreviewRow?.case_number || 'Dispute Brief'}</DialogTitle>
           </DialogHeader>
 
-          <div className="min-h-0 bg-transparent p-5 md:p-6">
-            {briefPreviewLoading ? (
-              <div className="flex h-full min-h-0 items-center justify-center gap-3 rounded-[24px] border border-white/10 bg-black/20 text-sm font-sans text-white/60">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading brief preview...
+          <div className="relative h-full w-full">
+            <div className="pointer-events-none absolute left-6 top-5 z-10 max-w-[60vw] space-y-1">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Brief PDF Preview</div>
+              <div className="truncate text-2xl font-sans font-light tracking-tight text-white">
+                {briefPreviewRow?.case_number || 'Dispute Brief'}
               </div>
-            ) : briefPreviewUrl ? (
-              <div className="h-full overflow-hidden rounded-[24px] border border-white/10 bg-white shadow-[0_20px_80px_rgba(0,0,0,0.35)]">
-                <iframe
-                  title="Dispute brief PDF preview"
-                  src={`${briefPreviewUrl}#toolbar=1&navpanes=0&view=FitH`}
-                  className="h-full w-full bg-white"
-                />
-              </div>
-            ) : (
-              <div className="flex h-full min-h-0 items-center justify-center rounded-[24px] border border-white/10 bg-black/20 px-8 text-center text-sm font-sans text-white/50">
-                Preview unavailable.
-              </div>
-            )}
+            </div>
+
+            <div className="absolute right-6 top-5 z-10 flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!briefPreviewUrl}
+                onClick={downloadBriefPreview}
+                className="h-11 rounded-full border-white/15 bg-black/25 px-3 text-white backdrop-blur-md hover:bg-white/10"
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={closeBriefPreview}
+                className="h-11 rounded-full border-white/15 bg-black/25 px-3 text-white backdrop-blur-md hover:bg-white/10"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="flex h-full items-center justify-center px-3 pb-4 pt-20 md:px-6 md:pb-6 md:pt-24">
+              {briefPreviewLoading ? (
+                <div className="flex h-full w-full items-center justify-center gap-3 text-sm font-sans text-white/60">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading brief preview...
+                </div>
+              ) : briefPreviewUrl ? (
+                <div className="h-full w-full overflow-hidden rounded-[10px] bg-white shadow-[0_24px_90px_rgba(0,0,0,0.40)]">
+                  <iframe
+                    title="Dispute brief PDF preview"
+                    src={`${briefPreviewUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                    className="h-full w-full bg-white"
+                  />
+                </div>
+              ) : (
+                <div className="flex h-full w-full items-center justify-center px-8 text-center text-sm font-sans text-white/50">
+                  Preview unavailable.
+                </div>
+              )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
