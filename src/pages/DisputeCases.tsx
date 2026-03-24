@@ -418,6 +418,7 @@ export default function DisputeCases() {
   const [briefPreviewLoading, setBriefPreviewLoading] = useState(false);
   const [briefPreviewUrl, setBriefPreviewUrl] = useState<string | null>(null);
   const [briefPreviewRow, setBriefPreviewRow] = useState<QueueRow | null>(null);
+  const [briefPreviewNotice, setBriefPreviewNotice] = useState<string | null>(null);
   const pageSize = 25;
 
   useEffect(() => {
@@ -601,6 +602,7 @@ export default function DisputeCases() {
     setBriefPreviewOpen(false);
     setBriefPreviewLoading(false);
     setBriefPreviewRow(null);
+    setBriefPreviewNotice(null);
     setBriefPreviewUrl((current) => {
       if (current) URL.revokeObjectURL(current);
       return null;
@@ -609,17 +611,17 @@ export default function DisputeCases() {
 
   const handleBriefPreview = async (row: QueueRow) => {
     if (!activeTenantSlug) return;
+    setBriefPreviewOpen(true);
+    setBriefPreviewLoading(false);
+    setBriefPreviewRow(row);
+    setBriefPreviewNotice(null);
+
     if (dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')) {
-      toast({
-        title: 'Brief unavailable',
-        description: 'Preview fixtures do not have a real backend dispute brief.'
-      });
+      setBriefPreviewNotice('This row is a preview fixture. No real backend dispute brief exists for it.');
       return;
     }
 
-    setBriefPreviewOpen(true);
     setBriefPreviewLoading(true);
-    setBriefPreviewRow(row);
 
     try {
       const response = await api.fetchDisputeBriefPdf(row.dispute_case_id, activeTenantSlug);
@@ -1050,7 +1052,6 @@ export default function DisputeCases() {
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
-                                      disabled={dataSource === 'preview' || row.dispute_case_id.startsWith('preview-')}
                                       onClick={() => handleBriefPreview(row)}
                                     >
                                       Brief PDF
@@ -1192,7 +1193,7 @@ export default function DisputeCases() {
                   {briefPreviewRow?.case_number || 'Dispute Brief'}
                 </DialogTitle>
                 <div className="text-[11px] font-sans text-white/45">
-                  Scroll in the preview and use the browser PDF controls to zoom.
+                  {briefPreviewNotice || 'Scroll in the preview and use the browser PDF controls to zoom.'}
                 </div>
               </div>
 
@@ -1231,8 +1232,8 @@ export default function DisputeCases() {
                 className="h-full w-full rounded-none bg-white"
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-sm font-sans text-white/50">
-                Preview unavailable.
+              <div className="flex h-full items-center justify-center px-8 text-center text-sm font-sans text-white/50">
+                {briefPreviewNotice || 'Preview unavailable.'}
               </div>
             )}
           </div>
