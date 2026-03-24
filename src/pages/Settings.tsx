@@ -5,7 +5,6 @@ import { Building2, CreditCard, Store } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
@@ -159,14 +158,12 @@ const Settings = () => {
       <PageLayout title="Account Control Center" midnight>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pt-10 pb-20">
-            <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
-              <CardContent className="p-8 space-y-3">
-                <h1 className="text-xl font-sans font-bold text-white tracking-tight">Settings unavailable</h1>
-                <p className="text-sm text-white/50 font-sans">
-                  A tenant workspace is required before account settings can be loaded.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="border-t border-white/10 pt-8 space-y-3">
+              <h1 className="text-xl font-sans font-bold text-white tracking-tight">Settings unavailable</h1>
+              <p className="text-sm text-white/50 font-sans">
+                A tenant workspace is required before account settings can be loaded.
+              </p>
+            </div>
           </div>
         </div>
       </PageLayout>
@@ -187,18 +184,21 @@ const Settings = () => {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-            <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-8">
-                <div>
-                  <h1 className="text-2xl font-sans font-light text-white tracking-tight mb-1">Settings</h1>
-                  <p className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
-                    SYSTEM_CONFIG // READ_ONLY
-                  </p>
-                </div>
+          <div className="border-b border-white/10 pb-10">
+            <div className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
+              SYSTEM_CONFIG // READ_ONLY
+            </div>
+            <h1 className="mt-3 text-4xl font-sans font-light text-white tracking-tight">Settings</h1>
+            <p className="mt-4 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
+              This page currently shows live account and workspace information. Editable settings that are not yet backed by real persistence have been removed.
+            </p>
+          </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 pt-10">
+            <div className="lg:col-span-1">
+              <div className="lg:sticky lg:top-24 space-y-8 border-t border-white/10 pt-8">
                 <nav className="space-y-1">
-                  <div className="group relative w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-[#111111] border border-white/10 text-white/80">
+                  <div className="group relative w-full flex items-center gap-4 px-0 py-3 text-white/80 border-b border-white/10">
                     <Building2 className="h-4.5 w-4.5 text-white/50" />
                     <span className="text-[11px] font-sans font-bold uppercase tracking-tight">
                       Seller Profile
@@ -213,22 +213,21 @@ const Settings = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-6"
+                className="space-y-10"
               >
                 <div>
                   <h2 className="text-xl font-sans font-bold text-white tracking-tight">Seller Profile</h2>
                   <p className="text-sm text-white/50 font-sans mt-3 max-w-2xl">
-                    This page currently shows live account and workspace information. Editable settings that are not yet backed by real persistence have been removed.
+                    This section shows live account and workspace information only.
                   </p>
                 </div>
 
-                <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-2xl relative overflow-hidden rounded-2xl backdrop-blur-3xl group transition-all duration-500">
+                <div className="relative overflow-hidden border-t border-white/10 pt-10 group transition-all duration-500">
                   <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
                     <Building2 className="h-48 w-48 text-white rotate-12" />
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent pointer-events-none" />
 
-                  <CardContent className="p-8 relative z-10">
+                  <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                       <div className="space-y-6">
                         <div>
@@ -239,7 +238,7 @@ const Settings = () => {
                             <Badge
                               variant="outline"
                               className={cn(
-                                'text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1',
+                                'text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1 rounded-none',
                                 isAmazonConnected
                                   ? 'bg-white/5 text-white border-white/10'
                                   : 'bg-white/5 text-white/40 border-white/10'
@@ -273,7 +272,7 @@ const Settings = () => {
 
                       <div className="flex flex-col gap-3">
                         <Button
-                          className="bg-white text-black hover:bg-white/90 transition-all active:scale-[0.98] rounded-xl h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                          className="bg-white text-black hover:bg-white/90 transition-all active:scale-[0.98] rounded-none h-12 px-8 font-sans font-bold uppercase tracking-tight text-xs shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                           onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/integrations-hub'))}
                           disabled={!activeTenantSlug}
                         >
@@ -281,16 +280,15 @@ const Settings = () => {
                         </Button>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
-                    <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
-                      <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6 space-y-4">
-                      <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl transition-all">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 border-t border-white/10 pt-10">
+                  <section className="space-y-6">
+                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between py-3 border-b border-white/10">
                         <div className="flex items-center gap-3">
                           <Store className="h-4 w-4 text-white/40" />
                           <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Amazon SP-API</span>
@@ -298,7 +296,7 @@ const Settings = () => {
                         <Badge
                           variant="outline"
                           className={cn(
-                            'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5',
+                            'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
                             isAmazonConnected
                               ? 'bg-white/5 text-white border-white/10'
                               : 'bg-white/5 text-white/40 border-white/10'
@@ -308,7 +306,7 @@ const Settings = () => {
                         </Badge>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl transition-all">
+                      <div className="flex items-center justify-between py-3 border-b border-white/10">
                         <div className="flex items-center gap-3">
                           <CreditCard className="h-4 w-4 text-white/40" />
                           <span className="text-xs font-sans font-bold text-white/80 tracking-tight">PayPal Billing</span>
@@ -316,7 +314,7 @@ const Settings = () => {
                         <Badge
                           variant="outline"
                           className={cn(
-                            'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5',
+                            'text-[9px] font-sans font-bold uppercase tracking-tight px-2 py-0.5 rounded-none',
                             paypalActive
                               ? 'bg-white/5 text-white border-white/10'
                               : 'bg-white/5 text-white/40 border-white/10'
@@ -326,7 +324,7 @@ const Settings = () => {
                         </Badge>
                       </div>
 
-                      <div className="space-y-2 pt-2">
+                      <div className="space-y-2 pt-4">
                         <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Ingest</p>
                         <p className="text-sm font-sans font-bold text-white/80 tracking-tight">
                           {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
@@ -340,7 +338,7 @@ const Settings = () => {
                             linkedMarketplaces.map((marketplaceId) => {
                               const marketplace = marketplaceNames[marketplaceId] || { name: marketplaceId, flag: 'GL' };
                               return (
-                                <Badge key={marketplaceId} variant="outline" className="text-[9px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/70">
+                                <Badge key={marketplaceId} variant="outline" className="text-[9px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/70 rounded-none">
                                   {marketplace.flag} {marketplace.name}
                                 </Badge>
                               );
@@ -350,14 +348,13 @@ const Settings = () => {
                           )}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </section>
 
-                  <Card className="bg-[#0c0c0c] border-white/5 text-white shadow-xl rounded-2xl backdrop-blur-3xl overflow-hidden group">
-                    <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-4">
-                      <CardTitle className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6 space-y-6">
+                  <section className="space-y-6 border-t border-white/10 pt-8 md:border-t-0 md:border-l md:pl-10">
+                    <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Support Tier</div>
+
+                    <div className="space-y-6">
                       <div className="space-y-2">
                         <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Current Tier</p>
                         <p className="text-lg font-sans font-bold text-white tracking-tight">{supportTier}</p>
@@ -376,14 +373,14 @@ const Settings = () => {
 
                       <Button
                         variant="outline"
-                        className="w-full h-10 border-white/10 hover:border-white/20 text-white bg-white/[0.03] font-sans font-bold text-[10px] uppercase tracking-tight"
+                        className="w-full h-10 rounded-none border-white/10 hover:border-white/20 text-white bg-white/[0.03] font-sans font-bold text-[10px] uppercase tracking-tight"
                         onClick={() => navigate(tenantRoute(activeTenantSlug || '', '/help'))}
                         disabled={!activeTenantSlug}
                       >
                         Open Support Channel
                       </Button>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </section>
                 </div>
               </motion.div>
             </div>

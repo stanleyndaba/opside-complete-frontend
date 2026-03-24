@@ -231,7 +231,7 @@ export default function Help() {
 
         <div className="relative max-w-6xl mx-auto px-8 py-12">
           <div className="border-b border-white/10 pb-10">
-            <div className="text-[10px] font-sans font-medium text-white/30 tracking-[0.24em] uppercase">Support Console</div>
+            <div className="text-[10px] font-sans font-medium text-white/30 tracking-tight uppercase">Support Console</div>
             <h1 className="mt-3 text-4xl md:text-5xl font-light font-sans text-white tracking-tight">
               Help <span className="text-white/40">and guidance</span>
             </h1>
@@ -244,7 +244,7 @@ export default function Help() {
             <section className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
               <div className="space-y-8">
                 <div>
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Static Help Guidance</div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Static Help Guidance</div>
                   <div className="mt-3 text-sm font-sans text-white">Search local knowledge-base guidance. This section is static help content, not live support workflow status.</div>
                 </div>
 
@@ -279,7 +279,7 @@ export default function Help() {
               </div>
 
               <div className="border-t border-white/10 pt-8 lg:border-t-0 lg:border-l lg:pl-10">
-                <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Support Tier</div>
+                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Support Tier</div>
                 <div className="mt-4 text-2xl font-sans font-light text-white tracking-tight">{supportTierText[tier].title}</div>
                 <div className="mt-3 text-sm font-sans text-white/55 leading-relaxed">{supportTierText[tier].detail}</div>
                 {tenant ? <div className="mt-5 text-sm font-sans text-white/35">Workspace: {tenant.name}</div> : null}
@@ -289,7 +289,7 @@ export default function Help() {
             <section className="border-t border-white/10 pt-10">
               <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(260px,0.55fr)]">
                 <div>
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Support Request</div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Support Request</div>
                   <div className="mt-3 text-sm font-sans text-white">Submit a tracked support request bound to your active tenant and user context.</div>
                 </div>
                 <div className="text-sm font-sans text-white/45 leading-relaxed">
@@ -300,7 +300,7 @@ export default function Help() {
               <form onSubmit={handleContactSubmit} className="mt-10 space-y-8">
                 <div className="grid gap-8 md:grid-cols-2">
                   <div className="space-y-3">
-                    <Label htmlFor="subject" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                    <Label htmlFor="subject" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                       Subject
                     </Label>
                     <Input
@@ -313,7 +313,7 @@ export default function Help() {
                   </div>
 
                   <div className="space-y-3">
-                    <Label htmlFor="category" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                    <Label htmlFor="category" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                       Topic
                     </Label>
                     <Select value={contactForm.category} onValueChange={(value) => setContactForm({ ...contactForm, category: value })}>
@@ -332,7 +332,7 @@ export default function Help() {
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="additional-context" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                  <Label htmlFor="additional-context" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                     Additional Context
                   </Label>
                   <Input
@@ -345,7 +345,7 @@ export default function Help() {
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="message" className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/35">
+                  <Label htmlFor="message" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/35">
                     Message
                   </Label>
                   <Textarea
@@ -362,14 +362,14 @@ export default function Help() {
                   <Button
                     type="submit"
                     disabled={submitting || !isReady || !tenant}
-                    className="h-12 w-full rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-medium text-[11px] uppercase tracking-[0.22em] md:w-auto md:min-w-[240px]"
+                    className="h-12 w-full rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-medium text-[11px] uppercase tracking-tight md:w-auto md:min-w-[240px]"
                   >
                     {submitting ? 'Submitting Request' : 'Submit Support Request'}
                   </Button>
 
                   {lastSubmitted && (
                     <div className="border-l border-blue-500/40 pl-5 text-sm font-sans text-blue-100">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-[0.24em] text-blue-200/70">Latest Request</div>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-blue-200/70">Latest Request</div>
                       <div className="mt-3">Request ID: {lastSubmitted.request_id}</div>
                       <div className="mt-1">Status: {formatLabel(lastSubmitted.status)}</div>
                       <div className="mt-2 text-blue-100/75">Submitted {formatTimestamp(lastSubmitted.created_at)}. Follow-up happens through recorded support handling, not a live chat workflow on this page.</div>
@@ -381,7 +381,7 @@ export default function Help() {
 
             <section className="border-t border-white/10 pt-10">
               <div>
-                <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Recent Requests</div>
+                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Recent Requests</div>
                 <div className="mt-3 text-sm font-sans text-white">This list shows real persisted support requests for the current user in the active tenant.</div>
               </div>
 
@@ -399,13 +399,13 @@ export default function Help() {
                         <div className="flex flex-col gap-4">
                           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                             <div>
-                              <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-white/30">{request.request_id}</div>
+                              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{request.request_id}</div>
                               <div className="mt-3 text-xl font-sans font-light text-white tracking-tight">{request.subject}</div>
-                              <div className="mt-2 text-xs font-sans text-white/45 uppercase tracking-[0.18em]">{formatLabel(request.category)}</div>
+                              <div className="mt-2 text-xs font-sans text-white/45 uppercase tracking-tight">{formatLabel(request.category)}</div>
                             </div>
                             <div className="flex items-center gap-5 md:items-start">
                               <div className="text-left md:text-right">
-                                <div className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] text-white/35">{formatLabel(request.status)}</div>
+                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{formatLabel(request.status)}</div>
                                 <div className="mt-3 text-xs font-sans text-white/45">{formatTimestamp(request.created_at)}</div>
                               </div>
                               <button
@@ -425,8 +425,13 @@ export default function Help() {
                           </div>
 
                           {expandedRequests[request.request_id] && (
-                            <div className="max-w-3xl text-sm font-sans text-white/65 leading-relaxed">
-                              {request.message}
+                            <div className="max-w-3xl space-y-3 border-t border-white/10 pt-4">
+                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                Submitted Message
+                              </div>
+                              <div className="whitespace-pre-wrap text-sm font-sans text-white/78 leading-relaxed">
+                                {request.message?.trim() || 'No message was recorded for this request.'}
+                              </div>
                             </div>
                           )}
                         </div>
@@ -440,7 +445,7 @@ export default function Help() {
             <section className="border-t border-white/10 pt-10">
               <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(320px,1fr)]">
                 <div>
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-[0.24em] text-white/30">Direct Email Contact</div>
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">Direct Email Contact</div>
                   <div className="mt-3 text-sm font-sans text-white">This opens your email client. It is a direct email action, not an in-app tracked ticket workflow.</div>
                 </div>
 
