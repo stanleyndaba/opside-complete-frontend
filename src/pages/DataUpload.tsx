@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { api, detectionApi } from '@/lib/api';
+import { supabase } from '@/lib/supabaseClient';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
     Archive, Target, Info
@@ -138,6 +139,18 @@ export default function DataUpload() {
                         resolvedTenantId = String(profile.tenant_id);
                         localStorage.setItem('active_tenant_id', resolvedTenantId);
                     }
+                }
+            } catch (_error) {
+                // Fall through to honest validation below.
+            }
+        }
+
+        if (!resolvedUserId) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user?.id) {
+                    resolvedUserId = String(user.id);
+                    localStorage.setItem('user_id', resolvedUserId);
                 }
             } catch (_error) {
                 // Fall through to honest validation below.
