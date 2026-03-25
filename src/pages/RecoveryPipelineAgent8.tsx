@@ -51,6 +51,12 @@ type Row = {
   operator_state: string;
   recovery_work_status?: string | null;
   billing_work_status?: string | null;
+  recovery_work_item_id?: string | null;
+  billing_work_item_id?: string | null;
+  recovery_execution_lane?: string | null;
+  billing_execution_lane?: string | null;
+  recovery_work_error?: string | null;
+  billing_work_error?: string | null;
   investigation_required: boolean;
   currency: string;
   expected_payout_date: string | null;
@@ -450,6 +456,13 @@ export default function RecoveryPipelineAgent8() {
                                         {row.billing_work_status ? `Billing Work ${label(row.billing_work_status)}` : ''}
                                       </div>
                                     ) : null}
+                                    {(row.recovery_execution_lane || row.billing_execution_lane) ? (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                        {row.recovery_execution_lane ? `Recovery Lane ${label(row.recovery_execution_lane)}` : ''}
+                                        {row.recovery_execution_lane && row.billing_execution_lane ? ' · ' : ''}
+                                        {row.billing_execution_lane ? `Billing Lane ${label(row.billing_execution_lane)}` : ''}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -566,6 +579,9 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Case Status', value: label(detailsRow.status) },
                   { label: 'Recovery Status', value: label(detailsRow.recovery_status) },
                   { label: 'Recovery Work', value: label(detailsRow.recovery_work_status) },
+                  { label: 'Recovery Work Item', value: detailsRow.recovery_work_item_id || 'Not available' },
+                  { label: 'Recovery Lane', value: detailsRow.recovery_execution_lane ? label(detailsRow.recovery_execution_lane) : 'Not available' },
+                  { label: 'Recovery Error', value: detailsRow.recovery_work_error || 'None' },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
                 ]}
               />
@@ -582,6 +598,9 @@ export default function RecoveryPipelineAgent8() {
                 rows={[
                   { label: 'Billing Status', value: label(detailsRow.billing_status) },
                   { label: 'Billing Work', value: label(detailsRow.billing_work_status) },
+                  { label: 'Billing Work Item', value: detailsRow.billing_work_item_id || 'Not available' },
+                  { label: 'Billing Lane', value: detailsRow.billing_execution_lane ? label(detailsRow.billing_execution_lane) : 'Not available' },
+                  { label: 'Billing Error', value: detailsRow.billing_work_error || 'None' },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },
                 ]}
