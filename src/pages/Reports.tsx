@@ -17,7 +17,7 @@ import { detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { useParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
-import { eventBus } from '@/lib/eventBus';
+import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 
 // Chart skeleton loader
 const ChartSkeleton = () => (
@@ -418,35 +418,123 @@ export default function Reports() {
   const [claims, setClaims] = useState<ClaimRecord[]>([]);
   const [claimsLoading, setClaimsLoading] = useState(false);
 
-  // SSE subscription for real-time updates
-  useEffect(() => {
-    eventBus.connect();
+  const applyClaimEvent = useCallback((event: StatusEvent) => {
+    const eventId = String(
+      event.data?.dispute_case_id ||
+      event.data?.claimId ||
+      event.data?.caseId ||
+      event.entityId ||
+      ''
+    ).trim();
 
-    const unsubDetection = eventBus.on('detection.anomaly_detected', () => {
-      // Refresh data when new detection comes in
-      setClaimsLoading(true);
-      recoveryApi.getRecoveries().then(recoveries => {
-        if (Array.isArray(recoveries)) {
-          const normalized = recoveries.map((r, i) => normalizeClaimRecord(r, i));
-          setClaims(normalized);
+    if (!eventId) {
+      return;
+    }
+
+    setClaims((prev) => {
+      const existing = prev.find((claim) => claim.id === eventId);
+      const timestamp =
+        event.timestamp ||
+        event.data?.timestamp ||
+        new Date().toISOString();
+
+      if (event.eventType === 'case.status_updated') {
+        const nextStatus = prettifyLabel(event.data?.status || 'Updated', 'Updated');
+        if (!existing) return prev;
+        return prev.map((claim) => (
+          claim.id === eventId
+            ? {
+              ...claim,
+              status: nextStatus,
+              payoutDate: nextStatus === 'Approved' ? (claim.payoutDate || timestamp) : claim.payoutDate
+            }
+            : claim
+        ));
+      }
+
+      if (event.eventType === 'payout.detected') {
+        const payoutAmount =
+          parseNumericAmount(event.data?.actual_amount) ??
+          parseNumericAmount(event.data?.amount) ??
+          0;
+
+        if (existing) {
+          return prev.map((claim) => (
+            claim.id === eventId
+              ? {
+                ...claim,
+                status: prettifyLabel(event.data?.status || 'Reconciled', 'Reconciled'),
+                amountRecovered: payoutAmount || claim.amountRecovered,
+                payoutDate: timestamp
+              }
+              : claim
+          ));
         }
-      }).finally(() => setClaimsLoading(false));
-    });
 
-    const unsubPayout = eventBus.on('detection.payout_received', () => {
-      // Refresh metrics when payout received
-      detectionApi.getDetectionStatistics().then(res => {
+        return [{
+          id: eventId,
+          dateCreated: timestamp,
+          claimType: prettifyLabel(event.data?.case_type || event.data?.anomaly_type || 'Recovery', 'Recovery'),
+          status: prettifyLabel(event.data?.status || 'Reconciled', 'Reconciled'),
+          amountRecovered: payoutAmount,
+          payoutDate: timestamp
+        }, ...prev];
+      }
+
+      if (event.eventType === 'filing.submitted') {
+        if (existing) {
+          return prev.map((claim) => (
+            claim.id === eventId
+              ? { ...claim, status: 'Filed' }
+              : claim
+          ));
+        }
+
+        return [{
+          id: eventId,
+          dateCreated: timestamp,
+          claimType: prettifyLabel(event.data?.case_type || 'Claim', 'Claim'),
+          status: 'Filed',
+          amountRecovered: parseNumericAmount(event.data?.amount) ?? 0,
+          payoutDate: null
+        }, ...prev];
+      }
+
+      return prev;
+    });
+  }, []);
+
+  useStatusStream((event: StatusEvent) => {
+    if (event.eventType === 'detection.created') {
+      setClaimsLoading(true);
+      recoveryApi.getRecoveries()
+        .then((recoveries) => {
+          if (!Array.isArray(recoveries)) return;
+          const normalized = recoveries
+            .map((record, index) => normalizeClaimRecord(record, index))
+            .filter((claim) => Boolean(claim.dateCreated));
+          setClaims(normalized);
+        })
+        .finally(() => setClaimsLoading(false));
+      return;
+    }
+
+    if (event.eventType === 'payout.detected') {
+      detectionApi.getDetectionStatistics().then((res) => {
         if (res.ok && res.data?.statistics) {
           setDetectionStats(res.data.statistics);
         }
       });
-    });
+    }
 
-    return () => {
-      unsubDetection();
-      unsubPayout();
-    };
-  }, []);
+    if (
+      event.eventType === 'case.status_updated' ||
+      event.eventType === 'filing.submitted' ||
+      event.eventType === 'payout.detected'
+    ) {
+      applyClaimEvent(event);
+    }
+  }, tenantSlug);
 
   // Fetch Phase 3 detection statistics
   useEffect(() => {

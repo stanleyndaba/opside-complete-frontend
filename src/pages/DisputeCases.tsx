@@ -264,6 +264,51 @@ function summarizeRows(rows: QueueRow[]) {
   };
 }
 
+function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<string, any>; timestamp: string }) {
+  const updatedAt = event.timestamp || new Date().toISOString();
+
+  if (event.eventType === 'filing.submitted') {
+    return {
+      ...row,
+      status: event.data?.status || row.status,
+      filing_status: event.data?.filing_status || 'filed',
+      amazon_case_id: event.data?.amazon_case_id || row.amazon_case_id,
+      updated_at: updatedAt
+    };
+  }
+
+  if (event.eventType === 'case.status_updated') {
+    return {
+      ...row,
+      status: event.data?.status || row.status,
+      amazon_case_id: event.data?.amazon_case_id || row.amazon_case_id,
+      approved_amount: event.data?.amount_approved ?? row.approved_amount,
+      updated_at: updatedAt
+    };
+  }
+
+  if (event.eventType === 'evidence.linked') {
+    const nextMatchedCount = Math.max(Number(row.matched_document_count || 0), 1);
+    return {
+      ...row,
+      evidence_state: nextMatchedCount > 0 ? 'Ready' : row.evidence_state,
+      matched_document_count: nextMatchedCount,
+      updated_at: updatedAt
+    };
+  }
+
+  if (event.eventType === 'payout.detected') {
+    return {
+      ...row,
+      recovery_status: event.data?.status || 'reconciled',
+      actual_payout_amount: event.data?.actual_amount ?? event.data?.amount ?? row.actual_payout_amount,
+      updated_at: updatedAt
+    };
+  }
+
+  return row;
+}
+
 export default function DisputeCases() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant, isReady, isThrottled } = useTenant();
@@ -402,14 +447,42 @@ export default function DisputeCases() {
   useStatusStream((event) => {
     if (!activeTenantSlug) return;
 
+    if (event.eventType === 'case.created') {
+      refresh();
+      return;
+    }
+
     if (
-      event.eventType === 'case.created' ||
       event.eventType === 'case.status_updated' ||
       event.eventType === 'filing.submitted' ||
       event.eventType === 'evidence.linked' ||
       event.eventType === 'payout.detected'
     ) {
-      refresh();
+      const disputeCaseId = String(event.data?.dispute_case_id || event.entityId || '').trim();
+      if (!disputeCaseId) {
+        refresh();
+        return;
+      }
+
+      if (!rows.some((row) => row.dispute_case_id === disputeCaseId)) {
+        refresh();
+        return;
+      }
+
+      setRows((currentRows) => {
+        const nextRows = currentRows.map((row) => {
+          if (row.dispute_case_id !== disputeCaseId) return row;
+          return updateQueueRow(row, event);
+        });
+
+        setSummary((currentSummary) => ({
+          ...summarizeRows(nextRows),
+          page: currentSummary.page,
+          page_size: currentSummary.page_size
+        }));
+
+        return nextRows;
+      });
     }
   }, activeTenantSlug);
 

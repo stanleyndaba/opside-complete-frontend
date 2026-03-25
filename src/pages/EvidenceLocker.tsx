@@ -61,6 +61,13 @@ interface LockerAuditEvent {
   narrative: string;
 }
 
+type LiveLockerEvent = {
+  eventType: string;
+  timestamp: string;
+  data: Record<string, any>;
+  entityId?: string;
+};
+
 const getAuditEventColor = (eventType: string) => {
   switch (eventType) {
     case 'parsed':
@@ -119,6 +126,78 @@ const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
       return 'bg-white/5 text-white/55 border-white/10';
   }
 };
+
+function appendAuditEvent(
+  current: LockerAuditEvent[],
+  next: LockerAuditEvent
+) {
+  const withoutDuplicate = current.filter((event) => event.id !== next.id);
+  return [next, ...withoutDuplicate].slice(0, 50);
+}
+
+function applyLockerEvent(doc: LockerDocumentRow, event: LiveLockerEvent): LockerDocumentRow {
+  const documentId = String(event.data?.document_id || event.entityId || '').trim();
+  if (!documentId || doc.id !== documentId) {
+    return doc;
+  }
+
+  if (event.eventType === 'parsing_completed') {
+    return {
+      ...doc,
+      parser_status: 'completed',
+      status: 'completed',
+      processing_status: 'completed',
+      updated_at: event.timestamp,
+      evidence_state: doc.linked_case_count > 0 ? doc.evidence_state : 'Unmatched'
+    };
+  }
+
+  if (event.eventType === 'matching_completed' || event.eventType === 'evidence_matching_completed') {
+    const match = Array.isArray(event.data?.results)
+      ? event.data.results.find((result: any) => String(result?.document_id || '') === doc.id)
+      : null;
+
+    if (!match) {
+      return doc;
+    }
+
+    const confidence = Number(match.confidence_score || 0);
+    return {
+      ...doc,
+      strongest_match_confidence: Number.isFinite(confidence) ? confidence : doc.strongest_match_confidence,
+      strongest_match_type: match.match_type || doc.strongest_match_type,
+      linkage_strength: confidence >= 0.85 ? 'strong' : confidence > 0 ? 'weak' : doc.linkage_strength,
+      updated_at: event.timestamp
+    };
+  }
+
+  if (event.eventType === 'evidence.linked') {
+    const caseId = String(event.data?.dispute_case_id || '').trim();
+    const caseRef = String(event.data?.case_number || caseId).trim();
+    const linkedCaseIds = caseId && !doc.linked_case_ids.includes(caseId)
+      ? [caseId, ...doc.linked_case_ids]
+      : doc.linked_case_ids;
+    const linkedCaseRefs = caseRef && !doc.linked_case_refs.includes(caseRef)
+      ? [caseRef, ...doc.linked_case_refs]
+      : doc.linked_case_refs;
+    const confidence = Number(event.data?.match_confidence || doc.strongest_match_confidence || 0);
+
+    return {
+      ...doc,
+      linked_case_count: Math.max(doc.linked_case_count, linkedCaseIds.length, 1),
+      linked_case_ids: linkedCaseIds,
+      linked_case_refs: linkedCaseRefs,
+      strongest_match_confidence: Number.isFinite(confidence) ? confidence : doc.strongest_match_confidence,
+      strongest_match_type: event.data?.match_type || doc.strongest_match_type,
+      linkage_strength: confidence >= 0.85 ? 'strong' : 'weak',
+      evidence_state: confidence >= 0.85 ? 'Linked Strongly' : 'Linked Weakly',
+      usable_as_evidence: true,
+      updated_at: event.timestamp
+    };
+  }
+
+  return doc;
+}
 export default function EvidenceLocker() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
@@ -290,12 +369,50 @@ export default function EvidenceLocker() {
     }
 
     if (
-      event.eventType === 'evidence.linked' ||
       event.eventType === 'parsing_completed' ||
       event.eventType === 'matching_completed' ||
       event.eventType === 'evidence_matching_completed' ||
-      event.eventType === 'case.created'
+      event.eventType === 'evidence.linked'
     ) {
+      const documentId = String(event.data?.document_id || event.entityId || '').trim();
+      if (!documentId) {
+        void refreshInventory();
+        return;
+      }
+
+      if (!documents.some((doc) => doc.id === documentId)) {
+        void refreshInventory();
+        return;
+      }
+
+      setDocuments((currentDocuments) => {
+        const nextDocuments = currentDocuments.map((doc) => {
+          return applyLockerEvent(doc, event);
+        });
+
+        setMetrics((currentMetrics) => ({
+          ...currentMetrics,
+          matched: nextDocuments.filter((doc) => doc.linked_case_count > 0).length,
+          parsed: nextDocuments.filter((doc) => doc.parser_status === 'completed').length,
+          needsReview: nextDocuments.filter((doc) => doc.needs_review).length,
+          failed: nextDocuments.filter((doc) => doc.parser_status === 'failed').length
+        }));
+
+        return nextDocuments;
+      });
+
+      setRecentEvents((currentEvents) => appendAuditEvent(currentEvents, {
+        id: `${event.eventType}:${documentId}:${event.timestamp}`,
+        documentId,
+        filename: String(event.data?.filename || documentId),
+        eventType: event.eventType,
+        timestamp: event.timestamp,
+        narrative: String(event.data?.message || `${event.eventType} for ${documentId}`)
+      }));
+      return;
+    }
+
+    if (event.eventType === 'case.created') {
       void refreshInventory();
     }
   }, activeSlug);

@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { eventBus } from '../lib/eventBus';
+import { useStatusStream, type StatusEvent } from './use-status-stream';
 
 interface FinancialMetrics {
     totalFound: number;
@@ -23,11 +23,17 @@ interface FinancialMetrics {
 interface UseRealTimeMetricsOptions {
     userId?: string;
     tenantId?: string;
+    tenantSlug?: string;
     pollInterval?: number;
 }
 
 export function useRealTimeMetrics(options: UseRealTimeMetricsOptions = {}) {
-    const { userId = 'demo-user', tenantId, pollInterval = 60000 } = options;
+    const {
+        userId = 'demo-user',
+        tenantId,
+        tenantSlug = localStorage.getItem('active_tenant_slug') || undefined,
+        pollInterval = 60000
+    } = options;
 
     const [metrics, setMetrics] = useState<FinancialMetrics>({
         totalFound: 0,
@@ -65,69 +71,52 @@ export function useRealTimeMetrics(options: UseRealTimeMetricsOptions = {}) {
         }
     }, [userId, tenantId]);
 
-    // Handle SSE events
+    useStatusStream((event: StatusEvent) => {
+        setMetrics(prev => {
+            const next = { ...prev, lastUpdated: new Date().toISOString() };
+
+            if (event.eventType === 'metrics' && event.data?.type === 'financial_metrics') {
+                const payloadMetrics = event.data?.data || {};
+                return {
+                    ...next,
+                    totalFound: payloadMetrics.totalFound ?? next.totalFound,
+                    totalPending: payloadMetrics.totalPending ?? next.totalPending,
+                    totalCollected: payloadMetrics.totalCollected ?? next.totalCollected,
+                    totalApproved: payloadMetrics.totalApproved ?? next.totalApproved,
+                    claimsDetected: payloadMetrics.claimsDetected ?? next.claimsDetected,
+                    claimsFiled: payloadMetrics.claimsFiled ?? next.claimsFiled,
+                    claimsPaid: payloadMetrics.claimsPaid ?? next.claimsPaid,
+                    roiMultiple: payloadMetrics.roiMultiple ?? next.roiMultiple
+                };
+            }
+
+            const amount = Number(event.data?.amount || event.data?.actual_amount || 0);
+
+            if (event.eventType === 'impact' || event.eventType === 'detection.created') {
+                next.totalFound += amount;
+                next.claimsDetected += Number(event.data?.count || 1);
+            } else if (event.eventType === 'filing.submitted') {
+                next.totalPending += Number(event.data?.amount || 0);
+                next.claimsFiled += 1;
+            } else if (event.eventType === 'case.status_updated') {
+                const status = String(event.data?.status || '').toLowerCase();
+                if (status === 'approved') {
+                    next.totalApproved += Number(event.data?.amount_approved || event.data?.amount || 0);
+                }
+            } else if (event.eventType === 'payout.detected') {
+                next.totalCollected += amount;
+                next.claimsPaid += 1;
+            }
+
+            return next;
+        });
+    }, tenantSlug);
+
     useEffect(() => {
-        // Connect event bus
-        eventBus.connect(userId);
-
-        // Fetch initial data
         fetchMetrics();
-
-        // Subscribe to metrics updates
-        const unsubMetrics = eventBus.on('metrics', (event) => {
-            if (event.data?.type === 'financial_metrics') {
-                setMetrics({ ...event.data.data, lastUpdated: new Date().toISOString() });
-            }
-        });
-
-        // Subscribe to impact events for optimistic updates
-        const unsubImpact = eventBus.on('impact', (event) => {
-            if (event.data?.type === 'financial_impact') {
-                const { status, amount } = event.data.data;
-
-                setMetrics(prev => {
-                    const updated = { ...prev, lastUpdated: new Date().toISOString() };
-
-                    // Optimistic update based on status
-                    if (status === 'detected') {
-                        updated.totalFound += amount || 0;
-                        updated.claimsDetected += 1;
-                    } else if (status === 'filed') {
-                        updated.totalPending += amount || 0;
-                        updated.claimsFiled += 1;
-                    } else if (status === 'approved') {
-                        updated.totalApproved += amount || 0;
-                    } else if (status === 'paid') {
-                        updated.totalCollected += amount || 0;
-                        updated.claimsPaid += 1;
-                    }
-
-                    return updated;
-                });
-            }
-        });
-
-        // Subscribe to detection events
-        const unsubDetection = eventBus.on('detection.anomaly_detected', (event) => {
-            const amount = event.data?.amount || 0;
-            setMetrics(prev => ({
-                ...prev,
-                totalFound: prev.totalFound + amount,
-                claimsDetected: prev.claimsDetected + 1,
-                lastUpdated: new Date().toISOString()
-            }));
-        });
-
-        // Poll for fresh data periodically
         const pollId = setInterval(fetchMetrics, pollInterval);
-
-        return () => {
-            unsubMetrics();
-            unsubImpact();
-            unsubDetection();
-            clearInterval(pollId);
-        };
-    }, [userId, tenantId, fetchMetrics, pollInterval]);
+        return () => clearInterval(pollId);
+    }, [fetchMetrics, pollInterval]);
 
     // Manual refresh function
     const refresh = useCallback(() => {
@@ -140,7 +129,7 @@ export function useRealTimeMetrics(options: UseRealTimeMetricsOptions = {}) {
         loading,
         error,
         refresh,
-        isConnected: eventBus.getConnectionStatus()
+        isConnected: Boolean(tenantSlug)
     };
 }
 
