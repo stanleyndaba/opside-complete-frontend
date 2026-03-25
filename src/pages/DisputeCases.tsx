@@ -264,6 +264,46 @@ function summarizeRows(rows: QueueRow[]) {
   };
 }
 
+function normalizeIdentifier(value: string | null | undefined) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function getQueueRowIdentifiers(row: QueueRow) {
+  return [
+    row.dispute_case_id,
+    row.case_number,
+    row.claim_number,
+    row.amazon_case_id,
+    row.detection_result_id
+  ]
+    .map(normalizeIdentifier)
+    .filter(Boolean);
+}
+
+function getEventIdentifiers(event: { entityId?: string; data: Record<string, any> }) {
+  return [
+    event.entityId,
+    event.data?.dispute_case_id,
+    event.data?.case_number,
+    event.data?.claim_number,
+    event.data?.amazon_case_id,
+    event.data?.detection_id
+  ]
+    .map(normalizeIdentifier)
+    .filter(Boolean);
+}
+
+function rowMatchesEvent(row: QueueRow, event: { entityId?: string; data: Record<string, any> }) {
+  const rowIdentifiers = getQueueRowIdentifiers(row);
+  const eventIdentifiers = getEventIdentifiers(event);
+
+  if (!rowIdentifiers.length || !eventIdentifiers.length) {
+    return false;
+  }
+
+  return eventIdentifiers.some((identifier) => rowIdentifiers.includes(identifier));
+}
+
 function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<string, any>; timestamp: string }) {
   const updatedAt = event.timestamp || new Date().toISOString();
 
@@ -458,20 +498,20 @@ export default function DisputeCases() {
       event.eventType === 'evidence.linked' ||
       event.eventType === 'payout.detected'
     ) {
-      const disputeCaseId = String(event.data?.dispute_case_id || event.entityId || '').trim();
-      if (!disputeCaseId) {
+      const eventIdentifiers = getEventIdentifiers(event);
+      if (!eventIdentifiers.length) {
         refresh();
         return;
       }
 
-      if (!rows.some((row) => row.dispute_case_id === disputeCaseId)) {
+      if (!rows.some((row) => rowMatchesEvent(row, event))) {
         refresh();
         return;
       }
 
       setRows((currentRows) => {
         const nextRows = currentRows.map((row) => {
-          if (row.dispute_case_id !== disputeCaseId) return row;
+          if (!rowMatchesEvent(row, event)) return row;
           return updateQueueRow(row, event);
         });
 
