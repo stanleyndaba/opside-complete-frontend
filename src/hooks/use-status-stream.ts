@@ -69,7 +69,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
         void queryClient.invalidateQueries({ predicate: keyMatcher('case') });
       }
 
-      if (event.type === 'payout' || event.type === 'recovery' || eventType.startsWith('payout')) {
+      if (event.type === 'payout' || event.type === 'recovery' || event.type === 'billing' || eventType.startsWith('payout') || eventType.startsWith('billing')) {
         void queryClient.invalidateQueries({ predicate: keyMatcher('recover') });
       }
 
@@ -165,6 +165,12 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
         'evidence.linked',
         'filing.submitted',
         'payout.detected',
+        'recovery.work_created',
+        'recovery.quarantined',
+        'recovery.failed',
+        'billing.work_created',
+        'billing.processed',
+        'billing.failed',
         'claim_expiring',
         'detection_resolved',
         'detection_status_changed',

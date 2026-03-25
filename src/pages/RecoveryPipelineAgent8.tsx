@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { useToast } from '@/hooks/use-toast';
+import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
@@ -48,6 +49,8 @@ type Row = {
   billed_revenue_amount: number | null;
   reconciliation_status: string;
   operator_state: string;
+  recovery_work_status?: string | null;
+  billing_work_status?: string | null;
   investigation_required: boolean;
   currency: string;
   expected_payout_date: string | null;
@@ -74,7 +77,7 @@ type ProofDocument = {
 };
 
 const PAGE_SIZE = 10;
-const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
+const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['recovery_processing', 'Recovery Processing'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_processing', 'Billing Processing'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
 const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
 const billingOptions = [['all', 'All Billing States'], ['pending', 'Pending'], ['sent', 'Sent'], ['charged', 'Charged'], ['credited', 'Credited'], ['paid', 'Paid']];
 const sortOptions = [['last_updated_at', 'Last Updated'], ['actual_payout_amount', 'Actual Payout'], ['approved_amount', 'Approved Value'], ['expected_payout_amount', 'Pending Payout'], ['case_number', 'Case Reference']];
@@ -105,7 +108,7 @@ const severityTone = (severity: Blocker['severity']) =>
 const badgeTone = (value: string | null | undefined) => {
   const normalized = String(value || '').toLowerCase();
   if (['reconciled', 'billing_complete', 'paid', 'charged', 'credited', 'complete', 'completed'].includes(normalized)) return 'border-blue-500/20 bg-blue-500/10 text-blue-100';
-  if (['partial_recovery', 'partial_payout_review', 'payout_detected', 'payout_detected_not_reconciled', 'waiting_for_payout', 'billing_pending', 'pending', 'pending_payout'].includes(normalized)) return 'border-amber-500/20 bg-amber-500/10 text-amber-100';
+  if (['partial_recovery', 'partial_payout_review', 'payout_detected', 'payout_detected_not_reconciled', 'waiting_for_payout', 'billing_pending', 'billing_processing', 'recovery_processing', 'pending', 'pending_payout', 'processing'].includes(normalized)) return 'border-amber-500/20 bg-amber-500/10 text-amber-100';
   if (['investigation_required', 'failed', 'rejected', 'denied', 'lost'].includes(normalized)) return 'border-red-500/20 bg-red-500/10 text-red-200';
   return 'border-white/10 bg-white/[0.04] text-white/70';
 };
@@ -168,6 +171,7 @@ export default function RecoveryPipelineAgent8() {
   const [evidencePackClaimId, setEvidencePackClaimId] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<Row | null>(null);
+  const liveRefreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (searchTerm !== urlQuery) {
@@ -221,6 +225,41 @@ export default function RecoveryPipelineAgent8() {
     if (!isReady || !activeSlug) return;
     fetchLedger('load');
   }, [activeSlug, fetchLedger, isReady]);
+
+  useEffect(() => () => {
+    if (liveRefreshTimeoutRef.current) {
+      clearTimeout(liveRefreshTimeoutRef.current);
+      liveRefreshTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scheduleLiveRefresh = useCallback(() => {
+    if (liveRefreshTimeoutRef.current) {
+      clearTimeout(liveRefreshTimeoutRef.current);
+    }
+    liveRefreshTimeoutRef.current = setTimeout(() => {
+      fetchLedger('refresh');
+      liveRefreshTimeoutRef.current = null;
+    }, 400);
+  }, [fetchLedger]);
+
+  useStatusStream((event: StatusEvent) => {
+    const eventType = String(event.eventType || '').toLowerCase();
+    const eventStatus = String(event.data?.status || '').toLowerCase();
+
+    const isRecoveryRelevant =
+      eventType === 'payout.detected' ||
+      eventType === 'recovery.work_created' ||
+      eventType === 'recovery.quarantined' ||
+      eventType === 'recovery.failed' ||
+      eventType === 'billing.work_created' ||
+      eventType === 'billing.processed' ||
+      eventType === 'billing.failed' ||
+      (eventType === 'case.status_updated' && eventStatus === 'approved');
+
+    if (!isRecoveryRelevant) return;
+    scheduleLiveRefresh();
+  }, activeSlug);
 
   const summary = ledger?.summary || null;
   const rows = ledger?.rows || [];
@@ -404,6 +443,13 @@ export default function RecoveryPipelineAgent8() {
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
                                       {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant reference not available'}
                                     </div>
+                                    {(row.recovery_work_status || row.billing_work_status) ? (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">
+                                        {row.recovery_work_status ? `Recovery Work ${label(row.recovery_work_status)}` : ''}
+                                        {row.recovery_work_status && row.billing_work_status ? ' · ' : ''}
+                                        {row.billing_work_status ? `Billing Work ${label(row.billing_work_status)}` : ''}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -519,6 +565,7 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
                   { label: 'Case Status', value: label(detailsRow.status) },
                   { label: 'Recovery Status', value: label(detailsRow.recovery_status) },
+                  { label: 'Recovery Work', value: label(detailsRow.recovery_work_status) },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
                 ]}
               />
@@ -534,6 +581,7 @@ export default function RecoveryPipelineAgent8() {
                 title="Billing"
                 rows={[
                   { label: 'Billing Status', value: label(detailsRow.billing_status) },
+                  { label: 'Billing Work', value: label(detailsRow.billing_work_status) },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },
                 ]}
