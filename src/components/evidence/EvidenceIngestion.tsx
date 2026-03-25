@@ -147,6 +147,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
 
     eventSource.addEventListener('evidence_ingestion_started', () => {
       setProgress(10);
+      onLogEvent?.({ type: 'progress', category: 'system', message: 'Evidence ingestion started.' }, 0);
       toast({
         title: 'Ingestion Started',
         description: 'Collecting documents from all connected sources...',
@@ -157,6 +158,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
       try {
         const data = JSON.parse(event.data);
         setProgress(100);
+        onLogEvent?.({
+          type: 'success',
+          category: 'system',
+          message: `Evidence ingestion completed. ${data.totalDocumentsIngested || 0} documents from ${data.totalItemsProcessed || 0} items.`
+        }, 0);
         toast({
           title: 'Ingestion Completed',
           description: `Ingested ${data.totalDocumentsIngested || 0} documents from ${data.totalItemsProcessed || 0} items.`,
@@ -186,48 +192,13 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     setProgress(0);
     setResult(null);
 
-    const sourceNames = sources.map(s => getProviderName(s.provider)).join(', ');
-    onLogEvent?.({ type: 'info', category: 'system', message: `Connecting to ${sources.length} source(s): ${sourceNames}...`, thinkingDuration: 2 }, 0);
-    onLogEvent?.({ type: 'thinking', category: 'system', message: 'Scanning for invoice attachments and documents...' }, 1000);
-
     try {
-      onLogEvent?.({ type: 'progress', category: 'system', message: 'Ingesting from all connected sources...', thinkingDuration: 3 }, 1200);
-
       const res = await api.ingestAllEvidence({
         maxResults: 50,
         autoParse: true,
       });
 
       if (res.ok && res.data) {
-        onLogEvent?.({ type: 'success', category: 'system', message: `[CONNECTED] All sources responded` }, 800);
-
-        if (res.data.totalItemsProcessed > 0) {
-          onLogEvent?.({ type: 'thinking', category: 'parse', message: `Found ${res.data.totalItemsProcessed} items to process...` }, 900);
-        }
-
-        if (res.data.totalDocumentsIngested > 0) {
-          onLogEvent?.({ type: 'success', category: 'parse', message: `[INGESTED] ${res.data.totalDocumentsIngested} document(s) extracted` }, 1100);
-          onLogEvent?.({ type: 'thinking', category: 'parse', message: 'Running OCR and text extraction on new documents...' }, 1000);
-          onLogEvent?.({ type: 'info', category: 'match', message: 'Queuing documents for claim matching...', thinkingDuration: 4 }, 1300);
-        } else {
-          onLogEvent?.({ type: 'info', category: 'system', message: 'No new documents found in sources' }, 800);
-        }
-
-        if (res.data.results) {
-          if (res.data.results.gmail?.documentsIngested) {
-            onLogEvent?.({ type: 'success', category: 'parse', message: `Gmail: ${res.data.results.gmail.documentsIngested} docs from ${res.data.results.gmail.emailsProcessed} emails` }, 600);
-          }
-          if (res.data.results.outlook?.documentsIngested) {
-            onLogEvent?.({ type: 'success', category: 'parse', message: `Outlook: ${res.data.results.outlook.documentsIngested} docs from ${res.data.results.outlook.emailsProcessed} emails` }, 600);
-          }
-          if (res.data.results.gdrive?.documentsIngested) {
-            onLogEvent?.({ type: 'success', category: 'parse', message: `Google Drive: ${res.data.results.gdrive.documentsIngested} docs from ${res.data.results.gdrive.filesProcessed} files` }, 600);
-          }
-          if (res.data.results.dropbox?.documentsIngested) {
-            onLogEvent?.({ type: 'success', category: 'parse', message: `Dropbox: ${res.data.results.dropbox.documentsIngested} docs from ${res.data.results.dropbox.filesProcessed} files` }, 600);
-          }
-        }
-
         setResult({
           success: res.data.success,
           totalDocumentsIngested: res.data.totalDocumentsIngested || 0,
@@ -250,7 +221,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
             variant: 'destructive',
           });
         } else {
-          onLogEvent?.({ type: 'success', category: 'system', message: '[COMPLETE] Evidence ingestion finished' }, 800);
+          onLogEvent?.({
+            type: 'success',
+            category: 'system',
+            message: `Evidence ingestion request completed. ${res.data.totalDocumentsIngested || 0} documents were ingested from ${res.data.totalItemsProcessed || 0} items.`
+          }, 0);
         }
         setProgress(100);
       } else {

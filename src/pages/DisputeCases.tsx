@@ -20,7 +20,6 @@ import { useToast } from '@/hooks/use-toast';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
-type LegacyCase = NonNullable<Awaited<ReturnType<typeof api.getDisputeCases>>['data']>['cases'][number];
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
@@ -247,60 +246,6 @@ function DetailSection({
   );
 }
 
-function deriveLegacyNextAction(status: string | null | undefined) {
-  const normalizedStatus = String(status || '').toLowerCase();
-  if (['paid', 'complete', 'completed'].includes(normalizedStatus)) return 'Recovered';
-  if (['approved', 'resolved', 'won'].includes(normalizedStatus)) return 'Waiting for payout';
-  if (['submitted', 'under review', 'in review'].includes(normalizedStatus)) return 'Filed / awaiting Amazon';
-  if (['rejected', 'denied', 'lost'].includes(normalizedStatus)) return 'Review rejection';
-  if (['pending'].includes(normalizedStatus)) return 'Ready to file';
-  return 'Manual review';
-}
-
-function toQueueRowFromLegacy(item: LegacyCase): QueueRow {
-  const normalizedStatus = String(item.status || '').toLowerCase();
-  const approvedAmount = ['approved', 'resolved', 'won', 'paid', 'complete', 'completed'].includes(normalizedStatus)
-    ? item.amount
-    : null;
-  const actualPayoutAmount = ['paid', 'complete', 'completed'].includes(normalizedStatus)
-    ? item.amount
-    : null;
-
-  return {
-    dispute_case_id: item.id,
-    detection_result_id: item.claim_id || null,
-    case_number: item.case_number || item.id,
-    claim_number: item.claim_id || null,
-    case_type: null,
-    anomaly_type: null,
-    status: item.status || null,
-    filing_status: null,
-    recovery_status: actualPayoutAmount != null ? 'reconciled' : null,
-    billing_status: null,
-    eligible_to_file: null,
-    block_reasons: [],
-    requested_amount: item.amount ?? null,
-    approved_amount: approvedAmount,
-    actual_payout_amount: actualPayoutAmount,
-    billed_amount: null,
-    currency: item.currency || 'USD',
-    evidence_state: 'Not available',
-    matched_document_count: 0,
-    rejection_category: null,
-    rejection_reason: null,
-    created_at: item.created_at || null,
-    updated_at: item.created_at || null,
-    amazon_case_id: null,
-    store_name: null,
-    order_id: null,
-    sku: null,
-    asin: null,
-    expected_payout_amount: actualPayoutAmount == null && (item.expected_payout_date || item.expectedPayoutDate) ? item.amount ?? null : null,
-    expected_payout_date: item.expected_payout_date || item.expectedPayoutDate || null,
-    next_action: deriveLegacyNextAction(item.status),
-  };
-}
-
 function summarizeRows(rows: QueueRow[]) {
   return {
     total_cases: rows.length,
@@ -328,12 +273,6 @@ export default function DisputeCases() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [dataSource, setDataSource] = useState<'authoritative' | 'legacy'>('authoritative');
-  const [sourceNote, setSourceNote] = useState<string | null>(null);
-  const [sourceCounts, setSourceCounts] = useState<{ authoritative: number | null; legacy: number | null }>({
-    authoritative: null,
-    legacy: null
-  });
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const [summaryExpanded, setSummaryExpanded] = useState(false);
@@ -391,10 +330,8 @@ export default function DisputeCases() {
     const loadQueue = async () => {
       setLoading(true);
       setError(null);
-      setSourceNote(null);
-      setSourceCounts({ authoritative: null, legacy: null });
       try {
-        const queuePromise = api.getDisputeCaseQueue({
+        const response = await api.getDisputeCaseQueue({
           search: searchTerm || undefined,
           status: status !== 'all' ? status : undefined,
           filing_status: filingStatus !== 'all' ? filingStatus : undefined,
@@ -407,53 +344,9 @@ export default function DisputeCases() {
           page,
           page_size: pageSize
         }, activeTenantSlug);
-        const legacyPromise = api.getDisputeCases({ limit: 500 }, activeTenantSlug);
-
-        const [response, legacyResponse] = await Promise.all([queuePromise, legacyPromise]);
-
-        setSourceCounts({
-          authoritative: response.ok && response.data ? response.data.total_cases : null,
-          legacy: legacyResponse.ok && legacyResponse.data ? legacyResponse.data.total || legacyResponse.data.cases?.length || 0 : null
-        });
 
         if (!response.ok || !response.data) {
-          if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
-            if (cancelled) return;
-            const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
-            setRows(legacyRows.slice((page - 1) * pageSize, page * pageSize));
-            setSummary({
-              ...summarizeRows(legacyRows),
-              total_cases: legacyResponse.data.total || legacyRows.length,
-              filtered_results: legacyResponse.data.total || legacyRows.length,
-              page,
-              page_size: pageSize
-            });
-            setDataSource('legacy');
-            setSourceNote('Strict queue failed; showing legacy dispute list for launch visibility.');
-            return;
-          }
-
           throw new Error(response.error || 'Failed to load dispute cases');
-        }
-
-        if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
-          if (cancelled) return;
-          const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
-          setRows(legacyRows.slice((page - 1) * pageSize, page * pageSize));
-          setSummary({
-            ...summarizeRows(legacyRows),
-            total_cases: legacyResponse.data.total || legacyRows.length,
-            filtered_results: legacyResponse.data.total || legacyRows.length,
-            page,
-            page_size: pageSize
-          });
-          setDataSource('legacy');
-          setSourceNote(
-            (response.data.total_cases || 0) === 0
-              ? 'Strict queue returned no cases; showing legacy dispute list for launch visibility.'
-              : 'Showing legacy dispute list for launch visibility while the strict queue is still being reconciled.'
-          );
-          return;
         }
 
         if (cancelled) return;
@@ -473,31 +366,8 @@ export default function DisputeCases() {
           page: response.data.page,
           page_size: response.data.page_size
         });
-        setDataSource('authoritative');
       } catch (err: any) {
         if (!cancelled) {
-          try {
-            const legacyResponse = await api.getDisputeCases({ limit: 500 }, activeTenantSlug);
-            if (legacyResponse.ok && legacyResponse.data?.cases?.length) {
-              if (cancelled) return;
-              const legacyRows = (legacyResponse.data.cases || []).map(toQueueRowFromLegacy);
-              setRows(legacyRows.slice((page - 1) * pageSize, page * pageSize));
-              setSummary({
-                ...summarizeRows(legacyRows),
-                total_cases: legacyResponse.data.total || legacyRows.length,
-                filtered_results: legacyResponse.data.total || legacyRows.length,
-                page,
-                page_size: pageSize
-              });
-              setDataSource('legacy');
-              setSourceNote('Strict queue failed; showing legacy dispute list while the queue route stabilizes.');
-              setError(null);
-              return;
-            }
-          } catch {
-            // Keep original error below if both sources fail.
-          }
-
           setRows([]);
           setSummary({
             total_cases: 0,
@@ -513,8 +383,6 @@ export default function DisputeCases() {
             page,
             page_size: pageSize
           });
-          setDataSource('authoritative');
-          setSourceNote(null);
           setError(err?.message || 'Failed to load dispute cases');
         }
       } finally {
