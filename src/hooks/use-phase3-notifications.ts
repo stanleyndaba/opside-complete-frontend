@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { useSession } from '@/contexts/SessionContext';
 import { api } from '@/lib/api';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
@@ -64,6 +65,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
   const maxReconnectAttempts = 5;
   const reconnectDelay = 3000; // 3 seconds
   const handledPayloadsRef = useRef<Set<string>>(new Set());
+  const { isAuthReady, authToken } = useSession();
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -80,7 +82,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
 
     try {
       const slug = tenantSlug;
-      if (!slug) return;
+      if (!slug || !isAuthReady || !authToken) return;
       const url = api.buildApiUrl(`/api/sse/notifications?tenantSlug=${slug}`);
       const eventSource = createAuthenticatedEventStream(url);
 
@@ -287,7 +289,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     } catch (error) {
       console.error('[Phase3 Notifications] Failed to create EventSource:', error);
     }
-  }, [onEvent, tenantSlug]);
+  }, [authToken, isAuthReady, onEvent, tenantSlug]);
 
   useEffect(() => {
     connect();

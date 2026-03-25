@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { useSession } from '@/contexts/SessionContext';
 import { api } from '@/lib/api';
 import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
 
@@ -27,6 +28,7 @@ export const useDetectionUpdates = (
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 3;
   const reconnectDelay = 2000;
+  const { isAuthReady, authToken } = useSession();
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -37,6 +39,9 @@ export const useDetectionUpdates = (
 
   const connect = useCallback(() => {
     if (!syncId) {
+      return;
+    }
+    if (!isAuthReady || !authToken) {
       return;
     }
 
@@ -109,7 +114,7 @@ export const useDetectionUpdates = (
     } catch (error) {
       console.error('[Detection Updates] Failed to create EventSource:', error);
     }
-  }, [syncId, onUpdate, tenantSlug]);
+  }, [authToken, isAuthReady, syncId, onUpdate, tenantSlug]);
 
   useEffect(() => {
     if (syncId) {

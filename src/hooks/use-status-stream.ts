@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { useSession } from '@/contexts/SessionContext';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
 import {
@@ -27,6 +28,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
   const handledPayloadsRef = useRef<Set<string>>(new Set());
   const onEventRef = useRef<typeof onEvent>();
   const queryClient = useQueryClient();
+  const { isAuthReady, authToken } = useSession();
 
   useEffect(() => {
     onEventRef.current = onEvent;
@@ -35,6 +37,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
   useEffect(() => {
     const slug = tenantSlug;
     if (!slug) return;
+    if (!isAuthReady || !authToken) return;
     const activeTenantId = typeof window !== 'undefined'
       ? String(localStorage.getItem('active_tenant_id') || '').trim()
       : '';
@@ -210,7 +213,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
       removeNamedListeners();
       eventSource.close();
     };
-  }, [queryClient, tenantSlug]);
+  }, [authToken, isAuthReady, queryClient, tenantSlug]);
 
   return {
     close: () => {

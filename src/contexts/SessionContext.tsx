@@ -10,6 +10,8 @@ import { SessionTimeoutModal } from '@/components/modals/SessionTimeoutModal';
 
 interface SessionContextType {
     isSessionValid: boolean;
+    isAuthReady: boolean;
+    authToken: string | null;
     userEmail: string | null;
     isPaidUser: boolean;
     showSessionTimeout: () => void;
@@ -22,34 +24,44 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
+    const [isAuthReady, setIsAuthReady] = useState(false);
+    const [authToken, setAuthToken] = useState<string | null>(null);
     const [isPaidUser, setIsPaidUser] = useState(false);
 
     // Get user email and ID on mount
     useEffect(() => {
         const getUser = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            const { data: { user } } = await supabase.auth.getUser();
-            if (session?.access_token) {
-                localStorage.setItem('session_token', session.access_token);
-            }
-            if (user?.email) {
-                setUserEmail(user.email);
-                localStorage.setItem('user_email', user.email);
-                
-                // Fetch the payment status from our fortress users table
-                const { data: profile } = await supabase
-                    .from('users')
-                    .select('is_paid_beta')
-                    .eq('id', user.id)
-                    .single();
-                
-                if (profile) {
-                    setIsPaidUser(!!profile.is_paid_beta);
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                const { data: { user } } = await supabase.auth.getUser();
+                const token = session?.access_token || localStorage.getItem('session_token') || null;
+
+                if (token) {
+                    localStorage.setItem('session_token', token);
+                    setAuthToken(token);
                 }
-            }
-            // Store user ID for API calls
-            if (user?.id) {
-                localStorage.setItem('user_id', user.id);
+
+                if (user?.email) {
+                    setUserEmail(user.email);
+                    localStorage.setItem('user_email', user.email);
+
+                    // Fetch the payment status from our fortress users table
+                    const { data: profile } = await supabase
+                        .from('users')
+                        .select('is_paid_beta')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (profile) {
+                        setIsPaidUser(!!profile.is_paid_beta);
+                    }
+                }
+                // Store user ID for API calls
+                if (user?.id) {
+                    localStorage.setItem('user_id', user.id);
+                }
+            } finally {
+                setIsAuthReady(true);
             }
         };
         getUser();
@@ -58,16 +70,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     // Listen for auth state changes
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_OUT' || !session) {
+            if (event === 'SIGNED_OUT') {
                 setIsSessionValid(false);
-                // Clear user_id on sign out
                 localStorage.removeItem('user_id');
                 localStorage.removeItem('session_token');
-            } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+                setAuthToken(null);
+                setIsAuthReady(true);
+            } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || !!session) {
                 setIsSessionValid(true);
                 setSessionTimeoutOpen(false);
                 if (session.access_token) {
                     localStorage.setItem('session_token', session.access_token);
+                    setAuthToken(session.access_token);
                 }
                 if (session.user?.email) {
                     setUserEmail(session.user.email);
@@ -86,6 +100,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 if (session.user?.id) {
                     localStorage.setItem('user_id', session.user.id);
                 }
+                setIsAuthReady(true);
+            } else {
+                setIsAuthReady(true);
             }
         });
 
@@ -108,6 +125,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return (
         <SessionContext.Provider value={{
             isSessionValid,
+            isAuthReady,
+            authToken,
             userEmail,
             isPaidUser,
             showSessionTimeout,

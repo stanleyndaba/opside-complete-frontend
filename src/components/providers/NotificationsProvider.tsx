@@ -5,6 +5,7 @@ import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'react-router-dom';
+import { useSession } from '@/contexts/SessionContext';
 
 export interface Notification {
   id: string;
@@ -32,6 +33,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { isAuthReady, authToken } = useSession();
 
   const { tenant } = useTenant();
   const location = useLocation();
@@ -43,7 +45,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const { close: closePhase3Notifications, lastEvent } = usePhase3Notifications(undefined, activeSlug);
 
   const fetchNotifications = useCallback(async () => {
-    if (!activeSlug) return;
+    if (!activeSlug || !isAuthReady || !authToken) return;
     try {
       const response = await api.getNotifications({ limit: 50 }, activeSlug);
       if (response.ok && response.data) {
@@ -58,7 +60,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
     } finally {
       setIsLoading(false);
     }
-  }, [activeSlug]);
+  }, [activeSlug, authToken, isAuthReady]);
 
   // Initial fetch
   useEffect(() => {
