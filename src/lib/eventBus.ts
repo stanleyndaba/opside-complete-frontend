@@ -6,6 +6,13 @@
  * Provides optimistic UI updates and instant state hydration.
  */
 
+import { api } from './api';
+import {
+    getLiveEventAliases,
+    getLiveEventDedupeKey,
+    normalizeIncomingLiveEvent
+} from './liveEvents';
+
 type EventCallback = (data: any) => void;
 type UnsubscribeFunction = () => void;
 
@@ -13,6 +20,8 @@ interface PlatformEvent {
     type: string;
     data: any;
     timestamp: string;
+    entityType?: string;
+    entityId?: string;
 }
 
 class GlobalEventBus {
@@ -24,27 +33,105 @@ class GlobalEventBus {
     private readonly reconnectDelay = 3000;
     private eventHistory: PlatformEvent[] = [];
     private readonly maxHistorySize = 100;
+    private readonly handledKeys: Set<string> = new Set();
+    private activeTenantSlug: string | null = null;
+    private activeTenantId: string | null = null;
+
+    private resolveTenantSlug(explicitTenantSlug?: string): string | null {
+        if (explicitTenantSlug?.trim()) {
+            return explicitTenantSlug.trim();
+        }
+
+        const storedSlug = localStorage.getItem('active_tenant_slug');
+        if (storedSlug?.trim()) {
+            return storedSlug.trim();
+        }
+
+        if (typeof window !== 'undefined') {
+            const match = window.location.pathname.match(/^\/app\/([^/]+)/);
+            if (match?.[1]) {
+                return decodeURIComponent(match[1]);
+            }
+        }
+
+        return null;
+    }
+
+    private async replayRecentEvents(): Promise<void> {
+        if (!this.activeTenantSlug) return;
+
+        try {
+            const response = await api.get<{ success: boolean; events: any[] }>(
+                `/api/sse/recent?tenantSlug=${encodeURIComponent(this.activeTenantSlug)}&limit=50`
+            );
+            if (!response.ok || !Array.isArray(response.data?.events)) {
+                return;
+            }
+
+            response.data.events.forEach((event) => {
+                this.handleRawEvent('message', event);
+            });
+        } catch (error) {
+            console.warn('[EventBus] Failed to replay recent events:', error);
+        }
+    }
+
+    private handleRawEvent(rawType: string, payload: any): void {
+        const liveEvent = normalizeIncomingLiveEvent(rawType, payload);
+        if (this.activeTenantSlug && liveEvent.tenant_slug && liveEvent.tenant_slug !== this.activeTenantSlug) {
+            return;
+        }
+        if (this.activeTenantId && liveEvent.tenant_id && liveEvent.tenant_id !== this.activeTenantId) {
+            return;
+        }
+
+        const dedupeKey = getLiveEventDedupeKey(liveEvent);
+        if (this.handledKeys.has(dedupeKey)) {
+            return;
+        }
+
+        this.handledKeys.add(dedupeKey);
+        if (this.handledKeys.size > this.maxHistorySize * 3) {
+            const recentKeys = Array.from(this.handledKeys).slice(-this.maxHistorySize);
+            this.handledKeys.clear();
+            recentKeys.forEach((key) => this.handledKeys.add(key));
+        }
+
+        const event: PlatformEvent = {
+            type: liveEvent.event_type,
+            data: liveEvent.payload,
+            timestamp: liveEvent.timestamp,
+            entityType: liveEvent.entity_type,
+            entityId: liveEvent.entity_id
+        };
+
+        this.handleEvent(event, getLiveEventAliases(liveEvent));
+    }
 
     /**
      * Connect to SSE stream
      */
-    connect(userId?: string): void {
+    connect(_userId?: string, tenantSlug?: string): void {
         if (this.eventSource?.readyState === EventSource.OPEN) {
             return; // Already connected
         }
 
-        const url = userId
-            ? `/api/sse/stream?userId=${userId}`
-            : '/api/sse/stream';
+        this.activeTenantSlug = this.resolveTenantSlug(tenantSlug);
+        this.activeTenantId = localStorage.getItem('active_tenant_id');
+        const query = this.activeTenantSlug
+            ? `?tenantSlug=${encodeURIComponent(this.activeTenantSlug)}`
+            : '';
+        const url = api.buildApiUrl(`/api/sse/status${query}`);
 
         try {
             this.eventSource = new EventSource(url);
 
-            this.eventSource.onopen = () => {
+            this.eventSource.onopen = async () => {
                 this.isConnected = true;
                 this.reconnectAttempts = 0;
                 console.log('[EventBus] Connected to SSE stream');
                 this.emit('connection', { connected: true });
+                await this.replayRecentEvents();
             };
 
             this.eventSource.onerror = () => {
@@ -57,7 +144,7 @@ class GlobalEventBus {
             this.eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    this.handleEvent(data);
+                    this.handleRawEvent('message', data);
                 } catch (e) {
                     // Ignore parse errors
                 }
@@ -68,16 +155,22 @@ class GlobalEventBus {
                 'message', 'impact', 'metrics', 'sync.log',
                 'job.queued', 'job.started', 'job.completed', 'job.failed',
                 'agent.invoked', 'agent.completed',
+                'detection.created', 'detection.completed',
+                'case.created', 'case.status_updated',
+                'evidence.linked', 'filing.submitted',
+                'payout.detected',
                 'detection.anomaly_detected', 'detection.claim_filed',
                 'detection.payout_received',
-                'system.health'
+                'system.health',
+                'evidence_ingestion_started', 'evidence_ingestion_completed', 'evidence_ingestion_failed',
+                'parsing_completed', 'matching_completed'
             ];
 
             eventTypes.forEach(type => {
                 this.eventSource?.addEventListener(type, (event: MessageEvent) => {
                     try {
                         const data = JSON.parse(event.data);
-                        this.handleEvent({ ...data, type });
+                        this.handleRawEvent(type, data);
                     } catch (e) {
                         // Ignore parse errors
                     }
@@ -97,6 +190,8 @@ class GlobalEventBus {
             this.eventSource.close();
             this.eventSource = null;
             this.isConnected = false;
+            this.activeTenantSlug = null;
+            this.activeTenantId = null;
             console.log('[EventBus] Disconnected');
         }
     }
@@ -136,15 +231,8 @@ class GlobalEventBus {
         this.handleEvent(event);
     }
 
-    private handleEvent(event: PlatformEvent): void {
-        // Store in history
-        this.eventHistory.push(event);
-        if (this.eventHistory.length > this.maxHistorySize) {
-            this.eventHistory.shift();
-        }
-
-        // Notify type-specific listeners
-        const typeListeners = this.listeners.get(event.type);
+    private notifyListeners(eventType: string, event: PlatformEvent): void {
+        const typeListeners = this.listeners.get(eventType);
         if (typeListeners) {
             typeListeners.forEach(callback => {
                 try {
@@ -154,6 +242,18 @@ class GlobalEventBus {
                 }
             });
         }
+    }
+
+    private handleEvent(event: PlatformEvent, aliases: string[] = []): void {
+        // Store in history
+        this.eventHistory.push(event);
+        if (this.eventHistory.length > this.maxHistorySize) {
+            this.eventHistory.shift();
+        }
+
+        // Notify type-specific listeners
+        this.notifyListeners(event.type, event);
+        aliases.forEach((alias) => this.notifyListeners(alias, { ...event, type: alias }));
 
         // Notify wildcard listeners
         const wildcardListeners = this.listeners.get('*');

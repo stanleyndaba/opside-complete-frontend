@@ -1,12 +1,22 @@
 import { useEffect, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
+import {
+  getLiveEventDedupeKey,
+  normalizeIncomingLiveEvent,
+  toStatusStreamEvent,
+  type StatusStreamEvent
+} from '@/lib/liveEvents';
 
 export type StatusEvent = {
-  type: 'sync' | 'detection' | 'claim' | 'evidence' | 'refund' | 'filing' | 'status_updated' | 'recovery';
-  status: 'started' | 'progress' | 'completed' | 'failed' | 'filed' | 'approved' | 'deposited' | 'denied' | 'linked' | 'payout_detected' | 'matched' | 'reconciled' | 'discrepancy';
-  data: any;
+  type: string;
+  status: string;
+  data: Record<string, any>;
   timestamp: string;
+  eventType: string;
+  entityType?: string;
+  entityId?: string;
 };
 
 import { api } from '@/lib/api';
@@ -14,22 +24,64 @@ import { api } from '@/lib/api';
 export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSlug?: string) => {
   const eventSourceRef = useRef<EventSource | null>(null);
   const handledPayloadsRef = useRef<Set<string>>(new Set());
+  const onEventRef = useRef<typeof onEvent>();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    onEventRef.current = onEvent;
+  }, [onEvent]);
 
   useEffect(() => {
     const slug = tenantSlug;
     if (!slug) return;
+    const activeTenantId = typeof window !== 'undefined'
+      ? String(localStorage.getItem('active_tenant_id') || '').trim()
+      : '';
 
     // Build SSE URL using API base URL
     const sseUrl = api.buildApiUrl(`/api/sse/status?tenantSlug=${slug}`);
     const eventSource = new EventSource(sseUrl, { withCredentials: true } as any);
 
+    const invalidateForEvent = (event: StatusStreamEvent) => {
+      const eventType = event.eventType.toLowerCase();
+      const keyMatcher = (needle: string) => (query: any) =>
+        JSON.stringify(query.queryKey || []).toLowerCase().includes(needle);
+
+      if (event.type === 'detection' || eventType.startsWith('sync.')) {
+        void queryClient.invalidateQueries({ predicate: keyMatcher('sync') });
+        void queryClient.invalidateQueries({ predicate: keyMatcher('detection') });
+      }
+
+      if (event.type === 'evidence' || eventType.startsWith('evidence') || eventType.startsWith('parsing') || eventType.startsWith('matching')) {
+        void queryClient.invalidateQueries({ predicate: keyMatcher('evidence') });
+        void queryClient.invalidateQueries({ predicate: keyMatcher('document') });
+      }
+
+      if (event.type === 'case' || event.type === 'filing') {
+        void queryClient.invalidateQueries({ predicate: keyMatcher('dispute') });
+        void queryClient.invalidateQueries({ predicate: keyMatcher('case') });
+      }
+
+      if (event.type === 'payout' || event.type === 'recovery' || eventType.startsWith('payout')) {
+        void queryClient.invalidateQueries({ predicate: keyMatcher('recover') });
+      }
+
+      if (eventType.startsWith('notification')) {
+        void queryClient.invalidateQueries({ predicate: keyMatcher('notification') });
+      }
+    };
+
     const processStatusEvent = (rawType: string, payload: any) => {
       try {
-        const eventName = rawType === 'message' ? (payload?.event_type || payload?.type || 'message') : rawType;
-        const parts = String(eventName).split(/[.:]/);
-        const normalizedType = (parts[0] || payload?.type || 'status_updated') as StatusEvent['type'];
-        const normalizedStatus = (parts[1] || payload?.status || 'progress') as StatusEvent['status'];
-        const dedupeKey = `${eventName}:${payload?.id || payload?.entity_id || payload?.timestamp || ''}`;
+        const liveEvent = normalizeIncomingLiveEvent(rawType, payload);
+        if (liveEvent.tenant_slug && liveEvent.tenant_slug !== slug) {
+          return;
+        }
+        if (activeTenantId && liveEvent.tenant_id && liveEvent.tenant_id !== activeTenantId) {
+          return;
+        }
+
+        const dedupeKey = getLiveEventDedupeKey(liveEvent);
         if (handledPayloadsRef.current.has(dedupeKey)) {
           return;
         }
@@ -38,13 +90,9 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
           handledPayloadsRef.current = new Set(Array.from(handledPayloadsRef.current).slice(-150));
         }
 
-        const statusEvent: StatusEvent = {
-          type: normalizedType,
-          status: normalizedStatus,
-          data: payload,
-          timestamp: payload?.timestamp || new Date().toISOString()
-        };
-        onEvent?.(statusEvent);
+        const statusEvent: StatusEvent = toStatusStreamEvent(liveEvent);
+        invalidateForEvent(statusEvent);
+        onEventRef.current?.(statusEvent);
 
         // Map important events to user-friendly toasts
         const { type, status, data } = statusEvent as any;
@@ -94,6 +142,12 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
         'sync.failed',
         'sync_progress',
         'detection.completed',
+        'detection.created',
+        'case.created',
+        'case.status_updated',
+        'evidence.linked',
+        'filing.submitted',
+        'payout.detected',
         'claim_expiring',
         'detection_resolved',
         'detection_status_changed',
@@ -108,13 +162,28 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
         'evidence_matching_completed',
         'recovery_detected',
         'payment_approved',
-        'payment_reconciled'
+        'payment_reconciled',
+        'detection.claim_filed',
+        'detection.payout_received'
       ],
       (eventName, payload) => processStatusEvent(eventName, payload)
     );
 
     eventSource.onmessage = (event) => {
       processStatusEvent('message', parseDefaultSSEMessage(event));
+    };
+
+    eventSource.onopen = () => {
+      void api.get<{ success: boolean; events: any[] }>(
+        `/api/sse/recent?tenantSlug=${encodeURIComponent(slug)}&limit=50`
+      ).then((response) => {
+        if (!response.ok || !response.data?.events) return;
+        for (const recentEvent of response.data.events) {
+          processStatusEvent('message', recentEvent);
+        }
+      }).catch(() => {
+        // Ignore replay failures and continue with live stream
+      });
     };
 
     eventSource.onerror = (error) => {
@@ -127,7 +196,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
       removeNamedListeners();
       eventSource.close();
     };
-  }, [onEvent, tenantSlug]);
+  }, [queryClient, tenantSlug]);
 
   return {
     close: () => {

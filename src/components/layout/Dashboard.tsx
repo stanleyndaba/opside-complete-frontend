@@ -38,6 +38,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
+import { useStatusStream } from '@/hooks/use-status-stream';
 
 // Icon imports for document sources
 
@@ -542,18 +543,6 @@ export function Dashboard() {
     });
   }, [activeSlug, fetchDashboardSummary, navigate, toast]);
 
-  useEffect(() => {
-    if (!isReady || !activeSlug) return;
-
-    let pollTimer: number | null = null;
-    fetchDashboardSummary();
-    pollTimer = window.setInterval(fetchDashboardSummary, 30000);
-
-    return () => {
-      if (pollTimer) clearInterval(pollTimer);
-    };
-  }, [activeSlug, fetchDashboardSummary, isReady]);
-
   // Fetch evidence status and detection statistics
   useEffect(() => {
     if (!isReady || !activeSlug) return;
@@ -932,7 +921,7 @@ export function Dashboard() {
   }
 
   // Fetch real dispute case data for Next Payment and Pending tiles
-  async function fetchDisputeMetrics() {
+  const fetchDisputeMetrics = useCallback(async () => {
     if (!isReady) return;
     try {
       const res = await api.getDisputeCases({ limit: 500 }, activeSlug);
@@ -1016,44 +1005,49 @@ export function Dashboard() {
     } catch (error) {
       console.error('[Dashboard] Failed to fetch dispute metrics:', error);
     }
-  }
+  }, [activeSlug, isReady]);
 
-  // Effect to manage polling and SSE logic
+  const refreshDashboardLive = useCallback(async () => {
+    await Promise.all([
+      fetchDashboardSummary(),
+      fetchDisputeMetrics()
+    ]);
+  }, [fetchDashboardSummary, fetchDisputeMetrics]);
+
+  useStatusStream((event) => {
+    if (!activeSlug) return;
+
+    if (
+      event.type === 'sync' ||
+      event.type === 'detection' ||
+      event.type === 'evidence' ||
+      event.type === 'case' ||
+      event.type === 'filing' ||
+      event.type === 'payout' ||
+      event.type === 'recovery'
+    ) {
+      void refreshDashboardLive();
+    }
+  }, activeSlug);
+
+  // Event-driven dashboard updates with slow polling fallback for recovery after disconnects.
   useEffect(() => {
     if (!isReady || !activeSlug) return;
     let pollTimer: number | null = null;
-    let es: EventSource | null = null;
 
-    // Initial fetch immediately on mount
     const initFetch = async () => {
-      await fetchDashboardSummary();
+      await refreshDashboardLive();
     };
 
     initFetch();
     hasFetchedRef.current = true;
 
-    // Short burst polling to show numbers populate quickly
     pollTimer = window.setInterval(async () => {
-      await fetchDashboardSummary();
-    }, 5000) as unknown as number;
-
-    // Listen for backend sync/detection events
-    try {
-      es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
-      es.onmessage = async (e) => {
-        if (!mountedRef.current) return;
-        try {
-          const evt = JSON.parse(e.data);
-          if (evt?.type === 'sync' || evt?.type === 'detection' || evt?.type === 'impact' || evt?.type === 'evidence') {
-            await fetchDashboardSummary();
-          }
-        } catch { }
-      };
-    } catch { }
+      await refreshDashboardLive();
+    }, 60000) as unknown as number;
 
     return () => {
       if (pollTimer) window.clearInterval(pollTimer);
-      if (es) es.close();
       if (syncPollingRef.current) {
         clearInterval(syncPollingRef.current);
         syncPollingRef.current = null;
@@ -1063,7 +1057,7 @@ export function Dashboard() {
         syncCheckTimeoutRef.current = null;
       }
     };
-  }, [activeSlug, fetchDashboardSummary, isReady]);
+  }, [activeSlug, isReady, refreshDashboardLive]);
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 

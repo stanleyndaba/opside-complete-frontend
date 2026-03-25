@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Clock, Eye, Download, Trash2, MoreHorizontal, RefreshCw, Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
+import { useStatusStream } from '@/hooks/use-status-stream';
 import { Checkbox } from '@/components/ui/checkbox';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
@@ -279,6 +280,26 @@ export default function EvidenceLocker() {
     );
   }, [docLogSearch, recentEvents]);
 
+  useStatusStream((event) => {
+    if (!activeSlug) return;
+
+    if (event.eventType === 'evidence_ingestion_completed') {
+      toast({ title: 'Scan complete', description: 'Evidence inventory refreshed.' });
+      void refreshInventory();
+      return;
+    }
+
+    if (
+      event.eventType === 'evidence.linked' ||
+      event.eventType === 'parsing_completed' ||
+      event.eventType === 'matching_completed' ||
+      event.eventType === 'evidence_matching_completed' ||
+      event.eventType === 'case.created'
+    ) {
+      void refreshInventory();
+    }
+  }, activeSlug);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -320,37 +341,8 @@ export default function EvidenceLocker() {
       setLoading(false);
     })();
 
-    let es: EventSource | null = null;
-    if (!isReady || !activeSlug) {
-      return () => { cancelled = true; };
-    }
-
-    try {
-      es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
-      es.onmessage = (e) => {
-        try {
-          const evt = JSON.parse(e.data);
-          if (evt?.type === 'evidence' && evt?.status === 'completed') {
-            toast({ title: 'Scan complete', description: 'Evidence inventory refreshed.' });
-            void refreshInventory();
-          }
-          if (evt?.type === 'parsing' && (evt?.status === 'completed' || evt?.status === 'failed')) {
-            void refreshInventory();
-          }
-          if (evt?.type === 'matching' && evt?.status === 'completed') {
-            void refreshInventory();
-          }
-        } catch {
-          // Ignore malformed SSE payloads
-        }
-      };
-    } catch {
-      // Ignore SSE setup failures and rely on manual refresh/actions
-    }
-
     return () => {
       cancelled = true;
-      if (es) es.close();
     };
   }, [activeSlug, isReady, page, pageSize, q, refreshInventory, sortBy, sortDir]);
   const handleDrag = (e: React.DragEvent) => {

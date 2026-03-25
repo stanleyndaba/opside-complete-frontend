@@ -260,8 +260,9 @@ export const subscribeSyncProgress = (
       const data = JSON.parse(e.data);
       onUpdate(data);
 
-      // Close connection if sync is complete or failed
-      if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
+      // Keep the stream open after sync completion so downstream detection events can arrive.
+      // Only terminal failures/cancellations should close immediately here.
+      if (data.status === 'failed' || data.status === 'cancelled') {
         eventSource.close();
         onConnectionChange?.('disconnected');
       }

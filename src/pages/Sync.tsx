@@ -102,6 +102,7 @@ export default function Sync() {
   const modalDismissedRef = useRef<boolean>(false); // Track if user dismissed modal for this sync session
   const [providerLoading, setProviderLoading] = useState<'gmail' | 'outlook' | 'gdrive' | 'dropbox' | null>(null);
   const [sseStatus, setSseStatus] = useState<SSEConnectionState>('disconnected'); // SSE connection status
+  const sseStatusRef = useRef<SSEConnectionState>('disconnected');
 
   // Log system state
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -124,6 +125,10 @@ export default function Sync() {
     fees: { syncing: false, completed: false, count: 0 },
     claims: { syncing: false, completed: false, count: 0 },
   });
+
+  useEffect(() => {
+    sseStatusRef.current = sseStatus;
+  }, [sseStatus]);
 
   // Add a log entry immediately
   const addLogImmediate = (entry: Omit<LogEntry, 'id' | 'timestamp'>) => {
@@ -983,6 +988,7 @@ export default function Sync() {
 
     interval = setInterval(async () => {
       if (!syncId || cancelled) return;
+      if (sseStatusRef.current === 'connected') return;
       try {
         const s = await getSyncStatus(syncId, currentTenantSlug);
         if (cancelled) return;

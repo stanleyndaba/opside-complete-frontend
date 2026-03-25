@@ -17,6 +17,7 @@ import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';
 import { useToast } from '@/hooks/use-toast';
+import { useStatusStream } from '@/hooks/use-status-stream';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
@@ -397,6 +398,20 @@ export default function DisputeCases() {
   const totalPages = Math.max(1, Math.ceil(summary.filtered_results / pageSize));
 
   const refresh = () => setRefreshKey((value) => value + 1);
+
+  useStatusStream((event) => {
+    if (!activeTenantSlug) return;
+
+    if (
+      event.eventType === 'case.created' ||
+      event.eventType === 'case.status_updated' ||
+      event.eventType === 'filing.submitted' ||
+      event.eventType === 'evidence.linked' ||
+      event.eventType === 'payout.detected'
+    ) {
+      refresh();
+    }
+  }, activeTenantSlug);
 
   useEffect(() => {
     return () => {
