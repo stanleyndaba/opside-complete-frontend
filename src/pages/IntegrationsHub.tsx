@@ -20,6 +20,7 @@ import {
 import { useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
+import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 import { tenantRoute } from '@/lib/routes';
 import { useTenant } from '@/contexts/TenantContext';
 
@@ -364,9 +365,12 @@ export default function IntegrationsHub() {
   // SSE for live ingest/detection events
   useEffect(() => {
     if (!isReady || !activeSlug) return;
-    let es: EventSource | null = null;
+    let es: ReturnType<typeof createAuthenticatedEventStream> | null = null;
     try {
-      es = new EventSource(`/api/sse/status?tenantSlug=${activeSlug}`);
+      es = createAuthenticatedEventStream(
+        api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
+        { autoReconnect: true, reconnectDelayMs: 3000 }
+      );
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 import { useToast } from '@/components/ui/use-toast';
 import { RefreshCw, AlertCircle, Cloud, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -143,7 +144,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   useEffect(() => {
     if (!ingesting) return;
 
-    const eventSource = new EventSource('/api/sse/status');
+    const activeSlug = tenantSlug || 'beta';
+    const eventSource = createAuthenticatedEventStream(
+      api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
+      { autoReconnect: true, reconnectDelayMs: 3000 }
+    );
 
     eventSource.addEventListener('evidence_ingestion_started', () => {
       setProgress(10);
@@ -175,7 +180,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     return () => {
       eventSource.close();
     };
-  }, [ingesting, toast]);
+  }, [ingesting, tenantSlug, toast]);
 
   const handleIngest = async () => {
     if (!hasConnectedSources) {

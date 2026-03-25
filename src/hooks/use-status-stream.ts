@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
+import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
 import {
   getLiveEventDedupeKey,
   normalizeIncomingLiveEvent,
@@ -22,7 +23,7 @@ export type StatusEvent = {
 import { api } from '@/lib/api';
 
 export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSlug?: string) => {
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const eventSourceRef = useRef<EventStreamLike | null>(null);
   const handledPayloadsRef = useRef<Set<string>>(new Set());
   const onEventRef = useRef<typeof onEvent>();
   const queryClient = useQueryClient();
@@ -40,7 +41,10 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
 
     // Build SSE URL using API base URL
     const sseUrl = api.buildApiUrl(`/api/sse/status?tenantSlug=${slug}`);
-    const eventSource = new EventSource(sseUrl, { withCredentials: true } as any);
+    const eventSource = createAuthenticatedEventStream(sseUrl, {
+      autoReconnect: true,
+      reconnectDelayMs: 3000
+    });
 
     const invalidateForEvent = (event: StatusStreamEvent) => {
       const eventType = event.eventType.toLowerCase();

@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
+import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
 
 export type Phase3NotificationEvent =
   | { type: 'claim_expiring'; data: Phase3ClaimExpiringEvent }
@@ -57,7 +58,7 @@ export interface Phase3SyncFailedEvent {
 
 export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent) => void, tenantSlug?: string) => {
   const [lastEvent, setLastEvent] = useState<Phase3NotificationEvent | null>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const eventSourceRef = useRef<EventStreamLike | null>(null);
   const reconnectTimeoutRef = useRef<number | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 5;
@@ -81,7 +82,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
       const slug = tenantSlug;
       if (!slug) return;
       const url = api.buildApiUrl(`/api/sse/notifications?tenantSlug=${slug}`);
-      const eventSource = new EventSource(url, { withCredentials: true } as any);
+      const eventSource = createAuthenticatedEventStream(url);
 
       const processIncomingEvent = (rawType: string, data: any) => {
         const eventType = rawType === 'message' ? (data?.event_type || data?.type || 'unknown') : rawType;

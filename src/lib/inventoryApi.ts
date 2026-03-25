@@ -1,4 +1,5 @@
 import { api } from './api';
+import { createAuthenticatedEventStream } from './authenticatedSSE';
 
 // Type definitions matching the documented API responses
 // Note: 'complete' is included for legacy backend compatibility
@@ -236,7 +237,7 @@ export const subscribeSyncProgress = (
   // Report connecting state
   onConnectionChange?.('connecting');
 
-  const eventSource = new EventSource(url, { withCredentials: true } as any);
+  const eventSource = createAuthenticatedEventStream(url);
 
   // Track if we've successfully connected
   let hasConnected = false;

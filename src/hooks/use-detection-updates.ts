@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
 
 export interface DetectionUpdateEvent {
   sync_id: string;
@@ -21,7 +22,7 @@ export const useDetectionUpdates = (
   onUpdate?: (event: DetectionUpdateEvent) => void,
   tenantSlug?: string
 ) => {
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const eventSourceRef = useRef<EventStreamLike | null>(null);
   const reconnectTimeoutRef = useRef<number | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 3;
@@ -48,7 +49,7 @@ export const useDetectionUpdates = (
       const slug = tenantSlug;
       if (!slug) return;
       const url = api.buildApiUrl(`/api/sse/detection-updates/${syncId}?tenantSlug=${slug}`);
-      const eventSource = new EventSource(url, { withCredentials: true } as any);
+      const eventSource = createAuthenticatedEventStream(url);
 
       eventSource.onopen = () => {
         console.log(`[Detection Updates] SSE connection opened for sync ${syncId}`);
@@ -138,4 +139,3 @@ export const useDetectionUpdates = (
     }
   };
 };
-

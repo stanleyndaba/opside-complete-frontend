@@ -28,6 +28,7 @@ import { api } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { ClaimPdfService } from '@/services/ClaimPdfService';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
+import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 
 interface CaseEvent {
   timestamp: string;
@@ -598,9 +599,12 @@ export default function CaseDetail() {
       await refreshCaseDetail(caseId, { showLoading: true });
     })();
 
-    let es: EventSource | null = null;
+    let es: ReturnType<typeof createAuthenticatedEventStream> | null = null;
     try {
-      es = new EventSource(api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`), { withCredentials: true } as any);
+      es = createAuthenticatedEventStream(
+        api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
+        { autoReconnect: true, reconnectDelayMs: 3000 }
+      );
       es.onopen = () => setStatusFeedUnavailable(false);
       const handleRealtimePayload = (payload: any) => {
         if (!caseId || !matchesRealtimeEvent(payload)) {

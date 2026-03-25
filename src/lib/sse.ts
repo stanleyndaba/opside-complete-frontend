@@ -1,7 +1,12 @@
 export type SSEMessageHandler = (eventName: string, payload: any, rawEvent: MessageEvent) => void;
 
+type EventSourceLike = {
+  addEventListener(type: string, listener: EventListener): void;
+  removeEventListener(type: string, listener: EventListener): void;
+};
+
 export function registerNamedSSEListeners(
-  eventSource: EventSource,
+  eventSource: EventSourceLike,
   eventNames: string[],
   handler: SSEMessageHandler
 ) {

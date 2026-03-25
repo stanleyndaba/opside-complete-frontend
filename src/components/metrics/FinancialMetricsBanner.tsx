@@ -8,6 +8,8 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, Clock, CheckCircle, DollarSign } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
+import { api } from '@/lib/api';
+import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 
 interface FinancialMetrics {
     totalFound: number;
@@ -61,7 +63,10 @@ export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetr
         fetchMetrics();
 
         // Listen for real-time updates via SSE
-        const eventSource = new EventSource(`/api/sse/stream?tenantSlug=${activeTenantSlug}`);
+        const eventSource = createAuthenticatedEventStream(
+            api.buildApiUrl(`/api/sse/stream?tenantSlug=${activeTenantSlug}`),
+            { autoReconnect: true, reconnectDelayMs: 3000 }
+        );
 
         eventSource.addEventListener('metrics', (event) => {
             try {

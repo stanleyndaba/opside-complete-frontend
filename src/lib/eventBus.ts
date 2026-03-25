@@ -7,6 +7,7 @@
  */
 
 import { api } from './api';
+import { createAuthenticatedEventStream, type EventStreamLike } from './authenticatedSSE';
 import {
     getLiveEventAliases,
     getLiveEventDedupeKey,
@@ -25,7 +26,7 @@ interface PlatformEvent {
 }
 
 class GlobalEventBus {
-    private eventSource: EventSource | null = null;
+    private eventSource: EventStreamLike | null = null;
     private listeners: Map<string, Set<EventCallback>> = new Map();
     private isConnected: boolean = false;
     private reconnectAttempts: number = 0;
@@ -124,7 +125,7 @@ class GlobalEventBus {
         const url = api.buildApiUrl(`/api/sse/status${query}`);
 
         try {
-            this.eventSource = new EventSource(url);
+            this.eventSource = createAuthenticatedEventStream(url);
 
             this.eventSource.onopen = async () => {
                 this.isConnected = true;

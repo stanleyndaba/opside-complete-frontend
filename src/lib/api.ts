@@ -12,6 +12,8 @@ export interface BlobApiResponse {
   error?: string;
 }
 
+import { getFrontendAuthContext } from './authSession';
+
 export function buildApiUrl(path: string): string {
   // Normalize provided path
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -84,9 +86,7 @@ async function requestJsonWithRetry<T>(
 ): Promise<ApiResponse<T>> {
   const requestStartTime = performance.now();
   const url = buildApiUrl(path);
-  const sessionToken = localStorage.getItem('session_token') || '';
-  const userId = localStorage.getItem('user_id') || '';
-  const tenantId = localStorage.getItem('active_tenant_id') || '';
+  const { token: sessionToken, userId, tenantId } = await getFrontendAuthContext();
 
   const method = (options?.method || 'GET').toUpperCase();
   const callerHeaders = (options?.headers || {}) as Record<string, string>;
@@ -278,9 +278,7 @@ async function requestBlob(
   options?: RequestInit
 ): Promise<BlobApiResponse> {
   const url = buildApiUrl(path);
-  const sessionToken = localStorage.getItem('session_token') || '';
-  const userId = localStorage.getItem('user_id') || '';
-  const tenantId = localStorage.getItem('active_tenant_id') || '';
+  const { token: sessionToken, userId, tenantId } = await getFrontendAuthContext();
   const callerHeaders = (options?.headers || {}) as Record<string, string>;
 
   const res = await fetch(url, {
