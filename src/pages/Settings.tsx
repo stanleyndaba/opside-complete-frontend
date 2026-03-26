@@ -15,6 +15,9 @@ import { tenantRoute } from '@/lib/routes';
 interface SellerProfile {
   id?: string;
   email?: string;
+  name?: string;
+  role?: string | null;
+  tenant_name?: string | null;
   amazon_seller_id?: string;
   company_name?: string;
   linked_marketplaces?: string[];
@@ -71,8 +74,11 @@ const Settings = () => {
             ...nextProfile,
             id: basicData.id,
             email: basicData.email,
-            company_name: basicData.name || basicData.company_name,
-            amazon_seller_id: basicData.amazon_seller_id || basicData.seller_id,
+            name: basicData.name,
+            role: basicData.role ?? null,
+            tenant_name: basicData.tenant_name ?? tenant?.name ?? null,
+            company_name: basicData.company_name,
+            amazon_seller_id: basicData.amazon_seller_id,
             amazon_connected: basicData.amazon_connected || false,
             paypal_connected: basicData.paypal_connected || false,
             paypal_email: basicData.paypal_email || null,
@@ -90,7 +96,6 @@ const Settings = () => {
             amazon_connected: status.amazon_connected ?? nextProfile.amazon_connected ?? false,
             amazon_seller_id: nextProfile.amazon_seller_id || status.amazon_account?.seller_id,
             amazon_account_display_name: status.amazon_account?.display_name || nextProfile.amazon_account_display_name,
-            company_name: nextProfile.company_name || status.amazon_account?.display_name,
             linked_marketplaces: Array.isArray(status.amazon_account?.marketplaces) ? status.amazon_account.marketplaces : [],
             last_sync_completed_at: status.lastIngest || status.lastSync || nextProfile.last_sync_completed_at,
           };
@@ -160,6 +165,15 @@ const Settings = () => {
   const isAmazonConnected = sellerProfile.amazon_connected ?? false;
   const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
   const paypalActive = !!sellerProfile.paypal_payment_token || !!sellerProfile.paypal_email;
+  const identityName = sellerProfile.name || sellerProfile.email || (loadingProfile ? 'Loading identity...' : 'Not available');
+  const identityFields = [
+    { label: 'User ID', value: sellerProfile.id || 'Not available' },
+    { label: 'Email', value: sellerProfile.email || 'Not available' },
+    { label: 'Name', value: sellerProfile.name || 'Not set' },
+    { label: 'Workspace Role', value: sellerProfile.role || 'Not available' },
+    { label: 'Workspace', value: sellerProfile.tenant_name || tenant?.name || 'Not available' },
+    { label: 'Last Login', value: formatDate(sellerProfile.last_login) },
+  ];
 
   const connectionScope = useMemo(() => {
     if (linkedMarketplaces.length > 0) {
@@ -255,7 +269,7 @@ const Settings = () => {
                   <div className="group relative w-full flex items-center gap-4 px-0 py-3 text-white/80 border-b border-white/10">
                     <Building2 className="h-4.5 w-4.5 text-white/50" />
                     <span className="text-[11px] font-sans font-bold uppercase tracking-tight">
-                      Seller Profile
+                      Account Identity
                     </span>
                   </div>
                 </nav>
@@ -270,9 +284,9 @@ const Settings = () => {
                 className="space-y-10"
               >
                 <div>
-                  <h2 className="text-xl font-sans font-bold text-white tracking-tight">Seller Profile</h2>
+                  <h2 className="text-xl font-sans font-bold text-white tracking-tight">Account Identity</h2>
                   <p className="text-sm text-white/50 font-sans mt-3 max-w-2xl">
-                    This section shows live account and workspace information only.
+                    This section shows authenticated user and workspace identity only.
                   </p>
                 </div>
 
@@ -286,41 +300,30 @@ const Settings = () => {
                       <div className="space-y-6">
                         <div>
                           <h3 className="text-2xl font-sans font-bold text-white tracking-tight">
-                            {sellerProfile.company_name || sellerProfile.amazon_account_display_name || (loadingProfile ? 'Loading profile...' : 'Not available')}
+                            {identityName}
                           </h3>
                           <div className="flex items-center gap-3 mt-2">
                             <Badge
                               variant="outline"
                               className={cn(
                                 'text-[10px] font-sans font-bold uppercase tracking-tight px-3 py-1 rounded-none',
-                                isAmazonConnected
+                                sellerProfile.id
                                   ? 'bg-white/5 text-white border-white/10'
                                   : 'bg-white/5 text-white/40 border-white/10'
                               )}
                             >
-                              {isAmazonConnected ? 'VERIFIED_CONNECTION' : 'UNVERIFIED_CONNECTION'}
+                              {sellerProfile.id ? 'AUTHENTICATED_USER' : 'IDENTITY_UNAVAILABLE'}
                             </Badge>
-                            {sellerProfile.amazon_seller_id && (
-                              <span className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
-                                ID: {sellerProfile.amazon_seller_id}
-                              </span>
-                            )}
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 pt-4">
-                          <div className="space-y-2">
-                            <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Connection Scope</p>
-                            <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{connectionScope}</p>
-                          </div>
-                          <div className="space-y-2">
-                            <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Activity</p>
-                            <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{formatDate(lastActivity)}</p>
-                          </div>
-                          <div className="space-y-2">
-                            <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">System Age</p>
-                            <p className="text-sm font-sans font-bold text-white/80 tracking-tight">{formatDate(sellerProfile.created_at)}</p>
-                          </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                          {identityFields.map((field) => (
+                            <div key={field.label} className="space-y-2">
+                              <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">{field.label}</p>
+                              <p className="text-sm font-sans font-bold text-white/80 tracking-tight break-all">{field.value}</p>
+                            </div>
+                          ))}
                         </div>
                       </div>
 

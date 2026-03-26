@@ -610,9 +610,14 @@ export default function IntegrationsHub() {
 
   const getStoreOperationalState = (store: any) => {
     const amazonStatus = getProviderState('amazon');
-    if (!amazonStatus.connected) return 'Status unavailable';
-    if (!store?.seller_id) return 'Unverified';
-    return 'Connected';
+    const connectedSellerId = status?.amazon_account?.seller_id;
+    if (!amazonStatus.connected) return 'Auth not connected';
+    if (!store?.seller_id) return 'Store record only';
+    if (connectedSellerId && store.seller_id === connectedSellerId) {
+      return amazonStatus.auth_valid ? 'Bound to active auth' : 'Seller bound, auth needs attention';
+    }
+    if (connectedSellerId && store.seller_id !== connectedSellerId) return 'Seller mismatch';
+    return 'Seller bound';
   };
 
   const connectedSecondaryProviders = SECONDARY_PROVIDERS.filter(provider => getProviderState(provider).connected);
@@ -627,6 +632,10 @@ export default function IntegrationsHub() {
       : connectedSecondaryProviders.length > 0
         ? 'Operational with active repositories'
         : 'Operational, no evidence repositories connected';
+  const amazonProviderState = getProviderState('amazon');
+  const connectedSellerId = status?.amazon_account?.seller_id || null;
+  const connectedAmazonName = status?.amazon_account?.display_name || null;
+  const connectedAmazonMarketplaces = Array.isArray(status?.amazon_account?.marketplaces) ? status?.amazon_account?.marketplaces : [];
 
   if (isReady && !activeSlug) {
     return (
@@ -794,7 +803,7 @@ export default function IntegrationsHub() {
                   Integrations
                 </h1>
                 <p className="text-gray-400 max-w-xl text-lg font-sans font-light leading-relaxed tracking-tight">
-                  Management of all primary data sources and store connections. Data is isolated per store and synchronized across our platform.
+                  Management of tenant-scoped connection truth, store records, and evidence repositories.
                 </p>
               </div>
 
@@ -840,13 +849,13 @@ export default function IntegrationsHub() {
 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
                   <div className="flex items-center gap-6">
-                    <div className="h-16 w-16 rounded-2xl bg-orange-600/10 flex items-center justify-center border border-orange-500/20 shadow-[0_0_20px_rgba(234,88,12,0.15)] group-hover:shadow-[0_0_30px_rgba(234,88,12,0.3)] transition-all duration-500 overflow-hidden relative">
-                      <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="h-16 w-16 rounded-2xl bg-sky-900/20 flex items-center justify-center border border-sky-700/30 shadow-[0_0_20px_rgba(14,116,144,0.22)] group-hover:shadow-[0_0_32px_rgba(30,64,175,0.34)] transition-all duration-500 overflow-hidden relative">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon Store</h3>
-                      <p className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Primary Store Connection</p>
+                      <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon Connection</h3>
+                      <p className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Tenant-scoped auth and store records</p>
                     </div>
                   </div>
 
@@ -857,14 +866,14 @@ export default function IntegrationsHub() {
                           variant="ghost"
                           className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 text-xs font-sans font-bold uppercase tracking-tight gap-2"
                         >
-                          <Plus className="w-4 h-4" /> Add a New Store
+                          <Plus className="w-4 h-4" /> Add Store Record
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-xl">
                         <DialogHeader>
-                          <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Add a New Store</DialogTitle>
+                          <DialogTitle className="text-2xl font-sans font-bold tracking-tight">Add Store Record</DialogTitle>
                           <DialogDescription className="text-gray-400 font-sans font-light tracking-tight">
-                            Configure authorization parameters for the terminal connection.
+                            Create a tenant store record. This does not authenticate Amazon by itself.
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-6 py-6">
@@ -879,7 +888,7 @@ export default function IntegrationsHub() {
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Seller Identity (Optional)</label>
+                              <label className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">Seller ID (Business Identity)</label>
                               <Input
                                 placeholder="A3XXXXXXXXXXXX"
                                 value={newStoreData.seller_id}
@@ -914,7 +923,7 @@ export default function IntegrationsHub() {
                             disabled={addingStore}
                             className="bg-white hover:bg-white/90 text-black font-sans font-bold uppercase text-[10px] h-12 px-8 tracking-tight"
                           >
-                            {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Add Store"}
+                            {addingStore ? <RefreshCw className="w-4 h-4 animate-spin" /> : "Save Store Record"}
                           </Button>
                         </DialogFooter>
                       </DialogContent>
@@ -947,6 +956,27 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
+                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Auth Status</span>
+                    <span className="text-sm text-white font-sans font-bold tracking-tight">{describeProviderState(amazonProviderState)}</span>
+                  </div>
+                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
+                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Seller ID</span>
+                    <span className="text-sm text-white font-sans font-bold tracking-tight break-all">{connectedSellerId || 'Not resolved'}</span>
+                  </div>
+                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
+                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Amazon Account</span>
+                    <span className="text-sm text-white font-sans font-bold tracking-tight">{connectedAmazonName || 'Not available'}</span>
+                  </div>
+                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
+                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Marketplaces</span>
+                    <span className="text-sm text-white font-sans font-bold tracking-tight">
+                      {connectedAmazonMarketplaces.length > 0 ? connectedAmazonMarketplaces.join(', ') : 'Not available'}
+                    </span>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {loadingStores ? (
                     <div className="col-span-full flex justify-center py-12">
@@ -963,24 +993,30 @@ export default function IntegrationsHub() {
                           <div className="h-2 w-2 rounded-full bg-white/70" />
                         </div>
 
-                        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div className="space-y-3 pt-4 border-t border-white/5">
                           <div className="flex flex-col">
+                            <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Seller ID</span>
+                            <span className="text-[10px] text-gray-300 font-bold tracking-tight break-all">{store.seller_id || 'Not bound'}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col">
                             <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Status</span>
                             <span className="text-[10px] text-gray-300 font-bold tracking-tight">{getStoreOperationalState(store)}</span>
+                            </div>
+                            <button
+                              onClick={() => handleDeleteStore(store.id)}
+                              disabled={deletingStore === store.id}
+                              className="opacity-0 group-hover/card:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded-lg text-gray-500 hover:text-red-400"
+                            >
+                              {deletingStore === store.id ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                            </button>
                           </div>
-                          <button
-                            onClick={() => handleDeleteStore(store.id)}
-                            disabled={deletingStore === store.id}
-                            className="opacity-0 group-hover/card:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded-lg text-gray-500 hover:text-red-400"
-                          >
-                            {deletingStore === store.id ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                          </button>
                         </div>
                       </div>
                     ))
                   ) : (
                     <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5 font-sans font-light tracking-tight">
-                      <p className="text-gray-500 opacity-50">No store nodes detected. Link a store to begin harvesting.</p>
+                      <p className="text-gray-500 opacity-50">No tenant store records are bound yet. Connect Amazon to resolve seller identity, or add a store record for workspace mapping.</p>
                     </div>
                   )}
                 </div>
@@ -990,7 +1026,7 @@ export default function IntegrationsHub() {
                     <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
                     <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-white/35" /> Encrypted</span>
                   </div>
-                  <span className="text-gray-400">Last ingest: {formatDateTime(status?.lastIngest)}</span>
+                  <span className="text-gray-400">Last Amazon ingest: {formatDateTime(status?.lastIngest)}</span>
                 </div>
               </div>
             </motion.div>
