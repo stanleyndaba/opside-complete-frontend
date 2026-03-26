@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertTriangle, RefreshCw, ExternalLink } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
-import { startSync } from '@/lib/inventoryApi';
 import { tenantRoute } from '@/lib/routes';
 import { useTenant } from '@/contexts/TenantContext';
 
@@ -72,29 +71,15 @@ export default function OAuthCallback() {
           if (!cancelled) {
             setStatusMessage('Connected. Fetching recovery data...');
 
-            // If Amazon is connected, check if sync needs to be triggered
+            // If Amazon is connected, only observe the backend kickoff path.
             if (res.data?.amazon_connected && provider === 'amazon') {
               try {
-                // Check if backend has already started sync (check sync status)
                 const syncStatusRes = await api.getSyncStatus(undefined, tenantSlug);
                 const hasActiveSync = syncStatusRes.ok && syncStatusRes.data?.hasActiveSync;
 
-                // If backend hasn't started sync automatically, trigger it from frontend
-                if (!hasActiveSync) {
-                  try {
-                    console.log('[OAuthCallback] Backend didn\'t auto-start sync, triggering from frontend...');
-                    const syncRes = await startSync(tenantSlug);
-                    if (syncRes?.syncId) {
-                      console.log('[OAuthCallback] Sync started successfully:', syncRes.syncId);
-                      console.log('[OAuthCallback] Sync started successfully:', syncRes.syncId);
-                      // Redirect to sync page to show progress
-                      navigate(tenantRoute(tenantSlug || 'beta', `/sync?id=${syncRes.syncId}`));
-                      return;
-                    }
-                  } catch (syncErr: unknown) {
-                    console.error('[OAuthCallback] Failed to start sync:', syncErr);
-                    // Continue to normal flow even if sync start fails
-                  }
+                if (hasActiveSync && syncStatusRes.data?.syncId) {
+                  navigate(tenantRoute(tenantSlug || 'beta', `/sync?id=${syncStatusRes.data.syncId}`));
+                  return;
                 }
 
                 // Try to get recovery data for the reveal
