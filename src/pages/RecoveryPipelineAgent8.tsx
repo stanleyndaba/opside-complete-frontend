@@ -57,6 +57,20 @@ type Row = {
   billing_execution_lane?: string | null;
   recovery_work_error?: string | null;
   billing_work_error?: string | null;
+  recovery_work_attempts?: number | null;
+  billing_work_attempts?: number | null;
+  recovery_defer_count?: number | null;
+  billing_defer_count?: number | null;
+  recovery_last_deferred_reason?: string | null;
+  billing_last_deferred_reason?: string | null;
+  recovery_last_processed_at?: string | null;
+  billing_last_processed_at?: string | null;
+  recovery_last_claimed_at?: string | null;
+  billing_last_claimed_at?: string | null;
+  recovery_last_runtime_role?: string | null;
+  billing_last_runtime_role?: string | null;
+  recovery_next_attempt_at?: string | null;
+  billing_next_attempt_at?: string | null;
   investigation_required: boolean;
   currency: string;
   expected_payout_date: string | null;
@@ -103,6 +117,21 @@ const stamp = (value: string | null | undefined) => {
 
 const label = (value: string | null | undefined) =>
   value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : 'Unknown';
+
+const describeWorkCycle = (status: string | null | undefined, deferReason: string | null | undefined, nextAttemptAt: string | null | undefined) => {
+  const normalized = String(status || '').toLowerCase();
+  if (!normalized) return null;
+  if (normalized === 'pending' && deferReason) {
+    return `Deferred: ${label(deferReason)}${nextAttemptAt ? ` · Next ${stamp(nextAttemptAt)}` : ''}`;
+  }
+  if (normalized === 'processing') {
+    return 'Claimed by execution lane';
+  }
+  if (normalized === 'failed_retry_exhausted') {
+    return 'Retry exhausted';
+  }
+  return null;
+};
 
 const severityTone = (severity: Blocker['severity']) =>
   severity === 'high'
@@ -255,12 +284,20 @@ export default function RecoveryPipelineAgent8() {
 
     const isRecoveryRelevant =
       eventType === 'payout.detected' ||
+      eventType === 'recovery.work_claimed' ||
       eventType === 'recovery.work_created' ||
+      eventType === 'recovery.work_deferred' ||
+      eventType === 'recovery.completed' ||
       eventType === 'recovery.quarantined' ||
       eventType === 'recovery.failed' ||
+      eventType === 'recovery.failed_retry_exhausted' ||
+      eventType === 'billing.work_claimed' ||
       eventType === 'billing.work_created' ||
+      eventType === 'billing.work_deferred' ||
+      eventType === 'billing.completed' ||
       eventType === 'billing.processed' ||
       eventType === 'billing.failed' ||
+      eventType === 'billing.failed_retry_exhausted' ||
       (eventType === 'case.status_updated' && eventStatus === 'approved');
 
     if (!isRecoveryRelevant) return;
@@ -463,6 +500,16 @@ export default function RecoveryPipelineAgent8() {
                                         {row.billing_execution_lane ? `Billing Lane ${label(row.billing_execution_lane)}` : ''}
                                       </div>
                                     ) : null}
+                                    {describeWorkCycle(row.recovery_work_status, row.recovery_last_deferred_reason, row.recovery_next_attempt_at) ? (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-amber-100/70">
+                                        {describeWorkCycle(row.recovery_work_status, row.recovery_last_deferred_reason, row.recovery_next_attempt_at)}
+                                      </div>
+                                    ) : null}
+                                    {describeWorkCycle(row.billing_work_status, row.billing_last_deferred_reason, row.billing_next_attempt_at) ? (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-blue-100/60">
+                                        {describeWorkCycle(row.billing_work_status, row.billing_last_deferred_reason, row.billing_next_attempt_at)}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -490,6 +537,12 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="space-y-2">
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Updated</div>
                                     <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.last_updated_at)}</div>
+                                    {(row.recovery_next_attempt_at || row.billing_next_attempt_at) ? (
+                                      <>
+                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Next Attempt</div>
+                                        <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_next_attempt_at || row.billing_next_attempt_at)}</div>
+                                      </>
+                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="py-5 pl-4 text-right">
@@ -581,6 +634,13 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Recovery Work', value: label(detailsRow.recovery_work_status) },
                   { label: 'Recovery Work Item', value: detailsRow.recovery_work_item_id || 'Not available' },
                   { label: 'Recovery Lane', value: detailsRow.recovery_execution_lane ? label(detailsRow.recovery_execution_lane) : 'Not available' },
+                  { label: 'Recovery Runtime', value: detailsRow.recovery_last_runtime_role ? label(detailsRow.recovery_last_runtime_role) : 'Not available' },
+                  { label: 'Recovery Attempts', value: String(detailsRow.recovery_work_attempts ?? 0) },
+                  { label: 'Recovery Defers', value: String(detailsRow.recovery_defer_count ?? 0) },
+                  { label: 'Deferred Reason', value: detailsRow.recovery_last_deferred_reason ? label(detailsRow.recovery_last_deferred_reason) : 'None' },
+                  { label: 'Last Claimed', value: stamp(detailsRow.recovery_last_claimed_at) },
+                  { label: 'Last Processed', value: stamp(detailsRow.recovery_last_processed_at) },
+                  { label: 'Next Attempt', value: stamp(detailsRow.recovery_next_attempt_at) },
                   { label: 'Recovery Error', value: detailsRow.recovery_work_error || 'None' },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
                 ]}
@@ -600,6 +660,13 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Billing Work', value: label(detailsRow.billing_work_status) },
                   { label: 'Billing Work Item', value: detailsRow.billing_work_item_id || 'Not available' },
                   { label: 'Billing Lane', value: detailsRow.billing_execution_lane ? label(detailsRow.billing_execution_lane) : 'Not available' },
+                  { label: 'Billing Runtime', value: detailsRow.billing_last_runtime_role ? label(detailsRow.billing_last_runtime_role) : 'Not available' },
+                  { label: 'Billing Attempts', value: String(detailsRow.billing_work_attempts ?? 0) },
+                  { label: 'Billing Defers', value: String(detailsRow.billing_defer_count ?? 0) },
+                  { label: 'Deferred Reason', value: detailsRow.billing_last_deferred_reason ? label(detailsRow.billing_last_deferred_reason) : 'None' },
+                  { label: 'Last Claimed', value: stamp(detailsRow.billing_last_claimed_at) },
+                  { label: 'Last Processed', value: stamp(detailsRow.billing_last_processed_at) },
+                  { label: 'Next Attempt', value: stamp(detailsRow.billing_next_attempt_at) },
                   { label: 'Billing Error', value: detailsRow.billing_work_error || 'None' },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },
