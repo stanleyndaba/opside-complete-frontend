@@ -59,6 +59,8 @@ type Row = {
   billing_work_error?: string | null;
   recovery_work_attempts?: number | null;
   billing_work_attempts?: number | null;
+  recovery_work_max_attempts?: number | null;
+  billing_work_max_attempts?: number | null;
   recovery_defer_count?: number | null;
   billing_defer_count?: number | null;
   recovery_last_deferred_reason?: string | null;
@@ -69,8 +71,16 @@ type Row = {
   billing_last_claimed_at?: string | null;
   recovery_last_runtime_role?: string | null;
   billing_last_runtime_role?: string | null;
+  recovery_execution_processed_at?: string | null;
+  billing_execution_processed_at?: string | null;
   recovery_next_attempt_at?: string | null;
   billing_next_attempt_at?: string | null;
+  recovery_locked_by?: string | null;
+  billing_locked_by?: string | null;
+  recovery_lifecycle_state?: string | null;
+  billing_lifecycle_state?: string | null;
+  recovery_work_payload?: Record<string, any> | null;
+  billing_work_payload?: Record<string, any> | null;
   investigation_required: boolean;
   currency: string;
   expected_payout_date: string | null;
@@ -97,6 +107,7 @@ type ProofDocument = {
 };
 
 const PAGE_SIZE = 10;
+const BILLING_COMPLETE_STATES = new Set(['paid', 'charged', 'credited', 'completed']);
 const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['recovery_processing', 'Recovery Processing'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_processing', 'Billing Processing'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
 const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
 const billingOptions = [['all', 'All Billing States'], ['pending', 'Pending'], ['sent', 'Sent'], ['charged', 'Charged'], ['credited', 'Credited'], ['paid', 'Paid']];
@@ -118,20 +129,251 @@ const stamp = (value: string | null | undefined) => {
 const label = (value: string | null | undefined) =>
   value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : 'Unknown';
 
-const describeWorkCycle = (status: string | null | undefined, deferReason: string | null | undefined, nextAttemptAt: string | null | undefined) => {
+const describeWorkCycle = (
+  status: string | null | undefined,
+  deferReason: string | null | undefined,
+  nextAttemptAt: string | null | undefined,
+  workError?: string | null | undefined,
+  attempts?: number | null | undefined,
+  maxAttempts?: number | null | undefined,
+  lastClaimedAt?: string | null | undefined,
+  lastProcessedAt?: string | null | undefined
+) => {
   const normalized = String(status || '').toLowerCase();
   if (!normalized) return null;
-  if (normalized === 'pending' && deferReason) {
-    return `Deferred: ${label(deferReason)}${nextAttemptAt ? ` · Next ${stamp(nextAttemptAt)}` : ''}`;
+  const reason = deferReason || workError || null;
+  if (normalized === 'pending' && reason) {
+    return `Deferred: ${label(reason)}${nextAttemptAt ? ` · Next ${stamp(nextAttemptAt)}` : lastProcessedAt ? ` · Last ${stamp(lastProcessedAt)}` : ''}`;
   }
   if (normalized === 'processing') {
-    return 'Claimed by execution lane';
+    return `Claimed by execution lane${lastClaimedAt ? ` · ${stamp(lastClaimedAt)}` : ''}`;
   }
   if (normalized === 'failed_retry_exhausted') {
-    return 'Retry exhausted';
+    return `Retry exhausted${typeof attempts === 'number' && typeof maxAttempts === 'number' && maxAttempts > 0 ? ` · ${attempts}/${maxAttempts}` : ''}`;
   }
   return null;
 };
+
+function pickLatestTimestamp(...values: Array<string | null | undefined>): string | null {
+  const stamped = values
+    .filter((value): value is string => Boolean(value))
+    .map((value) => ({ value, time: new Date(value).getTime() }))
+    .filter((entry) => Number.isFinite(entry.time))
+    .sort((left, right) => right.time - left.time)[0];
+  return stamped?.value || null;
+}
+
+function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
+  const payload = (event.data || {}) as Record<string, any>;
+  const eventType = String(event.eventType || '').toLowerCase();
+  const isRecovery = eventType.startsWith('recovery.');
+  const isBilling = eventType.startsWith('billing.');
+  if (!isRecovery && !isBilling) return row;
+
+  const recoveryWorkItemId = String(payload.recovery_work_item_id || '').trim();
+  const billingWorkItemId = String(payload.billing_work_item_id || '').trim();
+  const disputeCaseId = String(payload.dispute_case_id || payload.entity_id || '').trim();
+  const billingEntityId = String(payload.recovery_id || payload.entity_id || '').trim();
+
+  const matchesRecovery = isRecovery && (
+    (recoveryWorkItemId && recoveryWorkItemId === row.recovery_work_item_id) ||
+    (disputeCaseId && disputeCaseId === row.dispute_case_id)
+  );
+  const matchesBilling = isBilling && (
+    (billingWorkItemId && billingWorkItemId === row.billing_work_item_id) ||
+    (disputeCaseId && disputeCaseId === row.dispute_case_id) ||
+    (billingEntityId && billingEntityId === row.recovery_id)
+  );
+
+  if (!matchesRecovery && !matchesBilling) {
+    return row;
+  }
+
+  const timestamp = String(payload.timestamp || event.timestamp || '').trim() || null;
+  const runtimeRole = String(payload.runtime_role || '').trim() || null;
+  const executionLane = String(payload.execution_lane || '').trim() || null;
+  const reason = String(payload.reason || payload.error || '').trim() || null;
+  const status = String(payload.status || '').trim() || null;
+  const nextAttemptAt = String(payload.next_attempt_at || '').trim() || null;
+  const lastClaimedAt = String(payload.last_claimed_at || '').trim() || timestamp;
+  const deferCount = typeof payload.defer_count === 'number' ? payload.defer_count : Number(payload.defer_count || 0);
+
+  if (matchesRecovery) {
+    const recoveryWorkPayload = {
+      ...(row.recovery_work_payload || {}),
+      ...payload
+    };
+    const nextRow: Row = {
+      ...row,
+      recovery_work_item_id: recoveryWorkItemId || row.recovery_work_item_id || null,
+      recovery_work_status: status || row.recovery_work_status || null,
+      recovery_execution_lane: executionLane || row.recovery_execution_lane || null,
+      recovery_last_runtime_role: runtimeRole || row.recovery_last_runtime_role || null,
+      recovery_last_claimed_at: eventType === 'recovery.work_claimed' ? lastClaimedAt : row.recovery_last_claimed_at || null,
+      recovery_last_processed_at: eventType === 'recovery.work_claimed'
+        ? row.recovery_last_processed_at || null
+        : pickLatestTimestamp(timestamp, row.recovery_last_processed_at),
+      recovery_execution_processed_at: eventType === 'recovery.work_claimed'
+        ? row.recovery_execution_processed_at || null
+        : pickLatestTimestamp(timestamp, row.recovery_execution_processed_at),
+      recovery_work_error: reason || row.recovery_work_error || null,
+      recovery_last_deferred_reason: eventType === 'recovery.work_deferred'
+        ? (reason || row.recovery_last_deferred_reason || row.recovery_work_error || null)
+        : row.recovery_last_deferred_reason || null,
+      recovery_defer_count: eventType === 'recovery.work_deferred'
+        ? Math.max(row.recovery_defer_count ?? 0, Number.isFinite(deferCount) ? deferCount : 0)
+        : row.recovery_defer_count ?? 0,
+      recovery_next_attempt_at: nextAttemptAt || row.recovery_next_attempt_at || null,
+      recovery_locked_by: eventType === 'recovery.work_claimed'
+        ? (executionLane || row.recovery_locked_by || null)
+        : status === 'pending' || status === 'completed' || status === 'quarantined' || status === 'failed_retry_exhausted'
+          ? null
+          : row.recovery_locked_by || null,
+      recovery_lifecycle_state: eventType === 'recovery.work_deferred'
+        ? 'deferred'
+        : eventType === 'recovery.completed'
+          ? 'completed'
+          : eventType === 'recovery.quarantined'
+            ? 'quarantined'
+            : eventType === 'recovery.failed_retry_exhausted'
+              ? 'failed_retry_exhausted'
+              : eventType === 'recovery.work_claimed'
+                ? 'claimed'
+                : row.recovery_lifecycle_state || null,
+      recovery_work_payload: recoveryWorkPayload,
+      last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
+    };
+
+    if (eventType === 'recovery.completed') {
+      nextRow.recovery_status = 'reconciled';
+      nextRow.reconciliation_status = 'reconciled';
+      nextRow.operator_state = BILLING_COMPLETE_STATES.has(String(nextRow.billing_status || '').toLowerCase())
+        ? 'billing_complete'
+        : 'billing_pending';
+    } else if (eventType === 'recovery.quarantined' || eventType === 'recovery.failed_retry_exhausted') {
+      nextRow.operator_state = 'investigation_required';
+      nextRow.investigation_required = true;
+    } else if (eventType === 'recovery.work_claimed') {
+      nextRow.operator_state = 'recovery_processing';
+    } else if (eventType === 'recovery.work_deferred') {
+      nextRow.operator_state = 'waiting_for_payout';
+      nextRow.reconciliation_status = 'pending_payout';
+    }
+
+    return nextRow;
+  }
+
+  const billingWorkPayload = {
+    ...(row.billing_work_payload || {}),
+    ...payload
+  };
+  const nextRow: Row = {
+    ...row,
+    billing_work_item_id: billingWorkItemId || row.billing_work_item_id || null,
+    billing_work_status: status || row.billing_work_status || null,
+    billing_execution_lane: executionLane || row.billing_execution_lane || null,
+    billing_last_runtime_role: runtimeRole || row.billing_last_runtime_role || null,
+    billing_last_claimed_at: eventType === 'billing.work_claimed' ? lastClaimedAt : row.billing_last_claimed_at || null,
+    billing_last_processed_at: eventType === 'billing.work_claimed'
+      ? row.billing_last_processed_at || null
+      : pickLatestTimestamp(timestamp, row.billing_last_processed_at),
+    billing_execution_processed_at: eventType === 'billing.work_claimed'
+      ? row.billing_execution_processed_at || null
+      : pickLatestTimestamp(timestamp, row.billing_execution_processed_at),
+    billing_work_error: reason || row.billing_work_error || null,
+    billing_last_deferred_reason: eventType === 'billing.work_deferred'
+      ? (reason || row.billing_last_deferred_reason || row.billing_work_error || null)
+      : row.billing_last_deferred_reason || null,
+    billing_defer_count: eventType === 'billing.work_deferred'
+      ? Math.max(row.billing_defer_count ?? 0, Number.isFinite(deferCount) ? deferCount : 0)
+      : row.billing_defer_count ?? 0,
+    billing_next_attempt_at: nextAttemptAt || row.billing_next_attempt_at || null,
+    billing_locked_by: eventType === 'billing.work_claimed'
+      ? (executionLane || row.billing_locked_by || null)
+      : status === 'pending' || status === 'completed' || status === 'quarantined' || status === 'failed_retry_exhausted'
+        ? null
+        : row.billing_locked_by || null,
+    billing_lifecycle_state: eventType === 'billing.work_deferred'
+      ? 'deferred'
+      : eventType === 'billing.completed' || eventType === 'billing.processed'
+        ? 'completed'
+        : eventType === 'billing.quarantined'
+          ? 'quarantined'
+          : eventType === 'billing.failed_retry_exhausted' || eventType === 'billing.failed'
+            ? String(status || '').toLowerCase() === 'failed_retry_exhausted' ? 'failed_retry_exhausted' : 'failed'
+            : eventType === 'billing.work_claimed'
+              ? 'claimed'
+              : row.billing_lifecycle_state || null,
+    billing_work_payload: billingWorkPayload,
+    last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
+  };
+
+  if (eventType === 'billing.completed' || eventType === 'billing.processed') {
+    nextRow.billing_status = status || nextRow.billing_status || 'charged';
+    nextRow.operator_state = 'billing_complete';
+  } else if (eventType === 'billing.quarantined' || eventType === 'billing.failed_retry_exhausted') {
+    nextRow.operator_state = 'investigation_required';
+    nextRow.investigation_required = true;
+  } else if (eventType === 'billing.work_claimed') {
+    nextRow.operator_state = 'billing_processing';
+  }
+
+  return nextRow;
+}
+
+const PRESERVED_FINALITY_FIELDS: Array<keyof Row> = [
+  'recovery_execution_lane',
+  'billing_execution_lane',
+  'recovery_work_error',
+  'billing_work_error',
+  'recovery_work_attempts',
+  'billing_work_attempts',
+  'recovery_work_max_attempts',
+  'billing_work_max_attempts',
+  'recovery_defer_count',
+  'billing_defer_count',
+  'recovery_last_deferred_reason',
+  'billing_last_deferred_reason',
+  'recovery_last_processed_at',
+  'billing_last_processed_at',
+  'recovery_last_claimed_at',
+  'billing_last_claimed_at',
+  'recovery_last_runtime_role',
+  'billing_last_runtime_role',
+  'recovery_execution_processed_at',
+  'billing_execution_processed_at',
+  'recovery_next_attempt_at',
+  'billing_next_attempt_at',
+  'recovery_locked_by',
+  'billing_locked_by',
+  'recovery_lifecycle_state',
+  'billing_lifecycle_state',
+  'recovery_work_payload',
+  'billing_work_payload'
+];
+
+function mergeLedgerRows(nextRows: Row[], previousRows: Row[] = []): Row[] {
+  const previousById = new Map(
+    previousRows.map((row) => [row.dispute_case_id || row.recovery_id, row])
+  );
+
+  return nextRows.map((row) => {
+    const previous = previousById.get(row.dispute_case_id || row.recovery_id);
+    if (!previous) return row;
+
+    const merged: Row = { ...row };
+    for (const key of PRESERVED_FINALITY_FIELDS) {
+      const nextValue = merged[key];
+      if (nextValue === null || nextValue === undefined || nextValue === '' || (typeof nextValue === 'number' && nextValue === 0)) {
+        const previousValue = previous[key];
+        if (previousValue !== null && previousValue !== undefined && previousValue !== '') {
+          (merged as any)[key] = previousValue;
+        }
+      }
+    }
+    return merged;
+  });
+}
 
 const severityTone = (severity: Blocker['severity']) =>
   severity === 'high'
@@ -246,7 +488,13 @@ export default function RecoveryPipelineAgent8() {
         page_size: PAGE_SIZE,
       }, activeSlug);
       if (!response.ok || !response.data?.success) throw new Error(response.error || 'Failed to load recoveries.');
-      setLedger(response.data as Ledger);
+      setLedger((current) => {
+        const nextLedger = response.data as Ledger;
+        return {
+          ...nextLedger,
+          rows: mergeLedgerRows(nextLedger.rows || [], current?.rows || [])
+        };
+      });
     } catch (err: any) {
       setLedger(null);
       setError(err?.message || 'Failed to load recoveries.');
@@ -301,6 +549,13 @@ export default function RecoveryPipelineAgent8() {
       (eventType === 'case.status_updated' && eventStatus === 'approved');
 
     if (!isRecoveryRelevant) return;
+    setLedger((current) => {
+      if (!current?.rows?.length) return current;
+      return {
+        ...current,
+        rows: current.rows.map((row) => mergeFinalityEventRow(row, event))
+      };
+    });
     scheduleLiveRefresh();
   }, activeSlug);
 
@@ -500,14 +755,50 @@ export default function RecoveryPipelineAgent8() {
                                         {row.billing_execution_lane ? `Billing Lane ${label(row.billing_execution_lane)}` : ''}
                                       </div>
                                     ) : null}
-                                    {describeWorkCycle(row.recovery_work_status, row.recovery_last_deferred_reason, row.recovery_next_attempt_at) ? (
+                                    {describeWorkCycle(
+                                      row.recovery_work_status,
+                                      row.recovery_last_deferred_reason,
+                                      row.recovery_next_attempt_at,
+                                      row.recovery_work_error,
+                                      row.recovery_work_attempts,
+                                      row.recovery_work_max_attempts,
+                                      row.recovery_last_claimed_at,
+                                      row.recovery_last_processed_at
+                                    ) ? (
                                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-amber-100/70">
-                                        {describeWorkCycle(row.recovery_work_status, row.recovery_last_deferred_reason, row.recovery_next_attempt_at)}
+                                        {describeWorkCycle(
+                                          row.recovery_work_status,
+                                          row.recovery_last_deferred_reason,
+                                          row.recovery_next_attempt_at,
+                                          row.recovery_work_error,
+                                          row.recovery_work_attempts,
+                                          row.recovery_work_max_attempts,
+                                          row.recovery_last_claimed_at,
+                                          row.recovery_last_processed_at
+                                        )}
                                       </div>
                                     ) : null}
-                                    {describeWorkCycle(row.billing_work_status, row.billing_last_deferred_reason, row.billing_next_attempt_at) ? (
+                                    {describeWorkCycle(
+                                      row.billing_work_status,
+                                      row.billing_last_deferred_reason,
+                                      row.billing_next_attempt_at,
+                                      row.billing_work_error,
+                                      row.billing_work_attempts,
+                                      row.billing_work_max_attempts,
+                                      row.billing_last_claimed_at,
+                                      row.billing_last_processed_at
+                                    ) ? (
                                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-blue-100/60">
-                                        {describeWorkCycle(row.billing_work_status, row.billing_last_deferred_reason, row.billing_next_attempt_at)}
+                                        {describeWorkCycle(
+                                          row.billing_work_status,
+                                          row.billing_last_deferred_reason,
+                                          row.billing_next_attempt_at,
+                                          row.billing_work_error,
+                                          row.billing_work_attempts,
+                                          row.billing_work_max_attempts,
+                                          row.billing_last_claimed_at,
+                                          row.billing_last_processed_at
+                                        )}
                                       </div>
                                     ) : null}
                                   </div>
@@ -537,6 +828,12 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="space-y-2">
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Updated</div>
                                     <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.last_updated_at)}</div>
+                                    {(row.recovery_last_processed_at || row.billing_last_processed_at) ? (
+                                      <>
+                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Finality Activity</div>
+                                        <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_last_processed_at || row.billing_last_processed_at)}</div>
+                                      </>
+                                    ) : null}
                                     {(row.recovery_next_attempt_at || row.billing_next_attempt_at) ? (
                                       <>
                                         <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Next Attempt</div>
@@ -635,12 +932,16 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Recovery Work Item', value: detailsRow.recovery_work_item_id || 'Not available' },
                   { label: 'Recovery Lane', value: detailsRow.recovery_execution_lane ? label(detailsRow.recovery_execution_lane) : 'Not available' },
                   { label: 'Recovery Runtime', value: detailsRow.recovery_last_runtime_role ? label(detailsRow.recovery_last_runtime_role) : 'Not available' },
+                  { label: 'Recovery Lock Owner', value: detailsRow.recovery_locked_by || 'Not available' },
                   { label: 'Recovery Attempts', value: String(detailsRow.recovery_work_attempts ?? 0) },
+                  { label: 'Recovery Max Attempts', value: String(detailsRow.recovery_work_max_attempts ?? 0) },
                   { label: 'Recovery Defers', value: String(detailsRow.recovery_defer_count ?? 0) },
                   { label: 'Deferred Reason', value: detailsRow.recovery_last_deferred_reason ? label(detailsRow.recovery_last_deferred_reason) : 'None' },
                   { label: 'Last Claimed', value: stamp(detailsRow.recovery_last_claimed_at) },
                   { label: 'Last Processed', value: stamp(detailsRow.recovery_last_processed_at) },
+                  { label: 'Execution Processed', value: stamp(detailsRow.recovery_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.recovery_next_attempt_at) },
+                  { label: 'Lifecycle State', value: detailsRow.recovery_lifecycle_state ? label(detailsRow.recovery_lifecycle_state) : 'Not available' },
                   { label: 'Recovery Error', value: detailsRow.recovery_work_error || 'None' },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
                 ]}
@@ -661,12 +962,16 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Billing Work Item', value: detailsRow.billing_work_item_id || 'Not available' },
                   { label: 'Billing Lane', value: detailsRow.billing_execution_lane ? label(detailsRow.billing_execution_lane) : 'Not available' },
                   { label: 'Billing Runtime', value: detailsRow.billing_last_runtime_role ? label(detailsRow.billing_last_runtime_role) : 'Not available' },
+                  { label: 'Billing Lock Owner', value: detailsRow.billing_locked_by || 'Not available' },
                   { label: 'Billing Attempts', value: String(detailsRow.billing_work_attempts ?? 0) },
+                  { label: 'Billing Max Attempts', value: String(detailsRow.billing_work_max_attempts ?? 0) },
                   { label: 'Billing Defers', value: String(detailsRow.billing_defer_count ?? 0) },
                   { label: 'Deferred Reason', value: detailsRow.billing_last_deferred_reason ? label(detailsRow.billing_last_deferred_reason) : 'None' },
                   { label: 'Last Claimed', value: stamp(detailsRow.billing_last_claimed_at) },
                   { label: 'Last Processed', value: stamp(detailsRow.billing_last_processed_at) },
+                  { label: 'Execution Processed', value: stamp(detailsRow.billing_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.billing_next_attempt_at) },
+                  { label: 'Lifecycle State', value: detailsRow.billing_lifecycle_state ? label(detailsRow.billing_lifecycle_state) : 'Not available' },
                   { label: 'Billing Error', value: detailsRow.billing_work_error || 'None' },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },
