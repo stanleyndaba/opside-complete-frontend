@@ -165,15 +165,6 @@ const Settings = () => {
   const isAmazonConnected = sellerProfile.amazon_connected ?? false;
   const linkedMarketplaces = sellerProfile.linked_marketplaces || [];
   const paypalActive = !!sellerProfile.paypal_payment_token || !!sellerProfile.paypal_email;
-  const identityName = sellerProfile.name || sellerProfile.email || (loadingProfile ? 'Loading identity...' : 'Not available');
-  const identityFields = [
-    { label: 'User ID', value: sellerProfile.id || 'Not available' },
-    { label: 'Email', value: sellerProfile.email || 'Not available' },
-    { label: 'Name', value: sellerProfile.name || 'Not set' },
-    { label: 'Workspace Role', value: sellerProfile.role || 'Not available' },
-    { label: 'Workspace', value: sellerProfile.tenant_name || tenant?.name || 'Not available' },
-    { label: 'Last Login', value: formatDate(sellerProfile.last_login) },
-  ];
 
   const connectionScope = useMemo(() => {
     if (linkedMarketplaces.length > 0) {
@@ -207,6 +198,15 @@ const Settings = () => {
       return 'Not available';
     }
   };
+  const identityName = sellerProfile.name || sellerProfile.email || (loadingProfile ? 'Loading identity...' : 'Not available');
+  const identityFields = [
+    { label: 'User ID', value: sellerProfile.id || 'Not available' },
+    { label: 'Email', value: sellerProfile.email || 'Not available' },
+    { label: 'Name', value: sellerProfile.name || 'Not set' },
+    { label: 'Workspace Role', value: sellerProfile.role || 'Not available' },
+    { label: 'Workspace', value: sellerProfile.tenant_name || tenant?.name || 'Not available' },
+    { label: 'Last Login', value: formatDate(sellerProfile.last_login) },
+  ];
 
   const marketplaceNames: Record<string, { name: string; flag: string }> = {
     ATVPDKIKX0DER: { name: 'United States', flag: 'US' },
