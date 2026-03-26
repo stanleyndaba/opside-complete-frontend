@@ -598,7 +598,7 @@ export default function DataUpload() {
                                         <p className="text-[11px] text-white/20 mt-2">
                                             {supportedTypeNames.length > 0
                                                 ? `Supported now: ${supportedTypeNames.join(', ')}`
-                                                : 'Supported now: orders, shipments, returns, settlements, inventory, financial events, fees'}
+                                                : 'Supported now: orders, shipments, returns, settlements, inventory, financial events, fees, transfers'}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-4 mt-2 text-[10px] text-white/20 font-sans font-bold tracking-tight uppercase">
