@@ -98,7 +98,9 @@ export function Navbar({
     name?: string;
     company_name?: string;
     amazon_seller_id?: string;
+    amazon_display_name?: string;
     amazon_connected?: boolean;
+    amazon_status?: 'connected' | 'not_connected' | 'unknown';
     stripe_connected?: boolean;
     created_at?: string;
     last_login?: string;
@@ -130,8 +132,12 @@ export function Navbar({
             email: me.email,
             name: me.name || me.company_name || me.email || undefined,
             company_name: me.company_name,
-            amazon_seller_id: me.amazon_seller_id || me.seller_id || status?.amazon_account?.seller_id,
-            amazon_connected: status?.amazon_connected ?? me.amazon_connected ?? false,
+            amazon_seller_id: status?.amazon_account?.seller_id || undefined,
+            amazon_display_name: status?.amazon_account?.display_name || undefined,
+            amazon_connected: status?.amazon_connected ?? false,
+            amazon_status: status
+              ? (status.amazon_connected ? 'connected' : 'not_connected')
+              : 'unknown',
             stripe_connected: me.stripe_connected,
             created_at: me.created_at,
             last_login: me.last_login,
@@ -144,10 +150,11 @@ export function Navbar({
           setUserProfile((prev) => ({
             ...(prev || {}),
             id: prev?.id || localStorage.getItem('user_id') || undefined,
+            email: prev?.email || localStorage.getItem('user_email') || undefined,
             amazon_connected: status.amazon_connected ?? false,
+            amazon_status: status.amazon_connected ? 'connected' : 'not_connected',
             amazon_seller_id: status.amazon_account?.seller_id,
-            name: prev?.name || status.amazon_account?.display_name,
-            email: prev?.email || localStorage.getItem('user_email') || status.amazon_account?.email
+            amazon_display_name: status.amazon_account?.display_name
           }));
         }
       } catch (e) {
@@ -158,6 +165,24 @@ export function Navbar({
     };
     fetchProfile();
   }, [activeTenantSlug]);
+
+  const amazonStatusLabel =
+    isProfileLoading || !userProfile?.amazon_status
+      ? 'Loading...'
+      : userProfile.amazon_status === 'connected'
+        ? 'Connected'
+        : userProfile.amazon_status === 'not_connected'
+          ? 'Not connected'
+          : 'Unknown';
+
+  const amazonStatusHeaderLabel =
+    isProfileLoading || !userProfile?.amazon_status
+      ? 'Checking Amazon Status'
+      : userProfile.amazon_status === 'connected'
+        ? 'Amazon Connected'
+        : userProfile.amazon_status === 'not_connected'
+          ? 'Amazon Not Connected'
+          : 'Amazon Status Unknown';
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
@@ -583,10 +608,10 @@ export function Navbar({
                   <h3 className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">{userProfile?.name || userProfile?.company_name || userProfile?.email || 'My Account'}</h3>
                   <div className="flex items-center gap-2 mt-2">
                     <div className="relative flex h-1.5 w-1.5">
-                      <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", userProfile?.amazon_connected ? "bg-emerald-400" : "bg-amber-400")}></span>
-                      <span className={cn("relative inline-flex rounded-full h-1.5 w-1.5", userProfile?.amazon_connected ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]")}></span>
+                      <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", userProfile?.amazon_status === 'connected' ? "bg-emerald-400" : userProfile?.amazon_status === 'not_connected' ? "bg-amber-400" : "bg-white/20")}></span>
+                      <span className={cn("relative inline-flex rounded-full h-1.5 w-1.5", userProfile?.amazon_status === 'connected' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : userProfile?.amazon_status === 'not_connected' ? "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" : "bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.15)]")}></span>
                     </div>
-                    <p className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", userProfile?.amazon_connected ? "text-emerald-500/50" : "text-amber-500/50")}>{userProfile?.amazon_connected ? 'Amazon Connected' : 'Amazon Not Connected'}</p>
+                    <p className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", userProfile?.amazon_status === 'connected' ? "text-emerald-500/50" : userProfile?.amazon_status === 'not_connected' ? "text-amber-500/50" : "text-white/40")}>{amazonStatusHeaderLabel}</p>
                   </div>
                 </div>
 
@@ -594,10 +619,13 @@ export function Navbar({
                   {/* Compact Data Grid */}
                   <div className="grid grid-cols-1 gap-y-4">
                     {[
-                      { label: 'Account ID', value: userProfile?.amazon_seller_id || (userProfile?.id ? userProfile.id.substring(0, 12) + '...' : (isProfileLoading ? 'Loading...' : 'Not available')) },
+                      { label: 'User ID', value: userProfile?.id ? userProfile.id.substring(0, 12) + '...' : (isProfileLoading ? 'Loading...' : 'Not available') },
                       { label: 'Email', value: userProfile?.email || (isProfileLoading ? 'Loading...' : 'Not available') },
                       { label: 'Name', value: userProfile?.name || userProfile?.company_name || (isProfileLoading ? 'Loading...' : 'Not set') },
-                      { label: 'Amazon', value: userProfile?.amazon_connected ? 'Connected' : 'Not connected' },
+                      { label: 'Workspace Role', value: userProfile?.role || (isProfileLoading ? 'Loading...' : 'Not available') },
+                      { label: 'Amazon Seller ID', value: userProfile?.amazon_seller_id || (isProfileLoading ? 'Loading...' : 'Not connected') },
+                      { label: 'Amazon Account', value: userProfile?.amazon_display_name || (isProfileLoading ? 'Loading...' : 'Not available') },
+                      { label: 'Amazon Status', value: amazonStatusLabel },
                       { label: 'Member Since', value: userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : (isProfileLoading ? 'Loading...' : '—') }
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between gap-4 group/item">
