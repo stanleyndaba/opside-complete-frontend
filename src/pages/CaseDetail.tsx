@@ -25,6 +25,17 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
+import {
+  formatDisputeReason,
+  formatPayoutProofStatus,
+  formatProofStatus,
+  formatRequirementList,
+  getManualReviewReason,
+  getMissingRequirements,
+  getPayoutProofStatus,
+  getProofStatus,
+  getQuarantineReason
+} from '@/lib/disputeProof';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { ClaimPdfService } from '@/services/ClaimPdfService';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
@@ -257,6 +268,16 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   filing_status: apiData.filing_status || null,
   recovery_status: apiData.recovery_status || null,
   billing_status: apiData.billing_status || null,
+  block_reasons: Array.isArray(apiData.block_reasons) ? apiData.block_reasons : [],
+  proof_status: apiData.proof_status || apiData.evidence_attachments?.decision_intelligence?.proof_snapshot?.filingRecommendation || null,
+  missing_requirements: Array.isArray(apiData.missing_requirements)
+    ? apiData.missing_requirements
+    : (Array.isArray(apiData.evidence_attachments?.decision_intelligence?.proof_snapshot?.missingRequirements)
+      ? apiData.evidence_attachments.decision_intelligence.proof_snapshot.missingRequirements
+      : []),
+  manual_review_reason: apiData.manual_review_reason || null,
+  payout_proof_status: apiData.payout_proof_status || null,
+  quarantine_reason: apiData.quarantine_reason || apiData.last_error || null,
   updated_at: apiData.updated_at || apiData.created_at || apiData.createdDate || null,
   guaranteedAmount: apiData.guaranteedAmount ?? apiData.requested_amount ?? apiData.claim_amount ?? apiData.estimated_claim_value ?? apiData.estimated_value ?? null,
   estimated_claim_value: apiData.estimated_claim_value ?? apiData.estimated_recovery_amount ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null,
@@ -475,6 +496,16 @@ export default function CaseDetail() {
     filing_status: passedClaim.filing_status || null,
     recovery_status: passedClaim.recovery_status || null,
     billing_status: passedClaim.billing_status || null,
+    block_reasons: Array.isArray(passedClaim.block_reasons) ? passedClaim.block_reasons : [],
+    proof_status: passedClaim.proof_status || passedClaim.evidence_attachments?.decision_intelligence?.proof_snapshot?.filingRecommendation || null,
+    missing_requirements: Array.isArray(passedClaim.missing_requirements)
+      ? passedClaim.missing_requirements
+      : (Array.isArray(passedClaim.evidence_attachments?.decision_intelligence?.proof_snapshot?.missingRequirements)
+        ? passedClaim.evidence_attachments.decision_intelligence.proof_snapshot.missingRequirements
+        : []),
+    manual_review_reason: passedClaim.manual_review_reason || null,
+    payout_proof_status: passedClaim.payout_proof_status || null,
+    quarantine_reason: passedClaim.quarantine_reason || passedClaim.last_error || null,
     guaranteedAmount: passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
     estimated_claim_value: passedClaim.estimated_claim_value ?? passedClaim.estimated_recovery_amount ?? passedClaim.estimated_value ?? passedClaim.guaranteedAmount ?? null,
     requested_amount: passedClaim.requested_amount ?? passedClaim.claim_amount ?? passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
@@ -713,6 +744,11 @@ export default function CaseDetail() {
   const resolvedStoreName = effectiveCase?.store_name || effectiveCase?.seller_name || null;
   const nextStep = effectiveCase?.next_step_context || null;
   const generatedContext = effectiveCase?.generated_context || null;
+  const proofStatus = getProofStatus(effectiveCase);
+  const missingRequirements = getMissingRequirements(effectiveCase);
+  const manualReviewReason = getManualReviewReason(effectiveCase);
+  const payoutProofStatus = getPayoutProofStatus(effectiveCase);
+  const quarantineReason = getQuarantineReason(effectiveCase);
   const evidenceEvents = useMemo(() => (Array.isArray(caseData?.events) ? caseData.events.filter(isEvidenceRelatedEvent) : []), [caseData?.events]);
   const rejectionPlaybookReason = useMemo<RejectionReason | null>(() => {
     const category = effectiveCase?.rejection_category;
@@ -1161,6 +1197,18 @@ export default function CaseDetail() {
                           <dd className="text-xs font-sans font-bold text-white">{toStatusLabel(effectiveCase.billing_status)}</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Proof Status</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {formatProofStatus(proofStatus)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Payout Proof</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {formatPayoutProofStatus(payoutProofStatus)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Issue Identified</dt>
                           <dd className="text-xs font-sans font-bold text-white">
                             {formatDateOrDash(effectiveCase.created_at || effectiveCase.createdDate || effectiveCase.discovery_date)}
@@ -1170,6 +1218,40 @@ export default function CaseDetail() {
                           <dt className="text-[11px] text-white/40 font-medium">Last Updated</dt>
                           <dd className="text-xs font-sans font-bold text-white">
                             {formatDateOrDash(effectiveCase.updated_at || effectiveCase.created_at || effectiveCase.createdDate)}
+                          </dd>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="flex items-center gap-2 text-[10px] font-bold text-white/30 border-b border-white/10 pb-2.5 tracking-tight">
+                        <div className="h-1 w-2 bg-white/50 rounded-full" /> Proof & Review
+                      </h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Missing Requirements</dt>
+                          <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
+                            {formatRequirementList(missingRequirements)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Manual Review Reason</dt>
+                          <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
+                            {manualReviewReason ? formatDisputeReason(manualReviewReason) : '-'}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Block Reasons</dt>
+                          <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
+                            {Array.isArray(effectiveCase?.block_reasons) && effectiveCase.block_reasons.length
+                              ? effectiveCase.block_reasons.map((reason: string) => formatDisputeReason(reason)).join(', ')
+                              : '-'}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Quarantine Reason</dt>
+                          <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
+                            {quarantineReason || '-'}
                           </dd>
                         </div>
                       </div>

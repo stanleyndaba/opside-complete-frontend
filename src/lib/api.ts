@@ -1828,6 +1828,11 @@ export const api = {
         billed_amount: number | null;
         currency: string;
         evidence_state: string;
+        proof_status: string | null;
+        missing_requirements: string[];
+        manual_review_reason: string | null;
+        payout_proof_status: string | null;
+        quarantine_reason: string | null;
         matched_document_count: number;
         rejection_category: string | null;
         rejection_reason: string | null;

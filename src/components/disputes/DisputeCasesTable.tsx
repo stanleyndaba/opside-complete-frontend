@@ -9,6 +9,19 @@ import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { normalizeTenantSlug } from '@/lib/routes';
+import {
+  formatDisputeReason,
+  formatPayoutProofStatus,
+  formatProofStatus,
+  formatRequirementList,
+  getManualReviewReason,
+  getMissingRequirements,
+  getPayoutProofStatus,
+  getProofStatus,
+  getQuarantineReason,
+  payoutProofTone,
+  proofStatusTone
+} from '@/lib/disputeProof';
 import { cn } from '@/lib/utils';
 
 interface DisputeCasesTableProps {
@@ -55,6 +68,11 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
     billed_amount: null,
     currency: item.currency || 'USD',
     evidence_state: 'Not available',
+    proof_status: null,
+    missing_requirements: [],
+    manual_review_reason: null,
+    payout_proof_status: actualPayoutAmount != null ? 'verified' : approvedAmount != null ? 'awaiting_payout' : null,
+    quarantine_reason: null,
     matched_document_count: 0,
     rejection_category: null,
     rejection_reason: null,
@@ -226,6 +244,15 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
           {rows.map((row) => (
             <Card key={row.dispute_case_id} className="bg-white/[0.01] border-white/5 text-white rounded-2xl">
               <CardContent className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                {(() => {
+                  const proofStatus = getProofStatus(row);
+                  const missingRequirements = getMissingRequirements(row);
+                  const manualReviewReason = getManualReviewReason(row);
+                  const payoutProofStatus = getPayoutProofStatus(row);
+                  const quarantineReason = getQuarantineReason(row);
+
+                  return (
+                    <>
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <Link to={`/recoveries/${row.dispute_case_id}`} className="text-sm font-sans font-bold text-white hover:text-emerald-300">
@@ -234,15 +261,37 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
                     <Badge variant="outline" className={cn('border', badgeClass(row.status))}>{row.status || 'Not available'}</Badge>
                     <Badge variant="outline" className={cn('border', badgeClass(row.filing_status))}>{row.filing_status || 'Not available'}</Badge>
                     <Badge variant="outline" className={cn('border', badgeClass(row.evidence_state))}>{row.evidence_state}</Badge>
+                    {proofStatus ? (
+                      <Badge variant="outline" className={cn('border', proofStatusTone(proofStatus))}>
+                        Proof: {formatProofStatus(proofStatus)}
+                      </Badge>
+                    ) : null}
+                    {payoutProofStatus && payoutProofStatus !== 'not_applicable' ? (
+                      <Badge variant="outline" className={cn('border', payoutProofTone(payoutProofStatus))}>
+                        Payout: {formatPayoutProofStatus(payoutProofStatus)}
+                      </Badge>
+                    ) : null}
                   </div>
                   <div className="text-[11px] font-sans text-white/45 space-y-1">
                     <div>Next Action: {row.next_action}</div>
                     <div>Requested: {formatMoney(row.requested_amount, row.currency)} | Approved: {formatMoney(row.approved_amount, row.currency)} | Recovered: {formatMoney(row.actual_payout_amount, row.currency)}</div>
+                    {missingRequirements.length ? (
+                      <div>Missing: {formatRequirementList(missingRequirements, 2)}</div>
+                    ) : null}
+                    {manualReviewReason ? (
+                      <div>Review: {formatDisputeReason(manualReviewReason)}</div>
+                    ) : null}
+                    {quarantineReason ? (
+                      <div>Quarantine: {quarantineReason}</div>
+                    ) : null}
                   </div>
                 </div>
                 <div className="text-[11px] font-sans text-white/40">
                   Matched Docs: {row.matched_document_count}
                 </div>
+                    </>
+                  );
+                })()}
               </CardContent>
             </Card>
           ))}

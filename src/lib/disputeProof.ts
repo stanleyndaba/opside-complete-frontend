@@ -1,0 +1,174 @@
+type ProofSnapshotLike = {
+  filingRecommendation?: string | null;
+  missingRequirements?: unknown;
+  riskFlags?: unknown;
+};
+
+type DisputeProofLike = {
+  proof_status?: string | null;
+  missing_requirements?: unknown;
+  manual_review_reason?: string | null;
+  payout_proof_status?: string | null;
+  quarantine_reason?: string | null;
+  block_reasons?: unknown;
+  last_error?: string | null;
+  actual_payout_amount?: number | null;
+  recovered_amount?: number | null;
+  approved_amount?: number | null;
+  status?: string | null;
+  recovery_status?: string | null;
+  evidence_attachments?: {
+    decision_intelligence?: {
+      proof_snapshot?: ProofSnapshotLike | null;
+    } | null;
+  } | null;
+};
+
+const DISPUTE_REASON_LABELS: Record<string, string> = {
+  rejected_by_amazon: 'Rejected before',
+  rejected_without_reason: 'Rejected before',
+  missing_evidence_links: 'Missing evidence',
+  missing_required_doc_family: 'Missing required document family',
+  wrong_claim_type: 'Wrong claim type',
+  invalid_invoice_date: 'Invoice date mismatch',
+  weak_pod_evidence: 'Weak POD evidence',
+  amount_mismatch: 'Amount mismatch',
+  dimension_proof_required: 'Dimension proof required',
+  duplicate_active_claim_for_order: 'Duplicate active claim',
+  already_reimbursed: 'Already reimbursed',
+  claim_below_minimum_threshold: 'Below filing threshold',
+  manual_approval_required_high_value: 'Manual approval required',
+  dangerous_document_filename: 'Unsafe document filename',
+  dangerous_document_content: 'Unsafe document content',
+  low_success_probability: 'Low historical success probability',
+  user_auto_file_disabled: 'Seller auto-file disabled',
+  user_disabled_auto_file: 'Seller auto-file disabled',
+  queue_unavailable: 'Queue unavailable',
+  missing_required_identifiers: 'Missing required identifiers',
+  outside_claim_window: 'Outside claim window',
+};
+
+function normalizeToken(value: unknown): string {
+  return String(value || '').trim().toLowerCase();
+}
+
+function humanize(value: string | null | undefined): string {
+  if (!value) return 'Not available';
+  const normalized = String(value).replace(/[_-]+/g, ' ').trim();
+  if (!normalized) return 'Not available';
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+export function normalizeStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item || '').trim()).filter(Boolean);
+  }
+  if (typeof value === 'string' && value.trim()) {
+    return [value.trim()];
+  }
+  return [];
+}
+
+export function formatDisputeReason(value: string | null | undefined): string {
+  const normalized = normalizeToken(value);
+  return DISPUTE_REASON_LABELS[normalized] || humanize(value);
+}
+
+export function formatRequirement(value: string | null | undefined): string {
+  return humanize(value);
+}
+
+export function formatRequirementList(values: unknown, limit = 3): string {
+  const items = normalizeStringArray(values).map(formatRequirement);
+  if (!items.length) return 'None recorded';
+  if (items.length <= limit) return items.join(', ');
+  return `${items.slice(0, limit).join(', ')} +${items.length - limit} more`;
+}
+
+export function getProofSnapshot(record: DisputeProofLike | null | undefined): ProofSnapshotLike | null {
+  if (!record || typeof record !== 'object') return null;
+  return record.evidence_attachments?.decision_intelligence?.proof_snapshot || null;
+}
+
+export function getProofStatus(record: DisputeProofLike | null | undefined): string | null {
+  const explicit = normalizeToken(record?.proof_status);
+  if (explicit) return explicit;
+  const snapshotStatus = normalizeToken(getProofSnapshot(record)?.filingRecommendation);
+  return snapshotStatus || null;
+}
+
+export function getMissingRequirements(record: DisputeProofLike | null | undefined): string[] {
+  const direct = normalizeStringArray(record?.missing_requirements);
+  if (direct.length) return direct;
+  return normalizeStringArray(getProofSnapshot(record)?.missingRequirements);
+}
+
+export function getManualReviewReason(record: DisputeProofLike | null | undefined): string | null {
+  if (record?.manual_review_reason) return record.manual_review_reason;
+  const blockReason = normalizeStringArray(record?.block_reasons)[0];
+  if (blockReason) return blockReason;
+  const riskFlag = normalizeStringArray(getProofSnapshot(record)?.riskFlags)[0];
+  return riskFlag || null;
+}
+
+export function getPayoutProofStatus(record: DisputeProofLike | null | undefined): string | null {
+  const explicit = normalizeToken(record?.payout_proof_status);
+  if (explicit) return explicit;
+  if (record?.actual_payout_amount != null || record?.recovered_amount != null) return 'verified';
+  if (normalizeToken(record?.recovery_status) === 'quarantined') return 'quarantined';
+  if (record?.approved_amount != null || ['approved', 'resolved', 'won'].includes(normalizeToken(record?.status))) {
+    return 'awaiting_payout';
+  }
+  return null;
+}
+
+export function getQuarantineReason(record: DisputeProofLike | null | undefined): string | null {
+  return record?.quarantine_reason || record?.last_error || null;
+}
+
+export function formatProofStatus(value: string | null | undefined): string {
+  const normalized = normalizeToken(value);
+  const labels: Record<string, string> = {
+    filing_ready: 'Filing ready',
+    manual_review: 'Manual review',
+    ineligible: 'Ineligible',
+  };
+  return labels[normalized] || humanize(value);
+}
+
+export function proofStatusTone(value: string | null | undefined): string {
+  switch (normalizeToken(value)) {
+    case 'filing_ready':
+      return 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300';
+    case 'manual_review':
+      return 'border-amber-500/20 bg-amber-500/10 text-amber-300';
+    case 'ineligible':
+      return 'border-red-500/20 bg-red-500/10 text-red-300';
+    default:
+      return 'border-white/10 bg-white/5 text-white/50';
+  }
+}
+
+export function formatPayoutProofStatus(value: string | null | undefined): string {
+  const normalized = normalizeToken(value);
+  const labels: Record<string, string> = {
+    verified: 'Verified',
+    awaiting_payout: 'Awaiting payout',
+    quarantined: 'Quarantined',
+    not_applicable: 'Not applicable',
+  };
+  return labels[normalized] || humanize(value);
+}
+
+export function payoutProofTone(value: string | null | undefined): string {
+  switch (normalizeToken(value)) {
+    case 'verified':
+      return 'border-white/15 bg-white/10 text-white/80';
+    case 'awaiting_payout':
+      return 'border-blue-500/20 bg-blue-500/10 text-blue-300';
+    case 'quarantined':
+      return 'border-amber-500/20 bg-amber-500/10 text-amber-300';
+    default:
+      return 'border-white/10 bg-white/5 text-white/50';
+  }
+}

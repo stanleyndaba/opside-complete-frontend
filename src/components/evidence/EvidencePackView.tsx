@@ -5,6 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
+import {
+  formatDisputeReason,
+  formatPayoutProofStatus,
+  formatProofStatus,
+  formatRequirementList,
+  getManualReviewReason,
+  getMissingRequirements,
+  getPayoutProofStatus,
+  getProofStatus,
+  getQuarantineReason
+} from '@/lib/disputeProof';
 import { EvidenceAuditTrail } from './EvidenceAuditTrail';
 import { DocumentChecklist } from './DocumentChecklist';
 
@@ -70,6 +81,11 @@ interface PacketModel {
   filingStatus?: string | null;
   recoveryStatus?: string | null;
   billingStatus?: string | null;
+  proofStatus?: string | null;
+  missingRequirements: string[];
+  manualReviewReason?: string | null;
+  payoutProofStatus?: string | null;
+  quarantineReason?: string | null;
   requestedAmount?: number | null;
   approvedAmount?: number | null;
   actualPayoutAmount?: number | null;
@@ -167,6 +183,11 @@ function normalizeRecoveryDetail(detail: any): PacketModel {
     filingStatus: detail?.filing_status || null,
     recoveryStatus: detail?.recovery_status || null,
     billingStatus: detail?.billing_status || null,
+    proofStatus: getProofStatus(detail),
+    missingRequirements: getMissingRequirements(detail),
+    manualReviewReason: getManualReviewReason(detail),
+    payoutProofStatus: getPayoutProofStatus(detail),
+    quarantineReason: getQuarantineReason(detail),
     requestedAmount: toNumber(detail?.requested_amount),
     approvedAmount: toNumber(detail?.approved_amount),
     actualPayoutAmount: toNumber(detail?.actual_payout_amount),
@@ -192,6 +213,11 @@ function normalizeLegacyClaim(claim: LegacyClaim): PacketModel {
     claimReference: claim.claim_number || claim.id,
     claimType: claim.anomaly_type || claim.type || null,
     status: claim.status,
+    proofStatus: null,
+    missingRequirements: [],
+    manualReviewReason: null,
+    payoutProofStatus: null,
+    quarantineReason: null,
     detectedAt: claim.discovery_date || claim.created || claim.created_at || null,
     orderId: claim.details || null,
     sku: claim.sku || null,
@@ -234,6 +260,11 @@ function renderPacketHtml(packet: PacketModel) {
     ['Filing Status', formatLabel(packet.filingStatus)],
     ['Recovery Status', formatLabel(packet.recoveryStatus)],
     ['Billing Status', formatLabel(packet.billingStatus)],
+    ['Proof Status', formatProofStatus(packet.proofStatus)],
+    ['Payout Proof', formatPayoutProofStatus(packet.payoutProofStatus)],
+    ['Missing Requirements', formatRequirementList(packet.missingRequirements)],
+    ['Manual Review Reason', packet.manualReviewReason ? formatDisputeReason(packet.manualReviewReason) : 'Not available'],
+    ['Quarantine Reason', packet.quarantineReason || 'Not available'],
     ['Requested Amount', formatCurrency(packet.requestedAmount)],
     ['Approved Amount', formatCurrency(packet.approvedAmount)],
     ['Actual Payout', formatCurrency(packet.actualPayoutAmount)],
@@ -430,6 +461,15 @@ export function EvidencePackView({ open, onClose, claimId, tenantSlug, claim }: 
                   {packet.filingStatus ? <SummaryRow label="Filing Status" value={formatLabel(packet.filingStatus)} /> : null}
                   {packet.recoveryStatus ? <SummaryRow label="Recovery Status" value={formatLabel(packet.recoveryStatus)} /> : null}
                   {packet.billingStatus ? <SummaryRow label="Billing Status" value={formatLabel(packet.billingStatus)} /> : null}
+                  <SummaryRow label="Proof Status" value={formatProofStatus(packet.proofStatus)} />
+                  <SummaryRow label="Payout Proof" value={formatPayoutProofStatus(packet.payoutProofStatus)} />
+                  <SummaryRow label="Missing Requirements" value={formatRequirementList(packet.missingRequirements)} />
+                  {packet.manualReviewReason ? (
+                    <SummaryRow label="Manual Review Reason" value={formatDisputeReason(packet.manualReviewReason)} />
+                  ) : null}
+                  {packet.quarantineReason ? (
+                    <SummaryRow label="Quarantine Reason" value={packet.quarantineReason} />
+                  ) : null}
                   <SummaryRow label="Requested Amount" value={formatCurrency(packet.requestedAmount)} />
                   {packet.approvedAmount !== null && packet.approvedAmount !== undefined ? (
                     <SummaryRow label="Approved Amount" value={formatCurrency(packet.approvedAmount)} />

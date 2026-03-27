@@ -15,6 +15,20 @@ import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import {
+  formatDisputeReason,
+  formatPayoutProofStatus,
+  formatProofStatus,
+  formatRequirement,
+  formatRequirementList,
+  getManualReviewReason,
+  getMissingRequirements,
+  getPayoutProofStatus,
+  getProofStatus,
+  getQuarantineReason,
+  payoutProofTone,
+  proofStatusTone
+} from '@/lib/disputeProof';
+import {
   financialSourceLabel,
   financialStatusDetail,
   financialStatusLabel,
@@ -66,24 +80,7 @@ function badgeClass(value: string | null | undefined) {
 }
 
 function formatBlockReason(value: string) {
-  const mapped: Record<string, string> = {
-    rejected_by_amazon: 'Rejected before',
-    rejected_without_reason: 'Rejected before',
-    missing_evidence_links: 'Missing evidence',
-    wrong_claim_type: 'Wrong claim type',
-    invalid_invoice_date: 'Invoice date mismatch',
-    weak_pod_evidence: 'Weak POD evidence',
-    amount_mismatch: 'Amount mismatch',
-    dimension_proof_required: 'Dimension proof required',
-    duplicate_active_claim_for_order: 'Duplicate active claim',
-    already_reimbursed: 'Already reimbursed',
-    claim_below_minimum_threshold: 'Below filing threshold',
-    manual_approval_required_high_value: 'Manual approval required',
-    dangerous_document_filename: 'Unsafe document filename',
-    dangerous_document_content: 'Unsafe document content',
-  };
-
-  return mapped[value] || formatLabel(value);
+  return formatDisputeReason(value);
 }
 
 function formatCompactDate(value: string | null | undefined) {
@@ -116,6 +113,11 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   const billingStatus = String(row.billing_status || '').toLowerCase();
   const evidenceState = String(row.evidence_state || '').toLowerCase();
   const blockReasons = Array.isArray(row.block_reasons) ? row.block_reasons : [];
+  const proofStatus = getProofStatus(row);
+  const missingRequirements = getMissingRequirements(row);
+  const manualReviewReason = getManualReviewReason(row);
+  const payoutProofStatus = getPayoutProofStatus(row);
+  const quarantineReason = getQuarantineReason(row);
 
   const strengths: string[] = [];
   const risks: string[] = [];
@@ -147,12 +149,50 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     risks.push(...blockReasons.map(formatBlockReason));
   }
 
+  if (proofStatus === 'filing_ready') {
+    strengths.push('Proof packet ready');
+  } else if (proofStatus === 'manual_review') {
+    risks.push('Proof needs review');
+  } else if (proofStatus === 'ineligible') {
+    risks.push('Proof not filing ready');
+  }
+
+  if (missingRequirements.length) {
+    risks.push(...missingRequirements.slice(0, 2).map(formatRequirement));
+  }
+
+  if (manualReviewReason) {
+    risks.push(formatDisputeReason(manualReviewReason));
+  }
+
   if (row.rejection_reason) {
     risks.push('Prior rejection to address');
   }
 
+  if (payoutProofStatus === 'verified') {
+    strengths.push('Payout verified');
+  } else if (payoutProofStatus === 'awaiting_payout') {
+    strengths.push('Awaiting payout confirmation');
+  } else if (payoutProofStatus === 'quarantined') {
+    risks.push('Payout quarantined');
+  }
+
+  if (quarantineReason) {
+    risks.push(quarantineReason);
+  }
+
   if (row.expected_payout_date && row.approved_amount != null && row.actual_payout_amount == null) {
     strengths.push(`Est. payout ${formatCompactDate(row.expected_payout_date)}`);
+  }
+
+  if (payoutProofStatus === 'verified' && !financialSummary) {
+    return {
+      tone: 'resolved',
+      headline: 'Payment verified',
+      detail: 'The payout has already been verified and tied back to the case record.',
+      strengths: strengths.slice(0, 3),
+      risks: []
+    };
   }
 
   if (financialSummary?.payout_status === 'paid') {
@@ -1006,8 +1046,8 @@ export default function DisputeCases() {
                                 ? { label: 'File', mode: 'file' as const }
                                 : null;
 
-                        return (
-                          <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
+                      return (
+                        <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
                             <td className="px-6 py-5">
                               <div className="space-y-2 min-w-[220px]">
                                 <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
@@ -1045,8 +1085,21 @@ export default function DisputeCases() {
                                 <Badge variant="outline" className={cn('border', badgeClass(row.evidence_state))}>
                                   {row.evidence_state}
                                 </Badge>
+                                {getProofStatus(row) ? (
+                                  <Badge variant="outline" className={cn('border', proofStatusTone(getProofStatus(row)))}>
+                                    Proof: {formatProofStatus(getProofStatus(row))}
+                                  </Badge>
+                                ) : null}
+                                {getPayoutProofStatus(row) && getPayoutProofStatus(row) !== 'not_applicable' ? (
+                                  <Badge variant="outline" className={cn('border', payoutProofTone(getPayoutProofStatus(row)))}>
+                                    Payout: {formatPayoutProofStatus(getPayoutProofStatus(row))}
+                                  </Badge>
+                                ) : null}
                                 <div className="text-[11px] text-white/50 font-sans space-y-1">
                                   <div>Matched Docs: {row.matched_document_count}</div>
+                                  {getMissingRequirements(row).length ? (
+                                    <div>Missing: {formatRequirementList(getMissingRequirements(row), 2)}</div>
+                                  ) : null}
                                 </div>
                               </div>
                             </td>
@@ -1060,6 +1113,16 @@ export default function DisputeCases() {
                                   </Badge>
                                 </div>
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
+                                {getManualReviewReason(row) ? (
+                                  <p className="text-[11px] font-sans leading-5 text-white/38">
+                                    Review reason: {formatDisputeReason(getManualReviewReason(row))}
+                                  </p>
+                                ) : null}
+                                {getQuarantineReason(row) ? (
+                                  <p className="text-[11px] font-sans leading-5 text-white/38">
+                                    Quarantine: {getQuarantineReason(row)}
+                                  </p>
+                                ) : null}
                                 {posture.strengths.length ? (
                                   <div className="flex flex-wrap gap-2">
                                     {posture.strengths.map((item) => (
@@ -1208,6 +1271,8 @@ export default function DisputeCases() {
                   { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
+                  { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
+                  { label: 'Payout Proof', value: formatPayoutProofStatus(getPayoutProofStatus(detailsRow)) },
                   { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
                   { label: 'Next Action', value: detailsRow.next_action || 'Not available' },
                 ]}
@@ -1219,6 +1284,9 @@ export default function DisputeCases() {
                   { label: 'Detail', value: deriveFilingPosture(detailsRow).detail },
                   { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Unavailable' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'None recorded' },
+                  { label: 'Missing Requirements', value: formatRequirementList(getMissingRequirements(detailsRow)) },
+                  { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? formatDisputeReason(getManualReviewReason(detailsRow)) : 'None recorded' },
+                  { label: 'Quarantine Reason', value: getQuarantineReason(detailsRow) || 'None recorded' },
                 ]}
               />
               <DetailSection
@@ -1249,6 +1317,7 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Evidence State', value: detailsRow.evidence_state || 'Not available' },
                   { label: 'Matched Documents', value: String(detailsRow.matched_document_count ?? 0) },
+                  { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
                   { label: 'Rejection Category', value: detailsRow.rejection_category || 'Not available' },
                   { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not available' },
                 ]}
