@@ -15,7 +15,7 @@ import {
   FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
   ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
   Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X, AlertTriangle,
-  ChevronDown, Clock, Terminal, MoreVertical, Files
+  ChevronDown, Clock, MoreVertical, Files
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
@@ -1080,6 +1080,71 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
     return `Updated ${format(timestamp, 'MMM dd, yyyy, HH:mm')}`;
   }, [dashboardSummary?.last_updated_at]);
+  const formattedLastPayoutDate = useMemo(() => {
+    if (!dashboardSummary?.last_payout_date) return 'No payout recorded';
+    const timestamp = new Date(dashboardSummary.last_payout_date);
+    if (Number.isNaN(timestamp.getTime())) return 'No payout recorded';
+    return format(timestamp, 'MMM dd, yyyy');
+  }, [dashboardSummary?.last_payout_date]);
+  const lastSyncResult = useMemo(() => {
+    if (activeSyncId || syncTriggered) {
+      return {
+        value: 'Sync in progress',
+        detail: syncMessage || 'Agent 2 is processing the latest run.'
+      };
+    }
+    if (needsSync) {
+      return {
+        value: 'Needs attention',
+        detail: syncMessage || 'A refresh is needed to update ingestion truth.'
+      };
+    }
+    if (lastSyncTime) {
+      return {
+        value: 'Completed',
+        detail: `Last sync ${formatDistanceToNow(lastSyncTime, { addSuffix: true })}`
+      };
+    }
+    const lastIngestAt = dashboardSummary?.integrations_summary?.last_ingest_at;
+    if (lastIngestAt) {
+      const timestamp = new Date(lastIngestAt);
+      if (!Number.isNaN(timestamp.getTime())) {
+        return {
+          value: 'Completed',
+          detail: `Last ingest ${formatDistanceToNow(timestamp, { addSuffix: true })}`
+        };
+      }
+    }
+    return {
+      value: 'Not run yet',
+      detail: 'No sync result recorded yet.'
+    };
+  }, [activeSyncId, dashboardSummary?.integrations_summary?.last_ingest_at, lastSyncTime, needsSync, syncMessage, syncTriggered]);
+  const recentFinancialActivity = useMemo(() => {
+    const payoutCount = dashboardSummary?.payout_count ?? 0;
+    const recoveredCount = dashboardSummary?.recovered_count ?? 0;
+    return [
+      {
+        label: 'Last Payout Date',
+        value: formattedLastPayoutDate,
+        detail: payoutCount > 0
+          ? `${payoutCount} payout event${payoutCount === 1 ? '' : 's'} recorded`
+          : 'Waiting for the first reimbursement event'
+      },
+      {
+        label: 'Verified Reimbursements',
+        value: recoveredCount > 0 ? `${recoveredCount} reconciled` : 'No reimbursements yet',
+        detail: recoveredCashTotal > 0
+          ? `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} verified recovered`
+          : 'No verified reimbursement recorded yet'
+      },
+      {
+        label: 'Last Sync Result',
+        value: lastSyncResult.value,
+        detail: lastSyncResult.detail
+      }
+    ];
+  }, [dashboardSummary?.payout_count, dashboardSummary?.recovered_count, formatCurrencyWithSelection, formattedLastPayoutDate, lastSyncResult.detail, lastSyncResult.value, recoveredCashTotal, recoveredCurrency]);
 
   if (!activeSlug) {
     return (
@@ -1395,50 +1460,30 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Quick Actions - Execution Terminal */}
+                    {/* Recent Financial Activity */}
                     <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
                       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-                        <div className="flex items-center gap-3">
-                          <Terminal className="h-3 w-3 text-white/45" />
-                          <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Quick Actions</h2>
+                        <div className="flex flex-col gap-1">
+                          <h2 className="text-[10px] font-sans font-medium text-white/40 uppercase tracking-tight">Recent Financial Activity</h2>
+                          <p className="text-[9px] font-sans font-normal text-white/20 tracking-tight">
+                            Last payout date, verified reimbursements, and latest sync truth
+                          </p>
                         </div>
-                        <button
-                          aria-label="Customize quick actions"
-                          className="text-white/10 hover:text-white/70 transition-colors"
-                          onClick={() => setQuickActionsEditOpen(true)}>
-                          <Plus className="h-3 w-3" />
-                        </button>
                       </div>
-                      <div className="divide-y divide-white/5">
-                        <div className="grid grid-cols-2 lg:grid-cols-3 divide-x divide-white/5">
-                          {selectedQuickActions.slice(0, 6).map((actionId) => {
-                            const action = QUICK_ActionS.find(a => a.id === actionId);
-                            if (!action) return null;
-
-                            let IconComp = FileText;
-                            if (actionId === 'ingest_now') IconComp = Cloud;
-                            if (actionId === 'run_detector') IconComp = RefreshCw;
-                            if (actionId === 'connect_evidence') IconComp = Mail;
-                            if (actionId === 'invite_teammate') IconComp = Link2;
-
-                            return (
-                              <button
-                                key={actionId}
-                                onClick={() => {
-                                  void executeQuickAction(actionId);
-                                }}
-                                className="group flex flex-col p-8 hover:bg-white/[0.02] transition-all text-left border-b border-white/5 relative overflow-hidden">
-                                <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="flex items-center justify-between mb-4 text-white/10 group-hover:text-white/70 transition-colors">
-                                  <IconComp className="h-4 w-4" />
-                                  <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all transform -translate-x-2 group-hover:translate-x-0" />
-                                </div>
-                                <span className="text-[11px] text-white font-sans font-bold mb-1 tracking-tight uppercase group-hover:text-white transition-colors">{action.label.replace('_', ' ')}</span>
-                                <span className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">{action.subtitle.replace('_', ' ')}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/5">
+                        {recentFinancialActivity.map((item) => (
+                          <div key={item.label} className="p-8 flex flex-col gap-4">
+                            <div className="text-[9px] font-sans font-medium text-white/20 uppercase tracking-tight">
+                              {item.label}
+                            </div>
+                            <div className="text-[22px] font-sans font-medium text-white tracking-tight">
+                              {item.value}
+                            </div>
+                            <p className="text-[10px] font-sans font-normal text-white/30 tracking-tight leading-relaxed max-w-[240px]">
+                              {item.detail}
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
