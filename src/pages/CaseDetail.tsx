@@ -826,6 +826,8 @@ export default function CaseDetail() {
     document.body.removeChild(anchor);
   }, [pdfPreviewTitle, pdfPreviewUrl]);
 
+  const isReviewPdfPreview = pdfPreviewLabel === 'Case PDF Preview' || pdfPreviewLabel === 'Brief PDF Preview';
+
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
     return (
@@ -1854,11 +1856,19 @@ export default function CaseDetail() {
           </DialogHeader>
 
           <div className="relative h-full w-full">
-            <div className="pointer-events-none absolute left-6 top-5 z-10 max-w-[60vw] space-y-1">
+            <div className="pointer-events-none absolute left-6 top-5 z-10 max-w-[60vw] space-y-2">
               <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{pdfPreviewLabel}</div>
-              <div className="truncate text-2xl font-sans font-light tracking-tight text-white">
+              <div className={cn(
+                "truncate font-sans font-light tracking-tight text-white",
+                isReviewPdfPreview ? "text-lg" : "text-2xl"
+              )}>
                 {pdfPreviewTitle}
               </div>
+              {isReviewPdfPreview && (
+                <p className="text-[10px] font-sans font-medium tracking-tight text-white/55">
+                  For seller review only; PDFs are not submitted to Amazon and may be shared internally with Ops or accountants.
+                </p>
+              )}
             </div>
 
             <div className="absolute right-6 top-5 z-10 flex items-center gap-2">

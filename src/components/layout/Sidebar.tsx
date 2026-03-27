@@ -231,18 +231,18 @@ export function Sidebar({
     switch (healthState.tone) {
       case 'healthy':
         return {
-          dot: 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]',
-          text: 'text-emerald-500'
+          dot: 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.35)]',
+          text: 'text-blue-600'
         };
       case 'degraded':
         return {
-          dot: 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]',
-          text: 'text-amber-500'
+          dot: 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.35)]',
+          text: 'text-blue-600'
         };
       case 'attention':
         return {
-          dot: 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]',
-          text: 'text-red-500'
+          dot: 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.35)]',
+          text: 'text-blue-600'
         };
       case 'checking':
         return {
@@ -416,7 +416,7 @@ export function Sidebar({
           {!isCollapsed && (
             <div className="flex items-center gap-1.5 translate-x-0.5">
               <div className={cn("h-1 w-1 rounded-full", healthStyles.dot)} />
-              <span className={cn("text-[8px] font-sans font-bold uppercase tracking-widest", healthStyles.text)}>
+              <span className={cn("text-[8px] font-sans font-bold uppercase tracking-tight", healthStyles.text)}>
                 {healthState.label}
               </span>
             </div>
