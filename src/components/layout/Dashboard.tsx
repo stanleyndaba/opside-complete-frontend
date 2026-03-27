@@ -1146,22 +1146,6 @@ export function Dashboard() {
                         </span>
                       </button>
                       <button
-                        onClick={() => handleTabChange('disputes')}
-                        className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
-                          activeTab === 'disputes'
-                            ? "text-white bg-white/[0.08]"
-                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
-                        )}
-                      >
-                        Dispute Claims
-                        {filedClaimsCount > 0 && (
-                          <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-amber-500 text-[9px] font-bold rounded-full border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.25)]">
-                            {filedClaimsCount > 99 ? '99+' : filedClaimsCount}
-                          </span>
-                        )}
-                      </button>
-                      <button
                         onClick={() => handleTabChange('evidence')}
                         className={cn(
                           "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
