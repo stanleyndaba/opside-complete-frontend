@@ -139,25 +139,25 @@ export function SmartPromptCard({
                             {/* Header Metadata */}
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">
-                                        CORRELATION_VECT_REQUIRED
+                                    <span className="text-[10px] font-sans font-medium text-white uppercase tracking-tight">
+                                        Review Match
                                     </span>
                                     <div className="h-1 w-1 rounded-full bg-white/10" />
                                     <span className={cn(
-                                        "text-[10px] font-sans font-bold uppercase tracking-tight",
+                                        "text-[10px] font-sans font-medium uppercase tracking-tight",
                                         confidencePercent >= 85 ? "text-emerald-500" :
                                             confidencePercent >= 50 ? "text-amber-500" : "text-white/20"
                                     )}>
-                                        {confidencePercent}%_CONFIDENCE
+                                        {confidencePercent}% confidence
                                     </span>
                                     <div className="h-1 w-1 rounded-full bg-white/10" />
-                                    <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">
-                                        TYPE_{getMatchTypeLabel(match.match_type).toUpperCase().replace(/ /g, '_')}
+                                    <span className="text-[10px] font-sans font-medium text-white/20 uppercase tracking-tight">
+                                        {getMatchTypeLabel(match.match_type)}
                                     </span>
                                 </div>
                                 {match.created_at && (
-                                    <div className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">
-                                        INDEXED_{format(new Date(match.created_at), 'yyyy_MM_dd__HH:mm').toUpperCase()}
+                                    <div className="text-[9px] font-sans font-medium text-white/20 tracking-tight">
+                                        Added {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm')}
                                     </div>
                                 )}
                             </div>
@@ -165,21 +165,21 @@ export function SmartPromptCard({
                             {/* ID & Source Group */}
                             <div className="flex items-center gap-8">
                                 <div className="space-y-1.5">
-                                    <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">CLAIM_UUID</span>
+                                    <span className="text-[8px] font-sans font-medium text-white/20 uppercase tracking-tight">Claim</span>
                                     <div className="flex items-center gap-2">
                                         <Link2 className="h-3 w-3 text-white/10" />
-                                        <Link to={`/recoveries/${match.claim_id}`} className="text-[10px] font-sans font-bold text-white/60 hover:text-emerald-500 transition-colors uppercase tracking-tight">
-                                            {match.claim_id.substring(0, 16).toUpperCase()}
+                                        <Link to={`/recoveries/${match.claim_id}`} className="text-[10px] font-sans font-medium text-white/65 hover:text-white transition-colors tracking-tight">
+                                            {match.claim_id.substring(0, 16)}
                                         </Link>
                                     </div>
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">DOC_REFS</span>
+                                    <span className="text-[8px] font-sans font-medium text-white/20 uppercase tracking-tight">Document</span>
                                     <div className="flex items-center gap-2">
                                         <FileText className="h-3 w-3 text-white/10" />
-                                        <Link to={`/documents/${match.document_id}`} className="text-[10px] font-sans font-bold text-white/60 hover:text-emerald-500 transition-colors uppercase tracking-tight">
-                                            {match.document_details?.filename?.substring(0, 24) || match.document_id.substring(0, 16).toUpperCase()}
+                                        <Link to={`/documents/${match.document_id}`} className="text-[10px] font-sans font-medium text-white/65 hover:text-white transition-colors tracking-tight">
+                                            {match.document_details?.filename?.substring(0, 24) || match.document_id.substring(0, 16)}
                                         </Link>
                                     </div>
                                 </div>
@@ -189,8 +189,8 @@ export function SmartPromptCard({
                             {match.reasoning && (
                                 <div className="flex items-start gap-2 pt-1">
                                     <div className="space-y-1.5">
-                                        <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight leading-none">NEURAL_REASONING_ENGINE</span>
-                                        <p className="text-[11px] font-sans font-bold text-white/40 leading-relaxed max-w-2xl lowercase italic tracking-tight">
+                                        <span className="text-[8px] font-sans font-medium text-white/20 uppercase tracking-tight leading-none">Why it was matched</span>
+                                        <p className="text-[11px] font-sans font-normal text-white/45 leading-relaxed max-w-2xl tracking-tight italic">
                                             {match.reasoning}
                                         </p>
                                     </div>
@@ -200,11 +200,11 @@ export function SmartPromptCard({
                             {/* Matched Fields */}
                             {match.matched_fields && match.matched_fields.length > 0 && (
                                 <div className="flex items-center gap-3 py-1.5 px-3 bg-white/5 border border-white/5 rounded-lg inline-flex">
-                                    <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">MATCH_VECTORS:</span>
+                                    <span className="text-[8px] font-sans font-medium text-white/20 uppercase tracking-tight">Matched fields</span>
                                     <div className="flex gap-3">
                                         {match.matched_fields.map((field, idx) => (
-                                            <span key={idx} className="text-[9px] font-sans font-bold text-emerald-500/50 uppercase tracking-tight">
-                                                {field.replace(/_/g, '_')}
+                                            <span key={idx} className="text-[9px] font-sans font-medium text-white/55 uppercase tracking-tight">
+                                                {field.replace(/_/g, ' ')}
                                             </span>
                                         ))}
                                     </div>
@@ -219,15 +219,15 @@ export function SmartPromptCard({
                             onClick={handleApprove}
                             disabled={isApproving || isRejecting || isRequestingMore}
                             className={cn(
-                                "h-11 px-6 font-sans text-[10px] font-bold uppercase tracking-tight transition-all rounded-xl border",
+                                "h-11 px-6 font-sans text-[10px] font-medium uppercase tracking-tight transition-all rounded-xl border",
                                 confidencePercent >= 85
-                                    ? "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30"
-                                    : "bg-white/5 text-white/40 border-white/5 hover:text-white hover:bg-white/10"
+                                    ? "bg-white/[0.04] text-white/85 border-white/10 hover:bg-white/[0.08] hover:border-white/20"
+                                    : "bg-white/5 text-white/50 border-white/10 hover:text-white hover:bg-white/10"
                             )}>
                             {isApproving ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
                             ) : null}
-                            {confidencePercent >= 85 ? 'EXECUTE_LINK' : 'CONFIRM_VECT'}
+                            {confidencePercent >= 85 ? 'Approve Match' : 'Confirm Match'}
                         </Button>
 
                         <div className="flex items-center justify-between gap-4 px-1">
@@ -235,10 +235,10 @@ export function SmartPromptCard({
                                 variant="ghost"
                                 onClick={() => setShowRejectDialog(true)}
                                 disabled={isApproving || isRejecting || isRequestingMore}
-                                className="h-8 text-[9px] font-sans font-bold text-white/20 hover:text-red-400 hover:bg-transparent p-0 uppercase tracking-tight transition-colors">
+                                className="h-8 text-[9px] font-sans font-medium text-white/25 hover:text-red-400 hover:bg-transparent p-0 uppercase tracking-tight transition-colors">
                                 <span className="flex items-center gap-1.5">
                                     <XCircle className="w-3.5 h-3.5" />
-                                    REJECT
+                                    Reject
                                 </span>
                             </Button>
 
@@ -246,10 +246,10 @@ export function SmartPromptCard({
                                 variant="ghost"
                                 onClick={handleRequestMore}
                                 disabled={isApproving || isRejecting || isRequestingMore}
-                                className="h-8 text-[9px] font-sans font-bold text-white/20 hover:text-white hover:bg-transparent p-0 uppercase tracking-tight transition-colors">
+                                className="h-8 text-[9px] font-sans font-medium text-white/25 hover:text-white hover:bg-transparent p-0 uppercase tracking-tight transition-colors">
                                 <span className="flex items-center gap-1.5">
                                     <Search className="w-3.5 h-3.5" />
-                                    SCAN_MORE
+                                    Request Evidence
                                 </span>
                             </Button>
                         </div>

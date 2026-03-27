@@ -320,20 +320,20 @@ export function EvidenceMatchingTable() {
 
   if (loading && matchingResults.length === 0) {
     return (
-      <div className="bg-[#0c0c0c] border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
-        <Loader2 className="w-8 h-8 mx-auto text-amber-500/50 mb-4 animate-spin" />
-        <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">SYNCHRONIZING_INTELLIGENCE...</p>
+      <div className="bg-[#111111]/90 border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
+        <Loader2 className="w-8 h-8 mx-auto text-white/40 mb-4 animate-spin" />
+        <p className="text-[10px] font-sans font-medium text-white/30 uppercase tracking-tight">Loading evidence review...</p>
       </div>
     );
   }
 
   if (error && matchingResults.length === 0) {
     return (
-      <div className="bg-[#0c0c0c] border border-red-500/20 p-8 text-center rounded-2xl backdrop-blur-xl">
-        <p className="text-[10px] font-sans font-bold text-red-500/80 uppercase tracking-tight mb-4">{error}</p>
-        <Button onClick={fetchMatchingResults} className="h-10 px-6 text-[10px] font-sans font-bold uppercase tracking-tight bg-white/5 hover:bg-white/10 text-white/60 border border-white/10 rounded-xl">
+      <div className="bg-[#111111]/90 border border-red-500/20 p-8 text-center rounded-2xl backdrop-blur-xl">
+        <p className="text-[10px] font-sans font-medium text-red-400/90 uppercase tracking-tight mb-4">{error}</p>
+        <Button onClick={fetchMatchingResults} className="h-10 px-6 text-[10px] font-sans font-medium uppercase tracking-tight bg-white/5 hover:bg-white/10 text-white/70 border border-white/10 rounded-xl">
           <RefreshCw className="w-3.5 h-3.5 mr-2" />
-          RETRY_CONNECTION
+          Retry
         </Button>
       </div>
     );
@@ -341,19 +341,19 @@ export function EvidenceMatchingTable() {
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header with Run Matching Button */}
-      <div className="flex items-center justify-between gap-6 mb-8 px-2">
+      <div className="flex items-center justify-between gap-6 px-1">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <div className="h-1 w-1 rounded-full bg-amber-500 animate-pulse" />
-            <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Evidence_Correlation_Matrix</h2>
+            <div className="h-1.5 w-1.5 rounded-full bg-white/45" />
+            <h2 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Evidence Review</h2>
           </div>
-          <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
+          <p className="text-[10px] font-sans font-normal text-white/25 tracking-tight">
             {refreshing ? (
-              <span className="animate-pulse">SYNCHRONIZING_NEURAL_VECTORS...</span>
+              <span className="animate-pulse">Refreshing evidence matches...</span>
             ) : (
-              `ACTIVE_CORRELATIONS: ${matchingResults.length} NODES_IDENTIFIED`
+              `${matchingResults.length} evidence matches currently in review`
             )}
           </p>
         </div>
@@ -361,84 +361,84 @@ export function EvidenceMatchingTable() {
           onClick={handleRunMatching}
           disabled={refreshing}
           className={cn(
-            "h-12 px-6 font-sans text-[10px] font-bold uppercase tracking-tight transition-all rounded-xl border border-white/5",
+            "h-11 px-5 font-sans text-[10px] font-medium uppercase tracking-tight transition-all rounded-xl border border-white/10",
             refreshing
-              ? "bg-white/5 text-white/20"
-              : "bg-amber-500/5 text-amber-500 border-amber-500/20 hover:bg-amber-500/10 hover:border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+              ? "bg-white/5 text-white/25"
+              : "bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:border-white/20 shadow-[0_0_18px_rgba(255,255,255,0.05)]"
           )}>
           {refreshing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
           ) : (
             <RefreshCw className="w-3.5 h-3.5 mr-2" />
           )}
-          {refreshing ? 'EXECUTING...' : 'RUN_CORRELATION'}
+          {refreshing ? 'Refreshing...' : 'Refresh Matching'}
         </Button>
       </div>
 
-      {/* Tabs for different match categories - Pentagon Style */}
+      {/* Tabs for different match categories */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="flex h-12 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl mb-6">
+        <TabsList className="flex h-12 items-stretch justify-start gap-1 bg-white/[0.03] border border-white/10 rounded-xl p-1 backdrop-blur-xl mb-6">
           <TabsTrigger
             value="smart-prompts"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-medium text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/65 data-[state=active]:text-white data-[state=active]:bg-white/[0.06] data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.25)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
-              <Sparkles className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-              PENDING_REVIEW
+              <Sparkles className="w-3 h-3 text-current" />
+              Pending Review
               {smartPrompts.length > 0 && (
-                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{smartPrompts.length}</span>
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/25 group-data-[state=active]:text-white/75">{smartPrompts.length}</span>
               )}
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-medium text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/65 data-[state=active]:text-white data-[state=active]:bg-white/[0.06] data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.25)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
-              <CheckCircle2 className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-              AUTO_SUBMITTED
+              <CheckCircle2 className="w-3 h-3 text-current" />
+              Submitted
               {autoSubmitted.length > 0 && (
-                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{autoSubmitted.length}</span>
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/25 group-data-[state=active]:text-white/75">{autoSubmitted.length}</span>
               )}
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-medium text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/65 data-[state=active]:text-white data-[state=active]:bg-white/[0.06] data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.25)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
-              <XCircle className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-              HELD_REJECTED
+              <XCircle className="w-3 h-3 text-current" />
+              Held
               {heldForReview.length > 0 && (
-                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{heldForReview.length}</span>
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/25 group-data-[state=active]:text-white/75">{heldForReview.length}</span>
               )}
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-medium text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/65 data-[state=active]:text-white data-[state=active]:bg-white/[0.06] data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.25)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
-              <FileText className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
-              ALL_VECTORS
-              <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{matchingResults.length}</span>
+              <FileText className="w-3 h-3 text-current" />
+              All Matches
+              <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/25 group-data-[state=active]:text-white/75">{matchingResults.length}</span>
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="smart-prompts" className="mt-0 outline-none">
           {smartPrompts.length === 0 ? (
-            <div className="py-24 text-center bg-white/5 border border-white/5 rounded-2xl backdrop-blur-xl">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-500/5 border border-amber-500/20 mb-6 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
-                <CheckCircle2 className="h-6 w-6 text-amber-500" />
+            <div className="py-24 text-center bg-[#111111]/90 border border-white/10 rounded-2xl backdrop-blur-xl">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-6">
+                <CheckCircle2 className="h-6 w-6 text-white/40" />
               </div>
-              <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">QUEUE_FULLY_AUDITED</h3>
-              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
-                No matches currently require manual confirmation. Autonomous engine has finalized all active correlations.
+              <h3 className="text-[10px] font-sans font-medium text-white uppercase tracking-tight">No pending review</h3>
+              <p className="text-[10px] font-sans font-normal text-white/25 mt-2 max-w-[360px] mx-auto leading-relaxed tracking-tight">
+                No evidence matches currently need manual confirmation.
               </p>
             </div>
           ) : (
-            <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
+            <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {smartPrompts.map(match => (
                 <SmartPromptCard
                   key={match.id}
@@ -455,13 +455,13 @@ export function EvidenceMatchingTable() {
         {/* Auto-Submitted Tab */}
         <TabsContent value="auto-submitted" className="mt-0 border-t border-white/5">
           {autoSubmitted.length === 0 ? (
-            <div className="py-20 text-center bg-white/[0.02] rounded-2xl border border-white/5 backdrop-blur-xl">
+            <div className="py-20 text-center bg-[#111111]/90 rounded-2xl border border-white/10 backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
                 <Hexagon className="h-5 w-5 text-white/20" />
               </div>
-              <h3 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">NO_AUTO_SUBMITTED_VECTORS</h3>
-              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
-                System initiates automatic filing for matches exceeding the 85% confidence threshold. No high-confidence pairings detected.
+              <h3 className="text-[10px] font-sans font-medium text-white/50 uppercase tracking-tight">No submitted matches</h3>
+              <p className="text-[10px] font-sans font-normal text-white/25 mt-2 max-w-[360px] mx-auto leading-relaxed tracking-tight">
+                High-confidence evidence matches will appear here after they are approved or auto-submitted.
               </p>
             </div>
           ) : (
@@ -526,13 +526,13 @@ export function EvidenceMatchingTable() {
         {/* Held / Rejected Tab */}
         <TabsContent value="held" className="mt-0 border-t border-white/5">
           {heldForReview.length === 0 ? (
-            <div className="py-20 text-center bg-white/[0.02] rounded-2xl border border-white/5 backdrop-blur-xl">
+            <div className="py-20 text-center bg-[#111111]/90 rounded-2xl border border-white/10 backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
                 <CheckCircle2 className="h-5 w-5 text-white/20" />
               </div>
-              <h3 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">NO_PARKED_CLAIMS</h3>
-              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
-                All identified overlaps have been either actioned or dismissed. Systematic queue is clear.
+              <h3 className="text-[10px] font-sans font-medium text-white/50 uppercase tracking-tight">Nothing held</h3>
+              <p className="text-[10px] font-sans font-normal text-white/25 mt-2 max-w-[360px] mx-auto leading-relaxed tracking-tight">
+                There are no evidence matches waiting for more proof or manual follow-up.
               </p>
             </div>
           ) : (
@@ -553,23 +553,23 @@ export function EvidenceMatchingTable() {
         {/* All Matches Tab */}
         <TabsContent value="all" className="mt-0 outline-none">
           {matchingResults.length === 0 ? (
-            <div className="py-24 text-center bg-white/5 border border-white/5 rounded-2xl backdrop-blur-xl">
+            <div className="py-24 text-center bg-[#111111]/90 border border-white/10 rounded-2xl backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-6">
                 <FileText className="h-6 w-6 text-white/20" />
               </div>
-              <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">NO_EVIDENCE_MATCHES</h3>
-              <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
-                No claim-to-document correlations established. Run matching to process backlog.
+              <h3 className="text-[10px] font-sans font-medium text-white uppercase tracking-tight">No evidence matches</h3>
+              <p className="text-[10px] font-sans font-normal text-white/25 mt-2 max-w-[360px] mx-auto leading-relaxed tracking-tight">
+                No claim-to-document matches are available yet. Refresh matching to process the backlog.
               </p>
               <Button
                 onClick={handleRunMatching}
-                className="mt-8 h-10 px-6 font-sans text-[9px] font-bold text-white/40 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 rounded-full transition-all uppercase tracking-tight">
+                className="mt-8 h-10 px-6 font-sans text-[9px] font-medium text-white/55 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all uppercase tracking-tight">
                 <RefreshCw className="w-3.5 h-3.5 mr-2" />
-                INDEX_BACKLOG
+                Refresh Matching
               </Button>
             </div>
           ) : (
-            <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
+            <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {matchingResults.map((match) => (
                 <div key={match.id} className="group relative px-8 py-6 hover:bg-white/[0.02] transition-colors">
                   <div className="absolute left-0 top-0 bottom-0 w-px bg-amber-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500" />

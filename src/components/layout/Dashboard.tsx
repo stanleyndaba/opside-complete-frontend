@@ -1205,7 +1205,7 @@ export function Dashboard() {
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
-                        Substained
+                        Evidence
                       </button>
                     </div>
                   </div>
