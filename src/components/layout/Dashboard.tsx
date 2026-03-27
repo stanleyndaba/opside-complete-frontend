@@ -1197,20 +1197,6 @@ export function Dashboard() {
                         Overview
                       </button>
                       <button
-                        onClick={() => handleTabChange('discrepancies')}
-                        className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
-                          activeTab === 'discrepancies'
-                            ? "text-white bg-white/[0.08]"
-                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
-                        )}
-                      >
-                        Audits
-                        <span className="flex items-center justify-center min-w-[16px] h-4 px-1.5 bg-[#1a1a1a] text-white text-[9px] font-bold rounded-full border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-                          {detectedOpportunitiesCount}
-                        </span>
-                      </button>
-                      <button
                         onClick={() => handleTabChange('evidence')}
                         className={cn(
                           "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
@@ -1226,7 +1212,7 @@ export function Dashboard() {
                 </div>
                 <button
                   onClick={() => setQuickNoticeOpen(true)}
-                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-mono font-bold uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(37,99,235,0.3)] hover:shadow-[0_0_20px_rgba(37,99,235,0.5)]"
+                  className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
                 >
                   Quick Notice
                 </button>
@@ -1476,7 +1462,7 @@ export function Dashboard() {
                             <div className="text-[9px] font-sans font-medium text-white/20 uppercase tracking-tight">
                               {item.label}
                             </div>
-                            <div className="text-[22px] font-sans font-medium text-white tracking-tight">
+                            <div className="text-[18px] font-sans font-medium text-white tracking-tight">
                               {item.value}
                             </div>
                             <p className="text-[10px] font-sans font-normal text-white/30 tracking-tight leading-relaxed max-w-[240px]">
