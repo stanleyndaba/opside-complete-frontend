@@ -358,7 +358,7 @@ export function Navbar({
           <div className="flex items-center gap-x-8">
             <div className="relative flex items-center gap-4" ref={searchContainerRef}>
               <div className="relative w-80 lg:w-[420px] group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 group-focus-within:text-white/45 transition-colors" />
                 <Input
                   ref={searchInputRef}
                   aria-label="Search"
@@ -367,7 +367,7 @@ export function Navbar({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onKeyDown={handleKeyDown}
-                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-emerald-500/30 focus:ring-0 transition-all placeholder:text-white/10 font-sans font-bold tracking-tight text-emerald-500"
+                  className="pl-10 pr-10 h-10 text-[11px] bg-white/[0.03] border-white/5 rounded-xl focus:bg-white/[0.05] focus:border-white/15 focus:ring-0 transition-all placeholder:text-white/10 font-sans font-bold tracking-tight text-white/75"
                 />
                 {/* Clear button */}
                 {searchQuery && (
@@ -388,7 +388,7 @@ export function Navbar({
                           <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Recent searches</span>
                           <button
                             onClick={clearRecentSearches}
-                            className="text-[10px] font-sans font-bold text-emerald-500/50 hover:text-emerald-500 uppercase tracking-tight transition-colors">
+                            className="text-[10px] font-sans font-bold text-white/35 hover:text-white/65 uppercase tracking-tight transition-colors">
                             Clear
                           </button>
                         </div>
@@ -400,7 +400,7 @@ export function Navbar({
                               handleSearch(search);
                             }}
                             className="w-full flex items-center gap-3 px-3 py-2 text-[11px] text-white/40 hover:bg-white/[0.03] hover:text-white transition-all font-sans font-bold uppercase tracking-tight group">
-                            <Clock className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
+                            <Clock className="h-3 w-3 text-white/10 group-hover:text-white/55" />
                             {search}
                           </button>
                         ))}
@@ -426,7 +426,7 @@ export function Navbar({
                     {/* Search Tip */}
                     <div className="px-4 py-3 bg-white/[0.01] border-t border-white/5">
                       <p className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">
-                        Invoke system command with <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-emerald-500 font-sans font-bold text-[9px]">ENTER</kbd>
+                        Invoke system command with <kbd className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-white/70 font-sans font-bold text-[9px]">ENTER</kbd>
                       </p>
                     </div>
                   </div>

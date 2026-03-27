@@ -459,12 +459,12 @@ export function Sidebar({
           )}
         >
           <span className={cn(
-            "text-[10px] font-sans font-bold text-foreground/20 uppercase tracking-tight group-hover:text-emerald-500/80 transition-colors",
+            "text-[10px] font-sans font-bold text-foreground/20 uppercase tracking-tight group-hover:text-white/60 transition-colors",
             isCollapsed ? "block" : ""
           )}>
             {isCollapsed ? "v1" : "v1.0.0-GOLD"}
           </span>
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+          <div className="h-1.5 w-1.5 rounded-full bg-white/35 flex-shrink-0" />
         </Link>
       </div>
 

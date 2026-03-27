@@ -1156,7 +1156,7 @@ export function Dashboard() {
                       >
                         Dispute Claims
                         {filedClaimsCount > 0 && (
-                          <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-emerald-500 text-[9px] font-bold rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                          <span className="flex items-center justify-center min-w-[16px] h-4 px-1 bg-[#1a1a1a] text-amber-500 text-[9px] font-bold rounded-full border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.25)]">
                             {filedClaimsCount > 99 ? '99+' : filedClaimsCount}
                           </span>
                         )}
@@ -1170,7 +1170,7 @@ export function Dashboard() {
                             : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
                         )}
                       >
-                        Cases with Evidence
+                        Substained
                       </button>
                     </div>
                   </div>

@@ -321,7 +321,7 @@ export function EvidenceMatchingTable() {
   if (loading && matchingResults.length === 0) {
     return (
       <div className="bg-[#0c0c0c] border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
-        <Loader2 className="w-8 h-8 mx-auto text-emerald-500/50 mb-4 animate-spin" />
+        <Loader2 className="w-8 h-8 mx-auto text-amber-500/50 mb-4 animate-spin" />
         <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">SYNCHRONIZING_INTELLIGENCE...</p>
       </div>
     );
@@ -346,7 +346,7 @@ export function EvidenceMatchingTable() {
       <div className="flex items-center justify-between gap-6 mb-8 px-2">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="h-1 w-1 rounded-full bg-amber-500 animate-pulse" />
             <h2 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Evidence_Correlation_Matrix</h2>
           </div>
           <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
@@ -364,7 +364,7 @@ export function EvidenceMatchingTable() {
             "h-12 px-6 font-sans text-[10px] font-bold uppercase tracking-tight transition-all rounded-xl border border-white/5",
             refreshing
               ? "bg-white/5 text-white/20"
-              : "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+              : "bg-amber-500/5 text-amber-500 border-amber-500/20 hover:bg-amber-500/10 hover:border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
           )}>
           {refreshing ? (
             <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
@@ -380,57 +380,57 @@ export function EvidenceMatchingTable() {
         <TabsList className="flex h-12 items-stretch justify-start gap-1 bg-white/5 border border-white/5 rounded-xl p-1 backdrop-blur-xl mb-6">
           <TabsTrigger
             value="smart-prompts"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <Sparkles className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               PENDING_REVIEW
               {smartPrompts.length > 0 && (
-                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{smartPrompts.length}</span>
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{smartPrompts.length}</span>
               )}
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               AUTO_SUBMITTED
               {autoSubmitted.length > 0 && (
-                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{autoSubmitted.length}</span>
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{autoSubmitted.length}</span>
               )}
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <XCircle className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               HELD_REJECTED
               {heldForReview.length > 0 && (
-                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{heldForReview.length}</span>
+                <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{heldForReview.length}</span>
               )}
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
+            className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-amber-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
               <FileText className="w-3 h-3 text-current group-data-[state=active]:animate-pulse" />
               ALL_VECTORS
-              <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">{matchingResults.length}</span>
+              <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-amber-500/60">{matchingResults.length}</span>
             </div>
-            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emerald-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-amber-500 opacity-0 data-[state=active]:opacity-100 transition-opacity" />
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="smart-prompts" className="mt-0 outline-none">
           {smartPrompts.length === 0 ? (
             <div className="py-24 text-center bg-white/5 border border-white/5 rounded-2xl backdrop-blur-xl">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/5 border border-emerald-500/20 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
-                <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-amber-500/5 border border-amber-500/20 mb-6 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+                <CheckCircle2 className="h-6 w-6 text-amber-500" />
               </div>
               <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">QUEUE_FULLY_AUDITED</h3>
               <p className="text-[9px] font-sans font-bold text-white/20 mt-2 max-w-[320px] mx-auto leading-relaxed uppercase tracking-tight">
@@ -468,11 +468,11 @@ export function EvidenceMatchingTable() {
             <div className="divide-y divide-white/5">
               {autoSubmitted.map((match) => (
                 <div key={match.id} className="group relative pl-6 py-5 hover:bg-white/[0.02] transition-colors">
-                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-amber-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       <div className="mt-1 flex items-center justify-center w-8 h-8 border border-white/10 bg-white/5 rounded-lg">
-                        <Hexagon className="h-4 w-4 text-white/20 group-hover:text-emerald-500/60 transition-colors" />
+                        <Hexagon className="h-4 w-4 text-white/20 group-hover:text-amber-500/70 transition-colors" />
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
@@ -480,21 +480,21 @@ export function EvidenceMatchingTable() {
                             {getMatchTypeLabel(match.match_type)}
                           </span>
                           <span className="text-[10px] text-white/10">|</span>
-                          <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
+                          <span className="text-[10px] font-sans font-bold text-amber-500 uppercase tracking-tight">
                             {Math.round(match.confidence_score * 100)}%_CONFIDENCE
                           </span>
                         </div>
                         <div className="flex items-center gap-3 text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
                           <div className="flex items-center gap-1.5">
                             <span className="text-white/20">CLAIM:</span>
-                            <Link to={`/recoveries/${match.claim_id}`} className="text-emerald-500/60 hover:text-emerald-500 transition-colors">
+                            <Link to={`/recoveries/${match.claim_id}`} className="text-amber-500/70 hover:text-amber-400 transition-colors">
                               {match.claim_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
                           <span className="text-white/10">/</span>
                           <div className="flex items-center gap-1.5">
                             <span className="text-white/20">DOC:</span>
-                            <Link to={`/documents/${match.document_id}`} className="text-emerald-500/60 hover:text-emerald-500 transition-colors">
+                            <Link to={`/documents/${match.document_id}`} className="text-amber-500/70 hover:text-amber-400 transition-colors">
                               {match.document_details?.filename?.substring(0, 20) || match.document_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
@@ -508,7 +508,7 @@ export function EvidenceMatchingTable() {
                       </div>
                     </div>
                     <div className="pr-6">
-                      <Button asChild variant="ghost" size="sm" className="h-8 text-[9px] font-sans font-bold text-white/30 hover:text-emerald-500 hover:bg-transparent group/btn uppercase tracking-tight p-0">
+                      <Button asChild variant="ghost" size="sm" className="h-8 text-[9px] font-sans font-bold text-white/30 hover:text-amber-400 hover:bg-transparent group/btn uppercase tracking-tight p-0">
                         <Link to={`/recoveries/${match.claim_id}`} className="flex items-center gap-2">
                           VIEW_RECOVERY
                           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
@@ -572,10 +572,10 @@ export function EvidenceMatchingTable() {
             <div className="bg-white/5 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {matchingResults.map((match) => (
                 <div key={match.id} className="group relative px-8 py-6 hover:bg-white/[0.02] transition-colors">
-                  <div className="absolute left-0 top-0 bottom-0 w-px bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500" />
+                  <div className="absolute left-0 top-0 bottom-0 w-px bg-amber-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500" />
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-6">
-                      <div className="mt-1 flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/5 text-white/20 group-hover:text-emerald-500 group-hover:border-emerald-500/30 transition-all">
+                      <div className="mt-1 flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/5 text-white/20 group-hover:text-amber-400 group-hover:border-amber-500/30 transition-all">
                         <Hexagon className="h-5 w-5" />
                       </div>
                       <div className="space-y-2">
@@ -585,7 +585,7 @@ export function EvidenceMatchingTable() {
                           </span>                           <div className="h-1 w-1 rounded-full bg-white/10" />
                           <span className={cn(
                             "text-[10px] font-sans font-bold uppercase tracking-tight",
-                            match.confidence_score >= 0.85 ? "text-emerald-500" :
+                            match.confidence_score >= 0.85 ? "text-amber-500" :
                               match.confidence_score >= 0.5 ? "text-amber-500" : "text-white/20"
                           )}>
                             {Math.round(match.confidence_score * 100)}%_CONFIDENCE
@@ -599,14 +599,14 @@ export function EvidenceMatchingTable() {
 
                           <div className="flex items-center gap-2">
                             <span className="text-white/10">CLAIM:</span>
-                            <Link to={`/recoveries/${match.claim_id}`} className="text-white/60 font-sans font-bold hover:text-emerald-500 transition-colors">
+                            <Link to={`/recoveries/${match.claim_id}`} className="text-white/60 font-sans font-bold hover:text-amber-400 transition-colors">
                               {match.claim_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
                           <span className="text-white/10">/</span>
                           <div className="flex items-center gap-2">
                             <span className="text-white/10">DOC:</span>
-                            <Link to={`/documents/${match.document_id}`} className="text-white/60 font-sans font-bold hover:text-emerald-500 transition-colors">
+                            <Link to={`/documents/${match.document_id}`} className="text-white/60 font-sans font-bold hover:text-amber-400 transition-colors">
                               {match.document_details?.filename?.substring(0, 20) || match.document_id.substring(0, 12).toUpperCase()}
                             </Link>
                           </div>
@@ -622,7 +622,7 @@ export function EvidenceMatchingTable() {
                     <div className="flex items-center gap-4 self-center">
                       <Link
                         to={`/recoveries/${match.claim_id}`}
-                        className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 transition-all duration-300 group/link uppercase tracking-tight"
+                        className="flex items-center gap-2 text-[9px] font-sans font-bold text-white/20 hover:text-amber-400 transition-all duration-300 group/link uppercase tracking-tight"
                       >
                         DATA_NODE
                         <ArrowRight className="h-3.5 w-3.5 translate-x-0 group-hover/link:translate-x-1 transition-transform duration-300" />
