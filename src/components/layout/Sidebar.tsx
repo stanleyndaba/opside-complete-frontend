@@ -70,6 +70,14 @@ interface NavSection {
   title: string;
   items: NavItem[];
 }
+
+type SidebarHealthTone = 'healthy' | 'degraded' | 'attention' | 'checking' | 'unknown';
+
+interface SidebarHealthState {
+  label: string;
+  tone: SidebarHealthTone;
+}
+
 export function Sidebar({
   isCollapsed,
   onToggle,
@@ -82,6 +90,7 @@ export function Sidebar({
   const { tenant, isReady } = useTenant();
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
+  const [healthState, setHealthState] = useState<SidebarHealthState>({ label: 'Checking', tone: 'checking' });
   const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
   // States for referral functionality
@@ -125,6 +134,7 @@ export function Sidebar({
   React.useEffect(() => {
     setConnectedEmail(null);
     setClaimCount(null);
+    setHealthState({ label: 'Checking', tone: 'checking' });
   }, [currentTenantSlug]);
 
   // Fetch connected email from evidence sources
@@ -168,6 +178,84 @@ export function Sidebar({
     fetchRecoveries();
     return () => { cancelled = true; };
   }, [currentTenantSlug, isReady]);
+
+  React.useEffect(() => {
+    if (!isReady || !currentTenantSlug) return;
+    let cancelled = false;
+
+    const fetchSidebarHealth = async () => {
+      try {
+        const response = await api.getDashboardSummary(currentTenantSlug);
+        if (cancelled) return;
+
+        if (!response.ok || !response.data?.summary) {
+          setHealthState({ label: 'Unknown', tone: 'unknown' });
+          return;
+        }
+
+        const summary = response.data.summary as {
+          integrations_summary?: { connected_count?: number; stale_count?: number };
+          blockers?: Array<{ severity?: 'low' | 'medium' | 'high' }>;
+        };
+
+        const connectedCount = Number(summary.integrations_summary?.connected_count || 0);
+        const staleCount = Number(summary.integrations_summary?.stale_count || 0);
+        const blockers = Array.isArray(summary.blockers) ? summary.blockers : [];
+        const hasHighBlocker = blockers.some((blocker) => blocker?.severity === 'high');
+        const hasMediumBlocker = blockers.some((blocker) => blocker?.severity === 'medium');
+
+        if (connectedCount === 0 || hasHighBlocker) {
+          setHealthState({ label: 'Needs Attention', tone: 'attention' });
+          return;
+        }
+
+        if (staleCount > 0 || hasMediumBlocker) {
+          setHealthState({ label: 'Degraded', tone: 'degraded' });
+          return;
+        }
+
+        setHealthState({ label: 'Healthy', tone: 'healthy' });
+      } catch (error) {
+        if (!cancelled) {
+          console.warn('[Sidebar] Failed to resolve truthful health state.', error);
+          setHealthState({ label: 'Unknown', tone: 'unknown' });
+        }
+      }
+    };
+
+    void fetchSidebarHealth();
+    return () => { cancelled = true; };
+  }, [currentTenantSlug, isReady]);
+
+  const healthStyles = useMemo(() => {
+    switch (healthState.tone) {
+      case 'healthy':
+        return {
+          dot: 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]',
+          text: 'text-emerald-500'
+        };
+      case 'degraded':
+        return {
+          dot: 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]',
+          text: 'text-amber-500'
+        };
+      case 'attention':
+        return {
+          dot: 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]',
+          text: 'text-red-500'
+        };
+      case 'checking':
+        return {
+          dot: 'bg-white/40',
+          text: 'text-white/50'
+        };
+      default:
+        return {
+          dot: 'bg-white/30',
+          text: 'text-white/40'
+        };
+    }
+  }, [healthState.tone]);
 
   // Check if we're on the Dashboard (Command Center) page
   const isDashboard = location.pathname.endsWith('/dashboard') ||
@@ -327,8 +415,10 @@ export function Sidebar({
           />
           {!isCollapsed && (
             <div className="flex items-center gap-1.5 translate-x-0.5">
-              <div className="h-1 w-1 rounded-full bg-[#ff4500] animate-pulse shadow-[0_0_8px_rgba(255,69,0,0.4)]" />
-              <span className="text-[8px] font-sans font-bold text-[#ff4500] uppercase tracking-widest">Healthy</span>
+              <div className={cn("h-1 w-1 rounded-full", healthStyles.dot)} />
+              <span className={cn("text-[8px] font-sans font-bold uppercase tracking-widest", healthStyles.text)}>
+                {healthState.label}
+              </span>
             </div>
           )}
         </div>

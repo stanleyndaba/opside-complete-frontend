@@ -301,7 +301,6 @@ export function Dashboard() {
   const [nextPaymentDate, setNextPaymentDate] = useState<string | null>(null);
   const [successRate, setSuccessRate] = useState<number | null>(null);
   const [reconciledCount, setReconciledCount] = useState<number | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string>('');
   const [approvedClaimsThisMonth, setApprovedClaimsThisMonth] = useState<number | null>(null);
   const [settlementRate, setSettlementRate] = useState<number | null>(null);
   const [dashboardMetrics, setDashboardMetrics] = useState<{
@@ -478,7 +477,6 @@ export function Dashboard() {
     setDetectionStats(null);
     setEvidenceStatus(null);
     setDetectionResults([]);
-    setLastUpdated('');
   }, [activeSlug]);
 
   const fetchDashboardSummary = useCallback(async () => {
@@ -487,8 +485,7 @@ export function Dashboard() {
       const response = await api.getDashboardSummary(activeSlug);
       if (!mountedRef.current) return;
       if (response.ok && response.data?.summary) {
-        setDashboardSummary(response.data.summary as DashboardSummary);
-        setLastUpdated((response.data.summary as DashboardSummary).last_updated_at);
+      setDashboardSummary(response.data.summary as DashboardSummary);
       }
     } catch (error) {
       console.error('Failed to fetch dashboard summary:', error);
@@ -690,8 +687,6 @@ export function Dashboard() {
         setSuccessRate(data.success_rate ?? null);
         setApprovedClaimsThisMonth(data.approved_claims_this_month ?? null);
         if (typeof data.settlement_rate === 'number') setSettlementRate(data.settlement_rate);
-        setLastUpdated(new Date().toISOString());
-
         if (data.syncTriggered || data.needsSync) {
           checkAndMonitorSync();
         }
@@ -919,7 +914,6 @@ export function Dashboard() {
       // }
       if (approvedClaimsMonth !== null) setApprovedClaimsThisMonth(approvedClaimsMonth);
       if (d.dashboard) setDashboardMetrics(d.dashboard);
-      setLastUpdated(new Date().toLocaleTimeString());
     }
   }
 
