@@ -103,12 +103,12 @@ const Waitlist = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white selection:bg-emerald-500/30 selection:text-white relative overflow-hidden">
+        <div className="min-h-screen bg-[#050505] text-white selection:bg-white/20 selection:text-white relative overflow-hidden">
             {/* Technical Background Overlay */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.05),transparent_70%)]" />
-                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(59,130,246,0.03),transparent_70%)]" />
+                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.05),transparent_70%)]" />
+                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(148,163,184,0.04),transparent_70%)]" />
             </div>
 
             <PublicNavbar />
@@ -124,7 +124,7 @@ const Waitlist = () => {
                         {/* Header Section */}
                         <div className="space-y-8 text-center md:text-left">
                             <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-none">
-                                <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">Node Authorization</span>
+                                <span className="text-[10px] font-bold text-white/70 font-sans tracking-tight uppercase">Node Authorization</span>
                                 <div className="h-3 w-[1px] bg-white/10" />
                                 <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">Waitlist Protocol</span>
                             </div>
@@ -134,7 +134,7 @@ const Waitlist = () => {
                                 Early Access
                             </h1>
 
-                            <p className="max-w-md text-lg text-white/50 font-sans tracking-tight leading-relaxed border-l-2 border-emerald-500/20 pl-6 mx-auto md:mx-0">
+                            <p className="max-w-md text-lg text-white/50 font-sans tracking-tight leading-relaxed border-l-2 border-white/10 pl-6 mx-auto md:mx-0">
                                 Currently operating at maximum institutional bandwidth. Join the priority node release queue.
                             </p>
                         </div>
@@ -145,7 +145,7 @@ const Waitlist = () => {
                                 {[1, 2, 3].map((s) => (
                                     <div
                                         key={s}
-                                        className={`h-full flex-1 transition-all duration-700 ${step >= s ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-transparent'}`}
+                                        className={`h-full flex-1 transition-all duration-700 ${step >= s ? 'bg-white/40 shadow-[0_0_15px_rgba(255,255,255,0.12)]' : 'bg-transparent'}`}
                                     />
                                 ))}
                             </div>
@@ -162,8 +162,8 @@ const Waitlist = () => {
                                     transition={{ duration: 0.4 }}
                                     className="bg-white/[0.02] border border-white/10 p-8 md:p-12 shadow-2xl relative"
                                 >
-                                    <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-l border-t border-emerald-500/30" />
-                                    <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-r border-b border-emerald-500/30" />
+                                    <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-l border-t border-white/15" />
+                                    <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-r border-b border-white/15" />
 
                                     {step === 1 && (
                                         <div className="space-y-12">
@@ -179,14 +179,14 @@ const Waitlist = () => {
                                                             key={item.id}
                                                             onClick={() => handleSelection('user_type', item.id)}
                                                             className={`flex items-center gap-6 p-6 transition-all duration-300 rounded-none border group relative ${formData.user_type === item.id
-                                                                ? 'bg-emerald-500/5 border-emerald-500/40 text-white'
+                                                                ? 'bg-white/[0.04] border-white/20 text-white'
                                                                 : 'bg-white/[0.01] border-white/10 text-white/40 hover:bg-white/[0.03] hover:border-white/20'
                                                                 }`}
                                                         >
                                                             <item.icon className="w-4 h-4 opacity-50" />
                                                             <span className="text-[11px] font-bold uppercase tracking-tight font-sans">{item.label}</span>
                                                             {formData.user_type === item.id && (
-                                                                <div className="absolute right-6 h-1 w-8 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                                                <div className="absolute right-6 h-[1px] w-8 bg-white/50 shadow-[0_0_10px_rgba(255,255,255,0.16)]" />
                                                             )}
                                                         </button>
                                                     ))}
@@ -199,7 +199,7 @@ const Waitlist = () => {
                                                     onValueChange={(v) => handleSelection('annual_revenue', v)}
                                                     value={formData.annual_revenue}
                                                 >
-                                                    <SelectTrigger className="h-16 bg-white/[0.02] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase focus:border-emerald-500/50">
+                                                    <SelectTrigger className="h-16 bg-white/[0.02] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase focus:border-white/20">
                                                         <SelectValue placeholder="SELECT MAGNITUDE" />
                                                     </SelectTrigger>
                                                     <SelectContent className="bg-[#0a0a0a] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase">
@@ -214,7 +214,7 @@ const Waitlist = () => {
                                             <div className="pt-8">
                                                 <Button
                                                     onClick={nextStep}
-                                                    className="w-full h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
+                                                    className="w-full h-16 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
                                                 >
                                                     Transmit Signal
                                                 </Button>
@@ -234,7 +234,7 @@ const Waitlist = () => {
                                                             name="email"
                                                             type="email"
                                                             placeholder="AUTHORITY@DOMAIN.COM"
-                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
+                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
                                                             value={formData.email}
                                                             onChange={handleInputChange}
                                                         />
@@ -249,7 +249,7 @@ const Waitlist = () => {
                                                             id="contact_handle"
                                                             name="contact_handle"
                                                             placeholder="WHATSAPP / TELEGRAM ID"
-                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-emerald-500/50 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
+                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
                                                             value={formData.contact_handle}
                                                             onChange={handleInputChange}
                                                         />
@@ -267,7 +267,7 @@ const Waitlist = () => {
                                                 </Button>
                                                 <Button
                                                     onClick={nextStep}
-                                                    className="flex-1 h-16 bg-white text-black hover:bg-emerald-500 hover:text-white transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
+                                                    className="flex-1 h-16 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
                                                 >
                                                     Verify Node
                                                 </Button>
@@ -289,11 +289,11 @@ const Waitlist = () => {
                                                             key={item.id}
                                                             onClick={() => handleSelection('primary_goal', item.id)}
                                                             className={`flex items-start gap-6 p-6 border transition-all duration-300 rounded-none ${formData.primary_goal === item.id
-                                                                ? 'bg-emerald-500/5 border-emerald-500/40'
+                                                                ? 'bg-white/[0.04] border-white/20'
                                                                 : 'bg-white/[0.01] border-white/10 hover:bg-white/[0.03] hover:border-white/20'
                                                                 }`}
                                                         >
-                                                            <div className={`mt-1.5 w-3 h-3 rounded-none border transition-all ${formData.primary_goal === item.id ? 'border-emerald-500 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'border-white/20'}`} />
+                                                            <div className={`mt-1.5 w-3 h-3 rounded-none border transition-all ${formData.primary_goal === item.id ? 'border-white/60 bg-white/60 shadow-[0_0_10px_rgba(255,255,255,0.16)]' : 'border-white/20'}`} />
                                                             <div className="space-y-2 text-left">
                                                                 <div className={`text-xs font-bold uppercase tracking-tight font-sans ${formData.primary_goal === item.id ? 'text-white' : 'text-white/40'}`}>{item.label}</div>
                                                                 <div className="text-[10px] uppercase tracking-tight text-white/20 font-sans font-bold">{item.desc}</div>
@@ -315,7 +315,7 @@ const Waitlist = () => {
                                                 <Button
                                                     onClick={handleSubmit}
                                                     disabled={isSubmitting}
-                                                    className={`flex-1 h-16 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-emerald-600 text-white hover:bg-emerald-500 active:scale-[0.98]'
+                                                    className={`flex-1 h-16 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-white text-black hover:bg-white/90 active:scale-[0.98]'
                                                         }`}
                                                 >
                                                     {isSubmitting ? (
@@ -345,12 +345,12 @@ const Waitlist = () => {
                                     animate={{ opacity: 1, scale: 1 }}
                                     className="bg-white/[0.02] border border-white/10 p-16 md:p-24 shadow-3xl text-center space-y-12 relative overflow-hidden"
                                 >
-                                    <div className="absolute top-0 left-0 w-8 h-8 border-l border-t border-emerald-500/50" />
-                                    <div className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-emerald-500/50" />
+                                    <div className="absolute top-0 left-0 w-8 h-8 border-l border-t border-white/20" />
+                                    <div className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-white/20" />
 
                                     <div className="relative mx-auto w-32 h-32 flex items-center justify-center">
-                                        <div className="absolute inset-0 bg-emerald-500/10 rounded-full blur-[40px] animate-pulse" />
-                                        <div className="w-24 h-24 border border-emerald-500/30 rounded-none flex items-center justify-center text-emerald-500">
+                                        <div className="absolute inset-0 bg-white/10 rounded-full blur-[40px] animate-pulse" />
+                                        <div className="w-24 h-24 border border-white/20 rounded-none flex items-center justify-center text-white/80">
                                             <CheckCircle2 className="w-12 h-12" />
                                         </div>
                                     </div>

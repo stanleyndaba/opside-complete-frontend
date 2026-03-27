@@ -776,15 +776,15 @@ const Index = () => {
           {/* Market Intelligence / Forensic Briefs Section */}
           <section className="bg-[#050505] py-24 md:py-32 relative overflow-hidden">
             {/* Subtle background glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-emerald-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-white/[0.02] rounded-full blur-[120px] pointer-events-none" />
 
             <div className="container mx-auto px-6 max-w-7xl relative z-10">
               {/* Technical Header */}
               <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-emerald-500/50" />
-                    <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                    <div className="h-[1px] w-8 bg-white/25" />
+                    <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                       Case studies
                     </span>
                   </div>
@@ -806,7 +806,7 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                           Intel_Report_V4
                         </span>
                         <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
@@ -827,7 +827,7 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                           Forensic_Case_019
                         </span>
                         <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
@@ -848,7 +848,7 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                           Tech_Spec_Algo26
                         </span>
                         <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
@@ -870,13 +870,13 @@ const Index = () => {
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                          <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                             Valuation_Strategy
                           </span>
                           <div className="flex items-end gap-[1px]">
                             <div className="w-[2px] h-2 bg-white/10" />
                             <div className="w-[2px] h-3 bg-white/20" />
-                            <div className="w-[2px] h-5 bg-emerald-500/40" />
+                            <div className="w-[2px] h-5 bg-white/25" />
                           </div>
                         </div>
                         <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4">
@@ -898,10 +898,10 @@ const Index = () => {
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                          <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                             Temporal_Expiry_Alert
                           </span>
-                          <div className="w-10 h-[1px] bg-gradient-to-r from-emerald-500/40 via-white/10 to-transparent" />
+                          <div className="w-10 h-[1px] bg-gradient-to-r from-white/25 via-white/10 to-transparent" />
                         </div>
                         <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4">
                           Temporal Decay: The 18-Month Audit Cliff & Liquidity Forfeiture
@@ -921,7 +921,7 @@ const Index = () => {
                   <div className="flex-none w-[85vw] md:w-[450px] snap-center">
                     <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
                       <div className="flex-1">
-                        <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
                           Logistics_Recon_01
                         </span>
                         <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
