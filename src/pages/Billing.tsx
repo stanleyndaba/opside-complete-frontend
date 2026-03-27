@@ -35,6 +35,10 @@ interface InvoiceRecord {
   amountCharged: number;
   recoveryClaimIds?: string[];
   paypalInvoiceId?: string | null;
+  settlementId?: string | null;
+  payoutBatchId?: string | null;
+  referenceIds?: string[];
+  eventIds?: string[];
 }
 
 interface BillingSummary {
@@ -45,6 +49,8 @@ interface BillingSummary {
   pendingBilling: number;
   availableCreditBalance: number;
   lastBillingDate?: string;
+  lastPayoutDate?: string | null;
+  payoutCount?: number;
   currentRecoveryCycleId?: string | null;
   currentRecoveryCycleType?: string | null;
   currentRecoveryCycleStartedAt?: string | null;
@@ -81,7 +87,7 @@ const metricCards = [
   },
   {
     key: 'totalRecovered',
-    label: 'Recovered amount',
+    label: 'Verified recovered',
   },
   {
     key: 'totalFees',
@@ -203,6 +209,10 @@ export default function Billing() {
           amountCharged: Number(invoice.amount_due || 0),
           recoveryClaimIds: invoice.recovery_claim_ids || [],
           paypalInvoiceId: invoice.paypal_invoice_id || null,
+          settlementId: invoice.settlement_id || null,
+          payoutBatchId: invoice.payout_batch_id || null,
+          referenceIds: Array.isArray(invoice.reference_ids) ? invoice.reference_ids : [],
+          eventIds: Array.isArray(invoice.event_ids) ? invoice.event_ids : [],
         }));
 
         setInvoices(mappedInvoices);
@@ -214,6 +224,8 @@ export default function Billing() {
           pendingBilling: Number(statusRes.data?.status?.pending_billing || 0),
           availableCreditBalance: Number(statusRes.data?.status?.available_credit_balance || 0),
           lastBillingDate: statusRes.data?.status?.last_billing_date,
+          lastPayoutDate: statusRes.data?.status?.last_payout_date || null,
+          payoutCount: Number(statusRes.data?.status?.payout_count || 0),
           currentRecoveryCycleId: statusRes.data?.status?.current_recovery_cycle_id || null,
           currentRecoveryCycleType: statusRes.data?.status?.current_recovery_cycle_type || null,
           currentRecoveryCycleStartedAt: statusRes.data?.status?.current_recovery_cycle_started_at || null,
@@ -317,6 +329,16 @@ export default function Billing() {
                   ? `Last billed ${new Date(billingSummary.lastBillingDate).toLocaleDateString()}`
                   : 'Billing date unavailable'}
                 </Badge>
+                {billingSummary?.lastPayoutDate ? (
+                  <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
+                    Last payout proof {new Date(billingSummary.lastPayoutDate).toLocaleDateString()}
+                  </Badge>
+                ) : null}
+                {typeof billingSummary?.payoutCount === 'number' ? (
+                  <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
+                    Proof events: {billingSummary.payoutCount}
+                  </Badge>
+                ) : null}
                 {billingSummary?.currentRecoveryCycleType && billingSummary?.currentRecoveryCycleStartedAt ? (
                   <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
                     Cycle: {billingSummary.currentRecoveryCycleType} • Started {new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()}
@@ -472,7 +494,7 @@ export default function Billing() {
                 <h2 className="text-xl font-sans font-bold tracking-tight text-white">Billing history</h2>
                 <p className="text-[13px] font-sans leading-6 text-white/50">
                   One confirmed recovery creates one billing record. Each row shows confirmed recovered amount, fee, credit applied,
-                  amount due, and the remaining credit balance after that billing event.
+                  amount due, remaining credit balance, and proof-of-payment identifiers from canonical financial events.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -526,7 +548,7 @@ export default function Billing() {
                         <TableHead className="px-0 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Billing record</TableHead>
                         <TableHead className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Date</TableHead>
                         <TableHead className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Status</TableHead>
-                        <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovered</TableHead>
+                        <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verified recovered</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">20% fee</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Credit applied</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amount due</TableHead>
@@ -543,6 +565,19 @@ export default function Billing() {
                               {invoice.paypalInvoiceId && (
                                 <div className="mt-1 text-[11px] text-white/45">PayPal invoice {invoice.paypalInvoiceId}</div>
                               )}
+                              <div className="mt-2 space-y-1 text-[11px] text-white/50">
+                                <div>
+                                  {invoice.settlementId
+                                    ? `Recovered via Settlement ${invoice.settlementId}`
+                                    : 'No settlement proof attached yet'}
+                                </div>
+                                {invoice.payoutBatchId ? (
+                                  <div>Batch {invoice.payoutBatchId}</div>
+                                ) : null}
+                                {invoice.referenceIds && invoice.referenceIds.length > 0 ? (
+                                  <div>Reference IDs: {invoice.referenceIds.slice(0, 3).join(', ')}</div>
+                                ) : null}
+                              </div>
                             </TableCell>
                             <TableCell className="text-[13px] font-sans text-white/65">
                               {new Date(invoice.dateIssued).toLocaleDateString()}

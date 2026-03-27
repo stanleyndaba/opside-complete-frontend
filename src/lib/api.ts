@@ -787,6 +787,9 @@ export const api = {
         approved_value_total: number;
         recovered_cash_total: number;
         billed_revenue_total: number;
+        outstanding_amount?: number;
+        last_payout_date?: string | null;
+        payout_count?: number;
         last_updated_at: string;
         integrations_summary: {
           connected_count: number;
@@ -1930,6 +1933,10 @@ export const api = {
         seller_payout: number;
         status: string;
         paypal_invoice_id?: string | null;
+        settlement_id?: string | null;
+        payout_batch_id?: string | null;
+        reference_ids?: string[];
+        event_ids?: string[];
         created_at: string;
       }>;
       total: number;
@@ -1956,6 +1963,10 @@ export const api = {
         available_credit_balance: number;
         status: string;
         paypal_invoice_id?: string | null;
+        settlement_id?: string | null;
+        payout_batch_id?: string | null;
+        reference_ids?: string[];
+        event_ids?: string[];
       }>;
       total: number;
     }>(`/api/billing/invoices${query ? `?${query}` : ''}`);
@@ -2003,6 +2014,8 @@ export const api = {
         pending_billing: number;
         available_credit_balance: number;
         last_billing_date?: string;
+        last_payout_date?: string | null;
+        payout_count?: number;
         current_recovery_cycle_id?: string | null;
         current_recovery_cycle_type?: string | null;
         current_recovery_cycle_started_at?: string | null;

@@ -79,6 +79,9 @@ interface DashboardSummary {
   approved_value_total: number;
   recovered_cash_total: number;
   billed_revenue_total: number;
+  outstanding_amount?: number;
+  last_payout_date?: string | null;
+  payout_count?: number;
   last_updated_at: string;
   integrations_summary: {
     connected_count: number;
@@ -1207,9 +1210,9 @@ export function Dashboard() {
                       <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">RECOVERY SUMMARY</h2>
+                            <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">VERIFIED MONEY</h2>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-sans font-bold text-white tracking-tight">Recovered Cash</span>
+                              <span className="text-sm font-sans font-bold text-white tracking-tight">Verified Recovered Cash</span>
                             </div>
                           </div>
                         </div>
@@ -1254,7 +1257,7 @@ export function Dashboard() {
                                   </span>
                                 </div>
                                 <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
-                                  Billed Revenue {formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency)}
+                                  Verified Billed Revenue {formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency)}
                                 </span>
                               </div>
                             </>
@@ -1286,12 +1289,18 @@ export function Dashboard() {
                         </div>
                       </div>
 
+                      <div className="px-6 py-3 bg-white/[0.015] border-t border-white/5">
+                        <span className="text-[9px] font-sans font-bold text-white/25 uppercase tracking-tight">
+                          Pipeline Value // Not Yet Paid
+                        </span>
+                      </div>
+
                       {/* Secondary Metrics Grid - Unified */}
                       <div className="grid grid-cols-3 bg-[#0a0a0a]/50 divide-x divide-white/5 border-t border-white/5">
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Estimated Value</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Estimated Pipeline Value</div>
                               <div className="text-2xl font-sans font-bold text-white tracking-tight">
                                 {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
@@ -1302,7 +1311,7 @@ export function Dashboard() {
                               <div className="mt-4 flex items-center gap-2">
                                 <Clock className="h-3 w-3 text-white/25" />
                                 <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
-                                  Detected discrepancy value
+                                  Estimated value only, not yet paid
                                 </span>
                               </div>
                               <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
@@ -1315,7 +1324,7 @@ export function Dashboard() {
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Payout Details</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
-                                Estimated Value sums tenant detection estimates. It is potential value, not approved or recovered cash.
+                                Estimated Pipeline Value sums tenant detection estimates. It is potential value, not approved or paid cash.
                               </p>
                             </div>
                           </HoverCardContent>
@@ -1324,7 +1333,7 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Filed Value</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Filed Pipeline Value</div>
                               <div className="text-2xl font-sans font-bold text-white tracking-tight">
                                 {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
@@ -1334,7 +1343,7 @@ export function Dashboard() {
                               </div>
                               <div className="mt-4 space-y-1.5">
                                 <div className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
-                                  Submitted or post-submission case value
+                                  Filed case value, not yet paid
                                 </div>
                                 <div className="text-[10px] font-sans font-bold text-white/25 tracking-tight">
                                   {dashboardSummary ? `Across ${dashboardSummary.filed_count} Filed Cases` : 'Loading filed case value...'}
@@ -1350,7 +1359,7 @@ export function Dashboard() {
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Activity Log</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
-                                Filed Value reflects case amounts that entered the filing pipeline. It is not approved value or recovered cash.
+                                Filed Pipeline Value reflects case amounts that entered filing. It is still in progress and not verified cash.
                               </p>
                             </div>
                           </HoverCardContent>
@@ -1359,7 +1368,7 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Approved Value</div>
+                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Approved Not Yet Paid</div>
                               <div className="text-2xl font-sans font-bold text-white tracking-tight">
                                 {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
@@ -1391,7 +1400,7 @@ export function Dashboard() {
                                 <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Success Metrics</h4>
                               </div>
                               <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
-                                Approved Value reflects case amounts with approved dispute status. Recovered cash and billed revenue are tracked separately.
+                                Approved Not Yet Paid reflects case amounts with approved dispute status. It remains pipeline value until payout events are recorded.
                               </p>
                             </div>
                           </HoverCardContent>
@@ -1643,7 +1652,7 @@ export function Dashboard() {
                           </button>
 
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">RECOVERED</span>
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">VERIFIED RECOVERED</span>
                             <span className="text-lg font-sans font-bold text-white leading-none mt-1">
                               {dashboardSummary
                                 ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
