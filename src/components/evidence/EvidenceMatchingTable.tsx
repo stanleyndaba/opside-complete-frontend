@@ -14,7 +14,7 @@ import {
   Clock,
   FileText,
   AlertTriangle,
-  Sparkles,
+  Eye,
   Loader2,
   XCircle,
   FileSearch,
@@ -382,7 +382,7 @@ export function EvidenceMatchingTable() {
             value="smart-prompts"
             className="flex-1 relative px-6 text-[10px] font-sans font-medium text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/65 data-[state=active]:text-white data-[state=active]:bg-white/[0.06] data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.25)] uppercase tracking-tight group">
             <div className="flex items-center justify-center gap-2">
-              <Sparkles className="w-3 h-3 text-current" />
+              <Eye className="w-3 h-3 text-current" />
               Pending Review
               {smartPrompts.length > 0 && (
                 <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/25 group-data-[state=active]:text-white/75">{smartPrompts.length}</span>
@@ -428,7 +428,7 @@ export function EvidenceMatchingTable() {
 
         <TabsContent value="smart-prompts" className="mt-0 outline-none">
           {smartPrompts.length === 0 ? (
-            <div className="py-24 text-center bg-[#111111]/90 border border-white/10 rounded-2xl backdrop-blur-xl">
+            <div className="py-24 text-center bg-[#111111]/90 rounded-2xl backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-6">
                 <CheckCircle2 className="h-6 w-6 text-white/40" />
               </div>
@@ -438,7 +438,7 @@ export function EvidenceMatchingTable() {
               </p>
             </div>
           ) : (
-            <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
+            <div className="bg-[#111111]/90 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {smartPrompts.map(match => (
                 <SmartPromptCard
                   key={match.id}
@@ -455,7 +455,7 @@ export function EvidenceMatchingTable() {
         {/* Auto-Submitted Tab */}
         <TabsContent value="auto-submitted" className="mt-0 border-t border-white/5">
           {autoSubmitted.length === 0 ? (
-            <div className="py-20 text-center bg-[#111111]/90 rounded-2xl border border-white/10 backdrop-blur-xl">
+            <div className="py-20 text-center bg-[#111111]/90 rounded-2xl backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
                 <Hexagon className="h-5 w-5 text-white/20" />
               </div>
@@ -526,7 +526,7 @@ export function EvidenceMatchingTable() {
         {/* Held / Rejected Tab */}
         <TabsContent value="held" className="mt-0 border-t border-white/5">
           {heldForReview.length === 0 ? (
-            <div className="py-20 text-center bg-[#111111]/90 rounded-2xl border border-white/10 backdrop-blur-xl">
+            <div className="py-20 text-center bg-[#111111]/90 rounded-2xl backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-12 h-12 border border-dashed border-white/10 mb-4 bg-white/5 rounded-xl">
                 <CheckCircle2 className="h-5 w-5 text-white/20" />
               </div>
@@ -553,7 +553,7 @@ export function EvidenceMatchingTable() {
         {/* All Matches Tab */}
         <TabsContent value="all" className="mt-0 outline-none">
           {matchingResults.length === 0 ? (
-            <div className="py-24 text-center bg-[#111111]/90 border border-white/10 rounded-2xl backdrop-blur-xl">
+            <div className="py-24 text-center bg-[#111111]/90 rounded-2xl backdrop-blur-xl">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/5 border border-white/10 mb-6">
                 <FileText className="h-6 w-6 text-white/20" />
               </div>
@@ -569,7 +569,7 @@ export function EvidenceMatchingTable() {
               </Button>
             </div>
           ) : (
-            <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
+            <div className="bg-[#111111]/90 rounded-2xl overflow-hidden backdrop-blur-xl divide-y divide-white/5">
               {matchingResults.map((match) => (
                 <div key={match.id} className="group relative px-8 py-6 hover:bg-white/[0.02] transition-colors">
                   <div className="absolute left-0 top-0 bottom-0 w-px bg-amber-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-top duration-500" />
