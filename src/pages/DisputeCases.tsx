@@ -14,6 +14,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
+import {
+  financialSourceLabel,
+  financialStatusDetail,
+  financialStatusLabel,
+  financialStatusTone,
+  labelFinancialEventType,
+  type FinancialTruthEvent,
+  type FinancialTruthSummary
+} from '@/lib/financialTruth';
 import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';
 import { useToast } from '@/hooks/use-toast';
@@ -21,6 +30,7 @@ import { useStatusStream } from '@/hooks/use-status-stream';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
+type FinancialMap = Record<string, FinancialTruthSummary>;
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
@@ -89,10 +99,20 @@ type FilingPosture = {
   risks: string[];
 };
 
-function deriveFilingPosture(row: QueueRow): FilingPosture {
+function getFinancialKey(row: Pick<QueueRow, 'dispute_case_id' | 'detection_result_id'>): string {
+  return row.dispute_case_id || row.detection_result_id || '';
+}
+
+function getFinancialSummaryForRow(row: Pick<QueueRow, 'dispute_case_id' | 'detection_result_id'>, map: FinancialMap): FinancialTruthSummary | null {
+  const directKey = getFinancialKey(row);
+  if (directKey && map[directKey]) return map[directKey];
+  if (row.detection_result_id && map[row.detection_result_id]) return map[row.detection_result_id];
+  return null;
+}
+
+function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSummary | null): FilingPosture {
   const filingStatus = String(row.filing_status || '').toLowerCase();
   const status = String(row.status || '').toLowerCase();
-  const recoveryStatus = String(row.recovery_status || '').toLowerCase();
   const billingStatus = String(row.billing_status || '').toLowerCase();
   const evidenceState = String(row.evidence_state || '').toLowerCase();
   const blockReasons = Array.isArray(row.block_reasons) ? row.block_reasons : [];
@@ -132,29 +152,39 @@ function deriveFilingPosture(row: QueueRow): FilingPosture {
   }
 
   if (row.expected_payout_date && row.approved_amount != null && row.actual_payout_amount == null) {
-    strengths.push(`Payout target ${formatCompactDate(row.expected_payout_date)}`);
+    strengths.push(`Est. payout ${formatCompactDate(row.expected_payout_date)}`);
   }
 
-  if (row.actual_payout_amount != null || recoveryStatus === 'reconciled') {
+  if (financialSummary?.payout_status === 'paid') {
     if (billingStatus === 'credited' || billingStatus === 'completed' || row.billed_amount != null) {
       strengths.push('Billing reconciled');
     }
     return {
       tone: 'resolved',
-      headline: 'Recovered',
-      detail: row.billed_amount != null ? 'Recovery landed and billing has entered reconciliation.' : 'Recovery has been recorded for this case.',
+      headline: 'Financially confirmed',
+      detail: row.billed_amount != null ? 'Payment is confirmed by financial events and billing has entered reconciliation.' : 'Payment is confirmed by financial events.',
       strengths: strengths.slice(0, 3),
       risks: []
+    };
+  }
+
+  if (financialSummary?.payout_status === 'partially_paid') {
+    return {
+      tone: 'in_flight',
+      headline: 'Partial payment confirmed',
+      detail: 'Financial events show a partial payout. Keep the case open until the full amount is confirmed.',
+      strengths: strengths.slice(0, 3),
+      risks: risks.slice(0, 2)
     };
   }
 
   if (row.approved_amount != null && row.actual_payout_amount == null) {
     return {
       tone: 'in_flight',
-      headline: 'Payout pending',
+      headline: 'Awaiting financial confirmation',
       detail: row.expected_payout_date
-        ? `Amazon approval is in place. Track payout timing against ${formatCompactDate(row.expected_payout_date)}.`
-        : 'Amazon approval is in place. The remaining risk is payout timing, not filing readiness.',
+        ? `Amazon approval is in place. Track payout timing against the estimate ${formatCompactDate(row.expected_payout_date)} until a financial event confirms payment.`
+        : 'Amazon approval is in place. Payment is still awaiting financial confirmation.',
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
     };
@@ -391,6 +421,10 @@ export default function DisputeCases() {
   const [page, setPage] = useState(1);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<QueueRow | null>(null);
+  const [financialSummaries, setFinancialSummaries] = useState<FinancialMap>({});
+  const [detailsFinancialSummary, setDetailsFinancialSummary] = useState<FinancialTruthSummary | null>(null);
+  const [detailsFinancialEvents, setDetailsFinancialEvents] = useState<FinancialTruthEvent[]>([]);
+  const [detailsFinancialLoading, setDetailsFinancialLoading] = useState(false);
   const [briefPreviewOpen, setBriefPreviewOpen] = useState(false);
   const [briefPreviewLoading, setBriefPreviewLoading] = useState(false);
   const [briefPreviewUrl, setBriefPreviewUrl] = useState<string | null>(null);
@@ -480,7 +514,45 @@ export default function DisputeCases() {
     return () => { cancelled = true; };
   }, [activeTenantSlug, searchTerm, status, filingStatus, recoveryStatus, billingStatus, evidenceState, rejectionCategory, sortBy, sortOrder, page, refreshKey]);
 
+  useEffect(() => {
+    if (!activeTenantSlug || !rows.length) {
+      setFinancialSummaries({});
+      return;
+    }
+
+    let cancelled = false;
+    const loadFinancialTruth = async () => {
+      const caseIds = Array.from(new Set(rows.map((row) => getFinancialKey(row)).filter(Boolean)));
+      if (!caseIds.length) {
+        if (!cancelled) setFinancialSummaries({});
+        return;
+      }
+
+      const response = await api.getRecoveryFinancialEvents({ caseIds }, activeTenantSlug);
+      if (cancelled) return;
+      if (!response.ok || !response.data?.success) {
+        setFinancialSummaries({});
+        return;
+      }
+
+      const nextMap = (response.data.summaries || []).reduce<FinancialMap>((acc, item) => {
+        if (item.input_id) acc[item.input_id] = item;
+        if (item.dispute_case_id) acc[item.dispute_case_id] = item;
+        if (item.detection_result_id) acc[item.detection_result_id] = item;
+        return acc;
+      }, {});
+      setFinancialSummaries(nextMap);
+    };
+
+    void loadFinancialTruth();
+    return () => { cancelled = true; };
+  }, [activeTenantSlug, rows]);
+
   const totalPages = Math.max(1, Math.ceil(summary.filtered_results / pageSize));
+  const verifiedRecoveryCount = useMemo(
+    () => rows.filter((row) => getFinancialSummaryForRow(row, financialSummaries)?.payout_status === 'paid').length,
+    [financialSummaries, rows]
+  );
 
   const refresh = () => setRefreshKey((value) => value + 1);
 
@@ -534,9 +606,25 @@ export default function DisputeCases() {
     };
   }, [briefPreviewUrl]);
 
-  const openCaseDetails = (row: QueueRow) => {
+  const openCaseDetails = async (row: QueueRow) => {
     setDetailsRow(row);
     setDetailsOpen(true);
+    setDetailsFinancialSummary(getFinancialSummaryForRow(row, financialSummaries));
+    setDetailsFinancialEvents([]);
+    setDetailsFinancialLoading(true);
+    try {
+      const response = await api.getRecoveryFinancialEvents({ caseId: getFinancialKey(row) }, activeTenantSlug);
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Unable to load financial confirmation.');
+      }
+      const fetchedSummary = (response.data.summaries || [])[0] || getFinancialSummaryForRow(row, financialSummaries);
+      setDetailsFinancialSummary(fetchedSummary || null);
+      setDetailsFinancialEvents(response.data.events || []);
+    } catch {
+      setDetailsFinancialEvents([]);
+    } finally {
+      setDetailsFinancialLoading(false);
+    }
   };
 
   const closeBriefPreview = () => {
@@ -644,9 +732,9 @@ export default function DisputeCases() {
   const secondarySummaryCards = useMemo(() => ([
     { label: 'Filed', value: summary.filed_count },
     { label: 'Rejected', value: summary.rejected_count },
-    { label: 'Recovered', value: summary.recovered_count },
+    { label: 'Financially Verified', value: verifiedRecoveryCount },
     { label: 'Billing', value: summary.billing_pending_count },
-  ]), [summary]);
+  ]), [summary, verifiedRecoveryCount]);
 
   if (isReady && !activeTenantSlug) {
     return (
@@ -850,7 +938,7 @@ export default function DisputeCases() {
                       <SelectItem value="created_at">Created</SelectItem>
                       <SelectItem value="requested_amount">Requested Amount</SelectItem>
                       <SelectItem value="approved_amount">Approved Amount</SelectItem>
-                      <SelectItem value="actual_payout_amount">Recovered Amount</SelectItem>
+                      <SelectItem value="actual_payout_amount">Legacy Payout Field</SelectItem>
                       <SelectItem value="billed_amount">Billed Amount</SelectItem>
                     </SelectContent>
                   </Select>
@@ -907,7 +995,8 @@ export default function DisputeCases() {
                       {rows.map((row) => {
                         const filingValue = String(row.filing_status || '').toLowerCase();
                         const isProcessing = filingInProgress.has(row.dispute_case_id);
-                        const posture = deriveFilingPosture(row);
+                        const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
+                        const posture = deriveFilingPosture(row, financialSummary);
                         const actionButton =
                           filingValue === 'pending_approval'
                             ? { label: 'Approve', mode: 'approve' as const }
@@ -941,7 +1030,13 @@ export default function DisputeCases() {
                               <div className="space-y-1 min-w-[220px] text-[12px] font-sans text-white/70">
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Approved</span><span>{formatMoney(row.approved_amount, row.currency)}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-white/35">Recovered</span><span>{formatMoney(row.actual_payout_amount, row.currency)}</span></div>
+                                <div className="flex justify-between gap-4"><span className="text-white/35">Paid (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
+                                <div className="pt-1">
+                                  <Badge variant="outline" className={cn('border', financialStatusTone(financialSummary?.payout_status))}>
+                                    Financial Status: {financialStatusLabel(financialSummary?.payout_status)}
+                                  </Badge>
+                                </div>
+                                <div className="text-[10px] text-white/40">{financialStatusDetail(financialSummary)}</div>
                               </div>
                             </td>
 
@@ -1090,7 +1185,9 @@ export default function DisputeCases() {
               </div>
             ) : null}
           </DialogHeader>
-          {detailsRow ? (
+          {detailsRow ? (() => {
+            const financialSummary = detailsFinancialSummary || getFinancialSummaryForRow(detailsRow, financialSummaries);
+            return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
                 title="Case"
@@ -1111,6 +1208,7 @@ export default function DisputeCases() {
                   { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
+                  { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
                   { label: 'Next Action', value: detailsRow.next_action || 'Not available' },
                 ]}
               />
@@ -1128,9 +1226,22 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Requested Amount', value: formatMoney(detailsRow.requested_amount, detailsRow.currency) },
                   { label: 'Approved Amount', value: formatMoney(detailsRow.approved_amount, detailsRow.currency) },
-                  { label: 'Recovered Amount', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
+                  { label: 'Paid (Verified)', value: formatMoney(financialSummary?.verified_paid_amount, detailsRow.currency) },
+                  { label: 'Case Recovery Field (Legacy)', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
                   { label: 'Billed Amount', value: formatMoney(detailsRow.billed_amount, detailsRow.currency) },
-                  { label: 'Expected Payout', value: formatMoney(detailsRow.expected_payout_amount, detailsRow.currency) },
+                  { label: 'Expected Payout (Estimate)', value: formatMoney(detailsRow.expected_payout_amount, detailsRow.currency) },
+                  { label: 'Variance', value: formatMoney(financialSummary?.variance_amount, detailsRow.currency) },
+                ]}
+              />
+              <DetailSection
+                title="Financial Confirmation"
+                rows={[
+                  { label: 'Summary', value: financialStatusDetail(financialSummary) },
+                  { label: 'Paid Via Settlement', value: financialSummary?.proof_of_payment?.settlement_id || 'Not available' },
+                  { label: 'Payout Batch', value: financialSummary?.proof_of_payment?.payout_batch_id || 'Not available' },
+                  { label: 'Reference ID', value: financialSummary?.proof_of_payment?.reference_id || 'Not available' },
+                  { label: 'Confirmed At', value: financialSummary?.proof_of_payment?.event_date ? format(new Date(financialSummary.proof_of_payment.event_date), 'yyyy/MM/dd HH:mm') : 'Not available' },
+                  { label: 'Source', value: financialSummary?.source_types?.length ? financialSummary.source_types.map(financialSourceLabel).join(', ') : 'No financial events yet' },
                 ]}
               />
               <DetailSection
@@ -1147,13 +1258,43 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Created', value: detailsRow.created_at ? format(new Date(detailsRow.created_at), 'yyyy/MM/dd HH:mm') : 'Not available' },
                   { label: 'Updated', value: detailsRow.updated_at ? format(new Date(detailsRow.updated_at), 'yyyy/MM/dd HH:mm') : 'Not available' },
-                  { label: 'Expected Payout Date', value: detailsRow.expected_payout_date ? format(new Date(detailsRow.expected_payout_date), 'yyyy/MM/dd') : 'Not available' },
+                  { label: 'Expected Payout Date (Estimate)', value: detailsRow.expected_payout_date ? format(new Date(detailsRow.expected_payout_date), 'yyyy/MM/dd') : 'Not available' },
                   { label: 'Order ID', value: detailsRow.order_id || 'Not available' },
                   { label: 'SKU / ASIN', value: [detailsRow.sku, detailsRow.asin].filter(Boolean).join(' / ') || 'Not available' },
                 ]}
               />
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Financial Events Timeline</div>
+                  {detailsFinancialLoading ? <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Loading proof…</div> : null}
+                </div>
+                <div className="mt-4 space-y-3">
+                  {!detailsFinancialLoading && detailsFinancialEvents.length === 0 ? (
+                    <div className="text-[11px] font-sans font-semibold tracking-tight text-white/62">No payout recorded yet.</div>
+                  ) : detailsFinancialEvents.map((event) => (
+                    <div key={event.event_id} className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+                      <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
+                        <div>
+                          <div className="text-[11px] font-sans font-semibold tracking-tight text-white">{labelFinancialEventType(event.event_type, event.event_subtype)}</div>
+                          <div className="mt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/32">
+                            {financialSourceLabel(event.source)} · {event.event_date ? format(new Date(event.event_date), 'yyyy/MM/dd HH:mm') : 'No event date'}
+                          </div>
+                        </div>
+                        <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{formatMoney(event.amount, event.currency)}</div>
+                      </div>
+                      <div className="mt-3 grid gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/42 xl:grid-cols-2">
+                        <div>Reference: {event.reference_id || 'Not available'}</div>
+                        <div>Settlement: {event.settlement_id || 'Not available'}</div>
+                        <div>Batch: {event.payout_batch_id || 'Not available'}</div>
+                        <div>Order / SKU: {[event.amazon_order_id, event.sku].filter(Boolean).join(' / ') || 'Not available'}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          ) : null}
+            );
+          })() : null}
         </DialogContent>
       </Dialog>
 

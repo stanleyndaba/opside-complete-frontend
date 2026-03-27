@@ -16,6 +16,15 @@ import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
+import {
+  financialSourceLabel,
+  financialStatusDetail,
+  financialStatusLabel,
+  financialStatusTone,
+  labelFinancialEventType,
+  type FinancialTruthEvent,
+  type FinancialTruthSummary
+} from '@/lib/financialTruth';
 
 type Blocker = { key: string; label: string; count: number; severity: 'low' | 'medium' | 'high' };
 type Summary = {
@@ -106,12 +115,14 @@ type ProofDocument = {
   amount?: number;
 };
 
+type FinancialMap = Record<string, FinancialTruthSummary>;
+
 const PAGE_SIZE = 10;
 const BILLING_COMPLETE_STATES = new Set(['paid', 'charged', 'credited', 'completed']);
 const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['recovery_processing', 'Recovery Processing'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_processing', 'Billing Processing'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
 const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
 const billingOptions = [['all', 'All Billing States'], ['pending', 'Pending'], ['sent', 'Sent'], ['charged', 'Charged'], ['credited', 'Credited'], ['paid', 'Paid']];
-const sortOptions = [['last_updated_at', 'Last Updated'], ['actual_payout_amount', 'Actual Payout'], ['approved_amount', 'Approved Value'], ['expected_payout_amount', 'Pending Payout'], ['case_number', 'Case Reference']];
+const sortOptions = [['last_updated_at', 'Last Updated'], ['actual_payout_amount', 'Legacy Payout Field'], ['approved_amount', 'Approved Value'], ['expected_payout_amount', 'Projected Pending Payout'], ['case_number', 'Case Reference']];
 const dateRanges = [['30', 'Last 30 Days'], ['90', 'Last 90 Days'], ['365', 'This Year'], ['all', 'All Time']];
 
 const money = (value: number | null | undefined, currency = 'USD') =>
@@ -161,6 +172,17 @@ function pickLatestTimestamp(...values: Array<string | null | undefined>): strin
     .filter((entry) => Number.isFinite(entry.time))
     .sort((left, right) => right.time - left.time)[0];
   return stamped?.value || null;
+}
+
+function getFinancialKey(row: Pick<Row, 'dispute_case_id' | 'recovery_id' | 'detection_result_id'>): string {
+  return row.dispute_case_id || row.recovery_id || row.detection_result_id || '';
+}
+
+function getFinancialSummaryForRow(row: Pick<Row, 'dispute_case_id' | 'recovery_id' | 'detection_result_id'>, map: FinancialMap): FinancialTruthSummary | null {
+  const directKey = getFinancialKey(row);
+  if (directKey && map[directKey]) return map[directKey];
+  if (row.detection_result_id && map[row.detection_result_id]) return map[row.detection_result_id];
+  return null;
 }
 
 function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
@@ -448,6 +470,10 @@ export default function RecoveryPipelineAgent8() {
   const [evidencePackClaimId, setEvidencePackClaimId] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<Row | null>(null);
+  const [financialSummaries, setFinancialSummaries] = useState<FinancialMap>({});
+  const [detailsFinancialSummary, setDetailsFinancialSummary] = useState<FinancialTruthSummary | null>(null);
+  const [detailsFinancialEvents, setDetailsFinancialEvents] = useState<FinancialTruthEvent[]>([]);
+  const [detailsFinancialLoading, setDetailsFinancialLoading] = useState(false);
   const liveRefreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -563,6 +589,56 @@ export default function RecoveryPipelineAgent8() {
   const rows = ledger?.rows || [];
   const pagination = ledger?.pagination || null;
   const filteredLabel = useMemo(() => pagination ? `${pagination.total_filtered} filtered results of ${pagination.total_rows}` : '', [pagination]);
+  const financialOverview = useMemo(() => {
+    const rowSummaries = rows
+      .map((row) => getFinancialSummaryForRow(row, financialSummaries))
+      .filter((item): item is FinancialTruthSummary => Boolean(item));
+
+    return {
+      verifiedPaidTotal: Number(rowSummaries.reduce((sum, item) => sum + item.verified_paid_amount, 0).toFixed(2)),
+      pendingVerifiedTotal: Number(rowSummaries.reduce((sum, item) => sum + Number(item.outstanding_amount || 0), 0).toFixed(2)),
+      fullyPaidCount: rowSummaries.filter((item) => item.payout_status === 'paid').length,
+      partialPaidCount: rowSummaries.filter((item) => item.payout_status === 'partially_paid').length,
+      unpaidCount: rowSummaries.filter((item) => item.payout_status === 'not_paid').length,
+      proofCount: rowSummaries.filter((item) => Boolean(item.proof_of_payment)).length
+    };
+  }, [financialSummaries, rows]);
+
+  useEffect(() => {
+    if (!activeSlug || !rows.length) {
+      setFinancialSummaries({});
+      return;
+    }
+
+    let cancelled = false;
+    const loadFinancialTruth = async () => {
+      const caseIds = Array.from(new Set(rows.map((row) => getFinancialKey(row)).filter(Boolean)));
+      if (!caseIds.length) {
+        if (!cancelled) setFinancialSummaries({});
+        return;
+      }
+
+      const response = await api.getRecoveryFinancialEvents({ caseIds }, activeSlug);
+      if (cancelled) return;
+      if (!response.ok || !response.data?.success) {
+        setFinancialSummaries({});
+        return;
+      }
+
+      const nextMap = (response.data.summaries || []).reduce<FinancialMap>((acc, item) => {
+        if (item.input_id) acc[item.input_id] = item;
+        if (item.dispute_case_id) acc[item.dispute_case_id] = item;
+        if (item.detection_result_id) acc[item.detection_result_id] = item;
+        return acc;
+      }, {});
+      setFinancialSummaries(nextMap);
+    };
+
+    void loadFinancialTruth();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSlug, rows]);
 
   const openProofDocuments = async (row: Row) => {
     try {
@@ -578,9 +654,25 @@ export default function RecoveryPipelineAgent8() {
     }
   };
 
-  const openRecoveryDetails = (row: Row) => {
+  const openRecoveryDetails = async (row: Row) => {
     setDetailsRow(row);
     setDetailsOpen(true);
+    setDetailsFinancialSummary(getFinancialSummaryForRow(row, financialSummaries));
+    setDetailsFinancialEvents([]);
+    setDetailsFinancialLoading(true);
+    try {
+      const response = await api.getRecoveryFinancialEvents({ caseId: getFinancialKey(row) }, activeSlug);
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Unable to load financial proof.');
+      }
+      const fetchedSummary = (response.data.summaries || [])[0] || getFinancialSummaryForRow(row, financialSummaries);
+      setDetailsFinancialSummary(fetchedSummary || null);
+      setDetailsFinancialEvents(response.data.events || []);
+    } catch {
+      setDetailsFinancialEvents([]);
+    } finally {
+      setDetailsFinancialLoading(false);
+    }
   };
 
   const openEvidencePacket = (row: Row) => {
@@ -649,10 +741,10 @@ export default function RecoveryPipelineAgent8() {
           ) : summary && pagination ? (
             <div className="space-y-6">
               <div className="grid gap-4 xl:grid-cols-4">
-                <Metric labelText="Recovered Cash" value={money(summary.recovered_cash_total)} sublabel={`${summary.reconciled_count} reconciled, ${summary.unreconciled_count} unreconciled`} />
-                <Metric labelText="Pending Payout" value={money(summary.pending_payout_total)} sublabel={`${summary.pending_payout_count} waiting for payout`} />
+                <Metric labelText="Verified Paid" value={money(financialOverview.verifiedPaidTotal)} sublabel={`${financialOverview.fullyPaidCount} paid, ${financialOverview.partialPaidCount} partial`} />
+                <Metric labelText="Awaiting Payment" value={money(financialOverview.pendingVerifiedTotal)} sublabel={`${financialOverview.unpaidCount} with no payout recorded`} />
                 <Metric labelText="Approved Value" value={money(summary.approved_value_total)} sublabel={`${summary.approved_count} approved cases`} />
-                <Metric labelText="Billed Revenue" value={money(summary.billed_revenue_total)} sublabel={`${summary.billing_pending_count} billing pending`} />
+                <Metric labelText="Payment Proof" value={String(financialOverview.proofCount)} sublabel="Cases with settlement or batch proof" />
               </div>
 
               <Card className="border-white/10 bg-[#0c0c0c]">
@@ -733,7 +825,9 @@ export default function RecoveryPipelineAgent8() {
                             </tr>
                           </thead>
                           <tbody>
-                            {rows.map((row) => (
+                            {rows.map((row) => {
+                              const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
+                              return (
                               <tr key={row.recovery_id} className="border-b border-white/[0.06] align-top">
                                 <td className="py-5 pr-4">
                                   <div className="space-y-2">
@@ -813,13 +907,22 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="space-y-2">
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Approved Value</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
-                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Actual Payout</div>
-                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.actual_payout_amount, row.currency)}</div>
+                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Verified Paid</div>
+                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(financialSummary?.verified_paid_amount, row.currency)}</div>
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${financialStatusTone(financialSummary?.payout_status)}`}>{financialStatusLabel(financialSummary?.payout_status)}</span>
+                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">{financialStatusDetail(financialSummary)}</div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="space-y-2">
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.billing_status)}`}>{label(row.billing_status)}</span>
+                                    {financialSummary?.proof_of_payment ? (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/36">
+                                        Paid via {financialSummary.proof_of_payment.settlement_id ? `Settlement ${financialSummary.proof_of_payment.settlement_id}` : financialSummary.proof_of_payment.payout_batch_id ? `Batch ${financialSummary.proof_of_payment.payout_batch_id}` : 'financial event'}
+                                      </div>
+                                    ) : (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">No payout proof yet</div>
+                                    )}
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Billed Revenue</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.billed_revenue_amount, row.currency)}</div>
                                   </div>
@@ -868,7 +971,8 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : label(row.operator_state)}</div>
                                 </td>
                               </tr>
-                            ))}
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>
@@ -909,7 +1013,9 @@ export default function RecoveryPipelineAgent8() {
               {detailsRow?.case_number || 'Recovery Case'}
             </DialogTitle>
           </DialogHeader>
-          {detailsRow ? (
+          {detailsRow ? (() => {
+            const financialSummary = detailsFinancialSummary || getFinancialSummaryForRow(detailsRow, financialSummaries);
+            return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
                 title="Case"
@@ -947,11 +1053,27 @@ export default function RecoveryPipelineAgent8() {
                 ]}
               />
               <DetailSection
-                title="Money"
+                title="Financial Truth"
                 rows={[
                   { label: 'Approved Value', value: money(detailsRow.approved_amount, detailsRow.currency) },
-                  { label: 'Actual Payout', value: money(detailsRow.actual_payout_amount, detailsRow.currency) },
-                  { label: 'Pending Payout', value: money(detailsRow.expected_payout_amount, detailsRow.currency) },
+                  { label: 'Verified Paid', value: money(financialSummary?.verified_paid_amount, detailsRow.currency) },
+                  { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
+                  { label: 'Outstanding', value: money(financialSummary?.outstanding_amount, detailsRow.currency) },
+                  { label: 'Variance', value: money(financialSummary?.variance_amount, detailsRow.currency) },
+                  { label: 'Source Rails', value: financialSummary?.source_types?.length ? financialSummary.source_types.map(financialSourceLabel).join(', ') : 'No financial events yet' },
+                  { label: 'Legacy Case Payout Field', value: money(detailsRow.actual_payout_amount, detailsRow.currency) },
+                  { label: 'Projected Payout (Estimate)', value: money(detailsRow.expected_payout_amount, detailsRow.currency) },
+                ]}
+              />
+              <DetailSection
+                title="Proof of Payment"
+                rows={[
+                  { label: 'Status', value: financialStatusDetail(financialSummary) },
+                  { label: 'Paid Via Settlement', value: financialSummary?.proof_of_payment?.settlement_id || 'Not available' },
+                  { label: 'Payout Batch', value: financialSummary?.proof_of_payment?.payout_batch_id || 'Not available' },
+                  { label: 'Reference ID', value: financialSummary?.proof_of_payment?.reference_id || 'Not available' },
+                  { label: 'Payment Date', value: stamp(financialSummary?.proof_of_payment?.event_date) },
+                  { label: 'Payment Source', value: financialSourceLabel(financialSummary?.proof_of_payment?.source) },
                 ]}
               />
               <DetailSection
@@ -981,12 +1103,42 @@ export default function RecoveryPipelineAgent8() {
                 title="Currentness"
                 rows={[
                   { label: 'Last Updated', value: stamp(detailsRow.last_updated_at) },
-                  { label: 'Expected Payout Date', value: stamp(detailsRow.expected_payout_date) },
+                  { label: 'Expected Payout Date (Estimate)', value: stamp(detailsRow.expected_payout_date) },
                   { label: 'Recovery ID', value: detailsRow.recovery_id || 'Not available' },
                 ]}
               />
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Financial Events Timeline</div>
+                  {detailsFinancialLoading ? <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Loading proof…</div> : null}
+                </div>
+                <div className="mt-4 space-y-3">
+                  {!detailsFinancialLoading && detailsFinancialEvents.length === 0 ? (
+                    <div className="text-[11px] font-sans font-semibold tracking-tight text-white/62">No payout recorded yet.</div>
+                  ) : detailsFinancialEvents.map((event) => (
+                    <div key={event.event_id} className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+                      <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
+                        <div>
+                          <div className="text-[11px] font-sans font-semibold tracking-tight text-white">{labelFinancialEventType(event.event_type, event.event_subtype)}</div>
+                          <div className="mt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/32">
+                            {financialSourceLabel(event.source)} · {stamp(event.event_date)}
+                          </div>
+                        </div>
+                        <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(event.amount, event.currency)}</div>
+                      </div>
+                      <div className="mt-3 grid gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/42 xl:grid-cols-2">
+                        <div>Reference: {event.reference_id || 'Not available'}</div>
+                        <div>Settlement: {event.settlement_id || 'Not available'}</div>
+                        <div>Batch: {event.payout_batch_id || 'Not available'}</div>
+                        <div>Order / SKU: {[event.amazon_order_id, event.sku].filter(Boolean).join(' / ') || 'Not available'}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          ) : null}
+            );
+          })() : null}
         </DialogContent>
       </Dialog>
     </PageLayout>

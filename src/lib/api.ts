@@ -850,6 +850,87 @@ export const api = {
     if (params?.page_size) query.append('page_size', String(params.page_size));
     return requestJson<any>(`/api/recoveries/ledger?${query.toString()}`);
   },
+  getRecoveryFinancialEvents: (
+    params: {
+      caseId?: string;
+      caseIds?: string[];
+      storeId?: string;
+    },
+    tenantSlug?: string
+  ) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getRecoveryFinancialEvents");
+    const query = new URLSearchParams();
+    query.append('tenantSlug', tenantSlug);
+    if (params.caseId) query.append('caseId', params.caseId);
+    if (params.caseIds?.length) query.append('caseIds', params.caseIds.join(','));
+    if (params.storeId) query.append('storeId', params.storeId);
+    return requestJson<{
+      success: boolean;
+      summaries: Array<{
+        input_id: string;
+        dispute_case_id: string | null;
+        detection_result_id: string | null;
+        requested_amount: number | null;
+        approved_amount: number | null;
+        verified_paid_amount: number;
+        outstanding_amount: number | null;
+        variance_amount: number | null;
+        payout_status: 'not_paid' | 'partially_paid' | 'paid';
+        financial_event_count: number;
+        reimbursement_event_count: number;
+        settlement_event_count: number;
+        latest_event_date: string | null;
+        proof_of_payment: {
+          amount: number;
+          currency: string;
+          event_date: string | null;
+          reference_id: string | null;
+          settlement_id: string | null;
+          payout_batch_id: string | null;
+          source: string | null;
+        } | null;
+        source_types: string[];
+      }>;
+      events: Array<{
+        event_id: string;
+        event_type: string | null;
+        event_subtype: string | null;
+        amount: number;
+        currency: string;
+        event_date: string | null;
+        reference_id: string | null;
+        settlement_id: string | null;
+        payout_batch_id: string | null;
+        amazon_event_id: string | null;
+        amazon_order_id: string | null;
+        sku: string | null;
+        asin: string | null;
+        source: string | null;
+        raw_payload: Record<string, any> | null;
+        linked_detection_result_id: string | null;
+        linked_dispute_case_id: string | null;
+      }>;
+      events_by_input_id: Record<string, Array<{
+        event_id: string;
+        event_type: string | null;
+        event_subtype: string | null;
+        amount: number;
+        currency: string;
+        event_date: string | null;
+        reference_id: string | null;
+        settlement_id: string | null;
+        payout_batch_id: string | null;
+        amazon_event_id: string | null;
+        amazon_order_id: string | null;
+        sku: string | null;
+        asin: string | null;
+        source: string | null;
+        raw_payload: Record<string, any> | null;
+        linked_detection_result_id: string | null;
+        linked_dispute_case_id: string | null;
+      }>>;
+    }>(`/api/recoveries/financial-events?${query.toString()}`);
+  },
   getRecoveryDocumentUrl: (id: string) => buildApiUrl(`/api/recoveries/${encodeURIComponent(id)}/document`),
   getDocumentViewUrl: (docId: string) => buildApiUrl(`/api/documents/${encodeURIComponent(docId)}/view`),
 
