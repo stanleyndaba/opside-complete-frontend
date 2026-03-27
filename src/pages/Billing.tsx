@@ -91,7 +91,7 @@ const metricCards = [
   },
   {
     key: 'totalFees',
-    label: '20% success fees',
+    label: 'Platform fees',
   },
   {
     key: 'totalCreditApplied',
@@ -261,7 +261,7 @@ export default function Billing() {
       setVaultedEmail(finalizeRes.data?.paypalEmail || 'Linked PayPal account');
       toast({
         title: 'Payment method linked',
-        description: 'PayPal can now be used for future confirmed-recovery billing flows.',
+        description: 'PayPal can now be used for future platform invoices and prepaid credits.',
       });
     } catch (vaultError: any) {
       toast({
@@ -314,10 +314,10 @@ export default function Billing() {
               <div className="space-y-3 max-w-4xl">
                 <h1 className="text-4xl font-sans font-light tracking-tight text-white">Billing &amp; Recoveries</h1>
                 <p className="text-sm font-sans leading-6 text-white/55">
-                  You only pay after confirmed recovery. 20% success fee, with any $99 prepaid credit automatically applied.
+                  Margin uses software billing tied to verified recovery outcomes. The standard platform fee is 20%, and any $99 prepaid platform credit is applied automatically.
                 </p>
                 <p className="text-sm font-sans leading-6 text-white/42">
-                  You will never pay more than 20% of recovered funds. Unused credit carries forward.
+                  Amazon pays your seller account directly. Margin issues separate software invoices after recovery verification, and unused prepaid credit carries forward.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
@@ -387,7 +387,7 @@ export default function Billing() {
                 </div>
                 <p className="pt-2 text-[13px] leading-6 text-white/50">
                   The prepaid $99 Priority Audit Pass is attached to a recovery cycle. Any unused credit carries forward until it is
-                  applied against future confirmed-recovery fees.
+                  applied against future platform fees.
                 </p>
               </div>
             </section>
@@ -402,8 +402,8 @@ export default function Billing() {
                   </div>
                 </div>
                 <div className="text-[13px] font-sans leading-6 text-white/50">
-                  The upfront $99 pass uses PayPal checkout. Later success-fee collection can use PayPal invoicing or an authorized
-                  PayPal billing method after confirmed recovery.
+                  The upfront $99 pass uses PayPal checkout. Later software invoices can use PayPal invoicing or an authorized
+                  PayPal billing method after a recovery has been verified. Amazon reimbursement funds are always paid directly to your seller account.
                 </div>
                 <Button
                   onClick={handleLinkPaymentMethod}
@@ -493,7 +493,7 @@ export default function Billing() {
               <div className="space-y-2">
                 <h2 className="text-xl font-sans font-bold tracking-tight text-white">Billing history</h2>
                 <p className="text-[13px] font-sans leading-6 text-white/50">
-                  One confirmed recovery creates one billing record. Each row shows confirmed recovered amount, fee, credit applied,
+                  One verified recovery event reconciled in Margin creates one billing record. Each row shows confirmed recovered amount, platform fee, credit applied,
                   amount due, remaining credit balance, and proof-of-payment identifiers from canonical financial events.
                 </p>
               </div>
@@ -549,7 +549,7 @@ export default function Billing() {
                         <TableHead className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Date</TableHead>
                         <TableHead className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Status</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verified recovered</TableHead>
-                        <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">20% fee</TableHead>
+                        <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Platform fee</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Credit applied</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amount due</TableHead>
                         <TableHead className="text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Credit balance</TableHead>
@@ -658,24 +658,24 @@ export default function Billing() {
                   a: 'The $99 payment is a one-time Priority Audit Pass for a recovery cycle. It is stored as prepaid credit and linked to the recovery cycle in the billing system.',
                 },
                 {
-                  q: 'When is the 20% fee billed?',
-                  a: 'The 20% success fee is only billed after a payout has been confirmed and reconciled. Approved or expected money does not create a billing record by itself.',
+                  q: 'When is the platform fee billed?',
+                  a: 'The 20% platform fee is billed only after a payout has been verified and reconciled in Margin. Approved or expected money does not create a billing record by itself.',
                 },
                 {
                   q: 'How is credit applied?',
-                  a: 'When a confirmed recovery creates a billing record, available prepaid credit is applied first. The remaining amount, if any, becomes the amount due.',
+                  a: 'When a verified recovery creates a billing record, available prepaid credit is applied first. The remaining amount, if any, becomes the amount due.',
                 },
                 {
                   q: 'Can I pay more than 20% total?',
-                  a: 'No. The $99 prepaid pass is part of the 20% success fee, not an additional fee on top of it.',
+                  a: 'No. The $99 prepaid pass is platform credit applied toward the standard 20% platform fee, not an additional charge on top of it.',
                 },
                 {
                   q: 'What happens if my available credit is larger than the fee?',
-                  a: 'The billing record is marked as credited, no extra charge is issued, and the unused balance carries forward to future confirmed-recovery fees.',
+                  a: 'The billing record is marked as credited, no extra charge is issued, and the unused balance carries forward to future platform fees.',
                 },
                 {
                   q: 'How does PayPal fit into billing?',
-                  a: 'PayPal handles the upfront checkout and later collection flows. Depending on the billing path, Margin can use PayPal checkout, PayPal invoicing, or an authorized PayPal payment method.',
+                  a: 'PayPal can be used for prepaid platform credit and later software invoices. Amazon reimbursement funds are paid directly to your seller account and do not flow through Margin.',
                 },
               ].map((item, index) => (
                 <AccordionItem key={index} value={`item-${index}`} className="border-b border-white/10">

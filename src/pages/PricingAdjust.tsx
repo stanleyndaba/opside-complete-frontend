@@ -64,10 +64,13 @@ export default function PricingAdjust() {
             </div>
             
             <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white/95 leading-tight max-w-4xl">
-              Pricing
+              Software Pricing
             </h1>
             <p className="text-sm md:text-base text-white/40 tracking-tight max-w-2xl mx-auto">
-              Choose how you want Margin to monitor and recover your Amazon reimbursements.
+              Choose how Margin audits your Amazon account, verifies recovery outcomes, and bills for platform usage.
+            </p>
+            <p className="text-[12px] md:text-[13px] text-white/55 tracking-tight max-w-3xl mx-auto">
+              Amazon pays reimbursements directly to your seller account. Margin never receives or routes seller funds and bills software fees separately.
             </p>
           </motion.div>
 
@@ -88,21 +91,21 @@ export default function PricingAdjust() {
                     <div className="h-px flex-1 bg-white/5" />
                   </div>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Customized</h2>
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Standard</h2>
                     <span className="text-[10px] text-white/30 uppercase tracking-widest">(Default)</span>
                   </div>
                 </div>
 
                 <div className="mb-6">
-                  <span className="text-[11px] font-bold text-white/40">Benefits Includes:</span>
+                  <span className="text-[11px] font-bold text-white/40">Platform pricing includes:</span>
                 </div>
 
                 <div className="space-y-6 flex-grow mb-8">
                   <div className="flex items-start gap-4">
                     <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-white">Success Fee: 20%</p>
-                      <p className="text-[11px] text-white/30 uppercase tracking-wider">No upfront cost</p>
+                      <p className="text-sm font-semibold text-white">Platform Fee: 20%</p>
+                      <p className="text-[11px] text-white/30 uppercase tracking-wider">Billed on verified recoveries reconciled in Margin</p>
                     </div>
                   </div>
 
@@ -110,13 +113,13 @@ export default function PricingAdjust() {
                     <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
                       <p className="text-sm text-white/80">Audit Window: Last 90 Days</p>
-                      <p className="text-[11px] text-white/20 uppercase tracking-wider">Inventory & fee error scans</p>
+                      <p className="text-[11px] text-white/20 uppercase tracking-wider">Seller account reconciliation scans</p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
                     <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
-                    <p className="text-sm text-white/80 leading-relaxed font-light">Payouts are only generated after Amazon approves your reimbursements.</p>
+                    <p className="text-sm text-white/80 leading-relaxed font-light">Amazon pays your seller account directly. Margin issues a separate software invoice only after the recovery is verified.</p>
                   </div>
                 </div>
 
@@ -125,11 +128,11 @@ export default function PricingAdjust() {
                     onClick={handleStandardClick}
                     className="bg-white hover:bg-white/90 text-black font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2"
                   >
-                    Get Customized
+                    Start Standard
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                   <div className="pt-6 border-t border-white/5">
-                    <p className="text-[11px] text-white/30 italic font-light tracking-wide">"Best if you want to keep everything on autopilot with zero risk."</p>
+                    <p className="text-[11px] text-white/30 italic font-light tracking-wide">"Best if you want automated recovery monitoring with outcome-linked software billing."</p>
                   </div>
                 </div>
               </div>
@@ -166,8 +169,8 @@ export default function PricingAdjust() {
                   <div className="flex items-start gap-4">
                     <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
-                      <p className="text-sm font-bold text-white">Cost: One-time $99</p>
-                      <p className="text-[11px] text-emerald-400/60 font-bold uppercase tracking-tight">Fully credited against your 20% success fee</p>
+                      <p className="text-sm font-bold text-white">Cost: One-time $99 prepaid platform credit</p>
+                      <p className="text-[11px] text-emerald-400/60 font-bold uppercase tracking-tight">Applied first to future platform fees</p>
                     </div>
                   </div>
 
@@ -188,7 +191,7 @@ export default function PricingAdjust() {
                     <Check className="mt-1 h-3.5 w-3.5 text-emerald-500/60 shrink-0" />
                     <div>
                       <p className="text-sm text-white/80">Priority support & case follow ups</p>
-                      <p className="text-[11px] text-white/30 uppercase tracking-normal">Only billed after confirmed recovery</p>
+                      <p className="text-[11px] text-white/30 uppercase tracking-normal">Platform fees invoice only after verified recovery</p>
                     </div>
                   </div>
 
@@ -209,14 +212,14 @@ export default function PricingAdjust() {
                     className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 px-8 rounded-2xl w-fit flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                   >
                     <>
-                      Get Priority
+                      Start Priority
                       <ArrowRight className="h-4 w-4" />
                     </>
                   </Button>
                   <div className="pt-6 border-t border-white/10">
                     <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
                       <p className="text-[11px] text-white/60 leading-relaxed tracking-tight">
-                        <span className="text-white/80">Example:</span> If our 20% fee is $350, you only pay <span className="text-white font-bold">$251</span> after your $99 credit is applied.
+                        <span className="text-white/80">Example:</span> If your verified-outcome platform fee is $350, the prepaid $99 credit reduces the invoice to <span className="text-white font-bold">$251</span>.
                       </p>
                     </div>
                   </div>
@@ -251,7 +254,7 @@ export default function PricingAdjust() {
                   <div className="flex items-start gap-4">
                     <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-white">Custom Volume Pricing</p>
+                      <p className="text-sm font-semibold text-white">Custom Platform Pricing</p>
                       <p className="text-[11px] text-white/30 uppercase tracking-wider">For aggregators with 10+ accounts</p>
                     </div>
                   </div>

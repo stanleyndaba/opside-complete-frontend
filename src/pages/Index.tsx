@@ -49,7 +49,7 @@ const WORKFLOW_STEPS = [
   {
     title: "Reimbursement Payout",
     color: "bg-emerald-500/50",
-    description: "Approved reimbursements are deposited directly into your Amazon account. You get paid first, and we only invoice our 20% commission after the funds are safely in your bank.",
+    description: "Approved reimbursements are deposited directly into your Amazon account. Margin does not receive or route those funds; we invoice software fees separately after the recovery is verified in-platform.",
     duration: 4000
   },
   {
@@ -704,7 +704,7 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          Zero upfront, and zero monthly subscriptions. We take a flat 20% success fee only on the capital that actually clears into your Amazon settlement balance. If we scan your ledgers and find nothing, or if Amazon rejects the claim, you pay absolutely nothing.
+                          Margin uses transparent software pricing. Most sellers start with no upfront platform fee and are billed a 20% software fee only after a verified recovery is posted to their seller account and reconciled in Margin. Amazon pays you directly; Margin invoices separately for platform usage tied to that verified outcome.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
@@ -740,7 +740,7 @@ const Index = () => {
                           </AccordionTrigger>
                             <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                               <p>
-                                No problem. Run Margin alongside your current tool. We&aposs confident our AI Evidence Engine will find dollars that manual audits missed. You only pay us for the new funds we recover.
+                                No problem. Run Margin alongside your current tool. We&aposs confident our AI Evidence Engine will find opportunities that manual audits missed. You only receive software invoices for verified recovery value newly identified and reconciled through Margin.
                               </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -750,7 +750,7 @@ const Index = () => {
                           </AccordionTrigger>
                           <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
-                              You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only invoice the 20% commission on claims that were successfully paid out before you canceled.
+                              You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only issue software invoices for verified recoveries generated through Margin activity before your cancellation takes effect.
                             </p>
                           </AccordionContent>
                         </AccordionItem>

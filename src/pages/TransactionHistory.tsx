@@ -373,21 +373,21 @@ export default function TransactionHistory() {
         doc.setTextColor(RICH_BLACK);
         doc.text(formatUSD(summary.totalRecovered), 60, summaryY + 8);
 
-        // Row 2: Audit Success Fee (20%)
+        // Row 2: Platform Software Fee (20%)
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
-        doc.text('AUDIT SUCCESS FEE (20%) -', 14, summaryY + 15);
+        doc.text('PLATFORM SOFTWARE FEE (20%) -', 14, summaryY + 15);
         doc.setFont('times', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(RICH_BLACK);
         doc.text(`(${formatUSD(summary.totalFees)})`, 60, summaryY + 15);
 
-        // Row 3: Net Capital Restored
+        // Row 3: Seller Net After Platform Fee
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(SOFT_GREY);
-        doc.text('NET CAPITAL RESTORED -', 14, summaryY + 22);
+        doc.text('SELLER NET AFTER PLATFORM FEE -', 14, summaryY + 22);
         doc.setFont('times', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(RICH_BLACK);
@@ -749,7 +749,7 @@ export default function TransactionHistory() {
                                                 <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Claim_Amt</th>
                                                 <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Recovered</th>
                                                 <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-center">%_Eff</th>
-                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Net_Capt</th>
+                                                <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight text-right">Seller_Net</th>
                                                 <th className="px-6 py-4 text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight">State</th>
                                             </tr>
                                         </thead>

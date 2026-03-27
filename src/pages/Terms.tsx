@@ -95,13 +95,16 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Service Fee</span> — Margin charges a 20% success fee on all funds successfully recovered or reimbursed by Amazon.
+                  <span className="text-gray-900">Platform Fee</span> — Margin charges a software fee equal to 20% of verified recoveries reconciled in the platform.
                 </p>
                 <p>
-                  <span className="text-gray-900">Billing Cycle</span> — Fees are calculated and invoiced automatically after the reimbursement is successfully credited to your Amazon Seller account.
+                  <span className="text-gray-900">Billing Cycle</span> — Platform fees are calculated and invoiced after a reimbursement is verified and credited to your Amazon Seller account.
                 </p>
                 <p>
-                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for these success fees.
+                  <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
+                </p>
+                <p>
+                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for invoiced software fees.
                 </p>
               </div>
             </section>
@@ -113,13 +116,13 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Success-Based</span> — Since our fees are only charged after a successful recovery, there are no upfront costs to refund.
+                  <span className="text-gray-900">Outcome-Linked Billing</span> — Since platform fees are billed only after verified recovery outcomes, there are no upfront software-fee charges to refund.
                 </p>
                 <p>
-                  <span className="text-gray-900">Reversals</span> — If Amazon later reverses a reimbursement that you have already paid us for, Margin will provide a service credit equal to the fee paid for that specific claim.
+                  <span className="text-gray-900">Reversals</span> — If Amazon later reverses a reimbursement that you have already paid us for, Margin will provide a service credit equal to the software fee paid for that specific claim.
                 </p>
                 <p>
-                  <span className="text-gray-900">Disputes</span> — If you believe a fee was charged in error, contact us within 30 days.
+                  <span className="text-gray-900">Disputes</span> — If you believe a software fee was charged in error, contact us within 30 days.
                 </p>
               </div>
             </section>
@@ -164,7 +167,7 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">By You</span> — You may cancel your subscription at any time via your dashboard.
+                  <span className="text-gray-900">By You</span> — You may cancel your access to the Service at any time via your dashboard.
                 </p>
                 <p>
                   <span className="text-gray-900">By Us</span> — We may suspend your access immediately if you violate these Terms or if your Amazon Seller account is suspended.

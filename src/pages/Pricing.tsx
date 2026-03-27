@@ -10,8 +10,8 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 
 const Pricing = () => {
     usePageMeta({
-        title: 'Transparent Pricing | Performance-Based FBA Recovery',
-        description: 'Margin operates on a strictly contingent fee model. No monthly fees, no setup costs. We only get paid when you do.',
+        title: 'Transparent Software Pricing | Amazon Recovery Platform',
+        description: 'Margin is Amazon seller software with outcome-linked platform pricing. Amazon pays sellers directly, and Margin invoices software fees after verified recoveries are reconciled in the platform.',
         url: `${SITE_META.url}/pricing`,
     });
 
@@ -30,15 +30,15 @@ const Pricing = () => {
                         <div className="space-y-8">
                             <div className="space-y-4">
                                 <span className="text-[10px] font-bold text-white/30 font-mono tracking-[0.4em] uppercase">
-                                    Financial Model
+                                    Software Pricing
                                 </span>
                                 <h1 className="text-4xl md:text-6xl font-merriweather font-bold leading-tight tracking-tight">
                                     Transparent <br />
-                                    Pricing Structure
+                                    Software Pricing
                                 </h1>
                             </div>
                             <p className="text-lg text-white/30 font-montserrat leading-relaxed max-w-lg">
-                                Zero Risk. Performance Based. Margin operates on a strictly contingent fee model. We only generate invoices on successful reimbursements credited to your Seller Central account.
+                                Margin is a seller software platform with verified-outcome pricing. Amazon pays your seller account directly, and Margin invoices software fees only after those outcomes are verified in-platform.
                             </p>
                         </div>
 
@@ -47,24 +47,24 @@ const Pricing = () => {
                             {[
                                 {
                                     id: "01",
-                                    title: "Audit",
-                                    cost: "Free",
+                                    title: "Workspace",
+                                    cost: "Included",
                                     color: "text-blue-500",
-                                    desc: "Continuous forensic monitoring of your SP-API ledger nodes. We map discrepancies in real-time without upfront costs."
+                                    desc: "Continuous software access for audit monitoring, workflow visibility, and recovery tracking across your Amazon data."
                                 },
                                 {
                                     id: "02",
-                                    title: "Analysis",
-                                    cost: "Free",
+                                    title: "Priority Pass",
+                                    cost: "$99 Credit",
                                     color: "text-amber-500",
-                                    desc: "Deep forensic mapping of 18 months of inventory drift. Every SKU, every transaction, reconciled for loss."
+                                    desc: "Optional prepaid platform credit for an expanded historical audit window and faster review queue access."
                                 },
                                 {
                                     id: "03",
-                                    title: "Recovery Fee",
-                                    cost: "Contingent",
+                                    title: "Outcome-Linked Billing",
+                                    cost: "Up to 20%",
                                     color: "text-emerald-500",
-                                    desc: "Standard Industry Rate (Performance Only). We only earn when you do. If Amazon doesn't pay, neither do you."
+                                    desc: "Platform fees are billed on verified recoveries reconciled in Margin. Amazon never pays Margin; sellers are paid directly and invoiced separately."
                                 }
                             ].map((item, i) => (
                                 <div key={i} className="group border-t border-white/10 py-10 first:border-0 hover:bg-white/[0.01] transition-all duration-300">
@@ -95,17 +95,17 @@ const Pricing = () => {
                     {/* Final CTA */}
                     <div className="text-center py-24 border-t border-white/5">
                         <h2 className="text-3xl md:text-4xl font-merriweather font-bold mb-12 leading-relaxed">
-                            Zero setup fee. Zero risk. <br />
-                            Begin your forensic audit today.
+                            Transparent software billing. <br />
+                            Begin your seller audit workspace today.
                         </h2>
                         <div className="flex flex-col items-center gap-4">
                             <Link to="/contact">
                                 <Button className="h-16 px-12 bg-white text-black hover:bg-white/90 rounded-none font-bold text-xs uppercase tracking-[0.2em] transition-all">
-                                    Deploy Audit Engine
+                                    Start Platform Audit
                                 </Button>
                             </Link>
                             <p className="text-[10px] font-bold text-white/20 font-mono tracking-widest uppercase">
-                                No Credit Card Required for Initial Ingestion
+                                No Credit Card Required for Initial Workspace Setup
                             </p>
                         </div>
                     </div>

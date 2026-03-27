@@ -288,7 +288,7 @@ export default function UpcomingPayments() {
               <h1 className="text-4xl font-bold text-white tracking-tight font-sans">Payment <span className="text-white/40">Summary</span></h1>
             </div>
             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed font-sans font-bold tracking-tight">
-              Estimated payments and payout projections.
+              Estimated Amazon payouts and separate platform billing projections.
             </p>
           </div>
 
@@ -332,9 +332,9 @@ export default function UpcomingPayments() {
             <div className="group relative bg-[#111111]/90 border border-white/10 rounded-2xl p-6 transition-all hover:border-white/20 overflow-hidden backdrop-blur-xl">
               <div className="relative z-10 space-y-4">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Net Recovery</span>
+                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Seller Net After Platform Fee</span>
                   <span className="text-xs font-sans font-bold text-white/40 uppercase tracking-tight">
-                    After service fee
+                    After platform fee
                   </span>
                 </div>
                 <div className="text-3xl font-sans font-bold tracking-tight text-white">
@@ -438,8 +438,8 @@ export default function UpcomingPayments() {
                     <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Payout Date</TableHead>
                     <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight text-center">Claims</TableHead>
                     <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Gross Value</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Fee</TableHead>
-                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Net Credit</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Platform Fee</TableHead>
+                    <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Seller Net</TableHead>
                     <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Status</TableHead>
                     <TableHead className="py-4 px-6 text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight text-right">Details</TableHead>
                   </TableRow>
