@@ -231,18 +231,18 @@ export function Sidebar({
     switch (healthState.tone) {
       case 'healthy':
         return {
-          dot: 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.35)]',
-          text: 'text-blue-600'
+          dot: 'bg-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.25)]',
+          text: 'text-slate-400'
         };
       case 'degraded':
         return {
-          dot: 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.35)]',
-          text: 'text-blue-600'
+          dot: 'bg-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.25)]',
+          text: 'text-slate-400'
         };
       case 'attention':
         return {
-          dot: 'bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.35)]',
-          text: 'text-blue-600'
+          dot: 'bg-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.25)]',
+          text: 'text-slate-400'
         };
       case 'checking':
         return {

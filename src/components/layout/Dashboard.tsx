@@ -1204,9 +1204,9 @@ export function Dashboard() {
                       <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div>
-                            <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">VERIFIED MONEY</h2>
+                            <h2 className="text-[11px] font-sans font-medium text-white/40 uppercase tracking-tight">VERIFIED MONEY</h2>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-sans font-bold text-white tracking-tight">Verified Recovered Cash</span>
+                              <span className="text-sm font-sans font-medium text-white tracking-tight">Verified Recovered Cash</span>
                             </div>
                           </div>
                         </div>
@@ -1216,8 +1216,8 @@ export function Dashboard() {
                             className="flex items-center gap-3 transition-all group"
                           >
                             <div className="flex flex-col items-end">
-                              <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
-                              <span className="text-[9px] font-sans font-bold text-white group-hover:text-white uppercase tracking-tight">
+                              <span className="text-[10px] font-sans font-medium text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
+                              <span className="text-[9px] font-sans font-medium text-white group-hover:text-white uppercase tracking-tight">
                                 {formattedLastUpdatedAbsolute}
                               </span>
                             </div>
@@ -1239,28 +1239,28 @@ export function Dashboard() {
                             </div>
                           ) : recoveredCashTotal > 0 ? (
                             <>
-                              <div className="text-5xl font-sans font-bold text-white tracking-tight mb-4 flex items-baseline gap-2">
+                              <div className="text-5xl font-sans font-medium text-white tracking-tight mb-4 flex items-baseline gap-2">
                                 {formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)}
-                                <span className="text-sm font-sans font-bold text-white/40 animate-pulse">_</span>
+                                <span className="text-sm font-sans font-medium text-white/40 animate-pulse">_</span>
                               </div>
                               <div className="flex flex-wrap items-center gap-5 w-fit">
                                 <div className="flex items-center gap-3">
                                   <div className="h-1 w-1 rounded-full bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" />
-                                  <span className="text-[10px] font-sans font-bold text-white/65 uppercase tracking-tight">
+                                  <span className="text-[10px] font-sans font-medium text-white/65 uppercase tracking-tight">
                                     {dashboardSummary.recovered_count} Reconciled Cases
                                   </span>
                                 </div>
-                                <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">
+                                <span className="text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">
                                   Verified Billed Revenue {formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency)}
                                 </span>
                               </div>
                             </>
                           ) : dashboardSummary ? (
                             <div className="flex flex-col gap-6 py-2">
-                              <div className="text-5xl font-sans font-bold text-white/20 tracking-tight">
+                              <div className="text-5xl font-sans font-medium text-white/20 tracking-tight">
                                 $0.00
                               </div>
-                              <p className="text-xs text-white/30 font-sans font-bold leading-relaxed max-w-sm">
+                              <p className="text-xs text-white/30 font-sans font-normal leading-relaxed max-w-sm">
                                 No reconciled recoveries are recorded for this tenant yet.
                               </p>
                             </div>
@@ -1268,12 +1268,12 @@ export function Dashboard() {
                             <div className="flex flex-col gap-6 py-2">
                               <div className="flex items-center gap-3 text-white/60">
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                <span className="text-[11px] font-sans font-bold uppercase tracking-tight">Scanning Account</span>
+                                <span className="text-[11px] font-sans font-medium uppercase tracking-tight">Scanning Account</span>
                               </div>
-                              <div className="text-5xl font-sans font-bold text-white/5 tracking-tight select-none">
+                              <div className="text-5xl font-sans font-medium text-white/5 tracking-tight select-none">
                                 $0,000.00
                               </div>
-                              <p className="text-xs text-white/30 font-sans font-bold leading-relaxed max-w-sm">
+                              <p className="text-xs text-white/30 font-sans font-normal leading-relaxed max-w-sm">
                                 Loading your account data...
                               </p>
                             </div>
@@ -1284,7 +1284,7 @@ export function Dashboard() {
                       </div>
 
                       <div className="px-6 py-3 bg-white/[0.015] border-t border-white/5">
-                        <span className="text-[9px] font-sans font-bold text-white/25 uppercase tracking-tight">
+                        <span className="text-[9px] font-sans font-medium text-white/25 uppercase tracking-tight">
                           Pipeline Value // Not Yet Paid
                         </span>
                       </div>
@@ -1294,8 +1294,8 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Estimated Pipeline Value</div>
-                              <div className="text-2xl font-sans font-bold text-white tracking-tight">
+                              <div className="text-[9px] font-sans font-medium text-white/20 mb-4 tracking-tight uppercase">Estimated Pipeline Value</div>
+                              <div className="text-2xl font-sans font-medium text-white tracking-tight">
                                 {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
@@ -1304,7 +1304,7 @@ export function Dashboard() {
                               </div>
                               <div className="mt-4 flex items-center gap-2">
                                 <Clock className="h-3 w-3 text-white/25" />
-                                <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
+                                <span className="text-[10px] font-sans font-normal text-white/35 tracking-tight">
                                   Estimated value only, not yet paid
                                 </span>
                               </div>
@@ -1315,9 +1315,9 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                                <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Payout Details</h4>
+                                <h4 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Payout Details</h4>
                               </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
+                              <p className="text-xs text-white/40 leading-relaxed font-sans font-normal">
                                 Estimated Pipeline Value sums tenant detection estimates. It is potential value, not approved or paid cash.
                               </p>
                             </div>
@@ -1327,8 +1327,8 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Filed Pipeline Value</div>
-                              <div className="text-2xl font-sans font-bold text-white tracking-tight">
+                              <div className="text-[9px] font-sans font-medium text-white/20 mb-4 tracking-tight uppercase">Filed Pipeline Value</div>
+                              <div className="text-2xl font-sans font-medium text-white tracking-tight">
                                 {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
@@ -1336,10 +1336,10 @@ export function Dashboard() {
                                 )}
                               </div>
                               <div className="mt-4 space-y-1.5">
-                                <div className="text-[10px] font-sans font-bold text-white/35 tracking-tight">
+                                <div className="text-[10px] font-sans font-normal text-white/35 tracking-tight">
                                   Filed case value, not yet paid
                                 </div>
-                                <div className="text-[10px] font-sans font-bold text-white/25 tracking-tight">
+                                <div className="text-[10px] font-sans font-normal text-white/25 tracking-tight">
                                   {dashboardSummary ? `Across ${dashboardSummary.filed_count} Filed Cases` : 'Loading filed case value...'}
                                 </div>
                               </div>
@@ -1350,9 +1350,9 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                                <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Activity Log</h4>
+                                <h4 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Activity Log</h4>
                               </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
+                              <p className="text-xs text-white/40 leading-relaxed font-sans font-normal">
                                 Filed Pipeline Value reflects case amounts that entered filing. It is still in progress and not verified cash.
                               </p>
                             </div>
@@ -1362,8 +1362,8 @@ export function Dashboard() {
                         <HoverCard openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-bold text-white/20 mb-4 tracking-tight uppercase">Approved Not Yet Paid</div>
-                              <div className="text-2xl font-sans font-bold text-white tracking-tight">
+                              <div className="text-[9px] font-sans font-medium text-white/20 mb-4 tracking-tight uppercase">Approved Not Yet Paid</div>
+                              <div className="text-2xl font-sans font-medium text-white tracking-tight">
                                 {!dashboardSummary ? (
                                   <Skeleton className="h-8 w-32 bg-white/10" />
                                 ) : (
@@ -1371,16 +1371,16 @@ export function Dashboard() {
                                 )}
                               </div>
                               <div className="space-y-2.5">
-                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
                                   Opportunities Found (Detected): <span className="text-white">{detectedOpportunitiesCount}</span>
                                 </div>
-                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
                                   Filed: <span className="text-white">{filedClaimsCount}</span>
                                 </div>
-                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
                                   Approved: <span className="text-white">{approvedClaimsCount}</span>
                                 </div>
-                                <div className="text-[10px] font-sans font-bold text-white/40 tracking-tight">
+                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
                                   Billed: <span className="text-white">{dashboardSummary?.billed_count ?? 0}</span>
                                 </div>
                               </div>
@@ -1391,9 +1391,9 @@ export function Dashboard() {
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
                                 <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                                <h4 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Success Metrics</h4>
+                                <h4 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Success Metrics</h4>
                               </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-sans font-bold">
+                              <p className="text-xs text-white/40 leading-relaxed font-sans font-normal">
                                 Approved Not Yet Paid reflects case amounts with approved dispute status. It remains pipeline value until payout events are recorded.
                               </p>
                             </div>
@@ -1404,7 +1404,7 @@ export function Dashboard() {
                       {/* Blocker Summary */}
                       <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <p className="text-[9px] text-white/20 font-sans font-bold uppercase tracking-tight">
+                        <p className="text-[9px] text-white/20 font-sans font-medium uppercase tracking-tight">
                           {primaryBlocker ? `${primaryBlocker.label} · ${primaryBlocker.count}` : 'No active blockers in current summary'}
                         </p>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
