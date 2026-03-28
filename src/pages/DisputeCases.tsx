@@ -469,6 +469,7 @@ export default function DisputeCases() {
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
   const [paymentConfirmationVisible, setPaymentConfirmationVisible] = useState(false);
   const [unlockSubmitting, setUnlockSubmitting] = useState(false);
+  const [unlockOfferExpanded, setUnlockOfferExpanded] = useState(false);
   const [unlockResult, setUnlockResult] = useState<{
     already_unlocked: boolean;
     billing_status: 'unlocked';
@@ -948,6 +949,12 @@ export default function DisputeCases() {
   const showUnlockOffer = hasUnlockOfferValue && !isUnlockComplete;
   const showUnlockedState = hasUnlockOfferValue && isUnlockComplete;
 
+  useEffect(() => {
+    if (paymentConfirmationVisible || showUnlockedState) {
+      setUnlockOfferExpanded(true);
+    }
+  }, [paymentConfirmationVisible, showUnlockedState]);
+
   if (isReady && !activeTenantSlug) {
     return (
       <PageLayout title="Dispute Cases" midnight>
@@ -1047,104 +1054,138 @@ export default function DisputeCases() {
           </div>
 
           {hasUnlockOfferValue && unlockOffer ? (
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] shadow-[0_0_24px_rgba(0,0,0,0.22)]">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-[radial-gradient(circle_at_left,rgba(52,211,153,0.14),transparent_68%)]" />
-              <div className="relative flex flex-col gap-4 px-5 py-5 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-6">
-                <div className="min-w-0 flex-1 space-y-3">
-                  <div className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-100/80">
-                    Real claim value found
-                  </div>
-
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] shadow-[0_0_22px_rgba(0,0,0,0.2)]">
+              <div className="flex flex-col gap-4 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
+                <button
+                  type="button"
+                  onClick={() => setUnlockOfferExpanded((current) => !current)}
+                  aria-expanded={unlockOfferExpanded}
+                  className="flex-1 text-left"
+                >
                   <div className="space-y-2">
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-white/38">
-                      Pay once to start filing
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-white/34">
+                      Claim filing
                     </p>
-                    <h2 className="max-w-3xl text-[28px] leading-[1.05] font-sans font-bold tracking-tight text-white md:text-[32px]">
+                    <h2 className="max-w-3xl text-2xl font-sans font-bold tracking-tight text-white md:text-[28px]">
                       Start filing {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
                     </h2>
-                    <p className="max-w-2xl text-[13px] font-sans leading-5 text-white/62">
+                    <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/62">
                       You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to start filing every supportable case for your account.
                     </p>
-                    <p className="text-[11px] font-sans leading-5 text-white/44">
-                      We found real claim value for your account.
+                    <p className="text-[12px] font-sans leading-5 text-white/52">
+                      Charged as R1,699 at checkout. You keep 100% of recovered funds.
                     </p>
                   </div>
+                </button>
 
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                      {unlockOffer.supportableClaimCount} supportable claims
-                    </span>
-                    {unlockOffer.readyToFileCount > 0 ? (
-                      <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/80">
-                        {unlockOffer.readyToFileCount} ready to file
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="w-full max-w-sm rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                <div className="flex items-center gap-3 lg:shrink-0">
                   {showUnlockOffer ? (
+                    <Button
+                      type="button"
+                      onClick={handleUnlockCheckout}
+                      className="h-10 rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
+                    >
+                      Start Filing All Claims for $99
+                    </Button>
+                  ) : (
+                    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-white/78">
+                      {unlockResult?.queued_count ? 'Filing in progress' : 'Payment confirmed'}
+                    </div>
+                  )}
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setUnlockOfferExpanded((current) => !current)}
+                    className="h-10 w-10 rounded-xl border border-white/10 bg-white/[0.02] p-0 text-white/55 hover:bg-white/[0.05] hover:text-white"
+                  >
+                    {unlockOfferExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              {unlockOfferExpanded ? (
+                <div className="border-t border-white/10 px-5 py-4">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
-                      <Button
-                        type="button"
-                        onClick={handleUnlockCheckout}
-                        className="h-11 w-full rounded-xl bg-emerald-400 px-4 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-emerald-300"
-                      >
-                        Start Filing All Claims for $99
-                      </Button>
-                      <p className="text-[12px] font-sans leading-5 text-white/68">
-                        Charged as R1,699 at checkout. You keep 100% of recovered funds.
-                      </p>
-                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/34">
-                        Only shown because we found real claim value for your account.
+                      <p className="text-[11px] font-sans leading-5 text-white/44">
+                        We found real claim value for your account.
                       </p>
 
-                      {paymentConfirmationVisible ? (
-                        <div className="rounded-xl border border-emerald-300/15 bg-emerald-400/[0.06] p-3.5">
-                          <p className="text-[12px] font-sans leading-5 text-emerald-50/88">
-                            Complete your payment in the opened tab, then confirm below to start filing.
-                          </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                          {unlockOffer.supportableClaimCount} supportable claims
+                        </span>
+                        {unlockOffer.readyToFileCount > 0 ? (
+                          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                            {unlockOffer.readyToFileCount} ready to file
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className="w-full max-w-sm rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                      {showUnlockOffer ? (
+                        <div className="space-y-3">
                           <Button
                             type="button"
-                            onClick={handleConfirmPaymentAndStartFiling}
-                            disabled={unlockSubmitting}
-                            className="mt-3 h-10 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
+                            onClick={handleUnlockCheckout}
+                            className="h-11 w-full rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
                           >
-                            {unlockSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                            I&apos;ve Completed Payment
+                            Start Filing All Claims for $99
                           </Button>
+                          <p className="text-[12px] font-sans leading-5 text-white/68">
+                            Charged as R1,699 at checkout. You keep 100% of recovered funds.
+                          </p>
+
+                          {paymentConfirmationVisible ? (
+                            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                              <p className="text-[12px] font-sans leading-5 text-white/74">
+                                Complete your payment in the opened tab, then confirm below to start filing.
+                              </p>
+                              <Button
+                                type="button"
+                                onClick={handleConfirmPaymentAndStartFiling}
+                                disabled={unlockSubmitting}
+                                className="mt-3 h-10 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
+                              >
+                                {unlockSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                I&apos;ve Completed Payment
+                              </Button>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+
+                      {showUnlockedState ? (
+                        <div className="space-y-3">
+                          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-white/72">
+                            Payment confirmed
+                          </div>
+                          <p className="text-lg font-sans font-bold tracking-tight text-white">
+                            {unlockResult?.queued_count ? 'Filing in progress' : 'Filing access unlocked'}
+                          </p>
+                          <p className="text-[13px] font-sans leading-5 text-white/68">
+                            {unlockResult?.message || 'This account is unlocked. Eligible claims can move into filing immediately.'}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {unlockResult?.queued_count ? (
+                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                {unlockResult.queued_count} queued now
+                              </span>
+                            ) : null}
+                            {unlockResult?.blocked_count ? (
+                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                {unlockResult.blocked_count} still held back
+                              </span>
+                            ) : null}
+                          </div>
                         </div>
                       ) : null}
                     </div>
-                  ) : null}
-
-                  {showUnlockedState ? (
-                    <div className="space-y-3">
-                      <div className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-100/80">
-                        Payment confirmed
-                      </div>
-                      <p className="text-lg font-sans font-bold tracking-tight text-white">
-                        {unlockResult?.queued_count ? 'Filing in progress' : 'Filing access unlocked'}
-                      </p>
-                      <p className="text-[13px] font-sans leading-5 text-white/68">
-                        {unlockResult?.message || 'This account is unlocked. Eligible claims can move into filing immediately.'}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {unlockResult?.queued_count ? (
-                          <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/80">
-                            {unlockResult.queued_count} queued now
-                          </span>
-                        ) : null}
-                        {unlockResult?.blocked_count ? (
-                          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                            {unlockResult.blocked_count} still held back
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-                  ) : null}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
           ) : null}
 
