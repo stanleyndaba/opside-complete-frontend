@@ -1047,81 +1047,75 @@ export default function DisputeCases() {
           </div>
 
           {hasUnlockOfferValue && unlockOffer ? (
-            <div className="overflow-hidden rounded-[28px] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_45%),linear-gradient(135deg,rgba(17,24,39,0.96),rgba(10,10,10,0.98))] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-              <div className="flex flex-col gap-6 px-6 py-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
-                <div className="space-y-4">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] shadow-[0_0_24px_rgba(0,0,0,0.22)]">
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-[radial-gradient(circle_at_left,rgba(52,211,153,0.14),transparent_68%)]" />
+              <div className="relative flex flex-col gap-4 px-5 py-5 lg:flex-row lg:items-center lg:justify-between lg:gap-5 lg:px-6">
+                <div className="min-w-0 flex-1 space-y-3">
                   <div className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-100/80">
                     Real claim value found
                   </div>
 
-                  <div className="space-y-3">
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/42">
-                      Pay once to file what is already there
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-white/38">
+                      Pay once to start filing
                     </p>
-                    <h2 className="max-w-4xl text-3xl font-sans font-bold tracking-tight text-white md:text-4xl">
-                      Unlock {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
+                    <h2 className="max-w-3xl text-[28px] leading-[1.05] font-sans font-bold tracking-tight text-white md:text-[32px]">
+                      Start filing {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
                     </h2>
-                    <p className="max-w-3xl text-sm font-sans leading-6 text-white/68">
-                      You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to unlock filing across every supportable case in this workspace.
+                    <p className="max-w-2xl text-[13px] font-sans leading-5 text-white/62">
+                      You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to start filing every supportable case for your account.
                     </p>
-                    {unlockOffer.mode === 'preview' ? (
-                      <p className="max-w-3xl text-[11px] font-sans leading-5 text-white/46">
-                        Preview shown because this workspace already has real claim value on screen.
-                      </p>
-                    ) : null}
+                    <p className="text-[11px] font-sans leading-5 text-white/44">
+                      We found real claim value for your account.
+                    </p>
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80">
+                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
                       {unlockOffer.supportableClaimCount} supportable claims
                     </span>
                     {unlockOffer.readyToFileCount > 0 ? (
-                      <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/85">
+                      <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/80">
                         {unlockOffer.readyToFileCount} ready to file
-                      </span>
-                    ) : null}
-                    {unlockOffer.linkedDocumentCount > 0 ? (
-                      <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80">
-                        {unlockOffer.linkedDocumentCount} documents linked
                       </span>
                     ) : null}
                   </div>
                 </div>
 
-                <div className="w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-5 backdrop-blur-sm">
+                <div className="w-full max-w-sm rounded-xl border border-white/10 bg-white/[0.02] p-4">
                   {showUnlockOffer ? (
-                    <>
+                    <div className="space-y-3">
                       <Button
                         type="button"
                         onClick={handleUnlockCheckout}
-                        className="h-12 w-full rounded-xl bg-emerald-400 px-5 text-[11px] font-sans font-bold uppercase tracking-[0.16em] text-black hover:bg-emerald-300"
+                        className="h-11 w-full rounded-xl bg-emerald-400 px-4 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-emerald-300"
                       >
                         Start Filing All Claims for $99
                       </Button>
-                      <p className="mt-3 text-xs font-sans leading-5 text-white/72">
+                      <p className="text-[12px] font-sans leading-5 text-white/68">
                         Charged as R1,699 at checkout. You keep 100% of recovered funds.
                       </p>
-                      <p className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
+                      <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/34">
                         Only shown because we found real claim value for your account.
                       </p>
 
                       {paymentConfirmationVisible ? (
-                        <div className="mt-4 rounded-xl border border-emerald-300/15 bg-emerald-400/[0.06] p-4">
-                          <p className="text-sm font-sans leading-6 text-emerald-50/92">
+                        <div className="rounded-xl border border-emerald-300/15 bg-emerald-400/[0.06] p-3.5">
+                          <p className="text-[12px] font-sans leading-5 text-emerald-50/88">
                             Complete your payment in the opened tab, then confirm below to start filing.
                           </p>
                           <Button
                             type="button"
                             onClick={handleConfirmPaymentAndStartFiling}
                             disabled={unlockSubmitting}
-                            className="mt-4 h-11 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-[0.16em] text-black hover:bg-white/90"
+                            className="mt-3 h-10 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
                           >
                             {unlockSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                             I&apos;ve Completed Payment
                           </Button>
                         </div>
                       ) : null}
-                    </>
+                    </div>
                   ) : null}
 
                   {showUnlockedState ? (
@@ -1129,20 +1123,20 @@ export default function DisputeCases() {
                       <div className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-100/80">
                         Payment confirmed
                       </div>
-                      <p className="text-xl font-sans font-bold tracking-tight text-white">
+                      <p className="text-lg font-sans font-bold tracking-tight text-white">
                         {unlockResult?.queued_count ? 'Filing in progress' : 'Filing access unlocked'}
                       </p>
-                      <p className="text-sm font-sans leading-6 text-white/72">
-                        {unlockResult?.message || 'This workspace is unlocked. Eligible claims can move into filing immediately.'}
+                      <p className="text-[13px] font-sans leading-5 text-white/68">
+                        {unlockResult?.message || 'This account is unlocked. Eligible claims can move into filing immediately.'}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {unlockResult?.queued_count ? (
-                          <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/85">
+                          <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/80">
                             {unlockResult.queued_count} queued now
                           </span>
                         ) : null}
                         {unlockResult?.blocked_count ? (
-                          <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80">
+                          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
                             {unlockResult.blocked_count} still held back
                           </span>
                         ) : null}
