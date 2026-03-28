@@ -981,6 +981,19 @@ export const api = {
         parser_status?: string;
         parser_confidence?: number | null;
         parser_error?: string | null;
+        parsing_strategy?: 'FULL' | 'PARTIAL' | 'FAILED_DURABLE' | null;
+        parsing_explanation?: {
+          reason?: string;
+          completed_steps?: string[];
+          failed_steps?: string[];
+          preserved_outputs?: string[];
+        } | null;
+        ingestion_strategy?: 'FULL' | 'DEGRADED' | 'REJECTED' | null;
+        ingestion_explanation?: {
+          reason?: string;
+          preserved_fields?: string[];
+          missing_fields?: string[];
+        } | null;
         extraction_signal_count?: number;
         source?: string | null;
         provider?: string | null;
@@ -1261,10 +1274,23 @@ export const api = {
       id: string;
       filename: string;
       original_filename?: string;
-      processing_status: 'pending' | 'processing' | 'completed' | 'failed';
-      parser_status?: 'pending' | 'processing' | 'completed' | 'failed';
+      processing_status: 'pending' | 'processing' | 'completed' | 'failed' | string;
+      parser_status?: 'pending' | 'processing' | 'completed' | 'partial' | 'failed';
       parser_confidence?: number | null;
       parser_error?: string | null;
+      parsing_strategy?: 'FULL' | 'PARTIAL' | 'FAILED_DURABLE' | null;
+      parsing_explanation?: {
+        reason?: string;
+        completed_steps?: string[];
+        failed_steps?: string[];
+        preserved_outputs?: string[];
+      } | null;
+      ingestion_strategy?: 'FULL' | 'DEGRADED' | 'REJECTED' | null;
+      ingestion_explanation?: {
+        reason?: string;
+        preserved_fields?: string[];
+        missing_fields?: string[];
+      } | null;
       created_at?: string;
       updated_at?: string;
       content_type?: string;
@@ -1828,6 +1854,12 @@ export const api = {
         billed_amount: number | null;
         currency: string;
         evidence_state: string;
+        filing_strategy?: 'AUTO' | 'SMART' | 'BLOCKED' | null;
+        explanation_payload?: {
+          missing_fields?: string[];
+          assumptions?: string[];
+          justification?: string;
+        } | null;
         proof_status: string | null;
         missing_requirements: string[];
         manual_review_reason: string | null;

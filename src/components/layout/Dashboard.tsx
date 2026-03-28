@@ -523,7 +523,7 @@ export function Dashboard() {
         }
         toast({
           title: 'INGESTION_STARTED',
-          description: response.data?.message || 'Evidence ingestion started successfully.'
+          description: response.data?.message || 'Evidence ingestion was queued. Review the Evidence Locker for final FULL, DEGRADED, or REJECTED intake states.'
         });
         await fetchDashboardSummary();
       } catch (error: any) {

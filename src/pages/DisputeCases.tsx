@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
+import { formatAutonomyLabel, summarizeExplanationPayload } from '@/lib/autonomyTruth';
 import {
   formatDisputeReason,
   formatPayoutProofStatus,
@@ -382,6 +383,8 @@ function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<
       ...row,
       status: event.data?.status || row.status,
       filing_status: event.data?.filing_status || 'filed',
+      filing_strategy: event.data?.filing_strategy || row.filing_strategy,
+      explanation_payload: event.data?.explanation_payload || row.explanation_payload,
       amazon_case_id: event.data?.amazon_case_id || row.amazon_case_id,
       updated_at: updatedAt
     };
@@ -391,6 +394,8 @@ function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<
     return {
       ...row,
       status: event.data?.status || row.status,
+      filing_strategy: event.data?.filing_strategy || row.filing_strategy,
+      explanation_payload: event.data?.explanation_payload || row.explanation_payload,
       amazon_case_id: event.data?.amazon_case_id || row.amazon_case_id,
       approved_amount: event.data?.amount_approved ?? row.approved_amount,
       updated_at: updatedAt
@@ -634,6 +639,11 @@ export default function DisputeCases() {
         }));
 
         return nextRows;
+      });
+
+      setDetailsRow((currentDetails) => {
+        if (!currentDetails || !rowMatchesEvent(currentDetails, event)) return currentDetails;
+        return updateQueueRow(currentDetails, event);
       });
     }
   }, activeTenantSlug);
@@ -1037,6 +1047,7 @@ export default function DisputeCases() {
                         const isProcessing = filingInProgress.has(row.dispute_case_id);
                         const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
                         const posture = deriveFilingPosture(row, financialSummary);
+                        const decisionExplanation = summarizeExplanationPayload(row.explanation_payload);
                         const actionButton =
                           filingValue === 'pending_approval'
                             ? { label: 'Approve', mode: 'approve' as const }
@@ -1111,8 +1122,18 @@ export default function DisputeCases() {
                                   <Badge variant="outline" className={cn('border', postureBadgeClass(posture.tone))}>
                                     {posture.headline}
                                   </Badge>
+                                  {row.filing_strategy ? (
+                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                      Filing: {formatAutonomyLabel(row.filing_strategy)}
+                                    </Badge>
+                                  ) : null}
                                 </div>
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
+                                {decisionExplanation ? (
+                                  <p className="text-[11px] font-sans leading-5 text-white/45">
+                                    Decision: {decisionExplanation}
+                                  </p>
+                                ) : null}
                                 {getManualReviewReason(row) ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/38">
                                     Review reason: {formatDisputeReason(getManualReviewReason(row))}
@@ -1244,7 +1265,7 @@ export default function DisputeCases() {
             </DialogTitle>
             {detailsRow ? (
               <div className="pt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">
-                Filing: {formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
+                Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
               </div>
             ) : null}
           </DialogHeader>
@@ -1269,6 +1290,7 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Status', value: formatLabel(detailsRow.status) },
                   { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
+                  { label: 'Filing Strategy', value: detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : 'Not available' },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
                   { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
@@ -1282,6 +1304,7 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Posture', value: deriveFilingPosture(detailsRow).headline },
                   { label: 'Detail', value: deriveFilingPosture(detailsRow).detail },
+                  { label: 'Decision Explanation', value: summarizeExplanationPayload(detailsRow.explanation_payload) || 'None recorded' },
                   { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Unavailable' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'None recorded' },
                   { label: 'Missing Requirements', value: formatRequirementList(getMissingRequirements(detailsRow)) },

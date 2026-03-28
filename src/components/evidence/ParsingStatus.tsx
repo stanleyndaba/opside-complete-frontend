@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useTenant } from '@/contexts/TenantContext';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
-import { RefreshCw, CheckCircle2, XCircle, Clock, AlertTriangle, Activity, Package } from 'lucide-react';
+import { getParsingTruth, formatAutonomyLabel } from '@/lib/autonomyTruth';
+import { RefreshCw, CheckCircle2, XCircle, Clock, AlertTriangle, Activity } from 'lucide-react';
 
 interface ParsingStatusProps {
   documentId: string;
@@ -15,13 +14,30 @@ interface ParsingStatusProps {
   onRefresh?: () => Promise<void> | void;
 }
 
+type ParsingViewState = ReturnType<typeof getParsingTruth> & {
+  progress: number;
+};
+
+function toParsingViewState(record: any): ParsingViewState {
+  const truth = getParsingTruth(record);
+  return {
+    ...truth,
+    progress: truth.status === 'processing' ? 50 : truth.status === 'completed' || truth.status === 'partial' ? 100 : 0
+  };
+}
+
+function getExplanationLines(explanation: ParsingViewState['explanation']) {
+  if (!explanation) return [];
+  const lines: Array<{ label: string; value: string }> = [];
+  if (explanation.reason) lines.push({ label: 'Reason', value: explanation.reason });
+  if (explanation.completed_steps?.length) lines.push({ label: 'Completed', value: explanation.completed_steps.join(', ') });
+  if (explanation.failed_steps?.length) lines.push({ label: 'Failed', value: explanation.failed_steps.join(', ') });
+  if (explanation.preserved_outputs?.length) lines.push({ label: 'Preserved', value: explanation.preserved_outputs.join(', ') });
+  return lines;
+}
+
 export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, documentData, onRefresh }: ParsingStatusProps) {
-  const [jobStatus, setJobStatus] = useState<{
-    status: 'pending' | 'processing' | 'completed' | 'failed';
-    progress?: number;
-    confidence_score?: number;
-    error?: string;
-  } | null>(null);
+  const [jobStatus, setJobStatus] = useState<ParsingViewState | null>(null);
   const [parsedData, setParsedData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -33,26 +49,18 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
   useEffect(() => {
     if (usingExternalData) {
       return () => {
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-        }
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
+        if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
       };
     }
 
     if (documentId) {
-      fetchParsingStatus();
+      void fetchParsingStatus();
     }
 
     return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [documentId, usingExternalData]);
 
@@ -62,36 +70,41 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
       const res = await api.getDocumentWithParsedData(documentId, activeSlug);
       if (res.ok && res.data) {
         const data = res.data;
-        const status = data.parser_status || data.processing_status || 'pending';
-
-        setJobStatus({
-          status: status as any,
-          progress: data.parser_status === 'processing' ? 50 : data.parser_status === 'completed' ? 100 : 0,
-          confidence_score: data.parser_confidence,
-        });
+        const nextState = toParsingViewState(data);
+        setJobStatus(nextState);
 
         if (data.parsed_metadata) {
           setParsedData(data.parsed_metadata);
         }
 
-        onStatusChange?.(status);
+        onStatusChange?.(nextState.status);
 
-        // Stop polling if completed or failed
-        if (status === 'completed' || status === 'failed') {
+        if (nextState.isTerminal) {
           if (pollingIntervalRef.current) {
             clearInterval(pollingIntervalRef.current);
             pollingIntervalRef.current = null;
           }
-        } else if (autoPoll && status === 'processing') {
-          // Start polling for processing status
+        } else if (autoPoll) {
           startPolling();
         }
       } else {
-        setJobStatus({ status: 'pending', progress: 0 });
+        setJobStatus({ ...toParsingViewState({ parser_status: 'pending' }), error: res.error || null });
       }
     } catch (error) {
       console.error('Failed to fetch parsing status:', error);
-      setJobStatus({ status: 'failed', progress: 0, error: 'Failed to fetch status' });
+      setJobStatus({
+        ...toParsingViewState({
+          parser_status: 'failed',
+          parsing_strategy: 'FAILED_DURABLE',
+          parsing_explanation: {
+            reason: 'Failed to fetch parser state from the backend.',
+            completed_steps: [],
+            failed_steps: ['status_lookup'],
+            preserved_outputs: []
+          }
+        }),
+        error: 'Failed to fetch status'
+      });
     } finally {
       setLoading(false);
     }
@@ -99,18 +112,12 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
 
   const startPolling = () => {
     if (usingExternalData) return;
+    if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
 
-    // Clear existing polling
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-    }
-
-    // Poll every 5 seconds
     pollingIntervalRef.current = setInterval(() => {
-      fetchParsingStatus();
+      void fetchParsingStatus();
     }, 5000);
 
-    // Stop polling after 10 minutes
     timeoutRef.current = setTimeout(() => {
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
@@ -119,24 +126,26 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
     }, 10 * 60 * 1000);
   };
 
+  const effectiveStatus = usingExternalData ? toParsingViewState(documentData) : jobStatus;
+  const effectiveParsedData = usingExternalData ? documentData?.parsed_metadata : parsedData;
+  const explanationLines = getExplanationLines(effectiveStatus?.explanation);
+
   const getStatusIndicator = () => {
-    const statusState = usingExternalData
-      ? {
-          status: documentData?.parser_status || documentData?.processing_status || 'pending',
-          progress: documentData?.parser_status === 'processing' ? 50 : documentData?.parser_status === 'completed' ? 100 : 0,
-          confidence_score: documentData?.parser_confidence,
-          error: documentData?.parser_error,
-        }
-      : jobStatus;
+    if (!effectiveStatus) return null;
 
-    if (!statusState) return null;
-
-    switch (statusState.status) {
+    switch (effectiveStatus.status) {
       case 'completed':
         return (
           <div className="flex items-center gap-2 text-white/80">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">INTELLIGENCE_VERIFIED</span>
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">FULL_PARSE_COMPLETE</span>
+          </div>
+        );
+      case 'partial':
+        return (
+          <div className="flex items-center gap-2 text-amber-400">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">PARTIAL_PARSE_READY</span>
           </div>
         );
       case 'processing':
@@ -150,7 +159,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
         return (
           <div className="flex items-center gap-2 text-rose-500">
             <XCircle className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">EXTRACTION_HALTED</span>
+            <span className="text-[10px] font-sans font-bold tracking-tight uppercase">FAILED_DURABLE</span>
           </div>
         );
       case 'pending':
@@ -163,16 +172,6 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
         );
     }
   };
-
-  const effectiveStatus = usingExternalData
-    ? {
-        status: documentData?.parser_status || documentData?.processing_status || 'pending',
-        progress: documentData?.parser_status === 'processing' ? 50 : documentData?.parser_status === 'completed' ? 100 : 0,
-        confidence_score: documentData?.parser_confidence,
-        error: documentData?.parser_error,
-      }
-    : jobStatus;
-  const effectiveParsedData = usingExternalData ? documentData?.parsed_metadata : parsedData;
 
   if (loading && !effectiveStatus) {
     return (
@@ -191,20 +190,20 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
 
   return (
     <div className="space-y-0 rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-      {/* Status Overview */}
       <div className="bg-white/[0.03] border-b border-white/10 py-5 px-6 flex items-center justify-between backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">
-            NODE_OVERVIEW
-          </h4>
+          <h4 className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">NODE_OVERVIEW</h4>
           <div className="h-4 w-[1px] bg-white/10" />
           <div className="flex items-center gap-6">
             {getStatusIndicator()}
-            {effectiveStatus.confidence_score != null && (
+            <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+              {effectiveStatus.strategy ? formatAutonomyLabel(effectiveStatus.strategy) : formatAutonomyLabel(effectiveStatus.status)}
+            </Badge>
+            {effectiveStatus.confidence != null && (
               <div className="flex items-center gap-4">
                 <div className="h-4 w-[1px] bg-white/10" />
                 <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                  CONFIDENCE: <span className="text-white font-bold">{(effectiveStatus.confidence_score * 100).toFixed(1)}%</span>
+                  CONFIDENCE: <span className="text-white font-bold">{(effectiveStatus.confidence * 100).toFixed(1)}%</span>
                 </span>
               </div>
             )}
@@ -228,7 +227,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
       </div>
 
       <div className="bg-[#0a0a0a] p-8 space-y-10">
-        {effectiveStatus.status === 'processing' && effectiveStatus.progress !== undefined && (
+        {effectiveStatus.status === 'processing' && (
           <div className="space-y-4 max-w-xl">
             <div className="flex justify-between items-end mb-1">
               <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">EXTRACTION_PROGRESS</span>
@@ -251,13 +250,33 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
           </div>
         )}
 
-        {/* Parsed Metadata - Dictionary View */}
-        {effectiveParsedData && effectiveStatus.status === 'completed' && (
+        {explanationLines.length > 0 && effectiveStatus.status !== 'processing' && (
+          <div className="rounded-lg border border-white/10 bg-white/[0.02] p-5 space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Parse Decision</span>
+              <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[9px] font-sans font-bold uppercase tracking-tight text-white/60">
+                {effectiveStatus.strategy ? formatAutonomyLabel(effectiveStatus.strategy) : formatAutonomyLabel(effectiveStatus.status)}
+              </Badge>
+            </div>
+            <div className="space-y-2">
+              {explanationLines.map((line) => (
+                <div key={line.label} className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2 last:border-0 last:pb-0">
+                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{line.label}</span>
+                  <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/76">{line.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {effectiveParsedData && (effectiveStatus.status === 'completed' || effectiveStatus.status === 'partial') && (
           <div className="space-y-10">
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="h-1.5 w-1.5 rounded-full bg-white/40" />
-                <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">SUMMARY_INTELLIGENCE</h4>
+                <h4 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                  {effectiveStatus.status === 'partial' ? 'PARTIAL_INTELLIGENCE' : 'SUMMARY_INTELLIGENCE'}
+                </h4>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
 
@@ -320,4 +339,3 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
     </div>
   );
 }
-

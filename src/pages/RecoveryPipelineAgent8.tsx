@@ -16,6 +16,7 @@ import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
+import { formatAutonomyLabel, summarizeMatchExplanation } from '@/lib/autonomyTruth';
 import {
   financialSourceLabel,
   financialStatusDetail,
@@ -57,6 +58,12 @@ type Row = {
   expected_payout_amount: number | null;
   billed_revenue_amount: number | null;
   reconciliation_status: string;
+  reconciliation_strategy?: 'AUTO_MATCH' | 'SMART_MATCH' | 'QUARANTINED' | null;
+  match_explanation?: {
+    competing_candidates?: number;
+    selected_basis?: string;
+    confidence?: number;
+  } | null;
   operator_state: string;
   recovery_work_status?: string | null;
   billing_work_status?: string | null;
@@ -219,6 +226,8 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   const nextAttemptAt = String(payload.next_attempt_at || '').trim() || null;
   const lastClaimedAt = String(payload.last_claimed_at || '').trim() || timestamp;
   const deferCount = typeof payload.defer_count === 'number' ? payload.defer_count : Number(payload.defer_count || 0);
+  const reconciliationStrategy = String(payload.reconciliation_strategy || '').trim() || null;
+  const matchExplanation = payload.match_explanation || null;
 
   if (matchesRecovery) {
     const recoveryWorkPayload = {
@@ -239,6 +248,8 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
         ? row.recovery_execution_processed_at || null
         : pickLatestTimestamp(timestamp, row.recovery_execution_processed_at),
       recovery_work_error: reason || row.recovery_work_error || null,
+      reconciliation_strategy: reconciliationStrategy || row.reconciliation_strategy || null,
+      match_explanation: matchExplanation || row.match_explanation || null,
       recovery_last_deferred_reason: eventType === 'recovery.work_deferred'
         ? (reason || row.recovery_last_deferred_reason || row.recovery_work_error || null)
         : row.recovery_last_deferred_reason || null,
@@ -370,6 +381,8 @@ const PRESERVED_FINALITY_FIELDS: Array<keyof Row> = [
   'billing_locked_by',
   'recovery_lifecycle_state',
   'billing_lifecycle_state',
+  'reconciliation_strategy',
+  'match_explanation',
   'recovery_work_payload',
   'billing_work_payload'
 ];
@@ -582,6 +595,7 @@ export default function RecoveryPipelineAgent8() {
         rows: current.rows.map((row) => mergeFinalityEventRow(row, event))
       };
     });
+    setDetailsRow((currentDetails) => (currentDetails ? mergeFinalityEventRow(currentDetails, event) : currentDetails));
     scheduleLiveRefresh();
   }, activeSlug);
 
@@ -901,6 +915,16 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="flex flex-col gap-2">
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
+                                    {row.reconciliation_strategy ? (
+                                      <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                        {formatAutonomyLabel(row.reconciliation_strategy)}
+                                      </span>
+                                    ) : null}
+                                    {summarizeMatchExplanation(row.match_explanation) ? (
+                                      <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
+                                        {summarizeMatchExplanation(row.match_explanation)}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -1032,6 +1056,8 @@ export default function RecoveryPipelineAgent8() {
                 rows={[
                   { label: 'Operator State', value: label(detailsRow.operator_state) },
                   { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
+                  { label: 'Reconciliation Strategy', value: detailsRow.reconciliation_strategy ? formatAutonomyLabel(detailsRow.reconciliation_strategy) : 'Not available' },
+                  { label: 'Match Explanation', value: summarizeMatchExplanation(detailsRow.match_explanation) || 'None recorded' },
                   { label: 'Case Status', value: label(detailsRow.status) },
                   { label: 'Recovery Status', value: label(detailsRow.recovery_status) },
                   { label: 'Recovery Work', value: label(detailsRow.recovery_work_status) },

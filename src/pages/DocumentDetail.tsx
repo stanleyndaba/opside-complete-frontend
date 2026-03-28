@@ -38,6 +38,7 @@ import { format } from 'date-fns';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
+import { formatAutonomyLabel, getIngestionTruth, getParsingTruth } from '@/lib/autonomyTruth';
 
 export default function DocumentDetail() {
   const { id, documentId, tenantSlug } = useParams();
@@ -111,7 +112,7 @@ export default function DocumentDetail() {
   }, [docId, isReady, activeTenantSlug]);
 
   useEffect(() => {
-    const status = documentData?.parser_status || documentData?.processing_status;
+    const status = getParsingTruth(documentData || {}).status;
     if (!docId || !activeTenantSlug || (status !== 'pending' && status !== 'processing')) return;
 
     const interval = setInterval(() => {
@@ -119,7 +120,7 @@ export default function DocumentDetail() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [docId, activeTenantSlug, documentData?.parser_status, documentData?.processing_status]);
+  }, [docId, activeTenantSlug, documentData]);
 
   const handleTriggerParsing = async () => {
     if (!docId) return;
@@ -156,10 +157,18 @@ export default function DocumentDetail() {
         return (
           <div className="px-2.5 py-1 bg-white/5 border border-white/10 text-[10px] font-sans font-bold text-white/80 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
             <CheckCircle2 className="w-3 h-3" />
-            VALIDATED
+            FULL_PARSE
+          </div>
+        );
+      case 'partial':
+        return (
+          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[10px] font-sans font-bold text-amber-400 uppercase tracking-tight flex items-center gap-1.5 rounded-sm">
+            <AlertCircle className="w-3 h-3" />
+            PARTIAL_PARSE
           </div>
         );
       case 'pending':
+      case 'processing':
         return (
           <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-[10px] font-sans font-bold text-amber-500 uppercase tracking-tight flex items-center gap-1.5 rounded-sm animate-pulse">
             <Clock className="w-3 h-3" />
@@ -184,7 +193,9 @@ export default function DocumentDetail() {
   };
 
   const extracted = documentData?.extracted || parsedData?.extracted || {};
-  const parserConfidence = documentData?.parser_confidence;
+  const parsingTruth = getParsingTruth(documentData || {});
+  const ingestionTruth = getIngestionTruth(documentData || {});
+  const parserConfidence = parsingTruth.confidence;
   const parserConfidenceLabel = parserConfidence != null
     ? `${(parserConfidence * 100).toFixed(0)}%`
     : 'Unknown';
@@ -198,7 +209,7 @@ export default function DocumentDetail() {
     (extracted.dates?.length || 0);
 
   const evidenceDecision = (() => {
-    const status = documentData?.parser_status || documentData?.processing_status;
+    const status = parsingTruth.status;
     if (status === 'pending' || status === 'processing') {
       return { usable: false, label: 'NO', reason: 'Parsing is still in progress', nextStep: 'Wait for parsing to complete before using this document as evidence.' };
     }
@@ -210,6 +221,14 @@ export default function DocumentDetail() {
     }
     if (matchedClaims.length === 0) {
       return { usable: false, label: 'NO', reason: 'Not linked to any case yet', nextStep: 'Wait for matching or link this document to the correct case manually.' };
+    }
+    if (status === 'partial') {
+      return {
+        usable: false,
+        label: 'LIMITED',
+        reason: parsingTruth.explanation?.reason || 'The parser preserved some usable truth, but this document is only partially parsed.',
+        nextStep: 'Review the preserved fields before using this document in a filing decision.'
+      };
     }
     if (parserConfidence == null) {
       return { usable: false, label: 'NO', reason: 'Extraction confidence is unknown', nextStep: 'Review extracted fields manually before relying on this as evidence.' };
@@ -292,7 +311,7 @@ export default function DocumentDetail() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  {getParserStatusBadge(documentData?.parser_status || parsedData?.parser_status)}
+                  {getParserStatusBadge(parsingTruth.status)}
                   <div className="h-6 w-[1px] bg-white/10 mx-2" />
                   <Button
                     variant="ghost"
@@ -448,6 +467,18 @@ export default function DocumentDetail() {
                           <div className="h-8 w-[1px] bg-white/5" />
 
                           <div className="flex flex-col gap-1">
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">PARSE_STRATEGY</span>
+                            <span className={cn("text-lg font-sans font-bold tracking-tight", parsingTruth.status === 'failed' ? "text-rose-400" : parsingTruth.status === 'partial' ? "text-amber-400" : "text-white/80")}>
+                              {formatAutonomyLabel(parsingTruth.strategy || parsingTruth.status)}
+                            </span>
+                            <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">
+                              {parsingTruth.explanation?.reason || 'No parser explanation recorded.'}
+                            </span>
+                          </div>
+
+                          <div className="h-8 w-[1px] bg-white/5" />
+
+                          <div className="flex flex-col gap-1">
                             <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">USABLE_AS_EVIDENCE</span>
                             <span className={cn("text-lg font-sans font-bold tracking-tight", evidenceDecision.usable ? "text-white" : "text-rose-400")}>
                               {evidenceDecision.label}
@@ -468,6 +499,11 @@ export default function DocumentDetail() {
                                 (extracted.invoice_numbers?.length || 0) +
                                 (extracted.dates?.length || 0)}
                             </span>
+                            {ingestionTruth.strategy ? (
+                              <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">
+                                Intake: {formatAutonomyLabel(ingestionTruth.strategy)}
+                              </span>
+                            ) : null}
                           </div>
                         </div>
 

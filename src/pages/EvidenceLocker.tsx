@@ -15,6 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { formatAutonomyLabel, getIngestionTruth, getParsingTruth } from '@/lib/autonomyTruth';
 interface LockerDocumentRow {
   id: string;
   name: string;
@@ -28,6 +29,19 @@ interface LockerDocumentRow {
   parser_status?: string;
   parser_confidence?: number | null;
   parser_error?: string | null;
+  parsing_strategy?: 'FULL' | 'PARTIAL' | 'FAILED_DURABLE' | null;
+  parsing_explanation?: {
+    reason?: string;
+    completed_steps?: string[];
+    failed_steps?: string[];
+    preserved_outputs?: string[];
+  } | null;
+  ingestion_strategy?: 'FULL' | 'DEGRADED' | 'REJECTED' | null;
+  ingestion_explanation?: {
+    reason?: string;
+    preserved_fields?: string[];
+    missing_fields?: string[];
+  } | null;
   extraction_signal_count?: number;
   source?: string | null;
   provider?: string | null;
@@ -127,6 +141,16 @@ const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
   }
 };
 
+const getLockerParsingStatus = (doc: LockerDocumentRow) => getParsingTruth(doc).status;
+
+const getLockerParsingReason = (doc: LockerDocumentRow) =>
+  getParsingTruth(doc).explanation?.reason || doc.parser_error || null;
+
+const getLockerIngestionLabel = (doc: LockerDocumentRow) => {
+  const truth = getIngestionTruth(doc);
+  return truth.strategy ? formatAutonomyLabel(truth.strategy) : null;
+};
+
 function appendAuditEvent(
   current: LockerAuditEvent[],
   next: LockerAuditEvent
@@ -142,13 +166,31 @@ function applyLockerEvent(doc: LockerDocumentRow, event: LiveLockerEvent): Locke
   }
 
   if (event.eventType === 'parsing_completed') {
+    const parserStatus = String(event.data?.parser_status || '').trim().toLowerCase();
+    const parsingStrategy = String(event.data?.parsing_strategy || '').trim().toUpperCase();
+    const resolvedParserStatus = parserStatus || (parsingStrategy === 'PARTIAL' ? 'partial' : parsingStrategy === 'FAILED_DURABLE' ? 'failed' : 'completed');
+    const nextEvidenceState =
+      resolvedParserStatus === 'failed'
+        ? 'Parsing Failed'
+        : resolvedParserStatus === 'partial'
+          ? 'Parsing Partial'
+          : doc.linked_case_count > 0
+            ? doc.evidence_state
+            : 'Unmatched';
     return {
       ...doc,
-      parser_status: 'completed',
-      status: 'completed',
-      processing_status: 'completed',
+      parser_status: resolvedParserStatus,
+      parsing_strategy: parsingStrategy ? parsingStrategy as LockerDocumentRow['parsing_strategy'] : doc.parsing_strategy,
+      parsing_explanation: event.data?.parsing_explanation || doc.parsing_explanation,
+      status: resolvedParserStatus === 'failed' ? 'failed' : 'completed',
+      processing_status: resolvedParserStatus === 'failed' ? 'failed' : 'completed',
+      parser_confidence: typeof event.data?.parser_confidence === 'number' ? event.data.parser_confidence : doc.parser_confidence,
+      parser_error: event.data?.parser_error || doc.parser_error,
+      parsed_metadata: event.data?.parsed_metadata || doc.parsed_metadata,
       updated_at: event.timestamp,
-      evidence_state: doc.linked_case_count > 0 ? doc.evidence_state : 'Unmatched'
+      evidence_state: nextEvidenceState,
+      usable_as_evidence: resolvedParserStatus === 'completed' ? doc.usable_as_evidence : false,
+      needs_review: resolvedParserStatus !== 'completed' || doc.needs_review
     };
   }
 
@@ -331,7 +373,7 @@ export default function EvidenceLocker() {
 
       toast({
         title: 'Upload successful',
-        description: `${files.length} document(s) uploaded.`
+        description: `${files.length} document(s) uploaded and queued for evidence parsing.`
       });
     } catch (err: any) {
       toast({
@@ -363,7 +405,7 @@ export default function EvidenceLocker() {
     if (!activeSlug) return;
 
     if (event.eventType === 'evidence_ingestion_completed') {
-      toast({ title: 'Scan complete', description: 'Evidence inventory refreshed.' });
+      toast({ title: 'Scan complete', description: 'Evidence inventory refreshed from the latest backend ingestion decisions.' });
       void refreshInventory();
       return;
     }
@@ -393,9 +435,9 @@ export default function EvidenceLocker() {
         setMetrics((currentMetrics) => ({
           ...currentMetrics,
           matched: nextDocuments.filter((doc) => doc.linked_case_count > 0).length,
-          parsed: nextDocuments.filter((doc) => doc.parser_status === 'completed').length,
+          parsed: nextDocuments.filter((doc) => ['completed', 'partial'].includes(getLockerParsingStatus(doc))).length,
           needsReview: nextDocuments.filter((doc) => doc.needs_review).length,
-          failed: nextDocuments.filter((doc) => doc.parser_status === 'failed').length
+          failed: nextDocuments.filter((doc) => getLockerParsingStatus(doc) === 'failed').length
         }));
 
         return nextDocuments;
@@ -506,6 +548,8 @@ export default function EvidenceLocker() {
       size_bytes: d.size_bytes ?? '',
       uploaded_at: d.created_at,
       parser_status: d.parser_status || '',
+      parsing_strategy: d.parsing_strategy || '',
+      ingestion_strategy: d.ingestion_strategy || '',
       parser_confidence: d.parser_confidence != null ? `${(d.parser_confidence * 100).toFixed(0)}%` : 'Unknown',
       evidence_state: d.evidence_state,
       usable_as_evidence: d.usable_as_evidence ? 'Yes' : 'No',
@@ -898,18 +942,27 @@ export default function EvidenceLocker() {
                                   <span className="text-white/40">{formatBytes(doc.size_bytes)}</span>
                                   <span className="text-white/5">|</span>
                                   <div className="flex items-center gap-2">
+                                    {(() => {
+                                      const parsingStatus = getLockerParsingStatus(doc);
+                                      return (
+                                        <>
                                     <div className={cn(
                                       "h-1.5 w-1.5 rounded-full shadow-[0_0_8px]",
-                                      doc.parser_status === 'completed' ? 'bg-white/70 shadow-white/20' :
-                                        doc.parser_status === 'processing' ? 'bg-amber-500 shadow-amber-500/50 animate-pulse' :
-                                          doc.parser_status === 'failed' ? 'bg-rose-500 shadow-rose-500/50' : 'bg-white/10'
+                                      parsingStatus === 'completed' ? 'bg-white/70 shadow-white/20' :
+                                        parsingStatus === 'partial' ? 'bg-amber-400 shadow-amber-400/50' :
+                                          parsingStatus === 'processing' ? 'bg-amber-500 shadow-amber-500/50 animate-pulse' :
+                                            parsingStatus === 'failed' ? 'bg-rose-500 shadow-rose-500/50' : 'bg-white/10'
                                     )} />
                                     <span className={cn(
-                                      doc.parser_status === 'completed' ? 'text-white/60' :
-                                        doc.parser_status === 'failed' ? 'text-rose-500/60' : 'text-white/20'
+                                      parsingStatus === 'completed' ? 'text-white/60' :
+                                        parsingStatus === 'partial' ? 'text-amber-400/80' :
+                                          parsingStatus === 'failed' ? 'text-rose-500/60' : 'text-white/20'
                                     )}>
-                                      {doc.parser_status || "Pending"}
+                                      {formatAutonomyLabel(doc.parsing_strategy || parsingStatus)}
                                     </span>
+                                        </>
+                                      );
+                                    })()}
                                   </div>
                                   <span className="text-white/5">|</span>
                                   <span className="text-white/40">
@@ -931,6 +984,18 @@ export default function EvidenceLocker() {
                                   <span className="text-white/40">Invoice: {doc.invoice || "Not available"}</span>
                                   <span className="text-white/5">|</span>
                                   <span className="text-white/40">{doc.usability_reason}</span>
+                                  {getLockerIngestionLabel(doc) ? (
+                                    <>
+                                      <span className="text-white/5">|</span>
+                                      <span className="text-white/40">Intake: {getLockerIngestionLabel(doc)}</span>
+                                    </>
+                                  ) : null}
+                                  {getLockerParsingReason(doc) ? (
+                                    <>
+                                      <span className="text-white/5">|</span>
+                                      <span className="text-white/40 truncate max-w-[28rem]">Decision: {getLockerParsingReason(doc)}</span>
+                                    </>
+                                  ) : null}
                                 </div>
                               </div>
                             </div>
