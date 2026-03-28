@@ -815,6 +815,54 @@ export default function DisputeCases() {
     { label: 'Billing', value: summary.billing_pending_count },
   ]), [summary, verifiedRecoveryCount]);
 
+  const unlockOffer = useMemo(() => {
+    const supportableRows = rows.flatMap((row) => {
+      const filingValue = String(row.filing_status || '').toLowerCase();
+      const amount = typeof row.requested_amount === 'number' && row.requested_amount > 0
+        ? row.requested_amount
+        : null;
+
+      if (!row.eligible_to_file || !['pending', 'retrying', 'pending_approval'].includes(filingValue) || amount == null) {
+        return [];
+      }
+
+      const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
+      const posture = deriveFilingPosture(row, financialSummary);
+      if (posture.tone === 'blocked' || posture.tone === 'resolved' || posture.tone === 'in_flight') {
+        return [];
+      }
+
+      return [{
+        row,
+        amount,
+        currency: row.currency || 'USD',
+        posture
+      }];
+    });
+
+    if (!supportableRows.length) {
+      return null;
+    }
+
+    const currencies = Array.from(new Set(supportableRows.map((item) => item.currency).filter(Boolean)));
+    if (currencies.length !== 1) {
+      return null;
+    }
+
+    return {
+      currency: currencies[0],
+      totalSupportableValue: supportableRows.reduce((sum, item) => sum + item.amount, 0),
+      supportableClaimCount: supportableRows.length,
+      readyToFileCount: supportableRows.filter((item) => item.posture.tone === 'ready').length,
+      linkedDocumentCount: supportableRows.reduce((sum, item) => sum + Math.max(Number(item.row.matched_document_count || 0), 0), 0)
+    };
+  }, [financialSummaries, rows]);
+
+  const showUnlockOffer = !isPaidUser
+    && Boolean(unlockOffer)
+    && (unlockOffer?.totalSupportableValue || 0) > 0
+    && (unlockOffer?.supportableClaimCount || 0) > 0;
+
   if (isReady && !activeTenantSlug) {
     return (
       <PageLayout title="Dispute Cases" midnight>
@@ -912,6 +960,61 @@ export default function DisputeCases() {
               </div>
             )}
           </div>
+
+          {showUnlockOffer && unlockOffer ? (
+            <div className="overflow-hidden rounded-[28px] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_45%),linear-gradient(135deg,rgba(17,24,39,0.96),rgba(10,10,10,0.98))] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+              <div className="flex flex-col gap-6 px-6 py-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
+                <div className="space-y-4">
+                  <div className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-100/80">
+                    Real claim value found
+                  </div>
+
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/42">
+                      Pay once to file what is already there
+                    </p>
+                    <h2 className="max-w-4xl text-3xl font-sans font-bold tracking-tight text-white md:text-4xl">
+                      Unlock {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
+                    </h2>
+                    <p className="max-w-3xl text-sm font-sans leading-6 text-white/68">
+                      You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to unlock filing across every supportable case in this workspace.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80">
+                      {unlockOffer.supportableClaimCount} supportable claims
+                    </span>
+                    {unlockOffer.readyToFileCount > 0 ? (
+                      <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/85">
+                        {unlockOffer.readyToFileCount} ready to file
+                      </span>
+                    ) : null}
+                    {unlockOffer.linkedDocumentCount > 0 ? (
+                      <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80">
+                        {unlockOffer.linkedDocumentCount} documents linked
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-5 backdrop-blur-sm">
+                  <Button
+                    asChild
+                    className="h-12 w-full rounded-xl bg-emerald-400 px-5 text-[11px] font-sans font-bold uppercase tracking-[0.16em] text-black hover:bg-emerald-300"
+                  >
+                    <Link to="/pricing-adjust">Unlock &amp; File All Claims for $99</Link>
+                  </Button>
+                  <p className="mt-3 text-xs font-sans leading-5 text-white/72">
+                    One-time payment. No percentage taken from your recoveries. You keep 100% of the funds Amazon pays out.
+                  </p>
+                  <p className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
+                    Only shown when we found real claim value.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
