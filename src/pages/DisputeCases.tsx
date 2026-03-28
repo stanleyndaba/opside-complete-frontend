@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { normalizeTenantSlug } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
-import { formatAutonomyLabel, summarizeExplanationPayload } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
   formatDisputeReason,
   formatPayoutProofStatus,
@@ -113,6 +113,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   const status = String(row.status || '').toLowerCase();
   const billingStatus = String(row.billing_status || '').toLowerCase();
   const evidenceState = String(row.evidence_state || '').toLowerCase();
+  const operationalState = String(row.operational_state || '').toLowerCase();
+  const operationalSummary = summarizeOperationalExplanation(row.operational_explanation);
   const blockReasons = Array.isArray(row.block_reasons) ? row.block_reasons : [];
   const proofStatus = getProofStatus(row);
   const missingRequirements = getMissingRequirements(row);
@@ -266,6 +268,33 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   }
 
   if (row.eligible_to_file === true && ['pending', 'retrying'].includes(filingStatus)) {
+    if (operationalState === 'retry_scheduled') {
+      return {
+        tone: 'attention',
+        headline: 'Retry scheduled',
+        detail: operationalSummary || 'Runtime controls have scheduled this filing for another attempt.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 2)
+      };
+    }
+    if (operationalState === 'deferred_explicit') {
+      return {
+        tone: 'attention',
+        headline: 'Deferred by runtime guard',
+        detail: operationalSummary || 'The case is supportable, but dispatch is intentionally deferred by a runtime guard.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 2)
+      };
+    }
+    if (operationalState === 'blocked_operational' || operationalState === 'failed_durable') {
+      return {
+        tone: 'blocked',
+        headline: operationalState === 'failed_durable' ? 'Runtime failure is durable' : 'Dispatch is operationally blocked',
+        detail: operationalSummary || 'A runtime failure is currently preventing dispatch.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 3)
+      };
+    }
     return {
       tone: 'ready',
       headline: 'Ready to file',
@@ -1048,6 +1077,7 @@ export default function DisputeCases() {
                         const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
                         const posture = deriveFilingPosture(row, financialSummary);
                         const decisionExplanation = summarizeExplanationPayload(row.explanation_payload);
+                        const operationalExplanation = summarizeOperationalExplanation(row.operational_explanation);
                         const actionButton =
                           filingValue === 'pending_approval'
                             ? { label: 'Approve', mode: 'approve' as const }
@@ -1127,11 +1157,21 @@ export default function DisputeCases() {
                                       Filing: {formatAutonomyLabel(row.filing_strategy)}
                                     </Badge>
                                   ) : null}
+                                  {row.operational_state ? (
+                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-amber-100/80">
+                                      Runtime: {formatAutonomyLabel(row.operational_state)}
+                                    </Badge>
+                                  ) : null}
                                 </div>
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
                                 {decisionExplanation ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/45">
                                     Decision: {decisionExplanation}
+                                  </p>
+                                ) : null}
+                                {operationalExplanation ? (
+                                  <p className="text-[11px] font-sans leading-5 text-amber-100/55">
+                                    Runtime: {operationalExplanation}
                                   </p>
                                 ) : null}
                                 {getManualReviewReason(row) ? (
@@ -1291,6 +1331,7 @@ export default function DisputeCases() {
                   { label: 'Status', value: formatLabel(detailsRow.status) },
                   { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
                   { label: 'Filing Strategy', value: detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : 'Not available' },
+                  { label: 'Runtime State', value: detailsRow.operational_state ? formatAutonomyLabel(detailsRow.operational_state) : 'Not available' },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
                   { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
@@ -1305,6 +1346,7 @@ export default function DisputeCases() {
                   { label: 'Posture', value: deriveFilingPosture(detailsRow).headline },
                   { label: 'Detail', value: deriveFilingPosture(detailsRow).detail },
                   { label: 'Decision Explanation', value: summarizeExplanationPayload(detailsRow.explanation_payload) || 'None recorded' },
+                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.operational_explanation) || 'None recorded' },
                   { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Unavailable' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'None recorded' },
                   { label: 'Missing Requirements', value: formatRequirementList(getMissingRequirements(detailsRow)) },

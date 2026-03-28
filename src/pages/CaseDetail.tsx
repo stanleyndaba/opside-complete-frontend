@@ -25,7 +25,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
-import { formatAutonomyLabel, summarizeExplanationPayload } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
   formatDisputeReason,
   formatPayoutProofStatus,
@@ -269,6 +269,8 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   filing_status: apiData.filing_status || null,
   filing_strategy: apiData.filing_strategy || apiData.evidence_attachments?.decision_intelligence?.filing_strategy || null,
   explanation_payload: apiData.explanation_payload || apiData.evidence_attachments?.decision_intelligence?.explanation_payload || null,
+  operational_state: apiData.operational_state || apiData.evidence_attachments?.decision_intelligence?.operational_state || null,
+  operational_explanation: apiData.operational_explanation || apiData.evidence_attachments?.decision_intelligence?.operational_explanation || null,
   recovery_status: apiData.recovery_status || null,
   billing_status: apiData.billing_status || null,
   block_reasons: Array.isArray(apiData.block_reasons) ? apiData.block_reasons : [],
@@ -499,6 +501,8 @@ export default function CaseDetail() {
     filing_status: passedClaim.filing_status || null,
     filing_strategy: passedClaim.filing_strategy || passedClaim.evidence_attachments?.decision_intelligence?.filing_strategy || null,
     explanation_payload: passedClaim.explanation_payload || passedClaim.evidence_attachments?.decision_intelligence?.explanation_payload || null,
+    operational_state: passedClaim.operational_state || passedClaim.evidence_attachments?.decision_intelligence?.operational_state || null,
+    operational_explanation: passedClaim.operational_explanation || passedClaim.evidence_attachments?.decision_intelligence?.operational_explanation || null,
     recovery_status: passedClaim.recovery_status || null,
     billing_status: passedClaim.billing_status || null,
     block_reasons: Array.isArray(passedClaim.block_reasons) ? passedClaim.block_reasons : [],
@@ -1200,6 +1204,12 @@ export default function CaseDetail() {
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Runtime State</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {effectiveCase.operational_state ? formatAutonomyLabel(effectiveCase.operational_state) : '-'}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Recovery Status</dt>
                           <dd className="text-xs font-sans font-bold text-white">{toStatusLabel(effectiveCase.recovery_status)}</dd>
                         </div>
@@ -1255,6 +1265,12 @@ export default function CaseDetail() {
                           <dt className="text-[11px] text-white/40 font-medium">Decision Explanation</dt>
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
                             {summarizeExplanationPayload(effectiveCase.explanation_payload) || '-'}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Runtime Explanation</dt>
+                          <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
+                            {summarizeOperationalExplanation(effectiveCase.operational_explanation) || '-'}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">

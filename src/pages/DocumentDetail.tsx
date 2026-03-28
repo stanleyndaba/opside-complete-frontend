@@ -38,7 +38,7 @@ import { format } from 'date-fns';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
-import { formatAutonomyLabel, getIngestionTruth, getParsingTruth } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, getIngestionTruth, getParsingTruth, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 
 export default function DocumentDetail() {
   const { id, documentId, tenantSlug } = useParams();
@@ -207,14 +207,29 @@ export default function DocumentDetail() {
     (extracted.tracking_numbers?.length || 0) +
     (extracted.invoice_numbers?.length || 0) +
     (extracted.dates?.length || 0);
+  const parsingOperationalSummary = summarizeOperationalExplanation(parsingTruth.operationalExplanation);
 
   const evidenceDecision = (() => {
     const status = parsingTruth.status;
     if (status === 'pending' || status === 'processing') {
-      return { usable: false, label: 'NO', reason: 'Parsing is still in progress', nextStep: 'Wait for parsing to complete before using this document as evidence.' };
+      return {
+        usable: false,
+        label: 'NO',
+        reason: parsingOperationalSummary || 'Parsing is still in progress',
+        nextStep: parsingTruth.operationalExplanation?.next_action
+          ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
+          : 'Wait for parsing to complete before using this document as evidence.'
+      };
     }
     if (status === 'failed') {
-      return { usable: false, label: 'NO', reason: documentData?.parser_error || 'Parsing failed', nextStep: 'Re-run parsing or manually review the source document.' };
+      return {
+        usable: false,
+        label: 'NO',
+        reason: parsingOperationalSummary || documentData?.parser_error || 'Parsing failed',
+        nextStep: parsingTruth.operationalExplanation?.next_action
+          ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
+          : 'Re-run parsing or manually review the source document.'
+      };
     }
     if (extractedDataPointCount === 0 && !(parsedData?.line_items?.length > 0)) {
       return { usable: false, label: 'NO', reason: 'No structured fields were extracted', nextStep: 'Review the file manually or re-run parsing with a better source document.' };
@@ -474,6 +489,12 @@ export default function DocumentDetail() {
                             <span className="text-[10px] font-sans font-bold text-white/30 tracking-tight">
                               {parsingTruth.explanation?.reason || 'No parser explanation recorded.'}
                             </span>
+                            {parsingTruth.operationalState ? (
+                              <span className="text-[10px] font-sans font-bold text-amber-100/60 tracking-tight">
+                                Runtime: {formatAutonomyLabel(parsingTruth.operationalState)}
+                                {parsingOperationalSummary ? ` · ${parsingOperationalSummary}` : ''}
+                              </span>
+                            ) : null}
                           </div>
 
                           <div className="h-8 w-[1px] bg-white/5" />

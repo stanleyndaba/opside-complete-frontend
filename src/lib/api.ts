@@ -1285,6 +1285,13 @@ export const api = {
         failed_steps?: string[];
         preserved_outputs?: string[];
       } | null;
+      operational_state?: 'READY' | 'DEFERRED_EXPLICIT' | 'RETRY_SCHEDULED' | 'BLOCKED_OPERATIONAL' | 'FAILED_DURABLE' | null;
+      operational_explanation?: {
+        reason?: string;
+        retry_at?: string;
+        blocking_guard?: string;
+        next_action?: string;
+      } | null;
       ingestion_strategy?: 'FULL' | 'DEGRADED' | 'REJECTED' | null;
       ingestion_explanation?: {
         reason?: string;
@@ -1310,6 +1317,13 @@ export const api = {
           total: number;
         }>;
         confidence_score?: number | null;
+        operational_state?: 'READY' | 'DEFERRED_EXPLICIT' | 'RETRY_SCHEDULED' | 'BLOCKED_OPERATIONAL' | 'FAILED_DURABLE' | null;
+        operational_explanation?: {
+          reason?: string;
+          retry_at?: string;
+          blocking_guard?: string;
+          next_action?: string;
+        } | null;
       };
       // Agent 5 extracted data from PDF/OCR
       extracted?: {
@@ -1860,6 +1874,14 @@ export const api = {
           assumptions?: string[];
           justification?: string;
         } | null;
+        operational_state?: 'READY' | 'DEFERRED_EXPLICIT' | 'RETRY_SCHEDULED' | 'BLOCKED_OPERATIONAL' | 'FAILED_DURABLE' | null;
+        operational_explanation?: {
+          reason?: string;
+          retry_at?: string;
+          blocking_guard?: string;
+          next_action?: string;
+        } | null;
+        operational_updated_at?: string | null;
         proof_status: string | null;
         missing_requirements: string[];
         manual_review_reason: string | null;

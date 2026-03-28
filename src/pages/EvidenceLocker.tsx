@@ -15,7 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
 import { EvidenceIngestion } from '@/components/evidence/EvidenceIngestion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { formatAutonomyLabel, getIngestionTruth, getParsingTruth } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, getIngestionTruth, getParsingTruth, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 interface LockerDocumentRow {
   id: string;
   name: string;
@@ -144,7 +144,10 @@ const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
 const getLockerParsingStatus = (doc: LockerDocumentRow) => getParsingTruth(doc).status;
 
 const getLockerParsingReason = (doc: LockerDocumentRow) =>
-  getParsingTruth(doc).explanation?.reason || doc.parser_error || null;
+  getParsingTruth(doc).explanation?.reason ||
+  summarizeOperationalExplanation(getParsingTruth(doc).operationalExplanation) ||
+  doc.parser_error ||
+  null;
 
 const getLockerIngestionLabel = (doc: LockerDocumentRow) => {
   const truth = getIngestionTruth(doc);

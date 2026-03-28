@@ -16,7 +16,7 @@ import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
-import { formatAutonomyLabel, summarizeMatchExplanation } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, summarizeMatchExplanation, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
   financialSourceLabel,
   financialStatusDetail,
@@ -95,6 +95,20 @@ type Row = {
   billing_locked_by?: string | null;
   recovery_lifecycle_state?: string | null;
   billing_lifecycle_state?: string | null;
+  recovery_operational_state?: string | null;
+  billing_operational_state?: string | null;
+  recovery_operational_explanation?: {
+    reason?: string;
+    retry_at?: string;
+    blocking_guard?: string;
+    next_action?: string;
+  } | null;
+  billing_operational_explanation?: {
+    reason?: string;
+    retry_at?: string;
+    blocking_guard?: string;
+    next_action?: string;
+  } | null;
   recovery_work_payload?: Record<string, any> | null;
   billing_work_payload?: Record<string, any> | null;
   investigation_required: boolean;
@@ -273,6 +287,8 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
               : eventType === 'recovery.work_claimed'
                 ? 'claimed'
                 : row.recovery_lifecycle_state || null,
+      recovery_operational_state: String(payload.operational_state || '').trim() || row.recovery_operational_state || null,
+      recovery_operational_explanation: payload.operational_explanation || row.recovery_operational_explanation || null,
       recovery_work_payload: recoveryWorkPayload,
       last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
     };
@@ -337,6 +353,8 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
             : eventType === 'billing.work_claimed'
               ? 'claimed'
               : row.billing_lifecycle_state || null,
+    billing_operational_state: String(payload.operational_state || '').trim() || row.billing_operational_state || null,
+    billing_operational_explanation: payload.operational_explanation || row.billing_operational_explanation || null,
     billing_work_payload: billingWorkPayload,
     last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
   };
@@ -381,6 +399,10 @@ const PRESERVED_FINALITY_FIELDS: Array<keyof Row> = [
   'billing_locked_by',
   'recovery_lifecycle_state',
   'billing_lifecycle_state',
+  'recovery_operational_state',
+  'billing_operational_state',
+  'recovery_operational_explanation',
+  'billing_operational_explanation',
   'reconciliation_strategy',
   'match_explanation',
   'recovery_work_payload',
@@ -925,6 +947,14 @@ export default function RecoveryPipelineAgent8() {
                                         {summarizeMatchExplanation(row.match_explanation)}
                                       </div>
                                     ) : null}
+                                    {row.recovery_operational_state ? (
+                                      <div className="text-[9px] font-sans font-medium tracking-tight text-amber-100/70">
+                                        Runtime: {formatAutonomyLabel(row.recovery_operational_state)}
+                                        {summarizeOperationalExplanation(row.recovery_operational_explanation)
+                                          ? ` · ${summarizeOperationalExplanation(row.recovery_operational_explanation)}`
+                                          : ''}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -1074,6 +1104,8 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Execution Processed', value: stamp(detailsRow.recovery_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.recovery_next_attempt_at) },
                   { label: 'Lifecycle State', value: detailsRow.recovery_lifecycle_state ? label(detailsRow.recovery_lifecycle_state) : 'Not available' },
+                  { label: 'Runtime State', value: detailsRow.recovery_operational_state ? formatAutonomyLabel(detailsRow.recovery_operational_state) : 'Not available' },
+                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.recovery_operational_explanation) || 'None recorded' },
                   { label: 'Recovery Error', value: detailsRow.recovery_work_error || 'None' },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
                 ]}
@@ -1120,6 +1152,8 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Execution Processed', value: stamp(detailsRow.billing_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.billing_next_attempt_at) },
                   { label: 'Lifecycle State', value: detailsRow.billing_lifecycle_state ? label(detailsRow.billing_lifecycle_state) : 'Not available' },
+                  { label: 'Runtime State', value: detailsRow.billing_operational_state ? formatAutonomyLabel(detailsRow.billing_operational_state) : 'Not available' },
+                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.billing_operational_explanation) || 'None recorded' },
                   { label: 'Billing Error', value: detailsRow.billing_work_error || 'None' },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },

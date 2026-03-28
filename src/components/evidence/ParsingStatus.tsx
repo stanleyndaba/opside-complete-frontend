@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { api } from '@/lib/api';
-import { getParsingTruth, formatAutonomyLabel } from '@/lib/autonomyTruth';
+import { getParsingTruth, formatAutonomyLabel, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import { RefreshCw, CheckCircle2, XCircle, Clock, AlertTriangle, Activity } from 'lucide-react';
 
 interface ParsingStatusProps {
@@ -129,6 +129,7 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
   const effectiveStatus = usingExternalData ? toParsingViewState(documentData) : jobStatus;
   const effectiveParsedData = usingExternalData ? documentData?.parsed_metadata : parsedData;
   const explanationLines = getExplanationLines(effectiveStatus?.explanation);
+  const runtimeSummary = summarizeOperationalExplanation(effectiveStatus?.operationalExplanation);
 
   const getStatusIndicator = () => {
     if (!effectiveStatus) return null;
@@ -257,6 +258,11 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
               <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[9px] font-sans font-bold uppercase tracking-tight text-white/60">
                 {effectiveStatus.strategy ? formatAutonomyLabel(effectiveStatus.strategy) : formatAutonomyLabel(effectiveStatus.status)}
               </Badge>
+              {effectiveStatus.operationalState ? (
+                <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[9px] font-sans font-bold uppercase tracking-tight text-amber-100/80">
+                  Runtime {formatAutonomyLabel(effectiveStatus.operationalState)}
+                </Badge>
+              ) : null}
             </div>
             <div className="space-y-2">
               {explanationLines.map((line) => (
@@ -265,6 +271,12 @@ export function ParsingStatus({ documentId, autoPoll = true, onStatusChange, doc
                   <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-white/76">{line.value}</span>
                 </div>
               ))}
+              {runtimeSummary ? (
+                <div className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2 last:border-0 last:pb-0">
+                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Runtime</span>
+                  <span className="text-right text-[11px] font-sans font-semibold tracking-tight text-amber-100/70">{runtimeSummary}</span>
+                </div>
+              ) : null}
             </div>
           </div>
         )}
