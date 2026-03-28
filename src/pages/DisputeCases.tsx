@@ -65,6 +65,8 @@ const STATUS_BADGE_STYLES: Record<string, string> = {
   default: 'bg-white/5 text-white/50 border-white/10'
 };
 
+const YOCO_UNLOCK_URL = 'https://pay.yoco.com/r/7rnpQ3';
+
 function formatLabel(value: string | null | undefined) {
   if (!value) return 'Not available';
   return value.replace(/_/g, ' ');
@@ -465,6 +467,20 @@ export default function DisputeCases() {
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
+  const [paymentConfirmationVisible, setPaymentConfirmationVisible] = useState(false);
+  const [unlockSubmitting, setUnlockSubmitting] = useState(false);
+  const [unlockResult, setUnlockResult] = useState<{
+    already_unlocked: boolean;
+    billing_status: 'unlocked';
+    billing_unlocked_at: string;
+    billing_source: string;
+    queued_count: number;
+    blocked_count: number;
+    scanned_count: number;
+    queued_case_ids: string[];
+    blocked_case_ids: string[];
+    message: string;
+  } | null>(null);
   const [summaryExpanded, setSummaryExpanded] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [summary, setSummary] = useState({
@@ -629,6 +645,52 @@ export default function DisputeCases() {
   );
 
   const refresh = () => setRefreshKey((value) => value + 1);
+
+  const handleUnlockCheckout = () => {
+    const popup = window.open(YOCO_UNLOCK_URL, '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      toast({
+        variant: 'destructive',
+        title: 'Unable to open checkout',
+        description: 'Please allow pop-ups and try again.'
+      });
+      return;
+    }
+
+    setPaymentConfirmationVisible(true);
+    toast({
+      title: 'Checkout opened',
+      description: 'Complete your payment in the new tab, then confirm here to start filing.'
+    });
+  };
+
+  const handleConfirmPaymentAndStartFiling = async () => {
+    if (!activeTenantSlug || unlockSubmitting) return;
+
+    setUnlockSubmitting(true);
+    try {
+      const response = await api.confirmDisputeUnlockAndFile(activeTenantSlug);
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Unable to confirm payment unlock.');
+      }
+
+      setUnlockResult(response.data);
+      setPaymentConfirmationVisible(false);
+      toast({
+        title: response.data.queued_count > 0 ? 'Filing started' : 'Payment confirmed',
+        description: response.data.message
+      });
+      refresh();
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Confirmation failed',
+        description: err?.message || 'Unable to confirm payment right now.'
+      });
+    } finally {
+      setUnlockSubmitting(false);
+    }
+  };
 
   useStatusStream((event) => {
     if (!activeTenantSlug) return;
@@ -858,9 +920,12 @@ export default function DisputeCases() {
     };
   }, [financialSummaries, rows]);
 
-  const showUnlockOffer = Boolean(unlockOffer)
+  const hasUnlockOfferValue = Boolean(unlockOffer)
     && (unlockOffer?.totalSupportableValue || 0) > 0
     && (unlockOffer?.supportableClaimCount || 0) > 0;
+  const isUnlockComplete = isPaidUser || Boolean(unlockResult);
+  const showUnlockOffer = hasUnlockOfferValue && !isUnlockComplete;
+  const showUnlockedState = hasUnlockOfferValue && isUnlockComplete;
 
   if (isReady && !activeTenantSlug) {
     return (
@@ -960,7 +1025,7 @@ export default function DisputeCases() {
             )}
           </div>
 
-          {showUnlockOffer && unlockOffer ? (
+          {hasUnlockOfferValue && unlockOffer ? (
             <div className="overflow-hidden rounded-[28px] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_45%),linear-gradient(135deg,rgba(17,24,39,0.96),rgba(10,10,10,0.98))] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
               <div className="flex flex-col gap-6 px-6 py-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
                 <div className="space-y-4">
@@ -998,18 +1063,66 @@ export default function DisputeCases() {
                 </div>
 
                 <div className="w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-5 backdrop-blur-sm">
-                  <Button
-                    asChild
-                    className="h-12 w-full rounded-xl bg-emerald-400 px-5 text-[11px] font-sans font-bold uppercase tracking-[0.16em] text-black hover:bg-emerald-300"
-                  >
-                    <Link to="/pricing-adjust">Unlock &amp; File All Claims for $99</Link>
-                  </Button>
-                  <p className="mt-3 text-xs font-sans leading-5 text-white/72">
-                    One-time payment. No percentage taken from your recoveries. You keep 100% of the funds Amazon pays out.
-                  </p>
-                  <p className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
-                    Only shown when we found real claim value.
-                  </p>
+                  {showUnlockOffer ? (
+                    <>
+                      <Button
+                        type="button"
+                        onClick={handleUnlockCheckout}
+                        className="h-12 w-full rounded-xl bg-emerald-400 px-5 text-[11px] font-sans font-bold uppercase tracking-[0.16em] text-black hover:bg-emerald-300"
+                      >
+                        Start Filing All Claims for $99
+                      </Button>
+                      <p className="mt-3 text-xs font-sans leading-5 text-white/72">
+                        Charged as R1,699 at checkout. You keep 100% of recovered funds.
+                      </p>
+                      <p className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
+                        Only shown because we found real claim value for your account.
+                      </p>
+
+                      {paymentConfirmationVisible ? (
+                        <div className="mt-4 rounded-xl border border-emerald-300/15 bg-emerald-400/[0.06] p-4">
+                          <p className="text-sm font-sans leading-6 text-emerald-50/92">
+                            Complete your payment in the opened tab, then confirm below to start filing.
+                          </p>
+                          <Button
+                            type="button"
+                            onClick={handleConfirmPaymentAndStartFiling}
+                            disabled={unlockSubmitting}
+                            className="mt-4 h-11 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-[0.16em] text-black hover:bg-white/90"
+                          >
+                            {unlockSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            I&apos;ve Completed Payment
+                          </Button>
+                        </div>
+                      ) : null}
+                    </>
+                  ) : null}
+
+                  {showUnlockedState ? (
+                    <div className="space-y-3">
+                      <div className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-100/80">
+                        Payment confirmed
+                      </div>
+                      <p className="text-xl font-sans font-bold tracking-tight text-white">
+                        {unlockResult?.queued_count ? 'Filing in progress' : 'Filing access unlocked'}
+                      </p>
+                      <p className="text-sm font-sans leading-6 text-white/72">
+                        {unlockResult?.message || 'This workspace is unlocked. Eligible claims can move into filing immediately.'}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {unlockResult?.queued_count ? (
+                          <span className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-emerald-100/85">
+                            {unlockResult.queued_count} queued now
+                          </span>
+                        ) : null}
+                        {unlockResult?.blocked_count ? (
+                          <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/80">
+                            {unlockResult.blocked_count} still held back
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

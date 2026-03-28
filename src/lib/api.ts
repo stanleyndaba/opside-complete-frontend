@@ -1940,6 +1940,24 @@ export const api = {
       updated_at: string;
     };
   }>(`/api/disputes/${encodeURIComponent(caseId)}`),
+  confirmDisputeUnlockAndFile: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for confirmDisputeUnlockAndFile");
+    return requestJson<{
+      success: boolean;
+      message: string;
+      already_unlocked: boolean;
+      billing_status: 'unlocked';
+      billing_unlocked_at: string;
+      billing_source: string;
+      queued_count: number;
+      blocked_count: number;
+      scanned_count: number;
+      queued_case_ids: string[];
+      blocked_case_ids: string[];
+    }>(`/api/disputes/unlock-and-file?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST'
+    });
+  },
 
   // Agent 8: Recoveries endpoints (additional methods)
   getRecoveryRecords: (params?: { userId?: string; status?: string; limit?: number }, tenantSlug?: string) => {
