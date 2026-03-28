@@ -1069,10 +1069,10 @@ export default function DisputeCases() {
                     <h2 className="max-w-3xl text-2xl font-sans font-bold tracking-tight text-white md:text-[28px]">
                       Start filing {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
                     </h2>
-                    <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/42">
+                    <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/30">
                       You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to start filing every supportable case for your account.
                     </p>
-                    <p className="text-[12px] font-sans leading-5 text-white/34">
+                    <p className="text-[12px] font-sans leading-5 text-white/30">
                       Charged as R1,699 at checkout. You keep 100% of recovered funds.
                     </p>
                   </div>
@@ -1108,7 +1108,7 @@ export default function DisputeCases() {
                 <div className="border-t border-white/10 px-5 py-4">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
-                      <p className="text-[11px] font-sans leading-5 text-white/38">
+                      <p className="text-[11px] font-sans leading-5 text-white/30">
                         We found real claim value for your account.
                       </p>
 
@@ -1134,7 +1134,7 @@ export default function DisputeCases() {
                           >
                             Start Filing All Claims for $99
                           </Button>
-                          <p className="text-[12px] font-sans leading-5 text-white/38">
+                          <p className="text-[12px] font-sans leading-5 text-white/30">
                             Charged as R1,699 at checkout. You keep 100% of recovered funds.
                           </p>
 
