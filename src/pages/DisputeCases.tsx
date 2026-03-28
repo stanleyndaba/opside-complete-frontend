@@ -902,28 +902,49 @@ export default function DisputeCases() {
       }];
     });
 
-    if (!supportableRows.length) {
+    const previewRows = rows.flatMap((row) => {
+      const amount = typeof row.requested_amount === 'number' && row.requested_amount > 0
+        ? row.requested_amount
+        : null;
+
+      if (amount == null) {
+        return [];
+      }
+
+      const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
+      return [{
+        row,
+        amount,
+        currency: row.currency || 'USD',
+        posture: deriveFilingPosture(row, financialSummary)
+      }];
+    });
+
+    const offerRows = supportableRows.length > 0 ? supportableRows : previewRows;
+
+    if (!offerRows.length) {
       return null;
     }
 
-    const currencies = Array.from(new Set(supportableRows.map((item) => item.currency).filter(Boolean)));
+    const currencies = Array.from(new Set(offerRows.map((item) => item.currency).filter(Boolean)));
     if (currencies.length !== 1) {
       return null;
     }
 
     return {
+      mode: supportableRows.length > 0 ? 'queueable' as const : 'preview' as const,
       currency: currencies[0],
-      totalSupportableValue: supportableRows.reduce((sum, item) => sum + item.amount, 0),
-      supportableClaimCount: supportableRows.length,
+      totalSupportableValue: offerRows.reduce((sum, item) => sum + item.amount, 0),
+      supportableClaimCount: offerRows.length,
       readyToFileCount: supportableRows.filter((item) => item.posture.tone === 'ready').length,
-      linkedDocumentCount: supportableRows.reduce((sum, item) => sum + Math.max(Number(item.row.matched_document_count || 0), 0), 0)
+      linkedDocumentCount: offerRows.reduce((sum, item) => sum + Math.max(Number(item.row.matched_document_count || 0), 0), 0)
     };
   }, [financialSummaries, rows]);
 
   const hasUnlockOfferValue = Boolean(unlockOffer)
     && (unlockOffer?.totalSupportableValue || 0) > 0
     && (unlockOffer?.supportableClaimCount || 0) > 0;
-  const isUnlockComplete = isPaidUser || Boolean(unlockResult);
+  const isUnlockComplete = Boolean(unlockResult);
   const showUnlockOffer = hasUnlockOfferValue && !isUnlockComplete;
   const showUnlockedState = hasUnlockOfferValue && isUnlockComplete;
 
@@ -1043,6 +1064,11 @@ export default function DisputeCases() {
                     <p className="max-w-3xl text-sm font-sans leading-6 text-white/68">
                       You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to unlock filing across every supportable case in this workspace.
                     </p>
+                    {unlockOffer.mode === 'preview' ? (
+                      <p className="max-w-3xl text-[11px] font-sans leading-5 text-white/46">
+                        Preview shown because this workspace already has real claim value on screen.
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="flex flex-wrap gap-2">
