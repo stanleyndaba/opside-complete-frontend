@@ -858,8 +858,7 @@ export default function DisputeCases() {
     };
   }, [financialSummaries, rows]);
 
-  const showUnlockOffer = !isPaidUser
-    && Boolean(unlockOffer)
+  const showUnlockOffer = Boolean(unlockOffer)
     && (unlockOffer?.totalSupportableValue || 0) > 0
     && (unlockOffer?.supportableClaimCount || 0) > 0;
 
