@@ -1063,16 +1063,16 @@ export default function DisputeCases() {
                   className="flex-1 text-left"
                 >
                   <div className="space-y-2">
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-white/34">
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
                       Claim filing
                     </p>
                     <h2 className="max-w-3xl text-2xl font-sans font-bold tracking-tight text-white md:text-[28px]">
                       Start filing {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
                     </h2>
-                    <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/62">
+                    <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/42">
                       You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to start filing every supportable case for your account.
                     </p>
-                    <p className="text-[12px] font-sans leading-5 text-white/52">
+                    <p className="text-[12px] font-sans leading-5 text-white/34">
                       Charged as R1,699 at checkout. You keep 100% of recovered funds.
                     </p>
                   </div>
@@ -1083,12 +1083,12 @@ export default function DisputeCases() {
                     <Button
                       type="button"
                       onClick={handleUnlockCheckout}
-                      className="h-10 rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
+                      className="h-10 rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
                     >
                       Start Filing All Claims for $99
                     </Button>
                   ) : (
-                    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-white/78">
+                    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-white/78">
                       {unlockResult?.queued_count ? 'Filing in progress' : 'Payment confirmed'}
                     </div>
                   )}
@@ -1108,7 +1108,7 @@ export default function DisputeCases() {
                 <div className="border-t border-white/10 px-5 py-4">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
-                      <p className="text-[11px] font-sans leading-5 text-white/44">
+                      <p className="text-[11px] font-sans leading-5 text-white/38">
                         We found real claim value for your account.
                       </p>
 
@@ -1130,11 +1130,11 @@ export default function DisputeCases() {
                           <Button
                             type="button"
                             onClick={handleUnlockCheckout}
-                            className="h-11 w-full rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
+                            className="h-11 w-full rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
                           >
                             Start Filing All Claims for $99
                           </Button>
-                          <p className="text-[12px] font-sans leading-5 text-white/68">
+                          <p className="text-[12px] font-sans leading-5 text-white/38">
                             Charged as R1,699 at checkout. You keep 100% of recovered funds.
                           </p>
 
@@ -1147,7 +1147,7 @@ export default function DisputeCases() {
                                 type="button"
                                 onClick={handleConfirmPaymentAndStartFiling}
                                 disabled={unlockSubmitting}
-                                className="mt-3 h-10 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-[0.14em] text-black hover:bg-white/90"
+                                className="mt-3 h-10 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
                               >
                                 {unlockSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                 I&apos;ve Completed Payment
@@ -1159,7 +1159,7 @@ export default function DisputeCases() {
 
                       {showUnlockedState ? (
                         <div className="space-y-3">
-                          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-white/72">
+                          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72">
                             Payment confirmed
                           </div>
                           <p className="text-lg font-sans font-bold tracking-tight text-white">
