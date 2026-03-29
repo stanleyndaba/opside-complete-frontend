@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Loader2, Lock, ArrowRight } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import { normalizeTenantSlug } from '@/lib/routes';
 
 export default function ConnectAmazonAccount() {
   const navigate = useNavigate();
@@ -13,10 +14,75 @@ export default function ConnectAmazonAccount() {
   const { tenant } = useTenant();
   const { toast } = useToast();
   const activeTenantSlug = tenantSlug || tenant?.slug || '';
+  const [resolvedTenantSlug, setResolvedTenantSlug] = useState(activeTenantSlug);
+  const [preparing, setPreparing] = useState(true);
   const [connecting, setConnecting] = useState(false);
 
+  useEffect(() => {
+    let mounted = true;
+
+    const deriveWorkspaceName = (email: string) => {
+      const normalized = email.trim().toLowerCase();
+      const domain = normalized.split('@')[1] || '';
+      const base = domain.split('.')[0] || normalized.split('@')[0] || 'workspace';
+      return base
+        .split(/[^a-z0-9]+/i)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ') || 'Workspace';
+    };
+
+    const bootstrapWorkspace = async () => {
+      try {
+        const storedEmail = localStorage.getItem('user_email') || '';
+        const preferredTenantSlug = normalizeTenantSlug(tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug'));
+        const response = await api.post<{
+          success: boolean;
+          tenant?: { id: string; slug: string };
+        }>('/api/auth/bootstrap', {
+          workspaceName: deriveWorkspaceName(storedEmail),
+          preferredTenantSlug,
+        });
+
+        if (!mounted) {
+          return;
+        }
+
+        const nextTenantSlug = normalizeTenantSlug(response.data?.tenant?.slug) || preferredTenantSlug || '';
+        if (response.ok && response.data?.tenant?.id && nextTenantSlug) {
+          localStorage.setItem('active_tenant_id', response.data.tenant.id);
+          localStorage.setItem('active_tenant_slug', nextTenantSlug);
+          setResolvedTenantSlug(nextTenantSlug);
+
+          if (tenantSlug && nextTenantSlug !== tenantSlug) {
+            navigate(`/app/${nextTenantSlug}/connect-amazon`, { replace: true });
+            return;
+          }
+        }
+      } catch (error: any) {
+        if (mounted) {
+          toast({
+            title: 'Workspace setup incomplete',
+            description: error?.message || 'We could not finish preparing your workspace yet.',
+            variant: 'destructive',
+          });
+        }
+      } finally {
+        if (mounted) {
+          setPreparing(false);
+        }
+      }
+    };
+
+    bootstrapWorkspace();
+
+    return () => {
+      mounted = false;
+    };
+  }, [navigate, tenant?.slug, tenantSlug, toast]);
+
   const handleConnectAmazon = async () => {
-    if (!activeTenantSlug) {
+    if (!resolvedTenantSlug) {
       toast({
         title: 'Workspace unavailable',
         description: 'We could not resolve your workspace yet. Please try again.',
@@ -28,7 +94,7 @@ export default function ConnectAmazonAccount() {
     setConnecting(true);
 
     try {
-      const response = await api.connectAmazon(undefined, false, activeTenantSlug);
+      const response = await api.connectAmazon(undefined, false, resolvedTenantSlug);
       const authUrl = response.data?.auth_url || response.data?.authUrl;
 
       if (!response.ok || !authUrl) {
@@ -79,13 +145,13 @@ export default function ConnectAmazonAccount() {
             <Button
               type="button"
               onClick={handleConnectAmazon}
-              disabled={connecting}
+              disabled={connecting || preparing}
               className="h-12 w-full rounded-none bg-white text-black hover:bg-white/90"
             >
-              {connecting ? (
+              {connecting || preparing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Connecting...
+                  {preparing ? 'Preparing workspace...' : 'Connecting...'}
                 </>
               ) : (
                 <>

@@ -127,7 +127,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
 
             // Fetch tenant info. If tenantSlug is in URL, fetch that specific one.
             // Otherwise, get current based on session/storage.
-            const url = tenantSlug ? `/api/tenant/current?slug=${tenantSlug}` : '/api/tenant/current';
+            const url = tenantSlug ? `/api/tenant/current?tenantSlug=${tenantSlug}` : '/api/tenant/current';
             const currentResponse = await api.get(url);
 
             let fetchedTenantForRecovery: Tenant | null = null;

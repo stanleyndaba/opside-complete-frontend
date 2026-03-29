@@ -9,12 +9,13 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabaseClient';
 import { normalizeTenantSlug } from '@/lib/routes';
+import { api } from '@/lib/api';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const sanitizeNextPath = (value: string | null, intent: string | null) => {
   if (typeof window === 'undefined') {
-    return '/connect-amazon';
+    return '/app';
   }
 
   if (value && value.startsWith('/') && !value.startsWith('/login')) {
@@ -26,7 +27,7 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
     return `/app/${storedTenantSlug}/data-upload`;
   }
 
-  return '/connect-amazon';
+  return '/app';
 };
 
 type AuthMode = 'login' | 'signup' | 'recovery';
@@ -68,7 +69,17 @@ const Login = () => {
     const redirectIfAuthenticated = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (isMounted && session?.access_token) {
-        navigate(nextPath, { replace: true });
+        try {
+          const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(
+            session.user?.email || localStorage.getItem('user_email') || ''
+          );
+          const targetPath = nextPath !== '/app'
+            ? bindPathToTenant(nextPath, resolvedTenantSlug)
+            : `/app/${resolvedTenantSlug}/connect-amazon`;
+          navigate(targetPath, { replace: true });
+        } catch {
+          navigate(nextPath, { replace: true });
+        }
       }
     };
 
@@ -125,6 +136,52 @@ const Login = () => {
     }
   };
 
+  const clearStoredTenantContext = () => {
+    localStorage.removeItem('active_tenant_id');
+    localStorage.removeItem('active_tenant_slug');
+  };
+
+  const bindPathToTenant = (path: string, tenantSlug: string) => {
+    if (!path.startsWith('/app/')) {
+      return path;
+    }
+
+    return path.replace(/^\/app\/[^/]+/, `/app/${tenantSlug}`);
+  };
+
+  const deriveWorkspaceNameFromEmail = (value: string) => {
+    const trimmed = value.trim().toLowerCase();
+    const domain = trimmed.split('@')[1] || '';
+    const label = domain.split('.')[0] || trimmed.split('@')[0] || 'workspace';
+    return label
+      .split(/[^a-z0-9]+/i)
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ') || 'Workspace';
+  };
+
+  const resolveTenantSlugForAuthenticatedUser = async (emailAddress: string, preferredTenantSlug?: string | null) => {
+    clearStoredTenantContext();
+
+    const workspaceName = deriveWorkspaceNameFromEmail(emailAddress);
+    const bootstrapResponse = await api.post<{
+      success: boolean;
+      tenant?: { id: string; slug: string };
+    }>('/api/auth/bootstrap', {
+      workspaceName,
+      preferredTenantSlug: normalizeTenantSlug(preferredTenantSlug || localStorage.getItem('active_tenant_slug')),
+    });
+
+    const resolvedTenantSlug = normalizeTenantSlug(bootstrapResponse.data?.tenant?.slug);
+    if (bootstrapResponse.ok && resolvedTenantSlug && bootstrapResponse.data?.tenant?.id) {
+      localStorage.setItem('active_tenant_id', bootstrapResponse.data.tenant.id);
+      localStorage.setItem('active_tenant_slug', resolvedTenantSlug);
+      return resolvedTenantSlug;
+    }
+
+    throw new Error('Unable to resolve a workspace for this account.');
+  };
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -171,7 +228,8 @@ const Login = () => {
         });
 
         if (data.session) {
-          navigate(nextPath, { replace: true });
+          const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
+          navigate(`/app/${resolvedTenantSlug}/connect-amazon`, { replace: true });
         } else {
           setMode('login');
         }
@@ -196,7 +254,8 @@ const Login = () => {
         });
 
         setConfirmPassword('');
-        navigate(nextPath, { replace: true });
+        const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim() || localStorage.getItem('user_email') || '');
+        navigate(`/app/${resolvedTenantSlug}/connect-amazon`, { replace: true });
         setLoading(false);
         return;
       }
@@ -219,7 +278,11 @@ const Login = () => {
         description: 'Redirecting you into your workspace now.',
       });
 
-      navigate(nextPath, { replace: true });
+      const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
+      const targetPath = nextPath !== '/app'
+        ? bindPathToTenant(nextPath, resolvedTenantSlug)
+        : `/app/${resolvedTenantSlug}/connect-amazon`;
+      navigate(targetPath, { replace: true });
     } catch (loginError: any) {
       setError(loginError?.message || 'Login failed. Please try again.');
     } finally {

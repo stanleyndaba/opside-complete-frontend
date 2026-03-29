@@ -50,11 +50,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                         .from('users')
                         .select('is_paid_beta')
                         .eq('id', user.id)
-                        .single();
+                        .maybeSingle();
 
-                    if (profile) {
-                        setIsPaidUser(!!profile.is_paid_beta);
-                    }
+                    setIsPaidUser(!!profile?.is_paid_beta);
                 }
                 // Store user ID for API calls
                 if (user?.id) {
@@ -74,6 +72,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 setIsSessionValid(false);
                 localStorage.removeItem('user_id');
                 localStorage.removeItem('session_token');
+                localStorage.removeItem('active_tenant_id');
+                localStorage.removeItem('active_tenant_slug');
                 setAuthToken(null);
                 setIsAuthReady(true);
             } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || !!session) {
@@ -91,9 +91,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                         .from('users')
                         .select('is_paid_beta')
                         .eq('id', session.user.id)
-                        .single()
+                        .maybeSingle()
                         .then(({ data }) => {
-                            if (data) setIsPaidUser(!!data.is_paid_beta);
+                            setIsPaidUser(!!data?.is_paid_beta);
                         });
                 }
                 // Store user_id for API calls
