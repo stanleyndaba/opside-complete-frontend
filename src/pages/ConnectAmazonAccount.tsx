@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Loader2, Lock, ArrowRight } from 'lucide-react';
+import { Loader2, Lock } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import { normalizeTenantSlug } from '@/lib/routes';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AMAZON_MARKETPLACES } from '@/lib/amazonMarketplaces';
 
 export default function ConnectAmazonAccount() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ export default function ConnectAmazonAccount() {
   const [resolvedTenantSlug, setResolvedTenantSlug] = useState(activeTenantSlug);
   const [preparing, setPreparing] = useState(true);
   const [connecting, setConnecting] = useState(false);
+  const [selectedMarketplace, setSelectedMarketplace] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -91,11 +94,21 @@ export default function ConnectAmazonAccount() {
       return;
     }
 
+    if (!selectedMarketplace) {
+      toast({
+        title: 'Marketplace required',
+        description: 'Select a marketplace before continuing to Amazon.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setConnecting(true);
 
     try {
-      const response = await api.connectAmazon(undefined, false, resolvedTenantSlug);
+      const response = await api.connectAmazon(selectedMarketplace, false, resolvedTenantSlug);
       const authUrl = response.data?.auth_url || response.data?.authUrl;
+      const stateParam = (response.data as any)?.state;
 
       if (!response.ok || !authUrl) {
         toast({
@@ -106,6 +119,21 @@ export default function ConnectAmazonAccount() {
         setConnecting(false);
         return;
       }
+
+      if (stateParam) {
+        try {
+          sessionStorage.setItem('amazon_sandbox_state', stateParam);
+          localStorage.setItem('amazon_sandbox_state', stateParam);
+        } catch {
+          // Ignore storage failures for OAuth state convenience caching.
+        }
+      }
+
+      await api.trackEvent('amazon_connect_initiated', {
+        timestamp: new Date().toISOString(),
+        source: 'connect_amazon_onboarding',
+        marketplaceId: selectedMarketplace,
+      });
 
       window.location.assign(authUrl);
     } catch (error: any) {
@@ -139,27 +167,65 @@ export default function ConnectAmazonAccount() {
 
           <div className="space-y-6 border border-white/10 bg-black/20 p-6">
             <p className="text-sm leading-6 text-white/45">
-              Click the button below to begin Amazon authorization. Once Amazon finishes the OAuth flow, Margin will resume from there.
+              Select the marketplace you want to authorize, then continue to Amazon. Once Amazon finishes the OAuth flow, Margin will resume from there.
             </p>
 
-            <Button
-              type="button"
-              onClick={handleConnectAmazon}
-              disabled={connecting || preparing}
-              className="h-12 w-full rounded-none bg-white text-black hover:bg-white/90"
-            >
-              {connecting || preparing ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  {preparing ? 'Preparing workspace...' : 'Connecting...'}
-                </>
-              ) : (
-                <>
-                  Connect Amazon Account
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </Button>
+            {preparing ? (
+              <div className="flex h-12 w-full items-center justify-center border border-white/10 bg-white/[0.03] text-sm text-white/60">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Preparing workspace...
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                    Select Marketplace
+                  </p>
+                  <Select
+                    value={selectedMarketplace}
+                    onValueChange={setSelectedMarketplace}
+                    disabled={connecting}
+                  >
+                    <SelectTrigger className="h-12 rounded-none border-white/10 bg-white/[0.03] text-left text-sm text-white focus:border-white/20 focus:ring-0">
+                      <SelectValue placeholder="Choose the Amazon marketplace you want to connect" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-none border-white/10 bg-[#0a0a0a] text-white">
+                      {AMAZON_MARKETPLACES.map((marketplace) => (
+                        <SelectItem
+                          key={marketplace.id}
+                          value={marketplace.id}
+                          className="text-sm text-white focus:bg-white/10 focus:text-white"
+                        >
+                          {marketplace.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button
+                  type="button"
+                  onClick={handleConnectAmazon}
+                  disabled={connecting || !selectedMarketplace}
+                  className="h-12 w-full rounded-none bg-white text-black hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/25 disabled:text-white/50"
+                >
+                  {connecting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Connecting...
+                    </>
+                  ) : (
+                    'Connect Amazon Account'
+                  )}
+                </Button>
+              </div>
+            )}
+
+            {resolvedTenantSlug ? (
+              <p className="text-xs uppercase tracking-[0.22em] text-white/30">
+                Workspace: {resolvedTenantSlug}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

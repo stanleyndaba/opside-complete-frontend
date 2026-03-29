@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { tenantRoute } from '@/lib/routes';
 import { useTenant } from '@/contexts/TenantContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AMAZON_MARKETPLACES } from '@/lib/amazonMarketplaces';
 
 interface AmazonConnectProps {
   onConnectionStart?: () => void;
@@ -27,19 +28,6 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const [usingExisting, setUsingExisting] = useState(false);
   const [selectedMarketplace, setSelectedMarketplace] = useState<string>(''); // No default to show placeholder
   const { toast } = useToast();
-
-  const marketplaces = [
-    { id: 'ATVPDKIKX0DER', name: 'United States (US)', region: 'North America' },
-    { id: 'A2EUQ1WTGCTBG2', name: 'Canada (CA)', region: 'North America' },
-    { id: 'A1AM78C64UM0Y8', name: 'Mexico (MX)', region: 'North America' },
-    { id: 'A1PA6795UKMFR9', name: 'Germany (DE)', region: 'Europe' },
-    { id: 'A1F8U5RK5QF0S', name: 'United Kingdom (UK)', region: 'Europe' },
-    { id: 'APJ6JRA9NG5V4', name: 'Italy (IT)', region: 'Europe' },
-    { id: 'A13V1IB3VIYZZH', name: 'France (FR)', region: 'Europe' },
-    { id: 'ARE699S9C6Y0F', name: 'South Africa (ZA)', region: 'Europe' },
-    { id: 'A1VC38T7YXB528', name: 'Japan (JP)', region: 'Far East' },
-    { id: 'A19970868YG99F', name: 'Australia (AU)', region: 'Far East' },
-  ];
 
   const handleConnect = async () => {
     try {
@@ -282,7 +270,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             </div>
           </SelectTrigger>
           <SelectContent className="bg-white border-gray-100 shadow-2xl rounded-xl text-black min-w-[200px]">
-            {marketplaces.map((mp) => (
+            {AMAZON_MARKETPLACES.map((mp) => (
               <SelectItem key={mp.id} value={mp.id} className="text-sm font-normal py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
                 {mp.name}
               </SelectItem>
@@ -294,11 +282,11 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
       {/* Connect Button - Inset In Black */}
       <Button
         onClick={handleConnect}
-        disabled={connecting}
+        disabled={connecting || !selectedMarketplace}
         className={cn(
           "w-auto flex-[1.4] min-w-[110px] sm:min-w-[0]",
           "justify-center font-bold transition-all active:scale-95 px-3 sm:px-8 shrink-0 items-center rounded-full h-9 sm:h-auto py-2 sm:py-3 text-[9px] sm:text-xs",
-          "bg-black text-white hover:bg-black/90",
+          "bg-black text-white hover:bg-black/90 disabled:cursor-not-allowed disabled:bg-black/40 disabled:text-white/55",
           connecting && 'opacity-80',
           buttonClassName
         )}>
@@ -309,7 +297,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
             <span className="sm:hidden">Wait</span>
           </>
         ) : (
-          "Connect Account"
+          label
         )}
       </Button>
     </div>
