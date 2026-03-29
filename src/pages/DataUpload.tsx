@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { api, detectionApi } from '@/lib/api';
+import { getFrontendAuthContext } from '@/lib/authSession';
 import { supabase } from '@/lib/supabaseClient';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
@@ -198,9 +199,13 @@ export default function DataUpload() {
 
         const fetchSupportedTypes = async () => {
             try {
+                const { token } = await getFrontendAuthContext();
                 const response = await fetch(api.buildApiUrl(`/api/csv-upload/supported-types?tenantSlug=${encodeURIComponent(currentTenantSlug)}`), {
                     credentials: 'include',
-                    headers: activeTenantId ? { 'x-tenant-id': activeTenantId } : undefined,
+                    headers: {
+                        ...(activeTenantId ? { 'x-tenant-id': activeTenantId } : {}),
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
                 });
 
                 const payload = await response.json();
@@ -374,11 +379,20 @@ export default function DataUpload() {
     const handleUpload = async () => {
         if (files.length === 0 || isUploading) return;
         const { userId: resolvedUserId, tenantId: resolvedTenantId } = await resolveSessionIdentity();
+        const { token: sessionToken } = await getFrontendAuthContext();
 
         if (!resolvedUserId) {
             toast({
                 title: 'Sign in required',
                 description: 'CSV upload needs a real signed-in user. Refresh your session and try again.',
+                variant: 'destructive',
+            });
+            return;
+        }
+        if (!sessionToken) {
+            toast({
+                title: 'Session expired',
+                description: 'CSV upload needs a live account session. Refresh the page and sign in again if needed.',
                 variant: 'destructive',
             });
             return;
@@ -418,6 +432,7 @@ export default function DataUpload() {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
+                    ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
                     ...(resolvedUserId ? { 'x-user-id': resolvedUserId } : {}),
                     ...(resolvedTenantId ? { 'x-tenant-id': resolvedTenantId } : {}),
                 },
