@@ -12,8 +12,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { AGENT_HIGHLIGHTS, HERO_METRICS, SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { api } from '@/lib/api';
-import { useToast } from '@/components/ui/use-toast';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -82,9 +80,7 @@ const PadlockIcon: React.FC = () => (
 const Index = () => {
   const navigate = useNavigate();
   usePageMeta(SITE_META);
-  const { toast } = useToast();
   const [showMoreFAQs, setShowMoreFAQs] = useState(false);
-  const [signingIn, setSigningIn] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
 
   const [activeStep, setActiveStep] = useState(0);
@@ -103,81 +99,12 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, [activeStep, isPaused]);
 
-  const handleSignIn = async () => {
-    try {
-      setSigningIn(true);
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
-      // Start OAuth flow (same as Connect Amazon Account)
-      const response = await api.connectAmazon(undefined, false, 'default');
-
-      if (!response.ok) {
-        console.error('[Index] Failed to get OAuth URL:', response.error);
-
-        // Check if backend returned authUrl in error response (backwards compatibility)
-        const errorData = typeof response.error === 'object' ? response.error as any : {};
-        const authUrl = errorData.authUrl || errorData.auth_url || errorData.redirectTo;
-
-        if (authUrl) {
-          console.log('[Index] Backend returned authUrl in error, redirecting:', authUrl);
-          window.location.href = authUrl;
-          return;
-        }
-
-        toast({
-          title: 'Connection Failed',
-          description: response.error || 'Failed to start Amazon authentication. Please try again.',
-          variant: 'destructive'
-        });
-        setSigningIn(false);
-        return;
-      }
-
-      // Handle both auth_url and authUrl (backend may return either)
-      const authUrl = response.data?.auth_url || response.data?.authUrl;
-      const stateParam = response.data?.state;
-
-      if (stateParam) {
-        try {
-          sessionStorage.setItem('amazon_sandbox_state', stateParam);
-          localStorage.setItem('amazon_sandbox_state', stateParam);
-        } catch { }
-      }
-
-      if (authUrl && authUrl.includes('/auth/amazon-sandbox')) {
-        try {
-          sessionStorage.setItem('amazon_sandbox_mode', 'true');
-          localStorage.setItem('amazon_sandbox_mode', 'true');
-        } catch { }
-      }
-
-      if (authUrl) {
-        // Track the connection attempt
-        await api.trackEvent('amazon_connect_initiated', {
-          timestamp: new Date().toISOString(),
-          source: 'navbar_sign_in'
-        });
-
-        // Redirect user to Amazon
-        window.location.href = authUrl;
-      } else {
-        // No auth URL received
-        console.error('[Index] No auth URL received from backend');
-        toast({
-          title: 'Connection Failed',
-          description: 'No authorization URL received from backend. Please try again.',
-          variant: 'destructive'
-        });
-        setSigningIn(false);
-      }
-    } catch (error: any) {
-      console.error('[Index] Sign in failed:', error);
-      toast({
-        title: 'Connection Error',
-        description: error?.message || 'An unexpected error occurred during authentication.',
-        variant: 'destructive'
-      });
-      setSigningIn(false);
-    }
+  const handleUploadCsv = () => {
+    navigate('/login?intent=upload-csv');
   };
   const benefitWords = useMemo(
     () => [
@@ -426,7 +353,7 @@ const Index = () => {
                 {/* Buttons - left aligned on mobile, centered on desktop */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto mt-6">
                   <button
-                    onClick={() => navigate('/app/default/data-upload')}
+                    onClick={handleUploadCsv}
                     className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
                     {/* Glass backdrop with glow */}
                     <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
@@ -441,16 +368,15 @@ const Index = () => {
                   </button>
 
                   <button
-                    onClick={handleSignIn}
-                    disabled={signingIn}
-                    className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50">
+                    onClick={handleLogin}
+                    className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
                     <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
                       <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
                     </div>
                     <div className="absolute inset-0 bg-white/[0.03] group-hover:bg-white/[0.07] transition-colors duration-500" />
 
                     <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
-                      {signingIn ? 'Connecting...' : 'Connect Account'}
+                      Log In
                       <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
                     </span>
                   </button>

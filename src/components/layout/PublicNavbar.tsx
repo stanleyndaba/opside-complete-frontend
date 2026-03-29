@@ -99,6 +99,12 @@ export const PublicNavbar = () => {
 
                     <nav className="hidden md:flex items-center gap-4">
                         <Link
+                            to="/login"
+                            className="h-9 px-5 text-[10px] font-light text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center uppercase tracking-tight font-sans"
+                            style={{ borderRadius: '0px' }}>
+                            Login
+                        </Link>
+                        <Link
                             to="/sales"
                             className="h-9 px-5 text-[10px] font-light text-black bg-white hover:bg-emerald-500 hover:text-white transition-all inline-flex items-center uppercase tracking-tight font-sans"
                             style={{ borderRadius: '0px' }}>
@@ -194,6 +200,12 @@ export const PublicNavbar = () => {
                                     </AccordionItem>
                                 </Accordion>
 
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
+                                    Login
+                                </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}

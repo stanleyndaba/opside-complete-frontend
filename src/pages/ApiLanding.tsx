@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown, Link2, ScrollText } from 'lucide-react';
-import { api } from '@/lib/api';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const ApiLanding = () => {
+  const navigate = useNavigate();
   usePageMeta({
     title: 'Margin API Access',
     description: 'Explore Margin’s developer-ready endpoints and SP-API integrations.',
@@ -18,7 +18,6 @@ const ApiLanding = () => {
   });
 
 
-  const [connecting, setConnecting] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -31,17 +30,8 @@ const ApiLanding = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleLogin = async () => {
-    if (connecting) return;
-    setConnecting(true);
-    try {
-      const res = await api.connectAmazon();
-      const url = res.data?.auth_url;
-      if (res.ok && url) window.location.assign(url as string);
-      else window.location.assign('/auth/amazon-sandbox');
-    } catch {
-      window.location.assign('/auth/amazon-sandbox');
-    }
+  const handleLogin = () => {
+    navigate('/login');
   };
 
   return (
@@ -67,7 +57,6 @@ const ApiLanding = () => {
                 variant="ghost"
                 className="text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                 type="button"
-                disabled={connecting}
                 onClick={handleLogin}>
                 Login
               </Button>
@@ -92,7 +81,6 @@ const ApiLanding = () => {
                   variant="ghost"
                   className="w-full justify-center text-gray-800 hover:bg-gray-100 hover:text-gray-900"
                   type="button"
-                  disabled={connecting}
                   onClick={() => {
                     setMobileMenuOpen(false);
                     handleLogin();

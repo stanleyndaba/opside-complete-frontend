@@ -18,6 +18,7 @@ import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvide
 const Index = lazy(() => import("./pages/Index"));
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Login = lazy(() => import("./pages/Login"));
 const Sync = lazy(() => import("./pages/Sync"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
@@ -128,6 +129,7 @@ const App = () => (
                       <Routes>
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="/careers" element={<Careers />} />
                         <Route path="/docs" element={<Docs />} />
                         <Route path="/privacy" element={<Privacy />} />

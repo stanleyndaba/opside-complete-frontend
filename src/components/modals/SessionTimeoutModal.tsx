@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,8 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
     const [error, setError] = useState('');
     const { toast } = useToast();
     const navigate = useNavigate();
+    const location = useLocation();
+    const loginPath = `/login?next=${encodeURIComponent(`${location.pathname}${location.search}${location.hash}`)}`;
 
     const handleReAuthenticate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,7 +47,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
 
             if (!email) {
                 // If we don't have the email, we need a full login
-                navigate('/login');
+                navigate(loginPath);
                 return;
             }
 
@@ -75,7 +77,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
     };
 
     const handleLogout = () => {
-        navigate('/login');
+        navigate(loginPath);
     };
 
     return (
