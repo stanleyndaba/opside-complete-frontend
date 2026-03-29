@@ -1,4 +1,4 @@
-import { getAccessToken } from './supabaseClient';
+import { getAccessToken, supabase } from './supabaseClient';
 
 export async function getFrontendAuthToken(): Promise<string> {
   if (typeof window === 'undefined') {
@@ -6,16 +6,15 @@ export async function getFrontendAuthToken(): Promise<string> {
   }
 
   const storedToken = String(localStorage.getItem('session_token') || '').trim();
-  if (storedToken) {
-    return storedToken;
-  }
-
   const supabaseToken = (await getAccessToken()) || '';
   if (supabaseToken) {
-    localStorage.setItem('session_token', supabaseToken);
+    if (storedToken !== supabaseToken) {
+      localStorage.setItem('session_token', supabaseToken);
+    }
+    return supabaseToken;
   }
 
-  return supabaseToken;
+  return storedToken;
 }
 
 export async function getFrontendAuthContext() {
@@ -27,9 +26,23 @@ export async function getFrontendAuthContext() {
     };
   }
 
+  let userId = String(localStorage.getItem('user_id') || '').trim();
+
+  if (!userId) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.id) {
+        userId = user.id;
+        localStorage.setItem('user_id', user.id);
+      }
+    } catch {
+      // Ignore - auth context will fall back to existing storage values.
+    }
+  }
+
   return {
     token: await getFrontendAuthToken(),
-    userId: String(localStorage.getItem('user_id') || '').trim(),
+    userId,
     tenantId: String(localStorage.getItem('active_tenant_id') || '').trim()
   };
 }
