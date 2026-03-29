@@ -178,7 +178,7 @@ export default function ConnectAmazonAccount() {
             ) : (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                  <p className="text-[11px] font-semibold uppercase tracking-tight text-white/45">
                     Select Marketplace
                   </p>
                   <Select
@@ -221,11 +221,6 @@ export default function ConnectAmazonAccount() {
               </div>
             )}
 
-            {resolvedTenantSlug ? (
-              <p className="text-xs uppercase tracking-[0.22em] text-white/30">
-                Workspace: {resolvedTenantSlug}
-              </p>
-            ) : null}
           </div>
         </div>
       </div>
