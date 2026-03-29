@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AlertCircle, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { tenantRoute } from '@/lib/routes';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -89,7 +89,14 @@ export default function OAuthSuccess() {
   const email = params.get('email') ? decodeURIComponent(params.get('email')!) : null;
   const status = params.get('status') || 'ok';
   const isError = status === 'error';
-  const resolvedSlug = tenantSlug || params.get('tenant_slug') || params.get('tenant') || 'beta';
+  const storedSlug = typeof window !== 'undefined'
+    ? normalizeTenantSlug(localStorage.getItem('active_tenant_slug'))
+    : null;
+  const resolvedSlug = normalizeTenantSlug(tenantSlug)
+    || normalizeTenantSlug(params.get('tenant_slug'))
+    || normalizeTenantSlug(params.get('tenant'))
+    || storedSlug
+    || 'beta';
 
   const config = PROVIDER_CONFIG[provider] || {
     label: provider.charAt(0).toUpperCase() + provider.slice(1),
