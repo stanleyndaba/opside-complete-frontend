@@ -14,7 +14,7 @@ import { usePageMeta } from '@/hooks/usePageMeta';
 
 const sanitizeNextPath = (value: string | null, intent: string | null) => {
   if (typeof window === 'undefined') {
-    return '/app';
+    return '/connect-amazon';
   }
 
   if (value && value.startsWith('/') && !value.startsWith('/login')) {
@@ -26,7 +26,7 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
     return `/app/${storedTenantSlug}/data-upload`;
   }
 
-  return '/app';
+  return '/connect-amazon';
 };
 
 type AuthMode = 'login' | 'signup' | 'recovery';

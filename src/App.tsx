@@ -19,6 +19,7 @@ const Index = lazy(() => import("./pages/Index"));
 const Dashboard = lazy(() => import("@/components/layout/Dashboard").then(m => ({ default: m.Dashboard })));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
+const ConnectAmazonAccount = lazy(() => import("./pages/ConnectAmazonAccount"));
 const Sync = lazy(() => import("./pages/Sync"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
@@ -130,6 +131,7 @@ const App = () => (
                         {/* PUBLIC ROUTES - No tenant required */}
                         <Route path="/" element={<Index />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/connect-amazon" element={<TenantRedirect targetPath="/connect-amazon" />} />
                         <Route path="/careers" element={<Careers />} />
                         <Route path="/docs" element={<Docs />} />
                         <Route path="/privacy" element={<Privacy />} />
@@ -177,6 +179,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/settings" element={<Settings />} />
                         <Route path="/app/:tenantSlug/upcoming-payments" element={<Navigate to="../billing" replace />} />
                         <Route path="/app/:tenantSlug/reconnect-amazon" element={<ReconnectProvider />} />
+                        <Route path="/app/:tenantSlug/connect-amazon" element={<ConnectAmazonAccount />} />
                         <Route path="/app/:tenantSlug/integrations/reconnect/amazon" element={<ReconnectProvider />} />
                         <Route path="/app/:tenantSlug/billing" element={<Billing />} />
                         <Route path="/app/:tenantSlug/api-access" element={<ApiAccess />} />
@@ -204,6 +207,7 @@ const App = () => (
                         <Route path="/sync" element={<TenantRedirect />} />
                         <Route path="/settings" element={<TenantRedirect />} />
                         <Route path="/reconnect-amazon" element={<TenantRedirect />} />
+                        <Route path="/connect-amazon-account" element={<TenantRedirect targetPath="/connect-amazon" />} />
                         <Route path="/billing" element={<TenantRedirect />} />
                         <Route path="/history" element={<TenantRedirect targetPath="/billing" />} />
                         <Route path="/upcoming-payments" element={<TenantRedirect targetPath="/billing" />} />
