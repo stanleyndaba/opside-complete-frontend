@@ -773,10 +773,10 @@ export default function Sync() {
         }
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
-        addLog({ type: 'error', category: 'system', message: `Sync failed: ${s.error || s.message || 'Unknown error'}` });
+        addLog({ type: 'error', category: 'system', message: s.message || 'We hit a temporary issue while updating your Amazon records.' });
         toast({
-          title: 'Sync Failed',
-          description: s.error || s.message || 'The sync encountered an error. Please try again.',
+          title: 'Amazon Update Paused',
+          description: s.message || 'We hit a temporary issue while updating your Amazon records. Please try again.',
           variant: 'destructive',
           duration: 6000,
         });
@@ -841,8 +841,8 @@ export default function Sync() {
           toastShownRef.current = { started: true };
 
           toast({
-            title: 'Sync Started',
-            description: 'Your Amazon data sync has started. This may take a few minutes.',
+            title: 'Amazon Update Started',
+            description: 'We\'re pulling your latest Amazon records. This can take a few minutes.',
             duration: 4000,
           });
 
@@ -1796,8 +1796,8 @@ export default function Sync() {
                         toastShownRef.current = { started: true };
 
                         toast({
-                          title: 'Sync Started',
-                          description: 'Your Amazon data sync has started. This may take a few minutes.',
+                          title: 'Amazon Update Started',
+                          description: 'We\'re pulling your latest Amazon records. This can take a few minutes.',
                           duration: 4000,
                         });
 
@@ -1807,8 +1807,8 @@ export default function Sync() {
                         setMessage(e?.message || 'Failed to start sync');
                         setError(e?.message || 'Failed to start sync');
                         toast({
-                          title: 'Sync Failed',
-                          description: e?.message || 'Failed to start sync. Please try again.',
+                          title: 'Amazon Update Paused',
+                          description: e?.message || 'We could not start your Amazon sync. Please try again.',
                           variant: 'destructive',
                           duration: 5000,
                         });

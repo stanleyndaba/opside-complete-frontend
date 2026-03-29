@@ -110,7 +110,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
 
         // Handle Agent 1-11 events
         if (type === 'sync' && status === 'started') {
-          toast({ title: 'Data Sync Started', description: 'Syncing Amazon data...' });
+          toast({ title: 'Amazon Update Started', description: 'We\'re pulling your latest Amazon records.' });
         } else if (type === 'sync' && status === 'completed') {
           // Toast removed per user request
         } else if (type === 'detection' && status === 'started') {
@@ -131,7 +131,27 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
         } else if (type === 'evidence' && status === 'linked') {
           toast({ title: 'Evidence Linked', description: claimId ? `Linked to ${claimId}` : 'Evidence linked' });
         } else if (status === 'failed') {
-          toast({ title: 'Task Failed', description: `${type} failed`, variant: 'destructive' });
+          const failureCopy =
+            type === 'sync'
+              ? {
+                  title: 'Amazon Update Paused',
+                  description: 'We hit a temporary issue while updating your Amazon records.',
+                }
+              : type === 'detection'
+                ? {
+                    title: 'Account Review Paused',
+                    description: 'We hit a temporary issue while checking your account for discrepancies.',
+                  }
+                : type === 'evidence'
+                  ? {
+                      title: 'Evidence Collection Paused',
+                      description: 'We hit a temporary issue while collecting supporting documents.',
+                    }
+                  : {
+                      title: 'Update Paused',
+                      description: 'We hit a temporary issue while updating your account.',
+                    };
+          toast({ title: failureCopy.title, description: failureCopy.description, variant: 'destructive' });
         }
       } catch (error) {
         console.error('Failed to parse status event:', error);

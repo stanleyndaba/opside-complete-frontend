@@ -195,8 +195,8 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
 
               case 'sync_complete':
                 toast({
-                  title: 'Sync Complete',
-                  description: 'Complete successfully. See dashboard.',
+                  title: 'Amazon Update Complete',
+                  description: 'Your latest Amazon records are ready to review.',
                   duration: 5000,
                 });
                 break;
@@ -204,8 +204,8 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
               case 'sync_failed':
                 const failedData = notificationEvent.data;
                 toast({
-                  title: 'Sync Failed',
-                  description: failedData.message || failedData.error || 'Sync encountered an error.',
+                  title: 'Amazon Update Paused',
+                  description: failedData.message || 'We hit a temporary issue while updating your Amazon records.',
                   variant: 'destructive',
                   duration: 6000,
                 });

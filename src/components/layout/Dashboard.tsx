@@ -747,12 +747,12 @@ export function Dashboard() {
           // Sync failed
           setSyncTriggered(false);
           setNeedsSync(true); // Still needs sync
-          setSyncMessage(syncStatus.lastSync.message || 'Sync failed. Please try again.');
+          setSyncMessage(syncStatus.lastSync.message || 'We hit a temporary issue while updating your Amazon records. Please try again.');
 
           // Show error toast with more details
           toast({
-            title: 'Sync Failed',
-            description: syncStatus.lastSync.message || 'The sync encountered an error. Please try again.',
+            title: 'Amazon Update Paused',
+            description: syncStatus.lastSync.message || 'We hit a temporary issue while updating your Amazon records. Please try again.',
             variant: 'destructive',
             duration: 6000,
           });
@@ -829,12 +829,12 @@ export function Dashboard() {
           // Sync failed
           setSyncTriggered(false);
           setNeedsSync(true);
-          setSyncMessage('Sync failed. Please try again.');
+          setSyncMessage('We hit a temporary issue while updating your Amazon records. Please try again.');
           await fetchDashboardSummary();
 
           toast({
-            title: 'Sync Failed',
-            description: status.error || status.message || 'The sync encountered an error. Please try again.',
+            title: 'Amazon Update Paused',
+            description: status.message || status.error || 'We hit a temporary issue while updating your Amazon records. Please try again.',
             variant: 'destructive',
             duration: 6000,
           });

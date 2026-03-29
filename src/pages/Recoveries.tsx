@@ -1679,7 +1679,7 @@ export default function Recoveries() {
                 // Sync failed
                 setSyncTriggered(false);
                 setNeedsSync(true);
-                setSyncMessage('Sync failed. Please try again.');
+                setSyncMessage('We hit a temporary issue while updating your Amazon records. Please try again.');
 
                 // Clear polling
                 if (syncPollingRef.current) {
@@ -1741,8 +1741,8 @@ export default function Recoveries() {
                 setSyncMessage('Sync completed successfully!');
 
                 toast({
-                  title: 'Sync Complete',
-                  description: 'Complete successfully. See dashboard.',
+                  title: 'Amazon Update Complete',
+                  description: 'Your latest Amazon records are ready to review.',
                   duration: 5000,
                 });
 
@@ -1755,11 +1755,11 @@ export default function Recoveries() {
                 // Sync failed
                 setSyncTriggered(false);
                 setNeedsSync(true);
-                setSyncMessage('Sync failed. Please try again.');
+                setSyncMessage('We hit a temporary issue while updating your Amazon records. Please try again.');
 
                 toast({
-                  title: 'Sync Failed',
-                  description: 'The sync encountered an error. Please try again.',
+                  title: 'Amazon Update Paused',
+                  description: 'We hit a temporary issue while updating your Amazon records. Please try again shortly.',
                   variant: 'destructive',
                   duration: 5000,
                 });

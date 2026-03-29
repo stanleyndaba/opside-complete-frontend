@@ -568,7 +568,7 @@ export function Navbar({
                   className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                   aria-label="Integrations Hub">
                   <Box className="h-5 w-5" />
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center bg-blue-600 text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 shadow-[0_0_10px_rgba(37,99,235,0.5)]">
+                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center bg-[#262626] text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.45)]">
                     {connectedPlatformsCount}
                   </span>
                 </button>

@@ -177,7 +177,7 @@ export function NotificationBell({
           {shouldShowLabel && <span className="text-xs font-sans font-bold uppercase tracking-tight">{label}</span>}
           {unreadCount > 0 && (
             <span className={cn(
-              "absolute flex items-center justify-center bg-blue-600 text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 shadow-[0_0_10px_rgba(37,99,235,0.5)]",
+              "absolute flex items-center justify-center bg-[#262626] text-white text-[9px] font-bold leading-none rounded-full min-w-[14px] h-[14px] px-0.5 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.45)]",
               isSidebarStyle ? "top-1 right-2" : "-top-0.5 -right-0.5"
             )}>
               {unreadCount > 9 ? '9+' : unreadCount}
@@ -206,7 +206,7 @@ export function NotificationBell({
                 </button>
               )}
               {unreadCount > 0 && (
-                <div className="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-sans font-bold tracking-tight rounded">
+                <div className="px-2 py-0.5 bg-[#262626] text-white text-[9px] font-sans font-bold tracking-tight rounded border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.35)]">
                   {unreadCount} UNREAD
                 </div>
               )}
