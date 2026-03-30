@@ -99,11 +99,38 @@ export default function ResolveCase() {
     return 'Unknown';
   };
 
+  const openCanonicalFilingScreen = (intent: 'submit' | 'resubmit') => {
+    const linkedDisputeId = effectiveCase?.linked_dispute_case_id || effectiveCase?.dispute_case_id || null;
+    if (linkedDisputeId) {
+      toast({
+        title: intent === 'resubmit' ? 'Use Reopen Claims / Dispute Cases to retry' : 'Use Dispute Cases to file',
+        description: `This case must go through the canonical Agent 7 filing queue. Opening dispute case ${linkedDisputeId}.`
+      });
+      navigate(tenantRoute(activeTenantSlug, '/dispute-cases'), {
+        state: {
+          highlightDisputeId: linkedDisputeId,
+          sourceRecoveryId: effectiveCase?.id || caseId
+        }
+      });
+      return true;
+    }
+
+    const explicitReason = Array.isArray(effectiveCase?.block_reasons) && effectiveCase.block_reasons.length
+      ? effectiveCase.block_reasons.join(', ')
+      : (effectiveCase?.last_error || 'No linked dispute case exists yet for this recovery.');
+
+    toast({
+      title: intent === 'resubmit' ? 'Resubmission blocked' : 'Filing blocked',
+      description: explicitReason
+    });
+    return false;
+  };
+
   const onUploadFiles = async (files: File[]) => {
     if (!caseId || !files?.length) return;
     try {
       setStatusText('Uploading documents…');
-      const res = await recoveryApi.uploadRecoveryDocuments(caseId, files as any);
+      const res = await recoveryApi.uploadRecoveryDocuments(caseId, files as any, activeTenantSlug);
       setAttachedDocs((prev) => [...prev, ...(Array.isArray(res) ? res : [res])]);
       setStatusText('Documents uploaded successfully.');
     } catch (e: any) {
@@ -115,14 +142,14 @@ export default function ResolveCase() {
   const onResolve = async () => {
     if (!caseId) return;
     setSubmitting(true);
-    setStatusText('Submitting…');
+    setStatusText('Checking filing route…');
     try {
       if (choice === 'submit') {
-        await recoveryApi.submitClaim(caseId);
-        toast({ title: 'Submitted', description: 'Claim submitted to Amazon.' });
+        openCanonicalFilingScreen('submit');
+        return;
       } else if (choice === 'resubmit') {
-        await recoveryApi.resubmitClaim(caseId);
-        toast({ title: 'Resubmitted', description: 'Claim resubmitted with stronger documentation.' });
+        openCanonicalFilingScreen('resubmit');
+        return;
       } else if (choice === 'review') {
         toast({ title: 'Sent to Review', description: 'Our team will review and proceed.' });
       } else {

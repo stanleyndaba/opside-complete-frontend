@@ -46,13 +46,17 @@ type Summary = {
 type Row = {
   recovery_id: string;
   dispute_case_id: string;
+  linked_dispute_case_id?: string | null;
   detection_result_id: string | null;
   case_number: string;
   provider_case_id: string | null;
   merchant_reference: string | null;
   status: string | null;
+  filing_status?: string | null;
   recovery_status: string | null;
   billing_status: string | null;
+  block_reasons?: string[];
+  last_error?: string | null;
   approved_amount: number | null;
   actual_payout_amount: number | null;
   expected_payout_amount: number | null;
@@ -160,6 +164,38 @@ const stamp = (value: string | null | undefined) => {
 
 const label = (value: string | null | undefined) =>
   value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : 'Unknown';
+
+const truthText = (value: string | null | undefined) => {
+  const normalized = String(value || '').trim();
+  if (!normalized) return null;
+  return normalized.includes('_') || normalized.includes('-') ? label(normalized) : normalized;
+};
+
+const filedTruthStates = new Set(['filed', 'submitted', 'recovering']);
+const queueTruthStates = new Set(['pending', 'pending_approval', 'retrying', 'submitting']);
+const blockedTruthStates = new Set(['blocked', 'pending_safety_verification', 'duplicate_blocked', 'payment_required', 'failed']);
+
+function filingTruthHeadline(row: Pick<Row, 'dispute_case_id' | 'provider_case_id' | 'filing_status'>): string {
+  const filingStatus = String(row.filing_status || '').toLowerCase();
+  if (!row.dispute_case_id) return 'Issue detected';
+  if (row.provider_case_id || filedTruthStates.has(filingStatus)) return 'Filed with Amazon';
+  if (filingStatus === 'submitting') return 'Submitting now';
+  if (filingStatus === 'retrying') return 'Retry queued';
+  if (filingStatus === 'pending' || filingStatus === 'pending_approval') return 'Ready to file';
+  if (blockedTruthStates.has(filingStatus)) return label(filingStatus);
+  return 'Case opened';
+}
+
+function filingTruthDetail(row: Pick<Row, 'dispute_case_id' | 'provider_case_id' | 'filing_status' | 'block_reasons' | 'last_error'>): string | null {
+  const reasons = Array.isArray(row.block_reasons) ? row.block_reasons.filter(Boolean) : [];
+  const filingStatus = String(row.filing_status || '').toLowerCase();
+  if (!row.dispute_case_id) return 'Detected opportunity not yet promoted into a filed claim.';
+  if (row.provider_case_id) return `Amazon reference ${row.provider_case_id}`;
+  if (reasons.length > 0) return `Blocked: ${label(reasons[0])}`;
+  if (row.last_error) return truthText(row.last_error);
+  if (queueTruthStates.has(filingStatus)) return 'Waiting in the real filing queue.';
+  return null;
+}
 
 const describeWorkCycle = (
   status: string | null | undefined,
@@ -444,6 +480,9 @@ const badgeTone = (value: string | null | undefined) => {
   if (['reconciled', 'billing_complete', 'paid', 'charged', 'credited', 'complete', 'completed'].includes(normalized)) return 'border-blue-500/20 bg-blue-500/10 text-blue-100';
   if (['partial_recovery', 'partial_payout_review', 'payout_detected', 'payout_detected_not_reconciled', 'waiting_for_payout', 'billing_pending', 'billing_processing', 'recovery_processing', 'pending', 'pending_payout', 'processing'].includes(normalized)) return 'border-amber-500/20 bg-amber-500/10 text-amber-100';
   if (['investigation_required', 'failed', 'failed_retry_exhausted', 'rejected', 'denied', 'lost'].includes(normalized)) return 'border-red-500/20 bg-red-500/10 text-red-200';
+  if (['filed', 'submitted', 'recovering'].includes(normalized)) return 'border-blue-500/20 bg-blue-500/10 text-blue-100';
+  if (['retrying', 'submitting', 'pending_approval', 'pending_safety_verification'].includes(normalized)) return 'border-amber-500/20 bg-amber-500/10 text-amber-100';
+  if (['blocked', 'duplicate_blocked', 'payment_required'].includes(normalized)) return 'border-red-500/20 bg-red-500/10 text-red-200';
   return 'border-white/10 bg-white/[0.04] text-white/70';
 };
 
@@ -885,6 +924,11 @@ export default function RecoveryPipelineAgent8() {
                                         Amazon reference {row.provider_case_id}
                                       </div>
                                     ) : null}
+                                    {filingTruthDetail(row) && !row.provider_case_id ? (
+                                      <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
+                                        {filingTruthDetail(row)}
+                                      </div>
+                                    ) : null}
                                     {describeWorkCycle(
                                       row.recovery_work_status,
                                       row.recovery_last_deferred_reason,
@@ -935,12 +979,18 @@ export default function RecoveryPipelineAgent8() {
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="flex flex-col gap-2">
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.filing_status || (row.provider_case_id ? 'filed' : 'detected'))}`}>{filingTruthHeadline(row)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
                                     {row.reconciliation_strategy ? (
                                       <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
                                         {formatAutonomyLabel(row.reconciliation_strategy)}
                                       </span>
+                                    ) : null}
+                                    {filingTruthDetail(row) ? (
+                                      <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
+                                        {filingTruthDetail(row)}
+                                      </div>
                                     ) : null}
                                     {summarizeMatchExplanation(row.match_explanation) ? (
                                       <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
@@ -1000,9 +1050,15 @@ export default function RecoveryPipelineAgent8() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
                                       <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Case actions</div>
-                                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                        <Link to={`/app/${activeSlug}/recoveries/${row.dispute_case_id}`}>View Case Detail</Link>
-                                      </DropdownMenuItem>
+                                      {row.dispute_case_id ? (
+                                        <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                          <Link to={`/app/${activeSlug}/recoveries/${row.dispute_case_id}`}>View recovery detail</Link>
+                                        </DropdownMenuItem>
+                                      ) : (
+                                        <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
+                                          No claim record yet
+                                        </div>
+                                      )}
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
                                         View proof documents
                                       </DropdownMenuItem>
@@ -1014,7 +1070,7 @@ export default function RecoveryPipelineAgent8() {
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
-                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : label(row.operator_state)}</div>
+                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : filingTruthHeadline(row)}</div>
                                 </td>
                               </tr>
                               );
@@ -1076,6 +1132,10 @@ export default function RecoveryPipelineAgent8() {
               <DetailSection
                 title="Status"
                 rows={[
+                  { label: 'Filing Status', value: detailsRow.provider_case_id ? 'Filed with Amazon' : label(detailsRow.filing_status) },
+                  { label: 'Filing Detail', value: filingTruthDetail(detailsRow) || 'None recorded' },
+                  { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(label).join(', ') : 'None' },
+                  { label: 'Last Filing Error', value: detailsRow.last_error || 'None' },
                   { label: 'Operator State', value: label(detailsRow.operator_state) },
                   { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
                   { label: 'Reconciliation Strategy', value: detailsRow.reconciliation_strategy ? formatAutonomyLabel(detailsRow.reconciliation_strategy) : 'Not available' },

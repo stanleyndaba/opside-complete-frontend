@@ -987,12 +987,17 @@ export default function CaseDetail() {
                                     toast({ title: 'Attach evidence first', description: 'Add at least one supporting document before resubmitting.' });
                                     return;
                                   }
-                                  const res = await api.resubmitClaim(effectiveCase.id);
-                                  if (res.ok) {
-                                    toast({ title: playbook.autoTriggerable ? 'Auto-escalated' : 'Escalation submitted', description: 'We will keep you posted on the decision.' });
-                                    setCaseData((prev: any) => ({ ...(prev || {}), status: 'Submitted', escalation_count: (prev?.escalation_count || 0) + 1 }));
+                                  const linkedDisputeId = effectiveCase?.linked_dispute_case_id || effectiveCase?.dispute_case_id || null;
+                                  if (linkedDisputeId) {
+                                    toast({
+                                      title: playbook.autoTriggerable ? 'Use Dispute Cases to retry' : 'Use Dispute Cases to escalate',
+                                      description: `This legacy screen cannot file claims. Open dispute case ${linkedDisputeId} from the canonical Dispute Cases page.`
+                                    });
                                   } else {
-                                    toast({ title: 'Escalation failed', description: res.error || 'Please try again.' });
+                                    toast({
+                                      title: 'Escalation blocked',
+                                      description: effectiveCase?.last_error || 'No linked dispute case exists for this recovery yet.'
+                                    });
                                   }
                                 }}>
                                 <RefreshCw className="h-4 w-4 mr-2" />

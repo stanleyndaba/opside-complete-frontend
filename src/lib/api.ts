@@ -821,8 +821,6 @@ export const api = {
   setAutoClaimEnabled: (enabled: boolean) => requestJson<any>('/api/recoveries/auto-claim', { method: 'POST', body: JSON.stringify({ enabled }) }),
 
   // Refund Engine endpoints
-  submitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/submit`, { method: 'POST' }),
-  resubmitClaim: (id: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/resubmit`, { method: 'POST' }),
   getRecoveryStatus: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
   getRecoveryDetail: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
   getRecoveriesLedger: (

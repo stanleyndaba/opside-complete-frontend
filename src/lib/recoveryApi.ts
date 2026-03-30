@@ -28,24 +28,6 @@ export const recoveryApi = {
     return response.data;
   },
 
-  submitClaim: async (id: string, tenantSlug?: string) => {
-    if (!tenantSlug) throw new Error("tenantSlug required for submitClaim");
-    const response = await api.post(`/api/recoveries/${encodeURIComponent(id)}/submit?tenantSlug=${tenantSlug}`);
-    if (!response.ok) {
-      throw new Error(response.error || 'Failed to submit claim');
-    }
-    return response.data;
-  },
-
-  resubmitClaim: async (id: string, tenantSlug?: string) => {
-    if (!tenantSlug) throw new Error("tenantSlug required for resubmitClaim");
-    const response = await api.post(`/api/recoveries/${encodeURIComponent(id)}/resubmit?tenantSlug=${tenantSlug}`);
-    if (!response.ok) {
-      throw new Error(response.error || 'Failed to resubmit claim');
-    }
-    return response.data;
-  },
-
   getRecoveryStatus: async (recoveryId: string, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getRecoveryStatus");
     const response = await api.get(`/api/recoveries/${encodeURIComponent(recoveryId)}/status?tenantSlug=${tenantSlug}`);

@@ -23,6 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { detectionApi } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
+import { tenantRoute } from '@/lib/routes';
 import type { DateRange } from 'react-day-picker';
 import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -1140,6 +1141,7 @@ export default function Recoveries() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
   const activeSlug = tenantSlug;
+  const navigate = useNavigate();
   if (!activeSlug && isReady) {
     throw new Error("tenantSlug required for Recoveries");
   }
@@ -1184,6 +1186,54 @@ export default function Recoveries() {
 
   // Phase 3: Detection statistics and urgent claims
   const [detectionStats, setDetectionStats] = useState<any>(null);
+
+  const resolveClaimFilingTruth = useCallback(async (claimOrId: RecoveryClaim | string) => {
+    const claimId = typeof claimOrId === 'string' ? claimOrId : claimOrId?.id;
+    const fallback = typeof claimOrId === 'string' ? null : claimOrId;
+
+    if (!claimId) {
+      return {
+        claimId: '',
+        linkedDisputeId: null,
+        blockedReason: 'Missing recovery id.'
+      };
+    }
+
+    if (!activeSlug) {
+      return {
+        claimId,
+        linkedDisputeId: null,
+        blockedReason: 'Tenant context is required before filing can proceed.'
+      };
+    }
+
+    const detailResponse = await api.getRecoveryDetail(claimId, activeSlug).catch(() => null);
+    const detail = detailResponse?.ok ? (detailResponse.data as any) : fallback;
+    const linkedDisputeId = detail?.linked_dispute_case_id || detail?.dispute_case_id || null;
+    const blockedReason = Array.isArray(detail?.block_reasons) && detail.block_reasons.length
+      ? detail.block_reasons.join(', ')
+      : (detail?.last_error || 'No linked dispute case exists for this recovery yet.');
+
+    return {
+      claimId,
+      linkedDisputeId,
+      blockedReason
+    };
+  }, [activeSlug]);
+
+  const openCanonicalFilingQueue = useCallback((disputeId: string, sourceRecoveryId: string, intent: 'submit' | 'resubmit') => {
+    if (!activeSlug) return;
+    toast({
+      title: intent === 'resubmit' ? 'Use Dispute Cases to retry filing' : 'Use Dispute Cases to file',
+      description: `Opening the canonical Agent 7 queue for dispute case ${disputeId}.`
+    });
+    navigate(tenantRoute(activeSlug, '/dispute-cases'), {
+      state: {
+        highlightDisputeId: disputeId,
+        sourceRecoveryId
+      }
+    });
+  }, [activeSlug, navigate, toast]);
   const [resolveModalOpen, setResolveModalOpen] = useState(false);
   const [statusUpdateModalOpen, setStatusUpdateModalOpen] = useState(false);
   const [selectedDetection, setSelectedDetection] = useState<any | null>(null);
@@ -2333,16 +2383,30 @@ export default function Recoveries() {
                     onClick={async () => {
                       setSubmittingBulk(true);
                       const ids = Array.from(selectedIds);
-                      for (const id of ids) {
-                        try {
-                          await recoveryApi.submitClaim(id, activeSlug);
-                          toast({ title: `Submitted ${id}`, description: 'Claim submitted successfully.' });
-                          setClaims(prev => prev.map(c => c.id === id ? { ...c, status: 'Submitted' } : c));
-                        } catch (e: any) {
-                          toast({ title: `Failed to submit ${id}`, description: e?.message || 'Please try again.' });
+                      try {
+                        const truths = await Promise.all(ids.map((id) => resolveClaimFilingTruth(id)));
+                        const routed = truths.filter((truth) => Boolean(truth.linkedDisputeId));
+                        const blocked = truths.filter((truth) => !truth.linkedDisputeId);
+
+                        if (routed.length > 0) {
+                          openCanonicalFilingQueue(String(routed[0].linkedDisputeId), routed[0].claimId, 'submit');
+                          if (routed.length > 1) {
+                            toast({
+                              title: 'Additional selected cases need the same filing queue',
+                              description: `${routed.length} selected recoveries are filing-ready through Dispute Cases.`
+                            });
+                          }
                         }
+
+                        if (blocked.length > 0) {
+                          toast({
+                            title: 'Some selected cases are blocked',
+                            description: blocked[0].blockedReason
+                          });
+                        }
+                      } finally {
+                        setSubmittingBulk(false);
                       }
-                      setSubmittingBulk(false);
                     }}>
                     {submittingBulk ? (
                       <Loader2 className="h-4 w-4 animate-spin text-white" />
@@ -2882,12 +2946,12 @@ export default function Recoveries() {
                                                 <DropdownMenuItem
                                                   className="text-[10px] font-sans font-bold text-red-400 hover:text-red-300 rounded-lg px-3 py-2 cursor-pointer uppercase tracking-tight"
                                                   onClick={async () => {
-                                                    try {
-                                                      await recoveryApi.resubmitClaim(claim.id, activeSlug);
-                                                      toast({ title: 'Resubmitted', description: 'Claim resubmitted with enhanced evidence.' });
-                                                    } catch (e: any) {
-                                                      toast({ title: 'Resubmission failed', description: e?.message });
+                                                    const truth = await resolveClaimFilingTruth(claim);
+                                                    if (truth.linkedDisputeId) {
+                                                      openCanonicalFilingQueue(String(truth.linkedDisputeId), claim.id, 'resubmit');
+                                                      return;
                                                     }
+                                                    toast({ title: 'Resubmission blocked', description: truth.blockedReason });
                                                   }}>
                                                   RESUBMIT_ENHANCED_AUDIT
                                                 </DropdownMenuItem>
@@ -3268,10 +3332,15 @@ export default function Recoveries() {
                         onClick={async () => {
                           if (!claimToFile) return;
                           try {
-                            await recoveryApi.submitClaim(claimToFile.id, activeSlug);
-                            setClaims(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
-                            setMergedRecoveries(prev => prev.map(c => c.id === claimToFile.id ? { ...c, status: 'Submitted' } : c));
-                            toast({ title: 'Claim Filed', description: `${claimToFile.id} has been submitted to Amazon.` });
+                            const truth = await resolveClaimFilingTruth(claimToFile);
+                            if (truth.linkedDisputeId) {
+                              openCanonicalFilingQueue(String(truth.linkedDisputeId), claimToFile.id, 'submit');
+                            } else {
+                              toast({
+                                title: 'Filing blocked',
+                                description: truth.blockedReason
+                              });
+                            }
                             setFileAnywayModalOpen(false);
                             setClaimToFile(null);
                           } catch (e: any) {

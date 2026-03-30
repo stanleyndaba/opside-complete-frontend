@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
+import { tenantRoute } from '@/lib/routes';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -37,7 +38,6 @@ import {
   getProofStatus,
   getQuarantineReason
 } from '@/lib/disputeProof';
-import { recoveryApi } from '@/lib/recoveryApi';
 import { ClaimPdfService } from '@/services/ClaimPdfService';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
@@ -263,6 +263,7 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   ...apiData,
   id: apiData.id || fallbackId || null,
   dispute_case_id: apiData.dispute_case_id || (apiData.object_type === 'case' ? apiData.id : null),
+  linked_dispute_case_id: apiData.linked_dispute_case_id || apiData.dispute_case_id || (apiData.object_type === 'case' ? apiData.id : null),
   detection_result_id: apiData.detection_result_id || (apiData.object_type === 'detection' ? apiData.id : null),
   title: apiData.title || apiData.details || apiData.anomaly_type || 'Claim Details',
   status: apiData.status || null,
@@ -274,6 +275,7 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   recovery_status: apiData.recovery_status || null,
   billing_status: apiData.billing_status || null,
   block_reasons: Array.isArray(apiData.block_reasons) ? apiData.block_reasons : [],
+  last_error: apiData.last_error || null,
   proof_status: apiData.proof_status || apiData.evidence_attachments?.decision_intelligence?.proof_snapshot?.filingRecommendation || null,
   missing_requirements: Array.isArray(apiData.missing_requirements)
     ? apiData.missing_requirements
@@ -478,6 +480,7 @@ export default function CaseDetail() {
   const { caseId, tenantSlug } = useParams<{ caseId: string; tenantSlug: string }>();
   const { tenant, isReady } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug;
+  const navigate = useNavigate();
 
   if (!activeSlug && isReady) {
     throw new Error("tenantSlug required for CaseDetail");
@@ -495,6 +498,7 @@ export default function CaseDetail() {
   const [caseData, setCaseData] = useState<any | null>(passedClaim ? {
     id: passedClaim.id,
     dispute_case_id: passedClaim.dispute_case_id || null,
+    linked_dispute_case_id: passedClaim.linked_dispute_case_id || passedClaim.dispute_case_id || null,
     detection_result_id: passedClaim.detection_result_id || null,
     title: passedClaim.details || passedClaim.anomaly_type || 'Claim Details',
     status: passedClaim.status || '-',
@@ -506,6 +510,7 @@ export default function CaseDetail() {
     recovery_status: passedClaim.recovery_status || null,
     billing_status: passedClaim.billing_status || null,
     block_reasons: Array.isArray(passedClaim.block_reasons) ? passedClaim.block_reasons : [],
+    last_error: passedClaim.last_error || null,
     proof_status: passedClaim.proof_status || passedClaim.evidence_attachments?.decision_intelligence?.proof_snapshot?.filingRecommendation || null,
     missing_requirements: Array.isArray(passedClaim.missing_requirements)
       ? passedClaim.missing_requirements
@@ -573,6 +578,37 @@ export default function CaseDetail() {
     if (['guaranteed', 'awaiting approval', 'new', 'open'].includes(v)) return 'Open';
     return 'Unknown';
   };
+
+  const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
+    const linkedDisputeId = caseData?.linked_dispute_case_id
+      || caseData?.dispute_case_id
+      || passedClaim?.linked_dispute_case_id
+      || passedClaim?.dispute_case_id
+      || null;
+
+    if (linkedDisputeId && activeSlug) {
+      toast({
+        title: intent === 'resubmit' ? 'Use Dispute Cases to retry filing' : 'Use Dispute Cases to file',
+        description: `Opening the canonical Agent 7 filing screen for dispute case ${linkedDisputeId}.`
+      });
+      navigate(tenantRoute(activeSlug, '/dispute-cases'), {
+        state: {
+          highlightDisputeId: linkedDisputeId,
+          sourceRecoveryId: caseData?.id || passedClaim?.id || caseId
+        }
+      });
+      return;
+    }
+
+    const blockedReason = (Array.isArray(caseData?.block_reasons) && caseData.block_reasons.length
+      ? caseData.block_reasons.join(', ')
+      : caseData?.last_error || passedClaim?.last_error || 'No linked dispute case exists for this recovery yet.');
+
+    toast({
+      title: intent === 'resubmit' ? 'Retry blocked' : 'Filing blocked',
+      description: blockedReason
+    });
+  }, [activeSlug, caseData, caseId, navigate, passedClaim, toast]);
 
   const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
     if (!currentCaseId) return;
@@ -1867,9 +1903,7 @@ export default function CaseDetail() {
                             <div className="flex flex-col justify-end gap-3">
                               <button
                                 className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all rounded-lg"
-                                onClick={() => {
-                                  recoveryApi.resubmitClaim(effectiveCase.id, activeSlug).catch(() => { });
-                                }}
+                                onClick={() => openCanonicalFilingScreen('resubmit')}
                               >
                                 {escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
                               </button>
