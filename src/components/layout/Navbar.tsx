@@ -739,19 +739,11 @@ export function Navbar({
                       <LogOut className="h-4 w-4 opacity-55" />
                     </button>
                   </div>
-                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
       </header>
-
-
-      {/* Notes Modal - Commented out for V1 noise reduction
-      <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
-        ...
-      </Dialog> */}
-
       {/* Sign Out Confirmation Modal */}
       <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
         <DialogContent className="sm:max-w-[420px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-3xl rounded-2xl backdrop-blur-3xl">
