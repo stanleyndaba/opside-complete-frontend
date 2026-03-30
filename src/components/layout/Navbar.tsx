@@ -632,59 +632,55 @@ export function Navbar({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="w-[360px] bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <h3 className="text-[13px] font-sans font-semibold text-white tracking-tight truncate">
-                        {accountDisplayName}
-                      </h3>
-                      <p className="mt-1 text-[11px] font-sans text-white/42 truncate">
-                        {accountEmail}
-                      </p>
+                  <div className="min-w-0">
+                    <h3 className="text-[13px] font-sans font-semibold text-white tracking-tight truncate">
+                      {accountDisplayName}
+                    </h3>
+                    <p className="mt-1 text-[11px] font-sans text-white/42 truncate">
+                      {accountEmail}
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-2 text-[10px] font-sans tracking-tight text-white/38">
+                      <span className="uppercase">{accountRoleLabel}</span>
+                      <span className="h-1 w-1 rounded-full bg-white/14" />
+                      <span className="uppercase">Member since {memberSinceLabel}</span>
                     </div>
-                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/68">
-                      {accountRoleLabel}
+                    <div className="mt-2 text-[10px] font-sans tracking-tight text-white/46">
+                      {connectedPlatformsCount > 0
+                        ? `${connectedPlatformsCount} source${connectedPlatformsCount === 1 ? '' : 's'} connected`
+                        : 'No sources connected yet'}
                     </div>
-                  </div>
-                  <div className="mt-4 flex items-center gap-4 text-[10px] font-sans uppercase tracking-tight text-white/34">
-                    <span>Member since {memberSinceLabel}</span>
-                    <span className="h-1 w-1 rounded-full bg-white/14" />
-                    <span>{connectedPlatformsCount} source{connectedPlatformsCount === 1 ? '' : 's'} connected</span>
                   </div>
                 </div>
 
-                <div className="p-6 space-y-5">
+                <div className="p-6 space-y-4">
                   <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-white/34">
-                          Amazon connection
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/34">
+                          Amazon
                         </div>
-                        <div className="mt-2 text-[15px] font-sans font-medium tracking-tight text-white">
+                        <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
                           {amazonConnectionHeadline}
                         </div>
                         <p className="mt-2 text-[11px] font-sans leading-5 text-white/48">
                           {userProfile?.amazon_connected
-                            ? (userProfile?.amazon_display_name || 'Your Amazon seller account is connected and ready.')
-                            : 'Connect Amazon so Margin can keep pulling your latest account records.'}
+                            ? (userProfile?.amazon_display_name || 'Margin can keep your Amazon records up to date.')
+                            : 'Connect Amazon to keep your records up to date.'}
                         </p>
+                        <button
+                          onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
+                          className="mt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/58 transition-colors hover:text-white"
+                        >
+                          Open integrations
+                        </button>
                       </div>
                       <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
                         {amazonStatusLabel}
                       </div>
                     </div>
-                    {userProfile?.amazon_connected && userProfile?.amazon_seller_id ? (
-                      <div className="mt-4 border-t border-white/6 pt-3">
-                        <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-white/30">
-                          Seller ID
-                        </div>
-                        <div className="mt-1 text-[11px] font-sans text-white/62 truncate">
-                          {userProfile.amazon_seller_id}
-                        </div>
-                      </div>
-                    ) : null}
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {[
                       {
                         label: 'Account settings',
@@ -715,9 +711,9 @@ export function Navbar({
                           }}
                           className="rounded-xl border border-transparent bg-transparent px-4 py-3 focus:bg-white/[0.04] focus:text-white cursor-pointer"
                         >
-                          <div className="flex w-full items-start gap-3">
-                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03]">
-                              <ItemIcon className="h-4 w-4 text-white/42" />
+                        <div className="flex w-full items-start gap-3">
+                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.02]">
+                              <ItemIcon className="h-4 w-4 text-white/48" />
                             </div>
                             <div className="min-w-0">
                               <div className="text-[11px] font-sans font-medium tracking-tight text-white">
@@ -733,7 +729,7 @@ export function Navbar({
                     })}
                   </div>
 
-                  <div className="pt-2 border-t border-white/5">
+                  <div className="pt-3 border-t border-white/5">
                     <button
                       onClick={() => setShowSignOutModal(true)}
                       className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-[11px] font-sans font-medium text-white/52 hover:bg-white/[0.03] hover:text-white transition-colors tracking-tight"
