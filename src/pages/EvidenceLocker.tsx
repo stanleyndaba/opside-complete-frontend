@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { formatDistanceToNow } from 'date-fns';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { Navbar } from '@/components/layout/Navbar';
@@ -307,7 +308,7 @@ export default function EvidenceLocker() {
 
   const refreshInventory = useCallback(async () => {
     if (!activeSlug) {
-      setError('Tenant context is required to load the Evidence Locker.');
+      setError('Tenant context is required to load Claim Documents.');
       return;
     }
 
@@ -335,7 +336,7 @@ export default function EvidenceLocker() {
     if (!activeSlug) {
       toast({
         title: 'Tenant Required',
-        description: 'Open the Evidence Locker from a tenant workspace before uploading.',
+        description: 'Open Claim Documents from a tenant workspace before uploading.',
         variant: 'destructive'
       });
       return;
@@ -404,6 +405,10 @@ export default function EvidenceLocker() {
     );
   }, [docLogSearch, recentEvents]);
 
+  const latestInventoryTimestamp = useMemo(() => {
+    return recentEvents[0]?.timestamp || documents[0]?.updated_at || documents[0]?.created_at || null;
+  }, [documents, recentEvents]);
+
   useStatusStream((event) => {
     if (!activeSlug) return;
 
@@ -468,7 +473,7 @@ export default function EvidenceLocker() {
     (async () => {
       if (!isReady) return;
       if (!activeSlug) {
-        setError('Tenant context is required to load the Evidence Locker.');
+        setError('Tenant context is required to load Claim Documents.');
         return;
       }
 
@@ -648,10 +653,10 @@ export default function EvidenceLocker() {
             <div className="relative pt-8">
               <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
                 <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl p-10">
-                  <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight mb-4">Evidence Locker.</h1>
+                  <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Claim Documents</h1>
                   <p className="text-white/60 text-sm font-sans font-bold uppercase tracking-tight">Tenant context required</p>
                   <p className="text-white/35 mt-3 font-sans text-sm max-w-xl">
-                    The Evidence Locker only renders inside a real tenant workspace. Open this page from a tenant-scoped route to load document inventory truthfully.
+                    Claim Documents only renders inside a real tenant workspace. Open this page from a tenant-scoped route to load document inventory truthfully.
                   </p>
                 </div>
               </div>
@@ -674,14 +679,27 @@ export default function EvidenceLocker() {
         <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white">
-              {/* Institutional Header */}
-              <div className="mb-10">
-                <div className="flex flex-col gap-2">
-                  <Badge variant="outline" className="w-fit px-3 py-0.5 border-white/15 bg-white/5 text-white/75 font-sans font-bold text-[9px] tracking-tight uppercase">
-                    Evidence Inventory
-                  </Badge>
-                  <h1 className="text-4xl md:text-5xl font-sans font-bold text-white tracking-tight">Evidence Locker.</h1>
-                  <p className="text-white/40 mt-1 font-sans font-light italic text-lg max-w-2xl">Manage your uploaded documents and evidence artifacts.</p>
+              <div className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Claim Documents</h1>
+                  <p className="text-sm text-white/50 font-sans max-w-3xl">
+                    Review the files Margin can use to support recoveries, filings, and payout follow-up.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
+                    {latestInventoryTimestamp
+                      ? `Updated ${formatDistanceToNow(new Date(latestInventoryTimestamp), { addSuffix: true })}`
+                      : 'Update time unavailable'}
+                  </div>
+                  <Button
+                    onClick={() => void refreshInventory()}
+                    disabled={loading}
+                    className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight disabled:opacity-50"
+                  >
+                    <RefreshCw className={cn("w-3 h-3 mr-2", loading && "animate-spin")} />
+                    Refresh
+                  </Button>
                 </div>
               </div>
 

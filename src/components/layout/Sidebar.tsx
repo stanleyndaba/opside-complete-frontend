@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, Sparkles, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, NotebookPen, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -563,14 +563,14 @@ export function Sidebar({
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 notesActive && "bg-white text-black"
               )}>
-              <Sparkles
+              <NotebookPen
                 className={cn(
                   "h-4 w-4 transition-colors",
                   notesActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
                 )}
                 strokeWidth={1.5}
               />
-              <span>Patch_Notes</span>
+              <span>Latest Changes</span>
             </DropdownMenuItem>
 
             {/* Limited Offer / Referral */}

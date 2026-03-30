@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Plug, Bell, Shield, Store, Box, Upload } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Store, Box, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -681,56 +681,7 @@ export function Navbar({
                   </div>
                 </div>
 
-                <div className="p-5 space-y-1">
-                  {[
-                    {
-                      label: 'Account settings',
-                        detail: 'Profile, workspace, and account preferences',
-                        icon: Shield,
-                        action: () => navigate(tenantRoute(activeTenantSlug, '/settings')),
-                      },
-                      {
-                        label: 'Integrations',
-                        detail: 'Manage Amazon, Gmail, and other connected sources',
-                        icon: Plug,
-                        action: () => navigate(tenantRoute(activeTenantSlug, '/integrations-hub')),
-                      },
-                      {
-                        label: 'Updates',
-                        detail: 'See your recent account activity and notices',
-                        icon: Bell,
-                        action: () => navigate(tenantRoute(activeTenantSlug, '/notifications')),
-                      }
-                    ].map((item) => {
-                      const ItemIcon = item.icon;
-                      return (
-                        <DropdownMenuItem
-                          key={item.label}
-                          onSelect={(event) => {
-                            event.preventDefault();
-                            item.action();
-                          }}
-                          className="rounded-xl border border-transparent bg-transparent px-4 py-3 focus:bg-white/[0.04] focus:text-white cursor-pointer"
-                        >
-                        <div className="flex w-full items-start gap-3">
-                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.02]">
-                              <ItemIcon className="h-4 w-4 text-white/48" />
-                            </div>
-                            <div className="min-w-0">
-                              <div className="text-[11px] font-sans font-medium tracking-tight text-white">
-                                {item.label}
-                              </div>
-                              <div className="mt-1 text-[10px] font-sans leading-4 text-white/42">
-                                {item.detail}
-                              </div>
-                            </div>
-                          </div>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </div>
-
-                  <div className="pt-3 border-t border-white/5">
+                  <div className="p-5">
                     <button
                       onClick={() => setShowSignOutModal(true)}
                       className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-[11px] font-sans font-medium text-white/52 hover:bg-white/[0.03] hover:text-white transition-colors tracking-tight"
