@@ -175,13 +175,13 @@ const describeWorkCycle = (
   if (!normalized) return null;
   const reason = deferReason || workError || null;
   if (normalized === 'pending' && reason) {
-    return `Deferred: ${label(reason)}${nextAttemptAt ? ` · Next ${stamp(nextAttemptAt)}` : lastProcessedAt ? ` · Last ${stamp(lastProcessedAt)}` : ''}`;
+    return `Held: ${label(reason)}${nextAttemptAt ? ` · Next ${stamp(nextAttemptAt)}` : lastProcessedAt ? ` · Last ${stamp(lastProcessedAt)}` : ''}`;
   }
   if (normalized === 'processing') {
-    return `Claimed by execution lane${lastClaimedAt ? ` · ${stamp(lastClaimedAt)}` : ''}`;
+    return `Being worked now${lastClaimedAt ? ` · ${stamp(lastClaimedAt)}` : ''}`;
   }
   if (normalized === 'failed_retry_exhausted') {
-    return `Retry exhausted${typeof attempts === 'number' && typeof maxAttempts === 'number' && maxAttempts > 0 ? ` · ${attempts}/${maxAttempts}` : ''}`;
+    return `Needs manual attention${typeof attempts === 'number' && typeof maxAttempts === 'number' && maxAttempts > 0 ? ` · ${attempts}/${maxAttempts}` : ''}`;
   }
   return null;
 };
@@ -639,6 +639,15 @@ export default function RecoveryPipelineAgent8() {
       proofCount: rowSummaries.filter((item) => Boolean(item.proof_of_payment)).length
     };
   }, [financialSummaries, rows]);
+  const monthlyPlanBenchmark = 99;
+  const valueStillInPlay = summary
+    ? Math.max(Number(summary.pending_payout_total || 0), Number(financialOverview.pendingVerifiedTotal || 0), Number(summary.approved_value_total || 0))
+    : 0;
+  const planCoverageNote = valueStillInPlay > 0
+    ? `${money(valueStillInPlay)} still in play is about ${(valueStillInPlay / monthlyPlanBenchmark).toFixed(1)}x a $99 monthly plan.`
+    : financialOverview.verifiedPaidTotal > 0
+      ? 'One verified payout already covers the monthly plan.'
+      : 'One approved recovery can justify the monthly plan.';
 
   useEffect(() => {
     if (!activeSlug || !rows.length) {
@@ -718,13 +727,13 @@ export default function RecoveryPipelineAgent8() {
 
   if (isReady && !activeSlug) {
     return (
-      <PageLayout title="Recovery Pipeline" midnight>
+      <PageLayout title="Recoveries In Motion" midnight>
         <Card className="border-red-500/20 bg-[#0c0c0c]">
           <CardContent className="flex items-start gap-4 p-8">
             <AlertTriangle className="mt-0.5 h-5 w-5 text-red-400" />
             <div>
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Tenant Required</div>
-              <div className="mt-2 text-sm font-sans font-bold text-white">Recovery truth is blocked until a real tenant context is present.</div>
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-red-400">Workspace Required</div>
+              <div className="mt-2 text-sm font-sans font-bold text-white">A workspace is required before Margin can show recovery activity.</div>
             </div>
           </CardContent>
         </Card>
@@ -733,24 +742,24 @@ export default function RecoveryPipelineAgent8() {
   }
 
   return (
-    <PageLayout title="Recovery Pipeline" midnight>
+    <PageLayout title="Recoveries In Motion" midnight>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
       <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
         <div className="relative w-full max-w-full px-8 pt-8 pb-24">
           <div className="mb-8 border-b border-white/10 pb-8">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovery Ledger</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovery value</div>
             <div className="mt-3 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
-                <h1 className="text-4xl font-light tracking-tight text-white">Recovery Pipeline</h1>
-                <p className="mt-3 max-w-3xl text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">
-                  Approved claims, pending payouts, reconciliations, and billed recoveries for your account.
+                <h1 className="text-4xl font-light tracking-tight text-white">Recoveries In Motion</h1>
+                <p className="mt-3 max-w-3xl text-[12px] font-sans leading-6 text-white/40">
+                  See what Amazon already approved, what is still waiting for payout, and what has already been paid back.
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {summary?.last_updated_at ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">Updated {stamp(summary.last_updated_at)}</div> : null}
+                {summary?.last_updated_at ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">Last updated {stamp(summary.last_updated_at)}</div> : null}
                 <Button variant="outline" className="h-10 rounded-lg border-white/10 bg-white/5 px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" onClick={() => fetchLedger('refresh')} disabled={loading || refreshing}>
                   <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  Refresh Recoveries
+                  Refresh account
                 </Button>
               </div>
             </div>
@@ -777,21 +786,21 @@ export default function RecoveryPipelineAgent8() {
           ) : summary && pagination ? (
             <div className="space-y-6">
               <div className="grid gap-4 xl:grid-cols-4">
-                <Metric labelText="Verified Paid" value={money(financialOverview.verifiedPaidTotal)} sublabel={`${financialOverview.fullyPaidCount} paid, ${financialOverview.partialPaidCount} partial`} />
-                <Metric labelText="Awaiting Payment" value={money(financialOverview.pendingVerifiedTotal)} sublabel={`${financialOverview.unpaidCount} with no payout recorded`} />
-                <Metric labelText="Approved Value" value={money(summary.approved_value_total)} sublabel={`${summary.approved_count} approved cases`} />
-                <Metric labelText="Payment Proof" value={String(financialOverview.proofCount)} sublabel="Cases with settlement or batch proof" />
+                <Metric labelText="Paid back so far" value={money(financialOverview.verifiedPaidTotal)} sublabel={`${financialOverview.fullyPaidCount} paid back, ${financialOverview.partialPaidCount} partial`} />
+                <Metric labelText="Awaiting payout" value={money(financialOverview.pendingVerifiedTotal)} sublabel={`${financialOverview.unpaidCount} with no payout recorded`} />
+                <Metric labelText="Approved with Amazon" value={money(summary.approved_value_total)} sublabel={`${summary.approved_count} approved cases`} />
+                <Metric labelText="Monthly plan benchmark" value="$99" sublabel={planCoverageNote} />
               </div>
 
               <Card className="border-white/10 bg-[#0c0c0c]">
                 <CardContent className="space-y-5 p-6">
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                     <div>
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Recovery State Summary</div>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">What is happening now</div>
                       <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">{filteredLabel}</div>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {[['Reconciled', summary.reconciled_count], ['Partial Recovery', summary.partial_recovery_count], ['Unreconciled', summary.unreconciled_count], ['Investigation Required', summary.investigation_required_count]].map(([text, value]) => (
+                      {[['Paid back', summary.reconciled_count], ['Partial payout', summary.partial_recovery_count], ['Still waiting', summary.unreconciled_count], ['Needs review', summary.investigation_required_count]].map(([text, value]) => (
                         <div key={String(text)} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
                           {text}: <span className="text-white">{value}</span>
                         </div>
@@ -809,7 +818,7 @@ export default function RecoveryPipelineAgent8() {
                       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div className="relative w-full xl:max-w-xl">
                           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
-                          <Input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }} placeholder="Search by case reference, provider case ID, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
+                          <Input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }} placeholder="Search case, Amazon reference, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {dateRanges.map(([value, text]) => (
@@ -846,17 +855,17 @@ export default function RecoveryPipelineAgent8() {
                     </div>
                   </div>
 
-                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No recovery rows match the current backend filters.</div> : (
+                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No cases match the current filters.</div> : (
                     <>
                       <div className="overflow-x-auto">
                         <table className="w-full min-w-[1120px] border-collapse">
                           <thead>
                             <tr className="border-b border-white/10">
-                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Recovery Case</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Recovery State</th>
+                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Case</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Current state</th>
                               <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Money</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Billing</th>
-                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Currentness</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Payout and billing</th>
+                              <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Timing</th>
                               <th className="pl-4 py-3 text-right text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Actions</th>
                             </tr>
                           </thead>
@@ -871,18 +880,9 @@ export default function RecoveryPipelineAgent8() {
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
                                       {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant reference not available'}
                                     </div>
-                                    {(row.recovery_work_status || row.billing_work_status) ? (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">
-                                        {row.recovery_work_status ? `Recovery Work ${label(row.recovery_work_status)}` : ''}
-                                        {row.recovery_work_status && row.billing_work_status ? ' · ' : ''}
-                                        {row.billing_work_status ? `Billing Work ${label(row.billing_work_status)}` : ''}
-                                      </div>
-                                    ) : null}
-                                    {(row.recovery_execution_lane || row.billing_execution_lane) ? (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
-                                        {row.recovery_execution_lane ? `Recovery Lane ${label(row.recovery_execution_lane)}` : ''}
-                                        {row.recovery_execution_lane && row.billing_execution_lane ? ' · ' : ''}
-                                        {row.billing_execution_lane ? `Billing Lane ${label(row.billing_execution_lane)}` : ''}
+                                    {row.provider_case_id ? (
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
+                                        Amazon reference {row.provider_case_id}
                                       </div>
                                     ) : null}
                                     {describeWorkCycle(
@@ -895,7 +895,7 @@ export default function RecoveryPipelineAgent8() {
                                       row.recovery_last_claimed_at,
                                       row.recovery_last_processed_at
                                     ) ? (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-amber-100/70">
+                                      <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
                                         {describeWorkCycle(
                                           row.recovery_work_status,
                                           row.recovery_last_deferred_reason,
@@ -918,7 +918,7 @@ export default function RecoveryPipelineAgent8() {
                                       row.billing_last_claimed_at,
                                       row.billing_last_processed_at
                                     ) ? (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-blue-100/60">
+                                      <div className="text-[10px] font-sans leading-5 tracking-tight text-white/38">
                                         {describeWorkCycle(
                                           row.billing_work_status,
                                           row.billing_last_deferred_reason,
@@ -947,23 +947,15 @@ export default function RecoveryPipelineAgent8() {
                                         {summarizeMatchExplanation(row.match_explanation)}
                                       </div>
                                     ) : null}
-                                    {row.recovery_operational_state ? (
-                                      <div className="text-[9px] font-sans font-medium tracking-tight text-amber-100/70">
-                                        Runtime: {formatAutonomyLabel(row.recovery_operational_state)}
-                                        {summarizeOperationalExplanation(row.recovery_operational_explanation)
-                                          ? ` · ${summarizeOperationalExplanation(row.recovery_operational_explanation)}`
-                                          : ''}
-                                      </div>
-                                    ) : null}
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="space-y-2">
-                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Approved Value</div>
+                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Approved with Amazon</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
-                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Verified Paid</div>
+                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Paid back</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(financialSummary?.verified_paid_amount, row.currency)}</div>
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${financialStatusTone(financialSummary?.payout_status)}`}>{financialStatusLabel(financialSummary?.payout_status)}</span>
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${financialStatusTone(financialSummary?.payout_status)}`}>Payout: {financialStatusLabel(financialSummary?.payout_status)}</span>
                                     <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">{financialStatusDetail(financialSummary)}</div>
                                   </div>
                                 </td>
@@ -977,7 +969,7 @@ export default function RecoveryPipelineAgent8() {
                                     ) : (
                                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">No payout proof yet</div>
                                     )}
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Billed Revenue</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Margin billed</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.billed_revenue_amount, row.currency)}</div>
                                   </div>
                                 </td>
@@ -987,13 +979,13 @@ export default function RecoveryPipelineAgent8() {
                                     <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.last_updated_at)}</div>
                                     {(row.recovery_last_processed_at || row.billing_last_processed_at) ? (
                                       <>
-                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Finality Activity</div>
+                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last account movement</div>
                                         <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_last_processed_at || row.billing_last_processed_at)}</div>
                                       </>
                                     ) : null}
                                     {(row.recovery_next_attempt_at || row.billing_next_attempt_at) ? (
                                       <>
-                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Next Attempt</div>
+                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Next retry</div>
                                         <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_next_attempt_at || row.billing_next_attempt_at)}</div>
                                       </>
                                     ) : null}
@@ -1007,18 +999,18 @@ export default function RecoveryPipelineAgent8() {
                                       </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
-                                      <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Recovery Actions</div>
+                                      <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Case actions</div>
                                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
                                         <Link to={`/app/${activeSlug}/recoveries/${row.dispute_case_id}`}>View Case Detail</Link>
                                       </DropdownMenuItem>
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
-                                        Proof Documents
+                                        View proof documents
                                       </DropdownMenuItem>
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openEvidencePacket(row)}>
-                                        Evidence Packet
+                                        Open evidence packet
                                       </DropdownMenuItem>
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openRecoveryDetails(row)}>
-                                        Recovery Details
+                                        Open case details
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
