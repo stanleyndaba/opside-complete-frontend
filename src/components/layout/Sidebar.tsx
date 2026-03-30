@@ -30,7 +30,7 @@ const prefetchRoute = (path: string) => {
         import('@/pages/Reports');
         break;
       case '/recoveries':
-        import('@/pages/Recoveries');
+        import('@/pages/RecoveryPipelineAgent8');
         break;
       case '/dispute-cases':
         import('@/pages/DisputeCases');
