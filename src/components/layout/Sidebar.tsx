@@ -269,8 +269,8 @@ export function Sidebar({
     { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
     { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-    { title: 'Appeals', icon: Scale, href: tenantRoute(currentTenantSlug, '/appeals') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+    { title: 'Appeals', icon: Scale, href: tenantRoute(currentTenantSlug, '/appeals') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
   ];
 
