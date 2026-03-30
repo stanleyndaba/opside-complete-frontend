@@ -1330,6 +1330,17 @@ export function Dashboard() {
                         Overview
                       </button>
                       <button
+                        onClick={() => handleTabChange('discrepancies')}
+                        className={cn(
+                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight",
+                          activeTab === 'discrepancies'
+                            ? "text-white bg-white/[0.08]"
+                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
+                        )}
+                      >
+                        Issues Found
+                      </button>
+                      <button
                         onClick={() => handleTabChange('evidence')}
                         className={cn(
                           "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
@@ -1688,21 +1699,21 @@ export function Dashboard() {
                 </div>
               ) : activeTab === 'discrepancies' ? (
                 <div className="space-y-6">
-                  {/* Detected Discrepancies View */}
+                  {/* Issues Found View */}
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
                     <div className="flex items-center justify-between mb-8">
                       <div className="flex items-center gap-4">
                         <div>
-                          <h2 className="text-[11px] font-sans font-bold text-white/40 tracking-tight uppercase">Anomaly Ledger</h2>
+                          <h2 className="text-[11px] font-sans font-bold text-white/40 tracking-tight uppercase">Issues Found</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">Discrepancies</span>
+                            <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">Recent findings</span>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-12">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">DETECTIONS</span>
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">ISSUES FOUND</span>
                             <span className="text-lg font-sans font-bold text-white leading-none mt-1">
                               {detectedOpportunitiesCount}
                             </span>
@@ -1748,9 +1759,9 @@ export function Dashboard() {
                             <Shield className="h-8 w-8 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
                           </div>
                         </div>
-                        <h3 className="text-sm font-sans font-bold text-white uppercase tracking-tight">No open discrepancies in this view</h3>
+                        <h3 className="text-sm font-sans font-bold text-white uppercase tracking-tight">No open issues in this view</h3>
                         <p className="text-[10px] text-white/30 mt-3 font-sans font-bold max-w-sm mx-auto leading-relaxed">
-                          No unresolved detections are currently loaded for this tenant queue.
+                          No unresolved findings are currently loaded for this workspace.
                         </p>
                         <button
                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
@@ -1928,7 +1939,7 @@ export function Dashboard() {
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-white/40" />
                               <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                                Open detections loaded: <span className="text-white/40">{detectionResults.length}</span>
+                                Open issues loaded: <span className="text-white/40">{detectionResults.length}</span>
                               </span>
                             </div>
                             <span className="text-white/5 font-mono">|</span>
