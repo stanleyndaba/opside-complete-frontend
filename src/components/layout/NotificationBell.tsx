@@ -6,7 +6,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { Badge } from '@/components/ui/badge';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
@@ -27,6 +26,137 @@ interface NotificationBellProps {
 const stripEmojis = (text: any) => {
   if (!text || typeof text !== 'string') return '';
   return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{231A}-\u{231B}\u{23E9}-\u{23F3}\u{23F8}-\u{23FA}\u{25AA}-\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2702}\u{2705}\u{2708}-\u{270D}\u{270F}]/gu, '').trim();
+};
+
+const toTitleCase = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+const formatNotificationTimestamp = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Just now';
+
+  const diff = Date.now() - date.getTime();
+  if (diff < 60_000) return 'Just now';
+  if (diff < 86_400_000) {
+    return formatDistanceToNow(date, { addSuffix: true }).replace(/^about\s+/i, '');
+  }
+  return format(date, 'MMM d');
+};
+
+type NotificationTone = 'neutral' | 'progress' | 'success' | 'warning';
+
+const getNotificationPreview = (notification: any) => {
+  const payload = notification.payload || {};
+  const type = String(notification.type || '').toLowerCase();
+  const rawTitle = stripEmojis(notification.title || '');
+  const rawMessage = stripEmojis(notification.message || '');
+  const messageBlob = `${rawTitle} ${rawMessage}`.toLowerCase();
+  const amount =
+    payload.amount ||
+    payload.recovery_amount ||
+    payload.resolution_amount ||
+    payload.estimated_value;
+  const formattedAmount =
+    typeof amount === 'number' || (!Number.isNaN(Number(amount)) && amount !== '')
+      ? `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      : null;
+  const anomaly =
+    toTitleCase(
+      String(payload.anomaly_type || payload.type || '')
+    ) || 'Amazon issue';
+
+  if (
+    type === 'sync_complete' ||
+    messageBlob.includes('finished successfully') ||
+    messageBlob.includes('no discrepancies found')
+  ) {
+    return {
+      eyebrow: 'Amazon update',
+      header: 'Amazon update complete',
+      message: rawMessage || 'Your latest Amazon records are ready to review.',
+      tone: 'success' as NotificationTone,
+    };
+  }
+
+  if (
+    type === 'sync_failed' ||
+    messageBlob.includes('encountered an issue') ||
+    messageBlob.includes('failed') ||
+    messageBlob.includes('paused')
+  ) {
+    return {
+      eyebrow: 'Amazon update',
+      header: 'Amazon update paused',
+      message: rawMessage || 'We hit a temporary issue while updating your Amazon records.',
+      tone: 'warning' as NotificationTone,
+    };
+  }
+
+  if (
+    messageBlob.includes('pulling your latest amazon records') ||
+    messageBlob.includes('sync has started') ||
+    type === 'sync_started'
+  ) {
+    return {
+      eyebrow: 'Amazon update',
+      header: 'Amazon update started',
+      message: rawMessage || 'We are pulling your latest Amazon records now.',
+      tone: 'progress' as NotificationTone,
+    };
+  }
+
+  if (type === 'claim_detected' || type === 'anomaly_detected') {
+    return {
+      eyebrow: 'Recovery found',
+      header: formattedAmount ? `${formattedAmount} opportunity found` : 'Recovery opportunity found',
+      message: rawMessage || `${anomaly} is ready for review and filing.`,
+      tone: 'neutral' as NotificationTone,
+    };
+  }
+
+  if (type === 'funds_deposited' || type === 'reimbursement_payout' || type === 'refund_approved') {
+    return {
+      eyebrow: 'Payout',
+      header: formattedAmount ? `${formattedAmount} payout received` : 'Payout received',
+      message: rawMessage || 'Amazon has credited the approved reimbursement to your account.',
+      tone: 'success' as NotificationTone,
+    };
+  }
+
+  if (type === 'case_filed') {
+    return {
+      eyebrow: 'Claim filed',
+      header: 'Claim sent to Amazon',
+      message: rawMessage || 'Your reimbursement claim has been submitted and is now awaiting review.',
+      tone: 'progress' as NotificationTone,
+    };
+  }
+
+  if (
+    type === 'user_action_required' ||
+    type === 'amazon_challenge' ||
+    messageBlob.includes('action required')
+  ) {
+    return {
+      eyebrow: 'Action needed',
+      header: rawTitle || 'Action needed on your account',
+      message: rawMessage || 'Margin needs your input before this item can move forward.',
+      tone: 'warning' as NotificationTone,
+    };
+  }
+
+  return {
+    eyebrow: 'Update',
+    header: rawTitle || toTitleCase(type || 'notification'),
+    message: rawMessage || 'There is a new update waiting in your account.',
+    tone: 'neutral' as NotificationTone,
+  };
 };
 
 export function NotificationBell({
@@ -67,51 +197,18 @@ export function NotificationBell({
   };
 
   const displayNotifications = notifications.slice(0, 10).map(n => {
-    let timeAgo = 'Just now';
-    try {
-      const date = new Date(n.created_at);
-      if (!isNaN(date.getTime())) {
-        timeAgo = format(date, 'MMM d');
-      }
-    } catch (e) {
-      console.error('Invalid date for notification:', n.created_at);
-    }
-
-    // Weaponized Messaging Framework
-    const payload = n.payload || {};
-    const amount = payload.amount || payload.recovery_amount || (n.type === 'funds_deposited' ? 222.20 : 813.52);
-    const formattedAmount = (typeof amount === 'number' || !isNaN(Number(amount)))
-      ? `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-      : amount;
-
-    // Helper for Title Case
-    const toTitleCase = (str: string) => str.toLowerCase().replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
-    // Extract "Villain" (Anomaly Type)
-    const villain = toTitleCase(payload.anomaly_type || payload.type || n.type || 'Discrepancy');
-
-    let weaponizedHeader = toTitleCase(n.type || 'Notification');
-    let weaponizedSubtitle = n.message;
-
-    if (n.type === 'claim_detected' || n.type === 'anomaly_detected') {
-      weaponizedHeader = `+${formattedAmount} Found: ${villain}`;
-      weaponizedSubtitle = `Discrepancy isolated. Evidence payload generated and ready for auto-filing.`;
-    } else if (n.type === 'funds_deposited' || n.type === 'reimbursement_payout') {
-      weaponizedHeader = `+${formattedAmount} Payout Secured: ${villain}`;
-      weaponizedSubtitle = `Amazon approved the claim. Funds have been credited to your Seller Central ledger.`;
-    } else if (n.type === 'scarcity_alert' || n.message?.toLowerCase().includes('expiring') || n.type === 'expiring_soon') {
-      weaponizedHeader = `${formattedAmount} At Risk: Expiring in 5 Days`;
-      weaponizedSubtitle = `A fulfillment fee error is approaching Amazon's 60-day claim limit. Auto-filing initiated.`;
-    }
+    const preview = getNotificationPreview(n);
 
     return {
       id: n.id,
-      header: weaponizedHeader,
-      message: weaponizedSubtitle,
-      timestamp: timeAgo,
+      eyebrow: preview.eyebrow,
+      header: preview.header,
+      message: preview.message,
+      timestamp: formatNotificationTimestamp(n.created_at),
       href: getHrefForType(n.type),
       read: n.status === 'read',
-      type: n.type
+      type: n.type,
+      tone: preview.tone,
     };
   });
 
@@ -141,27 +238,6 @@ export function NotificationBell({
       : 'h-10 w-10 flex items-center justify-center ' + (isTransparentNavbar ? 'hover:bg-white/[0.03] text-white/40 hover:text-white border border-transparent hover:border-white/5' : 'hover:bg-white/[0.02]'),
     className
   ].filter(Boolean).join(' ');
-
-  const badge = unreadCount > 0 && (
-    <>
-      <div
-        className={
-          'absolute rounded-full animate-pulse ' +
-          (isSidebarStyle ? 'top-2 right-3 w-4 h-4 bg-emerald-500/80' : '-top-1 -right-1 w-4 h-4 bg-emerald-500/80')
-        }
-      />
-      <div
-        className={
-          'absolute rounded-full flex items-center justify-center text-xs font-semibold ' +
-          (isSidebarStyle
-            ? 'top-2 right-3 w-4 h-4 bg-emerald-500 text-white'
-            : '-top-1 -right-1 w-4 h-4 bg-emerald-500 text-white')
-        }>
-        {unreadCount > 9 ? '9+' : unreadCount}
-      </div>
-    </>
-  );
-
   return (
     <HoverCard openDelay={100} closeDelay={200} onOpenChange={setIsOpen} open={isOpen}>
       <HoverCardTrigger asChild>
@@ -190,89 +266,111 @@ export function NotificationBell({
       <HoverCardContent
         align="end"
         sideOffset={12}
-        className="w-[380px] max-h-[480px] bg-[#0c0c0c] border border-white/10 shadow-3xl z-50 rounded-2xl flex flex-col overflow-hidden p-0 backdrop-blur-3xl">
-        {/* Header - Fixed, Institutional Style */}
-        <div className="px-6 py-4 border-b border-white/5 flex-shrink-0 bg-white/[0.01]">
+        className="z-50 flex max-h-[520px] w-[392px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] p-0 shadow-3xl backdrop-blur-3xl">
+        <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <h3 className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">
-              Updates
-            </h3>
-            <div className="flex items-center gap-4">
+            <div>
+              <h3 className="text-[11px] font-sans font-bold uppercase tracking-tight text-white">
+                Updates
+              </h3>
+              <p className="mt-1 text-[10px] font-sans leading-4 text-white/38">
+                Recent activity across your Amazon account and recoveries.
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-[10px] font-sans font-bold text-white/20 hover:text-white transition-colors uppercase tracking-tight">
-                  Read All
+                  className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34 transition-colors hover:text-white/72">
+                  Mark all read
                 </button>
               )}
-              {unreadCount > 0 && (
-                <div className="px-2 py-0.5 bg-[#262626] text-white text-[9px] font-sans font-bold tracking-tight rounded border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.35)]">
-                  {unreadCount} UNREAD
-                </div>
-              )}
+              <div className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/72">
+                {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Notification Items - Scrollable area */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {displayNotifications.length === 0 ? (
-            <div className="px-4 py-8 text-center">
-              <p className="text-sm text-gray-400">No messages</p>
+            <div className="px-6 py-10 text-center">
+              <p className="text-[11px] font-sans font-medium uppercase tracking-tight text-white/42">
+                No recent updates
+              </p>
+              <p className="mt-2 text-[11px] font-sans leading-5 text-white/34">
+                New account activity will appear here as Margin finds, files, and tracks recoveries.
+              </p>
             </div>
           ) : (
             displayNotifications.map((notification, index) => {
               const content = (
                 <div
                   className={cn(
-                    'group relative px-6 py-3 transition-all duration-300 cursor-pointer border-r-2 border-transparent hover:bg-white/[0.02]',
-                    !notification.read ? 'bg-white/[0.015]' : 'bg-transparent'
+                    'group relative cursor-pointer px-6 py-4 transition-colors duration-200 hover:bg-white/[0.025]',
+                    !notification.read ? 'bg-white/[0.018]' : 'bg-transparent'
                   )}
                   onClick={() => handleNotificationClick(notification.id)}>
+                  <div
+                    className={cn(
+                      'absolute left-0 top-3 bottom-3 w-[2px] rounded-full transition-opacity',
+                      !notification.read ? 'bg-white/45 opacity-100' : 'bg-white/18 opacity-0 group-hover:opacity-100'
+                    )}
+                  />
 
-                  {/* Hover Accent Bar */}
-                  <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            'rounded-full border px-2 py-0.5 text-[9px] font-sans font-semibold uppercase tracking-tight',
+                            notification.tone === 'success'
+                              ? 'border-white/12 bg-white/[0.06] text-white/78'
+                              : notification.tone === 'warning'
+                                ? 'border-white/12 bg-white/[0.04] text-white/64'
+                                : notification.tone === 'progress'
+                                  ? 'border-white/10 bg-white/[0.03] text-white/58'
+                                  : 'border-white/8 bg-transparent text-white/46'
+                          )}
+                        >
+                          {notification.eyebrow}
+                        </span>
+                      </div>
 
-                  <div className="flex items-center justify-between gap-3 mb-0.5">
-                    <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                      <div className={cn("h-1.5 w-1.5 rounded-full shrink-0", !notification.read ? "bg-white/70" : "bg-white/20")} />
-                      <p className={cn(
-                        'text-[13px] truncate flex items-center gap-2 font-sans font-bold tracking-tight',
-                        !notification.read ? 'text-white' : 'text-white/55 group-hover:text-white/80'
-                      )}>
+                      <p
+                        className={cn(
+                          'mt-3 text-[13px] font-sans font-semibold leading-5 tracking-tight',
+                          !notification.read ? 'text-white' : 'text-white/72 group-hover:text-white/84'
+                        )}
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
                         {notification.header}
                       </p>
+
+                      <p
+                        className={cn(
+                          'mt-2 pr-3 text-[11px] font-sans leading-5 tracking-tight',
+                          !notification.read ? 'text-white/60' : 'text-white/38 group-hover:text-white/52'
+                        )}
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {notification.message}
+                      </p>
                     </div>
-                    <span className="text-[10px] text-white/22 font-sans font-bold text-right shrink-0 whitespace-nowrap uppercase tracking-tight">
+
+                    <span className="shrink-0 whitespace-nowrap pt-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
                       {notification.timestamp}
                     </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 ml-[14px]">
-                    <p className={cn(
-                      'text-[12px] leading-snug font-sans font-medium truncate tracking-tight',
-                      !notification.read ? 'text-white/68' : 'text-white/32 group-hover:text-white/48'
-                    )}>
-                      {stripEmojis(notification.message)}
-                    </p>
-                    {(() => {
-                      let statusText = '';
-                      if (notification.type === 'funds_deposited') statusText = 'PAID';
-                      else if (notification.type === 'case_filed') statusText = 'OPEN';
-                      else if (notification.type === 'claim_detected') statusText = 'FOUND';
-
-                      if (!statusText) return null;
-
-                      return (
-                        <span className={cn(
-                          "text-[9px] font-sans font-bold shrink-0 px-1.5 py-0.5 rounded border tracking-tight",
-                          notification.type === 'funds_deposited' ? "text-white/70 border-white/10 bg-white/[0.03]" :
-                            notification.type === 'case_filed' ? "text-blue-400 border-blue-400/20 bg-blue-400/5" : "text-white/30 border-white/8 bg-white/[0.02]"
-                        )}>
-                          {statusText}
-                        </span>
-                      );
-                    })()}
                   </div>
                 </div>
               );
@@ -287,7 +385,7 @@ export function NotificationBell({
                     <div>{content}</div>
                   )}
                   {index < displayNotifications.length - 1 && (
-                    <div className="border-b border-white/10" />
+                    <div className="border-b border-white/6" />
                   )}
                 </React.Fragment>
               );
@@ -295,11 +393,10 @@ export function NotificationBell({
           )}
         </div>
 
-        {/* Footer - Institutional Style */}
-        <div className="px-6 py-4 border-t border-white/5 flex-shrink-0 bg-white/[0.01]">
+        <div className="bg-white/[0.01] px-6 py-4 border-t border-white/5 flex-shrink-0">
           <Link to={tenantRoute(activeSlug, '/notifications')} onClick={() => setIsOpen(false)}>
-            <button className="w-full text-center text-[10px] font-sans font-bold text-white/20 hover:text-white/70 transition-colors uppercase tracking-tight">
-              All Notifications
+            <button className="w-full rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-center text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 transition-colors hover:border-white/20 hover:bg-white/[0.06] hover:text-white">
+              View all updates
             </button>
           </Link>
         </div>
