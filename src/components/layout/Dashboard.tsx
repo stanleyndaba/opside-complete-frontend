@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import {
   FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
   ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
-  Download, Bell, Shield, TrendingDown, TrendingUp, Loader2, X, AlertTriangle,
+  Download, Bell, TrendingDown, TrendingUp, Loader2, X, AlertTriangle,
   ChevronDown, Clock, MoreVertical, Files
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
@@ -100,6 +100,37 @@ interface DashboardSummary {
 
 const pluralize = (count: number, singular: string, plural = `${singular}s`) =>
   `${count} ${count === 1 ? singular : plural}`;
+
+const toTitleCase = (value: string) =>
+  value.replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+
+const formatIssueTypeLabel = (value?: string | null) => {
+  if (!value) return 'Unknown issue';
+  return toTitleCase(value.replace(/_/g, ' ').trim());
+};
+
+const isProcessedFindingStatus = (status?: string | null) =>
+  ['filed', 'resolved', 'converted'].includes((status || '').toLowerCase());
+
+const formatIssueStatusLabel = (status?: string | null) => {
+  const normalized = (status || '').toLowerCase();
+
+  switch (normalized) {
+    case 'pending':
+      return 'Pending review';
+    case 'detected':
+      return 'Issue found';
+    case 'filed':
+    case 'converted':
+      return 'Moved to claim';
+    case 'resolved':
+      return 'Closed';
+    case 'ready_to_file':
+      return 'Ready to file';
+    default:
+      return normalized ? toTitleCase(normalized.replace(/_/g, ' ')) : 'Needs review';
+  }
+};
 
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes' | 'evidence'>('overview');
@@ -1085,6 +1116,10 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
     return `Updated ${format(timestamp, 'MMM dd, yyyy, HH:mm')}`;
   }, [dashboardSummary?.last_updated_at]);
+  const visibleDetectionResults = useMemo(
+    () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
+    [detectionResults, showProcessed]
+  );
   const formattedLastPayoutDate = useMemo(() => {
     if (!dashboardSummary?.last_payout_date) return 'No payout recorded';
     const timestamp = new Date(dashboardSummary.last_payout_date);
@@ -1701,40 +1736,40 @@ export function Dashboard() {
                 <div className="space-y-6">
                   {/* Issues Found View */}
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-start justify-between gap-8 mb-8">
                       <div className="flex items-center gap-4">
                         <div>
-                          <h2 className="text-[11px] font-sans font-bold text-white/40 tracking-tight uppercase">Issues Found</h2>
+                          <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-[0.08em] uppercase">Issues Found</h2>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">Recent findings</span>
+                            <span className="text-base font-sans font-semibold text-white tracking-tight">Recent findings</span>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-12">
+                        <div className="flex items-center gap-10">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">ISSUES FOUND</span>
-                            <span className="text-lg font-sans font-bold text-white leading-none mt-1">
+                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-[0.08em] uppercase">Issues found</span>
+                            <span className="text-xl font-sans font-semibold text-white leading-none mt-1.5">
                               {detectedOpportunitiesCount}
                             </span>
                           </div>
 
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                            className="flex flex-col transition-colors group text-left"
+                            className="flex flex-col transition-colors text-left hover:text-white"
                           >
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight group-hover:text-emerald-500/50">CLAIMS</span>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-lg font-sans font-bold text-white leading-none group-hover:text-emerald-500">
+                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-[0.08em] uppercase">Claims</span>
+                            <div className="flex items-center gap-2 mt-1.5">
+                              <span className="text-xl font-sans font-semibold text-white leading-none">
                                 {filedClaimsCount}
                               </span>
-                              <ArrowRight className="h-3 w-3 text-white/10 group-hover:text-emerald-500" />
+                              <ArrowRight className="h-3 w-3 text-white/25" />
                             </div>
                           </button>
 
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">VERIFIED RECOVERED</span>
-                            <span className="text-lg font-sans font-bold text-white leading-none mt-1">
+                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-[0.08em] uppercase">Verified recovered</span>
+                            <span className="text-xl font-sans font-semibold text-white leading-none mt-1.5">
                               {dashboardSummary
                                 ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
                                 : 'Unavailable'}
@@ -1746,31 +1781,26 @@ export function Dashboard() {
 
                     {loadingDetections ? (
                       <div className="py-20 flex flex-col items-center justify-center gap-4">
-                        <Loader2 className="h-8 w-8 text-emerald-500 animate-spin" />
-                        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight animate-pulse">Syncing Database...</span>
+                        <Loader2 className="h-8 w-8 text-white/50 animate-spin" />
+                        <span className="text-[11px] font-sans font-medium text-white/35 tracking-tight animate-pulse">Loading findings...</span>
                       </div>
-                    ) : detectionResults.filter(r => showProcessed ? true : r.status !== 'resolved').length === 0 ? (
+                    ) : visibleDetectionResults.length === 0 ? (
                       <div className="py-24 flex flex-col items-center justify-center text-center">
-                        <div className="relative mb-8">
-                          {/* Pulsing Radar Effect */}
-                          <div className="absolute inset-0 bg-emerald-500/10 rounded-full animate-ping scale-150 opacity-20" />
-                          <div className="absolute inset-0 bg-emerald-500/20 rounded-full animate-pulse scale-125 opacity-30" />
-                          <div className="relative h-16 w-16 rounded-full border border-emerald-500/20 flex items-center justify-center bg-emerald-500/5 backdrop-blur-sm">
-                            <Shield className="h-8 w-8 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
-                          </div>
+                        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
+                          <Files className="h-6 w-6 text-white/40" />
                         </div>
-                        <h3 className="text-sm font-sans font-bold text-white uppercase tracking-tight">No open issues in this view</h3>
-                        <p className="text-[10px] text-white/30 mt-3 font-sans font-bold max-w-sm mx-auto leading-relaxed">
-                          No unresolved findings are currently loaded for this workspace.
+                        <h3 className="text-lg font-sans font-semibold text-white tracking-tight">No open issues right now</h3>
+                        <p className="text-[13px] text-white/45 mt-3 font-sans max-w-sm mx-auto leading-relaxed">
+                          Margin is not holding any unresolved findings in this view right now.
                         </p>
                         <button
                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                          className="mt-8 flex items-center gap-3 px-6 py-2 bg-emerald-500/5 border border-emerald-500/10 hover:bg-emerald-500/10 transition-all rounded-lg group"
+                          className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
                         >
-                          <span className="text-[10px] font-sans font-bold text-emerald-500 uppercase tracking-tight">
-                            View {filedClaimsCount} Filed Cases
+                          <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
+                            View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}
                           </span>
-                          <ArrowRight className="h-3 w-3 text-emerald-500/40 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
                         </button>
                       </div>
                     ) : (
@@ -1779,22 +1809,22 @@ export function Dashboard() {
                           <Button
                             onClick={handleBatchExport}
                             disabled={isExporting}
-                            className={`h-8 px-4 bg-white/5 hover:bg-emerald-500/10 text-white/60 hover:text-emerald-500 border border-white/10 hover:border-emerald-500/20 text-[9px] font-sans font-bold uppercase tracking-tight transition-all rounded-sm ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`h-9 px-4 bg-white/[0.03] hover:bg-white/[0.06] text-white/70 hover:text-white border border-white/10 text-[11px] font-sans font-medium tracking-tight transition-all rounded-md ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             {isExporting ? (
                               <Loader2 className="h-3 w-3 mr-2 animate-spin" />
                             ) : (
                               <Download className="h-3 w-3 mr-2" />
                             )}
-                            EXPORT CLAIM BATCH
+                            Export findings
                           </Button>
                           <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Show Processed</span>
+                            <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">Show processed</span>
                             <button
                               onClick={() => setShowProcessed(!showProcessed)}
                               className={cn(
                                 "w-8 h-4 rounded-full relative transition-colors duration-300",
-                                showProcessed ? "bg-emerald-500" : "bg-white/10"
+                                showProcessed ? "bg-white/35" : "bg-white/10"
                               )}
                             >
                               <div className={cn(
@@ -1807,87 +1837,86 @@ export function Dashboard() {
                         <table className="w-full text-left">
                           <thead>
                             <tr className="border-b border-white/5">
-                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Type</th>
-                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Found On</th>
-                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight text-right">Estimated Value</th>
-                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight text-center">Certainty</th>
-                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Status</th>
-                              <th className="pb-4 text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight text-right">Action</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em]">Issue</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em]">Found on</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em] text-right">Estimated value</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em] text-center">Confidence</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em]">Status</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em] text-right">Action</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
-                            {detectionResults
-                              .filter(r => showProcessed ? true : r.status !== 'resolved' && r.status !== 'filed')
+                            {visibleDetectionResults
                               .map((result) => {
-                                const isProcessed = result.status === 'filed' || result.status === 'resolved' || result.status === 'converted';
+                                const isProcessed = isProcessedFindingStatus(result.status);
                                 return (
                                   <tr
                                     key={result.id}
                                     className={cn(
                                       "group transition-colors",
-                                      isProcessed ? "opacity-30 grayscale pointer-events-none" : "hover:bg-white/[0.01]"
+                                      isProcessed ? "opacity-40 grayscale" : "hover:bg-white/[0.02]"
                                     )}
                                   >
-                                    <td className="py-4">
+                                    <td className="py-5">
                                       <div className="flex flex-col">
-                                        <span className="text-[11px] font-bold text-white uppercase tracking-tight group-hover:text-emerald-500 transition-colors">
-                                          {result.anomaly_type?.replace(/_/g, ' ') || 'UNKNOWN_ANOMALY'}
+                                        <span className="text-[13px] font-sans font-semibold text-white tracking-tight">
+                                          {formatIssueTypeLabel(result.anomaly_type)}
                                         </span>
-                                        <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                                          ID: {result.id?.substring(0, 8) || 'N/A'}
+                                        <span className="text-[11px] font-sans font-medium text-white/30 tracking-tight mt-1">
+                                          Ref {result.id?.substring(0, 8) || 'N/A'}
                                         </span>
                                       </div>
                                     </td>
-                                    <td className="py-4 text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                                    <td className="py-5 text-[12px] font-sans font-medium text-white/55 tracking-tight">
                                       {result.discovery_date
                                         ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                                         : 'N/A'
                                       }
                                     </td>
-                                    <td className="py-4 text-[11px] font-sans font-bold text-white text-right tracking-tight">
+                                    <td className="py-5 text-[13px] font-sans font-semibold text-white text-right tracking-tight">
                                       {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
                                     </td>
-                                    <td className="py-4">
+                                    <td className="py-5">
                                       <div className="flex items-center justify-center gap-2">
-                                        <div className="w-12 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                        <div className="w-12 h-1.5 bg-white/8 rounded-full overflow-hidden">
                                           <div
-                                            className="h-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]"
+                                            className="h-full bg-white/55"
                                             style={{ width: `${(result.confidence_score || 0) * 100}%` }}
                                           />
                                         </div>
-                                        <span className="text-[10px] font-sans font-bold text-blue-600/60 tracking-tight">
+                                        <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">
                                           {((result.confidence_score || 0) * 100).toFixed(0)}%
                                         </span>
                                       </div>
                                     </td>
-                                    <td className="py-4">
+                                    <td className="py-5">
                                       <div className="flex gap-2">
                                         <span className={cn(
-                                          "px-2 py-0.5 rounded-sm text-[8px] font-sans font-bold uppercase tracking-tight",
+                                          "px-2.5 py-1 rounded-full text-[10px] font-sans font-medium tracking-tight",
                                           isProcessed ? "bg-white/5 text-white/40 border border-white/10" :
-                                            result.status === 'detected' || result.status === 'pending' ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
-                                              "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                                            result.status === 'detected' || result.status === 'pending' ? "bg-amber-500/10 text-amber-300 border border-amber-500/20" :
+                                              "bg-white/5 text-white/65 border border-white/10"
                                         )}>
-                                          {isProcessed ? "Converted To Claim" : result.status}
+                                          {formatIssueStatusLabel(result.status)}
                                         </span>
                                       </div>
                                     </td>
-                                    <td className="py-4 text-right">
+                                    <td className="py-5 text-right">
                                       {isProcessed ? (
                                         <Button
                                           variant="ghost"
                                           size="sm"
                                           onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                                          className="text-[9px] font-sans font-bold text-emerald-500/40 hover:text-emerald-500 pointer-events-auto tracking-tight"
+                                          className="h-8 px-3 text-[11px] font-sans font-medium text-white/45 hover:text-white hover:bg-white/[0.04] pointer-events-auto tracking-tight"
                                         >
-                                          View Case
+                                          View case
                                         </Button>
                                       ) : (
                                         <div className="flex items-center justify-end gap-4">
                                           <Button
                                             variant="ghost"
                                             size="sm"
-                                            className="h-7 px-3 text-[9px] font-sans font-bold text-white/20 hover:text-emerald-500 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all uppercase tracking-tight"
+                                            className="h-8 px-3 text-[11px] font-sans font-medium text-white/55 hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all tracking-tight"
                                             onClick={() => {
                                               setActiveDiscrepancy({
                                                 id: result.id,
@@ -1898,7 +1927,7 @@ export function Dashboard() {
                                               setShowDiscrepancyModal(true);
                                             }}
                                           >
-                                            Start Recovering
+                                            Open recovery
                                           </Button>
 
                                           <DropdownMenu>
@@ -1906,7 +1935,7 @@ export function Dashboard() {
                                               <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-7 w-7 text-white/10 hover:text-emerald-500 hover:bg-emerald-500/5 transition-all rounded-sm border border-transparent hover:border-emerald-500/20"
+                                                className="h-8 w-8 text-white/25 hover:text-white hover:bg-white/[0.04] transition-all rounded-md border border-transparent hover:border-white/10"
                                               >
                                                 <MoreVertical className="h-3.5 w-3.5" />
                                               </Button>
@@ -1917,10 +1946,10 @@ export function Dashboard() {
                                             >
                                               <DropdownMenuItem
                                                 onClick={() => handleRowExport(result.id)}
-                                                className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/40 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                                className="text-[11px] font-sans font-medium tracking-tight text-white/65 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                               >
                                                 <Download className="h-3 w-3 mr-2" />
-                                                Download Claim Evidence
+                                                Download evidence
                                               </DropdownMenuItem>
                                             </DropdownMenuContent>
                                           </DropdownMenu>
@@ -1938,21 +1967,21 @@ export function Dashboard() {
                           <div className="flex items-center gap-6">
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-white/40" />
-                              <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                                Open issues loaded: <span className="text-white/40">{detectionResults.length}</span>
+                              <span className="text-[10px] font-sans font-medium text-white/35 tracking-tight">
+                                Open issues loaded: <span className="text-white/55">{visibleDetectionResults.length}</span>
                               </span>
                             </div>
-                            <span className="text-white/5 font-mono">|</span>
-                            <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                              Last Updated: <span className="text-white/40">{formattedLastUpdated}</span>
+                            <span className="text-white/10">|</span>
+                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
+                              Last updated: <span className="text-white/55">{formattedLastUpdated}</span>
                             </div>
-                            <span className="text-white/5 font-mono">|</span>
-                            <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/20 uppercase tracking-widest">
-                              Scope: <span className="text-white/40">Tenant Summary</span>
+                            <span className="text-white/10">|</span>
+                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
+                              Scope: <span className="text-white/55">Account summary</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-[9px] font-mono font-bold text-white/10 uppercase tracking-[0.2em]">
-                            Notification feed is user-scoped
+                          <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/22 tracking-tight">
+                            Showing current findings and review status
                           </div>
                         </div>
                       </div>
