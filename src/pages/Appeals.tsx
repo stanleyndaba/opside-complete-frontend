@@ -227,8 +227,6 @@ export default function Appeals() {
     return { appealValue, deniedCount, underpaidCount, readyCount, lastUpdatedAt };
   }, [candidates]);
 
-  const hasAppealData = candidates.length > 0;
-
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -258,87 +256,32 @@ export default function Appeals() {
       <div className="relative min-h-screen overflow-hidden bg-[#070707] text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
         <div className="relative z-10 container mx-auto space-y-6 px-8 pb-20 pt-10">
-          <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.8fr)]">
-            <Card className="rounded-2xl border-white/8 bg-[#0c0c0c] text-white">
-              <CardContent className="space-y-5 p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-3">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Denied reimbursement recovery</div>
-                    <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Reopen denied reimbursements</h1>
-                    <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
-                      When Amazon says no or pays short, Margin rebuilds the case with stronger proof and a tighter reimbursement argument.
-                    </p>
-                    <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
-                      Only denied or underpaid claims appear here.
-                    </p>
-                  </div>
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Denied reimbursement recovery</div>
+              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Reopen denied reimbursements</h1>
+              <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
+                When Amazon says no or pays short, Margin rebuilds the case with stronger proof and a tighter reimbursement argument.
+              </p>
+              <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
+                Only denied or underpaid claims appear here.
+              </p>
+            </div>
 
-                  <Button
-                    onClick={() => setRefreshKey((current) => current + 1)}
-                    className="h-10 shrink-0 rounded-lg border border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/56 hover:bg-white/10 hover:text-white"
-                  >
-                    <RefreshCw className="mr-2 h-3 w-3" />
-                    Refresh
-                  </Button>
+            <div className="flex items-center gap-3 lg:pt-1">
+              {summary.lastUpdatedAt ? (
+                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
+                  Updated {formatDistanceToNow(new Date(summary.lastUpdatedAt), { addSuffix: true })}
                 </div>
-
-                {summary.lastUpdatedAt ? (
-                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
-                    Updated {formatDistanceToNow(new Date(summary.lastUpdatedAt), { addSuffix: true })}
-                  </div>
-                ) : null}
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-2xl border-white/8 bg-[#0c0c0c] text-white">
-              <CardContent className="h-full p-6">
-                {hasAppealData ? (
-                  <div className="flex h-full flex-col justify-between gap-6">
-                    <div className="space-y-3">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Money Amazon pushed back on</div>
-                      <div className="text-[40px] font-sans font-bold leading-none tracking-tight text-[#8b8b8b]">
-                        {money(summary.appealValue)}
-                      </div>
-                      <p className="max-w-sm text-[12px] font-sans leading-5 text-white/42">
-                        This is the value still worth challenging across denied and underpaid reimbursements.
-                      </p>
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      {[
-                        ['Ready now', String(summary.readyCount)],
-                        ['Denied', String(summary.deniedCount)],
-                        ['Underpaid', String(summary.underpaidCount)]
-                      ].map(([title, value]) => (
-                        <div key={title} className="rounded-xl border border-white/8 bg-white/[0.02] px-4 py-3">
-                          <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/28">{title}</div>
-                          <div className="mt-2 text-xl font-sans font-bold tracking-tight text-white/78">{value}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex h-full flex-col justify-between gap-6">
-                    <div className="space-y-3">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Nothing to reopen yet</div>
-                      <div className="text-[28px] font-sans font-bold leading-tight tracking-tight text-[#8b8b8b]">
-                        No denied or underpaid reimbursements found
-                      </div>
-                      <p className="max-w-sm text-[12px] font-sans leading-5 text-white/42">
-                        This page will light up when Amazon denies a case or approves less than the claim value.
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border border-white/8 bg-white/[0.02] px-4 py-3">
-                      <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/28">What happens next</div>
-                      <div className="mt-2 text-[12px] font-sans leading-5 text-white/56">
-                        Margin will bring those cases here for a stronger second pass once Amazon pushes back.
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+              ) : null}
+              <Button
+                onClick={() => setRefreshKey((current) => current + 1)}
+                className="h-10 shrink-0 rounded-lg border border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/56 hover:bg-white/10 hover:text-white"
+              >
+                <RefreshCw className="mr-2 h-3 w-3" />
+                Refresh
+              </Button>
+            </div>
           </div>
 
           <Card className="overflow-hidden rounded-2xl border-white/8 bg-[#0c0c0c] text-white">
