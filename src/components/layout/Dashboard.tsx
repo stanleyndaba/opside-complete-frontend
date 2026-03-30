@@ -1739,7 +1739,7 @@ export function Dashboard() {
                     <div className="flex items-start justify-between gap-8 mb-8">
                       <div className="flex items-center gap-4">
                         <div>
-                          <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-[0.08em] uppercase">Issues Found</h2>
+                          <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-tight uppercase">Issues Found</h2>
                           <div className="flex items-center gap-2 mt-0.5">
                             <span className="text-base font-sans font-semibold text-white tracking-tight">Recent findings</span>
                           </div>
@@ -1748,7 +1748,7 @@ export function Dashboard() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-10">
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-[0.08em] uppercase">Issues found</span>
+                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-tight uppercase">Issues found</span>
                             <span className="text-xl font-sans font-semibold text-white leading-none mt-1.5">
                               {detectedOpportunitiesCount}
                             </span>
@@ -1758,7 +1758,7 @@ export function Dashboard() {
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="flex flex-col transition-colors text-left hover:text-white"
                           >
-                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-[0.08em] uppercase">Claims</span>
+                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-tight uppercase">Claims</span>
                             <div className="flex items-center gap-2 mt-1.5">
                               <span className="text-xl font-sans font-semibold text-white leading-none">
                                 {filedClaimsCount}
@@ -1768,7 +1768,7 @@ export function Dashboard() {
                           </button>
 
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-[0.08em] uppercase">Verified recovered</span>
+                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-tight uppercase">Verified recovered</span>
                             <span className="text-xl font-sans font-semibold text-white leading-none mt-1.5">
                               {dashboardSummary
                                 ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
@@ -1837,12 +1837,12 @@ export function Dashboard() {
                         <table className="w-full text-left">
                           <thead>
                             <tr className="border-b border-white/5">
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em]">Issue</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em]">Found on</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em] text-right">Estimated value</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em] text-center">Confidence</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em]">Status</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-[0.08em] text-right">Action</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">Issue</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">Found on</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight text-right">Estimated value</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight text-center">Confidence</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">Status</th>
+                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight text-right">Action</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
@@ -1980,7 +1980,7 @@ export function Dashboard() {
                               Scope: <span className="text-white/55">Account summary</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/22 tracking-tight">
+                          <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
                             Showing current findings and review status
                           </div>
                         </div>

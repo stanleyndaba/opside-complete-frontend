@@ -550,7 +550,7 @@ export function Navbar({
                       className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
                       aria-label="Store connections">
                       <Store className="h-5 w-5" />
-                      <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-emerald-500/30 rounded-full" />
+                      <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-white/20 rounded-full" />
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
@@ -560,8 +560,8 @@ export function Navbar({
                     className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
                     <div className="p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                          <Store className="h-4 w-4 text-emerald-500" />
+                        <div className="h-8 w-8 rounded-lg bg-white/[0.04] flex items-center justify-center border border-white/10">
+                          <Store className="h-4 w-4 text-white/70" />
                         </div>
                         <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Store Setup</span>
                       </div>
@@ -575,7 +575,7 @@ export function Navbar({
                           onClick={() => {
                             navigate(tenantRoute(activeTenantSlug, '/integrations-hub'));
                           }}
-                          className="w-full h-10 border border-emerald-500/20 bg-emerald-500/[0.02] hover:bg-emerald-500/10 hover:border-emerald-500/50 text-emerald-500 text-[10px] font-sans font-bold uppercase tracking-tight transition-all rounded-xl">
+                          className="w-full h-10 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 text-white/75 hover:text-white text-[10px] font-sans font-bold uppercase tracking-tight transition-all rounded-xl">
                           Manage connections
                         </Button>
                       </div>
@@ -625,9 +625,9 @@ export function Navbar({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 text-[11px] text-white/60 hover:text-white transition-all font-sans font-bold group/account uppercase tracking-tight px-3 py-1.5 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5">
-                  <User className="h-5 w-5 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
+                  <User className="h-5 w-5 text-white/20 group-hover/account:text-white/75 transition-colors" />
                   <span className="hidden sm:inline">Account</span>
-                  <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
+                  <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-white/75 transition-colors" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" sideOffset={12} className="w-[360px] bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">

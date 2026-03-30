@@ -131,13 +131,13 @@ export function ChatNode() {
                                     <div className={cn(
                                         "px-4 py-3 text-xs leading-relaxed font-mono",
                                         msg.role === 'user'
-                                            ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                                            ? "bg-white/[0.04] text-white/85 border border-white/10"
                                             : "bg-white/5 text-gray-300 border border-white/5"
                                     )}>
                                         {msg.text}
                                     </div>
                                     <span className="text-[9px] text-white/30 mt-1.5 font-mono uppercase tracking-tight flex items-center gap-1">
-                                        {msg.role === 'agent' && <span className="w-1 h-1 rounded-full bg-emerald-500/50" />}
+                                        {msg.role === 'agent' && <span className="w-1 h-1 rounded-full bg-white/35" />}
                                         {msg.role === 'agent' ? 'AI_AGENT_01' : 'USER_ID_Auth'} · {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
@@ -175,7 +175,7 @@ export function ChatNode() {
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
                                 placeholder="Execute command or ask query..."
-                                className="flex-1 bg-transparent border-none text-xs font-mono text-emerald-500 placeholder:text-white/20 focus:ring-0 focus:outline-none"
+                                className="flex-1 bg-transparent border-none text-xs font-mono text-white/80 placeholder:text-white/20 focus:ring-0 focus:outline-none"
                             />
                             <button
                                 type="submit"
@@ -196,7 +196,7 @@ export function ChatNode() {
                     "h-12 w-12 flex items-center justify-center rounded-none transition-all shadow-2xl border",
                     isOpen
                         ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-                        : "bg-[#050505] text-emerald-500 border-white/10 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                        : "bg-[#050505] text-white/80 border-white/10 hover:border-white/20 hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.08)]"
                 )}
             >
                 <MessageSquare className="h-5 w-5" />
