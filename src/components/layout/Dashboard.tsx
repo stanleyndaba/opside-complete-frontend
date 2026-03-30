@@ -1093,13 +1093,13 @@ export function Dashboard() {
     if (activeSyncId || syncTriggered) {
       return {
         value: 'Sync in progress',
-        detail: syncMessage || 'Agent 2 is processing the latest run.'
+        detail: syncMessage || 'We are pulling your latest account records now.'
       };
     }
     if (needsSync) {
       return {
         value: 'Needs attention',
-        detail: syncMessage || 'A refresh is needed to update ingestion truth.'
+        detail: syncMessage || 'A refresh is needed to bring in your latest account records.'
       };
     }
     if (lastSyncTime) {
@@ -1160,26 +1160,26 @@ export function Dashboard() {
   }, [dashboardSummary, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
   const overviewNarrative = useMemo(() => {
     if (!dashboardSummary) {
-      return 'Margin is assembling your seller recovery position from detections, filed cases, reimbursements, and billing truth.';
+      return 'Margin is assembling your current recovery picture from detected issues, filed cases, reimbursements, and fees already billed.';
     }
     if (estimatedValueTotal > 0 && recoveredCashTotal > 0) {
-      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} is already verified recovered. The remaining value is still moving through review, filing, approval, and payout confirmation.`;
+      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has already been confirmed as recovered. The remaining value is still moving through review, filing, approval, and payout confirmation.`;
     }
     if (estimatedValueTotal > 0) {
-      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified. Nothing in this number is verified cash yet; it is the value currently worth working through the pipeline.`;
+      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified. None of this is confirmed cash yet; it is the value currently worth reviewing and filing.`;
     }
     if (recoveredCashTotal > 0) {
-      return `Recoveries have already been verified for this tenant, but there is no additional open pipeline value showing right now.`;
+      return `Recoveries have already been confirmed for this account, but there is no additional open value showing right now.`;
     }
-    return 'No detections, filed cases, or approved payouts are currently raising recovery pressure for this tenant.';
+    return 'No detected issues, filed cases, or approved payouts are currently adding recovery pressure for this account.';
   }, [dashboardSummary, detectedOpportunitiesCount, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
   const overviewStatusRows = useMemo(() => ([
     {
       label: 'Verified recovered',
       value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
       detail: recoveredCashTotal > 0
-        ? `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')} now tied to verified payout events`
-        : 'No verified reimbursement recorded yet'
+        ? `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')} now tied to confirmed payout events`
+        : 'No confirmed reimbursement recorded yet'
     },
     {
       label: 'Approved and awaiting payout',
@@ -1192,11 +1192,11 @@ export function Dashboard() {
       label: 'Filed and in motion',
       value: formatCurrencyWithSelection(filedValueTotal, recoveredCurrency),
       detail: filedClaimsCount > 0
-        ? `${pluralize(filedClaimsCount, 'filed case')} currently in review or post-filing motion`
+        ? `${pluralize(filedClaimsCount, 'filed case')} currently in review after filing`
         : 'Nothing has entered filing yet'
     },
     {
-      label: 'Latest platform update',
+      label: 'Latest account update',
       value: lastSyncResult.value,
       detail: lastSyncResult.detail
     }
@@ -1253,12 +1253,12 @@ export function Dashboard() {
       return `${pluralize(approvedClaimsCount, 'approved case')} are waiting for payout confirmation rather than additional filing work.`;
     }
     if (filedClaimsCount > 0) {
-      return `${pluralize(filedClaimsCount, 'filed case')} are already in motion and waiting on Amazon or payout truth.`;
+      return `${pluralize(filedClaimsCount, 'filed case')} are already in motion and waiting on Amazon review or payout confirmation.`;
     }
     if (detectedOpportunitiesCount > 0) {
       return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified and can now be worked through evidence and filing.`;
     }
-    return 'No active recovery pressure is being raised by the current tenant summary.';
+    return 'No active recovery pressure is being raised by the current account summary.';
   }, [approvedClaimsCount, detectedOpportunitiesCount, filedClaimsCount, primaryBlocker]);
 
   if (!activeSlug) {
@@ -1365,13 +1365,13 @@ export function Dashboard() {
                                 onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                                 className="rounded-full border border-white/12 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/78 transition-colors hover:bg-white/[0.06] hover:text-white"
                               >
-                                Open Recovery Pipeline
+                                Open Recoveries
                               </button>
                               <button
                                 onClick={() => navigate(tenantRoute(activeSlug, '/dispute-cases'))}
                                 className="rounded-full border border-white/12 bg-transparent px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/50 transition-colors hover:border-white/20 hover:text-white/78"
                               >
-                                Review Filing Queue
+                                Review Filing List
                               </button>
                             </div>
                           </div>
@@ -1424,29 +1424,29 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+                    <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
                       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-6 py-5">
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
-                            Operating picture
+                        <div className="border-b border-white/5 px-5 py-4">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                            Account snapshot
                           </div>
-                          <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/36">
-                            The latest payout, reimbursement, and sync truth for this tenant.
+                          <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                            Your latest payout activity, reimbursements, and account refresh status.
                           </p>
                         </div>
                         <div className="divide-y divide-white/5">
                           {recentFinancialActivity.map((item) => (
-                            <div key={item.label} className="px-6 py-6">
-                              <div className="grid gap-4 md:grid-cols-[0.72fr_1fr] md:items-start">
+                            <div key={item.label} className="px-5 py-4">
+                              <div className="grid gap-2 md:grid-cols-[0.82fr_1fr] md:items-start">
                                 <div>
-                                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
                                     {item.label}
                                   </div>
-                                  <div className="mt-2 text-[22px] font-sans font-medium tracking-tight text-white">
+                                  <div className="mt-2 text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
                                     {item.value}
                                   </div>
                                 </div>
-                                <p className="text-[11px] font-sans leading-relaxed text-white/38">
+                                <p className="text-[10px] font-sans leading-5 text-white/44">
                                   {item.detail}
                                 </p>
                               </div>
@@ -1456,51 +1456,51 @@ export function Dashboard() {
                       </div>
 
                       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-6 py-5">
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
-                            Pipeline notes
+                        <div className="border-b border-white/5 px-5 py-4">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                            Recovery notes
                           </div>
-                          <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/36">
-                            A direct read of what is detected, filed, approved, and already billed.
+                          <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                            A quick read of what has been found, filed, approved, and already billed.
                           </p>
                         </div>
-                        <div className="space-y-5 px-6 py-6">
-                          <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-5">
+                        <div className="divide-y divide-white/5 px-5 py-4">
+                          <div className="flex items-start justify-between gap-3 py-4 pt-0">
                             <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                                Detection coverage
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                Open opportunities
                               </div>
-                              <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
-                                {pluralize(detectedOpportunitiesCount, 'opportunity')} are currently visible in the tenant summary.
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
+                                {pluralize(detectedOpportunitiesCount, 'opportunity')} are currently visible in your account.
                               </p>
                             </div>
-                            <div className="text-right text-[20px] font-sans font-medium tracking-tight text-white">
+                            <div className="text-right text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
                               {detectedOpportunitiesCount}
                             </div>
                           </div>
-                          <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-5">
+                          <div className="flex items-start justify-between gap-3 py-4">
                             <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
                                 Filed value
                               </div>
-                              <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
-                                Value that has already entered filing and is now waiting on review or payout truth.
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
+                                Value already filed and now waiting on Amazon review or payout confirmation.
                               </p>
                             </div>
-                            <div className="text-right text-[20px] font-sans font-medium tracking-tight text-white">
+                            <div className="text-right text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
                               {formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)}
                             </div>
                           </div>
-                          <div className="flex items-start justify-between gap-6">
+                          <div className="flex items-start justify-between gap-3 pb-0 pt-4">
                             <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                                Updated
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                Last updated
                               </div>
-                              <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
-                                Latest account-level recovery summary published by the backend.
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
+                                The most recent recovery summary available in Margin.
                               </p>
                             </div>
-                            <div className="text-right text-[13px] font-sans font-medium tracking-tight text-white/72">
+                            <div className="text-right text-[12px] font-sans font-medium leading-5 tracking-tight text-white/72">
                               {formattedLastUpdatedAbsolute}
                             </div>
                           </div>
