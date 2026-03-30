@@ -1860,6 +1860,7 @@ export const api = {
         billing_status: string | null;
         eligible_to_file: boolean | null;
         block_reasons: string[];
+        last_error?: string | null;
         requested_amount: number | null;
         approved_amount: number | null;
         actual_payout_amount: number | null;

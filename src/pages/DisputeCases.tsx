@@ -118,6 +118,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   const operationalState = String(row.operational_state || '').toLowerCase();
   const operationalSummary = summarizeOperationalExplanation(row.operational_explanation);
   const blockReasons = Array.isArray(row.block_reasons) ? row.block_reasons : [];
+  const lastError = String(row.last_error || '').trim();
   const proofStatus = getProofStatus(row);
   const missingRequirements = getMissingRequirements(row);
   const manualReviewReason = getManualReviewReason(row);
@@ -152,6 +153,10 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
 
   if (blockReasons.length) {
     risks.push(...blockReasons.map(formatBlockReason));
+  }
+
+  if (lastError) {
+    risks.unshift(lastError);
   }
 
   if (proofStatus === 'filing_ready') {
@@ -261,7 +266,9 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'blocked',
       headline: 'Blocked before filing',
-      detail: blockReasons.length
+      detail: lastError
+        ? lastError
+        : blockReasons.length
         ? 'The gate has already identified issues that should be fixed before submission.'
         : 'This case is not currently eligible to file.',
       strengths: strengths.slice(0, 2),
@@ -1614,6 +1621,7 @@ export default function DisputeCases() {
                   { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.operational_explanation) || 'None recorded' },
                   { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Unavailable' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'None recorded' },
+                  { label: 'Last Filing Error', value: detailsRow.last_error || 'None recorded' },
                   { label: 'Missing Requirements', value: formatRequirementList(getMissingRequirements(detailsRow)) },
                   { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? formatDisputeReason(getManualReviewReason(detailsRow)) : 'None recorded' },
                   { label: 'Quarantine Reason', value: getQuarantineReason(detailsRow) || 'None recorded' },

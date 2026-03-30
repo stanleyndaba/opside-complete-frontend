@@ -191,6 +191,7 @@ function filingTruthDetail(row: Pick<Row, 'dispute_case_id' | 'provider_case_id'
   const filingStatus = String(row.filing_status || '').toLowerCase();
   if (!row.dispute_case_id) return 'Detected opportunity not yet promoted into a filed claim.';
   if (row.provider_case_id) return `Amazon reference ${row.provider_case_id}`;
+  if (row.last_error && blockedTruthStates.has(filingStatus)) return truthText(row.last_error);
   if (reasons.length > 0) return `Blocked: ${label(reasons[0])}`;
   if (row.last_error) return truthText(row.last_error);
   if (queueTruthStates.has(filingStatus)) return 'Waiting in the real filing queue.';
