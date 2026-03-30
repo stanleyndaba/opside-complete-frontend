@@ -2244,6 +2244,27 @@ export default function Recoveries() {
     if (metrics && typeof (metrics as any).pendingCount === 'number') return (metrics as any).pendingCount;
     return tabCounts.claimsCount;
   }, [amazonClaimCount, metrics, tabCounts.claimsCount]);
+  const monthlyPlanBenchmark = 99;
+  const primaryRecoveryValue = owedSummary.totalOwed > 0
+    ? owedSummary.totalOwed
+    : (recoveredTotal != null && recoveredTotal > 0 ? recoveredTotal : 0);
+  const recoveriesHeroLabel = owedSummary.totalOwed > 0
+    ? 'Open recovery value'
+    : recoveredTotal != null && recoveredTotal > 0
+      ? 'Paid back so far'
+      : 'Recovery activity';
+  const recoveriesHeroSupportingLabel = owedSummary.totalOwed > 0
+    ? `${owedSummary.openCount} ${owedSummary.openCount === 1 ? 'opportunity is' : 'opportunities are'} currently worth reviewing`
+    : recoveredTotal != null && recoveredTotal > 0
+      ? `${approvedClaims.length} ${approvedClaims.length === 1 ? 'case is' : 'cases are'} already tied to recovered cash`
+      : pipelineActiveCount > 0
+        ? `${pipelineActiveCount} ${pipelineActiveCount === 1 ? 'opportunity is' : 'opportunities are'} under watch`
+        : 'No live recoveries are showing yet';
+  const recoveriesPlanNote = owedSummary.totalOwed > 0
+    ? `${formatCurrencyWithSelection(owedSummary.totalOwed, recoveredCurrency)} in open value is about ${(owedSummary.totalOwed / monthlyPlanBenchmark).toFixed(1)}x a $99 monthly plan.`
+    : recoveredTotal != null && recoveredTotal > 0
+      ? 'One recovered payout already covers the monthly plan.'
+      : 'One supportable recovery can justify the monthly plan.';
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -2287,16 +2308,16 @@ export default function Recoveries() {
           <div className="relative w-full max-w-full px-8 pt-8 pb-24">
             {/* Header Section - Matrix Terminal Design */}
             <div className="border-b border-white/10 pb-8 mb-8 relative">
-              <div className="absolute -bottom-px left-0 w-24 h-px bg-emerald-500/50 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <div className="absolute -bottom-px left-0 w-24 h-px bg-white/20" />
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-[10px] font-sans font-bold text-emerald-500/50 tracking-tight uppercase">SYSTEM_BUFFER</span>
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <span className="text-[10px] font-sans font-bold text-white/35 tracking-tight uppercase">Recovery view</span>
+                    <div className="h-1.5 w-1.5 rounded-full bg-white/20" />
                   </div>
-                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Recovery Pipeline</h1>
+                  <h1 className="text-4xl font-light font-sans text-white mb-2 tracking-tight">Open Recoveries</h1>
                   <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight max-w-md leading-relaxed">
-                    Approved claims, pending payouts, reconciliations, and billed recoveries for this tenant.
+                    See what Margin found, what is already with Amazon, and what has already been paid back.
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-3">
@@ -2306,7 +2327,7 @@ export default function Recoveries() {
                       "h-11 px-6 font-sans font-bold text-[10px] uppercase tracking-tight transition-all border border-white/5",
                       selectedIds.size === 0 || submittingBulk
                         ? "text-white/20 bg-transparent"
-                        : "text-emerald-500 bg-emerald-500/5 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30"
+                        : "text-white bg-white/5 border-white/15 hover:bg-white/10 hover:border-white/20"
                     )}
                     disabled={selectedIds.size === 0 || submittingBulk}
                     onClick={async () => {
@@ -2324,11 +2345,11 @@ export default function Recoveries() {
                       setSubmittingBulk(false);
                     }}>
                     {submittingBulk ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-emerald-500" />
+                      <Loader2 className="h-4 w-4 animate-spin text-white" />
                     ) : (
                       <>
                         <Upload className="h-3.5 w-3.5 mr-2" />
-                        Execute Submission ({selectedIds.size} selected)
+                        File selected cases ({selectedIds.size} selected)
                       </>
                     )}
                   </Button>
@@ -2341,49 +2362,41 @@ export default function Recoveries() {
               <div className="flex items-end justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">RECOVERY_YIELD</span>
-                    {recoveredTotal != null && recoveredTotal > 0 && (
+                    <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">{recoveriesHeroLabel}</span>
+                    {(recoveredTotal != null && recoveredTotal > 0) || owedSummary.totalOwed > 0 ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             aria-label="About recovered value"
-                            className="w-3.5 h-3.5 rounded-full border border-white/10 flex items-center justify-center hover:border-emerald-500/30 transition-colors group">
-                            <span className="text-white/40 text-[8px] font-sans font-bold group-hover:text-emerald-500">i</span>
+                            className="w-3.5 h-3.5 rounded-full border border-white/10 flex items-center justify-center hover:border-white/20 transition-colors group">
+                            <span className="text-white/40 text-[8px] font-sans font-bold group-hover:text-white">i</span>
                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="bg-[#0c0c0c] border border-white/10 text-white font-sans font-bold text-[10px] rounded-lg shadow-2xl backdrop-blur-3xl uppercase tracking-tight">
-                          Recovered from approved/completed claims. {recoverySource && `Source: ${recoverySource}`}
+                          {owedSummary.totalOwed > 0
+                            ? `Value currently in play across open cases. ${recoverySource ? `Source: ${recoverySource}` : ''}`.trim()
+                            : `Recovered from approved/completed claims. ${recoverySource ? `Source: ${recoverySource}` : ''}`.trim()}
                         </TooltipContent>
                       </Tooltip>
                     )}
                   </div>
                   <div className="flex items-baseline gap-4">
                     <div className="text-6xl font-sans font-bold text-white tracking-tight shadow-emerald-500/10 [text-shadow:0_0_20px_rgba(255,255,255,0.05)]">
-                      {recoveredTotal != null && recoveredTotal > 0 ? (
-                        formatCurrencyWithSelection(recoveredTotal, recoveredCurrency)
-                      ) : (
-                        formatCurrencyWithSelection(0)
-                      )}
+                      {formatCurrencyWithSelection(primaryRecoveryValue, recoveredCurrency)}
                     </div>
-                    {recoveredTotal != null && recoveredTotal > 0 ? (
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-sans font-bold text-emerald-500 tracking-tight uppercase">PROCESSED</span>
-                        <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
-                          {amazonClaimCount ?? 0} NODES_FINALIZED
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-sans font-bold text-white/20 tracking-tight uppercase">
-                          {pipelineActiveCount > 0 ? 'PIPELINE_ACTIVE' : 'INITIALIZING'}
-                        </span>
-                        <span className="text-[10px] font-sans font-bold text-white/10 uppercase tracking-tight">
-                          {pipelineActiveCount > 0 ? `${pipelineActiveCount} ACTIVE_NODES` : 'NO_ACTIVE_RECOVERIES'}
-                        </span>
-                      </div>
-                    )}
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-sans font-bold text-white/55 tracking-tight uppercase">
+                        {owedSummary.totalOwed > 0 ? 'In play now' : recoveredTotal != null && recoveredTotal > 0 ? 'Already paid back' : 'Current watchlist'}
+                      </span>
+                      <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
+                        {recoveriesHeroSupportingLabel}
+                      </span>
+                    </div>
                   </div>
+                  <p className="mt-4 max-w-2xl text-[12px] font-sans leading-5 text-white/42">
+                    {recoveriesPlanNote}
+                  </p>
 
                   {/* Sync status message - Matrix Alert style */}
                   {(syncMessage || needsSync || syncTriggered) && (
@@ -2399,18 +2412,18 @@ export default function Recoveries() {
                         <div className="flex items-center gap-3">
                           {syncTriggered ? (
                             <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <div className="h-1.5 w-1.5 rounded-full bg-current animate-pulse shadow-[0_0_8px_rgba(current,0.5)]" />
-                          )}
-                          <span className="text-[10px] font-sans font-bold uppercase tracking-tight">
-                            {syncMessage || (needsSync ? 'SYNCHRONIZING_AMAZON_NODES..._UPDATE_PENDING' : '')}
-                          </span>
-                        </div>
-                        {activeSyncId && (
+                        ) : (
+                          <div className="h-1.5 w-1.5 rounded-full bg-current animate-pulse shadow-[0_0_8px_rgba(current,0.5)]" />
+                        )}
+                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight">
+                            {syncMessage || (needsSync ? 'We are refreshing your latest Amazon records.' : '')}
+                        </span>
+                      </div>
+                      {activeSyncId && (
                           <Link
                             to={`/sync?id=${activeSyncId}`}
                             className="text-[10px] font-sans font-bold uppercase tracking-tight hover:underline px-2 py-1 border border-current/20 rounded">
-                            VIEW_STREAM
+                            Open sync detail
                           </Link>
                         )}
                       </div>
@@ -2422,8 +2435,8 @@ export default function Recoveries() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="h-10 bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white font-sans font-bold text-[9px] uppercase tracking-tight rounded-lg px-4 gap-3 group transition-all">
                       <div className="flex items-center gap-2">
-                        <div className="h-1 w-1 rounded-full bg-emerald-500/50 group-hover:bg-emerald-500" />
-                        EVENT_MATRICES
+                        <div className="h-1 w-1 rounded-full bg-white/35 group-hover:bg-white" />
+                        Issue breakdown
                       </div>
                       <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/30 tracking-tighter group-hover:border-emerald-500/30 group-hover:text-emerald-500">
                         ({Object.values(categoryCounts).reduce((a, b) => a + b, 0)})
@@ -2433,7 +2446,7 @@ export default function Recoveries() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-80 bg-[#0c0c0c] border border-white/10 shadow-2xl backdrop-blur-3xl rounded-xl p-2 outline-none">
                     <div className="text-[9px] font-sans font-bold text-white/20 px-3 py-2 border-b border-white/5 mb-2 uppercase tracking-tight">
-                      AMAZON_FINANCIAL_SPECTRUM
+                      Detected issue types
                     </div>
                     <div className="max-h-80 overflow-y-auto custom-scrollbar">
                       {Object.entries(categoryCounts)
@@ -2457,7 +2470,7 @@ export default function Recoveries() {
             <div className="mb-10">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px flex-1 bg-white/5" />
-                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Pipeline_Stages</h2>
+                <h2 className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Work queues</h2>
                 <div className="h-px flex-1 bg-white/5" />
               </div>
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'claims' | 'matching' | 'cases')} className="w-full">
@@ -2466,7 +2479,7 @@ export default function Recoveries() {
                     value="claims"
                     className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
-                      Opportunity Queue
+                      Open opportunities
                       {tabCounts.claimsCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.claimsCount}
@@ -2479,7 +2492,7 @@ export default function Recoveries() {
                     value="matching"
                     className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
-                      Claims With Evidence
+                      Evidence-ready
                       {tabCounts.evidenceMatchingCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.evidenceMatchingCount}
@@ -2492,7 +2505,7 @@ export default function Recoveries() {
                     value="cases"
                     className="flex-1 relative px-6 text-[10px] font-sans font-bold text-white/40 bg-transparent rounded-lg border-0 shadow-none transition-all hover:text-white/60 data-[state=active]:text-emerald-500 data-[state=active]:bg-white/5 data-[state=active]:shadow-[0_0_20px_rgba(0,0,0,0.4)] uppercase tracking-tight group">
                     <div className="flex items-center justify-center gap-2">
-                      Dispute Claims
+                      Filed with Amazon
                       {tabCounts.disputeCasesCount > 0 && (
                         <span className="text-[8px] bg-white/5 px-1.5 py-0.5 rounded border border-white/5 text-white/20 group-data-[state=active]:text-emerald-500/50">
                           {tabCounts.disputeCasesCount}
@@ -2513,12 +2526,12 @@ export default function Recoveries() {
 
                       <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between">
                         <div>
-                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">PIPELINE_OPPORTUNITY_LEDGER</h3>
-                          <p className="text-[9px] font-sans font-bold text-white/20 mt-1 uppercase tracking-tight">Live queue of detections and claims moving toward submission and recovery</p>
+                          <h3 className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Open recovery queue</h3>
+                          <p className="text-[10px] font-sans leading-5 text-white/35 mt-1 max-w-xl">Each row shows money still worth reviewing, evidence strength, and the next best move.</p>
                         </div>
-                        <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-white/10 uppercase tracking-tight">
+                        <div className="flex items-center gap-1.5 font-sans font-bold text-[9px] text-white/20 uppercase tracking-tight">
                           <Eye className="w-3 h-3" />
-                          MONITORING_ACTIVE
+                          Live updates on
                         </div>
                       </div>
 
@@ -2529,7 +2542,7 @@ export default function Recoveries() {
                             <div className="relative group/search max-w-2xl">
                               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within/search:text-emerald-500 transition-colors" />
                               <Input
-                                placeholder="IDENTIFY_NODES (Claim ID, ASIN, SKU)..."
+                                placeholder="Search claim, order, SKU, ASIN, or store"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-12 h-14 bg-white/5 border-white/5 text-white font-sans font-bold text-[11px] placeholder:text-white/10 focus:border-emerald-500/30 focus:ring-emerald-500/10 rounded-2xl transition-all shadow-inner"
@@ -2539,10 +2552,10 @@ export default function Recoveries() {
                             {/* Temporal Accents (Quick Filters) */}
                             <div className="flex flex-wrap gap-2">
                               {[
-                                { label: 'LAST_30_DAYS', val: '30days' },
-                                { label: 'LAST_QUARTER', val: 'quarter' },
-                                { label: 'THIS_YEAR', val: 'year' },
-                                { label: 'MAX_HISTORICAL', val: 'all' }
+                                { label: 'Last 30 days', val: '30days' },
+                                { label: 'This quarter', val: 'quarter' },
+                                { label: 'This year', val: 'year' },
+                                { label: 'All time', val: 'all' }
                               ].map((opt) => (
                                 <Button
                                   key={opt.val}

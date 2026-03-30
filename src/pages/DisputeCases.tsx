@@ -866,16 +866,16 @@ export default function DisputeCases() {
   };
 
   const primarySummaryCards = useMemo(() => ([
-    { label: 'Cases', value: summary.total_cases },
-    { label: 'Ready', value: summary.ready_to_file_count },
-    { label: 'Payout Pending', value: summary.approved_pending_payout_count },
+    { label: 'Cases live', value: summary.total_cases },
+    { label: 'Ready to file', value: summary.ready_to_file_count },
+    { label: 'Payout waiting', value: summary.approved_pending_payout_count },
   ]), [summary]);
 
   const secondarySummaryCards = useMemo(() => ([
-    { label: 'Filed', value: summary.filed_count },
+    { label: 'Already filed', value: summary.filed_count },
     { label: 'Rejected', value: summary.rejected_count },
-    { label: 'Financially Verified', value: verifiedRecoveryCount },
-    { label: 'Billing', value: summary.billing_pending_count },
+    { label: 'Paid back', value: verifiedRecoveryCount },
+    { label: 'Billing pending', value: summary.billing_pending_count },
   ]), [summary, verifiedRecoveryCount]);
 
   const unlockOffer = useMemo(() => {
@@ -957,12 +957,12 @@ export default function DisputeCases() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Dispute Cases" midnight>
+      <PageLayout title="Filed With Amazon" midnight>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pt-10 pb-20">
             <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
               <CardContent className="p-8 space-y-3">
-                <h1 className="text-xl font-sans font-bold text-white tracking-tight">Dispute queue unavailable</h1>
+                <h1 className="text-xl font-sans font-bold text-white tracking-tight">Filed cases unavailable</h1>
                 <p className="text-sm text-white/50 font-sans">
                   A tenant workspace is required before dispute cases can be loaded.
                 </p>
@@ -975,7 +975,7 @@ export default function DisputeCases() {
   }
 
   return (
-    <PageLayout title="Dispute Cases" midnight>
+    <PageLayout title="Filed With Amazon" midnight>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -989,9 +989,9 @@ export default function DisputeCases() {
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Dispute Cases</h1>
+              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Filed With Amazon</h1>
               <p className="text-sm text-white/50 font-sans max-w-3xl">
-                View your dispute cases, current status, evidence, and next steps in one place.
+                Track what is already with Amazon, what has been approved, and what is still waiting for payout.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -1016,13 +1016,13 @@ export default function DisputeCases() {
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.02]"
             >
               <div className="min-w-0">
-                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Summary</p>
-                <p className="mt-2 text-xs font-sans text-white">Tap to view live dispute counts</p>
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case snapshot</p>
+                <p className="mt-2 text-xs font-sans text-white">Tap to view live counts across filing, payout follow-up, and verified payments.</p>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-left">
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Cases</p>
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Cases live</p>
                   <p className="mt-1 text-lg leading-none font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
                     {summary.total_cases}
                   </p>
@@ -1064,13 +1064,13 @@ export default function DisputeCases() {
                 >
                   <div className="space-y-2">
                     <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
-                      Claim filing
+                      Filing access
                     </p>
                     <h2 className="max-w-3xl text-2xl font-sans font-bold tracking-tight text-white md:text-[28px]">
-                      Start filing {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} in claims for $99
+                      Unlock filing for {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} across {unlockOffer.supportableClaimCount} supportable claims
                     </h2>
                     <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/30">
-                      You have {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to start filing every supportable case for your account.
+                      Margin already found {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to move every supportable case into filing for this account.
                     </p>
                     <p className="text-[12px] font-sans leading-5 text-white/30">
                       Charged as R1,699 at checkout. You keep 100% of recovered funds.
@@ -1085,7 +1085,7 @@ export default function DisputeCases() {
                       onClick={handleUnlockCheckout}
                       className="h-10 rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
                     >
-                      Start Filing All Claims for $99
+                      Unlock filing for $99
                     </Button>
                   ) : (
                     <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-white/78">
@@ -1109,7 +1109,7 @@ export default function DisputeCases() {
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
                       <p className="text-[11px] font-sans leading-5 text-white/30">
-                        We found real claim value for your account.
+                        Margin has already found supportable claim value for this account.
                       </p>
 
                       <div className="flex flex-wrap gap-2">
@@ -1132,7 +1132,7 @@ export default function DisputeCases() {
                             onClick={handleUnlockCheckout}
                             className="h-11 w-full rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
                           >
-                            Start Filing All Claims for $99
+                            Unlock filing for $99
                           </Button>
                           <p className="text-[12px] font-sans leading-5 text-white/30">
                             Charged as R1,699 at checkout. You keep 100% of recovered funds.
@@ -1339,7 +1339,7 @@ export default function DisputeCases() {
                   <table className="w-full min-w-[1440px]">
                     <thead className="bg-white/[0.02] border-b border-white/5">
                       <tr className="text-left">
-                        {['Case', 'Lifecycle', 'Money', 'Evidence', 'Filing Posture', 'Updated', 'Actions'].map((header) => (
+                        {['Case', 'Case status', 'Money at stake', 'Evidence', 'Next best move', 'Updated', 'Actions'].map((header) => (
                           <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
                             {header}
                           </th>
@@ -1353,7 +1353,6 @@ export default function DisputeCases() {
                         const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
                         const posture = deriveFilingPosture(row, financialSummary);
                         const decisionExplanation = summarizeExplanationPayload(row.explanation_payload);
-                        const operationalExplanation = summarizeOperationalExplanation(row.operational_explanation);
                         const actionButton =
                           filingValue === 'pending_approval'
                             ? { label: 'Approve', mode: 'approve' as const }
@@ -1387,12 +1386,12 @@ export default function DisputeCases() {
                               <div className="space-y-1 min-w-[220px] text-[12px] font-sans text-white/70">
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Requested</span><span>{formatMoney(row.requested_amount, row.currency)}</span></div>
                                 <div className="flex justify-between gap-4"><span className="text-white/35">Approved</span><span>{formatMoney(row.approved_amount, row.currency)}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-white/35">Paid (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
-                                <div className="pt-1">
-                                  <Badge variant="outline" className={cn('border', financialStatusTone(financialSummary?.payout_status))}>
-                                    Financial Status: {financialStatusLabel(financialSummary?.payout_status)}
-                                  </Badge>
-                                </div>
+                                  <div className="flex justify-between gap-4"><span className="text-white/35">Paid back (verified)</span><span>{formatMoney(financialSummary?.verified_paid_amount, row.currency)}</span></div>
+                                  <div className="pt-1">
+                                    <Badge variant="outline" className={cn('border', financialStatusTone(financialSummary?.payout_status))}>
+                                    Payout status: {financialStatusLabel(financialSummary?.payout_status)}
+                                    </Badge>
+                                  </div>
                                 <div className="text-[10px] text-white/40">{financialStatusDetail(financialSummary)}</div>
                               </div>
                             </td>
@@ -1413,9 +1412,9 @@ export default function DisputeCases() {
                                   </Badge>
                                 ) : null}
                                 <div className="text-[11px] text-white/50 font-sans space-y-1">
-                                  <div>Matched Docs: {row.matched_document_count}</div>
+                                  <div>Documents linked: {row.matched_document_count}</div>
                                   {getMissingRequirements(row).length ? (
-                                    <div>Missing: {formatRequirementList(getMissingRequirements(row), 2)}</div>
+                                    <div>Still needed: {formatRequirementList(getMissingRequirements(row), 2)}</div>
                                   ) : null}
                                 </div>
                               </div>
@@ -1433,31 +1432,21 @@ export default function DisputeCases() {
                                       Filing: {formatAutonomyLabel(row.filing_strategy)}
                                     </Badge>
                                   ) : null}
-                                  {row.operational_state ? (
-                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-amber-100/80">
-                                      Runtime: {formatAutonomyLabel(row.operational_state)}
-                                    </Badge>
-                                  ) : null}
                                 </div>
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
                                 {decisionExplanation ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/45">
-                                    Decision: {decisionExplanation}
-                                  </p>
-                                ) : null}
-                                {operationalExplanation ? (
-                                  <p className="text-[11px] font-sans leading-5 text-amber-100/55">
-                                    Runtime: {operationalExplanation}
+                                    Why this case is in this state: {decisionExplanation}
                                   </p>
                                 ) : null}
                                 {getManualReviewReason(row) ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/38">
-                                    Review reason: {formatDisputeReason(getManualReviewReason(row))}
+                                    Needs review because: {formatDisputeReason(getManualReviewReason(row))}
                                   </p>
                                 ) : null}
                                 {getQuarantineReason(row) ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/38">
-                                    Quarantine: {getQuarantineReason(row)}
+                                    Held because: {getQuarantineReason(row)}
                                   </p>
                                 ) : null}
                                 {posture.strengths.length ? (

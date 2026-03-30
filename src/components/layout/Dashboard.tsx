@@ -1068,9 +1068,11 @@ export function Dashboard() {
   const estimatedValueTotal = dashboardSummary?.estimated_value_total ?? 0;
   const filedValueTotal = dashboardSummary?.filed_value_total ?? 0;
   const approvedValueTotal = dashboardSummary?.approved_value_total ?? 0;
-  const billedRevenueTotal = dashboardSummary?.billed_revenue_total ?? 0;
   const activeBlockers = dashboardSummary?.blockers ?? [];
   const primaryBlocker = activeBlockers[0] || null;
+  const monthlyPlanBenchmark = 99;
+  const hasLiveRecoveryValue = estimatedValueTotal > 0 || filedValueTotal > 0 || approvedValueTotal > 0 || recoveredCashTotal > 0;
+  const planCoverageMultiple = estimatedValueTotal > 0 ? estimatedValueTotal / monthlyPlanBenchmark : 0;
   const formattedLastUpdated = useMemo(() => {
     if (!dashboardSummary?.last_updated_at) return 'Unavailable';
     const timestamp = new Date(dashboardSummary.last_updated_at);
@@ -1128,21 +1130,23 @@ export function Dashboard() {
     const recoveredCount = dashboardSummary?.recovered_count ?? 0;
     return [
       {
-        label: 'Last Payout Date',
+        label: 'Last payout',
         value: formattedLastPayoutDate,
         detail: payoutCount > 0
           ? `${payoutCount} payout event${payoutCount === 1 ? '' : 's'} recorded`
           : 'Waiting for the first reimbursement event'
       },
       {
-        label: 'Verified Reimbursements',
-        value: recoveredCount > 0 ? `${recoveredCount} reconciled` : 'No reimbursements yet',
-        detail: recoveredCashTotal > 0
-          ? `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} verified recovered`
+        label: 'Paid back so far',
+        value: recoveredCashTotal > 0
+          ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
+          : 'No payout yet',
+        detail: recoveredCount > 0
+          ? `${pluralize(recoveredCount, 'reconciled case')} tied to confirmed payout activity`
           : 'No verified reimbursement recorded yet'
       },
       {
-        label: 'Last Sync Result',
+        label: 'Latest account refresh',
         value: lastSyncResult.value,
         detail: lastSyncResult.detail
       }
@@ -1151,31 +1155,38 @@ export function Dashboard() {
   const overviewHeadline = useMemo(() => {
     if (!dashboardSummary) return 'Building your current recovery position.';
     if (estimatedValueTotal > 0) {
-      return `${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} is currently in scope for review.`;
+      return `Margin has found ${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} across ${pluralize(detectedOpportunitiesCount, 'recoverable issue')}.`;
     }
     if (recoveredCashTotal > 0) {
-      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has already been verified as recovered cash.`;
+      return `Margin has already verified ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} back into this account.`;
     }
-    return 'No recoverable value is in scope yet.';
+    return 'Margin is ready to watch this account for missed reimbursements.';
   }, [dashboardSummary, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
   const overviewNarrative = useMemo(() => {
     if (!dashboardSummary) {
-      return 'Margin is assembling your current recovery picture from detected issues, filed cases, reimbursements, and fees already billed.';
+      return 'Margin is assembling your current recovery picture from detected issues, filed cases, reimbursements, and payout events.';
     }
     if (estimatedValueTotal > 0 && recoveredCashTotal > 0) {
-      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has already been confirmed as recovered. The remaining value is still moving through review, filing, approval, and payout confirmation.`;
+      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} is already confirmed as paid back. The remaining value is still moving through review, filing, approval, and payout confirmation.`;
     }
     if (estimatedValueTotal > 0) {
-      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified. None of this is confirmed cash yet; it is the value currently worth reviewing and filing.`;
+      if (filedClaimsCount > 0 || approvedClaimsCount > 0) {
+        const movementNotes = [
+          filedClaimsCount > 0 ? `${pluralize(filedClaimsCount, 'case')} already filed with Amazon` : null,
+          approvedClaimsCount > 0 ? `${pluralize(approvedClaimsCount, 'case')} approved and waiting for payout` : null
+        ].filter(Boolean).join('. ');
+        return `${movementNotes}. Margin is still watching the remaining value so nothing supportable gets missed.`;
+      }
+      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} are visible right now. Margin can now help move them from evidence into filing.`;
     }
     if (recoveredCashTotal > 0) {
-      return `Recoveries have already been confirmed for this account, but there is no additional open value showing right now.`;
+      return 'Recovered cash is already showing for this account, and Margin will keep watching for the next supportable issue.';
     }
-    return 'No detected issues, filed cases, or approved payouts are currently adding recovery pressure for this account.';
-  }, [dashboardSummary, detectedOpportunitiesCount, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
+    return 'No live Amazon activity is showing yet. Connect more data or load the demo pack to see how Margin flags inbound shortages, lost units, and transfer losses.';
+  }, [approvedClaimsCount, dashboardSummary, detectedOpportunitiesCount, estimatedValueTotal, filedClaimsCount, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
   const overviewStatusRows = useMemo(() => ([
     {
-      label: 'Verified recovered',
+      label: 'Paid back so far',
       value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
       detail: recoveredCashTotal > 0
         ? `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')} now tied to confirmed payout events`
@@ -1189,7 +1200,7 @@ export function Dashboard() {
         : 'No approved cases are currently waiting for payout'
     },
     {
-      label: 'Filed and in motion',
+      label: 'Already filed with Amazon',
       value: formatCurrencyWithSelection(filedValueTotal, recoveredCurrency),
       detail: filedClaimsCount > 0
         ? `${pluralize(filedClaimsCount, 'filed case')} currently in review after filing`
@@ -1214,51 +1225,58 @@ export function Dashboard() {
   ]);
   const overviewMetricRows = useMemo(() => ([
     {
-      label: 'Recoverable value identified',
+      label: 'Open value worth review',
       value: formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency),
       detail: `${pluralize(detectedOpportunitiesCount, 'opportunity')} currently detected`
     },
     {
-      label: 'Verified recovered cash',
+      label: 'Paid back so far',
       value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
       detail: `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')}`
     },
     {
-      label: 'Approved, not yet paid',
-      value: formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency),
-      detail: `${pluralize(approvedClaimsCount, 'approved case')}`
+      label: 'Monthly plan benchmark',
+      value: '$99',
+      detail: estimatedValueTotal > 0
+        ? `Current open value is about ${planCoverageMultiple.toFixed(1)}x the monthly plan.`
+        : recoveredCashTotal > 0
+          ? 'One verified recovery already covers the monthly plan.'
+          : 'One supportable case can justify the monthly plan.'
     },
     {
-      label: 'Verified billed revenue',
-      value: formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency),
-      detail: `${pluralize(dashboardSummary?.billed_count ?? 0, 'billed case')}`
+      label: 'Already filed with Amazon',
+      value: formatCurrencyWithSelection(filedValueTotal, recoveredCurrency),
+      detail: filedClaimsCount > 0
+        ? `${pluralize(filedClaimsCount, 'case')} already in motion`
+        : 'Nothing has been filed yet'
     }
   ]), [
     approvedClaimsCount,
     approvedValueTotal,
-    billedRevenueTotal,
-    dashboardSummary?.billed_count,
     dashboardSummary?.recovered_count,
     detectedOpportunitiesCount,
     estimatedValueTotal,
+    filedClaimsCount,
+    filedValueTotal,
     formatCurrencyWithSelection,
+    planCoverageMultiple,
     recoveredCashTotal,
     recoveredCurrency
   ]);
   const overviewPressureNote = useMemo(() => {
     if (primaryBlocker) {
-      return `${primaryBlocker.label} is the main constraint right now across ${pluralize(primaryBlocker.count, 'case')}.`;
+      return `${primaryBlocker.label} is the main thing holding money back right now across ${pluralize(primaryBlocker.count, 'case')}.`;
     }
     if (approvedClaimsCount > 0) {
-      return `${pluralize(approvedClaimsCount, 'approved case')} are waiting for payout confirmation rather than additional filing work.`;
+      return `${pluralize(approvedClaimsCount, 'approved case')} are now just waiting for payout confirmation.`;
     }
     if (filedClaimsCount > 0) {
-      return `${pluralize(filedClaimsCount, 'filed case')} are already in motion and waiting on Amazon review or payout confirmation.`;
+      return `${pluralize(filedClaimsCount, 'filed case')} are already with Amazon and waiting on review or payout confirmation.`;
     }
     if (detectedOpportunitiesCount > 0) {
-      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified and can now be worked through evidence and filing.`;
+      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} can move into evidence review and filing next.`;
     }
-    return 'No active recovery pressure is being raised by the current account summary.';
+    return 'No live opportunities are showing yet. Upload the demo pack or keep syncing so Margin can prove the workflow with real cases.';
   }, [approvedClaimsCount, detectedOpportunitiesCount, filedClaimsCount, primaryBlocker]);
 
   if (!activeSlug) {
@@ -1352,7 +1370,7 @@ export function Dashboard() {
                         <div className="grid gap-10 xl:grid-cols-[1.45fr_0.95fr]">
                           <div>
                             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
-                              Recovery Overview
+                              Recovery value today
                             </div>
                             <h2 className="mt-4 max-w-4xl text-4xl font-sans font-medium tracking-tight text-white xl:text-5xl">
                               {overviewHeadline}
@@ -1371,8 +1389,16 @@ export function Dashboard() {
                                 onClick={() => navigate(tenantRoute(activeSlug, '/dispute-cases'))}
                                 className="rounded-full border border-white/12 bg-transparent px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/50 transition-colors hover:border-white/20 hover:text-white/78"
                               >
-                                Review Filing List
+                                Review cases in motion
                               </button>
+                              {!hasLiveRecoveryValue ? (
+                                <button
+                                  onClick={() => navigate(tenantRoute(activeSlug, '/data-upload'))}
+                                  className="rounded-full border border-white/12 bg-transparent px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/50 transition-colors hover:border-white/20 hover:text-white/78"
+                                >
+                                  Load demo data
+                                </button>
+                              ) : null}
                             </div>
                           </div>
 
@@ -1428,10 +1454,10 @@ export function Dashboard() {
                       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
                         <div className="border-b border-white/5 px-5 py-4">
                           <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                            Account snapshot
+                            Account activity
                           </div>
                           <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                            Your latest payout activity, reimbursements, and account refresh status.
+                            Your latest payout activity, paid-back cash, and account refresh status.
                           </p>
                         </div>
                         <div className="divide-y divide-white/5">
@@ -1458,10 +1484,10 @@ export function Dashboard() {
                       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
                         <div className="border-b border-white/5 px-5 py-4">
                           <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                            Recovery notes
+                            What happens next
                           </div>
                           <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                            A quick read of what has been found, filed, approved, and already billed.
+                            A quick read of what has been found, what is already filed, and what is still waiting on Amazon.
                           </p>
                         </div>
                         <div className="divide-y divide-white/5 px-5 py-4">
@@ -1471,7 +1497,7 @@ export function Dashboard() {
                                 Open opportunities
                               </div>
                               <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                {pluralize(detectedOpportunitiesCount, 'opportunity')} are currently visible in your account.
+                                {pluralize(detectedOpportunitiesCount, 'opportunity')} are currently visible and worth reviewing.
                               </p>
                             </div>
                             <div className="text-right text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
@@ -1481,10 +1507,10 @@ export function Dashboard() {
                           <div className="flex items-start justify-between gap-3 py-4">
                             <div>
                               <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                Filed value
+                                Already filed
                               </div>
                               <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                Value already filed and now waiting on Amazon review or payout confirmation.
+                                Value already in Amazon review or waiting for payout confirmation.
                               </p>
                             </div>
                             <div className="text-right text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
