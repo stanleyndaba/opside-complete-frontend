@@ -266,10 +266,10 @@ export function NotificationBell({
       <HoverCardContent
         align="end"
         sideOffset={12}
-        className="z-50 flex max-h-[520px] w-[392px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] p-0 shadow-3xl backdrop-blur-3xl">
+        className="z-50 flex max-h-[520px] w-[428px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] p-0 shadow-3xl backdrop-blur-3xl">
         <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0 flex-1 pr-4">
               <h3 className="text-[11px] font-sans font-bold uppercase tracking-tight text-white">
                 Updates
               </h3>
@@ -277,7 +277,7 @@ export function NotificationBell({
                 Recent activity across your Amazon account and recoveries.
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex shrink-0 items-center gap-3">
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
@@ -285,7 +285,7 @@ export function NotificationBell({
                   Mark all read
                 </button>
               )}
-              <div className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/72">
+              <div className="inline-flex min-w-[88px] items-center justify-center whitespace-nowrap rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/72">
                 {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
               </div>
             </div>

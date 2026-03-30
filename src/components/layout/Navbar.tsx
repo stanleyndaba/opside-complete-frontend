@@ -30,6 +30,17 @@ interface QuickSearchResult {
   path: string;
 }
 
+const toTitleCase = (value?: string | null) => {
+  if (!value) return '';
+  return value
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 export function Navbar({
   className,
   sidebarCollapsed = false,
@@ -175,14 +186,31 @@ export function Navbar({
           ? 'Not connected'
           : 'Unknown';
 
-  const amazonStatusHeaderLabel =
+  const amazonConnectionHeadline =
     isProfileLoading || !userProfile?.amazon_status
-      ? 'Checking Amazon Status'
+      ? 'Checking Amazon connection'
       : userProfile.amazon_status === 'connected'
-        ? 'Amazon Connected'
+        ? 'Amazon connected'
         : userProfile.amazon_status === 'not_connected'
-          ? 'Amazon Not Connected'
-          : 'Amazon Status Unknown';
+          ? 'Amazon not connected'
+          : 'Amazon status unavailable';
+
+  const accountDisplayName =
+    userProfile?.name || userProfile?.company_name || userProfile?.email || 'My Account';
+
+  const accountEmail = userProfile?.email || (isProfileLoading ? 'Loading...' : 'No email available');
+
+  const accountRoleLabel =
+    userProfile?.role
+      ? toTitleCase(userProfile.role)
+      : isProfileLoading
+        ? 'Loading...'
+        : 'Member';
+
+  const memberSinceLabel =
+    userProfile?.created_at
+      ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+      : (isProfileLoading ? 'Loading...' : '—');
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
@@ -602,53 +630,116 @@ export function Navbar({
                   <ChevronDown className="h-3 w-3 text-white/20 group-hover/account:text-emerald-500 transition-colors" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={12} className="w-80 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
-                {/* Connection Status Header */}
+              <DropdownMenuContent align="end" sideOffset={12} className="w-[360px] bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl p-0 overflow-hidden mt-0 backdrop-blur-3xl">
                 <div className="px-6 py-5 bg-white/[0.01] border-b border-white/5">
-                  <h3 className="text-[12px] font-sans font-bold text-white uppercase tracking-tight">{userProfile?.name || userProfile?.company_name || userProfile?.email || 'My Account'}</h3>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="relative flex h-1.5 w-1.5">
-                      <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", userProfile?.amazon_status === 'connected' ? "bg-emerald-400" : userProfile?.amazon_status === 'not_connected' ? "bg-amber-400" : "bg-white/20")}></span>
-                      <span className={cn("relative inline-flex rounded-full h-1.5 w-1.5", userProfile?.amazon_status === 'connected' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : userProfile?.amazon_status === 'not_connected' ? "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" : "bg-white/40 shadow-[0_0_8px_rgba(255,255,255,0.15)]")}></span>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <h3 className="text-[13px] font-sans font-semibold text-white tracking-tight truncate">
+                        {accountDisplayName}
+                      </h3>
+                      <p className="mt-1 text-[11px] font-sans text-white/42 truncate">
+                        {accountEmail}
+                      </p>
                     </div>
-                    <p className={cn("text-[10px] font-sans font-bold uppercase tracking-tight", userProfile?.amazon_status === 'connected' ? "text-emerald-500/50" : userProfile?.amazon_status === 'not_connected' ? "text-amber-500/50" : "text-white/40")}>{amazonStatusHeaderLabel}</p>
+                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/68">
+                      {accountRoleLabel}
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center gap-4 text-[10px] font-sans uppercase tracking-tight text-white/34">
+                    <span>Member since {memberSinceLabel}</span>
+                    <span className="h-1 w-1 rounded-full bg-white/14" />
+                    <span>{connectedPlatformsCount} source{connectedPlatformsCount === 1 ? '' : 's'} connected</span>
                   </div>
                 </div>
 
-                <div className="p-6 space-y-6">
-                  {/* Compact Data Grid */}
-                  <div className="grid grid-cols-1 gap-y-4">
-                    {[
-                      { label: 'User ID', value: userProfile?.id ? userProfile.id.substring(0, 12) + '...' : (isProfileLoading ? 'Loading...' : 'Not available') },
-                      { label: 'Email', value: userProfile?.email || (isProfileLoading ? 'Loading...' : 'Not available') },
-                      { label: 'Name', value: userProfile?.name || userProfile?.company_name || (isProfileLoading ? 'Loading...' : 'Not set') },
-                      { label: 'Workspace Role', value: userProfile?.role || (isProfileLoading ? 'Loading...' : 'Not available') },
-                      { label: 'Amazon Seller ID', value: userProfile?.amazon_seller_id || (isProfileLoading ? 'Loading...' : 'Not connected') },
-                      { label: 'Amazon Account', value: userProfile?.amazon_display_name || (isProfileLoading ? 'Loading...' : 'Not available') },
-                      { label: 'Amazon Status', value: amazonStatusLabel },
-                      { label: 'Member Since', value: userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : (isProfileLoading ? 'Loading...' : '—') }
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between gap-4 group/item">
-                        <span className="text-[10px] font-sans font-bold text-white/20 group-hover/item:text-white/40 transition-colors uppercase tracking-tight shrink-0">
-                          {item.label}
-                        </span>
-                        <span className={cn(
-                          "text-[10px] font-sans font-bold transition-colors text-right truncate uppercase tracking-tight",
-                          !userProfile || item.value === 'Not available' || item.value === 'Not set' || item.value === 'Not connected' || item.value === 'Loading...' ? "text-emerald-500/30" : "text-white/60 group-hover/item:text-white"
-                        )}>
-                          {item.value}
-                        </span>
+                <div className="p-6 space-y-5">
+                  <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-white/34">
+                          Amazon connection
+                        </div>
+                        <div className="mt-2 text-[15px] font-sans font-medium tracking-tight text-white">
+                          {amazonConnectionHeadline}
+                        </div>
+                        <p className="mt-2 text-[11px] font-sans leading-5 text-white/48">
+                          {userProfile?.amazon_connected
+                            ? (userProfile?.amazon_display_name || 'Your Amazon seller account is connected and ready.')
+                            : 'Connect Amazon so Margin can keep pulling your latest account records.'}
+                        </p>
                       </div>
-                    ))}
+                      <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
+                        {amazonStatusLabel}
+                      </div>
+                    </div>
+                    {userProfile?.amazon_connected && userProfile?.amazon_seller_id ? (
+                      <div className="mt-4 border-t border-white/6 pt-3">
+                        <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-white/30">
+                          Seller ID
+                        </div>
+                        <div className="mt-1 text-[11px] font-sans text-white/62 truncate">
+                          {userProfile.amazon_seller_id}
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
 
-                  {/* Sign Out Action - Compact */}
-                  <div className="pt-5 border-t border-white/5 mt-2">
+                  <div className="space-y-2">
+                    {[
+                      {
+                        label: 'Account settings',
+                        detail: 'Profile, workspace, and account preferences',
+                        icon: Shield,
+                        action: () => navigate(tenantRoute(activeTenantSlug, '/settings')),
+                      },
+                      {
+                        label: 'Integrations',
+                        detail: 'Manage Amazon, Gmail, and other connected sources',
+                        icon: Plug,
+                        action: () => navigate(tenantRoute(activeTenantSlug, '/integrations-hub')),
+                      },
+                      {
+                        label: 'Updates',
+                        detail: 'See your recent account activity and notices',
+                        icon: Bell,
+                        action: () => navigate(tenantRoute(activeTenantSlug, '/notifications')),
+                      }
+                    ].map((item) => {
+                      const ItemIcon = item.icon;
+                      return (
+                        <DropdownMenuItem
+                          key={item.label}
+                          onSelect={(event) => {
+                            event.preventDefault();
+                            item.action();
+                          }}
+                          className="rounded-xl border border-transparent bg-transparent px-4 py-3 focus:bg-white/[0.04] focus:text-white cursor-pointer"
+                        >
+                          <div className="flex w-full items-start gap-3">
+                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03]">
+                              <ItemIcon className="h-4 w-4 text-white/42" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-[11px] font-sans font-medium tracking-tight text-white">
+                                {item.label}
+                              </div>
+                              <div className="mt-1 text-[10px] font-sans leading-4 text-white/42">
+                                {item.detail}
+                              </div>
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </div>
+
+                  <div className="pt-2 border-t border-white/5">
                     <button
                       onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between text-[10px] font-sans font-bold text-white/20 hover:text-rose-500 transition-all group/logout uppercase tracking-tight">
+                      className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-[11px] font-sans font-medium text-white/52 hover:bg-white/[0.03] hover:text-white transition-colors tracking-tight"
+                    >
                       <span>Sign out</span>
-                      <LogOut className="h-4 w-4 group-hover/logout:translate-x-1 transition-transform opacity-20 group-hover/logout:opacity-100" />
+                      <LogOut className="h-4 w-4 opacity-55" />
                     </button>
                   </div>
                 </div>

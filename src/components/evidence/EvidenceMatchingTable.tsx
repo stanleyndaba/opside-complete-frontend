@@ -322,13 +322,13 @@ export function EvidenceMatchingTable() {
     action?: React.ReactNode
   ) => (
     <div className="rounded-2xl border border-white/10 bg-[#111111]/90 px-8 py-16 text-center backdrop-blur-xl">
-      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/44">
         {eyebrow}
       </div>
       <h3 className="mt-4 text-lg font-sans font-medium tracking-tight text-white">
         {title}
       </h3>
-      <p className="mx-auto mt-3 max-w-md text-[11px] font-sans leading-relaxed text-white/38">
+      <p className="mx-auto mt-3 max-w-md text-[11px] font-sans leading-relaxed text-white/54">
         {description}
       </p>
       {action ? <div className="mt-8 flex justify-center">{action}</div> : null}
@@ -355,7 +355,7 @@ export function EvidenceMatchingTable() {
                 <div className="text-[12px] font-sans font-medium tracking-tight text-white">
                   {getMatchTypeLabel(match.match_type)}
                 </div>
-                <div className="mt-2 text-[10px] font-sans uppercase tracking-tight text-white/26">
+                <div className="mt-2 text-[10px] font-sans uppercase tracking-tight text-white/44">
                   {getActionLabel(match.action_taken)}
                 </div>
                 {match.created_at ? (
@@ -414,9 +414,9 @@ export function EvidenceMatchingTable() {
   if (loading && matchingResults.length === 0) {
     return (
       <div className="bg-[#111111]/90 border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
-        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">Evidence queue</div>
+        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/44">Evidence queue</div>
         <p className="mt-4 text-lg font-sans font-medium tracking-tight text-white">Loading current evidence matches.</p>
-        <p className="mt-3 text-[11px] font-sans leading-relaxed text-white/34">Please wait while Margin refreshes the current review queue.</p>
+        <p className="mt-3 text-[11px] font-sans leading-relaxed text-white/52">Please wait while Margin refreshes the current review queue.</p>
       </div>
     );
   }
@@ -440,11 +440,11 @@ export function EvidenceMatchingTable() {
       <div className="overflow-hidden rounded-2xl bg-[#111111]/90 backdrop-blur-xl">
         <div className="flex flex-col gap-6 border-b border-white/5 px-6 py-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">Evidence queue</div>
+            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/56">Evidence queue</div>
             <h2 className="mt-3 text-2xl font-sans font-medium tracking-tight text-white">
               Review the document matches that will support filing.
             </h2>
-            <p className="mt-3 text-[11px] font-sans leading-relaxed text-white/52">
+            <p className="mt-3 text-[11px] font-sans leading-relaxed text-white/62">
               {refreshing
                 ? 'Refreshing the current evidence queue.'
                 : matchingResults.length > 0
@@ -458,8 +458,8 @@ export function EvidenceMatchingTable() {
             className={cn(
               "h-11 px-5 font-sans text-[10px] font-medium uppercase tracking-tight transition-colors rounded-xl border border-white/10",
               refreshing
-                ? "bg-white/5 text-white/40"
-                : "bg-white/[0.03] text-white/72 hover:bg-white/[0.06] hover:border-white/20"
+                ? "bg-white/5 text-white/56"
+                : "bg-white/[0.03] text-white/82 hover:bg-white/[0.06] hover:border-white/20"
             )}
           >
             {refreshing ? 'Refreshing...' : 'Refresh matching'}
@@ -474,9 +474,9 @@ export function EvidenceMatchingTable() {
             { label: 'All matches', value: matchingResults.length, detail: 'Current queue total' }
           ].map((item) => (
             <div key={item.label} className="bg-[#0d0d0d] px-6 py-5">
-              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/40">{item.label}</div>
+              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/54">{item.label}</div>
               <div className="mt-3 text-[22px] font-sans font-medium tracking-tight text-white">{item.value}</div>
-              <div className="mt-2 text-[10px] font-sans leading-relaxed text-white/48">{item.detail}</div>
+              <div className="mt-2 text-[10px] font-sans leading-relaxed text-white/60">{item.detail}</div>
             </div>
           ))}
         </div>
@@ -487,38 +487,38 @@ export function EvidenceMatchingTable() {
         <TabsList className="mb-6 grid h-auto grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-2 backdrop-blur-xl lg:grid-cols-4">
           <TabsTrigger
             value="smart-prompts"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/54 shadow-none transition-colors hover:text-white/78 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/66 shadow-none transition-colors hover:text-white/86 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>Pending review</span>
-              <span className="text-[9px] text-white/58">{smartPrompts.length}</span>
+              <span className="text-[9px] text-white/68">{smartPrompts.length}</span>
             </div>
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/54 shadow-none transition-colors hover:text-white/78 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/66 shadow-none transition-colors hover:text-white/86 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>Submitted</span>
-              <span className="text-[9px] text-white/58">{autoSubmitted.length}</span>
+              <span className="text-[9px] text-white/68">{autoSubmitted.length}</span>
             </div>
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/54 shadow-none transition-colors hover:text-white/78 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/66 shadow-none transition-colors hover:text-white/86 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>Held</span>
-              <span className="text-[9px] text-white/58">{heldForReview.length}</span>
+              <span className="text-[9px] text-white/68">{heldForReview.length}</span>
             </div>
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/54 shadow-none transition-colors hover:text-white/78 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/66 shadow-none transition-colors hover:text-white/86 data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>All matches</span>
-              <span className="text-[9px] text-white/58">{matchingResults.length}</span>
+              <span className="text-[9px] text-white/68">{matchingResults.length}</span>
             </div>
           </TabsTrigger>
         </TabsList>

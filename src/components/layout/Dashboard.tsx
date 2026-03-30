@@ -1334,7 +1334,7 @@ export function Dashboard() {
               </div>
 
               {activeTab === 'overview' ? (
-                <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#070707] text-white">
+                <div className="relative overflow-hidden rounded-[28px] bg-[#070707] text-white">
                   <div
                     className="pointer-events-none absolute inset-0 opacity-[0.03]"
                     style={{

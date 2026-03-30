@@ -473,6 +473,13 @@ export function Sidebar({
         "mt-auto border-t border-border py-3",
         isCollapsed ? "px-2 flex justify-center" : ""
       )}>
+        {(() => {
+          const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
+          const updatesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/notifications'));
+          const notesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/whats-new'));
+          const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
+
+          return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -486,19 +493,49 @@ export function Sidebar({
               {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-56 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <LifeBuoy className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
-              <span>Report a problem</span>
+              className={cn(
+                "group/more-item flex items-center gap-3 px-3 py-2.5 cursor-pointer rounded-lg font-sans transition-colors",
+                "text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
+                helpActive && "bg-white text-black"
+              )}>
+              <LifeBuoy
+                className={cn(
+                  "h-4 w-4 shrink-0 transition-colors",
+                  helpActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                )}
+                strokeWidth={1.5}
+              />
+              <div className="min-w-0">
+                <div className="uppercase tracking-tight">Report a problem</div>
+                <div className={cn(
+                  "mt-0.5 text-[10px] font-sans tracking-tight normal-case",
+                  helpActive ? "text-black/60" : "text-foreground/30 group-data-[highlighted]/more-item:text-black/60"
+                )}>
+                  5 minute response
+                </div>
+              </div>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
-              className="flex items-center justify-between px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className={cn(
+                "group/more-item flex items-center justify-between px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
+                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
+                updatesActive && "bg-white text-black"
+              )}>
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <Mail className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
+                  <Mail
+                    className={cn(
+                      "h-4 w-4 transition-colors",
+                      updatesActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                    )}
+                    strokeWidth={1.5}
+                  />
                   <div className={cn(
                     "absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full",
                     unreadCount > 0 ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-white/10"
@@ -520,8 +557,19 @@ export function Sidebar({
             */}
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <Sparkles className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
+              className={cn(
+                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
+                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
+                notesActive && "bg-white text-black"
+              )}>
+              <Sparkles
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  notesActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                )}
+                strokeWidth={1.5}
+              />
               <span>Patch_Notes</span>
             </DropdownMenuItem>
 
@@ -566,8 +614,19 @@ export function Sidebar({
             </DropdownMenuItem> */}
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
-              <Settings2 className="h-4 w-4 text-foreground/20" strokeWidth={1.5} />
+              className={cn(
+                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
+                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
+                settingsActive && "bg-white text-black"
+              )}>
+              <Settings2
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  settingsActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                )}
+                strokeWidth={1.5}
+              />
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border my-1" />
@@ -579,6 +638,7 @@ export function Sidebar({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+          )})()}
       </div>
 
       {/* Sign Out Confirmation Dialog */}
