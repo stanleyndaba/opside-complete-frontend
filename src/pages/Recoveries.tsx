@@ -2363,7 +2363,7 @@ export default function Recoveries() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">{recoveriesHeroLabel}</span>
-                    {(recoveredTotal != null && recoveredTotal > 0) || owedSummary.totalOwed > 0 ? (
+                    {((recoveredTotal != null && recoveredTotal > 0) || owedSummary.totalOwed > 0) && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
