@@ -652,38 +652,39 @@ export function Navbar({
                   </div>
                 </div>
 
-                <div className="p-6 space-y-4">
-                  <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0">
+                <div className="px-6 py-5 border-b border-white/5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
                         <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/34">
                           Amazon
                         </div>
-                        <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
-                          {amazonConnectionHeadline}
+                        <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
+                          {amazonStatusLabel}
                         </div>
-                        <p className="mt-2 text-[11px] font-sans leading-5 text-white/48">
-                          {userProfile?.amazon_connected
-                            ? (userProfile?.amazon_display_name || 'Margin can keep your Amazon records up to date.')
-                            : 'Connect Amazon to keep your records up to date.'}
-                        </p>
-                        <button
-                          onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                          className="mt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/58 transition-colors hover:text-white"
-                        >
-                          Open integrations
-                        </button>
                       </div>
-                      <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
-                        {amazonStatusLabel}
+                      <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
+                        {amazonConnectionHeadline}
                       </div>
+                      <p className="mt-1.5 max-w-[240px] text-[11px] font-sans leading-5 text-white/48">
+                        {userProfile?.amazon_connected
+                          ? (userProfile?.amazon_display_name || 'Margin can keep your Amazon records up to date.')
+                          : 'Connect Amazon to keep your records up to date.'}
+                      </p>
+                      <button
+                        onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
+                        className="mt-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/58 transition-colors hover:text-white"
+                      >
+                        Open integrations
+                      </button>
                     </div>
                   </div>
+                </div>
 
-                  <div className="space-y-1">
-                    {[
-                      {
-                        label: 'Account settings',
+                <div className="p-5 space-y-1">
+                  {[
+                    {
+                      label: 'Account settings',
                         detail: 'Profile, workspace, and account preferences',
                         icon: Shield,
                         action: () => navigate(tenantRoute(activeTenantSlug, '/settings')),
