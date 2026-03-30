@@ -98,6 +98,9 @@ interface DashboardSummary {
   blockers: DashboardBlocker[];
 }
 
+const pluralize = (count: number, singular: string, plural = `${singular}s`) =>
+  `${count} ${count === 1 ? singular : plural}`;
+
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes' | 'evidence'>('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -1145,6 +1148,118 @@ export function Dashboard() {
       }
     ];
   }, [dashboardSummary?.payout_count, dashboardSummary?.recovered_count, formatCurrencyWithSelection, formattedLastPayoutDate, lastSyncResult.detail, lastSyncResult.value, recoveredCashTotal, recoveredCurrency]);
+  const overviewHeadline = useMemo(() => {
+    if (!dashboardSummary) return 'Building your current recovery position.';
+    if (estimatedValueTotal > 0) {
+      return `${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} is currently in scope for review.`;
+    }
+    if (recoveredCashTotal > 0) {
+      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has already been verified as recovered cash.`;
+    }
+    return 'No recoverable value is in scope yet.';
+  }, [dashboardSummary, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
+  const overviewNarrative = useMemo(() => {
+    if (!dashboardSummary) {
+      return 'Margin is assembling your seller recovery position from detections, filed cases, reimbursements, and billing truth.';
+    }
+    if (estimatedValueTotal > 0 && recoveredCashTotal > 0) {
+      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} is already verified recovered. The remaining value is still moving through review, filing, approval, and payout confirmation.`;
+    }
+    if (estimatedValueTotal > 0) {
+      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified. Nothing in this number is verified cash yet; it is the value currently worth working through the pipeline.`;
+    }
+    if (recoveredCashTotal > 0) {
+      return `Recoveries have already been verified for this tenant, but there is no additional open pipeline value showing right now.`;
+    }
+    return 'No detections, filed cases, or approved payouts are currently raising recovery pressure for this tenant.';
+  }, [dashboardSummary, detectedOpportunitiesCount, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
+  const overviewStatusRows = useMemo(() => ([
+    {
+      label: 'Verified recovered',
+      value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
+      detail: recoveredCashTotal > 0
+        ? `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')} now tied to verified payout events`
+        : 'No verified reimbursement recorded yet'
+    },
+    {
+      label: 'Approved and awaiting payout',
+      value: formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency),
+      detail: approvedClaimsCount > 0
+        ? `${pluralize(approvedClaimsCount, 'approved case')} still waiting for payout confirmation`
+        : 'No approved cases are currently waiting for payout'
+    },
+    {
+      label: 'Filed and in motion',
+      value: formatCurrencyWithSelection(filedValueTotal, recoveredCurrency),
+      detail: filedClaimsCount > 0
+        ? `${pluralize(filedClaimsCount, 'filed case')} currently in review or post-filing motion`
+        : 'Nothing has entered filing yet'
+    },
+    {
+      label: 'Latest platform update',
+      value: lastSyncResult.value,
+      detail: lastSyncResult.detail
+    }
+  ]), [
+    approvedClaimsCount,
+    approvedValueTotal,
+    dashboardSummary?.recovered_count,
+    filedClaimsCount,
+    filedValueTotal,
+    formatCurrencyWithSelection,
+    lastSyncResult.detail,
+    lastSyncResult.value,
+    recoveredCashTotal,
+    recoveredCurrency
+  ]);
+  const overviewMetricRows = useMemo(() => ([
+    {
+      label: 'Recoverable value identified',
+      value: formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency),
+      detail: `${pluralize(detectedOpportunitiesCount, 'opportunity')} currently detected`
+    },
+    {
+      label: 'Verified recovered cash',
+      value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
+      detail: `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')}`
+    },
+    {
+      label: 'Approved, not yet paid',
+      value: formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency),
+      detail: `${pluralize(approvedClaimsCount, 'approved case')}`
+    },
+    {
+      label: 'Verified billed revenue',
+      value: formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency),
+      detail: `${pluralize(dashboardSummary?.billed_count ?? 0, 'billed case')}`
+    }
+  ]), [
+    approvedClaimsCount,
+    approvedValueTotal,
+    billedRevenueTotal,
+    dashboardSummary?.billed_count,
+    dashboardSummary?.recovered_count,
+    detectedOpportunitiesCount,
+    estimatedValueTotal,
+    formatCurrencyWithSelection,
+    recoveredCashTotal,
+    recoveredCurrency
+  ]);
+  const overviewPressureNote = useMemo(() => {
+    if (primaryBlocker) {
+      return `${primaryBlocker.label} is the main constraint right now across ${pluralize(primaryBlocker.count, 'case')}.`;
+    }
+    if (approvedClaimsCount > 0) {
+      return `${pluralize(approvedClaimsCount, 'approved case')} are waiting for payout confirmation rather than additional filing work.`;
+    }
+    if (filedClaimsCount > 0) {
+      return `${pluralize(filedClaimsCount, 'filed case')} are already in motion and waiting on Amazon or payout truth.`;
+    }
+    if (detectedOpportunitiesCount > 0) {
+      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} have been identified and can now be worked through evidence and filing.`;
+    }
+    return 'No active recovery pressure is being raised by the current tenant summary.';
+  }, [approvedClaimsCount, detectedOpportunitiesCount, filedClaimsCount, primaryBlocker]);
 
   if (!activeSlug) {
     return (
@@ -1232,244 +1347,164 @@ export function Dashboard() {
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6">
                   {/* Main Content - 3 columns */}
                   <div className="lg:col-span-4 space-y-6">
-
-                    {/* Institutional Instrument Panel */}
-                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
-
-                      <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                      <div className="border-b border-white/5 px-8 py-8">
+                        <div className="grid gap-10 xl:grid-cols-[1.45fr_0.95fr]">
                           <div>
-                            <h2 className="text-[11px] font-sans font-medium text-white/40 uppercase tracking-tight">VERIFIED MONEY</h2>
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-sm font-sans font-medium text-white tracking-tight">Verified Recovered Cash</span>
+                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
+                              Recovery Overview
+                            </div>
+                            <h2 className="mt-4 max-w-4xl text-4xl font-sans font-medium tracking-tight text-white xl:text-5xl">
+                              {overviewHeadline}
+                            </h2>
+                            <p className="mt-5 max-w-3xl text-sm font-sans leading-relaxed text-white/52">
+                              {overviewNarrative}
+                            </p>
+                            <div className="mt-8 flex flex-wrap gap-3">
+                              <button
+                                onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
+                                className="rounded-full border border-white/12 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/78 transition-colors hover:bg-white/[0.06] hover:text-white"
+                              >
+                                Open Recovery Pipeline
+                              </button>
+                              <button
+                                onClick={() => navigate(tenantRoute(activeSlug, '/dispute-cases'))}
+                                className="rounded-full border border-white/12 bg-transparent px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/50 transition-colors hover:border-white/20 hover:text-white/78"
+                              >
+                                Review Filing Queue
+                              </button>
                             </div>
                           </div>
-                        </div>
-                        {dashboardSummary && dashboardSummary.filed_count > 0 && (
-                          <button
-                            onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                            className="flex items-center gap-3 transition-all group"
-                          >
-                            <div className="flex flex-col items-end">
-                              <span className="text-[10px] font-sans font-medium text-white/40 group-hover:text-white/75 uppercase tracking-tight">{dashboardSummary.filed_count} Filed Cases</span>
-                              <span className="text-[9px] font-sans font-medium text-white group-hover:text-white uppercase tracking-tight">
-                                {formattedLastUpdatedAbsolute}
-                              </span>
-                            </div>
-                            <ArrowRight className="h-3 w-3 text-white/20 group-hover:text-white/65" />
-                          </button>
-                        )}
-                      </div>
 
-                      <div className="p-10">
-                        <div className="flex flex-col">
-                          {!dashboardSummary ? (
-                            <div className="space-y-4 py-2">
-                              <div className="flex items-center gap-3">
-                                <Skeleton className="h-4 w-4 rounded-full bg-white/10" />
-                                <Skeleton className="h-4 w-32 bg-white/10" />
-                              </div>
-                              <Skeleton className="h-14 w-48 bg-white/10" />
-                              <Skeleton className="h-4 w-64 bg-white/10" />
-                            </div>
-                          ) : recoveredCashTotal > 0 ? (
-                            <>
-                              <div className="text-5xl font-sans font-medium text-white tracking-tight mb-4 flex items-baseline gap-2">
-                                {formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)}
-                                <span className="text-sm font-sans font-medium text-white/40 animate-pulse">_</span>
-                              </div>
-                              <div className="flex flex-wrap items-center gap-5 w-fit">
-                                <div className="flex items-center gap-3">
-                                  <div className="h-1 w-1 rounded-full bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" />
-                                  <span className="text-[10px] font-sans font-medium text-white/65 uppercase tracking-tight">
-                                    {dashboardSummary.recovered_count} Reconciled Cases
-                                  </span>
+                          <div className="grid gap-3">
+                            {overviewStatusRows.map((item) => (
+                              <div key={item.label} className="rounded-2xl border border-white/8 bg-black/20 px-5 py-4">
+                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
+                                  {item.label}
                                 </div>
-                                <span className="text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">
-                                  Verified Billed Revenue {formatCurrencyWithSelection(billedRevenueTotal, recoveredCurrency)}
-                                </span>
+                                <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                                  {item.value}
+                                </div>
+                                <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
+                                  {item.detail}
+                                </p>
                               </div>
-                            </>
-                          ) : dashboardSummary ? (
-                            <div className="flex flex-col gap-6 py-2">
-                              <div className="text-5xl font-sans font-medium text-white/20 tracking-tight">
-                                $0.00
-                              </div>
-                              <p className="text-xs text-white/30 font-sans font-normal leading-relaxed max-w-sm">
-                                No reconciled recoveries are recorded for this tenant yet.
-                              </p>
-                            </div>
-                          ) : (
-                            <div className="flex flex-col gap-6 py-2">
-                              <div className="flex items-center gap-3 text-white/60">
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                                <span className="text-[11px] font-sans font-medium uppercase tracking-tight">Scanning Account</span>
-                              </div>
-                              <div className="text-5xl font-sans font-medium text-white/5 tracking-tight select-none">
-                                $0,000.00
-                              </div>
-                              <p className="text-xs text-white/30 font-sans font-normal leading-relaxed max-w-sm">
-                                Loading your account data...
-                              </p>
-                            </div>
-                          )}
-
-
+                            ))}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="px-6 py-3 bg-white/[0.015] border-t border-white/5">
-                        <span className="text-[9px] font-sans font-medium text-white/25 uppercase tracking-tight">
-                          Pipeline Value // Not Yet Paid
-                        </span>
-                      </div>
-
-                      {/* Secondary Metrics Grid - Unified */}
-                      <div className="grid grid-cols-3 bg-[#0a0a0a]/50 divide-x divide-white/5 border-t border-white/5">
-                        <HoverCard openDelay={200} closeDelay={100}>
-                          <HoverCardTrigger asChild>
-                            <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-medium text-white/20 mb-4 tracking-tight uppercase">Estimated Pipeline Value</div>
-                              <div className="text-2xl font-sans font-medium text-white tracking-tight">
-                                {!dashboardSummary ? (
-                                  <Skeleton className="h-8 w-32 bg-white/10" />
-                                ) : (
-                                  formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)
-                                )}
-                              </div>
-                              <div className="mt-4 flex items-center gap-2">
-                                <Clock className="h-3 w-3 text-white/25" />
-                                <span className="text-[10px] font-sans font-normal text-white/35 tracking-tight">
-                                  Estimated value only, not yet paid
-                                </span>
-                              </div>
-                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
-                            </div>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="start">
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                                <h4 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Payout Details</h4>
-                              </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-sans font-normal">
-                                Estimated Pipeline Value sums tenant detection estimates. It is potential value, not approved or paid cash.
-                              </p>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
-
-                        <HoverCard openDelay={200} closeDelay={100}>
-                          <HoverCardTrigger asChild>
-                            <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-medium text-white/20 mb-4 tracking-tight uppercase">Filed Pipeline Value</div>
-                              <div className="text-2xl font-sans font-medium text-white tracking-tight">
-                                {!dashboardSummary ? (
-                                  <Skeleton className="h-8 w-32 bg-white/10" />
-                                ) : (
-                                  formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)
-                                )}
-                              </div>
-                              <div className="mt-4 space-y-1.5">
-                                <div className="text-[10px] font-sans font-normal text-white/35 tracking-tight">
-                                  Filed case value, not yet paid
-                                </div>
-                                <div className="text-[10px] font-sans font-normal text-white/25 tracking-tight">
-                                  {dashboardSummary ? `Across ${dashboardSummary.filed_count} Filed Cases` : 'Loading filed case value...'}
-                                </div>
-                              </div>
-                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
-                            </div>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="center">
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                                <h4 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Activity Log</h4>
-                              </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-sans font-normal">
-                                Filed Pipeline Value reflects case amounts that entered filing. It is still in progress and not verified cash.
-                              </p>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
-
-                        <HoverCard openDelay={200} closeDelay={100}>
-                          <HoverCardTrigger asChild>
-                            <div className="p-8 cursor-help hover:bg-white/[0.02] transition-colors relative group">
-                              <div className="text-[9px] font-sans font-medium text-white/20 mb-4 tracking-tight uppercase">Approved Not Yet Paid</div>
-                              <div className="text-2xl font-sans font-medium text-white tracking-tight">
-                                {!dashboardSummary ? (
-                                  <Skeleton className="h-8 w-32 bg-white/10" />
-                                ) : (
-                                  formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)
-                                )}
-                              </div>
-                              <div className="space-y-2.5">
-                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
-                                  Opportunities Found (Detected): <span className="text-white">{detectedOpportunitiesCount}</span>
-                                </div>
-                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
-                                  Filed: <span className="text-white">{filedClaimsCount}</span>
-                                </div>
-                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
-                                  Approved: <span className="text-white">{approvedClaimsCount}</span>
-                                </div>
-                                <div className="text-[10px] font-sans font-normal text-white/40 tracking-tight">
-                                  Billed: <span className="text-white">{dashboardSummary?.billed_count ?? 0}</span>
-                                </div>
-                              </div>
-                              <ArrowRight className="absolute bottom-6 right-6 h-3 w-3 text-white/5 group-hover:text-white/50 transition-colors" />
-                            </div>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-80 p-6 bg-[#0c0c0c] border-white/10 shadow-3xl rounded-xl backdrop-blur-3xl" side="bottom" align="end">
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-3">
-                                <div className="h-1.5 w-1.5 rounded-full bg-white/50" />
-                                <h4 className="text-[11px] font-sans font-medium text-white uppercase tracking-tight">Success Metrics</h4>
-                              </div>
-                              <p className="text-xs text-white/40 leading-relaxed font-sans font-normal">
-                                Approved Not Yet Paid reflects case amounts with approved dispute status. It remains pipeline value until payout events are recorded.
-                              </p>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
-                      </div>
-
-                      {/* Blocker Summary */}
-                      <div className="px-6 py-4 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-4">
-                        <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <p className="text-[9px] text-white/20 font-sans font-medium uppercase tracking-tight">
-                          {primaryBlocker ? `${primaryBlocker.label} · ${primaryBlocker.count}` : 'No active blockers in current summary'}
-                        </p>
-                        <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                      </div>
-                    </div>
-
-                    {/* Recent Financial Activity */}
-                    <div className="bg-[#111111]/90 border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
-                      <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-                        <div className="flex flex-col gap-1">
-                          <h2 className="text-[10px] font-sans font-medium text-white/40 uppercase tracking-tight">Recent Financial Activity</h2>
-                          <p className="text-[9px] font-sans font-normal text-white/20 tracking-tight">
-                            Last payout date, verified reimbursements, and latest sync truth
-                          </p>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/5">
-                        {recentFinancialActivity.map((item) => (
-                          <div key={item.label} className="p-8 flex flex-col gap-4">
-                            <div className="text-[9px] font-sans font-medium text-white/20 uppercase tracking-tight">
+                      <div className="grid grid-cols-1 gap-px bg-white/6 md:grid-cols-2 xl:grid-cols-4">
+                        {overviewMetricRows.map((item) => (
+                          <div key={item.label} className="bg-[#0d0d0d] px-8 py-7">
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
                               {item.label}
                             </div>
-                            <div className="text-[18px] font-sans font-medium text-white tracking-tight">
-                              {item.value}
+                            <div className="mt-4 text-3xl font-sans font-medium tracking-tight text-white">
+                              {!dashboardSummary ? (
+                                <Skeleton className="h-9 w-32 bg-white/10" />
+                              ) : (
+                                item.value
+                              )}
                             </div>
-                            <p className="text-[10px] font-sans font-normal text-white/30 tracking-tight leading-relaxed max-w-[240px]">
+                            <p className="mt-3 text-[11px] font-sans leading-relaxed text-white/34">
                               {item.detail}
                             </p>
                           </div>
                         ))}
+                      </div>
+
+                      <div className="border-t border-white/5 px-8 py-5">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                          Current pressure
+                        </div>
+                        <p className="mt-2 text-sm font-sans leading-relaxed text-white/56">
+                          {overviewPressureNote}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                        <div className="border-b border-white/5 px-6 py-5">
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
+                            Operating picture
+                          </div>
+                          <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/36">
+                            The latest payout, reimbursement, and sync truth for this tenant.
+                          </p>
+                        </div>
+                        <div className="divide-y divide-white/5">
+                          {recentFinancialActivity.map((item) => (
+                            <div key={item.label} className="px-6 py-6">
+                              <div className="grid gap-4 md:grid-cols-[0.72fr_1fr] md:items-start">
+                                <div>
+                                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                    {item.label}
+                                  </div>
+                                  <div className="mt-2 text-[22px] font-sans font-medium tracking-tight text-white">
+                                    {item.value}
+                                  </div>
+                                </div>
+                                <p className="text-[11px] font-sans leading-relaxed text-white/38">
+                                  {item.detail}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                        <div className="border-b border-white/5 px-6 py-5">
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
+                            Pipeline notes
+                          </div>
+                          <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/36">
+                            A direct read of what is detected, filed, approved, and already billed.
+                          </p>
+                        </div>
+                        <div className="space-y-5 px-6 py-6">
+                          <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-5">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                Detection coverage
+                              </div>
+                              <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
+                                {pluralize(detectedOpportunitiesCount, 'opportunity')} are currently visible in the tenant summary.
+                              </p>
+                            </div>
+                            <div className="text-right text-[20px] font-sans font-medium tracking-tight text-white">
+                              {detectedOpportunitiesCount}
+                            </div>
+                          </div>
+                          <div className="flex items-start justify-between gap-6 border-b border-white/5 pb-5">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                Filed value
+                              </div>
+                              <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
+                                Value that has already entered filing and is now waiting on review or payout truth.
+                              </p>
+                            </div>
+                            <div className="text-right text-[20px] font-sans font-medium tracking-tight text-white">
+                              {formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)}
+                            </div>
+                          </div>
+                          <div className="flex items-start justify-between gap-6">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                Updated
+                              </div>
+                              <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
+                                Latest account-level recovery summary published by the backend.
+                              </p>
+                            </div>
+                            <div className="text-right text-[13px] font-sans font-medium tracking-tight text-white/72">
+                              {formattedLastUpdatedAbsolute}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
