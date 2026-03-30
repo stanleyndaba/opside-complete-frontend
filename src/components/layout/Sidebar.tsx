@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, NotebookPen, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, Scale } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, NotebookPen, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -270,7 +270,7 @@ export function Sidebar({
     { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Appeals', icon: Scale, href: tenantRoute(currentTenantSlug, '/appeals') },
+    { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
   ];
 
