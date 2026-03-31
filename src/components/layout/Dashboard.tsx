@@ -2065,28 +2065,28 @@ export function Dashboard() {
             <p className="text-[12px] text-white/46 leading-relaxed font-serif">
               Here is what is live now and what is coming next across the platform.
             </p>
-            <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="rounded-xl border border-white/6 bg-white/[0.02] p-3">
+            <div className="mt-3 divide-y divide-white/6">
+              <div className="grid grid-cols-1 gap-1 py-3 md:grid-cols-[180px_minmax(0,1fr)] md:gap-4">
                 <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
                   Auto-Filing
                 </h3>
-                <p className="mt-1 text-[12px] text-white/58 leading-relaxed font-serif">
+                <p className="text-[12px] text-white/58 leading-relaxed font-serif">
                   Auto-filing is live. Filing-ready claims are being submitted through Amazon Seller Central. Some cases may take a little longer while Amazon moves through each support step, but submissions are active.
                 </p>
               </div>
-              <div className="rounded-xl border border-white/6 bg-white/[0.02] p-3">
+              <div className="grid grid-cols-1 gap-1 py-3 md:grid-cols-[180px_minmax(0,1fr)] md:gap-4">
                 <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
                   Recoveries
                 </h3>
-                <p className="mt-1 text-[12px] text-white/58 leading-relaxed font-serif">
+                <p className="text-[12px] text-white/58 leading-relaxed font-serif">
                   Recovery tracking is active on submitted cases. Payout verification is running, and accuracy is improving as more live recoveries move through the system.
                 </p>
               </div>
-              <div className="rounded-xl border border-white/6 bg-white/[0.02] p-3">
+              <div className="grid grid-cols-1 gap-1 py-3 md:grid-cols-[180px_minmax(0,1fr)] md:gap-4">
                 <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
                   Reopen Cases (Appeals)
                 </h3>
-                <p className="mt-1 text-[12px] text-white/58 leading-relaxed font-serif">
+                <p className="text-[12px] text-white/58 leading-relaxed font-serif">
                   Appeals will turn on automatically once enough case outcomes are collected. This lets Margin reopen cases with stronger evidence and more confidence.
                 </p>
               </div>
