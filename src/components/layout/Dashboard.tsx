@@ -2052,8 +2052,8 @@ export function Dashboard() {
 
       {/* Quick Notice Modal */}
       <Dialog open={quickNoticeOpen} onOpenChange={setQuickNoticeOpen}>
-        <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-2xl">
-          <DialogHeader className="px-6 pt-6 pb-4 border-b border-white/5 bg-white/[0.01]">
+        <DialogContent className="w-[min(94vw,920px)] max-w-4xl bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-2xl">
+          <DialogHeader className="px-5 pt-5 pb-3 border-b border-white/5 bg-white/[0.01]">
             <DialogTitle className="text-base font-serif text-white tracking-tight">
               Quick Notices
             </DialogTitle>
@@ -2061,44 +2061,44 @@ export function Dashboard() {
               Platform Updates
             </DialogDescription>
           </DialogHeader>
-          <div className="px-6 py-5">
-            <p className="text-[13px] text-white/46 leading-relaxed font-serif">
-              Here is the latest on what is live now and what is coming next across the platform.
+          <div className="px-5 py-4">
+            <p className="text-[12px] text-white/46 leading-relaxed font-serif">
+              Here is what is live now and what is coming next across the platform.
             </p>
-            <div className="mt-4 space-y-3">
-              <div className="border-b border-white/5 pb-3">
+            <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="rounded-xl border border-white/6 bg-white/[0.02] p-3">
                 <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
                   Auto-Filing
                 </h3>
-                <p className="mt-1.5 text-[13px] text-white/58 leading-relaxed font-serif">
-                  Auto-filing is now live. Filing-ready claims are being submitted through Amazon Seller Central. Some cases may take a little longer while Amazon moves through each support step, but submissions are active.
+                <p className="mt-1 text-[12px] text-white/58 leading-relaxed font-serif">
+                  Auto-filing is live. Filing-ready claims are being submitted through Amazon Seller Central. Some cases may take a little longer while Amazon moves through each support step, but submissions are active.
                 </p>
               </div>
-              <div className="border-b border-white/5 pb-3">
+              <div className="rounded-xl border border-white/6 bg-white/[0.02] p-3">
                 <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
                   Recoveries
                 </h3>
-                <p className="mt-1.5 text-[13px] text-white/58 leading-relaxed font-serif">
-                  Recovery tracking is active on submitted cases. Payout verification is running, and accuracy is improving as more real recoveries move through the system.
+                <p className="mt-1 text-[12px] text-white/58 leading-relaxed font-serif">
+                  Recovery tracking is active on submitted cases. Payout verification is running, and accuracy is improving as more live recoveries move through the system.
                 </p>
               </div>
-              <div>
+              <div className="rounded-xl border border-white/6 bg-white/[0.02] p-3">
                 <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
                   Reopen Cases (Appeals)
                 </h3>
-                <p className="mt-1.5 text-[13px] text-white/58 leading-relaxed font-serif">
-                  Appeals will turn on automatically once enough case outcomes are collected. This lets Margin reopen cases with stronger timing, better evidence, and more confidence.
+                <p className="mt-1 text-[12px] text-white/58 leading-relaxed font-serif">
+                  Appeals will turn on automatically once enough case outcomes are collected. This lets Margin reopen cases with stronger evidence and more confidence.
                 </p>
               </div>
             </div>
-            <p className="mt-4 text-[12px] text-white/40 leading-relaxed font-serif">
+            <p className="mt-3 text-[11px] text-white/40 leading-relaxed font-serif">
               You do not need to do anything. We will keep improving filing speed, recovery tracking, and appeal quality as more live cases are processed.
             </p>
           </div>
-          <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02] flex justify-end">
+          <div className="px-5 py-3 border-t border-white/5 bg-white/[0.02] flex justify-end">
             <button
               onClick={() => setQuickNoticeOpen(false)}
-              className="px-5 py-2 text-[10px] font-mono font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all uppercase tracking-tight rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+              className="px-4 py-1.5 text-[10px] font-mono font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all uppercase tracking-tight rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.3)]"
             >
               Got It
             </button>
