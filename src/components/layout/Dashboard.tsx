@@ -2054,29 +2054,45 @@ export function Dashboard() {
       <Dialog open={quickNoticeOpen} onOpenChange={setQuickNoticeOpen}>
         <DialogContent className="max-w-md bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-2xl">
           <DialogHeader className="px-8 pt-8 pb-6 border-b border-white/5 bg-white/[0.01]">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="h-10 w-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
-                <Files className="h-5 w-5 text-blue-400" />
-              </div>
-              <div>
-                <DialogTitle className="text-base font-serif text-white tracking-tight">
-                  Data uploads will be gone soon
-                </DialogTitle>
-                <DialogDescription className="text-[10px] text-blue-400/50 font-mono mt-0.5 uppercase tracking-[0.2em]">
-                  PLATFORM UPDATE
-                </DialogDescription>
-              </div>
-            </div>
+            <DialogTitle className="text-base font-serif text-white tracking-tight">
+              Quick Notices
+            </DialogTitle>
+            <DialogDescription className="text-[10px] text-white/35 font-mono mt-1 uppercase tracking-[0.2em]">
+              Platform Updates
+            </DialogDescription>
           </DialogHeader>
           <div className="px-8 py-6">
-            <p className="text-[13px] text-white/50 leading-relaxed font-serif">
-              We're transitioning the platform to <span className="text-white font-medium">full API-based control</span>, which means you'll be able to connect your accounts once and let the system handle everything automatically — a true <span className="text-white font-medium">set-it-and-forget-it</span> experience.
+            <p className="text-[13px] text-white/46 leading-relaxed font-serif">
+              Here is the latest on what is live now and what is coming next across the platform.
             </p>
-            <p className="text-[13px] text-white/50 leading-relaxed font-serif mt-4">
-              Manual data uploads will become a <span className="text-white font-medium">secondary backup option</span>, available only if the API connection is temporarily unavailable on any given day. This change ensures faster, more reliable, and fully end-to-end processing of your recoveries.
-            </p>
-            <p className="text-[13px] text-white/40 leading-relaxed font-serif mt-4 italic">
-              We appreciate your patience as we roll this out. Your experience matters to us, and this upgrade is designed to make things easier for you.
+            <div className="mt-5 space-y-4">
+              <div className="border-b border-white/5 pb-4">
+                <h3 className="text-[12px] font-mono font-bold uppercase tracking-[0.18em] text-white">
+                  Auto-Filing
+                </h3>
+                <p className="mt-2 text-[13px] text-white/58 leading-relaxed font-serif">
+                  Auto-filing is now live. Filing-ready claims are being submitted through Amazon Seller Central. Some cases may take a little longer while Amazon moves through each support step, but submissions are active.
+                </p>
+              </div>
+              <div className="border-b border-white/5 pb-4">
+                <h3 className="text-[12px] font-mono font-bold uppercase tracking-[0.18em] text-white">
+                  Recoveries
+                </h3>
+                <p className="mt-2 text-[13px] text-white/58 leading-relaxed font-serif">
+                  Recovery tracking is active on submitted cases. Payout verification is running, and accuracy is improving as more real recoveries move through the system.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-[12px] font-mono font-bold uppercase tracking-[0.18em] text-white">
+                  Reopen Cases (Appeals)
+                </h3>
+                <p className="mt-2 text-[13px] text-white/58 leading-relaxed font-serif">
+                  Appeals will turn on automatically once enough case outcomes are collected. This lets Margin reopen cases with stronger timing, better evidence, and more confidence.
+                </p>
+              </div>
+            </div>
+            <p className="mt-5 text-[12px] text-white/40 leading-relaxed font-serif">
+              You do not need to do anything. We will keep improving filing speed, recovery tracking, and appeal quality as more live cases are processed.
             </p>
           </div>
           <div className="px-8 py-5 border-t border-white/5 bg-white/[0.02] flex justify-end">
