@@ -88,12 +88,12 @@ const STATUS_BADGE_STYLES: Record<string, string> = {
 const YOCO_UNLOCK_URL = 'https://pay.yoco.com/r/7rnpQ3';
 
 function formatLabel(value: string | null | undefined) {
-  if (!value) return 'Not available';
+  if (!value) return 'Not Available';
   return value.replace(/_/g, ' ');
 }
 
 function formatMoney(amount: number | null | undefined, currency = 'USD') {
-  if (amount == null) return 'Not available';
+  if (amount == null) return 'Not Available';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
@@ -123,8 +123,58 @@ function formatBlockReason(value: string) {
 }
 
 function formatCompactDate(value: string | null | undefined) {
-  if (!value) return 'Unavailable';
+  if (!value) return 'Not Available';
   return format(new Date(value), 'yyyy/MM/dd');
+}
+
+function getQueueEntityKind(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'> | null | undefined) {
+  if (!row) return 'unknown' as const;
+  if (row.entity_type === 'dispute_case' || row.row_type === 'dispute_case' || row.has_real_dispute_case === true) {
+    return 'dispute_case' as const;
+  }
+  if (row.entity_type === 'detection' || row.row_type === 'orphan_detection' || row.has_real_dispute_case === false) {
+    return 'detection' as const;
+  }
+  return 'unknown' as const;
+}
+
+function getQueueEntityLabel(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'> | null | undefined) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') return 'Dispute Case';
+  if (kind === 'detection') return 'Detection';
+  return 'Not Available';
+}
+
+function getQueueEntityNoun(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'> | null | undefined) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') return 'case';
+  if (kind === 'detection') return 'detection';
+  return 'record';
+}
+
+function getQueueRecordIdentifier(row: QueueRow) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') {
+    return row.case_number || row.linked_dispute_case_id || row.dispute_case_id || 'Not Available';
+  }
+  if (kind === 'detection') {
+    return row.claim_number || row.detection_result_id || row.dispute_case_id || 'Not Available';
+  }
+  return row.dispute_case_id || row.detection_result_id || 'Not Available';
+}
+
+function getOpenRecordLabel(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'>) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') return 'Open Case';
+  if (kind === 'detection') return 'Open Detection';
+  return 'Not Available';
+}
+
+function getRecordDetailsLabel(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'>) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') return 'Case Details';
+  if (kind === 'detection') return 'Detection Details';
+  return 'Not Available';
 }
 
 function getBackendPrimaryAction(row: QueueRow): { label: string; mode: QueueActionMode } | null {
@@ -180,6 +230,9 @@ function createUnavailableSummary(page: number, pageSize: number): QueueSummaryS
 }
 
 function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSummary | null): FilingPosture {
+  const entityKind = getQueueEntityKind(row);
+  const entityNoun = getQueueEntityNoun(row);
+  const hasRealDisputeCase = entityKind === 'dispute_case';
   const filingStatus = String(row.filing_status || '').toLowerCase();
   const status = String(row.status || '').toLowerCase();
   const billingStatus = String(row.billing_status || '').toLowerCase();
@@ -268,7 +321,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'resolved',
       headline: 'Payment verified',
-      detail: 'The payout has already been verified and tied back to the case record.',
+      detail: `The payout has already been verified and tied back to this ${entityNoun} record.`,
       strengths: strengths.slice(0, 3),
       risks: []
     };
@@ -291,7 +344,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'in_flight',
       headline: 'Partial payment confirmed',
-      detail: 'Financial events show a partial payout. Keep the case open until the full amount is confirmed.',
+      detail: `Financial events show a partial payout. Keep this ${entityNoun} record open until the full amount is confirmed.`,
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
     };
@@ -301,15 +354,28 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'in_flight',
       headline: 'Awaiting financial confirmation',
-      detail: row.expected_payout_date
-        ? `Amazon approval is in place. Track payout timing against the estimate ${formatCompactDate(row.expected_payout_date)} until a financial event confirms payment.`
-        : 'Amazon approval is in place. Payment is still awaiting financial confirmation.',
+      detail: hasRealDisputeCase
+        ? row.expected_payout_date
+          ? `Amazon approval is in place. Track payout timing against the estimate ${formatCompactDate(row.expected_payout_date)} until a financial event confirms payment.`
+          : 'Amazon approval is in place. Payment is still awaiting financial confirmation.'
+        : row.expected_payout_date
+          ? `A backend approval amount is recorded. Track payout timing against the estimate ${formatCompactDate(row.expected_payout_date)} until a financial event confirms payment.`
+          : 'A backend approval amount is recorded. Payment is still awaiting financial confirmation.',
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
     };
   }
 
   if (['filed', 'submitting', 'recovering', 'payment_required'].includes(filingStatus) || ['submitted', 'under review', 'in review'].includes(status)) {
+    if (!hasRealDisputeCase) {
+      return {
+        tone: 'attention',
+        headline: 'Not Available',
+        detail: 'A backend-confirmed dispute case is not available for this detection row.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 2)
+      };
+    }
     return {
       tone: 'in_flight',
       headline: 'In Amazon review',
@@ -320,12 +386,21 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   }
 
   if (['rejected', 'denied', 'lost'].includes(status) || filingStatus === 'failed') {
+    if (!hasRealDisputeCase) {
+      return {
+        tone: 'attention',
+        headline: 'Not Available',
+        detail: 'A backend-confirmed dispute case is not available for this detection row.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 2)
+      };
+    }
     return {
       tone: 'blocked',
       headline: 'Rejection risk is live',
       detail: row.rejection_reason
         ? `Amazon has already objected to this case. Fix the recorded reason before retrying.`
-        : 'This case was rejected or failed in filing. Review the evidence and filing posture before resubmission.',
+        : `This ${entityNoun} was rejected or failed in filing. Review the evidence and filing posture before resubmission.`,
       strengths: strengths.slice(0, 2),
       risks: risks.slice(0, 3)
     };
@@ -339,7 +414,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
         ? lastError
         : blockReasons.length
         ? 'The gate has already identified issues that should be fixed before submission.'
-        : 'This case is not currently eligible to file.',
+        : `This ${entityNoun} is not currently eligible to file.`,
       strengths: strengths.slice(0, 2),
       risks: risks.slice(0, 3)
     };
@@ -376,7 +451,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'ready',
       headline: 'Ready to file',
-      detail: 'The current gate is open. Seller-controlled quality now comes down to keeping identifiers and evidence clean.',
+      detail: `The current gate is open. Seller-controlled quality now comes down to keeping this ${entityNoun}'s identifiers and evidence clean.`,
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
     };
@@ -385,7 +460,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   return {
     tone: 'attention',
     headline: 'Needs seller review',
-    detail: 'The case exists, but the current record still has gaps or ambiguity that can dilute filing strength.',
+    detail: `This ${entityNoun} record still has gaps or ambiguity that can dilute filing strength.`,
     strengths: strengths.slice(0, 2),
     risks: risks.slice(0, 3)
   };
@@ -645,7 +720,7 @@ export default function DisputeCases() {
         }, activeTenantSlug);
 
         if (!response.ok || !response.data) {
-          throw new Error(response.error || 'Failed to load dispute cases');
+          throw new Error(response.error || 'Failed to load dispute queue');
         }
 
         if (cancelled) return;
@@ -679,7 +754,7 @@ export default function DisputeCases() {
         if (!cancelled) {
           setRows([]);
           setSummary(createUnavailableSummary(page, pageSize));
-          setError(err?.message || 'Failed to load dispute cases');
+          setError(err?.message || 'Failed to load dispute queue');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -851,7 +926,7 @@ export default function DisputeCases() {
       toast({
         variant: 'destructive',
         title: 'Not Available',
-        description: 'Case detail is not backend-confirmed for this row.'
+        description: 'Record detail is not backend-confirmed for this row.'
       });
       return;
     }
@@ -998,13 +1073,13 @@ export default function DisputeCases() {
   };
 
   const primarySummaryCards = useMemo(() => ([
-    { label: 'Cases live', value: summary.total_cases },
+    { label: 'Queue records', value: summary.total_cases },
     { label: 'Ready to file', value: summary.ready_to_file_count },
     { label: 'Payout waiting', value: summary.approved_pending_payout_count },
   ]), [summary]);
 
   const secondarySummaryCards = useMemo(() => ([
-    { label: 'Already filed', value: summary.filed_count },
+    { label: 'Filed / submitted', value: summary.filed_count },
     { label: 'Rejected', value: summary.rejected_count },
     { label: 'Paid back', value: summary.verified_paid_count },
     { label: 'Billing pending', value: summary.billing_pending_count },
@@ -1050,14 +1125,14 @@ export default function DisputeCases() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Filed With Amazon" midnight>
+      <PageLayout title="Dispute Queue" midnight>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pt-10 pb-20">
             <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl">
               <CardContent className="p-8 space-y-3">
-                <h1 className="text-xl font-sans font-bold text-white tracking-tight">Filed cases unavailable</h1>
+                <h1 className="text-xl font-sans font-bold text-white tracking-tight">Queue unavailable</h1>
                 <p className="text-sm text-white/50 font-sans">
-                  A tenant workspace is required before dispute cases can be loaded.
+                  A tenant workspace is required before dispute queue records can be loaded.
                 </p>
               </CardContent>
             </Card>
@@ -1068,7 +1143,7 @@ export default function DisputeCases() {
   }
 
   return (
-    <PageLayout title="Filed With Amazon" midnight>
+    <PageLayout title="Dispute Queue" midnight>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -1082,9 +1157,9 @@ export default function DisputeCases() {
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Filed With Amazon</h1>
+              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Dispute Queue</h1>
               <p className="text-sm text-white/50 font-sans max-w-3xl">
-                Track what is already with Amazon, what has been approved, and what is still waiting for payout.
+                Track dispute cases, detection-only queue rows, approvals, and payout follow-up without assuming every record is already filed.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -1109,13 +1184,13 @@ export default function DisputeCases() {
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.02]"
             >
               <div className="min-w-0">
-                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case snapshot</p>
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Queue snapshot</p>
                 <p className="mt-2 text-xs font-sans text-white">Tap to view live counts across filing, payout follow-up, and verified payments.</p>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-left">
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Cases live</p>
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Queue records</p>
                   <p className="mt-1 text-lg leading-none font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
                     {formatSummaryValue(summary.total_cases)}
                   </p>
@@ -1318,7 +1393,7 @@ export default function DisputeCases() {
                     <Input
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
-                      placeholder="Search case number, Amazon case, store, order, SKU, ASIN, or rejection reason"
+                      placeholder="Search queue ID, claim number, Amazon case, store, order, SKU, ASIN, or rejection reason"
                       className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/25"
                     />
                   </div>
@@ -1430,7 +1505,7 @@ export default function DisputeCases() {
                 </div>
 
                 <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
-                  Filtered Results: {summary.filtered_results} of {summary.total_cases} total cases
+                  Filtered Results: {formatSummaryValue(summary.filtered_results)} of {formatSummaryValue(summary.total_cases)} total queue records
                 </div>
               </div>
             </CardHeader>
@@ -1439,27 +1514,27 @@ export default function DisputeCases() {
               {loading && rows.length === 0 ? (
                 <div className="py-20 flex items-center justify-center gap-3 text-white/40">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm font-sans font-bold">Loading dispute queue...</span>
+                  <span className="text-sm font-sans font-bold">Loading dispute queue records...</span>
                 </div>
               ) : error ? (
                 <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
                   <AlertCircle className="w-5 h-5 text-white/40" />
                   <div className="space-y-1">
-                    <p className="text-sm font-sans font-bold text-white/70">Failed to load dispute cases</p>
+                    <p className="text-sm font-sans font-bold text-white/70">Failed to load dispute queue</p>
                     <p className="text-xs font-sans text-white/40">{error}</p>
                   </div>
                 </div>
               ) : rows.length === 0 ? (
                 <div className="py-20 flex flex-col items-center justify-center gap-3 text-center">
                   <FileText className="w-5 h-5 text-white/20" />
-                  <p className="text-sm font-sans font-bold text-white/60">No dispute cases match the current filters.</p>
+                  <p className="text-sm font-sans font-bold text-white/60">No dispute queue records match the current filters.</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[1440px]">
                     <thead className="bg-white/[0.02] border-b border-white/5">
                       <tr className="text-left">
-                        {['Case', 'Case status', 'Money at stake', 'Evidence', 'Next best move', 'Updated', 'Actions'].map((header) => (
+                        {['Queue record', 'Record status', 'Money at stake', 'Evidence', 'Next best move', 'Updated', 'Actions'].map((header) => (
                           <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
                             {header}
                           </th>
@@ -1475,6 +1550,11 @@ export default function DisputeCases() {
                         const actionButton = getBackendPrimaryAction(row);
                         const canOpenCaseDetail = row.can_open_case_detail === true;
                         const canOpenBrief = row.can_open_brief === true && Boolean(row.linked_dispute_case_id);
+                        const entityLabel = getQueueEntityLabel(row);
+                        const openRecordLabel = getOpenRecordLabel(row);
+                        const recordDetailsLabel = getRecordDetailsLabel(row);
+                        const recordIdentifier = getQueueRecordIdentifier(row);
+                        const recordType = row.case_type || row.anomaly_type || 'Not Available';
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
@@ -1482,16 +1562,17 @@ export default function DisputeCases() {
                               <div className="space-y-2 min-w-[220px]">
                                 {canOpenCaseDetail ? (
                                   <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
-                                    {row.case_number || row.dispute_case_id}
+                                    {recordIdentifier}
                                   </Link>
                                 ) : (
                                   <span className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white/60">
-                                    {(row.case_number || row.dispute_case_id) || 'Not Available'}
+                                    {recordIdentifier}
                                   </span>
                                 )}
                                 <div className="space-y-1 text-[11px] text-white/50 font-sans">
-                                  <div>Store: {row.store_name || 'Not available'}</div>
-                                  <div>Type: {row.case_type || row.anomaly_type || 'Not available'}</div>
+                                  <div>Entity: {entityLabel}</div>
+                                  <div>Store: {row.store_name || 'Not Available'}</div>
+                                  <div>Type: {recordType}</div>
                                 </div>
                               </div>
                             </td>
@@ -1556,7 +1637,7 @@ export default function DisputeCases() {
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
                                 {decisionExplanation ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/45">
-                                    Why this case is in this state: {decisionExplanation}
+                                    Why this record is in this state: {decisionExplanation}
                                   </p>
                                 ) : null}
                                 {getManualReviewReason(row) ? (
@@ -1598,7 +1679,7 @@ export default function DisputeCases() {
 
                             <td className="px-6 py-5">
                               <div className="min-w-[160px] space-y-1 text-[11px] text-white/50 font-sans">
-                                <div>Updated: {row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not available'}</div>
+                                <div>Updated: {row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
                               </div>
                             </td>
 
@@ -1615,17 +1696,17 @@ export default function DisputeCases() {
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
-                                    <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Case Actions</div>
+                                    <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record Actions</div>
                                     {canOpenCaseDetail ? (
                                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                        <Link to={`/recoveries/${row.dispute_case_id}`}>Open Case</Link>
+                                        <Link to={`/recoveries/${row.dispute_case_id}`}>{openRecordLabel}</Link>
                                       </DropdownMenuItem>
                                     ) : (
                                       <DropdownMenuItem
                                         disabled
                                         className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
                                       >
-                                        {getActionAvailabilityLabel(false, 'Open Case')}
+                                        {getActionAvailabilityLabel(false, openRecordLabel)}
                                       </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem
@@ -1640,7 +1721,7 @@ export default function DisputeCases() {
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
                                       onClick={() => openCaseDetails(row)}
                                     >
-                                      {getActionAvailabilityLabel(canOpenCaseDetail, 'Case Details')}
+                                      {getActionAvailabilityLabel(canOpenCaseDetail, recordDetailsLabel)}
                                     </DropdownMenuItem>
                                     {actionButton ? (
                                       <DropdownMenuItem
@@ -1702,30 +1783,32 @@ export default function DisputeCases() {
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
         <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
           <DialogHeader className="border-b border-white/5 pb-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Case Details</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Record Details</div>
             <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
-              {detailsRow?.case_number || 'Dispute Case'}
+              {detailsRow ? getQueueRecordIdentifier(detailsRow) : 'Not Available'}
             </DialogTitle>
             {detailsRow ? (
               <div className="pt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">
-                Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
+                Entity: {getQueueEntityLabel(detailsRow)} · Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
               </div>
             ) : null}
           </DialogHeader>
           {detailsRow ? (() => {
             const financialSummary = detailsFinancialSummary || getFinancialSummaryForRow(detailsRow, financialSummaries);
+            const hasRealDisputeCase = getQueueEntityKind(detailsRow) === 'dispute_case';
             return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
-                title="Case"
+                title="Record"
                 rows={[
-                  { label: 'Case Number', value: detailsRow.case_number || 'Not available' },
-                  { label: 'Claim Number', value: detailsRow.claim_number || 'Not available' },
-                  { label: 'Dispute Case ID', value: detailsRow.dispute_case_id || 'Not available' },
-                  { label: 'Detection Reference', value: detailsRow.detection_result_id || 'Not available' },
-                  { label: 'Amazon Case', value: detailsRow.amazon_case_id || 'Not available' },
-                  { label: 'Store', value: detailsRow.store_name || 'Not available' },
-                  { label: 'Case Type', value: detailsRow.case_type || detailsRow.anomaly_type || 'Not available' },
+                  { label: 'Entity', value: getQueueEntityLabel(detailsRow) },
+                  { label: 'Queue Identifier', value: getQueueRecordIdentifier(detailsRow) },
+                  { label: 'Claim Number', value: detailsRow.claim_number || 'Not Available' },
+                  { label: 'Dispute Case ID', value: hasRealDisputeCase ? (detailsRow.linked_dispute_case_id || detailsRow.dispute_case_id || 'Not Available') : 'Not Available' },
+                  { label: 'Detection Reference', value: detailsRow.detection_result_id || (!hasRealDisputeCase ? detailsRow.dispute_case_id : null) || 'Not Available' },
+                  { label: 'Amazon Case', value: hasRealDisputeCase ? (detailsRow.amazon_case_id || 'Not Available') : 'Not Available' },
+                  { label: 'Store', value: detailsRow.store_name || 'Not Available' },
+                  { label: 'Record Type', value: detailsRow.case_type || detailsRow.anomaly_type || 'Not Available' },
                 ]}
               />
               <DetailSection
@@ -1733,14 +1816,14 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Status', value: formatLabel(detailsRow.status) },
                   { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
-                  { label: 'Filing Strategy', value: detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : 'Not available' },
-                  { label: 'Runtime State', value: detailsRow.operational_state ? formatAutonomyLabel(detailsRow.operational_state) : 'Not available' },
+                  { label: 'Filing Strategy', value: detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : 'Not Available' },
+                  { label: 'Runtime State', value: detailsRow.operational_state ? formatAutonomyLabel(detailsRow.operational_state) : 'Not Available' },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
                   { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
                   { label: 'Payout Proof', value: formatPayoutProofStatus(getPayoutProofStatus(detailsRow)) },
                   { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
-                  { label: 'Next Action', value: detailsRow.next_action || 'Not available' },
+                  { label: 'Next Action', value: detailsRow.next_action || 'Not Available' },
                 ]}
               />
               <DetailSection
@@ -1748,14 +1831,14 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Posture', value: deriveFilingPosture(detailsRow).headline },
                   { label: 'Detail', value: deriveFilingPosture(detailsRow).detail },
-                  { label: 'Decision Explanation', value: summarizeExplanationPayload(detailsRow.explanation_payload) || 'None recorded' },
-                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.operational_explanation) || 'None recorded' },
-                  { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Unavailable' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
-                  { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'None recorded' },
-                  { label: 'Last Filing Error', value: detailsRow.last_error || 'None recorded' },
+                  { label: 'Decision Explanation', value: summarizeExplanationPayload(detailsRow.explanation_payload) || 'Not Available' },
+                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.operational_explanation) || 'Not Available' },
+                  { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Not Available' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
+                  { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'Not Available' },
+                  { label: 'Last Filing Error', value: detailsRow.last_error || 'Not Available' },
                   { label: 'Missing Requirements', value: formatRequirementList(getMissingRequirements(detailsRow)) },
-                  { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? formatDisputeReason(getManualReviewReason(detailsRow)) : 'None recorded' },
-                  { label: 'Quarantine Reason', value: getQuarantineReason(detailsRow) || 'None recorded' },
+                  { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? formatDisputeReason(getManualReviewReason(detailsRow)) : 'Not Available' },
+                  { label: 'Quarantine Reason', value: getQuarantineReason(detailsRow) || 'Not Available' },
                 ]}
               />
               <DetailSection
@@ -1764,7 +1847,7 @@ export default function DisputeCases() {
                   { label: 'Requested Amount', value: formatMoney(detailsRow.requested_amount, detailsRow.currency) },
                   { label: 'Approved Amount', value: formatMoney(detailsRow.approved_amount, detailsRow.currency) },
                   { label: 'Paid (Verified)', value: formatMoney(financialSummary?.verified_paid_amount, detailsRow.currency) },
-                  { label: 'Case Recovery Field (Legacy)', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
+                  { label: 'Record Recovery Field (Legacy)', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
                   { label: 'Billed Amount', value: formatMoney(detailsRow.billed_amount, detailsRow.currency) },
                   { label: 'Expected Payout (Estimate)', value: formatMoney(detailsRow.expected_payout_amount, detailsRow.currency) },
                   { label: 'Variance', value: formatMoney(financialSummary?.variance_amount, detailsRow.currency) },
@@ -1774,31 +1857,31 @@ export default function DisputeCases() {
                 title="Financial Confirmation"
                 rows={[
                   { label: 'Summary', value: financialStatusDetail(financialSummary) },
-                  { label: 'Paid Via Settlement', value: financialSummary?.proof_of_payment?.settlement_id || 'Not available' },
-                  { label: 'Payout Batch', value: financialSummary?.proof_of_payment?.payout_batch_id || 'Not available' },
-                  { label: 'Reference ID', value: financialSummary?.proof_of_payment?.reference_id || 'Not available' },
-                  { label: 'Confirmed At', value: financialSummary?.proof_of_payment?.event_date ? format(new Date(financialSummary.proof_of_payment.event_date), 'yyyy/MM/dd HH:mm') : 'Not available' },
+                  { label: 'Paid Via Settlement', value: financialSummary?.proof_of_payment?.settlement_id || 'Not Available' },
+                  { label: 'Payout Batch', value: financialSummary?.proof_of_payment?.payout_batch_id || 'Not Available' },
+                  { label: 'Reference ID', value: financialSummary?.proof_of_payment?.reference_id || 'Not Available' },
+                  { label: 'Confirmed At', value: financialSummary?.proof_of_payment?.event_date ? format(new Date(financialSummary.proof_of_payment.event_date), 'yyyy/MM/dd HH:mm') : 'Not Available' },
                   { label: 'Source', value: financialSummary?.source_types?.length ? financialSummary.source_types.map(financialSourceLabel).join(', ') : 'No financial events yet' },
                 ]}
               />
               <DetailSection
                 title="Evidence"
                 rows={[
-                  { label: 'Evidence State', value: detailsRow.evidence_state || 'Not available' },
+                  { label: 'Evidence State', value: detailsRow.evidence_state || 'Not Available' },
                   { label: 'Matched Documents', value: String(detailsRow.matched_document_count ?? 0) },
                   { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
-                  { label: 'Rejection Category', value: detailsRow.rejection_category || 'Not available' },
-                  { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not available' },
+                  { label: 'Rejection Category', value: detailsRow.rejection_category || 'Not Available' },
+                  { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not Available' },
                 ]}
               />
               <DetailSection
                 title="Currentness"
                 rows={[
-                  { label: 'Created', value: detailsRow.created_at ? format(new Date(detailsRow.created_at), 'yyyy/MM/dd HH:mm') : 'Not available' },
-                  { label: 'Updated', value: detailsRow.updated_at ? format(new Date(detailsRow.updated_at), 'yyyy/MM/dd HH:mm') : 'Not available' },
-                  { label: 'Expected Payout Date (Estimate)', value: detailsRow.expected_payout_date ? format(new Date(detailsRow.expected_payout_date), 'yyyy/MM/dd') : 'Not available' },
-                  { label: 'Order ID', value: detailsRow.order_id || 'Not available' },
-                  { label: 'SKU / ASIN', value: [detailsRow.sku, detailsRow.asin].filter(Boolean).join(' / ') || 'Not available' },
+                  { label: 'Created', value: detailsRow.created_at ? format(new Date(detailsRow.created_at), 'yyyy/MM/dd HH:mm') : 'Not Available' },
+                  { label: 'Updated', value: detailsRow.updated_at ? format(new Date(detailsRow.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available' },
+                  { label: 'Expected Payout Date (Estimate)', value: detailsRow.expected_payout_date ? format(new Date(detailsRow.expected_payout_date), 'yyyy/MM/dd') : 'Not Available' },
+                  { label: 'Order ID', value: detailsRow.order_id || 'Not Available' },
+                  { label: 'SKU / ASIN', value: [detailsRow.sku, detailsRow.asin].filter(Boolean).join(' / ') || 'Not Available' },
                 ]}
               />
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
@@ -1821,10 +1904,10 @@ export default function DisputeCases() {
                         <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{formatMoney(event.amount, event.currency)}</div>
                       </div>
                       <div className="mt-3 grid gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/42 xl:grid-cols-2">
-                        <div>Reference: {event.reference_id || 'Not available'}</div>
-                        <div>Settlement: {event.settlement_id || 'Not available'}</div>
-                        <div>Batch: {event.payout_batch_id || 'Not available'}</div>
-                        <div>Order / SKU: {[event.amazon_order_id, event.sku].filter(Boolean).join(' / ') || 'Not available'}</div>
+                        <div>Reference: {event.reference_id || 'Not Available'}</div>
+                        <div>Settlement: {event.settlement_id || 'Not Available'}</div>
+                        <div>Batch: {event.payout_batch_id || 'Not Available'}</div>
+                        <div>Order / SKU: {[event.amazon_order_id, event.sku].filter(Boolean).join(' / ') || 'Not Available'}</div>
                       </div>
                     </div>
                   ))}
