@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProgress, type SyncStatusResponse, type SSEConnectionState } from '@/lib/inventoryApi';
@@ -66,7 +67,7 @@ export default function Sync() {
   const [syncId, setSyncId] = useState<string | undefined>(urlSyncId);
   const [progress, setProgress] = useState<number>(0);
   const [status, setStatus] = useState<'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled'>('idle');
-  const [message, setMessage] = useState<string>('Initializing sync...');
+  const [message, setMessage] = useState<string>('Preparing your audit...');
   const [syncData, setSyncData] = useState<SyncStatusResponse | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
@@ -104,6 +105,53 @@ export default function Sync() {
         id: `log_${nextLogIdRef.current++}`,
       },
     ]);
+  };
+
+  const readEventString = (value: unknown): string | null => {
+    return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
+  };
+
+  const extractEventSyncId = (event: unknown): string | null => {
+    if (!event || typeof event !== 'object') {
+      return null;
+    }
+
+    const record = event as Record<string, unknown>;
+    const payload = record.payload && typeof record.payload === 'object'
+      ? record.payload as Record<string, unknown>
+      : null;
+    const log = record.log && typeof record.log === 'object'
+      ? record.log as Record<string, unknown>
+      : null;
+
+    return (
+      readEventString(record.syncId) ||
+      readEventString(record.sync_id) ||
+      readEventString(payload?.syncId) ||
+      readEventString(payload?.sync_id) ||
+      readEventString(log?.syncId) ||
+      readEventString(log?.sync_id)
+    );
+  };
+
+  const warnIgnoredForeignEvent = (reason: string, currentSyncId: string, event: unknown) => {
+    if (!import.meta.env.DEV) return;
+
+    const record = event && typeof event === 'object'
+      ? event as Record<string, unknown>
+      : {};
+    const log = record.log && typeof record.log === 'object'
+      ? record.log as Record<string, unknown>
+      : null;
+
+    console.warn('[Sync] Ignored SSE event outside current run', {
+      reason,
+      currentSyncId,
+      incomingSyncId: extractEventSyncId(event),
+      eventType: readEventString(record.event_type) || readEventString(record.type) || 'unknown',
+      status: readEventString(record.status),
+      category: readEventString(log?.category) || readEventString(record.category),
+    });
   };
 
   // Scroll to bottom of logs
@@ -160,15 +208,15 @@ export default function Sync() {
     const storyMap = new Map<LogEntry['category'], LogStory>();
 
     const storyConfig: Record<LogEntry['category'], { title: string }> = {
-      inventory: { title: 'Inventory Scan' },
-      orders: { title: 'Order Ledger Check' },
-      shipments: { title: 'Shipment Verification' },
-      returns: { title: 'Returns Analysis' },
-      settlements: { title: 'Settlement Reconciliation' },
-      fees: { title: 'Fee Audit' },
-      claims: { title: 'Claim Detection' },
-      detection: { title: 'Opportunity Detection' },
-      system: { title: 'System' },
+      inventory: { title: 'Inventory' },
+      orders: { title: 'Orders' },
+      shipments: { title: 'Shipments' },
+      returns: { title: 'Returns' },
+      settlements: { title: 'Settlements' },
+      fees: { title: 'Fees' },
+      claims: { title: 'Claims' },
+      detection: { title: 'Findings' },
+      system: { title: 'Audit updates' },
     };
 
     for (const log of filteredLogs) {
@@ -310,16 +358,16 @@ export default function Sync() {
       } else if (mappedStatus === 'failed' && !toastShownRef.current.failed) {
         toastShownRef.current.failed = true;
         toast({
-          title: 'Amazon Update Paused',
-          description: s.error || s.message || 'Sync failed.',
+          title: 'Audit paused',
+          description: s.error || s.message || 'Audit failed.',
           variant: 'destructive',
           duration: 6000,
         });
       } else if (mappedStatus === 'cancelled' && !toastShownRef.current.cancelled) {
         toastShownRef.current.cancelled = true;
         toast({
-          title: 'Sync Cancelled',
-          description: s.message || 'The sync has been cancelled.',
+          title: 'Audit stopped',
+          description: s.message || 'This audit has been stopped.',
           duration: 4000,
         });
       }
@@ -358,12 +406,12 @@ export default function Sync() {
           const newSyncId = start.syncId;
           setSyncId(newSyncId);
           setStatus('running');
-          setMessage(start.message || 'Sync started successfully');
+          setMessage(start.message || 'Audit started successfully');
           previousStatusRef.current = 'running';
           toastShownRef.current = { started: true };
 
           toast({
-            title: 'Amazon Update Started',
+            title: 'Audit started',
             description: 'We\'re pulling your latest Amazon records. This can take a few minutes.',
             duration: 4000,
           });
@@ -371,7 +419,7 @@ export default function Sync() {
           navigate(`/sync?id=${newSyncId}`, { replace: true });
         } catch (e: any) {
           if (cancelled) return;
-          const errorMsg = e?.message || 'Failed to start sync';
+          const errorMsg = e?.message || 'Could not start audit';
 
           // Check if it's a "sync already in progress" error
           const isBlockedError = errorMsg.toLowerCase().includes('already in progress');
@@ -383,9 +431,9 @@ export default function Sync() {
           previousStatusRef.current = 'failed';
 
           toast({
-            title: isBlockedError ? 'Sync Blocked' : 'Failed to Start Sync',
+            title: isBlockedError ? 'Audit blocked' : 'Could not start audit',
             description: isBlockedError
-              ? 'A previous sync is stuck. Use "Clear & Retry" to fix this.'
+              ? 'A previous audit appears stuck. Use "Clear and retry" to fix this.'
               : errorMsg,
             variant: 'destructive',
             duration: 5000,
@@ -403,27 +451,27 @@ export default function Sync() {
         } catch (e: any) {
           if (cancelled) return;
           console.error('Failed to load sync status:', e);
-          const errorMessage = e?.message || 'Failed to load sync status';
+          const errorMessage = e?.message || 'Could not load audit';
 
           if (errorMessage.includes('not found') || errorMessage.includes('Sync not found')) {
             setSyncId(undefined);
             setSyncData(null);
             setStatus('idle');
             setProgress(0);
-            setMessage('Sync not found. Please start a new sync.');
+            setMessage('Audit not found. Please start a new audit.');
             setError(null);
             navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
 
             toast({
-              title: 'Sync Not Found',
-              description: 'The sync you were viewing no longer exists. Please start a new sync.',
+              title: 'Audit not found',
+              description: 'The audit you were viewing is no longer available. Start a new one to continue.',
               duration: 5000,
             });
           } else {
             setError(errorMessage);
             toast({
-              title: 'Error Loading Sync Status',
-              description: errorMessage || 'Failed to load sync status. Please refresh the page.',
+              title: 'Could not load audit',
+              description: errorMessage || 'We could not load this audit. Please refresh the page.',
               variant: 'destructive',
               duration: 5000,
             });
@@ -439,6 +487,21 @@ export default function Sync() {
       try {
         unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
           if (cancelled) return;
+          const incomingSyncId = extractEventSyncId(s);
+
+          if (!incomingSyncId) {
+            warnIgnoredForeignEvent('missing_sync_id', syncId, s);
+            return;
+          }
+
+          if (incomingSyncId !== syncId) {
+            warnIgnoredForeignEvent('sync_id_mismatch', syncId, s);
+            return;
+          }
+
+          if (s.status === 'connected') {
+            return;
+          }
 
           // Handle log events from backend
           if (s.type === 'log' && s.log) {
@@ -519,7 +582,7 @@ export default function Sync() {
           setSyncData(null);
           setStatus('idle');
           setProgress(0);
-          setMessage('Sync not found. Please start a new sync.');
+          setMessage('Audit not found. Please start a new audit.');
           navigate('/sync', { replace: true });
         }
       }
@@ -545,23 +608,23 @@ export default function Sync() {
     try {
       await cancelSync(syncId, currentTenantSlug);
       setStatus('cancelled');
-      setMessage('Sync cancelled');
+      setMessage('Audit stopped');
       previousStatusRef.current = 'cancelled';
       toastShownRef.current.cancelled = true;
 
       toast({
-        title: 'Sync Cancelled',
-        description: 'The sync has been cancelled successfully.',
+        title: 'Audit stopped',
+        description: 'This audit has been stopped.',
         duration: 4000,
       });
 
       const s = await getSyncStatus(syncId, currentTenantSlug);
       updateSyncState(s);
     } catch (e: any) {
-      setError(e?.message || 'Failed to cancel sync');
+      setError(e?.message || 'Could not stop audit');
       toast({
-        title: 'Failed to Cancel Sync',
-        description: e?.message || 'Failed to cancel sync. Please try again.',
+        title: 'Could not stop audit',
+        description: e?.message || 'We could not stop this audit. Please try again.',
         variant: 'destructive',
         duration: 5000,
       });
@@ -574,7 +637,7 @@ export default function Sync() {
     setSyncId(undefined);
     setProgress(0);
     setStatus('idle');
-    setMessage('Initializing sync...');
+    setMessage('Preparing your audit...');
     setError(null);
     setSyncData(null);
     setLogs([]);
@@ -584,8 +647,8 @@ export default function Sync() {
     toastShownRef.current = {};
 
     toast({
-      title: 'Retrying Sync',
-      description: 'Starting a new sync...',
+      title: 'Starting a new audit',
+      description: 'We\'re resetting this page and starting again.',
       duration: 3000,
     });
 
@@ -600,7 +663,7 @@ export default function Sync() {
       const result = await forceClearSync(currentTenantSlug);
 
       toast({
-        title: 'Sync Cleared',
+        title: 'Audit reset',
         description: result.message,
         duration: 3000,
       });
@@ -617,11 +680,11 @@ export default function Sync() {
         navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
       }, 500);
     } catch (e: any) {
-      const errorMsg = e?.message || 'Failed to clear stuck sync';
+      const errorMsg = e?.message || 'Could not reset this audit';
       setError(errorMsg);
 
       toast({
-        title: 'Failed to Clear',
+        title: 'Could not reset audit',
         description: errorMsg,
         variant: 'destructive',
         duration: 5000,
@@ -649,7 +712,7 @@ export default function Sync() {
     const html = `<!DOCTYPE html>
 <html>
 <head>
-  <title>Margin | Sync Logs - ${exportDate}</title>
+  <title>Margin | Audit Log - ${exportDate}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; max-width: 1200px; margin: 0 auto; }
     h1 { color: #111827; font-size: 24px; margin-bottom: 8px; }
@@ -666,7 +729,7 @@ export default function Sync() {
   </div>
   <div class="meta">
     <span><strong>Exported:</strong> ${exportDate}</span>
-    <span><strong>Sync ID:</strong> ${syncId || 'N/A'}</span>
+    <span><strong>Audit ID:</strong> ${syncId || 'N/A'}</span>
     <span><strong>Status:</strong> ${status}</span>
     <span><strong>Total Entries:</strong> ${logs.length}</span>
   </div>
@@ -748,113 +811,165 @@ export default function Sync() {
     return `${date}, ${time}`;
   };
 
+  const statusPresentation = {
+    idle: {
+      label: 'Ready',
+      summary: 'Start an audit to pull your latest Amazon records and watch the review unfold here.',
+      badgeClass: 'border-white/10 text-white/60 bg-white/[0.02]',
+    },
+    running: {
+      label: 'Audit in progress',
+      summary: message || 'We are pulling your latest Amazon records now.',
+      badgeClass: 'border-white/10 text-white/70 bg-white/[0.02]',
+    },
+    detecting: {
+      label: 'Reviewing findings',
+      summary: message || 'We are checking the records we pulled and looking for issues worth your attention.',
+      badgeClass: 'border-amber-500/20 text-amber-200 bg-amber-500/[0.08]',
+    },
+    completed: {
+      label: 'Audit complete',
+      summary: message || 'This audit finished and the latest confirmed updates are shown below.',
+      badgeClass: 'border-emerald-500/20 text-emerald-200 bg-emerald-500/[0.08]',
+    },
+    failed: {
+      label: 'Needs attention',
+      summary: error || message || 'We hit a problem while running this audit.',
+      badgeClass: 'border-red-500/20 text-red-200 bg-red-500/[0.08]',
+    },
+    cancelled: {
+      label: 'Audit stopped',
+      summary: message || 'This audit was stopped before it finished.',
+      badgeClass: 'border-white/10 text-white/60 bg-white/[0.02]',
+    },
+  } as const;
+
+  const activeStatusPresentation = statusPresentation[status];
+  const liveUpdateLabel = sseStatus === 'connected' ? 'Live updates on' : 'Checking for updates';
+  const progressWidth = `${Math.max(0, Math.min(progress, 100))}%`;
+
   return (
-    <PageLayout title="Sync Statistics" hideNavbar hideSidebar midnight hideLogo logoFontFamily='"Nunito Sans", sans-serif'>
-      <div className="relative min-h-[90vh] overflow-hidden">
-        {/* Background Mesh Accent */}
+    <PageLayout title="Audit" noPadding hideNavbar hideSidebar midnight hideLogo logoFontFamily='"Nunito Sans", sans-serif'>
+      <div className="min-h-screen bg-[#070707] text-white relative">
+        <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="relative z-10 max-w-6xl mx-auto space-y-8 pt-12 md:pt-16">
-          {/* Page Header - Screenshot Redesign - Aligned with Activity Log */}
-          <div className="mb-12 max-w-4xl mx-auto md:mx-auto lg:mx-auto">
-            <div className="flex items-start justify-between">
-              <div className="space-y-6">
-                <div>
-                  <h1 className="text-2xl font-bold text-white tracking-tight font-merriweather">Financial Audit Engine</h1>
-                  <p className="text-[13px] text-white/40 mt-1 font-normal font-montserrat">Powered by Amazon SP-API</p>
+        <div className="relative z-10 w-full mx-auto px-6 lg:px-10 py-10">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 flex flex-col md:flex-row md:items-start md:justify-between gap-6"
+          >
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 rounded-xl bg-[#111111] border border-white/10">
+                  <Target className="h-5 w-5 text-white/80" />
                 </div>
+                <h1 className="text-2xl font-sans font-light tracking-tight">Audit Engine</h1>
+                <Badge variant="outline" className={`text-[10px] font-sans font-bold uppercase tracking-tight ${activeStatusPresentation.badgeClass}`}>
+                  {activeStatusPresentation.label}
+                </Badge>
               </div>
+              <p className="text-sm text-white/40 max-w-2xl">
+                Follow this audit as it pulls your Amazon records, checks what changed, and shows any confirmed issues or recovery-related updates for this run only.
+              </p>
+            </div>
 
-              {/* Polling Status - Top Right */}
-              {status === 'running' && (
-                <div className="pt-8">
-                  <div className="flex items-center gap-2">
-                    {sseStatus === 'connected' ? (
-                      <span className="flex items-center gap-1.5 text-[13px] font-medium text-emerald-500/80">
-                        <span className="relative flex h-1.5 w-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                        </span>
-                        SYNC_ACTIVE
-                      </span>
-                    ) : (
-                      <span className="text-[13px] font-medium text-white/40 font-mono">POLLING_STATE</span>
-                    )}
-                  </div>
-                </div>
+            <div className="flex flex-wrap items-center gap-3">
+              {(status === 'running' || status === 'detecting') && (
+                <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/60 bg-white/[0.02]">
+                  {liveUpdateLabel}
+                </Badge>
+              )}
+              {logs.length > 0 && (
+                <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/60 bg-white/[0.02]">
+                  {filteredLogs.length} entries
+                </Badge>
               )}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="max-w-4xl mx-auto md:mx-auto lg:mx-auto space-y-4">
-            {/* Add shimmer animation to global styles */}
-            <style>{`
-              @keyframes shimmer {
-                0% { background-position: 200% 0; }
-                100% { background-position: -200% 0; }
-              }
-            `}</style>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="rounded-xl bg-white/[0.02] border border-white/10 p-5 mb-6"
+          >
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+              <div className="space-y-2">
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Current audit</p>
+                <h2 className="text-xl font-sans font-light tracking-tight text-white">{activeStatusPresentation.label}</h2>
+                <p className="text-sm text-white/40 max-w-2xl">{activeStatusPresentation.summary}</p>
+              </div>
 
-            {/* Main Content */}
-            <div className="space-y-4">
-              {/* Detecting Phase - OpenAI minimal style */}
-              {status === 'detecting' && (
-                <div className="py-6 border-b border-white/5 mb-4">
-                  <div className="flex items-center gap-4">
-                    <div className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </div>
-                    <div>
-                      <p className="text-[16px] font-bold text-white tracking-tight">Scanning for discrepancies</p>
-                      <p className="text-[13px] text-white/40 mt-1 font-normal font-montserrat">Our AI agents are auditing every transaction in real-time.</p>
-                    </div>
-                  </div>
+              <div className="min-w-[240px] rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Progress</span>
+                  <span className="text-[11px] font-sans font-semibold tracking-tight text-white/60">{Math.round(progress)}%</span>
                 </div>
-              )}
-
-
-              {/* Status Strip - OpenAI minimal style */}
-              {logs.length > 0 && status === 'completed' && (
-                <div className="flex items-center gap-4 text-[13px]">
-                  {syncData?.completedAt && (
-                    <span className="text-gray-400 font-normal">
-                      Last sync: {(() => {
-                        const completedTime = new Date(syncData.completedAt).getTime();
-                        const now = Date.now();
-                        const diffMs = now - completedTime;
-                        const diffMins = Math.floor(diffMs / (1000 * 60));
-                        if (diffMins < 1) return 'just now';
-                        if (diffMins < 60) return `${diffMins} min ago`;
-                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                        return `${diffHours}h ago`;
-                      })()}
-                    </span>
-                  )}
+                <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden">
+                  <div className="h-full rounded-full bg-white/80 transition-all duration-500" style={{ width: progressWidth }} />
                 </div>
-              )}
+              </div>
+            </div>
 
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center gap-4 mt-4 text-[10px] text-white/25 font-sans font-bold uppercase tracking-tight">
+              {syncData?.startedAt && (
+                <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> Started: {formatDateTime(syncData.startedAt)}</span>
+              )}
+              {syncData?.completedAt && (
+                <span className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-emerald-500/60" /> Completed: {formatDateTime(syncData.completedAt)}</span>
+              )}
+            </div>
+          </motion.div>
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.08 }}
+              className="rounded-xl bg-gradient-to-r from-red-500/[0.08] to-orange-500/[0.04] border border-red-500/20 p-5 mb-6"
+            >
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-300 mt-0.5 shrink-0" />
+                <div>
+                  <h3 className="text-sm font-medium text-red-300 mb-1">This audit needs attention</h3>
+                  <p className="text-sm text-red-100/70 leading-relaxed">{error}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="rounded-xl bg-white/[0.01] border border-white/10 p-5"
+          >
+            <div className="space-y-5">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                <div className="flex items-center gap-3">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[16px] font-bold text-white tracking-tight font-merriweather">Activity Log</h4>
+                    <h4 className="text-[16px] font-sans font-medium text-white tracking-tight">Audit activity</h4>
                     <TooltipProvider>
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger asChild>
                           <Info className="h-3.5 w-3.5 text-white/20 hover:text-white transition-colors cursor-help" />
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="bg-[#0A0A0A] border-white/10 text-neutral-200 p-4 max-w-[320px] shadow-2xl ml-2 rounded-none">
+                        <TooltipContent side="right" className="bg-[#0A0A0A] border-white/10 text-neutral-200 p-4 max-w-[320px] shadow-2xl ml-2 rounded-xl">
                           <div className="space-y-3">
                             <div className="space-y-1">
-                              <p className="font-bold text-white text-xs tracking-tight uppercase font-mono">Agent Activity</p>
-                              <p className="text-sm leading-relaxed text-white/40 font-normal font-montserrat">
-                                This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models.
+                              <p className="font-sans font-bold text-white text-xs tracking-tight uppercase">What you see</p>
+                              <p className="text-sm leading-relaxed text-white/40 font-sans">
+                                This feed shows confirmed updates for this audit only. Entries are grouped by orders, inventory, shipments, returns, settlements, fees, claims, and findings.
                               </p>
                             </div>
                             <div className="pt-2 border-t border-white/5">
-                              <p className="text-xs text-white/20 italic font-mono">
-                                Updates real-time via SP-API
+                              <p className="text-xs text-white/20 italic font-sans">
+                                New updates appear here as this audit runs.
                               </p>
                             </div>
                           </div>
@@ -862,37 +977,37 @@ export default function Sync() {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <span className="text-[11px] text-white/20 font-mono tracking-widest font-bold">{filteredLogs.length} ENTRIES</span>
+                  <span className="text-[11px] text-white/20 font-sans tracking-tight font-bold uppercase">{filteredLogs.length} entries</span>
                 </div>
 
                 {/* Filter Toggles & Export */}
-                <div className="flex items-center justify-between border-b border-white/5 pb-1">
-                  <div className="flex items-center gap-10">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/5 pb-1">
+                  <div className="flex items-center gap-6">
                     <button
                       onClick={() => setLogFilter('all')}
-                      className={`pb-3 text-[11px] font-bold uppercase font-mono tracking-widest transition-all relative ${logFilter === 'all'
+                      className={`pb-3 text-[11px] font-sans font-bold uppercase tracking-tight transition-all relative ${logFilter === 'all'
                         ? 'text-white'
                         : 'text-white/20 hover:text-white/40'
                         }`}>
-                      All Events
+                      All updates
                       {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('money')}
-                      className={`pb-3 text-[11px] font-bold uppercase font-mono tracking-widest transition-all relative ${logFilter === 'money'
+                      className={`pb-3 text-[11px] font-sans font-bold uppercase tracking-tight transition-all relative ${logFilter === 'money'
                         ? 'text-white'
                         : 'text-white/20 hover:text-white/40'
                         }`}>
-                      Recoveries
+                      Recovery-related
                       {logFilter === 'money' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('issues')}
-                      className={`pb-3 text-[11px] font-bold uppercase font-mono tracking-widest transition-all relative ${logFilter === 'issues'
+                      className={`pb-3 text-[11px] font-sans font-bold uppercase tracking-tight transition-all relative ${logFilter === 'issues'
                         ? 'text-white'
                         : 'text-white/20 hover:text-white/40'
                         }`}>
-                      Anomalies
+                      Issues
                       {logFilter === 'issues' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
                     </button>
                   </div>
@@ -901,7 +1016,7 @@ export default function Sync() {
                   {logs.length > 0 && (
                     <button
                       onClick={exportLogs}
-                      className="pb-3 flex items-center gap-2 text-[11px] font-bold text-white/20 hover:text-white transition-all uppercase font-mono tracking-widest">
+                      className="pb-3 flex items-center gap-2 text-[11px] font-sans font-bold text-white/20 hover:text-white transition-all uppercase tracking-tight">
                       <Download className="h-3.5 w-3.5" />
                       Export
                     </button>
@@ -915,25 +1030,24 @@ export default function Sync() {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-white/20" />
                 <Input
                   type="text"
-                  placeholder="QUERY_ACTIVITY_FEED..."
+                  placeholder="Search this audit"
                   value={logSearch}
                   onChange={(e) => setLogSearch(e.target.value)}
-                  className="pl-11 h-12 text-[12px] font-mono bg-white/[0.02] border-white/5 focus:bg-white/[0.04] focus:border-white/10 rounded-none placeholder:text-white/10 text-white shadow-none transition-all uppercase tracking-widest"
+                  className="pl-11 h-12 text-[12px] font-sans bg-white/[0.02] border-white/5 focus:bg-white/[0.04] focus:border-white/10 rounded-xl placeholder:text-white/20 text-white shadow-none transition-all tracking-tight"
                 />
               </div>
 
-              {/* Log Container - Institutional Dark Theme */}
+              {/* Log Container */}
               <div className="relative group">
-                {/* Header bar - OpenAI minimal terminal */}
-                <div className="absolute top-0 left-0 right-0 h-10 bg-[#0A0A0A] rounded-t-none border-b border-white/5 flex items-center px-5 z-10">
-                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em] font-mono">Stream: Activity_Feed</span>
+                <div className="absolute top-0 left-0 right-0 h-10 bg-[#0A0A0A] rounded-t-xl border-b border-white/5 flex items-center px-5 z-10">
+                  <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Current audit feed</span>
                 </div>
 
 
                 <div
                   ref={logContainerRef}
                   data-lenis-prevent
-                  className="bg-[#050505] rounded-none pt-14 pb-6 px-5 font-normal text-[13px] h-[500px] overflow-y-auto overscroll-contain scroll-smooth border border-white/5 shadow-2xl relative leading-relaxed tracking-tight text-white/40">
+                  className="bg-[#050505] rounded-xl pt-14 pb-6 px-5 font-normal text-[13px] h-[500px] overflow-y-auto overscroll-contain scroll-smooth border border-white/5 shadow-2xl relative leading-relaxed tracking-tight text-white/40">
                   {/* Simplified subtle gradient */}
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none rounded-lg"></div>
 
@@ -942,19 +1056,20 @@ export default function Sync() {
                       {logFilter === 'issues' ? (
                         <>
                           <AlertCircle className="h-8 w-8 mb-2 opacity-20" />
-                          <span className="text-xs opacity-40">NO BACKEND ISSUE LOGS AVAILABLE</span>
-                          <span className="text-xs text-gray-500 mt-1">Warnings and errors will appear here only when the backend emits them</span>
+                          <span className="text-xs opacity-40 uppercase tracking-tight font-sans">No issues reported for this audit</span>
+                          <span className="text-xs text-gray-500 mt-1 font-sans">Warnings and errors will appear here if this audit reports them.</span>
                         </>
                       ) : logFilter === 'money' ? (
                         <>
                           <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
-                          <span className="text-xs opacity-40">NO BACKEND RECOVERY LOGS AVAILABLE</span>
-                          <span className="text-xs text-gray-500 mt-1">Recovery-related backend log entries will appear here if they are emitted</span>
+                          <span className="text-xs opacity-40 uppercase tracking-tight font-sans">No recovery-related updates yet</span>
+                          <span className="text-xs text-gray-500 mt-1 font-sans">Recovery-related updates will appear here when this audit reports them.</span>
                         </>
                       ) : (
                         <>
                           <Loader2 className="h-8 w-8 mb-2 animate-spin opacity-20" />
-                          <span className="text-xs opacity-40">NO BACKEND LOG ENTRIES AVAILABLE</span>
+                          <span className="text-xs opacity-40 uppercase tracking-tight font-sans">No updates available yet</span>
+                          <span className="text-xs text-gray-500 mt-1 font-sans">This area will fill in as confirmed audit events arrive.</span>
                         </>
                       )}
                     </div>
@@ -977,7 +1092,7 @@ export default function Sync() {
                             }
                             if (part.match(/^\[.*?\]$/)) {
                               return (
-                                <span key={i} className="text-neutral-400 text-sm border border-neutral-800 px-1 rounded-sm tracking-tighter">
+                                <span key={i} className="text-neutral-400 text-sm border border-neutral-800 px-1 rounded-sm tracking-tight">
                                   {part.replace(/\[|\]/g, '')}
                                 </span>
                               );
@@ -991,7 +1106,7 @@ export default function Sync() {
                             {/* Story Header - Clickable */}
                             <button
                               onClick={() => toggleStory(story.id)}
-                              className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded-none hover:bg-white/[0.02] transition-colors group">
+                              className="w-full text-left flex items-center gap-2.5 py-2 px-3 rounded-xl hover:bg-white/[0.02] transition-colors group">
                               {/* Expand/Collapse Icon */}
                               <span className="text-white/20 group-hover:text-white transition-colors">
                                 {isExpanded ? (
@@ -1006,7 +1121,7 @@ export default function Sync() {
                               </span>
 
                               {/* Title */}
-                              <span className="font-bold text-white text-[10px] uppercase tracking-widest font-mono">{story.title}</span>
+                              <span className="font-sans font-bold text-white text-[10px] uppercase tracking-tight">{story.title}</span>
                             </button>
 
                             {/* Expanded Log Details */}
@@ -1018,10 +1133,10 @@ export default function Sync() {
                                   return (
                                     <React.Fragment key={log.id}>
                                       <div
-                                        className={`flex items-start gap-4 py-2 px-3 text-[12px] font-mono border-b border-white/[0.02] last:border-0 ${log.type === 'thinking' ? 'opacity-20 italic' : ''}`}>
+                                        className={`flex items-start gap-4 py-2 px-3 text-[12px] font-sans border-b border-white/[0.02] last:border-0 ${log.type === 'thinking' ? 'opacity-20 italic' : ''}`}>
                                         {/* Timestamp - very subtle */}
                                         <span
-                                          className="hidden sm:inline text-white/10 shrink-0 text-[10px] font-bold tracking-tighter"
+                                          className="hidden sm:inline text-white/10 shrink-0 text-[10px] font-sans font-bold tracking-tight"
                                           title={formattedTimestamp.full || formattedTimestamp.short}>
                                           {formattedTimestamp.short}
                                         </span>
@@ -1036,7 +1151,7 @@ export default function Sync() {
                                       </div>
                                       {/* Render context.details if present */}
                                       {log.context?.details && log.context.details.length > 0 && (
-                                        <div className="ml-12 mt-1 mb-2 space-y-0.5 text-sm text-gray-300">
+                                        <div className="ml-12 mt-1 mb-2 space-y-0.5 text-sm text-gray-300 font-sans tracking-tight">
                                           {log.context.details.map((detail, i) => (
                                             <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
                                               {detail}
@@ -1061,23 +1176,40 @@ export default function Sync() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Redesigned Bottom Section - Screenshot match */}
-          <div className="pt-16 pb-12">
-            <div className="flex flex-col gap-8">
-              {/* Syncing Indicator - Top Right of bottom section */}
-              <div className="flex justify-end pr-4">
+          <div className="pt-8 pb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="rounded-xl bg-white/[0.02] border border-white/10 p-5"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div className="space-y-2">
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Audit controls</p>
+                  <h3 className="text-lg font-sans font-light tracking-tight text-white">
+                    {status === 'running' ? 'Audit in progress' : 'Ready for the next step'}
+                  </h3>
+                  <p className="text-sm text-white/40 max-w-2xl">
+                    {status === 'running'
+                      ? 'This audit is still running. You can let it continue or stop it if needed.'
+                      : 'Run another audit, clear a stuck run, or move to your dashboard once this review is complete.'}
+                  </p>
+                </div>
+
                 {status === 'running' ? (
-                  <div className="flex items-center gap-3 px-6 py-4 bg-white/[0.02] border border-white/5 rounded-none">
-                    <Loader2 className="h-4 w-4 text-emerald-500 animate-spin" />
-                    <span className="text-[12px] font-bold text-white uppercase tracking-[0.2em] font-mono">Sync_Active</span>
+                  <div className="rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3 flex items-center gap-3">
+                    <Loader2 className="h-4 w-4 text-white/60 animate-spin" />
+                    <div>
+                      <p className="text-xs font-sans font-bold uppercase tracking-tight text-white/50">Audit in progress</p>
+                      <p className="text-[11px] text-white/35 font-sans">New updates will appear above as they arrive.</p>
+                    </div>
                   </div>
                 ) : (
                   <Button
                     onClick={async () => {
                       try {
-                        // Clear logs and reset state successfully
                         setLogs([]);
                         setLogsFinished(false);
                         logsFinishedRef.current = false;
@@ -1089,12 +1221,12 @@ export default function Sync() {
                         const newSyncId = start.syncId;
                         setSyncId(newSyncId);
                         setStatus('running');
-                        setMessage(start.message || 'Sync started successfully');
+                        setMessage(start.message || 'Audit started successfully');
                         previousStatusRef.current = 'running';
                         toastShownRef.current = { started: true };
 
                         toast({
-                          title: 'Amazon Update Started',
+                          title: 'Audit started',
                           description: 'We\'re pulling your latest Amazon records. This can take a few minutes.',
                           duration: 4000,
                         });
@@ -1102,99 +1234,78 @@ export default function Sync() {
                         navigate(`/sync?id=${newSyncId}`, { replace: true });
                       } catch (e: any) {
                         setStatus('failed');
-                        setMessage(e?.message || 'Failed to start sync');
-                        setError(e?.message || 'Failed to start sync');
+                        setMessage(e?.message || 'Could not start audit');
+                        setError(e?.message || 'Could not start audit');
                         toast({
-                          title: 'Amazon Update Paused',
-                          description: e?.message || 'We could not start your Amazon sync. Please try again.',
+                          title: 'Audit paused',
+                          description: e?.message || 'We could not start this audit. Please try again.',
                           variant: 'destructive',
                           duration: 5000,
                         });
                       }
                     }}
-                    className="bg-white hover:bg-white/90 text-black font-bold px-8 py-4 rounded-none h-12 text-[10px] uppercase font-mono tracking-widest shadow-2xl transition-all">
+                    className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
+                  >
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    PROBE_DATA_AGAIN
+                    Run audit again
                   </Button>
                 )}
               </div>
 
-              <div className="space-y-6">
-                {/* Error Message - Sophisticated Minimal Style */}
-                {error && (
-                  <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 mb-6">
-                    <div className="bg-neutral-50/50 border border-neutral-100 rounded-2xl p-6 flex items-start gap-4">
-                      <div className="h-2 w-2 rounded-full bg-neutral-900 mt-2 shrink-0" />
-                      <div className="space-y-1">
-                        <p className="text-[13px] font-medium text-neutral-900 uppercase tracking-wider">System Interruption</p>
-                        <p className="text-[16px] text-neutral-500 font-normal leading-relaxed"> {error}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                {status === 'running' ? (
+                  <Button
+                    onClick={handleCancelSync}
+                    disabled={isCancelling}
+                    variant="outline"
+                    className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
+                  >
+                    {isCancelling ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <XCircle className="h-4 w-4 mr-2" />
+                    )}
+                    Stop audit
+                  </Button>
+                ) : (status === 'failed' || status === 'cancelled') ? (
+                  <>
+                    {isSyncBlocked ? (
+                      <Button
+                        onClick={handleForceClear}
+                        disabled={isClearing}
+                        variant="outline"
+                        className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
+                      >
+                        {isClearing ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                        )}
+                        Clear and retry
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleRetry}
+                        variant="outline"
+                        className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Start a new audit
+                      </Button>
+                    )}
+                  </>
+                ) : null}
 
-                {/* Unified Timestamps */}
-                <div className="flex flex-wrap items-center gap-4 text-[10px] text-white/20 font-bold uppercase font-mono tracking-widest">
-                  {syncData?.startedAt && (
-                    <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> Started: {formatDateTime(syncData.startedAt)}</span>
-                  )}
-                  {syncData?.completedAt && (
-                    <span className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-emerald-500/50" /> Completed: {formatDateTime(syncData.completedAt)}</span>
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center gap-4">
-                  {status === 'running' ? (
-                    <button
-                      onClick={handleCancelSync}
-                      disabled={isCancelling}
-                      className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all border border-white/5 shadow-2xl disabled:opacity-50">
-                      {isCancelling ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <XCircle className="h-[18px] w-[18px] text-white/40" />
-                      )}
-                      ABORT_SYNC
-                    </button>
-                  ) : (status === 'failed' || status === 'cancelled') ? (
-                    <>
-                      {isSyncBlocked ? (
-                        <button
-                          onClick={handleForceClear}
-                          disabled={isClearing}
-                          className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all border border-white/5 shadow-2xl disabled:opacity-50">
-                          {isClearing ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <RefreshCw className="h-[18px] w-[18px] text-white/40" />
-                          )}
-                          FORCE_RETRY
-                        </button>
-                      ) : (
-                        <button
-                          onClick={handleRetry}
-                          className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all border border-white/5 shadow-2xl">
-                          <RefreshCw className="h-[18px] w-[18px] text-white/40" />
-                          REINITIALIZE
-                        </button>
-                      )}
-                    </>
-                  ) : null}
-
-                  {/* Dashboard Button */}
-                  <button
-                    onClick={() => status === 'completed' && navigate(`/app/${currentTenantSlug}/dashboard`)}
-                    disabled={status !== 'completed'}
-                    className={`px-8 py-3 text-[11px] font-bold uppercase font-mono tracking-widest rounded-none transition-all ${status === 'completed'
-                      ? 'bg-white/5 hover:bg-white/10 text-white border border-white/5 shadow-2xl'
-                      : 'text-white/10 cursor-not-allowed bg-transparent'
-                      }`}>
-                    DASHBOARD_GO
-                  </button>
-                </div>
+                <Button
+                  onClick={() => status === 'completed' && navigate(`/app/${currentTenantSlug}/dashboard`)}
+                  disabled={status !== 'completed'}
+                  variant="outline"
+                  className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6 disabled:opacity-30"
+                >
+                  Go to dashboard
+                </Button>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Audit Complete Modal */}
@@ -1207,13 +1318,13 @@ export default function Sync() {
               }
               setShowSourcesModal(open);
             }}>
-            <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-white/5 rounded-none shadow-2xl bg-[#050505]">
+            <DialogContent className="sm:max-w-md p-0 gap-0 overflow-hidden border-white/5 rounded-xl shadow-2xl bg-[#050505]">
               <DialogHeader className="px-6 py-8 bg-[#0A0A0A] border-b border-white/5">
-                <DialogTitle className="text-[10px] font-bold text-white uppercase tracking-[0.3em] font-mono">
-                  ACTION_REQUIRED: CONNECT_DOCUMENT_SOURCES
+                <DialogTitle className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">
+                  Connect document sources
                 </DialogTitle>
-                <DialogDescription className="text-[12px] text-white/40 mt-2 font-medium font-montserrat leading-relaxed">
-                  Authorized access required for deep forensic document ingestion.
+                <DialogDescription className="text-[12px] text-white/40 mt-2 font-sans leading-relaxed">
+                  If you want deeper document matching after this audit, connect the inboxes or storage tools where your proof usually lives.
                 </DialogDescription>
               </DialogHeader>
 
@@ -1244,13 +1355,13 @@ export default function Sync() {
                       }
                     }}
                     disabled={providerLoading === 'gmail'}
-                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-xl disabled:opacity-50">
                     {providerLoading === 'gmail' ? (
                       <Loader2 className="h-6 w-6 animate-spin text-white" />
                     ) : (
                       <img src={GmailIcon} alt="Gmail" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
                     )}
-                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Gmail</span>
+                    <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white uppercase tracking-tight">Gmail</span>
                   </button>
 
                   <button
@@ -1278,13 +1389,13 @@ export default function Sync() {
                       }
                     }}
                     disabled={providerLoading === 'outlook'}
-                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-xl disabled:opacity-50">
                     {providerLoading === 'outlook' ? (
                       <Loader2 className="h-6 w-6 animate-spin text-white" />
                     ) : (
                       <img src={OutlookIcon} alt="Outlook" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
                     )}
-                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Outlook</span>
+                    <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white uppercase tracking-tight">Outlook</span>
                   </button>
 
                   <button
@@ -1312,13 +1423,13 @@ export default function Sync() {
                       }
                     }}
                     disabled={providerLoading === 'gdrive'}
-                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-xl disabled:opacity-50">
                     {providerLoading === 'gdrive' ? (
                       <Loader2 className="h-6 w-6 animate-spin text-white" />
                     ) : (
                       <img src={GoogleDriveIcon} alt="Google Drive" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
                     )}
-                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Drive</span>
+                    <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white uppercase tracking-tight">Drive</span>
                   </button>
 
                   <button
@@ -1346,13 +1457,13 @@ export default function Sync() {
                       }
                     }}
                     disabled={providerLoading === 'dropbox'}
-                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-none disabled:opacity-50">
+                    className="group flex flex-col items-center justify-center gap-4 p-8 border border-white/5 hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 rounded-xl disabled:opacity-50">
                     {providerLoading === 'dropbox' ? (
                       <Loader2 className="h-6 w-6 animate-spin text-white" />
                     ) : (
                       <img src={DropboxIcon} alt="Dropbox" className="h-8 w-8 object-contain grayscale group-hover:grayscale-0 transition-opacity opacity-40 group-hover:opacity-100 duration-500" />
                     )}
-                    <span className="text-[10px] font-bold text-white/40 group-hover:text-white uppercase tracking-widest font-mono">Dropbox</span>
+                    <span className="text-[10px] font-sans font-bold text-white/40 group-hover:text-white uppercase tracking-tight">Dropbox</span>
                   </button>
                 </div>
               </div>
@@ -1362,8 +1473,8 @@ export default function Sync() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowSourcesModal(false)}
-                  className="text-[10px] text-white/20 hover:text-white hover:bg-transparent font-bold uppercase tracking-widest font-mono transition-colors">
-                  SKIP_FOR_NOW
+                  className="text-[10px] text-white/20 hover:text-white hover:bg-transparent font-sans font-bold uppercase tracking-tight transition-colors">
+                  Maybe later
                 </Button>
               </div>
             </DialogContent>
