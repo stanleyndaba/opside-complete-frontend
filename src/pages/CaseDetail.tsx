@@ -242,6 +242,7 @@ const getEventColor = (type: CaseEvent['type']) => {
 };
 
 type ObjectType = 'Detection' | 'Case' | 'Recovery';
+const NOT_AVAILABLE = 'Not Available';
 
 const resolveObjectType = (value: any): ObjectType => {
   if (!value) return 'Case';
@@ -255,9 +256,86 @@ const resolveObjectType = (value: any): ObjectType => {
 };
 
 const toStatusLabel = (value?: string | null) => {
-  if (!value) return '-';
-  return String(value).replace(/_/g, ' ');
+  const normalized = String(value || '').trim();
+  if (!normalized || normalized === '-' || normalized.toLowerCase() === 'n/a') return NOT_AVAILABLE;
+  return normalized.replace(/_/g, ' ');
 };
+
+const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string | null) => ({
+  id: fallbackId,
+  truth_unavailable: true,
+  dispute_case_id: null,
+  linked_dispute_case_id: null,
+  detection_result_id: null,
+  title: NOT_AVAILABLE,
+  status: null,
+  filing_status: null,
+  filing_strategy: null,
+  explanation_payload: null,
+  operational_state: null,
+  operational_explanation: null,
+  recovery_status: null,
+  billing_status: null,
+  block_reasons: [],
+  last_error: failureReason || null,
+  proof_status: null,
+  missing_requirements: [NOT_AVAILABLE],
+  manual_review_reason: NOT_AVAILABLE,
+  payout_proof_status: null,
+  quarantine_reason: failureReason || null,
+  guaranteedAmount: null,
+  estimated_claim_value: null,
+  requested_amount: null,
+  approved_amount: null,
+  recovered_amount: null,
+  actual_payout_amount: null,
+  billed_amount: null,
+  expectedPayoutDate: null,
+  createdDate: null,
+  updated_at: null,
+  sku: NOT_AVAILABLE,
+  asin: NOT_AVAILABLE,
+  productName: NOT_AVAILABLE,
+  facility: NOT_AVAILABLE,
+  unitsLost: null,
+  units_is_verified: false,
+  unitCost: null,
+  confidence: null,
+  evidenceStatus: null,
+  documents: [],
+  events: [],
+  evidence: {},
+  evidence_summary: {},
+  evidence_attachments: null,
+  claim_number: null,
+  generated_context: {
+    summaryLabel: NOT_AVAILABLE,
+    strategyLabel: NOT_AVAILABLE,
+    trustLabel: NOT_AVAILABLE,
+    generated: false
+  },
+  next_step_context: {
+    key: 'truth_unavailable',
+    title: NOT_AVAILABLE,
+    description: NOT_AVAILABLE,
+    generated: false
+  },
+  rejection_category: null,
+  rejection_reason: null,
+  autonomous_logic_summary: NOT_AVAILABLE,
+  playbook: {
+    title: NOT_AVAILABLE,
+    council: [],
+    steps: [NOT_AVAILABLE]
+  },
+  protection_protocol: [NOT_AVAILABLE],
+  seller_id: NOT_AVAILABLE,
+  user_id: NOT_AVAILABLE,
+  store_name: NOT_AVAILABLE,
+  prior_case_id: NOT_AVAILABLE,
+  amazonCaseId: null,
+  currency: 'USD'
+});
 
 const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   ...apiData,
@@ -488,70 +566,18 @@ export default function CaseDetail() {
 
   const location = useLocation() as any;
   const passedClaim = (location && location.state && (location.state as any).claim) || null;
+  const seedCaseData = useMemo(() => (
+    passedClaim ? normalizeCaseDetailData(passedClaim, caseId) : null
+  ), [caseId, passedClaim]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasResolvedBackend, setHasResolvedBackend] = useState(false);
   const [pdfPreviewOpen, setPdfPreviewOpen] = useState(false);
   const [pdfPreviewLoading, setPdfPreviewLoading] = useState(false);
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
   const [pdfPreviewTitle, setPdfPreviewTitle] = useState('PDF Preview');
   const [pdfPreviewLabel, setPdfPreviewLabel] = useState('Document Preview');
-  const [caseData, setCaseData] = useState<any | null>(passedClaim ? {
-    id: passedClaim.id,
-    dispute_case_id: passedClaim.dispute_case_id || null,
-    linked_dispute_case_id: passedClaim.linked_dispute_case_id || passedClaim.dispute_case_id || null,
-    detection_result_id: passedClaim.detection_result_id || null,
-    title: passedClaim.details || passedClaim.anomaly_type || 'Claim Details',
-    status: passedClaim.status || '-',
-    filing_status: passedClaim.filing_status || null,
-    filing_strategy: passedClaim.filing_strategy || passedClaim.evidence_attachments?.decision_intelligence?.filing_strategy || null,
-    explanation_payload: passedClaim.explanation_payload || passedClaim.evidence_attachments?.decision_intelligence?.explanation_payload || null,
-    operational_state: passedClaim.operational_state || passedClaim.evidence_attachments?.decision_intelligence?.operational_state || null,
-    operational_explanation: passedClaim.operational_explanation || passedClaim.evidence_attachments?.decision_intelligence?.operational_explanation || null,
-    recovery_status: passedClaim.recovery_status || null,
-    billing_status: passedClaim.billing_status || null,
-    block_reasons: Array.isArray(passedClaim.block_reasons) ? passedClaim.block_reasons : [],
-    last_error: passedClaim.last_error || null,
-    proof_status: passedClaim.proof_status || passedClaim.evidence_attachments?.decision_intelligence?.proof_snapshot?.filingRecommendation || null,
-    missing_requirements: Array.isArray(passedClaim.missing_requirements)
-      ? passedClaim.missing_requirements
-      : (Array.isArray(passedClaim.evidence_attachments?.decision_intelligence?.proof_snapshot?.missingRequirements)
-        ? passedClaim.evidence_attachments.decision_intelligence.proof_snapshot.missingRequirements
-        : []),
-    manual_review_reason: passedClaim.manual_review_reason || null,
-    payout_proof_status: passedClaim.payout_proof_status || null,
-    quarantine_reason: passedClaim.quarantine_reason || passedClaim.last_error || null,
-    guaranteedAmount: passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
-    estimated_claim_value: passedClaim.estimated_claim_value ?? passedClaim.estimated_recovery_amount ?? passedClaim.estimated_value ?? passedClaim.guaranteedAmount ?? null,
-    requested_amount: passedClaim.requested_amount ?? passedClaim.claim_amount ?? passedClaim.guaranteedAmount ?? passedClaim.estimated_value ?? null,
-    approved_amount: passedClaim.approved_amount ?? null,
-    recovered_amount: passedClaim.recovered_amount ?? passedClaim.actual_payout_amount ?? null,
-    actual_payout_amount: passedClaim.actual_payout_amount ?? passedClaim.recovered_amount ?? null,
-    billed_amount: passedClaim.billed_amount ?? null,
-    expectedPayoutDate: passedClaim.expectedPayoutDate || passedClaim.expected_payout_date || null,
-    createdDate: passedClaim.created || passedClaim.created_at || passedClaim.discovery_date || null,
-    updated_at: passedClaim.updated_at || passedClaim.created_at || passedClaim.created || null,
-    sku: passedClaim.sku || passedClaim.evidence?.sku || '-',
-    asin: passedClaim.asin || passedClaim.evidence?.asin || null,
-    productName: passedClaim.details || passedClaim.anomaly_type || 'Unknown Product',
-    facility: passedClaim.facility || passedClaim.warehouse || passedClaim.evidence?.fulfillment_center || null,
-    unitsLost: passedClaim.unitsLost ?? passedClaim.units_lost ?? passedClaim.quantity ?? passedClaim.units ?? null,
-    units_is_verified: passedClaim.units_is_verified === true,
-    unitCost: passedClaim.unitCost ?? passedClaim.unit_cost ?? null,
-    confidence: typeof passedClaim.confidence_score === 'number'
-      ? passedClaim.confidence_score * 100
-      : (typeof passedClaim.confidence === 'number' ? passedClaim.confidence : null),
-    evidenceStatus: passedClaim.evidenceStatus || null,
-    documents: passedClaim.documents || passedClaim.matchedDocs || [],
-    events: passedClaim.events || [],
-    evidence: passedClaim.evidence || {},
-    evidence_summary: passedClaim.evidence_summary || {},
-    evidence_attachments: passedClaim.evidence_attachments || null,
-    claim_number: passedClaim.claim_number || passedClaim.evidence?.claim_number || null,
-    next_step_context: passedClaim.next_step_context || null,
-    generated_context: passedClaim.generated_context || null,
-    rejection_category: passedClaim.rejection_category || passedClaim.evidence_attachments?.rejection_category || null,
-    rejection_reason: passedClaim.rejection_reason || null,
-  } : null);
+  const [caseData, setCaseData] = useState<any | null>(null);
   const { toast } = useToast();
   const [matchedDocs, setMatchedDocs] = useState<any[]>([]);
   const [selectedMetric, setSelectedMetric] = useState('payout');
@@ -559,14 +585,14 @@ export default function CaseDetail() {
   const [statusFeedUnavailable, setStatusFeedUnavailable] = useState(false);
 
   const formatDateOrDash = (value?: string | null) => {
-    if (!value) return '-';
+    if (!value) return NOT_AVAILABLE;
     const parsed = new Date(value);
-    if (Number.isNaN(parsed.getTime())) return '-';
+    if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
     return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   const formatCurrencyOrDash = (value?: number | null, currency: string = 'USD') => {
-    if (typeof value !== 'number' || Number.isNaN(value)) return '-';
+    if (typeof value !== 'number' || Number.isNaN(value)) return NOT_AVAILABLE;
     return value.toLocaleString('en-US', { style: 'currency', currency });
   };
 
@@ -582,8 +608,8 @@ export default function CaseDetail() {
   const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
     const linkedDisputeId = caseData?.linked_dispute_case_id
       || caseData?.dispute_case_id
-      || passedClaim?.linked_dispute_case_id
-      || passedClaim?.dispute_case_id
+      || (!hasResolvedBackend ? seedCaseData?.linked_dispute_case_id : null)
+      || (!hasResolvedBackend ? seedCaseData?.dispute_case_id : null)
       || null;
 
     if (linkedDisputeId && activeSlug) {
@@ -594,7 +620,7 @@ export default function CaseDetail() {
       navigate(tenantRoute(activeSlug, '/dispute-cases'), {
         state: {
           highlightDisputeId: linkedDisputeId,
-          sourceRecoveryId: caseData?.id || passedClaim?.id || caseId
+          sourceRecoveryId: caseData?.id || (!hasResolvedBackend ? seedCaseData?.id : null) || caseId
         }
       });
       return;
@@ -602,48 +628,57 @@ export default function CaseDetail() {
 
     const blockedReason = (Array.isArray(caseData?.block_reasons) && caseData.block_reasons.length
       ? caseData.block_reasons.join(', ')
-      : caseData?.last_error || passedClaim?.last_error || 'No linked dispute case exists for this recovery yet.');
+      : caseData?.last_error || (!hasResolvedBackend ? seedCaseData?.last_error : null) || 'No linked dispute case exists for this recovery yet.');
 
     toast({
       title: intent === 'resubmit' ? 'Retry blocked' : 'Filing blocked',
       description: blockedReason
     });
-  }, [activeSlug, caseData, caseId, navigate, passedClaim, toast]);
+  }, [activeSlug, caseData, caseId, hasResolvedBackend, navigate, seedCaseData, toast]);
 
   const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
     if (!currentCaseId) return;
     if (showLoading) setLoading(true);
-
-    const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
-    if (res.ok && res.data) {
-      const apiData = res.data as any;
-      const normalized = normalizeCaseDetailData(apiData, currentCaseId);
-      setCaseData(normalized);
-      if (Array.isArray((res.data as any)?.documents)) {
-        setMatchedDocs((res.data as any).documents);
+    try {
+      const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
+      if (res.ok && res.data) {
+        const apiData = res.data as any;
+        const normalized = normalizeCaseDetailData(apiData, currentCaseId);
+        setCaseData(normalized);
+        if (Array.isArray((res.data as any)?.documents)) {
+          setMatchedDocs((res.data as any).documents);
+        } else {
+          setMatchedDocs([]);
+        }
+        setStatusFeedUnavailable(false);
+        setError(null);
+      } else {
+        const failureReason = res.error || 'Case details unavailable';
+        setCaseData(buildUnavailableCaseDetail(currentCaseId, failureReason));
+        setMatchedDocs([]);
+        setError(failureReason);
       }
-      setStatusFeedUnavailable(false);
-      setError(null);
-    } else {
-      setCaseData(null);
+    } catch (err: any) {
+      const failureReason = err?.message || 'Case details unavailable';
+      setCaseData(buildUnavailableCaseDetail(currentCaseId, failureReason));
       setMatchedDocs([]);
-      setError(res.error || 'Case details unavailable');
+      setError(failureReason);
+    } finally {
+      setHasResolvedBackend(true);
+      if (showLoading) setLoading(false);
     }
+  }, [activeSlug]);
 
-    if (showLoading) setLoading(false);
-  }, [activeSlug, passedClaim]);
+  const effectiveCase = hasResolvedBackend ? caseData : seedCaseData;
 
   const resolvedIdentityIds = useMemo(() => {
     return Array.from(new Set([
       caseId,
-      caseData?.id,
-      caseData?.dispute_case_id,
-      caseData?.detection_result_id,
-      passedClaim?.id,
-      passedClaim?.dispute_case_id,
-      passedClaim?.detection_result_id,
+      effectiveCase?.id,
+      effectiveCase?.dispute_case_id,
+      effectiveCase?.detection_result_id,
     ].filter(Boolean)));
-  }, [caseId, caseData?.id, caseData?.dispute_case_id, caseData?.detection_result_id, passedClaim?.id, passedClaim?.dispute_case_id, passedClaim?.detection_result_id]);
+  }, [caseId, effectiveCase?.detection_result_id, effectiveCase?.dispute_case_id, effectiveCase?.id]);
 
   const matchesRealtimeEvent = useCallback((payload: any) => {
     const ids = new Set([
@@ -670,6 +705,10 @@ export default function CaseDetail() {
 
   useEffect(() => {
     let cancelled = false;
+    setHasResolvedBackend(false);
+    setCaseData(null);
+    setMatchedDocs([]);
+    setError(null);
     (async () => {
       if (!caseId) return;
       await refreshCaseDetail(caseId, { showLoading: true });
@@ -708,7 +747,9 @@ export default function CaseDetail() {
         removeNamedListeners();
         originalClose();
       };
-    } catch { }
+    } catch {
+      // Keep the existing page state when the live status stream cannot initialize.
+    }
     return () => { cancelled = true; if (es) es.close(); };
   }, [caseId, activeSlug, matchesRealtimeEvent, refreshCaseDetail]);
 
@@ -745,16 +786,19 @@ export default function CaseDetail() {
         if (!cancelled) {
           setMatchedDocs(Array.isArray(caseData?.documents) ? caseData.documents : []);
         }
-      } catch { }
+      } catch {
+        // If the matched document lookup fails, fall back to the documents already present on the case payload.
+      }
     })();
     return () => { cancelled = true; };
   }, [caseId, caseData?.evidence_attachments?.document_id, caseData?.documents, activeSlug]);
 
-  const effectiveCase = caseData || passedClaim;
-  const objectType = useMemo<ObjectType>(() => resolveObjectType(effectiveCase), [effectiveCase]);
+  const objectType = useMemo<ObjectType | typeof NOT_AVAILABLE>(() => (
+    effectiveCase?.truth_unavailable ? NOT_AVAILABLE : resolveObjectType(effectiveCase)
+  ), [effectiveCase]);
 
   const derivedConfidencePct = useMemo<number | null>(() => {
-    if (!effectiveCase) return null;
+    if (!effectiveCase || effectiveCase.truth_unavailable) return null;
     const value = typeof effectiveCase?.confidence === 'number'
       ? effectiveCase.confidence
       : (typeof effectiveCase?.confidence_score === 'number' ? effectiveCase.confidence_score * 100 : null);
@@ -763,12 +807,15 @@ export default function CaseDetail() {
   }, [effectiveCase, caseId]);
 
   const derivedEvidence = useMemo(() => {
+    if (effectiveCase?.truth_unavailable) return NOT_AVAILABLE;
     if (effectiveCase?.evidenceStatus) return effectiveCase.evidenceStatus;
     if (effectiveCase?.evidence_attachments?.document_id || matchedDocs.length > 0) return 'Available';
-    return 'Awaiting data';
+    return NOT_AVAILABLE;
   }, [effectiveCase, matchedDocs.length]);
 
-  const matchedCount = matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0);
+  const matchedCount = effectiveCase?.truth_unavailable
+    ? null
+    : (matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0));
   const resolvedUnitsAffected = effectiveCase?.unitsLost ?? effectiveCase?.units_lost ?? effectiveCase?.quantity ?? effectiveCase?.units ?? null;
   const estimatedClaimValue = effectiveCase?.estimated_claim_value ?? effectiveCase?.estimated_value ?? null;
   const requestedAmount = effectiveCase?.requested_amount ?? effectiveCase?.guaranteedAmount ?? effectiveCase?.claim_amount ?? effectiveCase?.amount ?? null;
@@ -781,10 +828,10 @@ export default function CaseDetail() {
     resolvedUnitsAffected > 0
     ? resolvedClaimAmount / resolvedUnitsAffected
     : null;
-  const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : '-';
+  const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : NOT_AVAILABLE;
   const resolvedMatchMethod = effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type
     ? String(effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type).replace(/_/g, ' ')
-    : '-';
+    : NOT_AVAILABLE;
   const resolvedFacility = effectiveCase?.facility || effectiveCase?.evidence?.fulfillment_center || effectiveCase?.warehouse || null;
   const resolvedStoreName = effectiveCase?.store_name || effectiveCase?.seller_name || null;
   const nextStep = effectiveCase?.next_step_context || null;
@@ -796,6 +843,7 @@ export default function CaseDetail() {
   const quarantineReason = getQuarantineReason(effectiveCase);
   const evidenceEvents = useMemo(() => (Array.isArray(caseData?.events) ? caseData.events.filter(isEvidenceRelatedEvent) : []), [caseData?.events]);
   const rejectionPlaybookReason = useMemo<RejectionReason | null>(() => {
+    if (effectiveCase?.truth_unavailable) return null;
     const category = effectiveCase?.rejection_category;
     if (category && REJECTION_CATEGORY_TO_PLAYBOOK[category]) {
       return REJECTION_CATEGORY_TO_PLAYBOOK[category];
@@ -804,11 +852,21 @@ export default function CaseDetail() {
     return legacy && escalationPlaybooks[legacy as RejectionReason] ? legacy as RejectionReason : null;
   }, [effectiveCase?.rejection_category, effectiveCase?.rejection_code]);
   const lifecycleSteps = useMemo(() => {
+    if (effectiveCase?.truth_unavailable) {
+      return [
+        { label: 'Detected', active: false },
+        { label: 'Evidence', active: false },
+        { label: 'Filed', active: false },
+        { label: 'Approved', active: false },
+        { label: 'Recovered', active: false },
+        { label: 'Billed', active: false }
+      ];
+    }
     const currentStatus = String(effectiveCase?.status || '').toLowerCase();
     const filingStatus = String(effectiveCase?.filing_status || '').toLowerCase();
     const recoveryStatus = String(effectiveCase?.recovery_status || '').toLowerCase();
     const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
-    const hasEvidence = matchedCount > 0;
+    const hasEvidence = (matchedCount ?? 0) > 0;
     return [
       { label: 'Detected', active: Boolean(effectiveCase?.id) },
       { label: 'Evidence', active: hasEvidence },
@@ -927,7 +985,7 @@ export default function CaseDetail() {
   }
 
   // Guard: show loading or error if no data
-  if (!effectiveCase && loading) {
+  if (!effectiveCase && (loading || !hasResolvedBackend)) {
     return (
       <PageLayout title="Loading..." midnight>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -1007,6 +1065,12 @@ export default function CaseDetail() {
               </div>
             </div>
 
+            {error && hasResolvedBackend && (
+              <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-xs font-bold text-red-300">
+                {error}
+              </div>
+            )}
+
             {/* Trust Banner - Policy & Confidence */}
             {(POLICY_MAP[effectiveCase.anomaly_type] || effectiveCase.safety_audit || matchedCount > 0 || nextStep) && (
               <div className="flex flex-wrap items-center gap-6 py-2 mb-4">
@@ -1060,7 +1124,7 @@ export default function CaseDetail() {
                 <div className="flex items-center gap-2 px-2.5 py-1 bg-white/5 border border-white/10 rounded">
                   <FileText className="h-3.5 w-3.5 text-white/40" />
                   <span className="text-[10px] font-bold text-white/70 uppercase tracking-tight">
-                    {matchedCount} matched docs
+                    {matchedCount === null ? NOT_AVAILABLE : `${matchedCount} matched docs`}
                   </span>
                 </div>
               </div>
@@ -1101,12 +1165,12 @@ export default function CaseDetail() {
                   <div className="mb-6">
                     <h3 className="text-sm font-bold text-white">Generated Case Summary</h3>
                     <p className="text-[10px] text-white/30 uppercase tracking-tight font-bold mt-1">
-                      {generatedContext?.summaryLabel || 'Generated context from backend case fields'}
+                      {generatedContext?.summaryLabel || NOT_AVAILABLE}
                     </p>
                   </div>
                   <div className="space-y-8">
                     <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
-                      {generateNarrative(effectiveCase)}
+                      {effectiveCase.truth_unavailable ? NOT_AVAILABLE : generateNarrative(effectiveCase)}
                     </p>
 
                     <div className="pt-6 border-t border-white/10">
@@ -1202,14 +1266,14 @@ export default function CaseDetail() {
                           <dt className="text-[11px] text-white/40 font-medium">Value Per Unit</dt>
                           <dd className="text-xs font-sans font-bold text-white">
                             {resolvedValuePerUnit === null
-                              ? '-'
+                              ? NOT_AVAILABLE
                               : `$${resolvedValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Confidence Score</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {derivedConfidencePct !== null ? `${derivedConfidencePct}%` : '-'}
+                            {derivedConfidencePct !== null ? `${derivedConfidencePct}%` : NOT_AVAILABLE}
                           </dd>
                         </div>
                       </div>
@@ -1236,13 +1300,13 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Filing Strategy</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {effectiveCase.filing_strategy ? formatAutonomyLabel(effectiveCase.filing_strategy) : '-'}
+                            {effectiveCase.filing_strategy ? formatAutonomyLabel(effectiveCase.filing_strategy) : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Runtime State</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {effectiveCase.operational_state ? formatAutonomyLabel(effectiveCase.operational_state) : '-'}
+                            {effectiveCase.operational_state ? formatAutonomyLabel(effectiveCase.operational_state) : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1294,19 +1358,19 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Manual Review Reason</dt>
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
-                            {manualReviewReason ? formatDisputeReason(manualReviewReason) : '-'}
+                            {manualReviewReason ? formatDisputeReason(manualReviewReason) : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Decision Explanation</dt>
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
-                            {summarizeExplanationPayload(effectiveCase.explanation_payload) || '-'}
+                            {summarizeExplanationPayload(effectiveCase.explanation_payload) || NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Runtime Explanation</dt>
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
-                            {summarizeOperationalExplanation(effectiveCase.operational_explanation) || '-'}
+                            {summarizeOperationalExplanation(effectiveCase.operational_explanation) || NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1314,13 +1378,13 @@ export default function CaseDetail() {
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
                             {Array.isArray(effectiveCase?.block_reasons) && effectiveCase.block_reasons.length
                               ? effectiveCase.block_reasons.map((reason: string) => formatDisputeReason(reason)).join(', ')
-                              : '-'}
+                              : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Quarantine Reason</dt>
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
-                            {quarantineReason || '-'}
+                            {quarantineReason || NOT_AVAILABLE}
                           </dd>
                         </div>
                       </div>
@@ -1335,7 +1399,7 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Warehouse</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || '-'}
+                            {effectiveCase.facility || effectiveCase.evidence?.fulfillment_center || NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1345,7 +1409,7 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Order Reference</dt>
                           <dd className="text-xs font-sans font-bold text-white underline underline-offset-2 decoration-white/20">
-                            {effectiveCase.order_id || '-'}
+                            {effectiveCase.order_id || NOT_AVAILABLE}
                           </dd>
                         </div>
                       </div>
@@ -1547,16 +1611,16 @@ export default function CaseDetail() {
                               effectiveCase.expectedPayoutDate ? (
                                 (() => {
                                   const d = new Date(effectiveCase.expectedPayoutDate);
-                                  return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-US', {
+                                  return isNaN(d.getTime()) ? NOT_AVAILABLE : d.toLocaleDateString('en-US', {
                                     month: 'short', day: 'numeric', year: 'numeric'
                                   });
                                 })()
-                              ) : '-'
+                              ) : NOT_AVAILABLE
                             )}
-                            {selectedMetric === 'confidence' && (derivedConfidencePct === null ? '-' : `${derivedConfidencePct}%`)}
-                            {selectedMetric === 'units' && `${effectiveCase.unitsLost ?? '-'} units`}
+                            {selectedMetric === 'confidence' && (derivedConfidencePct === null ? NOT_AVAILABLE : `${derivedConfidencePct}%`)}
+                            {selectedMetric === 'units' && (effectiveCase.unitsLost == null ? NOT_AVAILABLE : `${effectiveCase.unitsLost} units`)}
                             {selectedMetric === 'cost' && (
-                              typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : '-'
+                              typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : NOT_AVAILABLE
                             )}
                           </div>
                           <div className="text-[10px] text-white/30 mt-2 font-bold tracking-tight">
@@ -1630,7 +1694,7 @@ export default function CaseDetail() {
                   <div className="space-y-8">
                     <div className="space-y-4">
                       <div className="text-xs text-white/30 font-bold flex items-center gap-2">
-                        Matched Documents ({matchedCount})
+                        Matched Documents ({matchedCount === null ? NOT_AVAILABLE : matchedCount})
                         <div className="h-px flex-1 bg-white/10" />
                       </div>
 
@@ -1777,25 +1841,25 @@ export default function CaseDetail() {
                         <div className="space-y-3">
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Seller ID</dt>
-                            <dd className="text-xs font-sans font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || 'Not available'}</dd>
+                            <dd className="text-xs font-sans font-bold text-white">{effectiveCase.seller_id || effectiveCase.user_id || NOT_AVAILABLE}</dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Store Name</dt>
-                            <dd className="text-xs font-bold text-white truncate" title={resolvedStoreName || '-'}>
-                              {resolvedStoreName || '-'}
+                            <dd className="text-xs font-bold text-white truncate" title={resolvedStoreName || NOT_AVAILABLE}>
+                              {resolvedStoreName || NOT_AVAILABLE}
                             </dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">User ID</dt>
-                            <dd className="text-xs font-sans font-bold text-white">{effectiveCase.user_id || effectiveCase.seller_id || 'Not mapped'}</dd>
+                            <dd className="text-xs font-sans font-bold text-white">{effectiveCase.user_id || effectiveCase.seller_id || NOT_AVAILABLE}</dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Permission Status</dt>
-                            <dd className="text-xs font-bold text-white uppercase tracking-tight">-</dd>
+                            <dd className="text-xs font-bold text-white uppercase tracking-tight">{NOT_AVAILABLE}</dd>
                           </div>
                           <div>
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Contact Method</dt>
-                            <dd className="text-xs font-bold text-white uppercase tracking-tight">-</dd>
+                            <dd className="text-xs font-bold text-white uppercase tracking-tight">{NOT_AVAILABLE}</dd>
                           </div>
                         </div>
                       </div>
@@ -1809,12 +1873,12 @@ export default function CaseDetail() {
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Amazon Case ID</dt>
                             <dd className="text-xs font-sans font-bold text-white">
-                              {effectiveCase.amazonCaseId || <span className="text-white/20 font-normal">-</span>}
+                              {effectiveCase.amazonCaseId || <span className="text-white/40 font-normal">{NOT_AVAILABLE}</span>}
                             </dd>
                           </div>
                           <div className="border-b border-white/5 pb-2">
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Prior Case</dt>
-                            <dd className="text-xs font-bold text-white font-sans font-bold uppercase tracking-tight">{effectiveCase.prior_case_id || 'None'}</dd>
+                            <dd className="text-xs font-bold text-white font-sans font-bold uppercase tracking-tight">{effectiveCase.prior_case_id || NOT_AVAILABLE}</dd>
                           </div>
                           <div>
                             <dt className="text-[11px] text-white/40 font-medium mb-1">Claim Reference</dt>
@@ -1832,10 +1896,10 @@ export default function CaseDetail() {
                         </div>
                         <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
                           <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 tracking-tight uppercase mb-2">
-                            {generatedContext?.strategyLabel || 'Generated guidance'}
+                            {generatedContext?.strategyLabel || NOT_AVAILABLE}
                           </div>
                           <p className="text-[11px] text-white/70 leading-relaxed font-bold">
-                            {effectiveCase.autonomous_logic_summary || nextStep?.description || '-'}
+                            {effectiveCase.autonomous_logic_summary || nextStep?.description || NOT_AVAILABLE}
                           </p>
                         </div>
                       </div>
