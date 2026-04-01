@@ -1915,6 +1915,11 @@ export const api = {
       rows: Array<{
         dispute_case_id: string;
         detection_result_id: string | null;
+        row_type: 'dispute_case' | 'orphan_detection';
+        entity_type: 'dispute_case' | 'detection';
+        has_real_dispute_case: boolean;
+        linked_dispute_case_id: string | null;
+        brief_available: boolean;
         case_number: string | null;
         claim_number: string | null;
         case_type: string | null;
@@ -1963,6 +1968,11 @@ export const api = {
         asin: string | null;
         expected_payout_amount: number | null;
         expected_payout_date: string | null;
+        can_file: boolean;
+        can_retry: boolean;
+        can_approve: boolean;
+        can_open_brief: boolean;
+        can_open_case_detail: boolean;
         next_action: string;
       }>;
     }>(`/api/dispute-cases?${queryParams.toString()}`);

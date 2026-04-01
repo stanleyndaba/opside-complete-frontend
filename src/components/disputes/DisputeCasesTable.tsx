@@ -54,6 +54,11 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
   return {
     dispute_case_id: item.id,
     detection_result_id: item.claim_id || null,
+    row_type: 'dispute_case',
+    entity_type: 'dispute_case',
+    has_real_dispute_case: true,
+    linked_dispute_case_id: item.id,
+    brief_available: true,
     case_number: item.case_number || item.id,
     claim_number: item.claim_id || null,
     case_type: null,
@@ -85,6 +90,11 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
     asin: null,
     expected_payout_amount: actualPayoutAmount == null && (item.expected_payout_date || item.expectedPayoutDate) ? item.amount ?? null : null,
     expected_payout_date: item.expected_payout_date || item.expectedPayoutDate || null,
+    can_file: false,
+    can_retry: false,
+    can_approve: false,
+    can_open_brief: true,
+    can_open_case_detail: true,
     next_action: deriveLegacyNextAction(item.status),
   };
 }

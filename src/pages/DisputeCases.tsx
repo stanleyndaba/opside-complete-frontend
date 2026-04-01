@@ -46,6 +46,7 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
 type FinancialMap = Record<string, FinancialTruthSummary>;
+type QueueActionMode = 'file' | 'retry' | 'approve';
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
@@ -89,6 +90,17 @@ function formatBlockReason(value: string) {
 function formatCompactDate(value: string | null | undefined) {
   if (!value) return 'Unavailable';
   return format(new Date(value), 'yyyy/MM/dd');
+}
+
+function getBackendPrimaryAction(row: QueueRow): { label: string; mode: QueueActionMode } | null {
+  if (row.can_approve === true) return { label: 'Approve', mode: 'approve' };
+  if (row.can_retry === true) return { label: 'Retry', mode: 'retry' };
+  if (row.can_file === true) return { label: 'File', mode: 'file' };
+  return null;
+}
+
+function getActionAvailabilityLabel(isAvailable: boolean, label: string) {
+  return isAvailable ? label : `${label} · Not Available`;
 }
 
 type FilingPosture = {
@@ -756,6 +768,15 @@ export default function DisputeCases() {
   }, [briefPreviewUrl]);
 
   const openCaseDetails = async (row: QueueRow) => {
+    if (row.can_open_case_detail !== true) {
+      toast({
+        variant: 'destructive',
+        title: 'Not Available',
+        description: 'Case detail is not backend-confirmed for this row.'
+      });
+      return;
+    }
+
     setDetailsRow(row);
     setDetailsOpen(true);
     setDetailsFinancialSummary(getFinancialSummaryForRow(row, financialSummaries));
@@ -787,6 +808,15 @@ export default function DisputeCases() {
   };
 
   const handleBriefPreview = async (row: QueueRow) => {
+    if (row.can_open_brief !== true || !row.linked_dispute_case_id) {
+      toast({
+        variant: 'destructive',
+        title: 'Not Available',
+        description: 'A backend-confirmed dispute brief is not available for this row.'
+      });
+      return;
+    }
+
     if (!activeTenantSlug) return;
     setBriefPreviewOpen(true);
     setBriefPreviewLoading(false);
@@ -795,7 +825,7 @@ export default function DisputeCases() {
     setBriefPreviewLoading(true);
 
     try {
-      const response = await api.fetchDisputeBriefPdf(row.dispute_case_id, activeTenantSlug);
+      const response = await api.fetchDisputeBriefPdf(row.linked_dispute_case_id, activeTenantSlug);
       if (!response.ok || !response.blob) {
         throw new Error(response.error || 'Unable to load dispute brief preview.');
       }
@@ -826,8 +856,24 @@ export default function DisputeCases() {
     document.body.removeChild(anchor);
   };
 
-  const handleFilingAction = async (row: QueueRow, mode: 'file' | 'retry' | 'approve') => {
+  const handleFilingAction = async (row: QueueRow, mode: QueueActionMode) => {
     if (!activeTenantSlug) return;
+    const actionAllowed =
+      mode === 'approve'
+        ? row.can_approve === true
+        : mode === 'retry'
+          ? row.can_retry === true
+          : row.can_file === true;
+
+    if (!actionAllowed || !row.linked_dispute_case_id) {
+      toast({
+        variant: 'destructive',
+        title: 'Not Available',
+        description: 'This action is not backend-confirmed for the selected row.'
+      });
+      return;
+    }
+
     if (!isPaidUser && mode === 'file') {
       toast({ title: 'Upgrade required', description: 'Paid access is required before filing a case.' });
       return;
@@ -837,7 +883,7 @@ export default function DisputeCases() {
       return;
     }
 
-    const key = row.dispute_case_id;
+    const key = row.linked_dispute_case_id;
     setFilingInProgress((prev) => new Set(prev).add(key));
     try {
       const endpoint =
@@ -848,7 +894,7 @@ export default function DisputeCases() {
             : `/api/disputes/file-now?tenantSlug=${encodeURIComponent(activeTenantSlug)}`;
 
       const response = await api.post(endpoint, {
-        dispute_id: row.dispute_case_id,
+        dispute_id: row.linked_dispute_case_id,
         claim_id: row.detection_result_id
       });
 
@@ -1355,27 +1401,27 @@ export default function DisputeCases() {
                     </thead>
                     <tbody className="divide-y divide-white/5">
                       {rows.map((row) => {
-                        const filingValue = String(row.filing_status || '').toLowerCase();
-                        const isProcessing = filingInProgress.has(row.dispute_case_id);
+                        const isProcessing = row.linked_dispute_case_id ? filingInProgress.has(row.linked_dispute_case_id) : false;
                         const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
                         const posture = deriveFilingPosture(row, financialSummary);
                         const decisionExplanation = summarizeExplanationPayload(row.explanation_payload);
-                        const actionButton =
-                          filingValue === 'pending_approval'
-                            ? { label: 'Approve', mode: 'approve' as const }
-                            : filingValue === 'failed'
-                              ? { label: 'Retry', mode: 'retry' as const }
-                              : ['pending', 'retrying'].includes(filingValue) && row.evidence_state === 'Ready'
-                                ? { label: 'File', mode: 'file' as const }
-                                : null;
+                        const actionButton = getBackendPrimaryAction(row);
+                        const canOpenCaseDetail = row.can_open_case_detail === true;
+                        const canOpenBrief = row.can_open_brief === true && Boolean(row.linked_dispute_case_id);
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
                             <td className="px-6 py-5">
                               <div className="space-y-2 min-w-[220px]">
-                                <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
-                                  {row.case_number || row.dispute_case_id}
-                                </Link>
+                                {canOpenCaseDetail ? (
+                                  <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
+                                    {row.case_number || row.dispute_case_id}
+                                  </Link>
+                                ) : (
+                                  <span className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white/60">
+                                    {(row.case_number || row.dispute_case_id) || 'Not Available'}
+                                  </span>
+                                )}
                                 <div className="space-y-1 text-[11px] text-white/50 font-sans">
                                   <div>Store: {row.store_name || 'Not available'}</div>
                                   <div>Type: {row.case_type || row.anomaly_type || 'Not available'}</div>
@@ -1503,31 +1549,49 @@ export default function DisputeCases() {
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
                                     <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Case Actions</div>
-                                    <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                      <Link to={`/recoveries/${row.dispute_case_id}`}>Open Case</Link>
-                                    </DropdownMenuItem>
+                                    {canOpenCaseDetail ? (
+                                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                        <Link to={`/recoveries/${row.dispute_case_id}`}>Open Case</Link>
+                                      </DropdownMenuItem>
+                                    ) : (
+                                      <DropdownMenuItem
+                                        disabled
+                                        className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
+                                      >
+                                        {getActionAvailabilityLabel(false, 'Open Case')}
+                                      </DropdownMenuItem>
+                                    )}
                                     <DropdownMenuItem
+                                      disabled={!canOpenBrief}
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
                                       onClick={() => handleBriefPreview(row)}
                                     >
-                                      Brief PDF
+                                      {getActionAvailabilityLabel(canOpenBrief, 'Brief PDF')}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
+                                      disabled={!canOpenCaseDetail}
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
                                       onClick={() => openCaseDetails(row)}
                                     >
-                                      Case Details
+                                      {getActionAvailabilityLabel(canOpenCaseDetail, 'Case Details')}
                                     </DropdownMenuItem>
                                     {actionButton ? (
                                       <DropdownMenuItem
                                         className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
-                                        disabled={isProcessing || !row.detection_result_id}
+                                        disabled={isProcessing}
                                         onClick={() => handleFilingAction(row, actionButton.mode)}
                                       >
                                         {isProcessing ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : null}
                                         {actionButton.label}
                                       </DropdownMenuItem>
-                                    ) : null}
+                                    ) : (
+                                      <DropdownMenuItem
+                                        disabled
+                                        className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
+                                      >
+                                        Not Available
+                                      </DropdownMenuItem>
+                                    )}
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </div>
