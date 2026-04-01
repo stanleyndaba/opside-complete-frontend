@@ -75,7 +75,6 @@ export default function Sync() {
   const [isClearing, setIsClearing] = useState(false);
   const [isSyncBlocked, setIsSyncBlocked] = useState(false); // Shows force-clear button
   const [amazonReady, setAmazonReady] = useState<boolean | null>(null);
-  const [amazonConnectionMessage, setAmazonConnectionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled'>('idle');
@@ -361,7 +360,6 @@ export default function Sync() {
       const response = await api.getIntegrationStatus(currentTenantSlug);
       if (!response.ok || !response.data) {
         setAmazonReady(false);
-        setAmazonConnectionMessage(response.error || 'No Amazon store connected');
         return false;
       }
 
@@ -373,17 +371,10 @@ export default function Sync() {
       const isReady = isConnected && isStoreBound && isTenantBound && isSellerResolved;
 
       setAmazonReady(isReady);
-      setAmazonConnectionMessage(
-        isReady
-          ? null
-          : amazonProvider?.error_message || 'No Amazon store connected'
-      );
 
       return isReady;
-    } catch (connectionError: any) {
-      const messageText = connectionError?.message || 'No Amazon store connected';
+    } catch (_connectionError: any) {
       setAmazonReady(false);
-      setAmazonConnectionMessage(messageText);
       return false;
     }
   };
@@ -1155,42 +1146,6 @@ export default function Sync() {
               )}
             </div>
           </motion.div>
-
-          {!syncId && amazonReady === false && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 }}
-              className="rounded-xl bg-white/[0.02] border border-white/10 p-5 mb-6"
-            >
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="space-y-1">
-                  <h3 className="text-sm font-medium text-white">No Amazon store connected</h3>
-                  <p className="text-sm text-white/45 max-w-2xl">
-                    {amazonConnectionMessage || 'Connect Amazon before you run an Amazon SP-API sync here.'}
-                  </p>
-                  <p className="text-xs text-white/25 font-sans tracking-tight">
-                    CSV uploads are still available on the Data Upload page.
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button
-                    onClick={() => navigate(tenantRoute(currentTenantSlug, '/integrations'))}
-                    className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
-                  >
-                    Connect Amazon
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate(tenantRoute(currentTenantSlug, '/data-upload'))}
-                    className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
-                  >
-                    Open Data Upload
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          )}
 
           {error && (
             <motion.div
