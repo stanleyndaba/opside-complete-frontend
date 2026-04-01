@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
 import { AlertCircle, ChevronDown, ChevronUp, Download, FileText, Loader2, MoreHorizontal, RefreshCw, Search, X } from 'lucide-react';
@@ -368,23 +368,6 @@ function DetailSection({
   );
 }
 
-function summarizeRows(rows: QueueRow[]) {
-  return {
-    total_cases: rows.length,
-    filtered_results: rows.length,
-    blocked_count: rows.filter((row) => ['Waiting for evidence', 'Needs review', 'Review rejection'].includes(row.next_action)).length,
-    ready_to_file_count: rows.filter((row) => row.next_action === 'Ready to file').length,
-    filed_count: rows.filter((row) => row.next_action === 'Filed / awaiting Amazon').length,
-    rejected_count: rows.filter((row) => ['rejected', 'denied', 'lost'].includes(String(row.status || '').toLowerCase())).length,
-    approved_pending_payout_count: rows.filter((row) => ['approved', 'resolved', 'won'].includes(String(row.status || '').toLowerCase()) && row.actual_payout_amount == null).length,
-    recovered_count: rows.filter((row) => row.actual_payout_amount != null || String(row.recovery_status || '').toLowerCase() === 'reconciled').length,
-    billing_pending_count: rows.filter((row) => row.next_action === 'Billing pending').length,
-    last_updated_at: rows.map((row) => row.updated_at || row.created_at).filter(Boolean).sort().reverse()[0] || null,
-    page: 1,
-    page_size: 25
-  };
-}
-
 function normalizeIdentifier(value: string | null | undefined) {
   return String(value || '').trim().toLowerCase();
 }
@@ -425,53 +408,73 @@ function rowMatchesEvent(row: QueueRow, event: { entityId?: string; data: Record
   return eventIdentifiers.some((identifier) => rowIdentifiers.includes(identifier));
 }
 
+function rowsShareIdentity(left: QueueRow, right: QueueRow) {
+  const leftIdentifiers = getQueueRowIdentifiers(left);
+  const rightIdentifiers = getQueueRowIdentifiers(right);
+
+  if (!leftIdentifiers.length || !rightIdentifiers.length) {
+    return false;
+  }
+
+  return leftIdentifiers.some((identifier) => rightIdentifiers.includes(identifier));
+}
+
+function readLiveTimestamp(timestamp: string | null | undefined) {
+  if (!timestamp || Number.isNaN(new Date(timestamp).getTime())) {
+    return null;
+  }
+
+  return timestamp;
+}
+
 function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<string, any>; timestamp: string }) {
-  const updatedAt = event.timestamp || new Date().toISOString();
+  const updatedAt = readLiveTimestamp(event.timestamp);
+  const patch: Partial<QueueRow> = {};
 
   if (event.eventType === 'filing.submitted') {
-    return {
-      ...row,
-      status: event.data?.status || row.status,
-      filing_status: event.data?.filing_status || 'filed',
-      filing_strategy: event.data?.filing_strategy || row.filing_strategy,
-      explanation_payload: event.data?.explanation_payload || row.explanation_payload,
-      amazon_case_id: event.data?.amazon_case_id || row.amazon_case_id,
-      updated_at: updatedAt
-    };
+    if (typeof event.data?.status === 'string' && event.data.status.trim()) patch.status = event.data.status;
+    if (typeof event.data?.filing_status === 'string' && event.data.filing_status.trim()) patch.filing_status = event.data.filing_status;
+    if (typeof event.data?.filing_strategy === 'string' && event.data.filing_strategy.trim()) patch.filing_strategy = event.data.filing_strategy;
+    if (event.data?.explanation_payload && typeof event.data.explanation_payload === 'object') patch.explanation_payload = event.data.explanation_payload;
+    if (typeof event.data?.amazon_case_id === 'string' && event.data.amazon_case_id.trim()) patch.amazon_case_id = event.data.amazon_case_id;
   }
 
   if (event.eventType === 'case.status_updated') {
-    return {
-      ...row,
-      status: event.data?.status || row.status,
-      filing_strategy: event.data?.filing_strategy || row.filing_strategy,
-      explanation_payload: event.data?.explanation_payload || row.explanation_payload,
-      amazon_case_id: event.data?.amazon_case_id || row.amazon_case_id,
-      approved_amount: event.data?.amount_approved ?? row.approved_amount,
-      updated_at: updatedAt
-    };
+    if (typeof event.data?.status === 'string' && event.data.status.trim()) patch.status = event.data.status;
+    if (typeof event.data?.filing_strategy === 'string' && event.data.filing_strategy.trim()) patch.filing_strategy = event.data.filing_strategy;
+    if (event.data?.explanation_payload && typeof event.data.explanation_payload === 'object') patch.explanation_payload = event.data.explanation_payload;
+    if (typeof event.data?.amazon_case_id === 'string' && event.data.amazon_case_id.trim()) patch.amazon_case_id = event.data.amazon_case_id;
+    if (typeof event.data?.amount_approved === 'number' && Number.isFinite(event.data.amount_approved)) patch.approved_amount = event.data.amount_approved;
   }
 
   if (event.eventType === 'evidence.linked') {
-    const nextMatchedCount = Math.max(Number(row.matched_document_count || 0), 1);
-    return {
-      ...row,
-      evidence_state: nextMatchedCount > 0 ? 'Ready' : row.evidence_state,
-      matched_document_count: nextMatchedCount,
-      updated_at: updatedAt
-    };
+    if (typeof event.data?.evidence_state === 'string' && event.data.evidence_state.trim()) patch.evidence_state = event.data.evidence_state;
+    if (typeof event.data?.matched_document_count === 'number' && Number.isFinite(event.data.matched_document_count)) {
+      patch.matched_document_count = event.data.matched_document_count;
+    }
   }
 
   if (event.eventType === 'payout.detected') {
-    return {
-      ...row,
-      recovery_status: event.data?.status || 'reconciled',
-      actual_payout_amount: event.data?.actual_amount ?? event.data?.amount ?? row.actual_payout_amount,
-      updated_at: updatedAt
-    };
+    if (typeof event.data?.status === 'string' && event.data.status.trim()) patch.recovery_status = event.data.status;
+    if (typeof event.data?.actual_amount === 'number' && Number.isFinite(event.data.actual_amount)) {
+      patch.actual_payout_amount = event.data.actual_amount;
+    } else if (typeof event.data?.amount === 'number' && Number.isFinite(event.data.amount)) {
+      patch.actual_payout_amount = event.data.amount;
+    }
   }
 
-  return row;
+  if (!Object.keys(patch).length) {
+    return null;
+  }
+
+  if (updatedAt) {
+    patch.updated_at = updatedAt;
+  }
+
+  return {
+    ...row,
+    ...patch
+  };
 }
 
 export default function DisputeCases() {
@@ -539,7 +542,19 @@ export default function DisputeCases() {
   const [briefPreviewLoading, setBriefPreviewLoading] = useState(false);
   const [briefPreviewUrl, setBriefPreviewUrl] = useState<string | null>(null);
   const [briefPreviewRow, setBriefPreviewRow] = useState<QueueRow | null>(null);
+  const liveRefreshTimerRef = useRef<number | null>(null);
   const pageSize = 25;
+
+  const refresh = useCallback(() => setRefreshKey((value) => value + 1), []);
+
+  const scheduleLiveRefresh = useCallback(() => {
+    if (liveRefreshTimerRef.current != null) return;
+
+    liveRefreshTimerRef.current = window.setTimeout(() => {
+      liveRefreshTimerRef.current = null;
+      refresh();
+    }, 150);
+  }, [refresh]);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -582,6 +597,11 @@ export default function DisputeCases() {
         if (cancelled) return;
 
         setRows(response.data.rows || []);
+        setDetailsRow((currentDetails) => {
+          if (!currentDetails) return currentDetails;
+          const matchedRow = (response.data.rows || []).find((row) => rowsShareIdentity(currentDetails, row));
+          return matchedRow || currentDetails;
+        });
         setSummary({
           total_cases: response.data.total_cases,
           filtered_results: response.data.filtered_results,
@@ -664,8 +684,6 @@ export default function DisputeCases() {
     [financialSummaries, rows]
   );
 
-  const refresh = () => setRefreshKey((value) => value + 1);
-
   const handleUnlockCheckout = () => {
     const popup = window.open(YOCO_UNLOCK_URL, '_blank', 'noopener,noreferrer');
     if (!popup) {
@@ -716,7 +734,7 @@ export default function DisputeCases() {
     if (!activeTenantSlug) return;
 
     if (event.eventType === 'case.created') {
-      refresh();
+      scheduleLiveRefresh();
       return;
     }
 
@@ -728,39 +746,58 @@ export default function DisputeCases() {
     ) {
       const eventIdentifiers = getEventIdentifiers(event);
       if (!eventIdentifiers.length) {
-        refresh();
+        scheduleLiveRefresh();
         return;
       }
 
       if (!rows.some((row) => rowMatchesEvent(row, event))) {
-        refresh();
+        scheduleLiveRefresh();
         return;
       }
+
+      let matchedAnyRow = false;
+      let patchedAnyRow = false;
+      let requiresRefresh = false;
 
       setRows((currentRows) => {
         const nextRows = currentRows.map((row) => {
           if (!rowMatchesEvent(row, event)) return row;
-          return updateQueueRow(row, event);
+          matchedAnyRow = true;
+          const nextRow = updateQueueRow(row, event);
+          if (!nextRow) {
+            requiresRefresh = true;
+            return row;
+          }
+          if (nextRow !== row) {
+            patchedAnyRow = true;
+          }
+          return nextRow;
         });
-
-        setSummary((currentSummary) => ({
-          ...summarizeRows(nextRows),
-          page: currentSummary.page,
-          page_size: currentSummary.page_size
-        }));
 
         return nextRows;
       });
 
       setDetailsRow((currentDetails) => {
         if (!currentDetails || !rowMatchesEvent(currentDetails, event)) return currentDetails;
-        return updateQueueRow(currentDetails, event);
+        const nextDetails = updateQueueRow(currentDetails, event);
+        if (!nextDetails) {
+          requiresRefresh = true;
+          return currentDetails;
+        }
+        return nextDetails;
       });
+
+      if (!matchedAnyRow || patchedAnyRow || requiresRefresh) {
+        scheduleLiveRefresh();
+      }
     }
   }, activeTenantSlug);
 
   useEffect(() => {
     return () => {
+      if (liveRefreshTimerRef.current != null) {
+        window.clearTimeout(liveRefreshTimerRef.current);
+      }
       if (briefPreviewUrl) {
         URL.revokeObjectURL(briefPreviewUrl);
       }
