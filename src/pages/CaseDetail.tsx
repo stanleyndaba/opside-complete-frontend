@@ -597,35 +597,25 @@ export default function CaseDetail() {
   };
 
   const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
-    const linkedDisputeId = caseData?.has_linked_dispute_case === true
-      ? (caseData?.linked_dispute_case_id || null)
-      : ((!hasResolvedBackend && seedCaseData?.has_linked_dispute_case === true)
-        ? (seedCaseData?.linked_dispute_case_id || null)
-        : null);
-
-    if (linkedDisputeId && activeSlug) {
+    if (confirmedLinkedDisputeCaseId && activeSlug) {
       toast({
         title: intent === 'resubmit' ? 'Use Dispute Cases to retry filing' : 'Use Dispute Cases to file',
-        description: `Opening the canonical Agent 7 filing screen for dispute case ${linkedDisputeId}.`
+        description: `Opening the canonical Agent 7 filing screen for dispute case ${confirmedLinkedDisputeCaseId}.`
       });
       navigate(tenantRoute(activeSlug, '/dispute-cases'), {
         state: {
-          highlightDisputeId: linkedDisputeId,
-          sourceRecoveryId: caseData?.id || (!hasResolvedBackend ? seedCaseData?.id : null) || caseId
+          highlightDisputeId: confirmedLinkedDisputeCaseId,
+          sourceRecoveryId: caseData?.id || caseId
         }
       });
       return;
     }
 
-    const blockedReason = (Array.isArray(caseData?.block_reasons) && caseData.block_reasons.length
-      ? caseData.block_reasons.join(', ')
-      : caseData?.last_error || (!hasResolvedBackend ? seedCaseData?.last_error : null) || 'No linked dispute case exists for this recovery yet.');
-
     toast({
       title: intent === 'resubmit' ? 'Retry blocked' : 'Filing blocked',
-      description: blockedReason
+      description: NOT_AVAILABLE
     });
-  }, [activeSlug, caseData, caseId, hasResolvedBackend, navigate, seedCaseData, toast]);
+  }, [activeSlug, caseData?.id, caseId, confirmedLinkedDisputeCaseId, navigate, toast]);
 
   const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
     if (!currentCaseId) return;
@@ -789,6 +779,15 @@ export default function CaseDetail() {
   ), [effectiveCase]);
 
   const backendTruthCase = hasResolvedBackend ? caseData : null;
+  const hasBackendActionTruth = Boolean(hasResolvedBackend && backendTruthCase && !backendTruthCase.truth_unavailable);
+  const confirmedLinkedDisputeCaseId = hasBackendActionTruth &&
+    backendTruthCase?.has_linked_dispute_case === true &&
+    typeof backendTruthCase?.linked_dispute_case_id === 'string' &&
+    backendTruthCase.linked_dispute_case_id.trim()
+    ? backendTruthCase.linked_dispute_case_id
+    : null;
+  const canPreviewBrief = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
+  const canOpenCanonicalFiling = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
   const backendConfidencePct = useMemo<number | null>(() => {
     if (!backendTruthCase || backendTruthCase.truth_unavailable) return null;
     const backendValue = typeof backendTruthCase?.confidence_score === 'number'
@@ -907,11 +906,7 @@ export default function CaseDetail() {
   }, []);
 
   const handleBriefPreview = useCallback(async () => {
-    const disputeCaseId = effectiveCase?.has_linked_dispute_case === true
-      ? (effectiveCase.linked_dispute_case_id || null)
-      : null;
-
-    if (!activeSlug || !disputeCaseId) {
+    if (!activeSlug || !confirmedLinkedDisputeCaseId) {
       toast({
         variant: 'destructive',
         title: 'Brief preview unavailable',
@@ -922,7 +917,7 @@ export default function CaseDetail() {
     openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Dispute Brief', 'Brief PDF Preview');
 
     try {
-      const response = await api.fetchDisputeBriefPdf(String(disputeCaseId), activeSlug);
+      const response = await api.fetchDisputeBriefPdf(String(confirmedLinkedDisputeCaseId), activeSlug);
       if (!response.ok || !response.blob) {
         throw new Error(response.error || 'Unable to load dispute brief preview.');
       }
@@ -941,11 +936,11 @@ export default function CaseDetail() {
     } finally {
       setPdfPreviewLoading(false);
     }
-  }, [activeSlug, closePdfPreview, effectiveCase, openPdfPreview, toast]);
+  }, [activeSlug, closePdfPreview, confirmedLinkedDisputeCaseId, effectiveCase, openPdfPreview, toast]);
 
   const handleCasePdfPreview = useCallback(async () => {
     if (!effectiveCase) return;
-    openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Case PDF', 'Case PDF Preview');
+    openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Case PDF Export', 'Browser-Generated PDF Preview');
 
     try {
       const pdfBlob = await ClaimPdfService.generate(effectiveCase, { mode: 'blob' });
@@ -979,7 +974,7 @@ export default function CaseDetail() {
     document.body.removeChild(anchor);
   }, [pdfPreviewTitle, pdfPreviewUrl]);
 
-  const isReviewPdfPreview = pdfPreviewLabel === 'Case PDF Preview' || pdfPreviewLabel === 'Brief PDF Preview';
+  const isReviewPdfPreview = pdfPreviewLabel === 'Browser-Generated PDF Preview' || pdfPreviewLabel === 'Brief PDF Preview';
 
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
@@ -1061,11 +1056,12 @@ export default function CaseDetail() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
+                  className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={handleBriefPreview}
+                  disabled={!canPreviewBrief}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
-                  Brief PDF
+                  {canPreviewBrief ? 'Brief PDF' : 'Brief PDF · Not Available'}
                 </Button>
                 <Button
                   variant="outline"
@@ -1074,7 +1070,7 @@ export default function CaseDetail() {
                   onClick={handleCasePdfPreview}
                 >
                   <FileText className="h-3.5 w-3.5 mr-2" />
-                  Case PDF
+                  Case PDF Export
                 </Button>
               </div>
             </div>
@@ -1980,13 +1976,16 @@ export default function CaseDetail() {
                             </div>
                             <div className="flex flex-col justify-end gap-3">
                               <button
-                                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all rounded-lg"
+                                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all rounded-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-500"
                                 onClick={() => openCanonicalFilingScreen('resubmit')}
+                                disabled={!canOpenCanonicalFiling}
                               >
-                                {escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
+                                {canOpenCanonicalFiling
+                                  ? (escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation')
+                                  : 'Not Available'}
                               </button>
                               <p className="text-[9px] text-white/30 text-center">
-                                Escalation managed by {AGENT_NAMES['refund_filing']}
+                                {canOpenCanonicalFiling ? `Escalation managed by ${AGENT_NAMES['refund_filing']}` : NOT_AVAILABLE}
                               </p>
                             </div>
                           </div>
@@ -2093,7 +2092,7 @@ export default function CaseDetail() {
               </div>
               {isReviewPdfPreview && (
                 <p className="text-[10px] font-sans font-medium tracking-tight text-white/55">
-                  For seller review only; PDFs are not submitted to Amazon and may be shared internally with Ops or accountants.
+                  Browser-generated current-view export for seller review only. It is not the canonical backend dispute brief and is not submitted to Amazon.
                 </p>
               )}
             </div>
