@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { tenantRoute } from '@/lib/routes';
-import { RefreshCw, XCircle, CheckCircle2, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronRight, Download, Info } from 'lucide-react';
+import { RefreshCw, XCircle, AlertCircle, Loader2, Search, Package, Truck, RotateCcw, DollarSign, Archive, Target, Clock, ChevronDown, ChevronRight, Download, Info } from 'lucide-react';
 const GmailIcon = '/gmailicon.png';
 const OutlookIcon = '/outlookicon.webp';
 const GoogleDriveIcon = '/gd.png';
@@ -1111,7 +1111,6 @@ export default function Sync() {
 
   const activeStatusPresentation = statusPresentation[status];
   const liveUpdateLabel = sseStatus === 'connected' ? 'Live updates on' : 'Checking for updates';
-  const progressWidth = `${Math.max(0, Math.min(progress, 100))}%`;
 
   return (
     <PageLayout title="Audit" noPadding hideNavbar hideSidebar midnight hideLogo logoFontFamily='"Nunito Sans", sans-serif'>
@@ -1127,9 +1126,6 @@ export default function Sync() {
           >
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 rounded-xl bg-[#111111] border border-white/10">
-                  <Target className="h-5 w-5 text-white/80" />
-                </div>
                 <h1 className="text-2xl font-sans font-light tracking-tight">Audit Engine</h1>
                 <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/60 bg-white/[0.02]">
                   Amazon SP-API Sync
@@ -1156,48 +1152,6 @@ export default function Sync() {
                 <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/60 bg-white/[0.02]">
                   {filteredLogs.length} entries
                 </Badge>
-              )}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="rounded-xl bg-white/[0.02] border border-white/10 p-5 mb-6"
-          >
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-              <div className="space-y-2">
-                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Current audit</p>
-                <h2 className="text-xl font-sans font-light tracking-tight text-white">{activeStatusPresentation.label}</h2>
-                <p className="text-sm text-white/40 max-w-2xl">{activeStatusPresentation.summary}</p>
-                <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/55 bg-white/[0.02]">
-                    Source: Amazon SP-API Sync
-                  </Badge>
-                  <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/40 bg-white/[0.02]">
-                    CSV uploads: Data Upload page
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="min-w-[240px] rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Progress</span>
-                  <span className="text-[11px] font-sans font-semibold tracking-tight text-white/60">{Math.round(progress)}%</span>
-                </div>
-                <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden">
-                  <div className="h-full rounded-full bg-white/80 transition-all duration-500" style={{ width: progressWidth }} />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 mt-4 text-[10px] text-white/25 font-sans font-bold uppercase tracking-tight">
-              {syncData?.startedAt && (
-                <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> Started: {formatDateTime(syncData.startedAt)}</span>
-              )}
-              {syncData?.completedAt && (
-                <span className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-white/45" /> Completed: {formatDateTime(syncData.completedAt)}</span>
               )}
             </div>
           </motion.div>
