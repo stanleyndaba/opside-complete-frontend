@@ -47,6 +47,25 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
 type FinancialMap = Record<string, FinancialTruthSummary>;
 type QueueActionMode = 'file' | 'retry' | 'approve';
+type QueueSummaryState = {
+  total_cases: number | null;
+  filtered_results: number | null;
+  blocked_count: number | null;
+  ready_to_file_count: number | null;
+  filed_count: number | null;
+  rejected_count: number | null;
+  approved_pending_payout_count: number | null;
+  recovered_count: number | null;
+  verified_paid_count: number | null;
+  billing_pending_count: number | null;
+  supportable_claim_count: number | null;
+  supportable_claim_value: number | null;
+  supportable_ready_to_file_count: number | null;
+  supportable_currency: string | null;
+  last_updated_at: string | null;
+  page: number;
+  page_size: number;
+};
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
   pending: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
@@ -76,6 +95,22 @@ function formatLabel(value: string | null | undefined) {
 function formatMoney(amount: number | null | undefined, currency = 'USD') {
   if (amount == null) return 'Not available';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+}
+
+function formatSummaryMoney(amount: number | null | undefined, currency: string | null | undefined) {
+  if (typeof amount !== 'number' || !Number.isFinite(amount) || !currency) {
+    return 'Not Available';
+  }
+
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
+}
+
+function formatSummaryValue(value: number | null | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return 'Not Available';
+  }
+
+  return String(value);
 }
 
 function badgeClass(value: string | null | undefined) {
@@ -120,6 +155,28 @@ function getFinancialSummaryForRow(row: Pick<QueueRow, 'dispute_case_id' | 'dete
   if (directKey && map[directKey]) return map[directKey];
   if (row.detection_result_id && map[row.detection_result_id]) return map[row.detection_result_id];
   return null;
+}
+
+function createUnavailableSummary(page: number, pageSize: number): QueueSummaryState {
+  return {
+    total_cases: null,
+    filtered_results: null,
+    blocked_count: null,
+    ready_to_file_count: null,
+    filed_count: null,
+    rejected_count: null,
+    approved_pending_payout_count: null,
+    recovered_count: null,
+    verified_paid_count: null,
+    billing_pending_count: null,
+    supportable_claim_count: null,
+    supportable_claim_value: null,
+    supportable_ready_to_file_count: null,
+    supportable_currency: null,
+    last_updated_at: null,
+    page,
+    page_size: pageSize
+  };
 }
 
 function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSummary | null): FilingPosture {
@@ -506,20 +563,7 @@ export default function DisputeCases() {
   } | null>(null);
   const [summaryExpanded, setSummaryExpanded] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
-  const [summary, setSummary] = useState({
-    total_cases: 0,
-    filtered_results: 0,
-    blocked_count: 0,
-    ready_to_file_count: 0,
-    filed_count: 0,
-    rejected_count: 0,
-    approved_pending_payout_count: 0,
-    recovered_count: 0,
-    billing_pending_count: 0,
-    last_updated_at: null as string | null,
-    page: 1,
-    page_size: 25
-  });
+  const [summary, setSummary] = useState<QueueSummaryState>(() => createUnavailableSummary(1, 25));
 
   const [search, setSearch] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -545,16 +589,24 @@ export default function DisputeCases() {
   const liveRefreshTimerRef = useRef<number | null>(null);
   const pageSize = 25;
 
-  const refresh = useCallback(() => setRefreshKey((value) => value + 1), []);
+  const markSummaryUnavailable = useCallback(() => {
+    setSummary((current) => createUnavailableSummary(current.page, current.page_size));
+  }, []);
+
+  const refresh = useCallback(() => {
+    markSummaryUnavailable();
+    setRefreshKey((value) => value + 1);
+  }, [markSummaryUnavailable]);
 
   const scheduleLiveRefresh = useCallback(() => {
+    markSummaryUnavailable();
     if (liveRefreshTimerRef.current != null) return;
 
     liveRefreshTimerRef.current = window.setTimeout(() => {
       liveRefreshTimerRef.current = null;
       refresh();
     }, 150);
-  }, [refresh]);
+  }, [markSummaryUnavailable, refresh]);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -568,6 +620,7 @@ export default function DisputeCases() {
     if (!activeTenantSlug) {
       setLoading(false);
       setError(null);
+      setSummary(createUnavailableSummary(page, pageSize));
       return;
     }
 
@@ -575,6 +628,7 @@ export default function DisputeCases() {
     const loadQueue = async () => {
       setLoading(true);
       setError(null);
+      setSummary(createUnavailableSummary(page, pageSize));
       try {
         const response = await api.getDisputeCaseQueue({
           search: searchTerm || undefined,
@@ -611,7 +665,12 @@ export default function DisputeCases() {
           rejected_count: response.data.rejected_count,
           approved_pending_payout_count: response.data.approved_pending_payout_count,
           recovered_count: response.data.recovered_count,
+          verified_paid_count: response.data.verified_paid_count ?? null,
           billing_pending_count: response.data.billing_pending_count,
+          supportable_claim_count: response.data.supportable_claim_count ?? null,
+          supportable_claim_value: response.data.supportable_claim_value ?? null,
+          supportable_ready_to_file_count: response.data.supportable_ready_to_file_count ?? null,
+          supportable_currency: response.data.supportable_currency ?? null,
           last_updated_at: response.data.last_updated_at,
           page: response.data.page,
           page_size: response.data.page_size
@@ -619,20 +678,7 @@ export default function DisputeCases() {
       } catch (err: any) {
         if (!cancelled) {
           setRows([]);
-          setSummary({
-            total_cases: 0,
-            filtered_results: 0,
-            blocked_count: 0,
-            ready_to_file_count: 0,
-            filed_count: 0,
-            rejected_count: 0,
-            approved_pending_payout_count: 0,
-            recovered_count: 0,
-            billing_pending_count: 0,
-            last_updated_at: null,
-            page,
-            page_size: pageSize
-          });
+          setSummary(createUnavailableSummary(page, pageSize));
           setError(err?.message || 'Failed to load dispute cases');
         }
       } finally {
@@ -678,11 +724,7 @@ export default function DisputeCases() {
     return () => { cancelled = true; };
   }, [activeTenantSlug, rows]);
 
-  const totalPages = Math.max(1, Math.ceil(summary.filtered_results / pageSize));
-  const verifiedRecoveryCount = useMemo(
-    () => rows.filter((row) => getFinancialSummaryForRow(row, financialSummaries)?.payout_status === 'paid').length,
-    [financialSummaries, rows]
-  );
+  const totalPages = Math.max(1, Math.ceil((summary.filtered_results ?? 0) / pageSize));
 
   const handleUnlockCheckout = () => {
     const popup = window.open(YOCO_UNLOCK_URL, '_blank', 'noopener,noreferrer');
@@ -964,80 +1006,41 @@ export default function DisputeCases() {
   const secondarySummaryCards = useMemo(() => ([
     { label: 'Already filed', value: summary.filed_count },
     { label: 'Rejected', value: summary.rejected_count },
-    { label: 'Paid back', value: verifiedRecoveryCount },
+    { label: 'Paid back', value: summary.verified_paid_count },
     { label: 'Billing pending', value: summary.billing_pending_count },
-  ]), [summary, verifiedRecoveryCount]);
+  ]), [summary]);
 
   const unlockOffer = useMemo(() => {
-    const supportableRows = rows.flatMap((row) => {
-      const filingValue = String(row.filing_status || '').toLowerCase();
-      const amount = typeof row.requested_amount === 'number' && row.requested_amount > 0
-        ? row.requested_amount
-        : null;
-
-      if (!row.eligible_to_file || !['pending', 'retrying', 'pending_approval'].includes(filingValue) || amount == null) {
-        return [];
-      }
-
-      const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
-      const posture = deriveFilingPosture(row, financialSummary);
-      if (posture.tone === 'blocked' || posture.tone === 'resolved' || posture.tone === 'in_flight') {
-        return [];
-      }
-
-      return [{
-        row,
-        amount,
-        currency: row.currency || 'USD',
-        posture
-      }];
-    });
-
-    const previewRows = rows.flatMap((row) => {
-      const amount = typeof row.requested_amount === 'number' && row.requested_amount > 0
-        ? row.requested_amount
-        : null;
-
-      if (amount == null) {
-        return [];
-      }
-
-      const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
-      return [{
-        row,
-        amount,
-        currency: row.currency || 'USD',
-        posture: deriveFilingPosture(row, financialSummary)
-      }];
-    });
-
-    const offerRows = supportableRows.length > 0 ? supportableRows : previewRows;
-
-    if (!offerRows.length) {
-      return null;
+    if (summary.supportable_claim_count == null || summary.supportable_ready_to_file_count == null) {
+      return {
+        status: 'unavailable' as const,
+        currency: null,
+        totalSupportableValue: null,
+        supportableClaimCount: null,
+        readyToFileCount: null
+      };
     }
 
-    const currencies = Array.from(new Set(offerRows.map((item) => item.currency).filter(Boolean)));
-    if (currencies.length !== 1) {
+    if (summary.supportable_claim_count <= 0) {
       return null;
     }
 
     return {
-      mode: supportableRows.length > 0 ? 'queueable' as const : 'preview' as const,
-      currency: currencies[0],
-      totalSupportableValue: offerRows.reduce((sum, item) => sum + item.amount, 0),
-      supportableClaimCount: offerRows.length,
-      readyToFileCount: supportableRows.filter((item) => item.posture.tone === 'ready').length,
-      linkedDocumentCount: offerRows.reduce((sum, item) => sum + Math.max(Number(item.row.matched_document_count || 0), 0), 0)
+      status: 'available' as const,
+      currency: summary.supportable_currency,
+      totalSupportableValue: summary.supportable_claim_value,
+      supportableClaimCount: summary.supportable_claim_count,
+      readyToFileCount: summary.supportable_ready_to_file_count
     };
-  }, [financialSummaries, rows]);
+  }, [summary]);
 
-  const hasUnlockOfferValue = Boolean(unlockOffer)
-    && (unlockOffer?.totalSupportableValue || 0) > 0
-    && (unlockOffer?.supportableClaimCount || 0) > 0;
+  const unlockOfferUnavailable = unlockOffer?.status === 'unavailable';
+  const hasUnlockOfferValue = unlockOffer?.status === 'available'
+    && (unlockOffer.supportableClaimCount || 0) > 0;
   const isUnlockComplete = Boolean(unlockResult);
   const showUnlockOffer = hasUnlockOfferValue && !isUnlockComplete;
   const showUnlockedState = hasUnlockOfferValue && isUnlockComplete;
+  const showUnlockSection = Boolean(unlockOfferUnavailable || hasUnlockOfferValue);
 
   useEffect(() => {
     if (paymentConfirmationVisible || showUnlockedState) {
@@ -1114,7 +1117,7 @@ export default function DisputeCases() {
                 <div className="text-left">
                   <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Cases live</p>
                   <p className="mt-1 text-lg leading-none font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
-                    {summary.total_cases}
+                    {formatSummaryValue(summary.total_cases)}
                   </p>
                 </div>
                 {summaryExpanded ? (
@@ -1131,7 +1134,7 @@ export default function DisputeCases() {
                   {[...primarySummaryCards, ...secondarySummaryCards].map((card) => (
                     <div key={card.label} className="flex items-center gap-3">
                       <div className="min-w-[2.5rem] text-left text-sm font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
-                        {card.value}
+                        {formatSummaryValue(card.value)}
                       </div>
                       <div className="text-xs font-sans font-medium tracking-tight text-white">
                         {card.label}
@@ -1143,7 +1146,7 @@ export default function DisputeCases() {
             )}
           </div>
 
-          {hasUnlockOfferValue && unlockOffer ? (
+          {showUnlockSection && unlockOffer ? (
             <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] shadow-[0_0_22px_rgba(0,0,0,0.2)]">
               <div className="flex flex-col gap-4 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
                 <button
@@ -1157,10 +1160,12 @@ export default function DisputeCases() {
                       Filing access
                     </p>
                     <h2 className="max-w-3xl text-2xl font-sans font-bold tracking-tight text-white md:text-[28px]">
-                      Unlock filing for {formatMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} across {unlockOffer.supportableClaimCount} supportable claims
+                      Unlock filing for {formatSummaryMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} across {formatSummaryValue(unlockOffer.supportableClaimCount)} supportable claims
                     </h2>
                     <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/30">
-                      Margin already found {unlockOffer.supportableClaimCount} real claims with money attached. Pay once to move every supportable case into filing for this account.
+                      {unlockOfferUnavailable
+                        ? 'Backend queue-wide supportable claim summary is not available right now.'
+                        : `Margin already found ${formatSummaryValue(unlockOffer.supportableClaimCount)} supportable claims in the current queue. Pay once to move every backend-confirmed supportable case into filing for this account.`}
                     </p>
                     <p className="text-[12px] font-sans leading-5 text-white/30">
                       Charged as R1,699 at checkout. You keep 100% of recovered funds.
@@ -1177,6 +1182,10 @@ export default function DisputeCases() {
                     >
                       Unlock filing for $99
                     </Button>
+                  ) : unlockOfferUnavailable ? (
+                    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-white/78">
+                      Not Available
+                    </div>
                   ) : (
                     <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-white/78">
                       {unlockResult?.queued_count ? 'Filing in progress' : 'Payment confirmed'}
@@ -1199,16 +1208,18 @@ export default function DisputeCases() {
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-3">
                       <p className="text-[11px] font-sans leading-5 text-white/30">
-                        Margin has already found supportable claim value for this account.
+                        {unlockOfferUnavailable
+                          ? 'Backend queue-wide supportable claim summary is currently unavailable.'
+                          : 'Margin is showing backend-confirmed supportable claim summary for the current queue.'}
                       </p>
 
                       <div className="flex flex-wrap gap-2">
                         <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                          {unlockOffer.supportableClaimCount} supportable claims
+                          {formatSummaryValue(unlockOffer.supportableClaimCount)} supportable claims
                         </span>
-                        {unlockOffer.readyToFileCount > 0 ? (
+                        {unlockOffer.readyToFileCount != null ? (
                           <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                            {unlockOffer.readyToFileCount} ready to file
+                            {formatSummaryValue(unlockOffer.readyToFileCount)} ready to file
                           </span>
                         ) : null}
                       </div>
@@ -1244,6 +1255,25 @@ export default function DisputeCases() {
                               </Button>
                             </div>
                           ) : null}
+                        </div>
+                      ) : unlockOfferUnavailable ? (
+                        <div className="space-y-3">
+                          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72">
+                            Not Available
+                          </div>
+                          <p className="text-lg font-sans font-bold tracking-tight text-white">
+                            Queue-wide supportable summary unavailable
+                          </p>
+                          <p className="text-[13px] font-sans leading-5 text-white/68">
+                            This banner waits for backend queue summary truth before showing supportable claim totals.
+                          </p>
+                          <Button
+                            type="button"
+                            disabled
+                            className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-white/40"
+                          >
+                            Not Available
+                          </Button>
                         </div>
                       ) : null}
 

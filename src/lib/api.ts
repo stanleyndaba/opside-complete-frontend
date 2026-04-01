@@ -1908,7 +1908,12 @@ export const api = {
       rejected_count: number;
       approved_pending_payout_count: number;
       recovered_count: number;
+      verified_paid_count: number | null;
       billing_pending_count: number;
+      supportable_claim_count: number;
+      supportable_claim_value: number | null;
+      supportable_ready_to_file_count: number;
+      supportable_currency: string | null;
       last_updated_at: string | null;
       page: number;
       page_size: number;
