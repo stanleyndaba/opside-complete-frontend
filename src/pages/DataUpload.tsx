@@ -47,6 +47,8 @@ interface BatchResult {
     detectionTriggered: boolean;
     detectionJobId?: string;
     syncId: string;
+    error?: string;
+    details?: string;
 }
 
 interface SupportedCsvType {
@@ -97,6 +99,112 @@ const ANOMALY_LABELS: Record<string, string> = {
 const formatAnomalyType = (type: string) => ANOMALY_LABELS[type] || type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 const FALLBACK_SUPPORTED_TYPES = ['orders', 'shipments', 'returns', 'settlements', 'inventory', 'financial_events', 'fees', 'transfers'];
 const formatCsvTypeLabel = (type: string) => type.replace(/_/g, ' ');
+
+const readBackendMessage = (value: unknown): string | null => {
+    if (typeof value === 'string') {
+        const normalized = value.trim();
+        return normalized.length > 0 ? normalized : null;
+    }
+
+    if (value && typeof value === 'object') {
+        const record = value as Record<string, unknown>;
+        return readBackendMessage(record.message)
+            || readBackendMessage(record.details)
+            || readBackendMessage(record.error);
+    }
+
+    return null;
+};
+
+const combineBackendMessages = (...values: unknown[]): string | null => {
+    const seen = new Set<string>();
+    const messages: string[] = [];
+
+    values.forEach((value) => {
+        const message = readBackendMessage(value);
+        if (message && !seen.has(message)) {
+            seen.add(message);
+            messages.push(message);
+        }
+    });
+
+    return messages.length > 0 ? messages.join(' · ') : null;
+};
+
+const extractApiFailureMessage = (response: any, fallback?: string): string | null => {
+    return combineBackendMessages(
+        response?.data?.error,
+        response?.data?.details,
+        response?.data?.message,
+        response?.error,
+        fallback || null,
+    );
+};
+
+const toUploadDetectionState = (syncId: string, data?: any, fallbackError?: string | null): UploadDetectionState => ({
+    syncId,
+    status: data?.status || null,
+    processedAt: data?.processed_at ?? data?.processedAt ?? null,
+    errorMessage: data?.error_message ?? data?.errorMessage ?? fallbackError ?? null,
+    isSandbox: Boolean(data?.is_sandbox ?? data?.isSandbox),
+});
+
+const shouldOpenDetectionPreview = (data?: any): boolean => (
+    data?.status === 'completed'
+    || data?.status === 'failed'
+    || Number(data?.results?.claimsFound || 0) > 0
+);
+
+const getDetectionToastMessage = (data?: any): string | null => {
+    if (!data?.status) {
+        return null;
+    }
+
+    if (data.status === 'completed') {
+        return 'Detection completed for this upload.';
+    }
+
+    if (data.status === 'failed') {
+        return combineBackendMessages(data?.error_message, 'Detection failed for this upload.');
+    }
+
+    if (data.status === 'pending' || data.status === 'processing') {
+        return 'Detection is processing for this upload.';
+    }
+
+    return null;
+};
+
+const getEmptyDetectionCopy = (
+    status: UploadDetectionState['status'],
+    message: string | null,
+): { title: string; description: string } => {
+    if (status === 'pending' || status === 'processing') {
+        return {
+            title: 'Detection is still processing for this upload',
+            description: message || 'The backend has not reported completed findings for this upload yet.',
+        };
+    }
+
+    if (status === 'completed') {
+        return {
+            title: 'Detection completed with zero findings',
+            description: message || 'The backend completed detection for this upload and returned zero findings.',
+        };
+    }
+
+    if (status === 'failed') {
+        return {
+            title: 'Detection failed for this upload',
+            description: message || 'The backend reported a failed detection state for this upload.',
+        };
+    }
+
+    return {
+        title: 'Detection results unavailable',
+        description: message || 'The backend did not return detection results for this upload.',
+    };
+};
 
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
@@ -164,35 +272,45 @@ export default function DataUpload() {
         };
     }, [currentTenantSlug, tenant?.id]);
 
-    const pollForUploadDetections = useCallback(async (syncId: string) => {
-        const maxAttempts = 15;
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            try {
-                const statusRes = await detectionApi.getDetectionStatus(syncId, currentTenantSlug);
-                if (!statusRes?.ok || !statusRes.data) {
-                    continue;
-                }
-
-                setPreviewState({
-                    syncId,
-                    status: statusRes.data.status,
-                    processedAt: statusRes.data.processed_at || null,
-                    errorMessage: statusRes.data.error_message || null,
-                    isSandbox: !!statusRes.data.is_sandbox,
-                });
-
-                if (statusRes.data.status === 'completed' || statusRes.data.status === 'failed' || statusRes.data.results.claimsFound > 0) {
-                    setIsPreviewOpen(true);
-                    return;
-                }
-            } catch (_error) {
-                // Keep polling until the upload-scoped detection status is ready.
+    const loadUploadDetectionTruth = useCallback(async (syncId: string) => {
+        try {
+            const statusRes = await detectionApi.getDetectionStatus(syncId, currentTenantSlug);
+            if (statusRes?.ok && statusRes.data) {
+                setPreviewState(toUploadDetectionState(syncId, statusRes.data));
+                return statusRes.data;
             }
+
+            const failureMessage = extractApiFailureMessage(statusRes, 'Detection status unavailable for this upload.');
+            setPreviewState(toUploadDetectionState(syncId, undefined, failureMessage));
+            return null;
+        } catch (error) {
+            const failureMessage = combineBackendMessages(error instanceof Error ? error.message : null, 'Detection status unavailable for this upload.');
+            setPreviewState(toUploadDetectionState(syncId, undefined, failureMessage));
+            return null;
         }
     }, [currentTenantSlug]);
+
+    const pollForUploadDetections = useCallback(async (syncId: string, startWithDelay = false) => {
+        const maxAttempts = 15;
+        let shouldDelay = startWithDelay;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            if (shouldDelay) {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+            shouldDelay = true;
+
+            const statusData = await loadUploadDetectionTruth(syncId);
+            if (!statusData) {
+                continue;
+            }
+
+            if (shouldOpenDetectionPreview(statusData)) {
+                setIsPreviewOpen(true);
+                return;
+            }
+        }
+    }, [loadUploadDetectionTruth]);
 
     useEffect(() => {
         let cancelled = false;
@@ -236,13 +354,17 @@ export default function DataUpload() {
     );
 
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
+    const previewEmptyState = useMemo(
+        () => getEmptyDetectionCopy(previewState.status, previewMessage || previewState.errorMessage || null),
+        [previewMessage, previewState.errorMessage, previewState.status]
+    );
 
     // Fetch detection data for the current upload only
     useEffect(() => {
         if (!isPreviewOpen) return;
         if (!currentUploadSyncId) {
             setPreviewResults([]);
-            setPreviewMessage('No results available for this upload.');
+            setPreviewMessage('Detection results unavailable because this upload has no sync ID.');
             setPreviewState(prev => ({ ...prev, syncId: null, status: null, processedAt: null, errorMessage: null, isSandbox: false }));
             return;
         }
@@ -258,45 +380,51 @@ export default function DataUpload() {
 
                 if (cancelled) return;
 
-                if (statusRes?.ok && statusRes.data) {
-                    setPreviewState({
-                        syncId: currentUploadSyncId,
-                        status: statusRes.data.status,
-                        processedAt: statusRes.data.processed_at || null,
-                        errorMessage: statusRes.data.error_message || null,
-                        isSandbox: !!statusRes.data.is_sandbox,
-                    });
-                } else {
-                    setPreviewState(prev => ({
-                        ...prev,
-                        syncId: currentUploadSyncId,
-                        status: null,
-                        processedAt: null,
-                        errorMessage: statusRes?.error || null,
-                        isSandbox: false,
-                    }));
-                }
+                const statusTruth = statusRes?.ok && statusRes.data
+                    ? statusRes.data
+                    : (resultsRes?.ok ? resultsRes.data?.meta : null);
+                const statusFailureMessage = statusRes?.ok
+                    ? null
+                    : extractApiFailureMessage(statusRes, 'Detection status unavailable for this upload.');
+
+                setPreviewState(toUploadDetectionState(currentUploadSyncId, statusTruth, statusFailureMessage));
 
                 if (resultsRes?.ok && Array.isArray(resultsRes.data?.results)) {
                     setPreviewResults(resultsRes.data.results);
                     if (resultsRes.data.results.length > 0) {
                         setPreviewMessage(null);
-                    } else if (statusRes?.ok && statusRes.data?.status === 'completed') {
-                        setPreviewMessage('No detections found for this upload yet.');
-                    } else if (statusRes?.ok && statusRes.data?.status === 'failed') {
-                        setPreviewMessage(statusRes.data.error_message || 'Detection failed for this upload.');
                     } else {
-                        setPreviewMessage('No results available for this upload.');
+                        const emptyStateMessage = combineBackendMessages(
+                            statusTruth?.error_message,
+                            statusTruth?.errorMessage,
+                            statusFailureMessage,
+                            extractApiFailureMessage(resultsRes),
+                        );
+                        setPreviewMessage(getEmptyDetectionCopy(statusTruth?.status || null, emptyStateMessage).description);
                     }
                 } else {
                     setPreviewResults([]);
-                    setPreviewMessage('No results available for this upload.');
+                    setPreviewMessage(
+                        combineBackendMessages(
+                            extractApiFailureMessage(resultsRes, 'Detection results unavailable for this upload.'),
+                            statusFailureMessage,
+                        ) || 'Detection results unavailable for this upload.'
+                    );
                 }
             } catch (err) {
                 console.error('Failed to fetch preview data:', err);
                 if (!cancelled) {
                     setPreviewResults([]);
-                    setPreviewMessage('No results available for this upload.');
+                    const failureMessage = combineBackendMessages(
+                        err instanceof Error ? err.message : null,
+                        'Detection results unavailable for this upload.',
+                    ) || 'Detection results unavailable for this upload.';
+                    setPreviewMessage(failureMessage);
+                    setPreviewState(prev => ({
+                        ...prev,
+                        syncId: currentUploadSyncId,
+                        errorMessage: failureMessage,
+                    }));
                 }
             } finally {
                 if (!cancelled) setIsPreviewLoading(false);
@@ -441,13 +569,17 @@ export default function DataUpload() {
 
             const result: BatchResult = await response.json();
             if (!response.ok || !result) {
-                const reason = (result as any)?.error || `Server returned ${response.status}`;
+                const reason = combineBackendMessages(
+                    result?.error,
+                    result?.details,
+                    `Server returned ${response.status}`,
+                ) || `Server returned ${response.status}`;
                 throw new Error(reason);
             }
             setBatchResult(result);
             setPreviewState({
                 syncId: result.syncId || null,
-                status: result.detectionTriggered ? 'pending' : null,
+                status: null,
                 processedAt: null,
                 errorMessage: null,
                 isSandbox: false,
@@ -477,16 +609,23 @@ export default function DataUpload() {
             const failedCount = result.results?.filter(r => !r.success || r.rowsFailed > 0).length || 0;
             const totalRows = result.results?.reduce((sum, r) => sum + r.rowsInserted, 0) || 0;
             const totalSkipped = result.results?.reduce((sum, r) => sum + (r.rowsSkipped || 0), 0) || 0;
+            let detectionTruth: any = null;
+
+            if (result.detectionTriggered && result.syncId) {
+                detectionTruth = await loadUploadDetectionTruth(result.syncId);
+                if (detectionTruth && shouldOpenDetectionPreview(detectionTruth)) {
+                    setIsPreviewOpen(true);
+                } else {
+                    void pollForUploadDetections(result.syncId, true);
+                }
+            }
 
             if (insertedFileCount > 0) {
+                const detectionMessage = getDetectionToastMessage(detectionTruth);
                 toast({
                     title: `${insertedFileCount} file${insertedFileCount > 1 ? 's' : ''} imported`,
-                    description: `${totalRows.toLocaleString()} rows persisted${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${failedCount > 0 ? ` · ${failedCount} file${failedCount > 1 ? 's' : ''} need attention` : ''}${result.detectionTriggered ? ' · Detection queued for this upload.' : ''}`,
+                    description: `${totalRows.toLocaleString()} rows persisted${totalSkipped > 0 ? ` · ${totalSkipped.toLocaleString()} skipped` : ''}${failedCount > 0 ? ` · ${failedCount} file${failedCount > 1 ? 's' : ''} need attention` : ''}${detectionMessage ? ` · ${detectionMessage}` : ''}`,
                 });
-
-                if (result.detectionTriggered && result.syncId) {
-                    pollForUploadDetections(result.syncId);
-                }
             } else if (skippedOnlyCount > 0 && failedCount === 0) {
                 toast({
                     title: 'Files already imported',
@@ -500,8 +639,9 @@ export default function DataUpload() {
                 });
             }
         } catch (error: any) {
-            toast({ title: 'Upload failed', description: error.message || 'Network error', variant: 'destructive' });
-            setFiles(prev => prev.map(f => ({ ...f, status: 'error' as const, error: error.message })));
+            const failureMessage = combineBackendMessages(error?.message, 'Network error') || 'Network error';
+            toast({ title: 'Upload failed', description: failureMessage, variant: 'destructive' });
+            setFiles(prev => prev.map(f => ({ ...f, status: 'error' as const, error: failureMessage })));
         } finally {
             setIsUploading(false);
         }
@@ -563,7 +703,7 @@ export default function DataUpload() {
                                 </Badge>
                             </div>
                             <p className="text-sm text-white/40 max-w-xl">
-                                Upload Amazon Seller Central CSV reports to feed the detection pipeline. Your data flows directly into Agent 3's 26 claim detection algorithms.
+                                Upload Amazon Seller Central CSV reports to feed the detection pipeline. Your data flows directly into Agent 3's 7 flagship claim detectors.
                             </p>
                         </div>
                         
@@ -845,7 +985,7 @@ export default function DataUpload() {
                                 <p className="text-xs text-white/25 leading-relaxed">
                                     Upload CSV exports from Amazon Seller Central. The system auto-detects the report type,
                                     maps columns to the internal schema, and inserts data into the database.
-                                    After ingestion, Agent 3 runs 26 detection algorithms to find recoverable claims.
+                                    After ingestion, Agent 3 runs 7 flagship detectors to find recoverable claims.
                                 </p>
                             </div>
                         </div>
@@ -855,7 +995,7 @@ export default function DataUpload() {
                                 { step: '1', label: 'Upload', desc: 'Drop CSV files' },
                                 { step: '2', label: 'Parse', desc: 'Auto-detect type' },
                                 { step: '3', label: 'Ingest', desc: 'Insert into DB' },
-                                { step: '4', label: 'Detect', desc: 'Run 26 algorithms' },
+                                { step: '4', label: 'Detect', desc: 'Run 7 detectors' },
                             ].map(s => (
                                 <div key={s.step} className="flex items-center gap-2 py-2 px-3 rounded-lg bg-white/[0.02] border border-white/[0.03]">
                                     <span className="text-[10px] font-sans font-bold text-white/40 tracking-tight uppercase">{s.step}</span>
@@ -933,8 +1073,8 @@ export default function DataUpload() {
                                         <div className="flex items-center justify-center h-full">
                                             <div className="flex flex-col items-center gap-3 text-center max-w-sm">
                                                 <div className="p-4 rounded-2xl bg-gray-50"><Target className="h-10 w-10 text-gray-300" /></div>
-                                                <h3 className="text-sm font-semibold text-gray-700 font-sans">No detections found for this upload yet</h3>
-                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">{previewMessage || 'No results available for this upload.'}</p>
+                                                <h3 className="text-sm font-semibold text-gray-700 font-sans">{previewEmptyState.title}</h3>
+                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">{previewEmptyState.description}</p>
                                             </div>
                                         </div>
                                     ) : (
