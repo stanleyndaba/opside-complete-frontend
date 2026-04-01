@@ -250,6 +250,25 @@ const toEntityLabel = (value?: string | null) => {
   return normalized.replace(/_/g, ' ');
 };
 
+const toEventSourceLabel = (value?: string | null) => {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized) return NOT_AVAILABLE;
+  if (normalized === 'agent_event') return 'Agent Event';
+  if (normalized === 'notification') return 'Notification';
+  return String(value).replace(/[_-]+/g, ' ');
+};
+
+const formatEventTimestamp = (value?: string | null) => {
+  if (!value) return NOT_AVAILABLE;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
+  return parsed.toLocaleString('en-US', {
+    month: '2-digit', day: '2-digit', year: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  });
+};
+
 const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string | null) => ({
   id: fallbackId,
   truth_unavailable: true,
@@ -734,6 +753,14 @@ export default function CaseDetail() {
     return () => { cancelled = true; if (es) es.close(); };
   }, [caseId, activeSlug, matchesRealtimeEvent, refreshCaseDetail]);
 
+  useEffect(() => {
+    if (!statusFeedUnavailable || !caseId) return;
+    const intervalId = setInterval(() => {
+      void refreshCaseDetail(caseId);
+    }, 15000);
+    return () => clearInterval(intervalId);
+  }, [caseId, refreshCaseDetail, statusFeedUnavailable]);
+
   // Attempt to fetch matched documents for this case
   useEffect(() => {
     let cancelled = false;
@@ -1046,7 +1073,7 @@ export default function CaseDetail() {
                     </Badge>
                     {statusFeedUnavailable && (
                       <Badge variant="outline" className="border-amber-500/20 bg-amber-500/10 text-amber-400 text-[9px] uppercase tracking-tight">
-                        Status Unavailable
+                        Live Updates Unavailable
                       </Badge>
                     )}
                   </div>
@@ -1689,7 +1716,7 @@ export default function CaseDetail() {
 
                     {/* Timeline View */}
                     <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-lg">
-                      <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} />
+                      <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} liveUpdatesUnavailable={statusFeedUnavailable} />
                     </div>
 
                   </div>
@@ -1770,6 +1797,9 @@ export default function CaseDetail() {
                         Evidence Log
                         <div className="h-px flex-1 bg-white/10" />
                       </div>
+                      <div className="text-[10px] text-white/35 font-medium">
+                        Reconstructed evidence-related history from notifications and agent events.
+                      </div>
 
                       <div className="overflow-hidden border border-white/5 rounded-lg bg-white/[0.02]">
                         <table className="w-full text-left border-collapse">
@@ -1778,22 +1808,18 @@ export default function CaseDetail() {
                               <th className="px-4 py-3 text-[10px] font-bold text-white/40 uppercase tracking-tight font-sans">Timestamp</th>
                               <th className="px-4 py-3 text-[10px] font-bold text-white/40 uppercase tracking-tight font-sans">Event Type</th>
                               <th className="px-4 py-3 text-[10px] font-bold text-white/40 uppercase tracking-tight font-sans">Reference</th>
-                              <th className="px-4 py-3 text-[10px] font-bold text-white/40 uppercase tracking-tight font-sans">Confirmation</th>
+                              <th className="px-4 py-3 text-[10px] font-bold text-white/40 uppercase tracking-tight font-sans">Event Source</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
                             {evidenceEvents.map((event: any, idx: number) => {
                               const statusLabel = toStatusLabel(event.status || event.eventType || event.type);
-                              const confirmation = event.source === 'agent_event' ? 'SYSTEM_EVENT' : 'NOTIFICATION_EVENT';
+                              const eventSourceLabel = toEventSourceLabel(event.source);
 
                               return (
                                 <tr key={event.id || idx} className="hover:bg-white/[0.04] transition-colors group">
                                   <td className="px-4 py-3 text-[10px] font-sans font-bold text-white/60">
-                                    {new Date(event.at).toLocaleString('en-US', {
-                                      month: '2-digit', day: '2-digit', year: '2-digit',
-                                      hour: '2-digit', minute: '2-digit', second: '2-digit',
-                                      hour12: false
-                                    })}
+                                    {formatEventTimestamp(event.at)}
                                   </td>
                                   <td className="px-4 py-3">
                                     <div className="flex items-center gap-2">
@@ -1804,16 +1830,11 @@ export default function CaseDetail() {
                                     </div>
                                   </td>
                                   <td className="px-4 py-3 text-[10px] font-sans font-bold text-white/40">
-                                    {event.claimId || event.id || '--'}
+                                    {event.claimId || event.id || NOT_AVAILABLE}
                                   </td>
                                   <td className="px-4 py-3">
-                                    <Badge variant="outline" className={cn(
-                                      "text-[9px] h-4.5 px-2 border-white/10 font-sans font-bold uppercase tracking-tight",
-                                      confirmation === 'AMAZON_CONFIRMED' ? "bg-emerald-500/10 text-emerald-500/80 border-emerald-500/20" :
-                                        confirmation === 'SELLER_CONFIRMED' ? "bg-blue-500/10 text-blue-500/80 border-blue-500/20" :
-                                          "bg-white/5 text-white/40"
-                                    )}>
-                                      {confirmation}
+                                    <Badge variant="outline" className="text-[9px] h-4.5 px-2 border-white/10 font-sans font-bold uppercase tracking-tight bg-white/5 text-white/40">
+                                      {eventSourceLabel}
                                     </Badge>
                                   </td>
                                 </tr>
