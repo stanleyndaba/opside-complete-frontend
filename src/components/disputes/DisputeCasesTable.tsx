@@ -32,25 +32,7 @@ interface DisputeCasesTableProps {
 type QueueRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
 type LegacyCase = NonNullable<Awaited<ReturnType<typeof api.getDisputeCases>>['data']>['cases'][number];
 
-function deriveLegacyNextAction(status: string | null | undefined) {
-  const normalizedStatus = String(status || '').toLowerCase();
-  if (['paid', 'complete', 'completed'].includes(normalizedStatus)) return 'Recovered';
-  if (['approved', 'resolved', 'won'].includes(normalizedStatus)) return 'Waiting for payout';
-  if (['submitted', 'under review', 'in review'].includes(normalizedStatus)) return 'Filed / awaiting Amazon';
-  if (['rejected', 'denied', 'lost'].includes(normalizedStatus)) return 'Review rejection';
-  if (['pending'].includes(normalizedStatus)) return 'Ready to file';
-  return 'Manual review';
-}
-
 function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
-  const normalizedStatus = String(item.status || '').toLowerCase();
-  const approvedAmount = ['approved', 'resolved', 'won', 'paid', 'complete', 'completed'].includes(normalizedStatus)
-    ? item.amount
-    : null;
-  const actualPayoutAmount = ['paid', 'complete', 'completed'].includes(normalizedStatus)
-    ? item.amount
-    : null;
-
   return {
     dispute_case_id: item.id,
     detection_result_id: item.claim_id || null,
@@ -65,18 +47,18 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
     anomaly_type: null,
     status: item.status || null,
     filing_status: null,
-    recovery_status: actualPayoutAmount != null ? 'reconciled' : null,
+    recovery_status: null,
     billing_status: null,
     requested_amount: item.amount ?? null,
-    approved_amount: approvedAmount,
-    actual_payout_amount: actualPayoutAmount,
+    approved_amount: null,
+    actual_payout_amount: null,
     billed_amount: null,
     currency: item.currency || 'USD',
-    evidence_state: 'Not available',
+    evidence_state: 'Not Available',
     proof_status: null,
     missing_requirements: [],
     manual_review_reason: null,
-    payout_proof_status: actualPayoutAmount != null ? 'verified' : approvedAmount != null ? 'awaiting_payout' : null,
+    payout_proof_status: null,
     quarantine_reason: null,
     matched_document_count: 0,
     rejection_category: null,
@@ -88,14 +70,14 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
     order_id: null,
     sku: null,
     asin: null,
-    expected_payout_amount: actualPayoutAmount == null && (item.expected_payout_date || item.expectedPayoutDate) ? item.amount ?? null : null,
+    expected_payout_amount: null,
     expected_payout_date: item.expected_payout_date || item.expectedPayoutDate || null,
     can_file: false,
     can_retry: false,
     can_approve: false,
-    can_open_brief: true,
+    can_open_brief: false,
     can_open_case_detail: true,
-    next_action: deriveLegacyNextAction(item.status),
+    next_action: 'Not Available',
   };
 }
 
@@ -109,7 +91,7 @@ function badgeClass(value: string | null | undefined) {
 }
 
 function formatMoney(amount: number | null | undefined, currency = 'USD') {
-  if (amount == null) return 'Not available';
+  if (amount == null) return 'Not Available';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
@@ -247,7 +229,7 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
 
       {rows.length === 0 ? (
         <div className="py-16 flex flex-col items-center justify-center gap-2 text-center bg-white/[0.01] border border-white/5 rounded-2xl">
-          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/40">No dispute cases available</p>
+          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/40">No dispute queue records available</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -255,49 +237,59 @@ export function DisputeCasesTable(_props: DisputeCasesTableProps) {
             <Card key={row.dispute_case_id} className="bg-white/[0.01] border-white/5 text-white rounded-2xl">
               <CardContent className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 {(() => {
+                  const isLegacyRow = source === 'legacy';
                   const proofStatus = getProofStatus(row);
                   const missingRequirements = getMissingRequirements(row);
                   const manualReviewReason = getManualReviewReason(row);
                   const payoutProofStatus = getPayoutProofStatus(row);
                   const quarantineReason = getQuarantineReason(row);
+                  const recordId = row.linked_dispute_case_id || row.dispute_case_id;
+                  const filingStatusLabel = isLegacyRow ? 'Not Available' : (row.filing_status || 'Not Available');
+                  const evidenceStateLabel = isLegacyRow ? 'Not Available' : (row.evidence_state || 'Not Available');
+                  const proofStatusLabel = isLegacyRow ? 'Not Available' : (proofStatus ? formatProofStatus(proofStatus) : null);
+                  const payoutProofLabel = isLegacyRow ? 'Not Available' : (payoutProofStatus && payoutProofStatus !== 'not_applicable' ? formatPayoutProofStatus(payoutProofStatus) : null);
+                  const nextActionLabel = isLegacyRow ? 'Not Available' : (row.next_action || 'Not Available');
+                  const approvedLabel = isLegacyRow ? 'Not Available' : formatMoney(row.approved_amount, row.currency);
+                  const recoveredLabel = isLegacyRow ? 'Not Available' : formatMoney(row.actual_payout_amount, row.currency);
+                  const matchedDocsLabel = isLegacyRow ? 'Not Available' : String(row.matched_document_count);
 
                   return (
                     <>
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Link to={`/recoveries/${row.dispute_case_id}`} className="text-sm font-sans font-bold text-white hover:text-emerald-300">
+                    <Link to={`/recoveries/${recordId}`} className="text-sm font-sans font-bold text-white hover:text-emerald-300">
                       {row.case_number || row.dispute_case_id}
                     </Link>
-                    <Badge variant="outline" className={cn('border', badgeClass(row.status))}>{row.status || 'Not available'}</Badge>
-                    <Badge variant="outline" className={cn('border', badgeClass(row.filing_status))}>{row.filing_status || 'Not available'}</Badge>
-                    <Badge variant="outline" className={cn('border', badgeClass(row.evidence_state))}>{row.evidence_state}</Badge>
-                    {proofStatus ? (
-                      <Badge variant="outline" className={cn('border', proofStatusTone(proofStatus))}>
-                        Proof: {formatProofStatus(proofStatus)}
+                    <Badge variant="outline" className={cn('border', badgeClass(row.status))}>{row.status || 'Not Available'}</Badge>
+                    <Badge variant="outline" className={cn('border', badgeClass(filingStatusLabel))}>{filingStatusLabel}</Badge>
+                    <Badge variant="outline" className={cn('border', badgeClass(evidenceStateLabel))}>{evidenceStateLabel}</Badge>
+                    {proofStatusLabel ? (
+                      <Badge variant="outline" className={cn('border', isLegacyRow ? badgeClass('Not Available') : proofStatusTone(proofStatus))}>
+                        Proof: {proofStatusLabel}
                       </Badge>
                     ) : null}
-                    {payoutProofStatus && payoutProofStatus !== 'not_applicable' ? (
-                      <Badge variant="outline" className={cn('border', payoutProofTone(payoutProofStatus))}>
-                        Payout: {formatPayoutProofStatus(payoutProofStatus)}
+                    {payoutProofLabel ? (
+                      <Badge variant="outline" className={cn('border', isLegacyRow ? badgeClass('Not Available') : payoutProofTone(payoutProofStatus))}>
+                        Payout: {payoutProofLabel}
                       </Badge>
                     ) : null}
                   </div>
                   <div className="text-[11px] font-sans text-white/45 space-y-1">
-                    <div>Next Action: {row.next_action}</div>
-                    <div>Requested: {formatMoney(row.requested_amount, row.currency)} | Approved: {formatMoney(row.approved_amount, row.currency)} | Recovered: {formatMoney(row.actual_payout_amount, row.currency)}</div>
-                    {missingRequirements.length ? (
+                    <div>Next Action: {nextActionLabel}</div>
+                    <div>Requested: {formatMoney(row.requested_amount, row.currency)} | Approved: {approvedLabel} | Recovered: {recoveredLabel}</div>
+                    {!isLegacyRow && missingRequirements.length ? (
                       <div>Missing: {formatRequirementList(missingRequirements, 2)}</div>
                     ) : null}
-                    {manualReviewReason ? (
+                    {!isLegacyRow && manualReviewReason ? (
                       <div>Review: {formatDisputeReason(manualReviewReason)}</div>
                     ) : null}
-                    {quarantineReason ? (
+                    {!isLegacyRow && quarantineReason ? (
                       <div>Quarantine: {quarantineReason}</div>
                     ) : null}
                   </div>
                 </div>
                 <div className="text-[11px] font-sans text-white/40">
-                  Matched Docs: {row.matched_document_count}
+                  Matched Docs: {matchedDocsLabel}
                 </div>
                     </>
                   );
