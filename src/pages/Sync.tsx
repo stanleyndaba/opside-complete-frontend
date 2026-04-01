@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { startSync, getSyncStatus, cancelSync, forceClearSync, subscribeSyncProgress, type SyncStatusResponse, type SSEConnectionState } from '@/lib/inventoryApi';
+import { startSync, getSyncStatus, cancelSync, forceClearSync, getRecentSseEvents, subscribeSyncProgress, type RecentSSEEvent, type SyncStatusResponse, type SSEConnectionState } from '@/lib/inventoryApi';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
@@ -40,6 +40,8 @@ interface LogStory {
   title: string;
   logs: LogEntry[];
 }
+
+const LOG_DUPLICATE_WINDOW_MS = 1500;
 
 // Category icons
 const getCategoryIcon = (category: LogEntry['category']) => {
@@ -97,16 +99,6 @@ export default function Sync() {
     sseStatusRef.current = sseStatus;
   }, [sseStatus]);
 
-  const appendBackendLog = (entry: Omit<LogEntry, 'id'>) => {
-    setLogs(prev => [
-      ...prev,
-      {
-        ...entry,
-        id: `log_${nextLogIdRef.current++}`,
-      },
-    ]);
-  };
-
   const readEventString = (value: unknown): string | null => {
     return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
   };
@@ -152,6 +144,214 @@ export default function Sync() {
       status: readEventString(record.status),
       category: readEventString(log?.category) || readEventString(record.category),
     });
+  };
+
+  const extractEventTenantSlug = (event: unknown): string | null => {
+    if (!event || typeof event !== 'object') {
+      return null;
+    }
+
+    const record = event as Record<string, unknown>;
+    const payload = record.payload && typeof record.payload === 'object'
+      ? record.payload as Record<string, unknown>
+      : null;
+
+    return (
+      readEventString(record.tenant_slug) ||
+      readEventString(record.tenantSlug) ||
+      readEventString(payload?.tenant_slug) ||
+      readEventString(payload?.tenantSlug) ||
+      readEventString(payload?.slug)
+    );
+  };
+
+  const normalizeLogType = (value: string | null): LogEntry['type'] => {
+    switch (value) {
+      case 'success':
+      case 'warning':
+      case 'error':
+      case 'progress':
+      case 'thinking':
+        return value;
+      default:
+        return 'info';
+    }
+  };
+
+  const normalizeLogCategory = (value: string | null): LogEntry['category'] => {
+    switch (value) {
+      case 'orders':
+      case 'inventory':
+      case 'shipments':
+      case 'returns':
+      case 'settlements':
+      case 'fees':
+      case 'claims':
+      case 'detection':
+        return value;
+      default:
+        return 'system';
+    }
+  };
+
+  const normalizeLogContext = (value: unknown): LogEntry['context'] | undefined => {
+    if (!value || typeof value !== 'object') {
+      return undefined;
+    }
+
+    const record = value as Record<string, unknown>;
+    const details = Array.isArray(record.details)
+      ? record.details.filter((detail): detail is string => typeof detail === 'string' && detail.trim().length > 0)
+      : undefined;
+    const estimatedTime = readEventString(record.estimatedTime);
+
+    if ((!details || details.length === 0) && !estimatedTime) {
+      return undefined;
+    }
+
+    return {
+      ...(details && details.length > 0 ? { details } : {}),
+      ...(estimatedTime ? { estimatedTime } : {}),
+    };
+  };
+
+  const extractBackendTimestamp = (event: unknown, log?: Record<string, unknown> | null): string | null => {
+    if (!event || typeof event !== 'object') {
+      return readEventString(log?.timestamp);
+    }
+
+    const record = event as Record<string, unknown>;
+    const payload = record.payload && typeof record.payload === 'object'
+      ? record.payload as Record<string, unknown>
+      : null;
+
+    return (
+      readEventString(log?.timestamp) ||
+      readEventString(record.timestamp) ||
+      readEventString(payload?.timestamp)
+    );
+  };
+
+  const mapEventToLogEntry = (event: unknown): Omit<LogEntry, 'id'> | null => {
+    if (!event || typeof event !== 'object') {
+      return null;
+    }
+
+    const record = event as Record<string, unknown>;
+    const payload = record.payload && typeof record.payload === 'object'
+      ? record.payload as Record<string, unknown>
+      : null;
+    const log = record.log && typeof record.log === 'object'
+      ? record.log as Record<string, unknown>
+      : payload?.log && typeof payload.log === 'object'
+        ? payload.log as Record<string, unknown>
+        : null;
+    const eventType = readEventString(record.type) || readEventString(payload?.type);
+    const message = readEventString(log?.message);
+
+    if (eventType !== 'log' || !log || !message) {
+      return null;
+    }
+
+    const countValue = typeof log.count === 'number'
+      ? log.count
+      : typeof log.count === 'string' && log.count.trim().length > 0 && Number.isFinite(Number(log.count))
+        ? Number(log.count)
+        : undefined;
+    const context = normalizeLogContext(log.context);
+
+    return {
+      type: normalizeLogType(readEventString(log.type)),
+      category: normalizeLogCategory(readEventString(log.category)),
+      message,
+      ...(typeof countValue === 'number' ? { count: countValue } : {}),
+      ...(context ? { context } : {}),
+      timestamp: extractBackendTimestamp(event, log),
+    };
+  };
+
+  const parseLogTimestamp = (timestamp: string | null | undefined): number | null => {
+    if (!timestamp) {
+      return null;
+    }
+
+    const parsed = new Date(timestamp).getTime();
+    return Number.isNaN(parsed) ? null : parsed;
+  };
+
+  const areEquivalentLogs = (existing: LogEntry, candidate: Omit<LogEntry, 'id'>): boolean => {
+    const existingDetails = existing.context?.details || [];
+    const candidateDetails = candidate.context?.details || [];
+
+    if (
+      existing.type !== candidate.type ||
+      existing.category !== candidate.category ||
+      existing.message !== candidate.message ||
+      (existing.count ?? null) !== (candidate.count ?? null) ||
+      existing.context?.estimatedTime !== candidate.context?.estimatedTime ||
+      existingDetails.length !== candidateDetails.length ||
+      existingDetails.some((detail, index) => detail !== candidateDetails[index])
+    ) {
+      return false;
+    }
+
+    const existingTimestamp = parseLogTimestamp(existing.timestamp);
+    const candidateTimestamp = parseLogTimestamp(candidate.timestamp);
+
+    if (existingTimestamp === null || candidateTimestamp === null) {
+      return existing.timestamp === candidate.timestamp;
+    }
+
+    return Math.abs(existingTimestamp - candidateTimestamp) <= LOG_DUPLICATE_WINDOW_MS;
+  };
+
+  const sortLogsByBackendTimestamp = (entries: LogEntry[]): LogEntry[] => {
+    return [...entries].sort((left, right) => {
+      const leftTimestamp = parseLogTimestamp(left.timestamp);
+      const rightTimestamp = parseLogTimestamp(right.timestamp);
+
+      if (leftTimestamp !== null && rightTimestamp !== null && leftTimestamp !== rightTimestamp) {
+        return leftTimestamp - rightTimestamp;
+      }
+
+      if (leftTimestamp === null && rightTimestamp !== null) {
+        return 1;
+      }
+
+      if (leftTimestamp !== null && rightTimestamp === null) {
+        return -1;
+      }
+
+      return Number(left.id.replace('log_', '')) - Number(right.id.replace('log_', ''));
+    });
+  };
+
+  const mergeLogEntries = (entries: Array<Omit<LogEntry, 'id'>>) => {
+    if (entries.length === 0) {
+      return;
+    }
+
+    setLogs(prev => {
+      const merged = [...prev];
+
+      for (const entry of entries) {
+        if (merged.some(existing => areEquivalentLogs(existing, entry))) {
+          continue;
+        }
+
+        merged.push({
+          ...entry,
+          id: `log_${nextLogIdRef.current++}`,
+        });
+      }
+
+      return sortLogsByBackendTimestamp(merged);
+    });
+  };
+
+  const resetLogTimeline = () => {
+    nextLogIdRef.current = 0;
+    setLogs([]);
   };
 
   // Scroll to bottom of logs
@@ -392,17 +592,36 @@ export default function Sync() {
     let interval: NodeJS.Timeout | null = null;
     let unsubscribe: (() => void) | null = null;
 
-    async function ensureSync() {
+    const hydrateReplayTimeline = async (targetSyncId: string) => {
+      try {
+        const recentEvents = await getRecentSseEvents(250, currentTenantSlug);
+        if (cancelled) return;
+
+        const replayLogs = recentEvents
+          .filter((event: RecentSSEEvent) => {
+            const eventSyncId = extractEventSyncId(event);
+            const eventTenantSlug = extractEventTenantSlug(event);
+            return eventSyncId === targetSyncId && eventTenantSlug === currentTenantSlug;
+          })
+          .map((event: RecentSSEEvent) => mapEventToLogEntry(event))
+          .filter((entry): entry is Omit<LogEntry, 'id'> => entry !== null);
+
+        mergeLogEntries(replayLogs);
+      } catch (replayError) {
+        console.warn('[Sync] Failed to reconstruct replay timeline:', replayError);
+      }
+    };
+
+    const ensureSync = async (): Promise<string | null> => {
       if (!syncId) {
         try {
-          // Clear logs and reset state for new sync
-          setLogs([]);
+          resetLogTimeline();
           setLogsFinished(false);
-          modalDismissedRef.current = false; // Reset modal dismissed flag for new sync
+          modalDismissedRef.current = false;
           logsFinishedRef.current = false;
 
           const start = await startSync(currentTenantSlug);
-          if (cancelled) return;
+          if (cancelled) return null;
           const newSyncId = start.syncId;
           setSyncId(newSyncId);
           setStatus('running');
@@ -417,11 +636,10 @@ export default function Sync() {
           });
 
           navigate(`/sync?id=${newSyncId}`, { replace: true });
+          return null;
         } catch (e: any) {
-          if (cancelled) return;
+          if (cancelled) return null;
           const errorMsg = e?.message || 'Could not start audit';
-
-          // Check if it's a "sync already in progress" error
           const isBlockedError = errorMsg.toLowerCase().includes('already in progress');
 
           setStatus('failed');
@@ -438,64 +656,72 @@ export default function Sync() {
             variant: 'destructive',
             duration: 5000,
           });
-          return;
-        }
-      } else {
-        // Load existing sync status
-        try {
-          const s = await getSyncStatus(syncId, currentTenantSlug);
-          if (cancelled) return;
 
-          console.log('[Sync] Received sync status:', s);
-          updateSyncState(s);
-        } catch (e: any) {
-          if (cancelled) return;
-          console.error('Failed to load sync status:', e);
-          const errorMessage = e?.message || 'Could not load audit';
-
-          if (errorMessage.includes('not found') || errorMessage.includes('Sync not found')) {
-            setSyncId(undefined);
-            setSyncData(null);
-            setStatus('idle');
-            setProgress(0);
-            setMessage('Audit not found. Please start a new audit.');
-            setError(null);
-            navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
-
-            toast({
-              title: 'Audit not found',
-              description: 'The audit you were viewing is no longer available. Start a new one to continue.',
-              duration: 5000,
-            });
-          } else {
-            setError(errorMessage);
-            toast({
-              title: 'Could not load audit',
-              description: errorMessage || 'We could not load this audit. Please refresh the page.',
-              variant: 'destructive',
-              duration: 5000,
-            });
-          }
+          return null;
         }
       }
-    }
 
-    ensureSync();
+      resetLogTimeline();
 
-    // Prefer SSE realtime; fall back to polling if EventSource fails
-    if (syncId) {
       try {
-        unsubscribe = subscribeSyncProgress(syncId, (s: any) => {
+        const s = await getSyncStatus(syncId, currentTenantSlug);
+        if (cancelled) return null;
+
+        console.log('[Sync] Received sync status:', s);
+        updateSyncState(s);
+        await hydrateReplayTimeline(syncId);
+        return syncId;
+      } catch (e: any) {
+        if (cancelled) return null;
+        console.error('Failed to load sync status:', e);
+        const errorMessage = e?.message || 'Could not load audit';
+
+        if (errorMessage.includes('not found') || errorMessage.includes('Sync not found')) {
+          setSyncId(undefined);
+          setSyncData(null);
+          setStatus('idle');
+          setProgress(0);
+          setMessage('Audit not found. Please start a new audit.');
+          setError(null);
+          navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
+
+          toast({
+            title: 'Audit not found',
+            description: 'The audit you were viewing is no longer available. Start a new one to continue.',
+            duration: 5000,
+          });
+        } else {
+          setError(errorMessage);
+          toast({
+            title: 'Could not load audit',
+            description: errorMessage || 'We could not load this audit. Please refresh the page.',
+            variant: 'destructive',
+            duration: 5000,
+          });
+        }
+
+        return null;
+      }
+    };
+
+    const setupSyncMonitoring = async () => {
+      const activeSyncId = await ensureSync();
+      if (cancelled || !activeSyncId) {
+        return;
+      }
+
+      try {
+        unsubscribe = subscribeSyncProgress(activeSyncId, (s: any) => {
           if (cancelled) return;
           const incomingSyncId = extractEventSyncId(s);
 
           if (!incomingSyncId) {
-            warnIgnoredForeignEvent('missing_sync_id', syncId, s);
+            warnIgnoredForeignEvent('missing_sync_id', activeSyncId, s);
             return;
           }
 
-          if (incomingSyncId !== syncId) {
-            warnIgnoredForeignEvent('sync_id_mismatch', syncId, s);
+          if (incomingSyncId !== activeSyncId) {
+            warnIgnoredForeignEvent('sync_id_mismatch', activeSyncId, s);
             return;
           }
 
@@ -503,27 +729,20 @@ export default function Sync() {
             return;
           }
 
-          // Handle log events from backend
           if (s.type === 'log' && s.log) {
             console.log('[Sync] Log event received:', s.log);
-            appendBackendLog({
-              type: s.log.type || 'info',
-              category: s.log.category || 'system',
-              message: s.log.message,
-              count: s.log.count,
-              context: s.log.context,
-              timestamp: typeof s.log.timestamp === 'string' ? s.log.timestamp : null,
-            });
+            const logEntry = mapEventToLogEntry(s);
+            if (logEntry) {
+              mergeLogEntries([logEntry]);
+            }
             return;
           }
 
-          // Handle detection.completed event (sent after sync completes)
           if (s.type === 'detection' && s.status === 'completed') {
             console.log('[Sync] Detection completed event received:', s);
             const detectedCount = s.claimsDetected ?? null;
             const estimatedValue = s.totalRecoverableValue ?? null;
 
-            // ⭐ UPDATE syncData - but DON'T show toast here, let the main completion flow handle it
             setSyncData(prev => prev ? {
               ...prev,
               claimsDetected: detectedCount ?? prev.claimsDetected,
@@ -541,52 +760,52 @@ export default function Sync() {
             }
           }
         }, (connectionState) => {
-          // SSE connection state callback
           setSseStatus(connectionState);
         }, currentTenantSlug);
       } catch (err) {
         console.error('SSE connection failed, falling back to polling:', err);
       }
-    }
 
-    // Polling fallback - continue polling after completion to catch async detection results
-    let pollsAfterComplete = 0;
-    const MAX_POLLS_AFTER_COMPLETE = 12; // 12 polls × 3s = 36 seconds for detection to complete
+      let pollsAfterComplete = 0;
+      const MAX_POLLS_AFTER_COMPLETE = 12;
 
-    interval = setInterval(async () => {
-      if (!syncId || cancelled) return;
-      if (sseStatusRef.current === 'connected') return;
-      try {
-        const s = await getSyncStatus(syncId, currentTenantSlug);
+      interval = setInterval(async () => {
         if (cancelled) return;
-        updateSyncState(s);
+        if (sseStatusRef.current === 'connected') return;
+        try {
+          const s = await getSyncStatus(activeSyncId, currentTenantSlug);
+          if (cancelled) return;
+          updateSyncState(s);
 
-        if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
-          pollsAfterComplete++;
+          if (s.status === 'completed' || s.status === 'failed' || s.status === 'cancelled') {
+            pollsAfterComplete++;
 
-          if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
+            if (pollsAfterComplete >= MAX_POLLS_AFTER_COMPLETE || s.status === 'failed' || s.status === 'cancelled') {
+              if (interval) {
+                clearInterval(interval);
+                interval = null;
+              }
+            }
+          }
+        } catch (err: any) {
+          console.error('Polling error:', err);
+          if (err?.message?.includes('not found') || err?.message?.includes('Sync not found')) {
             if (interval) {
               clearInterval(interval);
               interval = null;
             }
+            setSyncId(undefined);
+            setSyncData(null);
+            setStatus('idle');
+            setProgress(0);
+            setMessage('Audit not found. Please start a new audit.');
+            navigate('/sync', { replace: true });
           }
         }
-      } catch (err: any) {
-        console.error('Polling error:', err);
-        if (err?.message?.includes('not found') || err?.message?.includes('Sync not found')) {
-          if (interval) {
-            clearInterval(interval);
-            interval = null;
-          }
-          setSyncId(undefined);
-          setSyncData(null);
-          setStatus('idle');
-          setProgress(0);
-          setMessage('Audit not found. Please start a new audit.');
-          navigate('/sync', { replace: true });
-        }
-      }
-    }, 3000);
+      }, 3000);
+    };
+
+    void setupSyncMonitoring();
 
     return () => {
       cancelled = true;
@@ -640,7 +859,7 @@ export default function Sync() {
     setMessage('Preparing your audit...');
     setError(null);
     setSyncData(null);
-    setLogs([]);
+    resetLogTimeline();
     setLogsFinished(false);
     logsFinishedRef.current = false;
     previousStatusRef.current = 'idle';
@@ -830,7 +1049,7 @@ export default function Sync() {
     completed: {
       label: 'Audit complete',
       summary: message || 'This audit finished and the latest confirmed updates are shown below.',
-      badgeClass: 'border-emerald-500/20 text-emerald-200 bg-emerald-500/[0.08]',
+      badgeClass: 'border-white/10 text-white/80 bg-white/[0.04]',
     },
     failed: {
       label: 'Needs attention',
@@ -854,9 +1073,6 @@ export default function Sync() {
         <div className="fixed inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
-
         <div className="relative z-10 w-full mx-auto px-6 lg:px-10 py-10">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -921,7 +1137,7 @@ export default function Sync() {
                 <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> Started: {formatDateTime(syncData.startedAt)}</span>
               )}
               {syncData?.completedAt && (
-                <span className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-emerald-500/60" /> Completed: {formatDateTime(syncData.completedAt)}</span>
+                <span className="flex items-center gap-2"><CheckCircle2 className="h-3 w-3 text-white/45" /> Completed: {formatDateTime(syncData.completedAt)}</span>
               )}
             </div>
           </motion.div>
@@ -990,7 +1206,7 @@ export default function Sync() {
                         : 'text-white/20 hover:text-white/40'
                         }`}>
                       All updates
-                      {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
+                      {logFilter === 'all' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-white/70" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('money')}
@@ -999,7 +1215,7 @@ export default function Sync() {
                         : 'text-white/20 hover:text-white/40'
                         }`}>
                       Recovery-related
-                      {logFilter === 'money' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
+                      {logFilter === 'money' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-white/70" />}
                     </button>
                     <button
                       onClick={() => setLogFilter('issues')}
@@ -1008,7 +1224,7 @@ export default function Sync() {
                         : 'text-white/20 hover:text-white/40'
                         }`}>
                       Issues
-                      {logFilter === 'issues' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-emerald-500" />}
+                      {logFilter === 'issues' && <motion.div layoutId="sync-tab" className="absolute bottom-[-1px] left-0 right-0 h-[1.5px] bg-white/70" />}
                     </button>
                   </div>
 
@@ -1153,7 +1369,7 @@ export default function Sync() {
                                       {log.context?.details && log.context.details.length > 0 && (
                                         <div className="ml-12 mt-1 mb-2 space-y-0.5 text-sm text-gray-300 font-sans tracking-tight">
                                           {log.context.details.map((detail, i) => (
-                                            <div key={i} className={detail.startsWith('✅') ? 'text-emerald-400' : ''}>
+                                            <div key={i} className={detail.startsWith('✅') ? 'text-white/70' : ''}>
                                               {detail}
                                             </div>
                                           ))}
@@ -1210,7 +1426,7 @@ export default function Sync() {
                   <Button
                     onClick={async () => {
                       try {
-                        setLogs([]);
+                        resetLogTimeline();
                         setLogsFinished(false);
                         logsFinishedRef.current = false;
                         setStatus('idle');

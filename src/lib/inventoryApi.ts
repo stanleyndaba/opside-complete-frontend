@@ -82,6 +82,37 @@ export interface SyncStatisticsResponse {
   };
 }
 
+export interface RecentSSEEvent {
+  event_type: string;
+  entity_type?: string;
+  entity_id?: string;
+  tenant_id?: string;
+  tenant_slug?: string;
+  user_id?: string;
+  timestamp: string;
+  payload?: Record<string, unknown>;
+  type?: string;
+  syncId?: string;
+  sync_id?: string;
+  log?: {
+    type?: string;
+    category?: string;
+    message?: string;
+    count?: number;
+    context?: {
+      details?: string[];
+      estimatedTime?: string;
+    };
+    timestamp?: string;
+  };
+  [key: string]: unknown;
+}
+
+export interface RecentSSEEventsResponse {
+  success: boolean;
+  events: RecentSSEEvent[];
+}
+
 // Individual exports for Sync.tsx
 export const startSync = async (tenantSlug?: string): Promise<{ syncId: string; status: string; message: string }> => {
   if (!tenantSlug) throw new Error("tenantSlug required for startSync");
@@ -154,6 +185,17 @@ export const forceClearSync = async (tenantSlug?: string): Promise<{ success: bo
     throw new Error(response.error || 'Failed to clear stuck syncs');
   }
   return response.data || { success: true, message: 'Stuck syncs cleared', clearedCount: 0 };
+};
+
+export const getRecentSseEvents = async (limit = 250, tenantSlug?: string): Promise<RecentSSEEvent[]> => {
+  if (!tenantSlug) throw new Error('tenantSlug required for getRecentSseEvents');
+  const slug = tenantSlug;
+  const clampedLimit = Math.max(1, Math.min(limit, 250));
+  const response = await api.get<RecentSSEEventsResponse>(`/api/sse/recent?tenantSlug=${encodeURIComponent(slug)}&limit=${clampedLimit}`);
+  if (!response.ok) {
+    throw new Error(response.error || 'Failed to fetch recent SSE events');
+  }
+  return Array.isArray(response.data?.events) ? response.data.events : [];
 };
 
 // Get sync history - GET /api/sync/history
@@ -337,6 +379,7 @@ export const inventoryApi = {
   getSyncStatus,
   cancelSync,
   forceClearSync,
+  getRecentSseEvents,
   getSyncHistory,
   getSyncStatistics,
   subscribeSyncProgress
