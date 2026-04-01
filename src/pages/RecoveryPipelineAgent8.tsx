@@ -44,10 +44,16 @@ type Summary = {
   blockers: Blocker[];
 };
 type Row = {
-  recovery_id: string;
-  dispute_case_id: string;
-  linked_dispute_case_id?: string | null;
+  row_type: 'dispute_case_projection' | 'detection_projection' | null;
+  entity_type: 'dispute_case' | 'detection' | null;
+  has_real_dispute_case: boolean | null;
+  linked_dispute_case_id: string | null;
+  has_real_recovery_record: boolean | null;
+  recovery_record_id: string | null;
+  dispute_case_id: string | null;
   detection_result_id: string | null;
+  expected_payout_source: 'approved_pending' | 'detection_estimate' | 'unavailable' | null;
+  actual_payout_source: 'verified_financial_event' | 'legacy_case_field' | 'unavailable' | null;
   case_number: string;
   provider_case_id: string | null;
   merchant_reference: string | null;
@@ -143,6 +149,7 @@ type ProofDocument = {
 type FinancialMap = Record<string, FinancialTruthSummary>;
 
 const PAGE_SIZE = 10;
+const NOT_AVAILABLE = 'Not Available';
 const BILLING_COMPLETE_STATES = new Set(['paid', 'charged', 'credited', 'completed']);
 const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['recovery_processing', 'Recovery Processing'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_processing', 'Billing Processing'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
 const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
@@ -153,17 +160,17 @@ const dateRanges = [['30', 'Last 30 Days'], ['90', 'Last 90 Days'], ['365', 'Thi
 const money = (value: number | null | undefined, currency = 'USD') =>
   typeof value === 'number' && !Number.isNaN(value)
     ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value)
-    : 'Not available';
+    : NOT_AVAILABLE;
 
 const stamp = (value: string | null | undefined) => {
-  if (!value) return 'Not available';
+  if (!value) return NOT_AVAILABLE;
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return 'Not available';
+  if (Number.isNaN(date.getTime())) return NOT_AVAILABLE;
   return date.toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
 };
 
 const label = (value: string | null | undefined) =>
-  value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : 'Unknown';
+  value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : NOT_AVAILABLE;
 
 const truthText = (value: string | null | undefined) => {
   const normalized = String(value || '').trim();
@@ -171,31 +178,100 @@ const truthText = (value: string | null | undefined) => {
   return normalized.includes('_') || normalized.includes('-') ? label(normalized) : normalized;
 };
 
-const filedTruthStates = new Set(['filed', 'submitted', 'recovering']);
-const queueTruthStates = new Set(['pending', 'pending_approval', 'retrying', 'submitting']);
-const blockedTruthStates = new Set(['blocked', 'pending_safety_verification', 'duplicate_blocked', 'payment_required', 'failed']);
-
-function filingTruthHeadline(row: Pick<Row, 'dispute_case_id' | 'provider_case_id' | 'filing_status'>): string {
-  const filingStatus = String(row.filing_status || '').toLowerCase();
-  if (!row.dispute_case_id) return 'Issue detected';
-  if (row.provider_case_id || filedTruthStates.has(filingStatus)) return 'Filed with Amazon';
-  if (filingStatus === 'submitting') return 'Submitting now';
-  if (filingStatus === 'retrying') return 'Retry queued';
-  if (filingStatus === 'pending' || filingStatus === 'pending_approval') return 'Ready to file';
-  if (blockedTruthStates.has(filingStatus)) return label(filingStatus);
-  return 'Case opened';
+function rowTypeLabel(value: Row['row_type'] | null | undefined): string {
+  switch (value) {
+    case 'dispute_case_projection':
+      return 'Dispute Case Projection';
+    case 'detection_projection':
+      return 'Detection Projection';
+    default:
+      return NOT_AVAILABLE;
+  }
 }
 
-function filingTruthDetail(row: Pick<Row, 'dispute_case_id' | 'provider_case_id' | 'filing_status' | 'block_reasons' | 'last_error'>): string | null {
-  const reasons = Array.isArray(row.block_reasons) ? row.block_reasons.filter(Boolean) : [];
-  const filingStatus = String(row.filing_status || '').toLowerCase();
-  if (!row.dispute_case_id) return 'Detected opportunity not yet promoted into a filed claim.';
-  if (row.provider_case_id) return `Amazon reference ${row.provider_case_id}`;
-  if (row.last_error && blockedTruthStates.has(filingStatus)) return truthText(row.last_error);
-  if (reasons.length > 0) return `Blocked: ${label(reasons[0])}`;
-  if (row.last_error) return truthText(row.last_error);
-  if (queueTruthStates.has(filingStatus)) return 'Waiting in the real filing queue.';
-  return null;
+function entityTypeLabel(value: Row['entity_type'] | null | undefined): string {
+  switch (value) {
+    case 'dispute_case':
+      return 'Dispute Case';
+    case 'detection':
+      return 'Detection';
+    default:
+      return NOT_AVAILABLE;
+  }
+}
+
+function payoutSourceLabel(value: Row['expected_payout_source'] | Row['actual_payout_source'] | null | undefined): string {
+  switch (value) {
+    case 'approved_pending':
+      return 'Approved Pending';
+    case 'detection_estimate':
+      return 'Detection Estimate';
+    case 'verified_financial_event':
+      return 'Verified Financial Event';
+    case 'legacy_case_field':
+      return 'Legacy Case Field';
+    case 'unavailable':
+      return NOT_AVAILABLE;
+    default:
+      return NOT_AVAILABLE;
+  }
+}
+
+function boolTruth(value: boolean | null | undefined): string {
+  if (value === true) return 'Yes';
+  if (value === false) return 'No';
+  return NOT_AVAILABLE;
+}
+
+function getDetailRouteId(row: Pick<Row, 'linked_dispute_case_id' | 'dispute_case_id' | 'detection_result_id'>): string {
+  return row.linked_dispute_case_id || row.dispute_case_id || row.detection_result_id || '';
+}
+
+function getLedgerRowKey(row: Pick<Row, 'recovery_record_id' | 'linked_dispute_case_id' | 'dispute_case_id' | 'detection_result_id' | 'case_number'>): string {
+  return row.recovery_record_id || getDetailRouteId(row) || row.case_number;
+}
+
+function identityTruthHeadline(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record' | 'has_real_dispute_case'>): string {
+  if (row.row_type === 'detection_projection' || row.entity_type === 'detection') {
+    return 'Detection Projection';
+  }
+  if (row.has_real_recovery_record === true) {
+    return 'Recovery Record Linked';
+  }
+  if (row.row_type === 'dispute_case_projection' || row.has_real_dispute_case === true) {
+    return 'Dispute Case Projection';
+  }
+  return NOT_AVAILABLE;
+}
+
+function identityTruthDetail(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record' | 'has_real_dispute_case'>): string {
+  if (row.row_type === 'detection_projection' || row.entity_type === 'detection') {
+    return 'Detection-backed payout estimate only. No confirmed dispute case or recovery record.';
+  }
+  if (row.has_real_dispute_case === true && row.has_real_recovery_record === true) {
+    return 'Backed by a dispute case and a persisted recovery record.';
+  }
+  if (row.has_real_dispute_case === true) {
+    return 'Backed by a dispute case. No persisted recovery record is linked yet.';
+  }
+  return NOT_AVAILABLE;
+}
+
+function identityBadgeTone(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record'>): string {
+  if (row.row_type === 'detection_projection' || row.entity_type === 'detection') {
+    return 'border-amber-500/20 bg-amber-500/10 text-amber-100';
+  }
+  if (row.has_real_recovery_record === true) {
+    return 'border-blue-500/20 bg-blue-500/10 text-blue-100';
+  }
+  return 'border-white/10 bg-white/[0.04] text-white/70';
+}
+
+function detailLinkLabel(row: Pick<Row, 'entity_type' | 'linked_dispute_case_id' | 'dispute_case_id' | 'detection_result_id'>): string {
+  if (!getDetailRouteId(row)) return NOT_AVAILABLE;
+  if (row.entity_type === 'detection') return 'View detection detail';
+  if (row.entity_type === 'dispute_case') return 'View dispute detail';
+  return NOT_AVAILABLE;
 }
 
 const describeWorkCycle = (
@@ -232,11 +308,11 @@ function pickLatestTimestamp(...values: Array<string | null | undefined>): strin
   return stamped?.value || null;
 }
 
-function getFinancialKey(row: Pick<Row, 'dispute_case_id' | 'recovery_id' | 'detection_result_id'>): string {
-  return row.dispute_case_id || row.recovery_id || row.detection_result_id || '';
+function getFinancialKey(row: Pick<Row, 'dispute_case_id' | 'detection_result_id'>): string {
+  return row.dispute_case_id || row.detection_result_id || '';
 }
 
-function getFinancialSummaryForRow(row: Pick<Row, 'dispute_case_id' | 'recovery_id' | 'detection_result_id'>, map: FinancialMap): FinancialTruthSummary | null {
+function getFinancialSummaryForRow(row: Pick<Row, 'dispute_case_id' | 'detection_result_id'>, map: FinancialMap): FinancialTruthSummary | null {
   const directKey = getFinancialKey(row);
   if (directKey && map[directKey]) return map[directKey];
   if (row.detection_result_id && map[row.detection_result_id]) return map[row.detection_result_id];
@@ -254,15 +330,17 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   const billingWorkItemId = String(payload.billing_work_item_id || '').trim();
   const disputeCaseId = String(payload.dispute_case_id || payload.entity_id || '').trim();
   const billingEntityId = String(payload.recovery_id || payload.entity_id || '').trim();
+  const rowDisputeCaseId = String(row.linked_dispute_case_id || row.dispute_case_id || '').trim();
+  const rowRecoveryRecordId = String(row.recovery_record_id || '').trim();
 
   const matchesRecovery = isRecovery && (
     (recoveryWorkItemId && recoveryWorkItemId === row.recovery_work_item_id) ||
-    (disputeCaseId && disputeCaseId === row.dispute_case_id)
+    (disputeCaseId && disputeCaseId === rowDisputeCaseId)
   );
   const matchesBilling = isBilling && (
     (billingWorkItemId && billingWorkItemId === row.billing_work_item_id) ||
-    (disputeCaseId && disputeCaseId === row.dispute_case_id) ||
-    (billingEntityId && billingEntityId === row.recovery_id)
+    (disputeCaseId && disputeCaseId === rowDisputeCaseId) ||
+    (billingEntityId && billingEntityId === rowRecoveryRecordId)
   );
 
   if (!matchesRecovery && !matchesBilling) {
@@ -448,11 +526,11 @@ const PRESERVED_FINALITY_FIELDS: Array<keyof Row> = [
 
 function mergeLedgerRows(nextRows: Row[], previousRows: Row[] = []): Row[] {
   const previousById = new Map(
-    previousRows.map((row) => [row.dispute_case_id || row.recovery_id, row])
+    previousRows.map((row) => [getLedgerRowKey(row), row])
   );
 
   return nextRows.map((row) => {
-    const previous = previousById.get(row.dispute_case_id || row.recovery_id);
+    const previous = previousById.get(getLedgerRowKey(row));
     if (!previous) return row;
 
     const merged: Row = { ...row };
@@ -727,12 +805,16 @@ export default function RecoveryPipelineAgent8() {
 
   const openProofDocuments = async (row: Row) => {
     try {
-      const res = await api.getRecoveryDetail(row.dispute_case_id || row.recovery_id, activeSlug);
+      const detailRouteId = getDetailRouteId(row);
+      if (!detailRouteId) {
+        throw new Error(NOT_AVAILABLE);
+      }
+      const res = await api.getRecoveryDetail(detailRouteId, activeSlug);
       if (!res.ok) {
         throw new Error(res.error || 'Unable to load proof documents.');
       }
       setProofDocs(Array.isArray(res.data?.documents) ? res.data.documents : []);
-      setProofDocsClaim({ id: row.dispute_case_id || row.recovery_id, claim_number: row.case_number });
+      setProofDocsClaim({ id: detailRouteId, claim_number: row.case_number });
       setProofDocsModalOpen(true);
     } catch (err: any) {
       toast({ title: 'Unable to load proof documents', description: err?.message || 'The linked evidence documents could not be loaded.' });
@@ -761,7 +843,12 @@ export default function RecoveryPipelineAgent8() {
   };
 
   const openEvidencePacket = (row: Row) => {
-    setEvidencePackClaimId(row.dispute_case_id || row.recovery_id);
+    const detailRouteId = getDetailRouteId(row);
+    if (!detailRouteId) {
+      toast({ title: 'Evidence packet unavailable', description: NOT_AVAILABLE });
+      return;
+    }
+    setEvidencePackClaimId(detailRouteId);
     setEvidencePackOpen(true);
   };
 
@@ -858,7 +945,7 @@ export default function RecoveryPipelineAgent8() {
                       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                         <div className="relative w-full xl:max-w-xl">
                           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/20" />
-                          <Input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }} placeholder="Search case, Amazon reference, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
+                          <Input value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }} placeholder="Search record, Amazon reference, merchant, or status" className="h-12 rounded-xl border-white/10 bg-white/[0.03] pl-11 text-sm font-sans font-bold text-white placeholder:text-white/20" />
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {dateRanges.map(([value, text]) => (
@@ -895,13 +982,13 @@ export default function RecoveryPipelineAgent8() {
                     </div>
                   </div>
 
-                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No cases match the current filters.</div> : (
+                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No ledger records match the current filters.</div> : (
                     <>
                       <div className="overflow-x-auto">
                         <table className="w-full min-w-[1120px] border-collapse">
                           <thead>
                             <tr className="border-b border-white/10">
-                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Case</th>
+                              <th className="py-3 pr-4 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Record</th>
                               <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Current state</th>
                               <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Money</th>
                               <th className="px-4 py-3 text-left text-[9px] font-sans font-medium uppercase tracking-tight text-white/18">Payout and billing</th>
@@ -912,22 +999,27 @@ export default function RecoveryPipelineAgent8() {
                           <tbody>
                             {rows.map((row) => {
                               const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
+                              const detailRouteId = getDetailRouteId(row);
+                              const detailLabel = detailLinkLabel(row);
                               return (
-                              <tr key={row.recovery_id} className="border-b border-white/[0.06] align-top">
+                              <tr key={getLedgerRowKey(row)} className="border-b border-white/[0.06] align-top">
                                 <td className="py-5 pr-4">
                                   <div className="space-y-2">
                                     <div className="text-[11px] font-sans font-semibold tracking-tight text-white/92">{row.case_number}</div>
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
-                                      {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant reference not available'}
+                                      {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant Reference Not Available'}
+                                    </div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                      {entityTypeLabel(row.entity_type)} · {rowTypeLabel(row.row_type)}
                                     </div>
                                     {row.provider_case_id ? (
                                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
                                         Amazon reference {row.provider_case_id}
                                       </div>
                                     ) : null}
-                                    {filingTruthDetail(row) && !row.provider_case_id ? (
+                                    {identityTruthDetail(row) !== NOT_AVAILABLE ? (
                                       <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
-                                        {filingTruthDetail(row)}
+                                        {identityTruthDetail(row)}
                                       </div>
                                     ) : null}
                                     {describeWorkCycle(
@@ -980,7 +1072,7 @@ export default function RecoveryPipelineAgent8() {
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="flex flex-col gap-2">
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.filing_status || (row.provider_case_id ? 'filed' : 'detected'))}`}>{filingTruthHeadline(row)}</span>
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${identityBadgeTone(row)}`}>{identityTruthHeadline(row)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
                                     {row.reconciliation_strategy ? (
@@ -988,11 +1080,9 @@ export default function RecoveryPipelineAgent8() {
                                         {formatAutonomyLabel(row.reconciliation_strategy)}
                                       </span>
                                     ) : null}
-                                    {filingTruthDetail(row) ? (
-                                      <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
-                                        {filingTruthDetail(row)}
-                                      </div>
-                                    ) : null}
+                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
+                                      {identityTruthDetail(row)}
+                                    </div>
                                     {summarizeMatchExplanation(row.match_explanation) ? (
                                       <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
                                         {summarizeMatchExplanation(row.match_explanation)}
@@ -1004,8 +1094,10 @@ export default function RecoveryPipelineAgent8() {
                                   <div className="space-y-2">
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Approved with Amazon</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Expected source: {payoutSourceLabel(row.expected_payout_source)}</div>
                                     <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Paid back</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(financialSummary?.verified_paid_amount, row.currency)}</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Actual source: {payoutSourceLabel(row.actual_payout_source)}</div>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${financialStatusTone(financialSummary?.payout_status)}`}>Payout: {financialStatusLabel(financialSummary?.payout_status)}</span>
                                     <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">{financialStatusDetail(financialSummary)}</div>
                                   </div>
@@ -1050,14 +1142,14 @@ export default function RecoveryPipelineAgent8() {
                                       </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
-                                      <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Case actions</div>
-                                      {row.dispute_case_id ? (
+                                      <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record actions</div>
+                                      {detailRouteId ? (
                                         <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                          <Link to={`/app/${activeSlug}/recoveries/${row.dispute_case_id}`}>View recovery detail</Link>
+                                          <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`}>{detailLabel}</Link>
                                         </DropdownMenuItem>
                                       ) : (
                                         <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
-                                          No claim record yet
+                                          {NOT_AVAILABLE}
                                         </div>
                                       )}
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
@@ -1067,11 +1159,11 @@ export default function RecoveryPipelineAgent8() {
                                         Open evidence packet
                                       </DropdownMenuItem>
                                       <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openRecoveryDetails(row)}>
-                                        Open case details
+                                        Open ledger details
                                       </DropdownMenuItem>
                                     </DropdownMenuContent>
                                   </DropdownMenu>
-                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : filingTruthHeadline(row)}</div>
+                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : identityTruthHeadline(row)}</div>
                                 </td>
                               </tr>
                               );
@@ -1111,9 +1203,9 @@ export default function RecoveryPipelineAgent8() {
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
         <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
           <DialogHeader className="border-b border-white/5 pb-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Recovery Details</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Ledger Details</div>
             <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
-              {detailsRow?.case_number || 'Recovery Case'}
+              {detailsRow?.case_number || 'Ledger Record'}
             </DialogTitle>
           </DialogHeader>
           {detailsRow ? (() => {
@@ -1121,33 +1213,39 @@ export default function RecoveryPipelineAgent8() {
             return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
-                title="Case"
+                title="Record Identity"
                 rows={[
-                  { label: 'Case Number', value: detailsRow.case_number || 'Not available' },
-                  { label: 'Merchant Reference', value: detailsRow.merchant_reference || 'Not available' },
-                  { label: 'Provider Case', value: detailsRow.provider_case_id || 'Not available' },
-                  { label: 'Detection Reference', value: detailsRow.detection_result_id || 'Not available' },
-                  { label: 'Dispute Case ID', value: detailsRow.dispute_case_id || 'Not available' },
+                  { label: 'Record Reference', value: detailsRow.case_number || NOT_AVAILABLE },
+                  { label: 'Merchant Reference', value: detailsRow.merchant_reference || NOT_AVAILABLE },
+                  { label: 'Entity Type', value: entityTypeLabel(detailsRow.entity_type) },
+                  { label: 'Row Type', value: rowTypeLabel(detailsRow.row_type) },
+                  { label: 'Confirmed Dispute Case', value: boolTruth(detailsRow.has_real_dispute_case) },
+                  { label: 'Linked Dispute Case ID', value: detailsRow.linked_dispute_case_id || NOT_AVAILABLE },
+                  { label: 'Confirmed Recovery Record', value: boolTruth(detailsRow.has_real_recovery_record) },
+                  { label: 'Recovery Record ID', value: detailsRow.recovery_record_id || NOT_AVAILABLE },
+                  { label: 'Provider Case', value: detailsRow.provider_case_id || NOT_AVAILABLE },
+                  { label: 'Detection Reference', value: detailsRow.detection_result_id || NOT_AVAILABLE },
                 ]}
               />
               <DetailSection
                 title="Status"
                 rows={[
-                  { label: 'Filing Status', value: detailsRow.provider_case_id ? 'Filed with Amazon' : label(detailsRow.filing_status) },
-                  { label: 'Filing Detail', value: filingTruthDetail(detailsRow) || 'None recorded' },
+                  { label: 'Record Identity', value: identityTruthHeadline(detailsRow) },
+                  { label: 'Identity Detail', value: identityTruthDetail(detailsRow) },
+                  { label: 'Filing Status', value: detailsRow.filing_status ? label(detailsRow.filing_status) : NOT_AVAILABLE },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(label).join(', ') : 'None' },
-                  { label: 'Last Filing Error', value: detailsRow.last_error || 'None' },
+                  { label: 'Last Filing Error', value: detailsRow.last_error || NOT_AVAILABLE },
                   { label: 'Operator State', value: label(detailsRow.operator_state) },
                   { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
-                  { label: 'Reconciliation Strategy', value: detailsRow.reconciliation_strategy ? formatAutonomyLabel(detailsRow.reconciliation_strategy) : 'Not available' },
+                  { label: 'Reconciliation Strategy', value: detailsRow.reconciliation_strategy ? formatAutonomyLabel(detailsRow.reconciliation_strategy) : NOT_AVAILABLE },
                   { label: 'Match Explanation', value: summarizeMatchExplanation(detailsRow.match_explanation) || 'None recorded' },
                   { label: 'Case Status', value: label(detailsRow.status) },
                   { label: 'Recovery Status', value: label(detailsRow.recovery_status) },
                   { label: 'Recovery Work', value: label(detailsRow.recovery_work_status) },
-                  { label: 'Recovery Work Item', value: detailsRow.recovery_work_item_id || 'Not available' },
-                  { label: 'Recovery Lane', value: detailsRow.recovery_execution_lane ? label(detailsRow.recovery_execution_lane) : 'Not available' },
-                  { label: 'Recovery Runtime', value: detailsRow.recovery_last_runtime_role ? label(detailsRow.recovery_last_runtime_role) : 'Not available' },
-                  { label: 'Recovery Lock Owner', value: detailsRow.recovery_locked_by || 'Not available' },
+                  { label: 'Recovery Work Item', value: detailsRow.recovery_work_item_id || NOT_AVAILABLE },
+                  { label: 'Recovery Lane', value: detailsRow.recovery_execution_lane ? label(detailsRow.recovery_execution_lane) : NOT_AVAILABLE },
+                  { label: 'Recovery Runtime', value: detailsRow.recovery_last_runtime_role ? label(detailsRow.recovery_last_runtime_role) : NOT_AVAILABLE },
+                  { label: 'Recovery Lock Owner', value: detailsRow.recovery_locked_by || NOT_AVAILABLE },
                   { label: 'Recovery Attempts', value: String(detailsRow.recovery_work_attempts ?? 0) },
                   { label: 'Recovery Max Attempts', value: String(detailsRow.recovery_work_max_attempts ?? 0) },
                   { label: 'Recovery Defers', value: String(detailsRow.recovery_defer_count ?? 0) },
@@ -1156,8 +1254,8 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Last Processed', value: stamp(detailsRow.recovery_last_processed_at) },
                   { label: 'Execution Processed', value: stamp(detailsRow.recovery_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.recovery_next_attempt_at) },
-                  { label: 'Lifecycle State', value: detailsRow.recovery_lifecycle_state ? label(detailsRow.recovery_lifecycle_state) : 'Not available' },
-                  { label: 'Runtime State', value: detailsRow.recovery_operational_state ? formatAutonomyLabel(detailsRow.recovery_operational_state) : 'Not available' },
+                  { label: 'Lifecycle State', value: detailsRow.recovery_lifecycle_state ? label(detailsRow.recovery_lifecycle_state) : NOT_AVAILABLE },
+                  { label: 'Runtime State', value: detailsRow.recovery_operational_state ? formatAutonomyLabel(detailsRow.recovery_operational_state) : NOT_AVAILABLE },
                   { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.recovery_operational_explanation) || 'None recorded' },
                   { label: 'Recovery Error', value: detailsRow.recovery_work_error || 'None' },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
@@ -1167,22 +1265,24 @@ export default function RecoveryPipelineAgent8() {
                 title="Financial Truth"
                 rows={[
                   { label: 'Approved Value', value: money(detailsRow.approved_amount, detailsRow.currency) },
+                  { label: 'Expected Payout', value: money(detailsRow.expected_payout_amount, detailsRow.currency) },
+                  { label: 'Expected Payout Source', value: payoutSourceLabel(detailsRow.expected_payout_source) },
                   { label: 'Verified Paid', value: money(financialSummary?.verified_paid_amount, detailsRow.currency) },
+                  { label: 'Actual Payout Source', value: payoutSourceLabel(detailsRow.actual_payout_source) },
                   { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
                   { label: 'Outstanding', value: money(financialSummary?.outstanding_amount, detailsRow.currency) },
                   { label: 'Variance', value: money(financialSummary?.variance_amount, detailsRow.currency) },
                   { label: 'Source Rails', value: financialSummary?.source_types?.length ? financialSummary.source_types.map(financialSourceLabel).join(', ') : 'No financial events yet' },
                   { label: 'Legacy Case Payout Field', value: money(detailsRow.actual_payout_amount, detailsRow.currency) },
-                  { label: 'Projected Payout (Estimate)', value: money(detailsRow.expected_payout_amount, detailsRow.currency) },
                 ]}
               />
               <DetailSection
                 title="Proof of Payment"
                 rows={[
                   { label: 'Status', value: financialStatusDetail(financialSummary) },
-                  { label: 'Paid Via Settlement', value: financialSummary?.proof_of_payment?.settlement_id || 'Not available' },
-                  { label: 'Payout Batch', value: financialSummary?.proof_of_payment?.payout_batch_id || 'Not available' },
-                  { label: 'Reference ID', value: financialSummary?.proof_of_payment?.reference_id || 'Not available' },
+                  { label: 'Paid Via Settlement', value: financialSummary?.proof_of_payment?.settlement_id || NOT_AVAILABLE },
+                  { label: 'Payout Batch', value: financialSummary?.proof_of_payment?.payout_batch_id || NOT_AVAILABLE },
+                  { label: 'Reference ID', value: financialSummary?.proof_of_payment?.reference_id || NOT_AVAILABLE },
                   { label: 'Payment Date', value: stamp(financialSummary?.proof_of_payment?.event_date) },
                   { label: 'Payment Source', value: financialSourceLabel(financialSummary?.proof_of_payment?.source) },
                 ]}
@@ -1192,10 +1292,10 @@ export default function RecoveryPipelineAgent8() {
                 rows={[
                   { label: 'Billing Status', value: label(detailsRow.billing_status) },
                   { label: 'Billing Work', value: label(detailsRow.billing_work_status) },
-                  { label: 'Billing Work Item', value: detailsRow.billing_work_item_id || 'Not available' },
-                  { label: 'Billing Lane', value: detailsRow.billing_execution_lane ? label(detailsRow.billing_execution_lane) : 'Not available' },
-                  { label: 'Billing Runtime', value: detailsRow.billing_last_runtime_role ? label(detailsRow.billing_last_runtime_role) : 'Not available' },
-                  { label: 'Billing Lock Owner', value: detailsRow.billing_locked_by || 'Not available' },
+                  { label: 'Billing Work Item', value: detailsRow.billing_work_item_id || NOT_AVAILABLE },
+                  { label: 'Billing Lane', value: detailsRow.billing_execution_lane ? label(detailsRow.billing_execution_lane) : NOT_AVAILABLE },
+                  { label: 'Billing Runtime', value: detailsRow.billing_last_runtime_role ? label(detailsRow.billing_last_runtime_role) : NOT_AVAILABLE },
+                  { label: 'Billing Lock Owner', value: detailsRow.billing_locked_by || NOT_AVAILABLE },
                   { label: 'Billing Attempts', value: String(detailsRow.billing_work_attempts ?? 0) },
                   { label: 'Billing Max Attempts', value: String(detailsRow.billing_work_max_attempts ?? 0) },
                   { label: 'Billing Defers', value: String(detailsRow.billing_defer_count ?? 0) },
@@ -1204,8 +1304,8 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Last Processed', value: stamp(detailsRow.billing_last_processed_at) },
                   { label: 'Execution Processed', value: stamp(detailsRow.billing_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.billing_next_attempt_at) },
-                  { label: 'Lifecycle State', value: detailsRow.billing_lifecycle_state ? label(detailsRow.billing_lifecycle_state) : 'Not available' },
-                  { label: 'Runtime State', value: detailsRow.billing_operational_state ? formatAutonomyLabel(detailsRow.billing_operational_state) : 'Not available' },
+                  { label: 'Lifecycle State', value: detailsRow.billing_lifecycle_state ? label(detailsRow.billing_lifecycle_state) : NOT_AVAILABLE },
+                  { label: 'Runtime State', value: detailsRow.billing_operational_state ? formatAutonomyLabel(detailsRow.billing_operational_state) : NOT_AVAILABLE },
                   { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.billing_operational_explanation) || 'None recorded' },
                   { label: 'Billing Error', value: detailsRow.billing_work_error || 'None' },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
@@ -1217,7 +1317,7 @@ export default function RecoveryPipelineAgent8() {
                 rows={[
                   { label: 'Last Updated', value: stamp(detailsRow.last_updated_at) },
                   { label: 'Expected Payout Date (Estimate)', value: stamp(detailsRow.expected_payout_date) },
-                  { label: 'Recovery ID', value: detailsRow.recovery_id || 'Not available' },
+                  { label: 'Detail Route ID', value: getDetailRouteId(detailsRow) || NOT_AVAILABLE },
                 ]}
               />
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
@@ -1240,10 +1340,10 @@ export default function RecoveryPipelineAgent8() {
                         <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(event.amount, event.currency)}</div>
                       </div>
                       <div className="mt-3 grid gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/42 xl:grid-cols-2">
-                        <div>Reference: {event.reference_id || 'Not available'}</div>
-                        <div>Settlement: {event.settlement_id || 'Not available'}</div>
-                        <div>Batch: {event.payout_batch_id || 'Not available'}</div>
-                        <div>Order / SKU: {[event.amazon_order_id, event.sku].filter(Boolean).join(' / ') || 'Not available'}</div>
+                        <div>Reference: {event.reference_id || NOT_AVAILABLE}</div>
+                        <div>Settlement: {event.settlement_id || NOT_AVAILABLE}</div>
+                        <div>Batch: {event.payout_batch_id || NOT_AVAILABLE}</div>
+                        <div>Order / SKU: {[event.amazon_order_id, event.sku].filter(Boolean).join(' / ') || NOT_AVAILABLE}</div>
                       </div>
                     </div>
                   ))}
