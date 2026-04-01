@@ -16,7 +16,7 @@ import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
-import { formatAutonomyLabel, summarizeMatchExplanation, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
+import { formatAutonomyLabel, summarizeMatchExplanation } from '@/lib/autonomyTruth';
 import {
   financialSourceLabel,
   financialStatusDetail,
@@ -36,6 +36,14 @@ type Summary = {
   unreconciled_count: number;
   investigation_required_count: number;
   billing_pending_count: number;
+  verified_paid_count: number | null;
+  partial_paid_count: number | null;
+  awaiting_payout_queue_count: number | null;
+  verified_paid_total: number | null;
+  awaiting_payout_total: number | null;
+  approved_total: number | null;
+  outstanding_total: number | null;
+  summary_currency: string | null;
   recovered_cash_total: number;
   approved_value_total: number;
   pending_payout_total: number;
@@ -166,6 +174,11 @@ const money = (value: number | null | undefined, currency = 'USD') =>
     ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value)
     : NOT_AVAILABLE;
 
+const summaryMoney = (value: number | null | undefined, currency: string | null | undefined) =>
+  typeof value === 'number' && !Number.isNaN(value) && currency
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value)
+    : NOT_AVAILABLE;
+
 const stamp = (value: string | null | undefined) => {
   if (!value) return NOT_AVAILABLE;
   const date = new Date(value);
@@ -239,18 +252,6 @@ function visiblePayoutStatusTone(value: Row['payout_status'] | null | undefined)
 }
 
 function reconciliationTruthDetail(row: Pick<Row, 'reconciliation_source' | 'reconciliation_status' | 'payout_status'>): string {
-  if (row.reconciliation_source === 'canonical_financial_truth') {
-    if (row.payout_status === 'paid') return 'Canonical financial truth confirms full payout.';
-    if (row.payout_status === 'partially_paid') return 'Canonical financial truth confirms partial payout.';
-    if (row.payout_status === 'not_paid') return 'Canonical financial truth shows no payout event yet.';
-    return 'Canonical financial truth is linked, but no reconciliation state is available.';
-  }
-  if (row.reconciliation_source === 'projected_legacy_case_field') {
-    return 'Legacy case payout field exists, but canonical reconciliation truth is not confirmed.';
-  }
-  if (row.reconciliation_source === 'detection_estimate') {
-    return 'Detection estimate only. Reconciliation truth is not available.';
-  }
   return NOT_AVAILABLE;
 }
 
@@ -311,30 +312,48 @@ function detailLinkLabel(row: Pick<Row, 'entity_type' | 'linked_dispute_case_id'
   return NOT_AVAILABLE;
 }
 
-const describeWorkCycle = (
-  status: string | null | undefined,
-  deferReason: string | null | undefined,
-  nextAttemptAt: string | null | undefined,
-  workError?: string | null | undefined,
-  attempts?: number | null | undefined,
-  maxAttempts?: number | null | undefined,
-  lastClaimedAt?: string | null | undefined,
-  lastProcessedAt?: string | null | undefined
-) => {
-  const normalized = String(status || '').toLowerCase();
-  if (!normalized) return null;
-  const reason = deferReason || workError || null;
-  if (normalized === 'pending' && reason) {
-    return `Held: ${label(reason)}${nextAttemptAt ? ` · Next ${stamp(nextAttemptAt)}` : lastProcessedAt ? ` · Last ${stamp(lastProcessedAt)}` : ''}`;
-  }
-  if (normalized === 'processing') {
-    return `Being worked now${lastClaimedAt ? ` · ${stamp(lastClaimedAt)}` : ''}`;
-  }
-  if (normalized === 'failed_retry_exhausted') {
-    return `Needs manual attention${typeof attempts === 'number' && typeof maxAttempts === 'number' && maxAttempts > 0 ? ` · ${attempts}/${maxAttempts}` : ''}`;
-  }
-  return null;
-};
+type OperationalExplanationValue = {
+  reason?: string;
+  retry_at?: string;
+  blocking_guard?: string;
+  next_action?: string;
+} | null | undefined;
+
+function formatBackendOperationalExplanation(explanation: OperationalExplanationValue): string {
+  if (!explanation) return NOT_AVAILABLE;
+  const parts: string[] = [];
+  if (explanation.reason) parts.push(`Reason: ${explanation.reason}`);
+  if (explanation.blocking_guard) parts.push(`Blocking Guard: ${formatAutonomyLabel(explanation.blocking_guard)}`);
+  if (explanation.next_action) parts.push(`Next Action: ${formatAutonomyLabel(explanation.next_action)}`);
+  if (explanation.retry_at) parts.push(`Retry At: ${stamp(explanation.retry_at)}`);
+  return parts.length ? parts.join(' · ') : NOT_AVAILABLE;
+}
+
+function formatBackendLifecycleSnapshot(params: {
+  workStatus?: string | null;
+  lifecycleState?: string | null;
+  operationalState?: string | null;
+  deferReason?: string | null;
+  workError?: string | null;
+  nextAttemptAt?: string | null;
+  lastClaimedAt?: string | null;
+  lastProcessedAt?: string | null;
+}): string {
+  const parts: string[] = [];
+  if (params.workStatus) parts.push(`Work Status: ${label(params.workStatus)}`);
+  if (params.lifecycleState) parts.push(`Lifecycle: ${label(params.lifecycleState)}`);
+  if (params.operationalState) parts.push(`Runtime State: ${formatAutonomyLabel(params.operationalState)}`);
+  if (params.deferReason) parts.push(`Deferred Reason: ${label(params.deferReason)}`);
+  if (!params.deferReason && params.workError) parts.push(`Error: ${params.workError}`);
+  if (params.nextAttemptAt) parts.push(`Next Attempt: ${stamp(params.nextAttemptAt)}`);
+  if (params.lastClaimedAt) parts.push(`Last Claimed: ${stamp(params.lastClaimedAt)}`);
+  if (params.lastProcessedAt) parts.push(`Last Processed: ${stamp(params.lastProcessedAt)}`);
+  return parts.length ? parts.join(' · ') : NOT_AVAILABLE;
+}
+
+function formatLifecycleSection(labelText: string, summary: string): string {
+  return `${labelText}: ${summary || NOT_AVAILABLE}`;
+}
 
 function pickLatestTimestamp(...values: Array<string | null | undefined>): string | null {
   const stamped = values
@@ -790,29 +809,6 @@ export default function RecoveryPipelineAgent8() {
   const rows = ledger?.rows || [];
   const pagination = ledger?.pagination || null;
   const filteredLabel = useMemo(() => pagination ? `${pagination.total_filtered} filtered results of ${pagination.total_rows}` : '', [pagination]);
-  const financialOverview = useMemo(() => {
-    const rowSummaries = rows
-      .map((row) => getFinancialSummaryForRow(row, financialSummaries))
-      .filter((item): item is FinancialTruthSummary => Boolean(item));
-
-    return {
-      verifiedPaidTotal: Number(rowSummaries.reduce((sum, item) => sum + item.verified_paid_amount, 0).toFixed(2)),
-      pendingVerifiedTotal: Number(rowSummaries.reduce((sum, item) => sum + Number(item.outstanding_amount || 0), 0).toFixed(2)),
-      fullyPaidCount: rowSummaries.filter((item) => item.payout_status === 'paid').length,
-      partialPaidCount: rowSummaries.filter((item) => item.payout_status === 'partially_paid').length,
-      unpaidCount: rowSummaries.filter((item) => item.payout_status === 'not_paid').length,
-      proofCount: rowSummaries.filter((item) => Boolean(item.proof_of_payment)).length
-    };
-  }, [financialSummaries, rows]);
-  const monthlyPlanBenchmark = 99;
-  const valueStillInPlay = summary
-    ? Math.max(Number(summary.pending_payout_total || 0), Number(financialOverview.pendingVerifiedTotal || 0), Number(summary.approved_value_total || 0))
-    : 0;
-  const planCoverageNote = valueStillInPlay > 0
-    ? `${money(valueStillInPlay)} still in play is about ${(valueStillInPlay / monthlyPlanBenchmark).toFixed(1)}x a $99 monthly plan.`
-    : financialOverview.verifiedPaidTotal > 0
-      ? 'One verified payout already covers the monthly plan.'
-      : 'One approved recovery can justify the monthly plan.';
 
   useEffect(() => {
     if (!activeSlug || !rows.length) {
@@ -957,13 +953,37 @@ export default function RecoveryPipelineAgent8() {
                 </div>
               </CardContent>
             </Card>
-          ) : summary && pagination ? (
+          ) : pagination ? (
             <div className="space-y-6">
               <div className="grid gap-4 xl:grid-cols-4">
-                <Metric labelText="Paid back so far" value={money(financialOverview.verifiedPaidTotal)} sublabel={`${financialOverview.fullyPaidCount} paid back, ${financialOverview.partialPaidCount} partial`} />
-                <Metric labelText="Awaiting payout" value={money(financialOverview.pendingVerifiedTotal)} sublabel={`${financialOverview.unpaidCount} with no payout recorded`} />
-                <Metric labelText="Approved with Amazon" value={money(summary.approved_value_total)} sublabel={`${summary.approved_count} approved cases`} />
-                <Metric labelText="Monthly plan benchmark" value="$99" sublabel={planCoverageNote} />
+                <Metric
+                  labelText="Paid back so far"
+                  value={summaryMoney(summary?.verified_paid_total, summary?.summary_currency)}
+                  sublabel={
+                    summary?.verified_paid_count != null && summary?.partial_paid_count != null
+                      ? `${summary.verified_paid_count} paid back, ${summary.partial_paid_count} partial`
+                      : NOT_AVAILABLE
+                  }
+                />
+                <Metric
+                  labelText="Awaiting payout"
+                  value={summaryMoney(summary?.awaiting_payout_total, summary?.summary_currency)}
+                  sublabel={
+                    summary?.awaiting_payout_queue_count != null
+                      ? `${summary.awaiting_payout_queue_count} awaiting payout`
+                      : NOT_AVAILABLE
+                  }
+                />
+                <Metric
+                  labelText="Approved with Amazon"
+                  value={summaryMoney(summary?.approved_total, summary?.summary_currency)}
+                  sublabel={summary?.approved_count != null ? `${summary.approved_count} approved cases` : NOT_AVAILABLE}
+                />
+                <Metric
+                  labelText="Outstanding total"
+                  value={summaryMoney(summary?.outstanding_total, summary?.summary_currency)}
+                  sublabel={summary?.summary_currency ? 'Queue-wide backend financial truth' : NOT_AVAILABLE}
+                />
               </div>
 
               <Card className="border-white/10 bg-[#0c0c0c]">
@@ -974,14 +994,14 @@ export default function RecoveryPipelineAgent8() {
                       <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">{filteredLabel}</div>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {[['Paid back', summary.reconciled_count], ['Partial payout', summary.partial_recovery_count], ['Still waiting', summary.unreconciled_count], ['Needs review', summary.investigation_required_count]].map(([text, value]) => (
+                      {[['Paid back', summary?.reconciled_count ?? NOT_AVAILABLE], ['Partial payout', summary?.partial_recovery_count ?? NOT_AVAILABLE], ['Still waiting', summary?.unreconciled_count ?? NOT_AVAILABLE], ['Needs review', summary?.investigation_required_count ?? NOT_AVAILABLE]].map(([text, value]) => (
                         <div key={String(text)} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
                           {text}: <span className="text-white">{value}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  {summary.blockers.length > 0 ? <div className="flex flex-wrap gap-3 border-t border-white/10 pt-5">{summary.blockers.map((blocker) => <div key={blocker.key} className={`rounded-full border px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight ${severityTone(blocker.severity)}`}>{blocker.label}: {blocker.count}</div>)}</div> : null}
+                  {summary?.blockers?.length ? <div className="flex flex-wrap gap-3 border-t border-white/10 pt-5">{summary.blockers.map((blocker) => <div key={blocker.key} className={`rounded-full border px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight ${severityTone(blocker.severity)}`}>{blocker.label}: {blocker.count}</div>)}</div> : null}
                 </CardContent>
               </Card>
 
@@ -1069,52 +1089,36 @@ export default function RecoveryPipelineAgent8() {
                                         {identityTruthDetail(row)}
                                       </div>
                                     ) : null}
-                                    {describeWorkCycle(
-                                      row.recovery_work_status,
-                                      row.recovery_last_deferred_reason,
-                                      row.recovery_next_attempt_at,
-                                      row.recovery_work_error,
-                                      row.recovery_work_attempts,
-                                      row.recovery_work_max_attempts,
-                                      row.recovery_last_claimed_at,
-                                      row.recovery_last_processed_at
-                                    ) ? (
-                                      <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
-                                        {describeWorkCycle(
-                                          row.recovery_work_status,
-                                          row.recovery_last_deferred_reason,
-                                          row.recovery_next_attempt_at,
-                                          row.recovery_work_error,
-                                          row.recovery_work_attempts,
-                                          row.recovery_work_max_attempts,
-                                          row.recovery_last_claimed_at,
-                                          row.recovery_last_processed_at
-                                        )}
-                                      </div>
-                                    ) : null}
-                                    {describeWorkCycle(
-                                      row.billing_work_status,
-                                      row.billing_last_deferred_reason,
-                                      row.billing_next_attempt_at,
-                                      row.billing_work_error,
-                                      row.billing_work_attempts,
-                                      row.billing_work_max_attempts,
-                                      row.billing_last_claimed_at,
-                                      row.billing_last_processed_at
-                                    ) ? (
-                                      <div className="text-[10px] font-sans leading-5 tracking-tight text-white/38">
-                                        {describeWorkCycle(
-                                          row.billing_work_status,
-                                          row.billing_last_deferred_reason,
-                                          row.billing_next_attempt_at,
-                                          row.billing_work_error,
-                                          row.billing_work_attempts,
-                                          row.billing_work_max_attempts,
-                                          row.billing_last_claimed_at,
-                                          row.billing_last_processed_at
-                                        )}
-                                      </div>
-                                    ) : null}
+                                    <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
+                                      {formatLifecycleSection(
+                                        'Recovery Lifecycle',
+                                        formatBackendLifecycleSnapshot({
+                                          workStatus: row.recovery_work_status,
+                                          lifecycleState: row.recovery_lifecycle_state,
+                                          operationalState: row.recovery_operational_state,
+                                          deferReason: row.recovery_last_deferred_reason,
+                                          workError: row.recovery_work_error,
+                                          nextAttemptAt: row.recovery_next_attempt_at,
+                                          lastClaimedAt: row.recovery_last_claimed_at,
+                                          lastProcessedAt: row.recovery_last_processed_at,
+                                        })
+                                      )}
+                                    </div>
+                                    <div className="text-[10px] font-sans leading-5 tracking-tight text-white/38">
+                                      {formatLifecycleSection(
+                                        'Billing Lifecycle',
+                                        formatBackendLifecycleSnapshot({
+                                          workStatus: row.billing_work_status,
+                                          lifecycleState: row.billing_lifecycle_state,
+                                          operationalState: row.billing_operational_state,
+                                          deferReason: row.billing_last_deferred_reason,
+                                          workError: row.billing_work_error,
+                                          nextAttemptAt: row.billing_next_attempt_at,
+                                          lastClaimedAt: row.billing_last_claimed_at,
+                                          lastProcessedAt: row.billing_last_processed_at,
+                                        })
+                                      )}
+                                    </div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -1287,14 +1291,14 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Record Identity', value: identityTruthHeadline(detailsRow) },
                   { label: 'Identity Detail', value: identityTruthDetail(detailsRow) },
                   { label: 'Filing Status', value: detailsRow.filing_status ? label(detailsRow.filing_status) : NOT_AVAILABLE },
-                  { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(label).join(', ') : 'None' },
+                  { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(label).join(', ') : NOT_AVAILABLE },
                   { label: 'Last Filing Error', value: detailsRow.last_error || NOT_AVAILABLE },
                   { label: 'Operator State', value: label(detailsRow.operator_state) },
                   { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
                   { label: 'Reconciliation Source', value: reconciliationSourceLabel(detailsRow.reconciliation_source) },
                   { label: 'Reconciliation Detail', value: reconciliationTruthDetail(detailsRow) },
                   { label: 'Reconciliation Strategy', value: detailsRow.reconciliation_strategy ? formatAutonomyLabel(detailsRow.reconciliation_strategy) : NOT_AVAILABLE },
-                  { label: 'Match Explanation', value: summarizeMatchExplanation(detailsRow.match_explanation) || 'None recorded' },
+                  { label: 'Match Explanation', value: summarizeMatchExplanation(detailsRow.match_explanation) || NOT_AVAILABLE },
                   { label: 'Case Status', value: label(detailsRow.status) },
                   { label: 'Recovery Status', value: label(detailsRow.recovery_status) },
                   { label: 'Recovery Work', value: label(detailsRow.recovery_work_status) },
@@ -1305,15 +1309,15 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Recovery Attempts', value: String(detailsRow.recovery_work_attempts ?? 0) },
                   { label: 'Recovery Max Attempts', value: String(detailsRow.recovery_work_max_attempts ?? 0) },
                   { label: 'Recovery Defers', value: String(detailsRow.recovery_defer_count ?? 0) },
-                  { label: 'Deferred Reason', value: detailsRow.recovery_last_deferred_reason ? label(detailsRow.recovery_last_deferred_reason) : 'None' },
+                  { label: 'Deferred Reason', value: detailsRow.recovery_last_deferred_reason ? label(detailsRow.recovery_last_deferred_reason) : NOT_AVAILABLE },
                   { label: 'Last Claimed', value: stamp(detailsRow.recovery_last_claimed_at) },
                   { label: 'Last Processed', value: stamp(detailsRow.recovery_last_processed_at) },
                   { label: 'Execution Processed', value: stamp(detailsRow.recovery_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.recovery_next_attempt_at) },
                   { label: 'Lifecycle State', value: detailsRow.recovery_lifecycle_state ? label(detailsRow.recovery_lifecycle_state) : NOT_AVAILABLE },
                   { label: 'Runtime State', value: detailsRow.recovery_operational_state ? formatAutonomyLabel(detailsRow.recovery_operational_state) : NOT_AVAILABLE },
-                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.recovery_operational_explanation) || 'None recorded' },
-                  { label: 'Recovery Error', value: detailsRow.recovery_work_error || 'None' },
+                  { label: 'Runtime Explanation', value: formatBackendOperationalExplanation(detailsRow.recovery_operational_explanation) },
+                  { label: 'Recovery Error', value: detailsRow.recovery_work_error || NOT_AVAILABLE },
                   { label: 'Investigation Required', value: detailsRow.investigation_required ? 'Yes' : 'No' },
                 ]}
               />
@@ -1355,15 +1359,15 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Billing Attempts', value: String(detailsRow.billing_work_attempts ?? 0) },
                   { label: 'Billing Max Attempts', value: String(detailsRow.billing_work_max_attempts ?? 0) },
                   { label: 'Billing Defers', value: String(detailsRow.billing_defer_count ?? 0) },
-                  { label: 'Deferred Reason', value: detailsRow.billing_last_deferred_reason ? label(detailsRow.billing_last_deferred_reason) : 'None' },
+                  { label: 'Deferred Reason', value: detailsRow.billing_last_deferred_reason ? label(detailsRow.billing_last_deferred_reason) : NOT_AVAILABLE },
                   { label: 'Last Claimed', value: stamp(detailsRow.billing_last_claimed_at) },
                   { label: 'Last Processed', value: stamp(detailsRow.billing_last_processed_at) },
                   { label: 'Execution Processed', value: stamp(detailsRow.billing_execution_processed_at) },
                   { label: 'Next Attempt', value: stamp(detailsRow.billing_next_attempt_at) },
                   { label: 'Lifecycle State', value: detailsRow.billing_lifecycle_state ? label(detailsRow.billing_lifecycle_state) : NOT_AVAILABLE },
                   { label: 'Runtime State', value: detailsRow.billing_operational_state ? formatAutonomyLabel(detailsRow.billing_operational_state) : NOT_AVAILABLE },
-                  { label: 'Runtime Explanation', value: summarizeOperationalExplanation(detailsRow.billing_operational_explanation) || 'None recorded' },
-                  { label: 'Billing Error', value: detailsRow.billing_work_error || 'None' },
+                  { label: 'Runtime Explanation', value: formatBackendOperationalExplanation(detailsRow.billing_operational_explanation) },
+                  { label: 'Billing Error', value: detailsRow.billing_work_error || NOT_AVAILABLE },
                   { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },
                 ]}
