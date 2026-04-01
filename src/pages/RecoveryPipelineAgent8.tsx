@@ -533,64 +533,9 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   return nextRow;
 }
 
-const PRESERVED_FINALITY_FIELDS: Array<keyof Row> = [
-  'recovery_execution_lane',
-  'billing_execution_lane',
-  'recovery_work_error',
-  'billing_work_error',
-  'recovery_work_attempts',
-  'billing_work_attempts',
-  'recovery_work_max_attempts',
-  'billing_work_max_attempts',
-  'recovery_defer_count',
-  'billing_defer_count',
-  'recovery_last_deferred_reason',
-  'billing_last_deferred_reason',
-  'recovery_last_processed_at',
-  'billing_last_processed_at',
-  'recovery_last_claimed_at',
-  'billing_last_claimed_at',
-  'recovery_last_runtime_role',
-  'billing_last_runtime_role',
-  'recovery_execution_processed_at',
-  'billing_execution_processed_at',
-  'recovery_next_attempt_at',
-  'billing_next_attempt_at',
-  'recovery_locked_by',
-  'billing_locked_by',
-  'recovery_lifecycle_state',
-  'billing_lifecycle_state',
-  'recovery_operational_state',
-  'billing_operational_state',
-  'recovery_operational_explanation',
-  'billing_operational_explanation',
-  'reconciliation_strategy',
-  'match_explanation',
-  'recovery_work_payload',
-  'billing_work_payload'
-];
-
 function mergeLedgerRows(nextRows: Row[], previousRows: Row[] = []): Row[] {
-  const previousById = new Map(
-    previousRows.map((row) => [getLedgerRowKey(row), row])
-  );
-
-  return nextRows.map((row) => {
-    const previous = previousById.get(getLedgerRowKey(row));
-    if (!previous) return row;
-
-    const merged: Row = { ...row };
-    for (const key of PRESERVED_FINALITY_FIELDS) {
-      const nextValue = merged[key];
-      if (nextValue === null || nextValue === undefined || nextValue === '' || (typeof nextValue === 'number' && nextValue === 0)) {
-        const previousValue = previous[key];
-        if (previousValue !== null && previousValue !== undefined && previousValue !== '') {
-          (merged as any)[key] = previousValue;
-        }
-      }
-    }
-    return merged;
-  });
+  void previousRows;
+  return nextRows;
 }
 
 const severityTone = (severity: Blocker['severity']) =>
