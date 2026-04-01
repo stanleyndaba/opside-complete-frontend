@@ -149,10 +149,16 @@ const toUploadDetectionState = (syncId: string, data?: any, fallbackError?: stri
     isSandbox: Boolean(data?.is_sandbox ?? data?.isSandbox),
 });
 
+const isDetectionTerminal = (status: UploadDetectionState['status'] | undefined | null): boolean => (
+    status === 'completed' || status === 'failed'
+);
+
+const isDetectionInFlight = (status: UploadDetectionState['status'] | undefined | null): boolean => (
+    status === 'pending' || status === 'processing'
+);
+
 const shouldOpenDetectionPreview = (data?: any): boolean => (
-    data?.status === 'completed'
-    || data?.status === 'failed'
-    || Number(data?.results?.claimsFound || 0) > 0
+    isDetectionTerminal(data?.status) || Number(data?.results?.claimsFound || 0) > 0
 );
 
 const getDetectionToastMessage = (data?: any): string | null => {
@@ -230,6 +236,34 @@ export default function DataUpload() {
     const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
+    const detectionPollingRef = useRef({ token: 0, syncId: null as string | null });
+    const isMountedRef = useRef(true);
+
+    const invalidateDetectionPolling = useCallback((clearSyncId = true) => {
+        detectionPollingRef.current.token += 1;
+        if (clearSyncId) {
+            detectionPollingRef.current.syncId = null;
+        }
+    }, []);
+
+    const beginDetectionPolling = useCallback((syncId: string) => {
+        detectionPollingRef.current.token += 1;
+        detectionPollingRef.current.syncId = syncId;
+        return detectionPollingRef.current.token;
+    }, []);
+
+    const isPollingCurrent = useCallback((syncId: string, token: number) => (
+        isMountedRef.current
+        && detectionPollingRef.current.token === token
+        && detectionPollingRef.current.syncId === syncId
+    ), []);
+
+    useEffect(() => {
+        return () => {
+            isMountedRef.current = false;
+            invalidateDetectionPolling();
+        };
+    }, [invalidateDetectionPolling]);
 
     const resolveSessionIdentity = useCallback(async () => {
         let resolvedUserId = localStorage.getItem('user_id') || '';
@@ -272,9 +306,13 @@ export default function DataUpload() {
         };
     }, [currentTenantSlug, tenant?.id]);
 
-    const loadUploadDetectionTruth = useCallback(async (syncId: string) => {
+    const loadUploadDetectionTruth = useCallback(async (syncId: string, pollingToken?: number) => {
         try {
             const statusRes = await detectionApi.getDetectionStatus(syncId, currentTenantSlug);
+            if (pollingToken !== undefined && !isPollingCurrent(syncId, pollingToken)) {
+                return null;
+            }
+
             if (statusRes?.ok && statusRes.data) {
                 setPreviewState(toUploadDetectionState(syncId, statusRes.data));
                 return statusRes.data;
@@ -284,33 +322,52 @@ export default function DataUpload() {
             setPreviewState(toUploadDetectionState(syncId, undefined, failureMessage));
             return null;
         } catch (error) {
+            if (pollingToken !== undefined && !isPollingCurrent(syncId, pollingToken)) {
+                return null;
+            }
+
             const failureMessage = combineBackendMessages(error instanceof Error ? error.message : null, 'Detection status unavailable for this upload.');
             setPreviewState(toUploadDetectionState(syncId, undefined, failureMessage));
             return null;
         }
-    }, [currentTenantSlug]);
+    }, [currentTenantSlug, isPollingCurrent]);
 
-    const pollForUploadDetections = useCallback(async (syncId: string, startWithDelay = false) => {
+    const pollForUploadDetections = useCallback(async (syncId: string, pollingToken: number, startWithDelay = false) => {
         const maxAttempts = 15;
         let shouldDelay = startWithDelay;
 
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            if (!isPollingCurrent(syncId, pollingToken)) {
+                return;
+            }
+
             if (shouldDelay) {
                 await new Promise(resolve => setTimeout(resolve, 2000));
             }
             shouldDelay = true;
 
-            const statusData = await loadUploadDetectionTruth(syncId);
+            if (!isPollingCurrent(syncId, pollingToken)) {
+                return;
+            }
+
+            const statusData = await loadUploadDetectionTruth(syncId, pollingToken);
+            if (!isPollingCurrent(syncId, pollingToken)) {
+                return;
+            }
+
             if (!statusData) {
                 continue;
             }
 
-            if (shouldOpenDetectionPreview(statusData)) {
+            if (shouldOpenDetectionPreview(statusData) && !isPreviewOpen) {
                 setIsPreviewOpen(true);
+            }
+
+            if (isDetectionTerminal(statusData.status)) {
                 return;
             }
         }
-    }, [loadUploadDetectionTruth]);
+    }, [isPollingCurrent, isPreviewOpen, loadUploadDetectionTruth]);
 
     useEffect(() => {
         let cancelled = false;
@@ -354,6 +411,7 @@ export default function DataUpload() {
     );
 
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
+    const isPreviewPartial = previewResults.length > 0 && isDetectionInFlight(previewState.status);
     const previewEmptyState = useMemo(
         () => getEmptyDetectionCopy(previewState.status, previewMessage || previewState.errorMessage || null),
         [previewMessage, previewState.errorMessage, previewState.status]
@@ -371,63 +429,78 @@ export default function DataUpload() {
 
         let cancelled = false;
         const fetchPreviewData = async () => {
-            setIsPreviewLoading(true);
-            try {
-                const [statusRes, resultsRes] = await Promise.all([
-                    detectionApi.getDetectionStatus(currentUploadSyncId, currentTenantSlug),
-                    detectionApi.getDetectionResults({ limit: 500, syncId: currentUploadSyncId }, currentTenantSlug),
-                ]);
+            let shouldContinue = true;
 
-                if (cancelled) return;
+            while (!cancelled && shouldContinue) {
+                setIsPreviewLoading(true);
+                try {
+                    const [statusRes, resultsRes] = await Promise.all([
+                        detectionApi.getDetectionStatus(currentUploadSyncId, currentTenantSlug),
+                        detectionApi.getDetectionResults({ limit: 500, syncId: currentUploadSyncId }, currentTenantSlug),
+                    ]);
 
-                const statusTruth = statusRes?.ok && statusRes.data
-                    ? statusRes.data
-                    : (resultsRes?.ok ? resultsRes.data?.meta : null);
-                const statusFailureMessage = statusRes?.ok
-                    ? null
-                    : extractApiFailureMessage(statusRes, 'Detection status unavailable for this upload.');
+                    if (cancelled) return;
 
-                setPreviewState(toUploadDetectionState(currentUploadSyncId, statusTruth, statusFailureMessage));
+                    const statusTruth = statusRes?.ok && statusRes.data
+                        ? statusRes.data
+                        : (resultsRes?.ok ? resultsRes.data?.meta : null);
+                    const statusFailureMessage = statusRes?.ok
+                        ? null
+                        : extractApiFailureMessage(statusRes, 'Detection status unavailable for this upload.');
 
-                if (resultsRes?.ok && Array.isArray(resultsRes.data?.results)) {
-                    setPreviewResults(resultsRes.data.results);
-                    if (resultsRes.data.results.length > 0) {
-                        setPreviewMessage(null);
+                    setPreviewState(toUploadDetectionState(currentUploadSyncId, statusTruth, statusFailureMessage));
+
+                    if (resultsRes?.ok && Array.isArray(resultsRes.data?.results)) {
+                        setPreviewResults(resultsRes.data.results);
+                        if (resultsRes.data.results.length > 0) {
+                            setPreviewMessage(null);
+                        } else {
+                            const emptyStateMessage = combineBackendMessages(
+                                statusTruth?.error_message,
+                                statusTruth?.errorMessage,
+                                statusFailureMessage,
+                                extractApiFailureMessage(resultsRes),
+                            );
+                            setPreviewMessage(getEmptyDetectionCopy(statusTruth?.status || null, emptyStateMessage).description);
+                        }
                     } else {
-                        const emptyStateMessage = combineBackendMessages(
-                            statusTruth?.error_message,
-                            statusTruth?.errorMessage,
-                            statusFailureMessage,
-                            extractApiFailureMessage(resultsRes),
+                        setPreviewResults([]);
+                        setPreviewMessage(
+                            combineBackendMessages(
+                                extractApiFailureMessage(resultsRes, 'Detection results unavailable for this upload.'),
+                                statusFailureMessage,
+                            ) || 'Detection results unavailable for this upload.'
                         );
-                        setPreviewMessage(getEmptyDetectionCopy(statusTruth?.status || null, emptyStateMessage).description);
                     }
-                } else {
-                    setPreviewResults([]);
-                    setPreviewMessage(
-                        combineBackendMessages(
-                            extractApiFailureMessage(resultsRes, 'Detection results unavailable for this upload.'),
-                            statusFailureMessage,
-                        ) || 'Detection results unavailable for this upload.'
-                    );
+
+                    shouldContinue = isDetectionInFlight(statusTruth?.status || null);
+                } catch (err) {
+                    console.error('Failed to fetch preview data:', err);
+                    if (!cancelled) {
+                        setPreviewResults([]);
+                        const failureMessage = combineBackendMessages(
+                            err instanceof Error ? err.message : null,
+                            'Detection results unavailable for this upload.',
+                        ) || 'Detection results unavailable for this upload.';
+                        setPreviewMessage(failureMessage);
+                        setPreviewState(prev => ({
+                            ...prev,
+                            syncId: currentUploadSyncId,
+                            errorMessage: failureMessage,
+                        }));
+                    }
+                    shouldContinue = false;
+                } finally {
+                    if (!cancelled) {
+                        setIsPreviewLoading(false);
+                    }
                 }
-            } catch (err) {
-                console.error('Failed to fetch preview data:', err);
-                if (!cancelled) {
-                    setPreviewResults([]);
-                    const failureMessage = combineBackendMessages(
-                        err instanceof Error ? err.message : null,
-                        'Detection results unavailable for this upload.',
-                    ) || 'Detection results unavailable for this upload.';
-                    setPreviewMessage(failureMessage);
-                    setPreviewState(prev => ({
-                        ...prev,
-                        syncId: currentUploadSyncId,
-                        errorMessage: failureMessage,
-                    }));
+
+                if (!shouldContinue || cancelled) {
+                    break;
                 }
-            } finally {
-                if (!cancelled) setIsPreviewLoading(false);
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
             }
         };
         fetchPreviewData();
@@ -534,8 +607,10 @@ export default function DataUpload() {
             return;
         }
 
+        invalidateDetectionPolling();
         setIsUploading(true);
         setBatchResult(null);
+        setIsPreviewOpen(false);
         setPreviewResults([]);
         setPreviewMessage(null);
         setPreviewState({
@@ -612,12 +687,12 @@ export default function DataUpload() {
             let detectionTruth: any = null;
 
             if (result.detectionTriggered && result.syncId) {
-                detectionTruth = await loadUploadDetectionTruth(result.syncId);
+                const pollingToken = beginDetectionPolling(result.syncId);
+                detectionTruth = await loadUploadDetectionTruth(result.syncId, pollingToken);
                 if (detectionTruth && shouldOpenDetectionPreview(detectionTruth)) {
                     setIsPreviewOpen(true);
-                } else {
-                    void pollForUploadDetections(result.syncId, true);
                 }
+                void pollForUploadDetections(result.syncId, pollingToken, true);
             }
 
             if (insertedFileCount > 0) {
@@ -649,6 +724,7 @@ export default function DataUpload() {
 
     // Reset for new upload
     const handleReset = () => {
+        invalidateDetectionPolling();
         setFiles([]);
         setBatchResult(null);
         setIsPreviewOpen(false);
@@ -1046,6 +1122,11 @@ export default function DataUpload() {
                                                     Sync ID: <span className="font-semibold text-gray-600">{previewState.syncId}</span>
                                                 </p>
                                             )}
+                                            {isPreviewPartial && (
+                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-600 tracking-tight">
+                                                    Partial findings. Detection is still processing for this upload.
+                                                </p>
+                                            )}
                                             {previewState.isSandbox && (
                                                 <p className="mt-1 text-[10px] font-sans font-semibold text-amber-600 tracking-tight">
                                                     Simulated detection results (sandbox mode)
@@ -1095,6 +1176,12 @@ export default function DataUpload() {
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detection state:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewState.status || 'Unavailable'}</span>
                                                     </li>
+                                                    {isPreviewPartial && (
+                                                        <li className="flex items-baseline gap-2">
+                                                            <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Results:</span>
+                                                            <span className="text-[11px] font-semibold text-amber-700 font-sans tracking-tight">Partial until detection completes</span>
+                                                        </li>
+                                                    )}
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detections:</span>
                                                         <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewResults.length}</span>
