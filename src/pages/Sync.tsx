@@ -74,6 +74,8 @@ export default function Sync() {
   const [isCancelling, setIsCancelling] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const [isSyncBlocked, setIsSyncBlocked] = useState(false); // Shows force-clear button
+  const [amazonReady, setAmazonReady] = useState<boolean | null>(null);
+  const [amazonConnectionMessage, setAmazonConnectionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const previousStatusRef = useRef<'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled'>('idle');
@@ -354,6 +356,38 @@ export default function Sync() {
     setLogs([]);
   };
 
+  const checkAmazonConnection = async (): Promise<boolean> => {
+    try {
+      const response = await api.getIntegrationStatus(currentTenantSlug);
+      if (!response.ok || !response.data) {
+        setAmazonReady(false);
+        setAmazonConnectionMessage(response.error || 'No Amazon store connected');
+        return false;
+      }
+
+      const amazonProvider = response.data.providers?.amazon;
+      const isConnected = response.data.amazon_connected === true;
+      const isStoreBound = amazonProvider?.store_bound !== false;
+      const isTenantBound = amazonProvider?.tenant_bound !== false;
+      const isSellerResolved = amazonProvider?.seller_resolved !== false;
+      const isReady = isConnected && isStoreBound && isTenantBound && isSellerResolved;
+
+      setAmazonReady(isReady);
+      setAmazonConnectionMessage(
+        isReady
+          ? null
+          : amazonProvider?.error_message || 'No Amazon store connected'
+      );
+
+      return isReady;
+    } catch (connectionError: any) {
+      const messageText = connectionError?.message || 'No Amazon store connected';
+      setAmazonReady(false);
+      setAmazonConnectionMessage(messageText);
+      return false;
+    }
+  };
+
   // Scroll to bottom of logs
   useEffect(() => {
     if (logContainerRef.current) {
@@ -620,6 +654,16 @@ export default function Sync() {
           modalDismissedRef.current = false;
           logsFinishedRef.current = false;
 
+          const amazonConnected = await checkAmazonConnection();
+          if (cancelled) return null;
+
+          if (!amazonConnected) {
+            setStatus('idle');
+            setMessage('No Amazon store connected');
+            setError(null);
+            return null;
+          }
+
           const start = await startSync(currentTenantSlug);
           if (cancelled) return null;
           const newSyncId = start.syncId;
@@ -631,7 +675,7 @@ export default function Sync() {
 
           toast({
             title: 'Audit started',
-            description: 'We\'re pulling your latest Amazon records. This can take a few minutes.',
+            description: 'We\'re pulling your latest Amazon SP-API records. This can take a few minutes.',
             duration: 4000,
           });
 
@@ -1033,17 +1077,19 @@ export default function Sync() {
   const statusPresentation = {
     idle: {
       label: 'Ready',
-      summary: 'Start an audit to pull your latest Amazon records and watch the review unfold here.',
+      summary: amazonReady === false
+        ? 'No Amazon store connected. Connect Amazon before you run an Amazon SP-API sync here.'
+        : 'Start an Amazon SP-API sync to pull your latest Amazon records and watch the review unfold here.',
       badgeClass: 'border-white/10 text-white/60 bg-white/[0.02]',
     },
     running: {
       label: 'Audit in progress',
-      summary: message || 'We are pulling your latest Amazon records now.',
+      summary: message || 'We are pulling your latest Amazon SP-API records now.',
       badgeClass: 'border-white/10 text-white/70 bg-white/[0.02]',
     },
     detecting: {
       label: 'Reviewing findings',
-      summary: message || 'We are checking the records we pulled and looking for issues worth your attention.',
+      summary: message || 'We are checking the Amazon SP-API records we pulled and looking for issues worth your attention.',
       badgeClass: 'border-amber-500/20 text-amber-200 bg-amber-500/[0.08]',
     },
     completed: {
@@ -1085,12 +1131,18 @@ export default function Sync() {
                   <Target className="h-5 w-5 text-white/80" />
                 </div>
                 <h1 className="text-2xl font-sans font-light tracking-tight">Audit Engine</h1>
+                <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/60 bg-white/[0.02]">
+                  Amazon SP-API Sync
+                </Badge>
                 <Badge variant="outline" className={`text-[10px] font-sans font-bold uppercase tracking-tight ${activeStatusPresentation.badgeClass}`}>
                   {activeStatusPresentation.label}
                 </Badge>
               </div>
               <p className="text-sm text-white/40 max-w-2xl">
-                Follow this audit as it pulls your Amazon records, checks what changed, and shows any confirmed issues or recovery-related updates for this run only.
+                Follow this Amazon SP-API sync as it pulls your Amazon records, checks what changed, and shows confirmed issues or recovery-related updates for this run only.
+              </p>
+              <p className="text-xs text-white/25 max-w-2xl mt-2 font-sans tracking-tight">
+                CSV uploads are tracked on the Data Upload page, not here.
               </p>
             </div>
 
@@ -1119,6 +1171,14 @@ export default function Sync() {
                 <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Current audit</p>
                 <h2 className="text-xl font-sans font-light tracking-tight text-white">{activeStatusPresentation.label}</h2>
                 <p className="text-sm text-white/40 max-w-2xl">{activeStatusPresentation.summary}</p>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/55 bg-white/[0.02]">
+                    Source: Amazon SP-API Sync
+                  </Badge>
+                  <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/40 bg-white/[0.02]">
+                    CSV uploads: Data Upload page
+                  </Badge>
+                </div>
               </div>
 
               <div className="min-w-[240px] rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3">
@@ -1141,6 +1201,42 @@ export default function Sync() {
               )}
             </div>
           </motion.div>
+
+          {!syncId && amazonReady === false && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.08 }}
+              className="rounded-xl bg-white/[0.02] border border-white/10 p-5 mb-6"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-medium text-white">No Amazon store connected</h3>
+                  <p className="text-sm text-white/45 max-w-2xl">
+                    {amazonConnectionMessage || 'Connect Amazon before you run an Amazon SP-API sync here.'}
+                  </p>
+                  <p className="text-xs text-white/25 font-sans tracking-tight">
+                    CSV uploads are still available on the Data Upload page.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    onClick={() => navigate(tenantRoute(currentTenantSlug, '/integrations'))}
+                    className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
+                  >
+                    Connect Amazon
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate(tenantRoute(currentTenantSlug, '/data-upload'))}
+                    className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
+                  >
+                    Open Data Upload
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {error && (
             <motion.div
@@ -1180,12 +1276,12 @@ export default function Sync() {
                             <div className="space-y-1">
                               <p className="font-sans font-bold text-white text-xs tracking-tight uppercase">What you see</p>
                               <p className="text-sm leading-relaxed text-white/40 font-sans">
-                                This feed shows confirmed updates for this audit only. Entries are grouped by orders, inventory, shipments, returns, settlements, fees, claims, and findings.
+                                This feed shows confirmed updates for this Amazon SP-API sync only. Entries are grouped by orders, inventory, shipments, returns, settlements, fees, claims, and findings.
                               </p>
                             </div>
                             <div className="pt-2 border-t border-white/5">
                               <p className="text-xs text-white/20 italic font-sans">
-                                New updates appear here as this audit runs.
+                                CSV uploads do not appear here. Track those on the Data Upload page.
                               </p>
                             </div>
                           </div>
@@ -1405,12 +1501,18 @@ export default function Sync() {
                 <div className="space-y-2">
                   <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Audit controls</p>
                   <h3 className="text-lg font-sans font-light tracking-tight text-white">
-                    {status === 'running' ? 'Audit in progress' : 'Ready for the next step'}
+                    {status === 'running'
+                      ? 'Amazon SP-API sync in progress'
+                      : !syncId && amazonReady === false
+                        ? 'Amazon connection required'
+                        : 'Ready for the next step'}
                   </h3>
                   <p className="text-sm text-white/40 max-w-2xl">
                     {status === 'running'
-                      ? 'This audit is still running. You can let it continue or stop it if needed.'
-                      : 'Run another audit, clear a stuck run, or move to your dashboard once this review is complete.'}
+                      ? 'This Amazon SP-API sync is still running. You can let it continue or stop it if needed.'
+                      : !syncId && amazonReady === false
+                        ? 'Connect an Amazon store to run this page. CSV uploads continue to live on the Data Upload page.'
+                        : 'Run another Amazon SP-API sync, clear a stuck run, or move to your dashboard once this review is complete.'}
                   </p>
                 </div>
 
@@ -1422,10 +1524,25 @@ export default function Sync() {
                       <p className="text-[11px] text-white/35 font-sans">New updates will appear above as they arrive.</p>
                     </div>
                   </div>
+                ) : !syncId && amazonReady === false ? (
+                  <Button
+                    onClick={() => navigate(tenantRoute(currentTenantSlug, '/integrations'))}
+                    className="bg-[#141414] hover:bg-[#1b1b1b] border border-white/10 text-white font-medium px-6 h-10 shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
+                  >
+                    Connect Amazon
+                  </Button>
                 ) : (
                   <Button
                     onClick={async () => {
                       try {
+                        const amazonConnected = await checkAmazonConnection();
+                        if (!amazonConnected) {
+                          setStatus('idle');
+                          setMessage('No Amazon store connected');
+                          setError(null);
+                          return;
+                        }
+
                         resetLogTimeline();
                         setLogsFinished(false);
                         logsFinishedRef.current = false;
@@ -1443,7 +1560,7 @@ export default function Sync() {
 
                         toast({
                           title: 'Audit started',
-                          description: 'We\'re pulling your latest Amazon records. This can take a few minutes.',
+                          description: 'We\'re pulling your latest Amazon SP-API records. This can take a few minutes.',
                           duration: 4000,
                         });
 

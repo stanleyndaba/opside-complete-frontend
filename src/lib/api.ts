@@ -1444,6 +1444,9 @@ export const api = {
         connected: boolean;
         auth_valid: boolean;
         needs_reconnect: boolean;
+        store_bound?: boolean;
+        tenant_bound?: boolean;
+        seller_resolved?: boolean;
         last_ingest_at?: string;
         last_success_at?: string;
         error_state?: string;
