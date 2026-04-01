@@ -241,21 +241,15 @@ const getEventColor = (type: CaseEvent['type']) => {
   }
 };
 
-type ObjectType = 'Detection' | 'Case' | 'Recovery';
 const NOT_AVAILABLE = 'Not Available';
 
-const resolveObjectType = (value: any): ObjectType => {
-  if (!value) return 'Case';
-  if (value.actual_payout_amount || value.resolution_amount || value.reconciled_at || value.recovery_status === 'reconciled') {
-    return 'Recovery';
-  }
-  if (value.filing_status || value.case_number || value.provider_case_id || value.amazonCaseId || value.amazon_case_id || value.provider) {
-    return 'Case';
-  }
-  return 'Detection';
+const toStatusLabel = (value?: string | null) => {
+  const normalized = String(value || '').trim();
+  if (!normalized || normalized === '-' || normalized.toLowerCase() === 'n/a') return NOT_AVAILABLE;
+  return normalized.replace(/_/g, ' ');
 };
 
-const toStatusLabel = (value?: string | null) => {
+const toEntityLabel = (value?: string | null) => {
   const normalized = String(value || '').trim();
   if (!normalized || normalized === '-' || normalized.toLowerCase() === 'n/a') return NOT_AVAILABLE;
   return normalized.replace(/_/g, ' ');
@@ -264,8 +258,12 @@ const toStatusLabel = (value?: string | null) => {
 const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string | null) => ({
   id: fallbackId,
   truth_unavailable: true,
+  entity_type: null,
+  has_linked_dispute_case: null,
   dispute_case_id: null,
   linked_dispute_case_id: null,
+  has_submission: null,
+  has_payout: null,
   detection_result_id: null,
   title: NOT_AVAILABLE,
   status: null,
@@ -340,9 +338,13 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
 const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   ...apiData,
   id: apiData.id || fallbackId || null,
-  dispute_case_id: apiData.dispute_case_id || (apiData.object_type === 'case' ? apiData.id : null),
-  linked_dispute_case_id: apiData.linked_dispute_case_id || apiData.dispute_case_id || (apiData.object_type === 'case' ? apiData.id : null),
-  detection_result_id: apiData.detection_result_id || (apiData.object_type === 'detection' ? apiData.id : null),
+  entity_type: apiData.entity_type || null,
+  has_linked_dispute_case: typeof apiData.has_linked_dispute_case === 'boolean' ? apiData.has_linked_dispute_case : null,
+  dispute_case_id: apiData.dispute_case_id || null,
+  linked_dispute_case_id: apiData.linked_dispute_case_id || null,
+  has_submission: typeof apiData.has_submission === 'boolean' ? apiData.has_submission : null,
+  has_payout: typeof apiData.has_payout === 'boolean' ? apiData.has_payout : null,
+  detection_result_id: apiData.detection_result_id || null,
   title: apiData.title || apiData.details || apiData.anomaly_type || 'Claim Details',
   status: apiData.status || null,
   filing_status: apiData.filing_status || null,
@@ -606,11 +608,11 @@ export default function CaseDetail() {
   };
 
   const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
-    const linkedDisputeId = caseData?.linked_dispute_case_id
-      || caseData?.dispute_case_id
-      || (!hasResolvedBackend ? seedCaseData?.linked_dispute_case_id : null)
-      || (!hasResolvedBackend ? seedCaseData?.dispute_case_id : null)
-      || null;
+    const linkedDisputeId = caseData?.has_linked_dispute_case === true
+      ? (caseData?.linked_dispute_case_id || null)
+      : ((!hasResolvedBackend && seedCaseData?.has_linked_dispute_case === true)
+        ? (seedCaseData?.linked_dispute_case_id || null)
+        : null);
 
     if (linkedDisputeId && activeSlug) {
       toast({
@@ -793,8 +795,8 @@ export default function CaseDetail() {
     return () => { cancelled = true; };
   }, [caseId, caseData?.evidence_attachments?.document_id, caseData?.documents, activeSlug]);
 
-  const objectType = useMemo<ObjectType | typeof NOT_AVAILABLE>(() => (
-    effectiveCase?.truth_unavailable ? NOT_AVAILABLE : resolveObjectType(effectiveCase)
+  const entityTypeLabel = useMemo(() => (
+    effectiveCase?.truth_unavailable ? NOT_AVAILABLE : toEntityLabel(effectiveCase?.entity_type)
   ), [effectiveCase]);
 
   const derivedConfidencePct = useMemo<number | null>(() => {
@@ -863,16 +865,17 @@ export default function CaseDetail() {
       ];
     }
     const currentStatus = String(effectiveCase?.status || '').toLowerCase();
-    const filingStatus = String(effectiveCase?.filing_status || '').toLowerCase();
     const recoveryStatus = String(effectiveCase?.recovery_status || '').toLowerCase();
     const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
     const hasEvidence = (matchedCount ?? 0) > 0;
+    const hasSubmission = effectiveCase?.has_submission === true;
+    const hasPayout = effectiveCase?.has_payout === true;
     return [
       { label: 'Detected', active: Boolean(effectiveCase?.id) },
       { label: 'Evidence', active: hasEvidence },
-      { label: 'Filed', active: ['filed', 'submitted', 'resubmitted'].includes(filingStatus) },
+      { label: 'Filed', active: hasSubmission },
       { label: 'Approved', active: ['approved'].includes(currentStatus) || typeof approvedAmount === 'number' },
-      { label: 'Recovered', active: ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
+      { label: 'Recovered', active: hasPayout || ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
       { label: 'Billed', active: ['pending', 'completed'].includes(billingStatus) }
     ];
   }, [approvedAmount, effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
@@ -904,11 +907,22 @@ export default function CaseDetail() {
   }, []);
 
   const handleBriefPreview = useCallback(async () => {
-    if (!activeSlug || !effectiveCase?.id) return;
+    const disputeCaseId = effectiveCase?.has_linked_dispute_case === true
+      ? (effectiveCase.linked_dispute_case_id || null)
+      : null;
+
+    if (!activeSlug || !disputeCaseId) {
+      toast({
+        variant: 'destructive',
+        title: 'Brief preview unavailable',
+        description: NOT_AVAILABLE,
+      });
+      return;
+    }
     openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Dispute Brief', 'Brief PDF Preview');
 
     try {
-      const response = await api.fetchDisputeBriefPdf(String(effectiveCase.id), activeSlug);
+      const response = await api.fetchDisputeBriefPdf(String(disputeCaseId), activeSlug);
       if (!response.ok || !response.blob) {
         throw new Error(response.error || 'Unable to load dispute brief preview.');
       }
@@ -1033,7 +1047,7 @@ export default function CaseDetail() {
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.case_number || effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                     <Badge variant="outline" className="border-white/10 bg-white/5 text-white/70 text-[9px] uppercase tracking-tight">
-                      {objectType}
+                      {entityTypeLabel}
                     </Badge>
                     {statusFeedUnavailable && (
                       <Badge variant="outline" className="border-amber-500/20 bg-amber-500/10 text-amber-400 text-[9px] uppercase tracking-tight">
@@ -1834,7 +1848,7 @@ export default function CaseDetail() {
                           </div>
                           <div>
                             <h4 className="text-[11px] font-bold text-white tracking-tight">Seller Identity</h4>
-                            <p className="text-[10px] text-white/30 font-sans font-bold uppercase tracking-tight">{objectType}</p>
+                            <p className="text-[10px] text-white/30 font-sans font-bold uppercase tracking-tight">{entityTypeLabel}</p>
                           </div>
                         </div>
 
