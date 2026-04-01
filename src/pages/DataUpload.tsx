@@ -224,6 +224,7 @@ export default function DataUpload() {
     const [isDragOver, setIsDragOver] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [previewResults, setPreviewResults] = useState<PreviewDetectionResult[]>([]);
+    const [previewResultsTotal, setPreviewResultsTotal] = useState<number | null>(null);
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
     const [previewState, setPreviewState] = useState<UploadDetectionState>({
         syncId: null,
@@ -416,12 +417,22 @@ export default function DataUpload() {
         () => getEmptyDetectionCopy(previewState.status, previewMessage || previewState.errorMessage || null),
         [previewMessage, previewState.errorMessage, previewState.status]
     );
+    const previewLoadedCount = previewResults.length;
+    const previewKnownTotal = typeof previewResultsTotal === 'number' ? previewResultsTotal : previewLoadedCount;
+    const previewIsTruncated = previewKnownTotal > previewLoadedCount;
+    const previewRecoveryLabel = previewIsTruncated ? 'Loaded subset recovery' : 'Recovery';
+    const previewBreakdownLabel = previewIsTruncated ? 'Top loaded claim categories by value' : 'Top claim categories by value';
+    const previewResultsSummary = previewIsTruncated
+        ? `Showing first ${previewLoadedCount} of ${previewKnownTotal} detections for this upload`
+        : `${previewLoadedCount} of ${previewKnownTotal} detection result${previewKnownTotal !== 1 ? 's' : ''} loaded for this upload`;
+    const previewRecoverySummaryLabel = previewIsTruncated ? 'Loaded subset recovery total' : 'Total estimated recovery';
 
     // Fetch detection data for the current upload only
     useEffect(() => {
         if (!isPreviewOpen) return;
         if (!currentUploadSyncId) {
             setPreviewResults([]);
+            setPreviewResultsTotal(null);
             setPreviewMessage('Detection results unavailable because this upload has no sync ID.');
             setPreviewState(prev => ({ ...prev, syncId: null, status: null, processedAt: null, errorMessage: null, isSandbox: false }));
             return;
@@ -452,6 +463,11 @@ export default function DataUpload() {
 
                     if (resultsRes?.ok && Array.isArray(resultsRes.data?.results)) {
                         setPreviewResults(resultsRes.data.results);
+                        setPreviewResultsTotal(
+                            typeof resultsRes.data.total === 'number'
+                                ? resultsRes.data.total
+                                : resultsRes.data.results.length
+                        );
                         if (resultsRes.data.results.length > 0) {
                             setPreviewMessage(null);
                         } else {
@@ -465,6 +481,7 @@ export default function DataUpload() {
                         }
                     } else {
                         setPreviewResults([]);
+                        setPreviewResultsTotal(null);
                         setPreviewMessage(
                             combineBackendMessages(
                                 extractApiFailureMessage(resultsRes, 'Detection results unavailable for this upload.'),
@@ -478,6 +495,7 @@ export default function DataUpload() {
                     console.error('Failed to fetch preview data:', err);
                     if (!cancelled) {
                         setPreviewResults([]);
+                        setPreviewResultsTotal(null);
                         const failureMessage = combineBackendMessages(
                             err instanceof Error ? err.message : null,
                             'Detection results unavailable for this upload.',
@@ -612,6 +630,7 @@ export default function DataUpload() {
         setBatchResult(null);
         setIsPreviewOpen(false);
         setPreviewResults([]);
+        setPreviewResultsTotal(null);
         setPreviewMessage(null);
         setPreviewState({
             syncId: null,
@@ -729,6 +748,7 @@ export default function DataUpload() {
         setBatchResult(null);
         setIsPreviewOpen(false);
         setPreviewResults([]);
+        setPreviewResultsTotal(null);
         setPreviewMessage(null);
         setPreviewState({
             syncId: null,
@@ -1116,7 +1136,7 @@ export default function DataUpload() {
                                         </div>
                                         <div className="flex flex-col px-0.5">
                                             <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Current upload detection summary</p>
-                                            <p className="text-[11px] font-bold text-gray-900 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `Recovery: ${fmt(previewTotalRecovery)}`}</p>
+                                            <p className="text-[11px] font-bold text-gray-900 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `${previewRecoveryLabel}: ${fmt(previewTotalRecovery)}`}</p>
                                             {previewState.syncId && (
                                                 <p className="mt-1 text-[10px] font-sans text-gray-400 tracking-tight">
                                                     Sync ID: <span className="font-semibold text-gray-600">{previewState.syncId}</span>
@@ -1184,11 +1204,11 @@ export default function DataUpload() {
                                                     )}
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detections:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewResults.length}</span>
+                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewLoadedCount} loaded{previewKnownTotal !== previewLoadedCount ? ` of ${previewKnownTotal} total` : ''}</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Est. Recovery:</span>
-                                                        <span className="text-[11px] font-bold text-gray-900 font-sans tracking-tight">{fmt(previewTotalRecovery)}</span>
+                                                        <span className="text-[11px] font-bold text-gray-900 font-sans tracking-tight">{fmt(previewTotalRecovery)}{previewIsTruncated ? ' (loaded subset)' : ''}</span>
                                                     </li>
                                                     <li className="flex items-baseline gap-2">
                                                         <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
@@ -1198,7 +1218,7 @@ export default function DataUpload() {
                                             </div>
                                             <div className="px-5 py-4 border-b border-gray-100">
                                                 <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Detection breakdown</h3>
-                                                <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">Top claim categories by value</p>
+                                                <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">{previewBreakdownLabel}</p>
                                                 <div className="space-y-2">
                                                     {previewTopTypes.slice(0, 5).map(([type, data], idx) => (
                                                         <div key={idx} className="flex items-start justify-between">
@@ -1218,8 +1238,13 @@ export default function DataUpload() {
                                         </div>
                                         <div className="flex-1 flex flex-col">
                                             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
-                                                <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Full Data</h3>
-                                                <p className="text-[10px] text-gray-400 font-sans">{previewResults.length} detection result{previewResults.length !== 1 ? 's' : ''} for this upload</p>
+                                                <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Loaded Results</h3>
+                                                <p className="text-[10px] text-gray-400 font-sans">{previewResultsSummary}</p>
+                                                {previewIsTruncated && (
+                                                    <p className="mt-1 text-[10px] font-sans font-semibold text-amber-700 tracking-tight">
+                                                        Showing first {previewLoadedCount} of {previewKnownTotal} detections. Recovery totals and category summaries below are based on the loaded subset only.
+                                                    </p>
+                                                )}
                                             </div>
                                             <div className="flex-1 overflow-auto p-6">
                                                 <div className="w-full">
@@ -1249,7 +1274,7 @@ export default function DataUpload() {
                                                         </tbody>
                                                         <tfoot>
                                                             <tr className="border-t border-gray-100">
-                                                                <td className="py-6"><span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Total Estimated Recovery</span></td>
+                                                                <td className="py-6"><span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">{previewRecoverySummaryLabel}</span></td>
                                                                 <td className="py-6 text-right">
                                                                     <div className="flex items-center justify-end gap-12">
                                                                         <span className="text-base font-bold font-sans text-gray-900 tracking-tight">{fmt(previewTotalRecovery)}</span>
