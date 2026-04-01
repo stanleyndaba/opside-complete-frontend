@@ -67,7 +67,11 @@ type Row = {
   actual_payout_amount: number | null;
   expected_payout_amount: number | null;
   billed_revenue_amount: number | null;
-  reconciliation_status: string;
+  reconciliation_status: 'pending_payout' | 'partial_recovery' | 'reconciled' | null;
+  reconciliation_source: 'canonical_financial_truth' | 'projected_legacy_case_field' | 'detection_estimate' | 'unavailable' | null;
+  payout_status: 'not_paid' | 'partially_paid' | 'paid' | null;
+  outstanding_amount: number | null;
+  variance_amount: number | null;
   reconciliation_strategy?: 'AUTO_MATCH' | 'SMART_MATCH' | 'QUARANTINED' | null;
   match_explanation?: {
     competing_candidates?: number;
@@ -172,12 +176,6 @@ const stamp = (value: string | null | undefined) => {
 const label = (value: string | null | undefined) =>
   value ? value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase()) : NOT_AVAILABLE;
 
-const truthText = (value: string | null | undefined) => {
-  const normalized = String(value || '').trim();
-  if (!normalized) return null;
-  return normalized.includes('_') || normalized.includes('-') ? label(normalized) : normalized;
-};
-
 function rowTypeLabel(value: Row['row_type'] | null | undefined): string {
   switch (value) {
     case 'dispute_case_projection':
@@ -215,6 +213,45 @@ function payoutSourceLabel(value: Row['expected_payout_source'] | Row['actual_pa
     default:
       return NOT_AVAILABLE;
   }
+}
+
+function reconciliationSourceLabel(value: Row['reconciliation_source'] | null | undefined): string {
+  switch (value) {
+    case 'canonical_financial_truth':
+      return 'Canonical Financial Truth';
+    case 'projected_legacy_case_field':
+      return 'Projected Legacy Case Field';
+    case 'detection_estimate':
+      return 'Detection Estimate';
+    case 'unavailable':
+      return NOT_AVAILABLE;
+    default:
+      return NOT_AVAILABLE;
+  }
+}
+
+function visiblePayoutStatusLabel(value: Row['payout_status'] | null | undefined): string {
+  return value ? financialStatusLabel(value) : NOT_AVAILABLE;
+}
+
+function visiblePayoutStatusTone(value: Row['payout_status'] | null | undefined): string {
+  return value ? financialStatusTone(value) : 'border-white/10 bg-white/[0.04] text-white/60';
+}
+
+function reconciliationTruthDetail(row: Pick<Row, 'reconciliation_source' | 'reconciliation_status' | 'payout_status'>): string {
+  if (row.reconciliation_source === 'canonical_financial_truth') {
+    if (row.payout_status === 'paid') return 'Canonical financial truth confirms full payout.';
+    if (row.payout_status === 'partially_paid') return 'Canonical financial truth confirms partial payout.';
+    if (row.payout_status === 'not_paid') return 'Canonical financial truth shows no payout event yet.';
+    return 'Canonical financial truth is linked, but no reconciliation state is available.';
+  }
+  if (row.reconciliation_source === 'projected_legacy_case_field') {
+    return 'Legacy case payout field exists, but canonical reconciliation truth is not confirmed.';
+  }
+  if (row.reconciliation_source === 'detection_estimate') {
+    return 'Detection estimate only. Reconciliation truth is not available.';
+  }
+  return NOT_AVAILABLE;
 }
 
 function boolTruth(value: boolean | null | undefined): string {
@@ -357,6 +394,13 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   const deferCount = typeof payload.defer_count === 'number' ? payload.defer_count : Number(payload.defer_count || 0);
   const reconciliationStrategy = String(payload.reconciliation_strategy || '').trim() || null;
   const matchExplanation = payload.match_explanation || null;
+  const explicitReconciliationStatus = String(payload.reconciliation_status || '').trim() || null;
+  const explicitReconciliationSource = String(payload.reconciliation_source || '').trim() || null;
+  const explicitPayoutStatus = String(payload.payout_status || '').trim() || null;
+  const explicitOutstandingRaw = Number(payload.outstanding_amount);
+  const explicitVarianceRaw = Number(payload.variance_amount);
+  const explicitOutstandingAmount = Number.isFinite(explicitOutstandingRaw) ? explicitOutstandingRaw : null;
+  const explicitVarianceAmount = Number.isFinite(explicitVarianceRaw) ? explicitVarianceRaw : null;
 
   if (matchesRecovery) {
     const recoveryWorkPayload = {
@@ -405,12 +449,16 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
       recovery_operational_state: String(payload.operational_state || '').trim() || row.recovery_operational_state || null,
       recovery_operational_explanation: payload.operational_explanation || row.recovery_operational_explanation || null,
       recovery_work_payload: recoveryWorkPayload,
+      reconciliation_status: explicitReconciliationStatus as Row['reconciliation_status'] || row.reconciliation_status,
+      reconciliation_source: explicitReconciliationSource as Row['reconciliation_source'] || row.reconciliation_source,
+      payout_status: explicitPayoutStatus as Row['payout_status'] || row.payout_status,
+      outstanding_amount: explicitOutstandingAmount ?? row.outstanding_amount,
+      variance_amount: explicitVarianceAmount ?? row.variance_amount,
       last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
     };
 
     if (eventType === 'recovery.completed') {
       nextRow.recovery_status = 'reconciled';
-      nextRow.reconciliation_status = 'reconciled';
       nextRow.operator_state = BILLING_COMPLETE_STATES.has(String(nextRow.billing_status || '').toLowerCase())
         ? 'billing_complete'
         : 'billing_pending';
@@ -421,7 +469,6 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
       nextRow.operator_state = 'recovery_processing';
     } else if (eventType === 'recovery.work_deferred') {
       nextRow.operator_state = 'waiting_for_payout';
-      nextRow.reconciliation_status = 'pending_payout';
     }
 
     return nextRow;
@@ -1075,6 +1122,9 @@ export default function RecoveryPipelineAgent8() {
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${identityBadgeTone(row)}`}>{identityTruthHeadline(row)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
+                                    <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                      {reconciliationSourceLabel(row.reconciliation_source)}
+                                    </span>
                                     {row.reconciliation_strategy ? (
                                       <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
                                         {formatAutonomyLabel(row.reconciliation_strategy)}
@@ -1088,6 +1138,9 @@ export default function RecoveryPipelineAgent8() {
                                         {summarizeMatchExplanation(row.match_explanation)}
                                       </div>
                                     ) : null}
+                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
+                                      {reconciliationTruthDetail(row)}
+                                    </div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -1098,8 +1151,9 @@ export default function RecoveryPipelineAgent8() {
                                     <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Paid back</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(financialSummary?.verified_paid_amount, row.currency)}</div>
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Actual source: {payoutSourceLabel(row.actual_payout_source)}</div>
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${financialStatusTone(financialSummary?.payout_status)}`}>Payout: {financialStatusLabel(financialSummary?.payout_status)}</span>
-                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">{financialStatusDetail(financialSummary)}</div>
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${visiblePayoutStatusTone(row.payout_status)}`}>Payout: {visiblePayoutStatusLabel(row.payout_status)}</span>
+                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">Outstanding: {money(row.outstanding_amount, row.currency)}</div>
+                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">Variance: {money(row.variance_amount, row.currency)}</div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
@@ -1237,6 +1291,8 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Last Filing Error', value: detailsRow.last_error || NOT_AVAILABLE },
                   { label: 'Operator State', value: label(detailsRow.operator_state) },
                   { label: 'Reconciliation State', value: label(detailsRow.reconciliation_status) },
+                  { label: 'Reconciliation Source', value: reconciliationSourceLabel(detailsRow.reconciliation_source) },
+                  { label: 'Reconciliation Detail', value: reconciliationTruthDetail(detailsRow) },
                   { label: 'Reconciliation Strategy', value: detailsRow.reconciliation_strategy ? formatAutonomyLabel(detailsRow.reconciliation_strategy) : NOT_AVAILABLE },
                   { label: 'Match Explanation', value: summarizeMatchExplanation(detailsRow.match_explanation) || 'None recorded' },
                   { label: 'Case Status', value: label(detailsRow.status) },
@@ -1269,9 +1325,9 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Expected Payout Source', value: payoutSourceLabel(detailsRow.expected_payout_source) },
                   { label: 'Verified Paid', value: money(financialSummary?.verified_paid_amount, detailsRow.currency) },
                   { label: 'Actual Payout Source', value: payoutSourceLabel(detailsRow.actual_payout_source) },
-                  { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
-                  { label: 'Outstanding', value: money(financialSummary?.outstanding_amount, detailsRow.currency) },
-                  { label: 'Variance', value: money(financialSummary?.variance_amount, detailsRow.currency) },
+                  { label: 'Payout Status', value: visiblePayoutStatusLabel(detailsRow.payout_status) },
+                  { label: 'Outstanding', value: money(detailsRow.outstanding_amount, detailsRow.currency) },
+                  { label: 'Variance', value: money(detailsRow.variance_amount, detailsRow.currency) },
                   { label: 'Source Rails', value: financialSummary?.source_types?.length ? financialSummary.source_types.map(financialSourceLabel).join(', ') : 'No financial events yet' },
                   { label: 'Legacy Case Payout Field', value: money(detailsRow.actual_payout_amount, detailsRow.currency) },
                 ]}
