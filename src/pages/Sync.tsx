@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { startSync, getSyncStatus, cancelSync, forceClearSync, getRecentSseEvents, subscribeSyncProgress, type RecentSSEEvent, type SyncStatusResponse, type SSEConnectionState } from '@/lib/inventoryApi';
+import { startSync, getActiveSyncStatus, getSyncStatus, cancelSync, forceClearSync, getRecentSseEvents, subscribeSyncProgress, type RecentSSEEvent, type SyncStatusResponse, type SSEConnectionState } from '@/lib/inventoryApi';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
@@ -16,7 +16,6 @@ const OutlookIcon = '/outlookicon.webp';
 const GoogleDriveIcon = '/gd.png';
 const DropboxIcon = '/Dropbox_Icon.svg.png';
 import { useToast } from '@/hooks/use-toast';
-import { useDetectionUpdates } from '@/hooks/use-detection-updates';
 import { api } from '@/lib/api';
 
 // Log entry type
@@ -95,6 +94,7 @@ export default function Sync() {
   const logsFinishedRef = useRef(false);
   const logContainerRef = useRef<HTMLDivElement>(null);
   const nextLogIdRef = useRef(0);
+  const latestHydratedTimestampRef = useRef<number | null>(null);
 
   useEffect(() => {
     sseStatusRef.current = sseStatus;
@@ -327,6 +327,23 @@ export default function Sync() {
     });
   };
 
+  const getLatestBackendTimestamp = (entries: Array<Pick<LogEntry, 'timestamp'>>): number | null => {
+    let latestTimestamp: number | null = null;
+
+    for (const entry of entries) {
+      const parsedTimestamp = parseLogTimestamp(entry.timestamp);
+      if (parsedTimestamp === null) {
+        continue;
+      }
+
+      if (latestTimestamp === null || parsedTimestamp > latestTimestamp) {
+        latestTimestamp = parsedTimestamp;
+      }
+    }
+
+    return latestTimestamp;
+  };
+
   const mergeLogEntries = (entries: Array<Omit<LogEntry, 'id'>>) => {
     if (entries.length === 0) {
       return;
@@ -352,12 +369,13 @@ export default function Sync() {
 
   const resetLogTimeline = () => {
     nextLogIdRef.current = 0;
+    latestHydratedTimestampRef.current = null;
     setLogs([]);
   };
 
   const checkAmazonConnection = async (): Promise<boolean> => {
     try {
-      const response = await api.getIntegrationStatus(currentTenantSlug);
+      const response = await api.getIntegrationsStatus(currentTenantSlug);
       if (!response.ok || !response.data) {
         setAmazonReady(false);
         return false;
@@ -506,42 +524,6 @@ export default function Sync() {
     };
   }, [logsFinished, status, toast, syncData]);
 
-  // Phase 3: Detection updates SSE - connect when sync completes
-  // NOTE: This hook ONLY updates syncData state - logs are already handled by main SSE handler
-  // to avoid duplicate log messages
-  useDetectionUpdates(
-    status === 'completed' && syncId ? syncId : null,
-    (event) => {
-      // Handle detection updates - DON'T add logs here, main SSE handler does that
-      if (event.status === 'complete') {
-        const totalDetections = event.total_detections ?? null;
-        const estimatedValue = event.estimated_value ?? event.totalRecoverableValue ?? null;
-
-        if (totalDetections !== null && totalDetections > 0) {
-          // ⭐ UPDATE syncData so "Potential Recovery Identified" shows when logsFinished
-          // No addLog here - main SSE handler at line 500+ already handles logs
-          setSyncData(prev => prev ? {
-            ...prev,
-            claimsDetected: totalDetections,
-            totalRecoverableValue: estimatedValue ?? prev.totalRecoverableValue
-          } : prev);
-        }
-      } else if (event.new_detections_count && event.new_detections_count > 0) {
-        const estimatedValue = event.estimated_value ?? null;
-
-        // ⭐ UPDATE syncData for incremental updates too
-        // No addLog here - avoid duplicate logs
-        setSyncData(prev => prev ? {
-          ...prev,
-          claimsDetected: (prev.claimsDetected ?? 0) + event.new_detections_count,
-          totalRecoverableValue: estimatedValue !== null
-            ? (prev.totalRecoverableValue ?? 0) + estimatedValue
-            : prev.totalRecoverableValue
-        } : prev);
-      }
-    }
-  );
-
   const updateSyncState = (s: SyncStatusResponse) => {
     // Merge new state with previous, preserving claimsDetected and totalRecoverableValue
     // to avoid race condition where sync completion overwrites detection values
@@ -562,14 +544,16 @@ export default function Sync() {
     }
     if (s.message) setMessage(s.message);
 
+    const structuredRunState = s.runState || s.status;
+
     // Map status values to match documentation
     let mappedStatus: 'idle' | 'running' | 'detecting' | 'completed' | 'failed' | 'cancelled' = 'idle';
-    if (s.status === 'idle') mappedStatus = 'idle';
-    else if (s.status === 'running') mappedStatus = 'running';
-    else if (s.status === 'detecting') mappedStatus = 'detecting';
-    else if (s.status === 'completed' || s.status === 'complete') mappedStatus = 'completed';
-    else if (s.status === 'failed') mappedStatus = 'failed';
-    else if (s.status === 'cancelled') mappedStatus = 'cancelled';
+    if (structuredRunState === 'idle') mappedStatus = 'idle';
+    else if (structuredRunState === 'running') mappedStatus = 'running';
+    else if (structuredRunState === 'detecting') mappedStatus = 'detecting';
+    else if (structuredRunState === 'completed' || structuredRunState === 'complete') mappedStatus = 'completed';
+    else if (structuredRunState === 'failed') mappedStatus = 'failed';
+    else if (structuredRunState === 'cancelled') mappedStatus = 'cancelled';
 
     // Show toast notifications on status changes
     if (mappedStatus !== previousStatusRef.current) {
@@ -632,6 +616,7 @@ export default function Sync() {
           .filter((entry): entry is Omit<LogEntry, 'id'> => entry !== null);
 
         mergeLogEntries(replayLogs);
+        latestHydratedTimestampRef.current = getLatestBackendTimestamp(replayLogs);
       } catch (replayError) {
         console.warn('[Sync] Failed to reconstruct replay timeline:', replayError);
       }
@@ -644,6 +629,31 @@ export default function Sync() {
           setLogsFinished(false);
           modalDismissedRef.current = false;
           logsFinishedRef.current = false;
+
+          const activeSyncStatus = await getActiveSyncStatus(currentTenantSlug);
+          if (cancelled) return null;
+
+          if (activeSyncStatus.hasActiveSync && activeSyncStatus.lastSync?.syncId) {
+            const resumedSyncId = activeSyncStatus.lastSync.syncId;
+            const resumedRunState = activeSyncStatus.lastSync.status;
+
+            setSyncId(resumedSyncId);
+            setProgress(activeSyncStatus.lastSync.progress ?? 0);
+            setMessage(activeSyncStatus.lastSync.message || 'Resuming current audit...');
+            setStatus(
+              resumedRunState === 'detecting'
+                ? 'detecting'
+                : resumedRunState === 'completed' || resumedRunState === 'complete'
+                  ? 'completed'
+                  : resumedRunState === 'failed'
+                    ? 'failed'
+                    : resumedRunState === 'cancelled'
+                      ? 'cancelled'
+                      : 'running'
+            );
+            navigate(tenantRoute(currentTenantSlug, `/sync?id=${resumedSyncId}`), { replace: true });
+            return null;
+          }
 
           const amazonConnected = await checkAmazonConnection();
           if (cancelled) return null;
@@ -666,11 +676,11 @@ export default function Sync() {
 
           toast({
             title: 'Audit started',
-            description: 'We\'re pulling your latest Amazon SP-API records. This can take a few minutes.',
+            description: `We\'re pulling your latest records through ${sourceLabel}. This can take a few minutes.`,
             duration: 4000,
           });
 
-          navigate(`/sync?id=${newSyncId}`, { replace: true });
+          navigate(tenantRoute(currentTenantSlug, `/sync?id=${newSyncId}`), { replace: true });
           return null;
         } catch (e: any) {
           if (cancelled) return null;
@@ -768,6 +778,20 @@ export default function Sync() {
             console.log('[Sync] Log event received:', s.log);
             const logEntry = mapEventToLogEntry(s);
             if (logEntry) {
+              const liveEventTimestamp = parseLogTimestamp(logEntry.timestamp);
+              if (
+                process.env.NODE_ENV !== 'production' &&
+                latestHydratedTimestampRef.current !== null &&
+                liveEventTimestamp !== null &&
+                liveEventTimestamp < latestHydratedTimestampRef.current
+              ) {
+                console.warn('[Sync] Live log event arrived older than latest hydrated replay event', {
+                  syncId: activeSyncId,
+                  liveEventTimestamp: logEntry.timestamp,
+                  latestHydratedTimestamp: new Date(latestHydratedTimestampRef.current).toISOString(),
+                  message: logEntry.message
+                });
+              }
               mergeLogEntries([logEntry]);
             }
             return;
@@ -834,7 +858,7 @@ export default function Sync() {
             setStatus('idle');
             setProgress(0);
             setMessage('Audit not found. Please start a new audit.');
-            navigate('/sync', { replace: true });
+            navigate(tenantRoute(currentTenantSlug, '/sync'), { replace: true });
           }
         }
       }, 3000);
@@ -856,7 +880,7 @@ export default function Sync() {
   }, [syncId, navigate, currentTenantSlug]);
 
   const handleCancelSync = async () => {
-    if (!syncId || status !== 'running') return;
+    if (!syncId || (status !== 'running' && status !== 'detecting')) return;
 
     setIsCancelling(true);
     try {
@@ -1056,31 +1080,26 @@ export default function Sync() {
     }
   };
 
-  // Helper for screenshot-style date formatting: YYYY/MM/DD, HH:MM:SS
-  const formatDateTime = (dateStr: string | Date) => {
-    const d = new Date(dateStr);
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const date = `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())}`;
-    const time = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-    return `${date}, ${time}`;
-  };
+  const sourceLabel = syncData?.sourceLabel || 'Amazon SP-API Sync';
+  const structuredRunState = syncData?.runState || status;
+  const resolvedRunState = structuredRunState === 'complete' ? 'completed' : structuredRunState;
 
   const statusPresentation = {
     idle: {
       label: 'Ready',
       summary: amazonReady === false
-        ? 'No Amazon store connected. Connect Amazon before you run an Amazon SP-API sync here.'
-        : 'Start an Amazon SP-API sync to pull your latest Amazon records and watch the review unfold here.',
+        ? `No Amazon store connected. Connect Amazon before you run a ${sourceLabel} here.`
+        : `Start a ${sourceLabel} to pull your latest Amazon records and watch the review unfold here.`,
       badgeClass: 'border-white/10 text-white/60 bg-white/[0.02]',
     },
     running: {
       label: 'Audit in progress',
-      summary: message || 'We are pulling your latest Amazon SP-API records now.',
+      summary: message || `We are pulling your latest records through ${sourceLabel} now.`,
       badgeClass: 'border-white/10 text-white/70 bg-white/[0.02]',
     },
     detecting: {
       label: 'Reviewing findings',
-      summary: message || 'We are checking the Amazon SP-API records we pulled and looking for issues worth your attention.',
+      summary: message || `We are checking the ${sourceLabel} records we pulled and looking for issues worth your attention.`,
       badgeClass: 'border-amber-500/20 text-amber-200 bg-amber-500/[0.08]',
     },
     completed: {
@@ -1090,7 +1109,9 @@ export default function Sync() {
     },
     failed: {
       label: 'Needs attention',
-      summary: error || message || 'We hit a problem while running this audit.',
+      summary: syncData?.partialSuccess
+        ? 'Part of this audit completed, but the run did not finish cleanly.'
+        : error || message || 'We hit a problem while running this audit.',
       badgeClass: 'border-red-500/20 text-red-200 bg-red-500/[0.08]',
     },
     cancelled: {
@@ -1100,7 +1121,7 @@ export default function Sync() {
     },
   } as const;
 
-  const activeStatusPresentation = statusPresentation[status];
+  const activeStatusPresentation = statusPresentation[resolvedRunState] || statusPresentation[status];
   const liveUpdateLabel = sseStatus === 'connected' ? 'Live updates on' : 'Checking for updates';
 
   return (
@@ -1119,14 +1140,14 @@ export default function Sync() {
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-2xl font-sans font-light tracking-tight">Audit Engine</h1>
                 <Badge variant="outline" className="text-[10px] font-sans font-bold uppercase tracking-tight border-white/10 text-white/60 bg-white/[0.02]">
-                  Amazon SP-API Sync
+                  {sourceLabel}
                 </Badge>
                 <Badge variant="outline" className={`text-[10px] font-sans font-bold uppercase tracking-tight ${activeStatusPresentation.badgeClass}`}>
                   {activeStatusPresentation.label}
                 </Badge>
               </div>
               <p className="text-sm text-white/40 max-w-2xl">
-                Follow this Amazon SP-API sync as it pulls your Amazon records, checks what changed, and shows confirmed issues or recovery-related updates for this run only.
+                Follow this {sourceLabel} as it pulls your Amazon records, checks what changed, and shows confirmed issues or recovery-related updates for this run only.
               </p>
               <p className="text-xs text-white/25 max-w-2xl mt-2 font-sans tracking-tight">
                 CSV uploads are tracked on the Data Upload page, not here.
@@ -1185,7 +1206,7 @@ export default function Sync() {
                             <div className="space-y-1">
                               <p className="font-sans font-bold text-white text-xs tracking-tight uppercase">What you see</p>
                               <p className="text-sm leading-relaxed text-white/40 font-sans">
-                                This feed shows confirmed updates for this Amazon SP-API sync only. Entries are grouped by orders, inventory, shipments, returns, settlements, fees, claims, and findings.
+                                This feed shows confirmed updates for this run only. Entries are grouped by orders, inventory, shipments, returns, settlements, fees, claims, and findings.
                               </p>
                             </div>
                             <div className="pt-2 border-t border-white/5">
@@ -1410,22 +1431,22 @@ export default function Sync() {
                 <div className="space-y-2">
                   <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Audit controls</p>
                   <h3 className="text-lg font-sans font-light tracking-tight text-white">
-                    {status === 'running'
-                      ? 'Amazon SP-API sync in progress'
+                    {status === 'running' || status === 'detecting'
+                      ? `${sourceLabel} in progress`
                       : !syncId && amazonReady === false
                         ? 'Amazon connection required'
                         : 'Ready for the next step'}
                   </h3>
                   <p className="text-sm text-white/40 max-w-2xl">
-                    {status === 'running'
-                      ? 'This Amazon SP-API sync is still running. You can let it continue or stop it if needed.'
+                    {status === 'running' || status === 'detecting'
+                      ? `This ${sourceLabel} is still running. You can let it continue or stop it if needed.`
                       : !syncId && amazonReady === false
                         ? 'Connect an Amazon store to run this page. CSV uploads continue to live on the Data Upload page.'
-                        : 'Run another Amazon SP-API sync, clear a stuck run, or move to your dashboard once this review is complete.'}
+                        : `Run another ${sourceLabel}, clear a stuck run, or move to your dashboard once this review is complete.`}
                   </p>
                 </div>
 
-                {status === 'running' ? (
+                {status === 'running' || status === 'detecting' ? (
                   <div className="rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3 flex items-center gap-3">
                     <Loader2 className="h-4 w-4 text-white/60 animate-spin" />
                     <div>
@@ -1469,7 +1490,7 @@ export default function Sync() {
 
                         toast({
                           title: 'Audit started',
-                          description: 'We\'re pulling your latest Amazon SP-API records. This can take a few minutes.',
+                          description: `We\'re pulling your latest records through ${sourceLabel}. This can take a few minutes.`,
                           duration: 4000,
                         });
 
@@ -1495,7 +1516,7 @@ export default function Sync() {
               </div>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                {status === 'running' ? (
+                {status === 'running' || status === 'detecting' ? (
                   <Button
                     onClick={handleCancelSync}
                     disabled={isCancelling}

@@ -10,9 +10,16 @@ export interface SyncStatusResponse {
   success?: boolean;
   syncId: string;
   status: SyncStatus;
+  runState: SyncStatus;
   progress: number;
   message: string;
+  sourceType?: 'amazon_sp_api';
+  sourceLabel?: string;
+  tenantSlug?: string | null;
+  storeId?: string | null;
+  partialSuccess?: boolean;
   startedAt: string;
+  lastEventAt?: string | null;
   completedAt?: string | null;
   estimatedCompletion?: string;
   ordersProcessed?: number;
@@ -25,6 +32,8 @@ export interface SyncStatusResponse {
   claimsDetected?: number;       // ⭐ NEW - Claims detected
   inventoryValue?: number;       // ⭐ NEW - Total value of inventory synced
   totalRecoverableValue?: number; // ⭐ NEW - Total $ value of potential recoveries
+  reportIdentifiers?: string[];
+  requestIdentifiers?: string[];
   error?: string | null;
 }
 
