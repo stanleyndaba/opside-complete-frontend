@@ -162,7 +162,6 @@ type FinancialMap = Record<string, FinancialTruthSummary>;
 
 const PAGE_SIZE = 10;
 const NOT_AVAILABLE = 'Not Available';
-const BILLING_COMPLETE_STATES = new Set(['paid', 'charged', 'credited', 'completed']);
 const statusOptions = [['all', 'All Recovery States'], ['waiting_for_payout', 'Waiting For Payout'], ['recovery_processing', 'Recovery Processing'], ['payout_detected_not_reconciled', 'Payout Detected'], ['partial_payout_review', 'Partial Recovery'], ['billing_pending', 'Billing Pending'], ['billing_processing', 'Billing Processing'], ['billing_complete', 'Billing Complete'], ['investigation_required', 'Investigation Required']];
 const reconciliationOptions = [['all', 'All Reconciliation States'], ['pending_payout', 'Pending Payout'], ['payout_detected', 'Payout Detected'], ['partial_recovery', 'Partial Recovery'], ['reconciled', 'Reconciled'], ['unknown', 'Unknown']];
 const billingOptions = [['all', 'All Billing States'], ['pending', 'Pending'], ['sent', 'Sent'], ['charged', 'Charged'], ['credited', 'Credited'], ['paid', 'Paid']];
@@ -375,12 +374,22 @@ function getFinancialSummaryForRow(row: Pick<Row, 'dispute_case_id' | 'detection
   return null;
 }
 
-function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
+function getFinalityEventMatch(row: Row, event: StatusEvent) {
   const payload = (event.data || {}) as Record<string, any>;
   const eventType = String(event.eventType || '').toLowerCase();
   const isRecovery = eventType.startsWith('recovery.');
   const isBilling = eventType.startsWith('billing.');
-  if (!isRecovery && !isBilling) return row;
+  if (!isRecovery && !isBilling) {
+    return {
+      payload,
+      eventType,
+      isRecovery,
+      isBilling,
+      matchesRecovery: false,
+      matchesBilling: false,
+      matched: false,
+    };
+  }
 
   const recoveryWorkItemId = String(payload.recovery_work_item_id || '').trim();
   const billingWorkItemId = String(payload.billing_work_item_id || '').trim();
@@ -399,23 +408,48 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
     (billingEntityId && billingEntityId === rowRecoveryRecordId)
   );
 
-  if (!matchesRecovery && !matchesBilling) {
+  return {
+    payload,
+    eventType,
+    isRecovery,
+    isBilling,
+    matchesRecovery,
+    matchesBilling,
+    matched: matchesRecovery || matchesBilling,
+  };
+}
+
+function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
+  const match = getFinalityEventMatch(row, event);
+  if (!match.matched) {
     return row;
   }
 
-  const timestamp = String(payload.timestamp || event.timestamp || '').trim() || null;
+  const { payload, eventType, matchesRecovery } = match;
+  const envelopeTimestamp = String(event.timestamp || '').trim() || null;
+  const explicitTimestamp = String(payload.timestamp || '').trim() || envelopeTimestamp;
   const runtimeRole = String(payload.runtime_role || '').trim() || null;
   const executionLane = String(payload.execution_lane || '').trim() || null;
+  const lockedBy = String(payload.locked_by || '').trim() || null;
   const reason = String(payload.reason || payload.error || '').trim() || null;
   const status = String(payload.status || '').trim() || null;
   const nextAttemptAt = String(payload.next_attempt_at || '').trim() || null;
-  const lastClaimedAt = String(payload.last_claimed_at || '').trim() || timestamp;
-  const deferCount = typeof payload.defer_count === 'number' ? payload.defer_count : Number(payload.defer_count || 0);
+  const explicitLastClaimedAt = String(payload.last_claimed_at || '').trim() || null;
+  const explicitLastProcessedAt = String(payload.last_processed_at || '').trim() || null;
+  const explicitExecutionProcessedAt = String(payload.execution_processed_at || '').trim() || null;
+  const deferCountRaw = typeof payload.defer_count === 'number' ? payload.defer_count : Number(payload.defer_count);
+  const explicitDeferCount = Number.isFinite(deferCountRaw) ? deferCountRaw : null;
   const reconciliationStrategy = String(payload.reconciliation_strategy || '').trim() || null;
   const matchExplanation = payload.match_explanation || null;
   const explicitReconciliationStatus = String(payload.reconciliation_status || '').trim() || null;
   const explicitReconciliationSource = String(payload.reconciliation_source || '').trim() || null;
   const explicitPayoutStatus = String(payload.payout_status || '').trim() || null;
+  const explicitRecoveryStatus = String(payload.recovery_status || '').trim() || null;
+  const explicitBillingStatus = String(payload.billing_status || '').trim() || null;
+  const explicitOperatorState = String(payload.operator_state || '').trim() || null;
+  const explicitRecoveryLifecycleState = String(payload.recovery_lifecycle_state || payload.lifecycle_state || '').trim() || null;
+  const explicitBillingLifecycleState = String(payload.billing_lifecycle_state || payload.lifecycle_state || '').trim() || null;
+  const explicitInvestigationRequired = typeof payload.investigation_required === 'boolean' ? payload.investigation_required : null;
   const explicitOutstandingRaw = Number(payload.outstanding_amount);
   const explicitVarianceRaw = Number(payload.variance_amount);
   const explicitOutstandingAmount = Number.isFinite(explicitOutstandingRaw) ? explicitOutstandingRaw : null;
@@ -428,67 +462,38 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
     };
     const nextRow: Row = {
       ...row,
-      recovery_work_item_id: recoveryWorkItemId || row.recovery_work_item_id || null,
+      recovery_work_item_id: String(payload.recovery_work_item_id || '').trim() || row.recovery_work_item_id || null,
       recovery_work_status: status || row.recovery_work_status || null,
       recovery_execution_lane: executionLane || row.recovery_execution_lane || null,
       recovery_last_runtime_role: runtimeRole || row.recovery_last_runtime_role || null,
-      recovery_last_claimed_at: eventType === 'recovery.work_claimed' ? lastClaimedAt : row.recovery_last_claimed_at || null,
-      recovery_last_processed_at: eventType === 'recovery.work_claimed'
-        ? row.recovery_last_processed_at || null
-        : pickLatestTimestamp(timestamp, row.recovery_last_processed_at),
-      recovery_execution_processed_at: eventType === 'recovery.work_claimed'
-        ? row.recovery_execution_processed_at || null
-        : pickLatestTimestamp(timestamp, row.recovery_execution_processed_at),
+      recovery_last_claimed_at: explicitLastClaimedAt || row.recovery_last_claimed_at || null,
+      recovery_last_processed_at: explicitLastProcessedAt || row.recovery_last_processed_at || null,
+      recovery_execution_processed_at: explicitExecutionProcessedAt || row.recovery_execution_processed_at || null,
       recovery_work_error: reason || row.recovery_work_error || null,
       reconciliation_strategy: reconciliationStrategy || row.reconciliation_strategy || null,
       match_explanation: matchExplanation || row.match_explanation || null,
       recovery_last_deferred_reason: eventType === 'recovery.work_deferred'
-        ? (reason || row.recovery_last_deferred_reason || row.recovery_work_error || null)
+        ? (reason || row.recovery_last_deferred_reason || null)
         : row.recovery_last_deferred_reason || null,
-      recovery_defer_count: eventType === 'recovery.work_deferred'
-        ? Math.max(row.recovery_defer_count ?? 0, Number.isFinite(deferCount) ? deferCount : 0)
+      recovery_defer_count: eventType === 'recovery.work_deferred' && explicitDeferCount != null
+        ? Math.max(row.recovery_defer_count ?? 0, explicitDeferCount)
         : row.recovery_defer_count ?? 0,
       recovery_next_attempt_at: nextAttemptAt || row.recovery_next_attempt_at || null,
-      recovery_locked_by: eventType === 'recovery.work_claimed'
-        ? (executionLane || row.recovery_locked_by || null)
-        : status === 'pending' || status === 'completed' || status === 'quarantined' || status === 'failed_retry_exhausted'
-          ? null
-          : row.recovery_locked_by || null,
-      recovery_lifecycle_state: eventType === 'recovery.work_deferred'
-        ? 'deferred'
-        : eventType === 'recovery.completed'
-          ? 'completed'
-          : eventType === 'recovery.quarantined'
-            ? 'quarantined'
-            : eventType === 'recovery.failed_retry_exhausted'
-              ? 'failed_retry_exhausted'
-              : eventType === 'recovery.work_claimed'
-                ? 'claimed'
-                : row.recovery_lifecycle_state || null,
+      recovery_locked_by: lockedBy || row.recovery_locked_by || null,
+      recovery_lifecycle_state: explicitRecoveryLifecycleState || row.recovery_lifecycle_state || null,
       recovery_operational_state: String(payload.operational_state || '').trim() || row.recovery_operational_state || null,
       recovery_operational_explanation: payload.operational_explanation || row.recovery_operational_explanation || null,
       recovery_work_payload: recoveryWorkPayload,
       reconciliation_status: explicitReconciliationStatus as Row['reconciliation_status'] || row.reconciliation_status,
       reconciliation_source: explicitReconciliationSource as Row['reconciliation_source'] || row.reconciliation_source,
       payout_status: explicitPayoutStatus as Row['payout_status'] || row.payout_status,
+      recovery_status: explicitRecoveryStatus || row.recovery_status,
+      operator_state: explicitOperatorState || row.operator_state,
+      investigation_required: explicitInvestigationRequired ?? row.investigation_required,
       outstanding_amount: explicitOutstandingAmount ?? row.outstanding_amount,
       variance_amount: explicitVarianceAmount ?? row.variance_amount,
-      last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
+      last_updated_at: pickLatestTimestamp(explicitTimestamp, row.last_updated_at)
     };
-
-    if (eventType === 'recovery.completed') {
-      nextRow.recovery_status = 'reconciled';
-      nextRow.operator_state = BILLING_COMPLETE_STATES.has(String(nextRow.billing_status || '').toLowerCase())
-        ? 'billing_complete'
-        : 'billing_pending';
-    } else if (eventType === 'recovery.quarantined' || eventType === 'recovery.failed_retry_exhausted') {
-      nextRow.operator_state = 'investigation_required';
-      nextRow.investigation_required = true;
-    } else if (eventType === 'recovery.work_claimed') {
-      nextRow.operator_state = 'recovery_processing';
-    } else if (eventType === 'recovery.work_deferred') {
-      nextRow.operator_state = 'waiting_for_payout';
-    }
 
     return nextRow;
   }
@@ -499,56 +504,31 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   };
   const nextRow: Row = {
     ...row,
-    billing_work_item_id: billingWorkItemId || row.billing_work_item_id || null,
+    billing_work_item_id: String(payload.billing_work_item_id || '').trim() || row.billing_work_item_id || null,
     billing_work_status: status || row.billing_work_status || null,
     billing_execution_lane: executionLane || row.billing_execution_lane || null,
     billing_last_runtime_role: runtimeRole || row.billing_last_runtime_role || null,
-    billing_last_claimed_at: eventType === 'billing.work_claimed' ? lastClaimedAt : row.billing_last_claimed_at || null,
-    billing_last_processed_at: eventType === 'billing.work_claimed'
-      ? row.billing_last_processed_at || null
-      : pickLatestTimestamp(timestamp, row.billing_last_processed_at),
-    billing_execution_processed_at: eventType === 'billing.work_claimed'
-      ? row.billing_execution_processed_at || null
-      : pickLatestTimestamp(timestamp, row.billing_execution_processed_at),
+    billing_last_claimed_at: explicitLastClaimedAt || row.billing_last_claimed_at || null,
+    billing_last_processed_at: explicitLastProcessedAt || row.billing_last_processed_at || null,
+    billing_execution_processed_at: explicitExecutionProcessedAt || row.billing_execution_processed_at || null,
     billing_work_error: reason || row.billing_work_error || null,
     billing_last_deferred_reason: eventType === 'billing.work_deferred'
-      ? (reason || row.billing_last_deferred_reason || row.billing_work_error || null)
+      ? (reason || row.billing_last_deferred_reason || null)
       : row.billing_last_deferred_reason || null,
-    billing_defer_count: eventType === 'billing.work_deferred'
-      ? Math.max(row.billing_defer_count ?? 0, Number.isFinite(deferCount) ? deferCount : 0)
+    billing_defer_count: eventType === 'billing.work_deferred' && explicitDeferCount != null
+      ? Math.max(row.billing_defer_count ?? 0, explicitDeferCount)
       : row.billing_defer_count ?? 0,
     billing_next_attempt_at: nextAttemptAt || row.billing_next_attempt_at || null,
-    billing_locked_by: eventType === 'billing.work_claimed'
-      ? (executionLane || row.billing_locked_by || null)
-      : status === 'pending' || status === 'completed' || status === 'quarantined' || status === 'failed_retry_exhausted'
-        ? null
-        : row.billing_locked_by || null,
-    billing_lifecycle_state: eventType === 'billing.work_deferred'
-      ? 'deferred'
-      : eventType === 'billing.completed' || eventType === 'billing.processed'
-        ? 'completed'
-        : eventType === 'billing.quarantined'
-          ? 'quarantined'
-          : eventType === 'billing.failed_retry_exhausted' || eventType === 'billing.failed'
-            ? String(status || '').toLowerCase() === 'failed_retry_exhausted' ? 'failed_retry_exhausted' : 'failed'
-            : eventType === 'billing.work_claimed'
-              ? 'claimed'
-              : row.billing_lifecycle_state || null,
+    billing_locked_by: lockedBy || row.billing_locked_by || null,
+    billing_lifecycle_state: explicitBillingLifecycleState || row.billing_lifecycle_state || null,
     billing_operational_state: String(payload.operational_state || '').trim() || row.billing_operational_state || null,
     billing_operational_explanation: payload.operational_explanation || row.billing_operational_explanation || null,
     billing_work_payload: billingWorkPayload,
-    last_updated_at: pickLatestTimestamp(timestamp, row.last_updated_at)
+    billing_status: explicitBillingStatus || row.billing_status,
+    operator_state: explicitOperatorState || row.operator_state,
+    investigation_required: explicitInvestigationRequired ?? row.investigation_required,
+    last_updated_at: pickLatestTimestamp(explicitTimestamp, row.last_updated_at)
   };
-
-  if (eventType === 'billing.completed' || eventType === 'billing.processed') {
-    nextRow.billing_status = status || nextRow.billing_status || 'charged';
-    nextRow.operator_state = 'billing_complete';
-  } else if (eventType === 'billing.quarantined' || eventType === 'billing.failed_retry_exhausted') {
-    nextRow.operator_state = 'investigation_required';
-    nextRow.investigation_required = true;
-  } else if (eventType === 'billing.work_claimed') {
-    nextRow.operator_state = 'billing_processing';
-  }
 
   return nextRow;
 }
@@ -694,6 +674,7 @@ export default function RecoveryPipelineAgent8() {
   const [detailsFinancialEvents, setDetailsFinancialEvents] = useState<FinancialTruthEvent[]>([]);
   const [detailsFinancialLoading, setDetailsFinancialLoading] = useState(false);
   const liveRefreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingDetailsRefreshKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (searchTerm !== urlQuery) {
@@ -761,12 +742,30 @@ export default function RecoveryPipelineAgent8() {
     }
   }, []);
 
+  const loadDetailsFinancialTruth = useCallback(async (row: Row) => {
+    setDetailsFinancialLoading(true);
+    try {
+      const response = await api.getRecoveryFinancialEvents({ caseId: getFinancialKey(row) }, activeSlug);
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Unable to load financial proof.');
+      }
+      const fetchedSummary = (response.data.summaries || [])[0] || getFinancialSummaryForRow(row, financialSummaries);
+      setDetailsFinancialSummary(fetchedSummary || null);
+      setDetailsFinancialEvents(response.data.events || []);
+    } catch {
+      setDetailsFinancialSummary(null);
+      setDetailsFinancialEvents([]);
+    } finally {
+      setDetailsFinancialLoading(false);
+    }
+  }, [activeSlug, financialSummaries]);
+
   const scheduleLiveRefresh = useCallback(() => {
     if (liveRefreshTimeoutRef.current) {
       clearTimeout(liveRefreshTimeoutRef.current);
     }
     liveRefreshTimeoutRef.current = setTimeout(() => {
-      fetchLedger('refresh');
+      void fetchLedger('refresh');
       liveRefreshTimeoutRef.current = null;
     }, 400);
   }, [fetchLedger]);
@@ -801,7 +800,10 @@ export default function RecoveryPipelineAgent8() {
         rows: current.rows.map((row) => mergeFinalityEventRow(row, event))
       };
     });
-    setDetailsRow((currentDetails) => (currentDetails ? mergeFinalityEventRow(currentDetails, event) : currentDetails));
+    if (detailsRow && getFinalityEventMatch(detailsRow, event).matched) {
+      pendingDetailsRefreshKeyRef.current = getLedgerRowKey(detailsRow);
+      setDetailsFinancialLoading(true);
+    }
     scheduleLiveRefresh();
   }, activeSlug);
 
@@ -846,6 +848,33 @@ export default function RecoveryPipelineAgent8() {
     };
   }, [activeSlug, rows]);
 
+  useEffect(() => {
+    if (!detailsOpen || !detailsRow || !ledger?.rows?.length) return;
+    const detailsKey = getLedgerRowKey(detailsRow);
+    const refreshedRow = ledger.rows.find((row) => getLedgerRowKey(row) === detailsKey);
+    if (!refreshedRow || refreshedRow === detailsRow) return;
+    setDetailsRow(refreshedRow);
+  }, [detailsOpen, detailsRow, ledger]);
+
+  useEffect(() => {
+    if (!detailsOpen || !ledger?.rows?.length || !pendingDetailsRefreshKeyRef.current) return;
+    const refreshedRow = ledger.rows.find((row) => getLedgerRowKey(row) === pendingDetailsRefreshKeyRef.current);
+    if (!refreshedRow) {
+      pendingDetailsRefreshKeyRef.current = null;
+      setDetailsFinancialLoading(false);
+      return;
+    }
+    setDetailsRow(refreshedRow);
+    void loadDetailsFinancialTruth(refreshedRow);
+    pendingDetailsRefreshKeyRef.current = null;
+  }, [detailsOpen, ledger, loadDetailsFinancialTruth]);
+
+  useEffect(() => {
+    if (detailsOpen) return;
+    pendingDetailsRefreshKeyRef.current = null;
+    setDetailsFinancialLoading(false);
+  }, [detailsOpen]);
+
   const openProofDocuments = async (row: Row) => {
     try {
       const detailRouteId = getDetailRouteId(row);
@@ -869,20 +898,7 @@ export default function RecoveryPipelineAgent8() {
     setDetailsOpen(true);
     setDetailsFinancialSummary(getFinancialSummaryForRow(row, financialSummaries));
     setDetailsFinancialEvents([]);
-    setDetailsFinancialLoading(true);
-    try {
-      const response = await api.getRecoveryFinancialEvents({ caseId: getFinancialKey(row) }, activeSlug);
-      if (!response.ok || !response.data?.success) {
-        throw new Error(response.error || 'Unable to load financial proof.');
-      }
-      const fetchedSummary = (response.data.summaries || [])[0] || getFinancialSummaryForRow(row, financialSummaries);
-      setDetailsFinancialSummary(fetchedSummary || null);
-      setDetailsFinancialEvents(response.data.events || []);
-    } catch {
-      setDetailsFinancialEvents([]);
-    } finally {
-      setDetailsFinancialLoading(false);
-    }
+    void loadDetailsFinancialTruth(row);
   };
 
   const openEvidencePacket = (row: Row) => {
