@@ -81,13 +81,28 @@ interface UploadDetectionState {
     isSandbox: boolean;
 }
 
+type CsvUploadRunStatus = 'started' | 'detection_processing' | 'completed' | 'partial' | 'failed';
 type CsvRunRecoverySource = 'persisted_run' | 'detection_queue_fallback' | 'detection_results_fallback' | 'last_known_sync_fallback';
+interface CsvRunFileSummary {
+    fileName: string;
+    mimeType?: string;
+    status: 'accepted' | 'ingested' | 'duplicate' | 'failed';
+    csvType?: string;
+    rowsProcessed?: number;
+    rowsInserted?: number;
+    rowsSkipped?: number;
+    rowsFailed?: number;
+    errors?: string[];
+    detectionTriggered?: boolean;
+    detectionJobId?: string;
+}
 
 interface CsvRunDetectionSnapshot {
     status: UploadDetectionState['status'];
     processedAt: string | null;
     errorMessage: string | null;
     resultsTotal: number;
+    isSandbox: boolean;
 }
 
 interface CsvRunRehydrationRecord {
@@ -97,6 +112,15 @@ interface CsvRunRehydrationRecord {
     recoveryNotice: string | null;
     createdAt: string | null;
     updatedAt: string | null;
+    startedAt: string | null;
+    completedAt: string | null;
+    status: CsvUploadRunStatus | null;
+    fileCount: number;
+    filesSummary: CsvRunFileSummary[];
+    detectionTriggered: boolean;
+    detectionJobId?: string;
+    error: string | null;
+    isSandbox: boolean;
     batchResult: BatchResult | null;
     detection: CsvRunDetectionSnapshot | null;
 }
@@ -245,6 +269,30 @@ const formatCsvRecoverySource = (source: CsvRunRecoverySource): string => {
         default:
             return 'CSV refresh recovery';
     }
+};
+
+const getDetectionStatusFromRunRecord = (run: CsvRunRehydrationRecord): UploadDetectionState['status'] => {
+    if (run.detection?.status) {
+        return run.detection.status;
+    }
+
+    if (!run.detectionTriggered) {
+        return null;
+    }
+
+    if (run.status === 'detection_processing' || run.status === 'started') {
+        return 'processing';
+    }
+
+    if (run.status === 'completed' || run.status === 'partial') {
+        return 'completed';
+    }
+
+    if (run.status === 'failed') {
+        return 'failed';
+    }
+
+    return null;
 };
 
 export default function DataUpload() {
@@ -469,17 +517,20 @@ export default function DataUpload() {
                     setBatchResult(latestRun.uploadSummaryAvailable && latestRun.batchResult ? latestRun.batchResult : null);
                     setPreviewResults([]);
                     setPreviewResultsTotal(latestRun.detection?.resultsTotal ?? null);
-                    setPreviewMessage(latestRun.recoveryNotice);
+                    setPreviewMessage(combineBackendMessages(latestRun.error, latestRun.recoveryNotice));
                     setPreviewState({
                         syncId: latestRun.syncId,
-                        status: latestRun.detection?.status || null,
-                        processedAt: latestRun.detection?.processedAt || null,
-                        errorMessage: latestRun.detection?.errorMessage || null,
-                        isSandbox: false,
+                        status: getDetectionStatusFromRunRecord(latestRun),
+                        processedAt: latestRun.detection?.processedAt || latestRun.completedAt || null,
+                        errorMessage: latestRun.detection?.errorMessage || latestRun.error || null,
+                        isSandbox: latestRun.detection?.isSandbox ?? latestRun.isSandbox,
                     });
                     setRehydratedRun(latestRun);
-                    setRehydrationNotice(latestRun.recoveryNotice);
-                    setIsPreviewOpen(Boolean(latestRun.detection && (latestRun.detection.resultsTotal > 0 || latestRun.detection.status)));
+                    setRehydrationNotice(combineBackendMessages(latestRun.recoveryNotice, latestRun.error));
+                    setIsPreviewOpen(Boolean(
+                        (latestRun.detection && (latestRun.detection.resultsTotal > 0 || latestRun.detection.status))
+                        || (latestRun.detectionTriggered && getDetectionStatusFromRunRecord(latestRun))
+                    ));
                     return;
                 }
             } catch (_error) {
@@ -517,6 +568,15 @@ export default function DataUpload() {
                         recoveryNotice: failureNotice,
                         createdAt: null,
                         updatedAt: null,
+                        startedAt: null,
+                        completedAt: null,
+                        status: null,
+                        fileCount: 0,
+                        filesSummary: [],
+                        detectionTriggered: false,
+                        detectionJobId: undefined,
+                        error: failureNotice,
+                        isSandbox: false,
                         batchResult: null,
                         detection: null,
                     });
@@ -542,12 +602,28 @@ export default function DataUpload() {
                     recoveryNotice: fallbackNotice,
                     createdAt: null,
                     updatedAt: null,
+                    startedAt: null,
+                    completedAt: statusTruth?.processed_at ?? statusTruth?.processedAt ?? null,
+                    status: statusTruth?.status === 'failed'
+                        ? 'failed'
+                        : statusTruth?.status === 'pending' || statusTruth?.status === 'processing'
+                            ? 'detection_processing'
+                            : statusTruth?.status === 'completed'
+                                ? 'completed'
+                                : null,
+                    fileCount: 0,
+                    filesSummary: [],
+                    detectionTriggered: Boolean(statusTruth?.status || resultsTotal > 0),
+                    detectionJobId: undefined,
+                    error: statusTruth?.error_message ?? statusTruth?.errorMessage ?? null,
+                    isSandbox: Boolean(statusTruth?.is_sandbox ?? statusTruth?.isSandbox),
                     batchResult: null,
                     detection: {
                         status: statusTruth?.status || null,
                         processedAt: statusTruth?.processed_at ?? statusTruth?.processedAt ?? null,
                         errorMessage: statusTruth?.error_message ?? statusTruth?.errorMessage ?? null,
                         resultsTotal,
+                        isSandbox: Boolean(statusTruth?.is_sandbox ?? statusTruth?.isSandbox),
                     },
                 });
                 setRehydrationNotice(fallbackNotice);
@@ -563,6 +639,15 @@ export default function DataUpload() {
                     recoveryNotice: failureNotice,
                     createdAt: null,
                     updatedAt: null,
+                    startedAt: null,
+                    completedAt: null,
+                    status: null,
+                    fileCount: 0,
+                    filesSummary: [],
+                    detectionTriggered: false,
+                    detectionJobId: undefined,
+                    error: failureNotice,
+                    isSandbox: false,
                     batchResult: null,
                     detection: null,
                 });
@@ -1157,6 +1242,8 @@ export default function DataUpload() {
                                     <p className="text-[10px] text-white/30 mt-2 font-sans tracking-tight">
                                         Sync ID: <span className="text-white/55">{rehydratedRun.syncId}</span>
                                         {' · '}Source: <span className="text-white/55">{formatCsvRecoverySource(rehydratedRun.source)}</span>
+                                        {' · '}Run status: <span className="text-white/55">{rehydratedRun.status || 'unavailable'}</span>
+                                        {' · '}Files: <span className="text-white/55">{rehydratedRun.fileCount}</span>
                                         {previewState.status ? (
                                             <>
                                                 {' · '}Detection state: <span className="text-white/55">{previewState.status}</span>

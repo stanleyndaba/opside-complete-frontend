@@ -453,6 +453,27 @@ export const api = {
         recoveryNotice: string | null;
         createdAt: string | null;
         updatedAt: string | null;
+        startedAt: string | null;
+        completedAt: string | null;
+        status: 'started' | 'detection_processing' | 'completed' | 'partial' | 'failed' | null;
+        fileCount: number;
+        filesSummary: Array<{
+          fileName: string;
+          mimeType?: string;
+          status: 'accepted' | 'ingested' | 'duplicate' | 'failed';
+          csvType?: string;
+          rowsProcessed?: number;
+          rowsInserted?: number;
+          rowsSkipped?: number;
+          rowsFailed?: number;
+          errors?: string[];
+          detectionTriggered?: boolean;
+          detectionJobId?: string;
+        }>;
+        detectionTriggered: boolean;
+        detectionJobId?: string;
+        error: string | null;
+        isSandbox: boolean;
         batchResult: {
           success: boolean;
           userId: string;
@@ -478,6 +499,7 @@ export const api = {
           processedAt: string | null;
           errorMessage: string | null;
           resultsTotal: number;
+          isSandbox: boolean;
         } | null;
       } | null;
     }>(`/api/csv-upload/latest-run?tenantSlug=${encodeURIComponent(tenantSlug)}`);
