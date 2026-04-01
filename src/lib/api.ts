@@ -2080,14 +2080,14 @@ export const api = {
       transactions: Array<{
         id: string;
         recovery_id: string;
-        amount: number;
-        confirmed_recovered_amount: number;
-        platform_fee: number;
-        credit_applied: number;
-        amount_due: number;
-        credit_balance_remaining: number;
-        seller_payout: number;
-        status: string;
+        amount: number | null;
+        confirmed_recovered_amount: number | null;
+        platform_fee: number | null;
+        credit_applied: number | null;
+        amount_due: number | null;
+        credit_balance_remaining: number | null;
+        seller_payout: number | null;
+        status: string | null;
         paypal_invoice_id?: string | null;
         settlement_id?: string | null;
         payout_batch_id?: string | null;
@@ -2109,15 +2109,17 @@ export const api = {
       success: boolean;
       invoices: Array<{
         id: string;
-        period_start: string;
-        period_end: string;
-        total_amount: number;
-        confirmed_recovered_amount: number;
-        platform_fee: number;
-        credit_applied: number;
-        amount_due: number;
-        available_credit_balance: number;
-        status: string;
+        period_start: string | null;
+        period_end: string | null;
+        total_amount: number | null;
+        confirmed_recovered_amount: number | null;
+        platform_fee: number | null;
+        credit_applied: number | null;
+        amount_due: number | null;
+        amount_charged?: number | null;
+        available_credit_balance: number | null;
+        status: string | null;
+        created_at?: string | null;
         paypal_invoice_id?: string | null;
         settlement_id?: string | null;
         payout_batch_id?: string | null;
@@ -2163,15 +2165,15 @@ export const api = {
     return requestJson<{
       success: boolean;
       status: {
-        total_recovered: number;
-        total_fees: number;
-        total_credit_applied: number;
-        total_amount_due: number;
-        pending_billing: number;
-        available_credit_balance: number;
-        last_billing_date?: string;
+        total_recovered: number | null;
+        total_fees: number | null;
+        total_credit_applied: number | null;
+        total_amount_due: number | null;
+        pending_billing: number | null;
+        available_credit_balance: number | null;
+        last_billing_date?: string | null;
         last_payout_date?: string | null;
-        payout_count?: number;
+        payout_count?: number | null;
         current_recovery_cycle_id?: string | null;
         current_recovery_cycle_type?: string | null;
         current_recovery_cycle_started_at?: string | null;

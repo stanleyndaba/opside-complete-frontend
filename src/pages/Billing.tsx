@@ -18,21 +18,18 @@ type BillingRowStatus =
   | 'charged'
   | 'credited'
   | 'failed'
-  | 'refunded'
-  | 'due'
-  | 'overdue'
-  | 'paid';
+  | 'refunded';
 
 interface InvoiceRecord {
   id: string;
-  dateIssued: string;
-  status: BillingRowStatus;
-  totalRecovered: number;
-  commission: number;
-  creditApplied: number;
-  amountDue: number;
-  remainingCreditBalance: number;
-  amountCharged: number;
+  dateIssued: string | null;
+  status: BillingRowStatus | null;
+  totalRecovered: number | null;
+  commission: number | null;
+  creditApplied: number | null;
+  amountDue: number | null;
+  remainingCreditBalance: number | null;
+  amountCharged: number | null;
   recoveryClaimIds?: string[];
   paypalInvoiceId?: string | null;
   settlementId?: string | null;
@@ -42,15 +39,15 @@ interface InvoiceRecord {
 }
 
 interface BillingSummary {
-  totalRecovered: number;
-  totalFees: number;
-  totalCreditApplied: number;
-  totalAmountDue: number;
-  pendingBilling: number;
-  availableCreditBalance: number;
-  lastBillingDate?: string;
+  totalRecovered: number | null;
+  totalFees: number | null;
+  totalCreditApplied: number | null;
+  totalAmountDue: number | null;
+  pendingBilling: number | null;
+  availableCreditBalance: number | null;
+  lastBillingDate?: string | null;
   lastPayoutDate?: string | null;
-  payoutCount?: number;
+  payoutCount?: number | null;
   currentRecoveryCycleId?: string | null;
   currentRecoveryCycleType?: string | null;
   currentRecoveryCycleStartedAt?: string | null;
@@ -59,13 +56,10 @@ interface BillingSummary {
 const statusLabels: Record<BillingRowStatus, string> = {
   pending: 'Pending',
   sent: 'Sent',
-  charged: 'Paid',
+  charged: 'Charged',
   credited: 'Credited',
   failed: 'Failed',
   refunded: 'Refunded',
-  due: 'Due',
-  overdue: 'Overdue',
-  paid: 'Paid',
 };
 
 const statusStyles: Record<BillingRowStatus, string> = {
@@ -75,9 +69,6 @@ const statusStyles: Record<BillingRowStatus, string> = {
   credited: 'border-indigo-500/20 bg-indigo-500/10 text-indigo-300',
   failed: 'border-rose-500/20 bg-rose-500/10 text-rose-300',
   refunded: 'border-stone-500/20 bg-stone-500/10 text-stone-300',
-  due: 'border-amber-500/20 bg-amber-500/10 text-amber-300',
-  overdue: 'border-rose-500/20 bg-rose-500/10 text-rose-300',
-  paid: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
 };
 
 const metricCards = [
@@ -107,24 +98,44 @@ const metricCards = [
   },
 ] as const;
 
-function formatMoney(value: number) {
+const NOT_AVAILABLE = 'Not Available';
+
+function toOptionalNumber(value: unknown): number | null {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Number(parsed) : null;
+}
+
+function toOptionalString(value: unknown): string | null {
+  const normalized = typeof value === 'string' ? value.trim() : String(value || '').trim();
+  return normalized ? normalized : null;
+}
+
+function toBillingRowStatus(status: unknown): BillingRowStatus | null {
+  const normalized = String(status || '').trim().toLowerCase();
+  if (!normalized) return null;
+  if (normalized in statusLabels) return normalized as BillingRowStatus;
+  return null;
+}
+
+function formatMoney(value: number | null | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return NOT_AVAILABLE;
   return `$${value.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 }
 
-function normalizeInvoiceStatus(status: unknown): BillingRowStatus {
-  const normalized = String(status || 'pending').toLowerCase();
-  if (normalized === 'settled') return 'paid';
-  if (normalized in statusLabels) return normalized as BillingRowStatus;
-  return 'pending';
+function formatDate(value: string | null | undefined) {
+  if (!value) return NOT_AVAILABLE;
+  const timestamp = new Date(value);
+  if (Number.isNaN(timestamp.getTime())) return NOT_AVAILABLE;
+  return timestamp.toLocaleDateString();
 }
 
 export default function Billing() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady, tenant } = useTenant();
-  const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || 'beta';
+  const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
   const { toast } = useToast();
 
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
@@ -153,7 +164,7 @@ export default function Billing() {
   }, []);
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !activeSlug) return;
     let cancelled = false;
 
     (async () => {
@@ -175,6 +186,13 @@ export default function Billing() {
 
   useEffect(() => {
     if (!isReady) return;
+    if (!activeSlug) {
+      setInvoices([]);
+      setBillingSummary(null);
+      setLoading(false);
+      setError('Billing tenant context is Not Available.');
+      return;
+    }
     let cancelled = false;
 
     (async () => {
@@ -199,14 +217,14 @@ export default function Billing() {
 
         const mappedInvoices: InvoiceRecord[] = (invoiceRes.data?.invoices || []).map((invoice: any) => ({
           id: String(invoice.id || invoice.invoice_id || ''),
-          dateIssued: String(invoice.period_end || invoice.created_at || new Date().toISOString()).split('T')[0],
-          status: normalizeInvoiceStatus(invoice.status),
-          totalRecovered: Number(invoice.confirmed_recovered_amount || invoice.total_amount || 0),
-          commission: Number(invoice.platform_fee || invoice.commission || 0),
-          creditApplied: Number(invoice.credit_applied || 0),
-          amountDue: Number(invoice.amount_due || 0),
-          remainingCreditBalance: Number(invoice.available_credit_balance || 0),
-          amountCharged: Number(invoice.amount_due || 0),
+          dateIssued: toOptionalString(invoice.created_at),
+          status: toBillingRowStatus(invoice.status),
+          totalRecovered: toOptionalNumber(invoice.confirmed_recovered_amount),
+          commission: toOptionalNumber(invoice.platform_fee),
+          creditApplied: toOptionalNumber(invoice.credit_applied),
+          amountDue: toOptionalNumber(invoice.amount_due),
+          remainingCreditBalance: toOptionalNumber(invoice.available_credit_balance),
+          amountCharged: toOptionalNumber(invoice.amount_charged),
           recoveryClaimIds: invoice.recovery_claim_ids || [],
           paypalInvoiceId: invoice.paypal_invoice_id || null,
           settlementId: invoice.settlement_id || null,
@@ -217,15 +235,15 @@ export default function Billing() {
 
         setInvoices(mappedInvoices);
         setBillingSummary({
-          totalRecovered: Number(statusRes.data?.status?.total_recovered || 0),
-          totalFees: Number(statusRes.data?.status?.total_fees || 0),
-          totalCreditApplied: Number(statusRes.data?.status?.total_credit_applied || 0),
-          totalAmountDue: Number(statusRes.data?.status?.total_amount_due || 0),
-          pendingBilling: Number(statusRes.data?.status?.pending_billing || 0),
-          availableCreditBalance: Number(statusRes.data?.status?.available_credit_balance || 0),
-          lastBillingDate: statusRes.data?.status?.last_billing_date,
+          totalRecovered: toOptionalNumber(statusRes.data?.status?.total_recovered),
+          totalFees: toOptionalNumber(statusRes.data?.status?.total_fees),
+          totalCreditApplied: toOptionalNumber(statusRes.data?.status?.total_credit_applied),
+          totalAmountDue: toOptionalNumber(statusRes.data?.status?.total_amount_due),
+          pendingBilling: toOptionalNumber(statusRes.data?.status?.pending_billing),
+          availableCreditBalance: toOptionalNumber(statusRes.data?.status?.available_credit_balance),
+          lastBillingDate: toOptionalString(statusRes.data?.status?.last_billing_date),
           lastPayoutDate: statusRes.data?.status?.last_payout_date || null,
-          payoutCount: Number(statusRes.data?.status?.payout_count || 0),
+          payoutCount: toOptionalNumber(statusRes.data?.status?.payout_count),
           currentRecoveryCycleId: statusRes.data?.status?.current_recovery_cycle_id || null,
           currentRecoveryCycleType: statusRes.data?.status?.current_recovery_cycle_type || null,
           currentRecoveryCycleStartedAt: statusRes.data?.status?.current_recovery_cycle_started_at || null,
@@ -261,7 +279,7 @@ export default function Billing() {
       setVaultedEmail(finalizeRes.data?.paypalEmail || 'Linked PayPal account');
       toast({
         title: 'Payment method linked',
-        description: 'PayPal can now be used for future platform invoices and prepaid credits.',
+        description: 'PayPal can now be used for future billing records when the backend issues them.',
       });
     } catch (vaultError: any) {
       toast({
@@ -288,7 +306,7 @@ export default function Billing() {
       const matchesSearch =
         !term ||
         invoice.id.toLowerCase().includes(term) ||
-        statusLabels[invoice.status].toLowerCase().includes(term) ||
+        (invoice.status ? statusLabels[invoice.status] : NOT_AVAILABLE).toLowerCase().includes(term) ||
         (invoice.paypalInvoiceId || '').toLowerCase().includes(term);
       const matchesStatus = statusFilter === 'all' || invoice.status === statusFilter;
       return matchesSearch && matchesStatus;
@@ -309,15 +327,15 @@ export default function Billing() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
         <div className="relative container mx-auto px-8 pt-10 pb-20 space-y-10">
           <div className="border-b border-white/10 pb-10">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Recovery Billing // Live State</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">Recovery Billing // Backend Truth</div>
             <div className="mt-4 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
               <div className="space-y-3 max-w-4xl">
                 <h1 className="text-4xl font-sans font-light tracking-tight text-white">Billing &amp; Recoveries</h1>
                 <p className="text-sm font-sans leading-6 text-white/55">
-                  Margin uses software billing tied to verified recovery outcomes. The standard platform fee is 20%, and any $99 prepaid platform credit is applied automatically.
+                  Billing renders backend billing transactions and payout-proof context only. If invoice, payout, or cycle truth is absent, this page shows Not Available instead of inferring a billing state.
                 </p>
                 <p className="text-sm font-sans leading-6 text-white/42">
-                  Amazon pays your seller account directly. Margin issues separate software invoices after recovery verification, and unused prepaid credit carries forward.
+                  Amazon pays your seller account directly. Margin renders separate billing records only when the backend has persisted them.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
@@ -325,25 +343,17 @@ export default function Billing() {
                 Tenant: {activeSlug || 'Unavailable'}
                 </Badge>
                 <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
-                {billingSummary?.lastBillingDate
-                  ? `Last billed ${new Date(billingSummary.lastBillingDate).toLocaleDateString()}`
-                  : 'Billing date unavailable'}
+                Last billed: {formatDate(billingSummary?.lastBillingDate)}
                 </Badge>
-                {billingSummary?.lastPayoutDate ? (
-                  <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
-                    Last payout proof {new Date(billingSummary.lastPayoutDate).toLocaleDateString()}
-                  </Badge>
-                ) : null}
-                {typeof billingSummary?.payoutCount === 'number' ? (
-                  <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
-                    Proof events: {billingSummary.payoutCount}
-                  </Badge>
-                ) : null}
-                {billingSummary?.currentRecoveryCycleType && billingSummary?.currentRecoveryCycleStartedAt ? (
-                  <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
-                    Cycle: {billingSummary.currentRecoveryCycleType} • Started {new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()}
-                  </Badge>
-                ) : null}
+                <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
+                  Last payout proof: {formatDate(billingSummary?.lastPayoutDate)}
+                </Badge>
+                <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
+                  Proof events: {typeof billingSummary?.payoutCount === 'number' ? billingSummary.payoutCount : NOT_AVAILABLE}
+                </Badge>
+                <Badge variant="outline" className="border-white/10 text-white/60 bg-white/5 rounded-none">
+                  Cycle: {billingSummary?.currentRecoveryCycleType || NOT_AVAILABLE} • Started {formatDate(billingSummary?.currentRecoveryCycleStartedAt)}
+                </Badge>
               </div>
             </div>
           </div>
@@ -354,7 +364,7 @@ export default function Billing() {
               <div key={metric.key} className="space-y-2">
                   <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{metric.label}</p>
                   <p className="text-2xl font-sans font-bold text-white tracking-tight tabular-nums">
-                    {billingSummary ? formatMoney(billingSummary[metric.key]) : '—'}
+                    {billingSummary ? formatMoney(billingSummary[metric.key]) : NOT_AVAILABLE}
                   </p>
               </div>
             ))}
@@ -368,26 +378,23 @@ export default function Billing() {
                 <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4">
                   <span className="text-white/40">Recovery cycle ID</span>
                   <span className="text-right text-white/90 font-bold tracking-tight">
-                    {billingSummary?.currentRecoveryCycleId || 'No active recovery cycle'}
+                    {billingSummary?.currentRecoveryCycleId || NOT_AVAILABLE}
                   </span>
                 </div>
                 <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4">
                   <span className="text-white/40">Cycle type</span>
                   <span className="text-right text-white/90 font-bold tracking-tight">
-                    {billingSummary?.currentRecoveryCycleType || 'Not available'}
+                    {billingSummary?.currentRecoveryCycleType || NOT_AVAILABLE}
                   </span>
                 </div>
                 <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4">
                   <span className="text-white/40">Cycle started</span>
                   <span className="text-right text-white/90 font-bold tracking-tight">
-                    {billingSummary?.currentRecoveryCycleStartedAt
-                      ? new Date(billingSummary.currentRecoveryCycleStartedAt).toLocaleDateString()
-                      : 'Not available'}
+                    {formatDate(billingSummary?.currentRecoveryCycleStartedAt)}
                   </span>
                 </div>
                 <p className="pt-2 text-[13px] leading-6 text-white/50">
-                  The prepaid $99 Priority Audit Pass is attached to a recovery cycle. Any unused credit carries forward until it is
-                  applied against future platform fees.
+                  Recovery cycle metadata is shown only when the backend provides it. Missing cycle truth renders as Not Available.
                 </p>
               </div>
             </section>
@@ -398,16 +405,15 @@ export default function Billing() {
                 <div className="space-y-2">
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Current billing method</div>
                   <div className="text-sm font-sans font-bold text-white tracking-tight">
-                    {vaultedEmail || 'No linked PayPal account'}
+                    {vaultedEmail || NOT_AVAILABLE}
                   </div>
                 </div>
                 <div className="text-[13px] font-sans leading-6 text-white/50">
-                  The upfront $99 pass uses PayPal checkout. Later software invoices can use PayPal invoicing or an authorized
-                  PayPal billing method after a recovery has been verified. Amazon reimbursement funds are always paid directly to your seller account.
+                  PayPal billing details are shown only when a linked billing method is present. Amazon reimbursement funds are always paid directly to your seller account.
                 </div>
                 <Button
                   onClick={handleLinkPaymentMethod}
-                  disabled={isVaulting}
+                  disabled={isVaulting || !activeSlug}
                   className="h-10 rounded-none border border-white/10 bg-white text-black hover:bg-white/90 font-sans font-bold text-[10px] uppercase tracking-tight"
                 >
                   {isVaulting ? 'Linking PayPal...' : vaultedEmail ? 'Update PayPal method' : 'Link PayPal method'}
@@ -493,8 +499,7 @@ export default function Billing() {
               <div className="space-y-2">
                 <h2 className="text-xl font-sans font-bold tracking-tight text-white">Billing history</h2>
                 <p className="text-[13px] font-sans leading-6 text-white/50">
-                  One verified recovery event reconciled in Margin creates one billing record. Each row shows confirmed recovered amount, platform fee, credit applied,
-                  amount due, remaining credit balance, and proof-of-payment identifiers from canonical financial events.
+                  Billing history shows backend billing records plus canonical payout-proof identifiers when available. Missing invoice or proof fields render as Not Available.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -569,7 +574,7 @@ export default function Billing() {
                                 <div>
                                   {invoice.settlementId
                                     ? `Recovered via Settlement ${invoice.settlementId}`
-                                    : 'No settlement proof attached yet'}
+                                    : NOT_AVAILABLE}
                                 </div>
                                 {invoice.payoutBatchId ? (
                                   <div>Batch {invoice.payoutBatchId}</div>
@@ -580,15 +585,24 @@ export default function Billing() {
                               </div>
                             </TableCell>
                             <TableCell className="text-[13px] font-sans text-white/65">
-                              {new Date(invoice.dateIssued).toLocaleDateString()}
+                              {formatDate(invoice.dateIssued)}
                             </TableCell>
                             <TableCell>
-                              <Badge
-                                variant="outline"
-                                className={cn('px-3 py-1 text-[11px] font-sans font-bold tracking-tight rounded-none', statusStyles[invoice.status])}
-                              >
-                                {statusLabels[invoice.status]}
-                              </Badge>
+                              {invoice.status ? (
+                                <Badge
+                                  variant="outline"
+                                  className={cn('px-3 py-1 text-[11px] font-sans font-bold tracking-tight rounded-none', statusStyles[invoice.status])}
+                                >
+                                  {statusLabels[invoice.status]}
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  variant="outline"
+                                  className="px-3 py-1 text-[11px] font-sans font-bold tracking-tight rounded-none border-white/10 bg-white/5 text-white/55"
+                                >
+                                  {NOT_AVAILABLE}
+                                </Badge>
+                              )}
                             </TableCell>
                             <TableCell className="text-right text-[13px] font-sans text-white/85">
                               {formatMoney(invoice.totalRecovered)}
@@ -654,28 +668,28 @@ export default function Billing() {
             <Accordion type="single" collapsible className="space-y-0 border-t border-white/10">
               {[
                 {
-                  q: 'What is the $99 payment?',
-                  a: 'The $99 payment is a one-time Priority Audit Pass for a recovery cycle. It is stored as prepaid credit and linked to the recovery cycle in the billing system.',
+                  q: 'What creates a billing record?',
+                  a: 'A billing record appears only when the backend has persisted a billing transaction. If that billing truth is absent, this page shows Not Available.',
                 },
                 {
-                  q: 'When is the platform fee billed?',
-                  a: 'The 20% platform fee is billed only after a payout has been verified and reconciled in Margin. Approved or expected money does not create a billing record by itself.',
+                  q: 'When is a charge eligible?',
+                  a: 'Charge eligibility is determined from backend payout-confirmation truth. Approved, expected, or estimated money does not count as billable truth by itself.',
                 },
                 {
                   q: 'How is credit applied?',
-                  a: 'When a verified recovery creates a billing record, available prepaid credit is applied first. The remaining amount, if any, becomes the amount due.',
+                  a: 'Credit is shown from the backend credit ledger when it is available. Missing credit truth renders as Not Available.',
                 },
                 {
-                  q: 'Can I pay more than 20% total?',
-                  a: 'No. The $99 prepaid pass is platform credit applied toward the standard 20% platform fee, not an additional charge on top of it.',
+                  q: 'What if payout proof is missing?',
+                  a: 'This page fails closed. Missing payout proof, invoice dates, or billing statuses render as Not Available instead of being inferred.',
                 },
                 {
-                  q: 'What happens if my available credit is larger than the fee?',
-                  a: 'The billing record is marked as credited, no extra charge is issued, and the unused balance carries forward to future platform fees.',
+                  q: 'Can approved or estimated amounts create billing?',
+                  a: 'No. Billing should follow backend-confirmed payout truth only. Approved or estimated amounts are not treated as paid money here.',
                 },
                 {
                   q: 'How does PayPal fit into billing?',
-                  a: 'PayPal can be used for prepaid platform credit and later software invoices. Amazon reimbursement funds are paid directly to your seller account and do not flow through Margin.',
+                  a: 'PayPal details are shown only when the backend or linked payment-method state provides them. Amazon reimbursement funds are paid directly to your seller account.',
                 },
               ].map((item, index) => (
                 <AccordionItem key={index} value={`item-${index}`} className="border-b border-white/10">
