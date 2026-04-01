@@ -32,11 +32,6 @@ import {
   formatPayoutProofStatus,
   formatProofStatus,
   formatRequirementList,
-  getManualReviewReason,
-  getMissingRequirements,
-  getPayoutProofStatus,
-  getProofStatus,
-  getQuarantineReason
 } from '@/lib/disputeProof';
 import { ClaimPdfService } from '@/services/ClaimPdfService';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
@@ -277,10 +272,10 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   block_reasons: [],
   last_error: failureReason || null,
   proof_status: null,
-  missing_requirements: [NOT_AVAILABLE],
-  manual_review_reason: NOT_AVAILABLE,
+  missing_requirements: null,
+  manual_review_reason: null,
   payout_proof_status: null,
-  quarantine_reason: failureReason || null,
+  quarantine_reason: null,
   guaranteedAmount: null,
   estimated_claim_value: null,
   requested_amount: null,
@@ -356,15 +351,11 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   billing_status: apiData.billing_status || null,
   block_reasons: Array.isArray(apiData.block_reasons) ? apiData.block_reasons : [],
   last_error: apiData.last_error || null,
-  proof_status: apiData.proof_status || apiData.evidence_attachments?.decision_intelligence?.proof_snapshot?.filingRecommendation || null,
-  missing_requirements: Array.isArray(apiData.missing_requirements)
-    ? apiData.missing_requirements
-    : (Array.isArray(apiData.evidence_attachments?.decision_intelligence?.proof_snapshot?.missingRequirements)
-      ? apiData.evidence_attachments.decision_intelligence.proof_snapshot.missingRequirements
-      : []),
+  proof_status: apiData.proof_status || null,
+  missing_requirements: Array.isArray(apiData.missing_requirements) ? apiData.missing_requirements : null,
   manual_review_reason: apiData.manual_review_reason || null,
   payout_proof_status: apiData.payout_proof_status || null,
-  quarantine_reason: apiData.quarantine_reason || apiData.last_error || null,
+  quarantine_reason: apiData.quarantine_reason || null,
   updated_at: apiData.updated_at || apiData.created_at || apiData.createdDate || null,
   guaranteedAmount: apiData.guaranteedAmount ?? apiData.requested_amount ?? apiData.claim_amount ?? apiData.estimated_claim_value ?? apiData.estimated_value ?? null,
   estimated_claim_value: apiData.estimated_claim_value ?? apiData.estimated_recovery_amount ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null,
@@ -383,10 +374,8 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   unitsLost: apiData.unitsLost ?? apiData.units_lost ?? apiData.evidence?.quantity ?? null,
   units_is_verified: apiData.units_is_verified === true,
   unitCost: apiData.unitCost ?? apiData.unit_cost ?? null,
-  confidence: typeof apiData.confidence_score === 'number'
-    ? apiData.confidence_score * 100
-    : (typeof apiData.confidence === 'number' ? apiData.confidence : null),
-  evidenceStatus: apiData.evidenceStatus || null,
+  confidence: typeof apiData.confidence === 'number' ? apiData.confidence : null,
+  evidenceStatus: apiData.evidenceStatus || apiData.evidence_status || null,
   documents: Array.isArray(apiData.documents) ? apiData.documents : [],
   events: Array.isArray(apiData.events) ? apiData.events : [],
   evidence: apiData.evidence || {},
@@ -799,37 +788,40 @@ export default function CaseDetail() {
     effectiveCase?.truth_unavailable ? NOT_AVAILABLE : toEntityLabel(effectiveCase?.entity_type)
   ), [effectiveCase]);
 
-  const derivedConfidencePct = useMemo<number | null>(() => {
-    if (!effectiveCase || effectiveCase.truth_unavailable) return null;
-    const value = typeof effectiveCase?.confidence === 'number'
-      ? effectiveCase.confidence
-      : (typeof effectiveCase?.confidence_score === 'number' ? effectiveCase.confidence_score * 100 : null);
-    if (value === null) return null;
-    return Math.max(0, Math.min(100, Math.round(value)));
-  }, [effectiveCase, caseId]);
+  const backendTruthCase = hasResolvedBackend ? caseData : null;
+  const backendConfidencePct = useMemo<number | null>(() => {
+    if (!backendTruthCase || backendTruthCase.truth_unavailable) return null;
+    const backendValue = typeof backendTruthCase?.confidence_score === 'number'
+      ? (backendTruthCase.confidence_score > 1 ? backendTruthCase.confidence_score : backendTruthCase.confidence_score * 100)
+      : (typeof backendTruthCase?.confidence === 'number'
+        ? (backendTruthCase.confidence > 1 ? backendTruthCase.confidence : backendTruthCase.confidence * 100)
+        : null);
+    if (backendValue === null) return null;
+    return Math.max(0, Math.min(100, Math.round(backendValue)));
+  }, [backendTruthCase]);
 
-  const derivedEvidence = useMemo(() => {
-    if (effectiveCase?.truth_unavailable) return NOT_AVAILABLE;
-    if (effectiveCase?.evidenceStatus) return effectiveCase.evidenceStatus;
-    if (effectiveCase?.evidence_attachments?.document_id || matchedDocs.length > 0) return 'Available';
-    return NOT_AVAILABLE;
-  }, [effectiveCase, matchedDocs.length]);
+  const backendEvidenceStatus = typeof backendTruthCase?.evidenceStatus === 'string' && backendTruthCase.evidenceStatus.trim()
+    ? backendTruthCase.evidenceStatus
+    : NOT_AVAILABLE;
 
   const matchedCount = effectiveCase?.truth_unavailable
     ? null
     : (matchedDocs.length || (Array.isArray(effectiveCase?.documents) ? effectiveCase.documents.length : 0));
   const resolvedUnitsAffected = effectiveCase?.unitsLost ?? effectiveCase?.units_lost ?? effectiveCase?.quantity ?? effectiveCase?.units ?? null;
-  const estimatedClaimValue = effectiveCase?.estimated_claim_value ?? effectiveCase?.estimated_value ?? null;
-  const requestedAmount = effectiveCase?.requested_amount ?? effectiveCase?.guaranteedAmount ?? effectiveCase?.claim_amount ?? effectiveCase?.amount ?? null;
-  const approvedAmount = effectiveCase?.approved_amount ?? null;
-  const recoveredAmount = effectiveCase?.recovered_amount ?? effectiveCase?.actual_payout_amount ?? null;
-  const billedAmount = effectiveCase?.billed_amount ?? null;
-  const resolvedClaimAmount = requestedAmount ?? estimatedClaimValue ?? null;
-  const resolvedValuePerUnit = typeof resolvedClaimAmount === 'number' &&
-    typeof resolvedUnitsAffected === 'number' &&
-    resolvedUnitsAffected > 0
-    ? resolvedClaimAmount / resolvedUnitsAffected
-    : null;
+  const backendUnitsAffected = typeof backendTruthCase?.unitsLost === 'number'
+    ? backendTruthCase.unitsLost
+    : (typeof backendTruthCase?.units_lost === 'number' ? backendTruthCase.units_lost : null);
+  const estimatedClaimValue = typeof backendTruthCase?.estimated_claim_value === 'number' ? backendTruthCase.estimated_claim_value : null;
+  const requestedAmount = typeof backendTruthCase?.requested_amount === 'number' ? backendTruthCase.requested_amount : null;
+  const approvedAmount = typeof backendTruthCase?.approved_amount === 'number' ? backendTruthCase.approved_amount : null;
+  const recoveredAmount = typeof backendTruthCase?.actual_payout_amount === 'number'
+    ? backendTruthCase.actual_payout_amount
+    : (typeof backendTruthCase?.recovered_amount === 'number' ? backendTruthCase.recovered_amount : null);
+  const billedAmount = typeof backendTruthCase?.billed_amount === 'number' ? backendTruthCase.billed_amount : null;
+  const explicitValuePerUnit = typeof backendTruthCase?.value_per_unit === 'number' ? backendTruthCase.value_per_unit : null;
+  const backendUnitCost = typeof backendTruthCase?.unitCost === 'number'
+    ? backendTruthCase.unitCost
+    : (typeof backendTruthCase?.unit_cost === 'number' ? backendTruthCase.unit_cost : null);
   const resolvedClaimType = effectiveCase?.anomaly_type ? String(effectiveCase.anomaly_type).replace(/_/g, ' ') : NOT_AVAILABLE;
   const resolvedMatchMethod = effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type
     ? String(effectiveCase?.evidence_summary?.match_type || effectiveCase?.evidence_attachments?.match_type || effectiveCase?.match_type).replace(/_/g, ' ')
@@ -838,11 +830,19 @@ export default function CaseDetail() {
   const resolvedStoreName = effectiveCase?.store_name || effectiveCase?.seller_name || null;
   const nextStep = effectiveCase?.next_step_context || null;
   const generatedContext = effectiveCase?.generated_context || null;
-  const proofStatus = getProofStatus(effectiveCase);
-  const missingRequirements = getMissingRequirements(effectiveCase);
-  const manualReviewReason = getManualReviewReason(effectiveCase);
-  const payoutProofStatus = getPayoutProofStatus(effectiveCase);
-  const quarantineReason = getQuarantineReason(effectiveCase);
+  const proofStatus = typeof backendTruthCase?.proof_status === 'string' && backendTruthCase.proof_status.trim()
+    ? backendTruthCase.proof_status
+    : null;
+  const missingRequirements = Array.isArray(backendTruthCase?.missing_requirements) ? backendTruthCase.missing_requirements : null;
+  const manualReviewReason = typeof backendTruthCase?.manual_review_reason === 'string' && backendTruthCase.manual_review_reason.trim()
+    ? backendTruthCase.manual_review_reason
+    : null;
+  const payoutProofStatus = typeof backendTruthCase?.payout_proof_status === 'string' && backendTruthCase.payout_proof_status.trim()
+    ? backendTruthCase.payout_proof_status
+    : null;
+  const quarantineReason = typeof backendTruthCase?.quarantine_reason === 'string' && backendTruthCase.quarantine_reason.trim()
+    ? backendTruthCase.quarantine_reason
+    : null;
   const evidenceEvents = useMemo(() => (Array.isArray(caseData?.events) ? caseData.events.filter(isEvidenceRelatedEvent) : []), [caseData?.events]);
   const rejectionPlaybookReason = useMemo<RejectionReason | null>(() => {
     if (effectiveCase?.truth_unavailable) return null;
@@ -867,9 +867,9 @@ export default function CaseDetail() {
     const currentStatus = String(effectiveCase?.status || '').toLowerCase();
     const recoveryStatus = String(effectiveCase?.recovery_status || '').toLowerCase();
     const billingStatus = String(effectiveCase?.billing_status || '').toLowerCase();
-    const hasEvidence = (matchedCount ?? 0) > 0;
-    const hasSubmission = effectiveCase?.has_submission === true;
-    const hasPayout = effectiveCase?.has_payout === true;
+    const hasEvidence = backendTruthCase?.evidence_summary?.has_documents === true;
+    const hasSubmission = backendTruthCase?.has_submission === true;
+    const hasPayout = backendTruthCase?.has_payout === true;
     return [
       { label: 'Detected', active: Boolean(effectiveCase?.id) },
       { label: 'Evidence', active: hasEvidence },
@@ -878,7 +878,7 @@ export default function CaseDetail() {
       { label: 'Recovered', active: hasPayout || ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
       { label: 'Billed', active: ['pending', 'completed'].includes(billingStatus) }
     ];
-  }, [approvedAmount, effectiveCase?.id, effectiveCase?.status, effectiveCase?.filing_status, effectiveCase?.recovery_status, effectiveCase?.billing_status, matchedCount, recoveredAmount]);
+  }, [approvedAmount, backendTruthCase?.evidence_summary?.has_documents, backendTruthCase?.has_payout, backendTruthCase?.has_submission, effectiveCase?.billing_status, effectiveCase?.id, effectiveCase?.recovery_status, effectiveCase?.status, recoveredAmount]);
 
   useEffect(() => {
     return () => {
@@ -1279,15 +1279,15 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Value Per Unit</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {resolvedValuePerUnit === null
+                            {explicitValuePerUnit === null
                               ? NOT_AVAILABLE
-                              : `$${resolvedValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                              : `$${explicitValuePerUnit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Confidence Score</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {derivedConfidencePct !== null ? `${derivedConfidencePct}%` : NOT_AVAILABLE}
+                            {backendConfidencePct !== null ? `${backendConfidencePct}%` : NOT_AVAILABLE}
                           </dd>
                         </div>
                       </div>
@@ -1334,13 +1334,13 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Proof Status</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {formatProofStatus(proofStatus)}
+                            {proofStatus ? formatProofStatus(proofStatus) : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Payout Proof</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {formatPayoutProofStatus(payoutProofStatus)}
+                            {payoutProofStatus ? formatPayoutProofStatus(payoutProofStatus) : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1366,7 +1366,7 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Missing Requirements</dt>
                           <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
-                            {formatRequirementList(missingRequirements)}
+                            {missingRequirements ? formatRequirementList(missingRequirements) : NOT_AVAILABLE}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1418,7 +1418,7 @@ export default function CaseDetail() {
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Product Match</dt>
-                          <dd className="text-xs font-sans font-bold text-white">{derivedEvidence}</dd>
+                          <dd className="text-xs font-sans font-bold text-white">{backendEvidenceStatus}</dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Order Reference</dt>
@@ -1629,12 +1629,12 @@ export default function CaseDetail() {
                                     month: 'short', day: 'numeric', year: 'numeric'
                                   });
                                 })()
-                              ) : NOT_AVAILABLE
-                            )}
-                            {selectedMetric === 'confidence' && (derivedConfidencePct === null ? NOT_AVAILABLE : `${derivedConfidencePct}%`)}
-                            {selectedMetric === 'units' && (effectiveCase.unitsLost == null ? NOT_AVAILABLE : `${effectiveCase.unitsLost} units`)}
+                            ) : NOT_AVAILABLE
+                          )}
+                            {selectedMetric === 'confidence' && (backendConfidencePct === null ? NOT_AVAILABLE : `${backendConfidencePct}%`)}
+                            {selectedMetric === 'units' && (backendUnitsAffected == null ? NOT_AVAILABLE : `${backendUnitsAffected} units`)}
                             {selectedMetric === 'cost' && (
-                              typeof effectiveCase.unitCost === 'number' ? `$${effectiveCase.unitCost.toFixed(2)}` : NOT_AVAILABLE
+                              typeof backendUnitCost === 'number' ? `$${backendUnitCost.toFixed(2)}` : NOT_AVAILABLE
                             )}
                           </div>
                           <div className="text-[10px] text-white/30 mt-2 font-bold tracking-tight">
