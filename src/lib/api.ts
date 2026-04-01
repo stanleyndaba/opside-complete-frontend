@@ -442,6 +442,46 @@ export const api = {
 
   // Auth endpoints
   getMe: (tenantSlug?: string) => requestJson<any>(`/api/auth/me${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`),
+  getLatestCsvUploadRun: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getLatestCsvUploadRun");
+    return requestJson<{
+      success: boolean;
+      run: {
+        syncId: string;
+        source: 'persisted_run' | 'detection_queue_fallback' | 'detection_results_fallback';
+        uploadSummaryAvailable: boolean;
+        recoveryNotice: string | null;
+        createdAt: string | null;
+        updatedAt: string | null;
+        batchResult: {
+          success: boolean;
+          userId: string;
+          totalFiles: number;
+          results: Array<{
+            success: boolean;
+            csvType: string;
+            fileName: string;
+            rowsProcessed: number;
+            rowsInserted: number;
+            rowsSkipped: number;
+            rowsFailed: number;
+            errors: string[];
+            detectionTriggered: boolean;
+            detectionJobId?: string;
+          }>;
+          detectionTriggered: boolean;
+          detectionJobId?: string;
+          syncId: string;
+        } | null;
+        detection: {
+          status: 'pending' | 'processing' | 'completed' | 'failed' | null;
+          processedAt: string | null;
+          errorMessage: string | null;
+          resultsTotal: number;
+        } | null;
+      } | null;
+    }>(`/api/csv-upload/latest-run?tenantSlug=${encodeURIComponent(tenantSlug)}`);
+  },
   getUserProfile: (tenantSlug?: string) => requestJson<{
     success: boolean;
     user: {

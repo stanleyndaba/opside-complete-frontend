@@ -81,6 +81,26 @@ interface UploadDetectionState {
     isSandbox: boolean;
 }
 
+type CsvRunRecoverySource = 'persisted_run' | 'detection_queue_fallback' | 'detection_results_fallback' | 'last_known_sync_fallback';
+
+interface CsvRunDetectionSnapshot {
+    status: UploadDetectionState['status'];
+    processedAt: string | null;
+    errorMessage: string | null;
+    resultsTotal: number;
+}
+
+interface CsvRunRehydrationRecord {
+    syncId: string;
+    source: CsvRunRecoverySource;
+    uploadSummaryAvailable: boolean;
+    recoveryNotice: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+    batchResult: BatchResult | null;
+    detection: CsvRunDetectionSnapshot | null;
+}
+
 const ANOMALY_LABELS: Record<string, string> = {
     missing_unit: 'Missing Units', overcharge: 'Overcharge', damaged_stock: 'Damaged Stock',
     incorrect_fee: 'Incorrect Fee', duplicate_charge: 'Duplicate Charge',
@@ -212,6 +232,21 @@ const getEmptyDetectionCopy = (
     };
 };
 
+const formatCsvRecoverySource = (source: CsvRunRecoverySource): string => {
+    switch (source) {
+        case 'persisted_run':
+            return 'Persisted CSV run record';
+        case 'detection_queue_fallback':
+            return 'Detection queue fallback';
+        case 'detection_results_fallback':
+            return 'Detection results fallback';
+        case 'last_known_sync_fallback':
+            return 'Last known sync fallback';
+        default:
+            return 'CSV refresh recovery';
+    }
+};
+
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
     const { tenant } = useTenant();
@@ -234,9 +269,12 @@ export default function DataUpload() {
         isSandbox: false,
     });
     const [previewMessage, setPreviewMessage] = useState<string | null>(null);
+    const [rehydrationNotice, setRehydrationNotice] = useState<string | null>(null);
+    const [rehydratedRun, setRehydratedRun] = useState<CsvRunRehydrationRecord | null>(null);
     const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
+    const latestCsvSyncStorageKey = `data_upload:last_csv_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const detectionPollingRef = useRef({ token: 0, syncId: null as string | null });
     const isMountedRef = useRef(true);
 
@@ -410,6 +448,131 @@ export default function DataUpload() {
         },
         [supportedCsvTypes]
     );
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const rehydrateLatestCsvRun = async () => {
+            try {
+                const latestRunRes = await api.getLatestCsvUploadRun(currentTenantSlug);
+                if (cancelled) return;
+
+                const latestRun = latestRunRes?.ok ? latestRunRes.data?.run as CsvRunRehydrationRecord | null | undefined : null;
+                if (latestRun?.syncId) {
+                    try {
+                        localStorage.setItem(latestCsvSyncStorageKey, latestRun.syncId);
+                    } catch (_error) {
+                        // Local fallback is best-effort only.
+                    }
+
+                    setFiles([]);
+                    setBatchResult(latestRun.uploadSummaryAvailable && latestRun.batchResult ? latestRun.batchResult : null);
+                    setPreviewResults([]);
+                    setPreviewResultsTotal(latestRun.detection?.resultsTotal ?? null);
+                    setPreviewMessage(latestRun.recoveryNotice);
+                    setPreviewState({
+                        syncId: latestRun.syncId,
+                        status: latestRun.detection?.status || null,
+                        processedAt: latestRun.detection?.processedAt || null,
+                        errorMessage: latestRun.detection?.errorMessage || null,
+                        isSandbox: false,
+                    });
+                    setRehydratedRun(latestRun);
+                    setRehydrationNotice(latestRun.recoveryNotice);
+                    setIsPreviewOpen(Boolean(latestRun.detection && (latestRun.detection.resultsTotal > 0 || latestRun.detection.status)));
+                    return;
+                }
+            } catch (_error) {
+                // Fall through to the last-known sync fallback below.
+            }
+
+            const lastKnownSyncId = localStorage.getItem(latestCsvSyncStorageKey);
+            if (!lastKnownSyncId || cancelled) {
+                return;
+            }
+
+            try {
+                const [statusRes, resultsRes] = await Promise.all([
+                    detectionApi.getDetectionStatus(lastKnownSyncId, currentTenantSlug),
+                    detectionApi.getDetectionResults({ limit: 500, syncId: lastKnownSyncId }, currentTenantSlug),
+                ]);
+
+                if (cancelled) return;
+
+                const statusTruth = statusRes?.ok && statusRes.data
+                    ? statusRes.data
+                    : (resultsRes?.ok ? resultsRes.data?.meta : null);
+                const results = resultsRes?.ok && Array.isArray(resultsRes.data?.results) ? resultsRes.data.results : [];
+                const resultsTotal = resultsRes?.ok
+                    ? (typeof resultsRes.data?.total === 'number' ? resultsRes.data.total : results.length)
+                    : 0;
+                const hasRecoverableTruth = Boolean(statusTruth?.status || resultsTotal > 0);
+
+                if (!hasRecoverableTruth) {
+                    const failureNotice = 'Refresh recovery is not possible for the last known CSV run because no persisted CSV upload record or persisted detection records were found for it.';
+                    setRehydratedRun({
+                        syncId: lastKnownSyncId,
+                        source: 'last_known_sync_fallback',
+                        uploadSummaryAvailable: false,
+                        recoveryNotice: failureNotice,
+                        createdAt: null,
+                        updatedAt: null,
+                        batchResult: null,
+                        detection: null,
+                    });
+                    setRehydrationNotice(failureNotice);
+                    return;
+                }
+
+                const fallbackNotice = 'Recovered detection truth from the last known CSV sync ID. Per-file upload summary is not persisted for this run and cannot be reconstructed after refresh.';
+                setFiles([]);
+                setBatchResult(null);
+                setPreviewResults(results);
+                setPreviewResultsTotal(resultsTotal);
+                setPreviewMessage(results.length > 0 ? null : fallbackNotice);
+                setPreviewState(toUploadDetectionState(
+                    lastKnownSyncId,
+                    statusTruth,
+                    extractApiFailureMessage(statusRes, fallbackNotice),
+                ));
+                setRehydratedRun({
+                    syncId: lastKnownSyncId,
+                    source: 'last_known_sync_fallback',
+                    uploadSummaryAvailable: false,
+                    recoveryNotice: fallbackNotice,
+                    createdAt: null,
+                    updatedAt: null,
+                    batchResult: null,
+                    detection: {
+                        status: statusTruth?.status || null,
+                        processedAt: statusTruth?.processed_at ?? statusTruth?.processedAt ?? null,
+                        errorMessage: statusTruth?.error_message ?? statusTruth?.errorMessage ?? null,
+                        resultsTotal,
+                    },
+                });
+                setRehydrationNotice(fallbackNotice);
+                setIsPreviewOpen(Boolean(statusTruth?.status || resultsTotal > 0));
+            } catch (_error) {
+                if (cancelled) return;
+
+                const failureNotice = 'Refresh recovery is not possible because the last known CSV sync ID could not be rehydrated from persisted detection truth.';
+                setRehydratedRun({
+                    syncId: lastKnownSyncId,
+                    source: 'last_known_sync_fallback',
+                    uploadSummaryAvailable: false,
+                    recoveryNotice: failureNotice,
+                    createdAt: null,
+                    updatedAt: null,
+                    batchResult: null,
+                    detection: null,
+                });
+                setRehydrationNotice(failureNotice);
+            }
+        };
+
+        rehydrateLatestCsvRun();
+        return () => { cancelled = true; };
+    }, [currentTenantSlug, latestCsvSyncStorageKey]);
 
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
     const isPreviewPartial = previewResults.length > 0 && isDetectionInFlight(previewState.status);
@@ -632,6 +795,8 @@ export default function DataUpload() {
         setPreviewResults([]);
         setPreviewResultsTotal(null);
         setPreviewMessage(null);
+        setRehydrationNotice(null);
+        setRehydratedRun(null);
         setPreviewState({
             syncId: null,
             status: null,
@@ -671,6 +836,13 @@ export default function DataUpload() {
                 throw new Error(reason);
             }
             setBatchResult(result);
+            try {
+                if (result.syncId) {
+                    localStorage.setItem(latestCsvSyncStorageKey, result.syncId);
+                }
+            } catch (_error) {
+                // Local refresh fallback is best-effort only.
+            }
             setPreviewState({
                 syncId: result.syncId || null,
                 status: null,
@@ -750,6 +922,8 @@ export default function DataUpload() {
         setPreviewResults([]);
         setPreviewResultsTotal(null);
         setPreviewMessage(null);
+        setRehydrationNotice(null);
+        setRehydratedRun(null);
         setPreviewState({
             syncId: null,
             status: null,
@@ -964,6 +1138,35 @@ export default function DataUpload() {
                             </Button>
                         )}
                     </motion.div>
+
+                    {rehydratedRun && (!rehydratedRun.uploadSummaryAvailable || rehydrationNotice) && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-6 rounded-xl bg-white/[0.02] border border-white/10 p-4"
+                        >
+                            <div className="flex items-start gap-3">
+                                <Info className="h-4 w-4 text-white/30 mt-0.5 flex-shrink-0" />
+                                <div>
+                                    <p className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                                        Refreshed CSV Run
+                                    </p>
+                                    <p className="text-xs text-white/45 mt-1 leading-relaxed">
+                                        {rehydrationNotice || 'Latest CSV run restored from persisted backend truth.'}
+                                    </p>
+                                    <p className="text-[10px] text-white/30 mt-2 font-sans tracking-tight">
+                                        Sync ID: <span className="text-white/55">{rehydratedRun.syncId}</span>
+                                        {' · '}Source: <span className="text-white/55">{formatCsvRecoverySource(rehydratedRun.source)}</span>
+                                        {previewState.status ? (
+                                            <>
+                                                {' · '}Detection state: <span className="text-white/55">{previewState.status}</span>
+                                            </>
+                                        ) : null}
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
 
                     {/* Results Summary */}
                     {batchResult && (
