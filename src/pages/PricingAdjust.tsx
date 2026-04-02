@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, CreditCard } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -68,67 +68,71 @@ export default function PricingAdjust() {
 
   return (
     <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo midnight>
-      <div className="min-h-screen bg-[#050505] text-white relative flex flex-col items-center pt-32 md:pt-40 lg:pt-48 pb-24 overflow-hidden font-sans">
+      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden font-sans">
         <PublicNavbar />
         <div
-          className="fixed inset-0 pointer-events-none opacity-[0.03] z-[1]"
+          className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
             backgroundImage:
               'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
           }}
         />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="absolute inset-x-0 top-0 h-[32rem] bg-[radial-gradient(circle_at_top,_rgba(251,191,36,0.14),_transparent_42%),radial-gradient(circle_at_20%_20%,_rgba(16,185,129,0.12),_transparent_30%)] pointer-events-none z-[1]" />
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center px-6 lg:px-10">
+        <div className="relative z-10 w-full mx-auto px-6 lg:px-10 pt-32 md:pt-40 lg:pt-44 pb-24">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center mb-14 space-y-6"
+            className="mb-8 flex flex-col gap-6"
           >
-            <div className="flex flex-col items-center gap-4">
-              <Badge variant="outline" className="text-[10px] font-bold uppercase border-white/10 text-white/70 px-5 py-1.5 bg-white/5 backdrop-blur-sm">
-                Margin Pricing
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl border border-white/10 bg-[#111111] p-2">
+                <CreditCard className="h-5 w-5 text-white/80" />
+              </div>
+              <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
+              <Badge variant="outline" className="ml-2 border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+                Flat Subscription
               </Badge>
-              <div className="h-px w-12 bg-white/10" />
             </div>
-
-            <h1 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight max-w-5xl">
-              Keep 100% of every recovery for your first 60 days.
-            </h1>
-            <p className="text-sm md:text-base text-white/45 tracking-tight max-w-3xl mx-auto leading-7">
-              Pay once a month. Start with the plan that fits your seller stage, keep every recovered dollar for the first 60 days,
-              and stay on the same flat monthly price after that.
-            </p>
+            <div className="max-w-4xl space-y-3">
+              <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight">
+                Keep 100% of every recovery for your first 60 days.
+              </h2>
+              <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight">
+                Pay once a month. Start with the plan that fits your seller stage, keep every recovered dollar for the first 60 days,
+                and stay on the same flat monthly price after that.
+              </p>
+            </div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-4xl rounded-[2rem] border border-white/10 bg-white/[0.04] backdrop-blur-md p-8 md:p-10 mb-14"
+            className="mb-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8"
           >
             <div className="flex flex-col gap-4">
-              <div className="text-[10px] font-bold uppercase tracking-[0.24em] text-amber-300/80">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/40">
                 Clear Monthly Billing
               </div>
               {subscriptionPromise.map((line) => (
-                <p key={line} className="text-lg md:text-xl leading-relaxed text-white/88 tracking-tight">
+                <p key={line} className="text-lg md:text-xl leading-relaxed text-white/82 tracking-tight">
                   {line}
                 </p>
               ))}
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-6xl items-stretch">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 items-stretch">
             {pricingTiers.map((tier, index) => {
               const featured = Boolean(tier.featured);
               const baseCard =
-                'relative flex h-full flex-col rounded-[2rem] border p-8 transition-all duration-500 overflow-hidden';
+                'relative flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 overflow-hidden';
               const cardClasses = featured
-                ? `${baseCard} border-emerald-400/30 bg-emerald-500/[0.08] shadow-[0_0_60px_rgba(16,185,129,0.08)]`
-                : `${baseCard} border-white/10 bg-white/[0.03]`;
+                ? `${baseCard} border-white/20 bg-white/[0.04]`
+                : `${baseCard} border-white/10 bg-white/[0.02]`;
 
               return (
                 <motion.div
@@ -138,45 +142,45 @@ export default function PricingAdjust() {
                   transition={{ delay: 0.2 + index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                   className={cardClasses}
                 >
-                  <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.16),_transparent_60%)] pointer-events-none" />
+                  <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)] pointer-events-none" />
 
                   <div className="relative z-10 flex h-full flex-col">
                     <div className="mb-6 flex items-start justify-between gap-4">
                       <div>
-                        <div className="text-[10px] font-bold uppercase tracking-[0.24em] text-white/35">Tier</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Tier</div>
                         <h2 className="mt-3 text-3xl font-bold tracking-tight text-white">{tier.name}</h2>
                       </div>
                       {featured ? (
-                        <Badge variant="outline" className="border-emerald-400/40 bg-emerald-400/10 text-emerald-300 text-[9px] font-bold uppercase tracking-[0.18em]">
+                        <Badge variant="outline" className="border-white/10 bg-white/[0.04] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
                           Most Popular
                         </Badge>
                       ) : null}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                        <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">Monthly</div>
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Monthly</div>
                         <div className="mt-3 text-3xl font-light tracking-tight text-white">{tier.monthlyPrice}</div>
-                        <div className="mt-2 text-[11px] text-white/40">Pay monthly</div>
+                        <div className="mt-2 text-[11px] text-white/35">Pay monthly</div>
                       </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                        <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">Annual</div>
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Annual</div>
                         <div className="mt-3 text-2xl font-light tracking-tight text-white">{tier.annualPrice}</div>
-                        <div className="mt-2 text-[11px] text-emerald-300/80">Save 20%</div>
+                        <div className="mt-2 text-[11px] text-white/50">Save 20%</div>
                       </div>
                     </div>
 
-                    <div className="mb-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                      <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">Best For</div>
-                      <div className="mt-3 text-sm font-medium text-white/85">{tier.bestFor}</div>
+                    <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Best For</div>
+                      <div className="mt-3 text-sm font-medium text-white/80">{tier.bestFor}</div>
                     </div>
 
-                    <div className="mb-8 flex-grow rounded-2xl border border-white/10 bg-black/20 p-5">
-                      <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">Key Features</div>
+                    <div className="mb-8 flex-grow rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Key Features</div>
                       <div className="mt-4 space-y-3">
                         {tier.features.map((feature) => (
-                          <div key={feature} className="flex items-start gap-3 text-sm text-white/82 leading-6">
-                            <Check className={`mt-1 h-4 w-4 shrink-0 ${featured ? 'text-emerald-300' : 'text-white/45'}`} />
+                          <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-white/78">
+                            <Check className="mt-1 h-4 w-4 shrink-0 text-white/45" />
                             <span>{feature}</span>
                           </div>
                         ))}
@@ -188,7 +192,7 @@ export default function PricingAdjust() {
                         <Button
                           asChild
                           variant="outline"
-                          className="h-12 rounded-2xl border-white/15 bg-white text-black hover:bg-white/90 hover:text-black font-bold"
+                          className="h-12 rounded-xl border-white/10 bg-[#141414] text-white hover:bg-[#1b1b1b] hover:text-white font-sans font-medium shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
                         >
                           <a href="mailto:support@margin-finance.com?subject=Enterprise Pricing Inquiry">
                             Talk to Sales
@@ -198,16 +202,14 @@ export default function PricingAdjust() {
                       ) : (
                         <Button
                           onClick={() => handlePlanClick(tier.name === 'Starter' ? 'starter' : 'pro')}
-                          className={`h-12 rounded-2xl font-bold ${
-                            featured ? 'bg-emerald-500 hover:bg-emerald-400 text-white' : 'bg-white hover:bg-white/90 text-black'
-                          }`}
+                          className="h-12 rounded-xl border border-white/10 bg-[#141414] text-white hover:bg-[#1b1b1b] font-sans font-medium shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
                         >
                           Choose {tier.name}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       )}
 
-                      <p className="text-[11px] leading-5 text-white/42">
+                      <p className="text-[11px] leading-5 text-white/38">
                         First 60 days: keep 100% of what we recover. After that: same flat monthly subscription, no commissions.
                       </p>
                     </div>
@@ -217,21 +219,21 @@ export default function PricingAdjust() {
             })}
           </div>
 
-          <section className="w-full max-w-6xl mt-16 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 md:p-10">
+          <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-end">
               <div className="space-y-4">
-                <div className="text-[10px] font-bold uppercase tracking-[0.24em] text-white/35">How Margin Bills</div>
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">How Margin Bills</div>
                 <h3 className="text-2xl md:text-3xl font-light tracking-tight text-white">
                   No commissions, no recovery cuts, no surprise percentage fees.
                 </h3>
-                <p className="text-sm md:text-base leading-7 text-white/55 max-w-3xl">
+                <p className="max-w-3xl text-sm md:text-base leading-7 text-white/45">
                   Margin is now a flat monthly software subscription. You pay once a month, keep 100% of recovered funds for the first 60 days,
                   and continue on the same plan after that. The price does not switch into a commission model later.
                 </p>
               </div>
-              <div className="rounded-[1.5rem] border border-white/10 bg-black/25 p-6">
-                <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/35">Included Across Plans</div>
-                <div className="mt-4 space-y-3 text-sm text-white/78">
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Included Across Plans</div>
+                <div className="mt-4 space-y-3 text-sm text-white/75">
                   <div className="flex items-start gap-3">
                     <Check className="mt-1 h-4 w-4 text-white/45 shrink-0" />
                     <span>Monthly billing with a fixed software price</span>
@@ -250,7 +252,7 @@ export default function PricingAdjust() {
           </section>
         </div>
 
-        <div className="w-full mt-24 relative z-10">
+        <div className="relative z-10 mt-24 w-full">
           <BrandFooter />
         </div>
       </div>
