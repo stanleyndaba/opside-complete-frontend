@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 
@@ -8,8 +8,12 @@ import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/components/ui/use-toast';
+import { useSession } from '@/contexts/SessionContext';
+import { useTenant } from '@/contexts/TenantContext';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
+import { api } from '@/lib/api';
 
 type PricingTier = {
   name: string;
@@ -22,6 +26,7 @@ type PricingTier = {
 };
 
 type BillingView = 'monthly' | 'annual';
+type SelectablePlan = 'starter' | 'pro';
 
 const pricingTiers: PricingTier[] = [
   {
@@ -54,11 +59,18 @@ const pricingTiers: PricingTier[] = [
 export default function PricingAdjust() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const { isAuthReady, authToken } = useSession();
+  const { tenant, isReady: isTenantReady } = useTenant();
   const [selectedBillingView, setSelectedBillingView] = useState<Record<string, BillingView>>({
     Starter: 'monthly',
     Pro: 'monthly',
     Enterprise: 'monthly',
   });
+  const [processingSelectionKey, setProcessingSelectionKey] = useState<string | null>(null);
+  const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
+  const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
 
   usePageMeta({
     title: 'Margin Pricing | Monthly Plans, No Commissions',
@@ -67,10 +79,94 @@ export default function PricingAdjust() {
     url: `${SITE_META.url}/pricing`,
   });
 
-  const handlePlanClick = (plan: 'starter' | 'pro', interval: BillingView) => {
-    const path = tenantSlug ? `/app/${tenantSlug}/pricing/standard-agreement` : '/pricing/standard-agreement';
-    navigate(`${path}?plan=${plan}&interval=${interval}`);
+  const buildPricingReturnPath = (plan: SelectablePlan, interval: BillingView) =>
+    `/app/default/pricing-adjust?plan=${plan}&interval=${interval}`;
+
+  const startSubscribeIntent = async (plan: SelectablePlan, interval: BillingView) => {
+    const selectionKey = `${plan}:${interval}`;
+
+    if (!isAuthReady) {
+      toast({
+        title: 'Checking account access',
+        description: 'Pricing selection is waiting for authenticated workspace context.',
+      });
+      return;
+    }
+
+    if (!authToken) {
+      navigate(`/login?next=${encodeURIComponent(buildPricingReturnPath(plan, interval))}`);
+      return;
+    }
+
+    if (!isTenantReady) {
+      toast({
+        title: 'Loading workspace',
+        description: 'Pricing selection needs a tenant-bound workspace before billing can begin.',
+      });
+      return;
+    }
+
+    if (!activeSlug) {
+      toast({
+        title: 'Workspace Not Available',
+        description: 'Pricing cannot create a billing intent until a workspace is available.',
+        variant: 'destructive',
+      });
+      navigate('/app');
+      return;
+    }
+
+    setProcessingSelectionKey(selectionKey);
+
+    try {
+      const response = await api.createBillingSubscribeIntent({
+        plan_tier: plan,
+        billing_interval: interval,
+      }, activeSlug);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          navigate(`/login?next=${encodeURIComponent(buildPricingReturnPath(plan, interval))}`);
+          return;
+        }
+
+        throw new Error(response.error || 'Unable to create a subscription invoice.');
+      }
+
+      const invoiceId = response.data?.invoice_id || response.data?.invoice?.invoice_id || 'subscription invoice';
+      toast({
+        title: response.data?.intent_status === 'reused' ? 'Billing invoice ready' : 'Subscription invoice created',
+        description: `Plan selection is now bound to ${invoiceId}. Review it from Billing before payment.`,
+      });
+
+      navigate(`/app/${activeSlug}/billing`);
+    } catch (error) {
+      toast({
+        title: 'Unable to start billing',
+        description: error instanceof Error ? error.message : 'Billing entrypoint is Not Available.',
+        variant: 'destructive',
+      });
+    } finally {
+      setProcessingSelectionKey(null);
+    }
   };
+
+  useEffect(() => {
+    const planParam = searchParams.get('plan');
+    const intervalParam = searchParams.get('interval');
+    const plan = planParam === 'starter' || planParam === 'pro' ? planParam : null;
+    const interval = intervalParam === 'monthly' || intervalParam === 'annual' ? intervalParam : null;
+
+    if (!plan || !interval) return;
+    if (!isAuthReady) return;
+    if (authToken && !isTenantReady) return;
+
+    const selectionKey = `${plan}:${interval}`;
+    if (processingSelectionKey === selectionKey || restoredSelectionKey === selectionKey) return;
+
+    setRestoredSelectionKey(selectionKey);
+    void startSubscribeIntent(plan, interval);
+  }, [authToken, isAuthReady, isTenantReady, processingSelectionKey, restoredSelectionKey, searchParams]);
 
   return (
     <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo midnight>
@@ -210,10 +306,13 @@ export default function PricingAdjust() {
                         </Button>
                       ) : (
                         <Button
-                          onClick={() => handlePlanClick(tier.name === 'Starter' ? 'starter' : 'pro', activeBillingView)}
+                          onClick={() => startSubscribeIntent(tier.name === 'Starter' ? 'starter' : 'pro', activeBillingView)}
+                          disabled={processingSelectionKey !== null}
                           className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
                         >
-                          Choose {tier.name}
+                          {processingSelectionKey === `${tier.name === 'Starter' ? 'starter' : 'pro'}:${activeBillingView}`
+                            ? 'Preparing Billing'
+                            : `Choose ${tier.name}`}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       )}

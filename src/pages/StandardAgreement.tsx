@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, ArrowRight, XCircle, CheckCircle2 } from 'lucide-react';
+import { useTenant } from '@/contexts/TenantContext';
+import { Check, ArrowRight } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { BrandFooter } from '@/components/layout/BrandFooter';
@@ -11,18 +12,20 @@ import { BrandFooter } from '@/components/layout/BrandFooter';
 export default function StandardAgreement() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
+  const { tenant } = useTenant();
   const [status, setStatus] = useState<'pending' | 'agreed' | 'disagreed'>('pending');
+  const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
 
   const handleAgree = () => {
     setStatus('agreed');
-    // Navigate to data upload after a short delay
+    // Agreement acknowledgment is informational only. Billing stays on the tenant-scoped billing surface.
     setTimeout(() => {
-      if (tenantSlug) {
-        navigate(`/app/${tenantSlug}/data-upload`);
+      if (activeSlug) {
+        navigate(`/app/${activeSlug}/billing`);
       } else {
-        navigate('/app/default/data-upload');
+        navigate('/pricing');
       }
-    }, 3000);
+    }, 1500);
   };
 
   const handleDisagree = () => {
@@ -69,7 +72,7 @@ export default function StandardAgreement() {
                       Service Agreement
                     </h1>
                     <p className="text-sm md:text-base text-white/40 tracking-tight max-w-md mx-auto">
-                      Review and acknowledge our software pricing terms to proceed with your automated audit.
+                      Review and acknowledge our subscription terms. Payment still happens from the tenant billing page after an invoice exists.
                     </p>
                   </div>
 
@@ -135,7 +138,7 @@ export default function StandardAgreement() {
                   <div className="space-y-3">
                     <h2 className="text-3xl md:text-4xl font-light tracking-tight text-white/95">Agreement Confirmed</h2>
                     <p className="text-sm md:text-base text-white/40 tracking-tight font-sans">
-                      Redirecting you to the Data Upload engine...
+                      Redirecting you to Billing...
                     </p>
                   </div>
                 </div>
