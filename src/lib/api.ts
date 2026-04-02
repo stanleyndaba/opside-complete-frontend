@@ -2079,7 +2079,11 @@ export const api = {
       success: boolean;
       transactions: Array<{
         id: string;
-        recovery_id: string;
+        record_type: 'legacy_recovery_fee';
+        billing_model: 'legacy_recovery_fee';
+        legacy_label: string | null;
+        currency: string | null;
+        recovery_id: string | null;
         amount: number | null;
         confirmed_recovered_amount: number | null;
         platform_fee: number | null;
@@ -2096,6 +2100,8 @@ export const api = {
         created_at: string;
       }>;
       total: number;
+      billing_model: 'flat_subscription';
+      legacy_note?: string;
     }>(`/api/billing/transactions?tenantSlug=${tenantSlug}${query ? `&${query}` : ''}`);
   },
   getBillingInvoices: (params?: { userId?: string; limit?: number }, tenantSlug?: string) => {
@@ -2109,24 +2115,47 @@ export const api = {
       success: boolean;
       invoices: Array<{
         id: string;
+        invoice_id: string;
+        invoice_type: 'subscription_invoice' | 'legacy_recovery_fee_invoice';
+        invoice_model: 'subscription' | 'legacy_recovery_fee';
+        billing_model: 'flat_subscription' | 'legacy_recovery_fee';
+        legacy_label: string | null;
+        plan_tier: string | null;
+        plan_tier_label: string | null;
+        billing_interval: string | null;
+        billing_interval_label: string | null;
+        currency: string | null;
         period_start: string | null;
         period_end: string | null;
         total_amount: number | null;
-        confirmed_recovered_amount: number | null;
-        platform_fee: number | null;
-        credit_applied: number | null;
-        amount_due: number | null;
         amount_charged?: number | null;
-        available_credit_balance: number | null;
         status: string | null;
         created_at?: string | null;
-        paypal_invoice_id?: string | null;
+        due_date?: string | null;
+        promo_type?: string | null;
+        promo_note?: string | null;
+        provider_invoice_id?: string | null;
+        provider_charge_id?: string | null;
+        payment_provider?: 'yoco' | null;
+        payment_link_key?: string | null;
+        payment_link_url?: string | null;
+        summary_label?: string | null;
+        legacy_source_transaction_id?: string | null;
         settlement_id?: string | null;
         payout_batch_id?: string | null;
         reference_ids?: string[];
         event_ids?: string[];
+        current_subscription_plan?: string | null;
       }>;
       total: number;
+      billing_model: 'flat_subscription';
+      subscription?: {
+        id: string;
+        plan_tier: string | null;
+        billing_interval: string | null;
+        subscription_status: string | null;
+        promo_end_at: string | null;
+      } | null;
     }>(`/api/billing/invoices${query ? `?${query}` : ''}`);
   },
   downloadInvoicePdf: async (invoiceId: string, tenantSlug?: string, userId?: string): Promise<void> => {
@@ -2165,18 +2194,37 @@ export const api = {
     return requestJson<{
       success: boolean;
       status: {
-        total_recovered: number | null;
-        total_fees: number | null;
-        total_credit_applied: number | null;
-        total_amount_due: number | null;
-        pending_billing: number | null;
-        available_credit_balance: number | null;
-        last_billing_date?: string | null;
-        last_payout_date?: string | null;
-        payout_count?: number | null;
-        current_recovery_cycle_id?: string | null;
-        current_recovery_cycle_type?: string | null;
-        current_recovery_cycle_started_at?: string | null;
+        billing_model: 'flat_subscription';
+        plan_tier: string | null;
+        plan_tier_label: string | null;
+        billing_interval: string | null;
+        billing_interval_label: string | null;
+        monthly_price: number | null;
+        annual_monthly_equivalent_price: number | null;
+        subscription_amount: number | null;
+        summary_currency: string | null;
+        promo_start_at: string | null;
+        promo_end_at: string | null;
+        promo_type: string | null;
+        promo_note: string | null;
+        promo_active: boolean;
+        subscription_status: string | null;
+        next_billing_date: string | null;
+        current_period_start_at: string | null;
+        current_period_end_at: string | null;
+        billing_provider: string | null;
+        billing_customer_id: string | null;
+        billing_subscription_id: string | null;
+        legacy_recovery_billing_disabled_at: string | null;
+        invoices_total: number;
+        paid_invoice_total: number | null;
+        pending_invoice_total: number | null;
+        paid_invoice_count: number;
+        pending_invoice_count: number;
+        last_invoice_date?: string | null;
+        last_paid_invoice_date?: string | null;
+        legacy_recovery_fee_count: number;
+        legacy_recovery_fee_total: number | null;
       };
     }>(`/api/billing/status?${query}`);
   },

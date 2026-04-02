@@ -1131,7 +1131,7 @@ export default function RecoveryPipelineAgent8() {
                                     ) : (
                                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">No payout proof yet</div>
                                     )}
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Margin billed</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Legacy fee history</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.billed_revenue_amount, row.currency)}</div>
                                   </div>
                                 </td>
@@ -1329,7 +1329,7 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Runtime State', value: detailsRow.billing_operational_state ? formatAutonomyLabel(detailsRow.billing_operational_state) : NOT_AVAILABLE },
                   { label: 'Runtime Explanation', value: formatBackendOperationalExplanation(detailsRow.billing_operational_explanation) },
                   { label: 'Billing Error', value: detailsRow.billing_work_error || NOT_AVAILABLE },
-                  { label: 'Billed Revenue', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
+                  { label: 'Legacy Recovery Fee Amount', value: money(detailsRow.billed_revenue_amount, detailsRow.currency) },
                   { label: 'Currency', value: detailsRow.currency || 'USD' },
                 ]}
               />

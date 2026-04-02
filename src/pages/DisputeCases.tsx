@@ -329,12 +329,12 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
 
   if (financialSummary?.payout_status === 'paid') {
     if (billingStatus === 'credited' || billingStatus === 'completed' || row.billed_amount != null) {
-      strengths.push('Billing reconciled');
+      strengths.push('Legacy fee history present');
     }
     return {
       tone: 'resolved',
       headline: 'Financially confirmed',
-      detail: row.billed_amount != null ? 'Payment is confirmed by financial events and billing has entered reconciliation.' : 'Payment is confirmed by financial events.',
+      detail: row.billed_amount != null ? 'Payment is confirmed by financial events and a historical legacy recovery-fee record exists.' : 'Payment is confirmed by financial events.',
       strengths: strengths.slice(0, 3),
       risks: []
     };
@@ -1489,7 +1489,7 @@ export default function DisputeCases() {
                       <SelectItem value="requested_amount">Requested Amount</SelectItem>
                       <SelectItem value="approved_amount">Approved Amount</SelectItem>
                       <SelectItem value="actual_payout_amount">Legacy Payout Field</SelectItem>
-                      <SelectItem value="billed_amount">Billed Amount</SelectItem>
+                      <SelectItem value="billed_amount">Legacy Billed Amount</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -1848,7 +1848,7 @@ export default function DisputeCases() {
                   { label: 'Approved Amount', value: formatMoney(detailsRow.approved_amount, detailsRow.currency) },
                   { label: 'Paid (Verified)', value: formatMoney(financialSummary?.verified_paid_amount, detailsRow.currency) },
                   { label: 'Record Recovery Field (Legacy)', value: formatMoney(detailsRow.actual_payout_amount, detailsRow.currency) },
-                  { label: 'Billed Amount', value: formatMoney(detailsRow.billed_amount, detailsRow.currency) },
+                  { label: 'Legacy Billed Amount', value: formatMoney(detailsRow.billed_amount, detailsRow.currency) },
                   { label: 'Expected Payout (Estimate)', value: formatMoney(detailsRow.expected_payout_amount, detailsRow.currency) },
                   { label: 'Variance', value: formatMoney(financialSummary?.variance_amount, detailsRow.currency) },
                 ]}

@@ -630,7 +630,7 @@ const Index = () => {
                       </AccordionTrigger>
                       <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                         <p>
-                          Margin uses transparent software pricing. Most sellers start with no upfront platform fee and are billed a 20% software fee only after a verified recovery is posted to their seller account and reconciled in Margin. Amazon pays you directly; Margin invoices separately for platform usage tied to that verified outcome.
+                          Margin uses flat subscription pricing: Starter, Pro, or Enterprise, billed monthly or annually depending on the plan. For the first 60 days you keep 100% of recoveries, then continue on the same subscription price with no commissions or recovery-based charges.
                         </p>
                       </AccordionContent>
                     </AccordionItem>
@@ -661,12 +661,12 @@ const Index = () => {
                       <>
 
                         <AccordionItem value="coexist" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                            What if I already use another reimbursement service?
-                          </AccordionTrigger>
+                        <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
+                          What if I already use another reimbursement service?
+                        </AccordionTrigger>
                             <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                               <p>
-                                No problem. Run Margin alongside your current tool. We&aposs confident our AI Evidence Engine will find opportunities that manual audits missed. You only receive software invoices for verified recovery value newly identified and reconciled through Margin.
+                                No problem. Run Margin alongside your current tool. Our pricing stays flat subscription pricing either way, so recoveries do not trigger extra commissions or percentage-based invoices.
                               </p>
                             </AccordionContent>
                         </AccordionItem>
@@ -676,7 +676,7 @@ const Index = () => {
                           </AccordionTrigger>
                           <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
                             <p>
-                              You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done—no lock-in contracts. We&apos;ll only issue software invoices for verified recoveries generated through Margin activity before your cancellation takes effect.
+                              You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done. We only bill for the subscription period already in effect; cancellation never converts your account into recovery-fee or commission billing.
                             </p>
                           </AccordionContent>
                         </AccordionItem>

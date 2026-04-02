@@ -1275,7 +1275,7 @@ export function Dashboard() {
       detail: estimatedValueTotal > 0
         ? `Current open value is about ${planCoverageMultiple.toFixed(1)}x the monthly plan.`
         : recoveredCashTotal > 0
-          ? 'One verified recovery already covers the monthly plan.'
+          ? 'Recovered value already exceeds one month of Pro pricing.'
           : 'One supportable case can justify the monthly plan.'
     },
     {

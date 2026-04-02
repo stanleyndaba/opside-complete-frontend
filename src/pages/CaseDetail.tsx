@@ -887,7 +887,7 @@ export default function CaseDetail() {
         { label: 'Filed', active: false },
         { label: 'Approved', active: false },
         { label: 'Recovered', active: false },
-        { label: 'Billed', active: false }
+        { label: 'Legacy Billed', active: false }
       ];
     }
     const currentStatus = String(effectiveCase?.status || '').toLowerCase();
@@ -902,7 +902,7 @@ export default function CaseDetail() {
       { label: 'Filed', active: hasSubmission },
       { label: 'Approved', active: ['approved'].includes(currentStatus) || typeof approvedAmount === 'number' },
       { label: 'Recovered', active: hasPayout || ['reconciled', 'discrepancy'].includes(recoveryStatus) || typeof recoveredAmount === 'number' },
-      { label: 'Billed', active: ['pending', 'completed'].includes(billingStatus) }
+      { label: 'Legacy Billed', active: ['pending', 'completed'].includes(billingStatus) }
     ];
   }, [approvedAmount, backendTruthCase?.evidence_summary?.has_documents, backendTruthCase?.has_payout, backendTruthCase?.has_submission, effectiveCase?.billing_status, effectiveCase?.id, effectiveCase?.recovery_status, effectiveCase?.status, recoveredAmount]);
 
@@ -1608,7 +1608,7 @@ export default function CaseDetail() {
                           <span className="font-sans font-bold text-white">{formatCurrencyOrDash(recoveredAmount, effectiveCase?.currency || 'USD')}</span>
                         </div>
                         <div className="flex items-center justify-between text-white/60">
-                          <span>Billed Amount</span>
+                          <span>Legacy Billed Amount</span>
                           <span className="font-sans font-bold text-white">{formatCurrencyOrDash(billedAmount, effectiveCase?.currency || 'USD')}</span>
                         </div>
                       </div>

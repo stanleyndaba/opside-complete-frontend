@@ -95,16 +95,16 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Platform Fee</span> — Margin charges a software fee equal to 20% of verified recoveries reconciled in the platform.
+                  <span className="text-gray-900">Subscription Pricing</span> — Margin uses flat subscription pricing with Starter, Pro, and Enterprise plan tiers. Pricing may be billed monthly or annually depending on the plan interval you choose.
                 </p>
                 <p>
-                  <span className="text-gray-900">Billing Cycle</span> — Platform fees are calculated and invoiced after a reimbursement is verified and credited to your Amazon Seller account.
+                  <span className="text-gray-900">Billing Cycle</span> — Subscription invoices are issued on the selected monthly or annual billing interval. The first 60 days are a promotional period where you keep 100% of recoveries, but the billing model remains flat subscription pricing throughout.
                 </p>
                 <p>
                   <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
                 </p>
                 <p>
-                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for invoiced software fees.
+                  <span className="text-gray-900">Payment Method</span> — You authorize Margin to charge your payment method on file for subscription invoices. Margin does not charge commissions or recovery-based fees.
                 </p>
               </div>
             </section>
@@ -116,13 +116,13 @@ const Terms = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <p>
-                  <span className="text-gray-900">Outcome-Linked Billing</span> — Since platform fees are billed only after verified recovery outcomes, there are no upfront software-fee charges to refund.
+                  <span className="text-gray-900">Subscription Billing</span> — Margin no longer uses outcome-linked or commission billing. Refund requests apply to subscription charges only.
                 </p>
                 <p>
-                  <span className="text-gray-900">Reversals</span> — If Amazon later reverses a reimbursement that you have already paid us for, Margin will provide a service credit equal to the software fee paid for that specific claim.
+                  <span className="text-gray-900">Promo Window</span> — During the first 60 days you keep 100% of recoveries. After that, the same flat subscription pricing continues with no transition into success-fee billing.
                 </p>
                 <p>
-                  <span className="text-gray-900">Disputes</span> — If you believe a software fee was charged in error, contact us within 30 days.
+                  <span className="text-gray-900">Disputes</span> — If you believe a subscription charge was billed in error, contact us within 30 days.
                 </p>
               </div>
             </section>
