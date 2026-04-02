@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, CreditCard } from 'lucide-react';
@@ -14,16 +15,20 @@ type PricingTier = {
   name: string;
   monthlyPrice: string;
   annualPrice: string;
+  annualCheckout: string;
   bestFor: string;
   features: string[];
   featured?: boolean;
 };
+
+type BillingView = 'monthly' | 'annual';
 
 const pricingTiers: PricingTier[] = [
   {
     name: 'Starter',
     monthlyPrice: '$49',
     annualPrice: '$39 / month',
+    annualCheckout: '$468 billed yearly',
     bestFor: 'New & small sellers',
     features: ['Auto-detection', 'Basic dashboard', '5 claims/mo'],
   },
@@ -31,6 +36,7 @@ const pricingTiers: PricingTier[] = [
     name: 'Pro',
     monthlyPrice: '$99',
     annualPrice: '$79 / month',
+    annualCheckout: '$948 billed yearly',
     bestFor: 'Growing mid-size sellers',
     features: ['Unlimited auto-filing', 'Gmail/Drive matching', 'Real-time alerts', 'Priority support'],
     featured: true,
@@ -39,6 +45,7 @@ const pricingTiers: PricingTier[] = [
     name: 'Enterprise',
     monthlyPrice: '$199',
     annualPrice: '$159 / month',
+    annualCheckout: '$1,908 billed yearly',
     bestFor: 'Large sellers & agencies',
     features: ['Everything in Pro', 'API', 'Custom rules', '<1hr support', 'Multi-marketplace'],
   },
@@ -53,6 +60,11 @@ const subscriptionPromise = [
 export default function PricingAdjust() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
+  const [selectedBillingView, setSelectedBillingView] = useState<Record<string, BillingView>>({
+    Starter: 'monthly',
+    Pro: 'monthly',
+    Enterprise: 'monthly',
+  });
 
   usePageMeta({
     title: 'Margin Pricing | Monthly Plans, No Commissions',
@@ -61,9 +73,9 @@ export default function PricingAdjust() {
     url: `${SITE_META.url}/pricing`,
   });
 
-  const handlePlanClick = (plan: 'starter' | 'pro') => {
+  const handlePlanClick = (plan: 'starter' | 'pro', interval: BillingView) => {
     const path = tenantSlug ? `/app/${tenantSlug}/pricing/standard-agreement` : '/pricing/standard-agreement';
-    navigate(`${path}?plan=${plan}`);
+    navigate(`${path}?plan=${plan}&interval=${interval}`);
   };
 
   return (
@@ -128,11 +140,12 @@ export default function PricingAdjust() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 items-stretch">
             {pricingTiers.map((tier, index) => {
               const featured = Boolean(tier.featured);
+              const activeBillingView = selectedBillingView[tier.name] || 'monthly';
               const baseCard =
-                'relative flex h-full flex-col rounded-2xl border p-6 transition-all duration-300 overflow-hidden';
+                'relative flex h-full flex-col rounded-2xl p-6 transition-all duration-300 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.45)]';
               const cardClasses = featured
-                ? `${baseCard} border-white/20 bg-white/[0.04]`
-                : `${baseCard} border-white/10 bg-white/[0.02]`;
+                ? `${baseCard} bg-white/[0.045]`
+                : `${baseCard} bg-white/[0.025]`;
 
               return (
                 <motion.div
@@ -151,31 +164,55 @@ export default function PricingAdjust() {
                         <h2 className="mt-3 text-3xl font-bold tracking-tight text-white">{tier.name}</h2>
                       </div>
                       {featured ? (
-                        <Badge variant="outline" className="border-white/10 bg-white/[0.04] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
+                        <Badge variant="outline" className="border-0 bg-white/[0.06] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
                           Most Popular
                         </Badge>
                       ) : null}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Monthly</div>
-                        <div className="mt-3 text-3xl font-light tracking-tight text-white">{tier.monthlyPrice}</div>
-                        <div className="mt-2 text-[11px] text-white/35">Pay monthly</div>
-                      </div>
-                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Annual</div>
-                        <div className="mt-3 text-2xl font-light tracking-tight text-white">{tier.annualPrice}</div>
-                        <div className="mt-2 text-[11px] text-white/50">Save 20%</div>
+                    <div className="mb-6 rounded-xl bg-black/20 p-1">
+                      <div className="grid grid-cols-2 gap-1">
+                        {(['monthly', 'annual'] as BillingView[]).map((view) => {
+                          const isActive = activeBillingView === view;
+                          return (
+                            <button
+                              key={view}
+                              type="button"
+                              onClick={() => setSelectedBillingView((current) => ({ ...current, [tier.name]: view }))}
+                              className={`rounded-lg px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight transition-all ${
+                                isActive
+                                  ? 'bg-white text-black'
+                                  : 'bg-transparent text-white/35 hover:text-white/70'
+                              }`}
+                            >
+                              {view}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 
-                    <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                    <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                        {activeBillingView === 'monthly' ? 'Monthly' : 'Annual'}
+                      </div>
+                      <div className="mt-3 text-4xl font-light tracking-tight text-white">
+                        {activeBillingView === 'monthly' ? tier.monthlyPrice : tier.annualPrice}
+                      </div>
+                      <div className="mt-2 text-[11px] text-white/45">
+                        {activeBillingView === 'monthly' ? 'Pay monthly' : 'Equivalent monthly rate when billed annually'}
+                      </div>
+                      <div className="mt-1 text-[11px] text-white/32">
+                        {activeBillingView === 'monthly' ? 'Flexible recurring monthly billing' : `${tier.annualCheckout} · Save 20%`}
+                      </div>
+                    </div>
+
+                    <div className="mb-6 rounded-xl bg-white/[0.03] p-4">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Best For</div>
                       <div className="mt-3 text-sm font-medium text-white/80">{tier.bestFor}</div>
                     </div>
 
-                    <div className="mb-8 flex-grow rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                    <div className="mb-8 flex-grow rounded-xl bg-white/[0.03] p-5">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Key Features</div>
                       <div className="mt-4 space-y-3">
                         {tier.features.map((feature) => (
@@ -192,7 +229,7 @@ export default function PricingAdjust() {
                         <Button
                           asChild
                           variant="outline"
-                          className="h-12 rounded-xl border-white/10 bg-[#141414] text-white hover:bg-[#1b1b1b] hover:text-white font-sans font-medium shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
+                          className="h-12 rounded-xl border-white/15 bg-transparent text-white hover:bg-white/[0.04] hover:text-white font-sans font-medium"
                         >
                           <a href="mailto:support@margin-finance.com?subject=Enterprise Pricing Inquiry">
                             Talk to Sales
@@ -201,8 +238,8 @@ export default function PricingAdjust() {
                         </Button>
                       ) : (
                         <Button
-                          onClick={() => handlePlanClick(tier.name === 'Starter' ? 'starter' : 'pro')}
-                          className="h-12 rounded-xl border border-white/10 bg-[#141414] text-white hover:bg-[#1b1b1b] font-sans font-medium shadow-lg shadow-[0_0_20px_rgba(0,0,0,0.25)]"
+                          onClick={() => handlePlanClick(tier.name === 'Starter' ? 'starter' : 'pro', activeBillingView)}
+                          className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
                         >
                           Choose {tier.name}
                           <ArrowRight className="ml-2 h-4 w-4" />
