@@ -25,10 +25,17 @@ interface EvidenceIngestionProps {
 
 interface EvidenceSource {
   id: string;
-  provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+  provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'onedrive' | 'adobe_sign' | 'slack';
   account_email: string;
   status: 'connected' | 'disconnected' | 'error';
-  last_sync_at: string | null;
+  connected: boolean;
+  ingestable: boolean;
+  ingestable_reason: string | null;
+  last_ingested_at: string | null;
+  documents_count: number;
+  parsed_count: number;
+  match_ready_count: number;
+  metadata: Record<string, any>;
 }
 
 export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnected = false }: EvidenceIngestionProps) {
@@ -41,12 +48,18 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     success: boolean;
     totalDocumentsIngested: number;
     totalItemsProcessed: number;
+    documentsInserted: number;
+    sourcesResolved: number;
+    providersAttempted: string[];
     errors: string[];
     results?: {
       gmail?: { documentsIngested: number; emailsProcessed: number };
       outlook?: { documentsIngested: number; emailsProcessed: number };
       gdrive?: { documentsIngested: number; filesProcessed: number };
       dropbox?: { documentsIngested: number; filesProcessed: number };
+      onedrive?: { documentsIngested: number; filesProcessed: number };
+      adobe_sign?: { documentsIngested: number; agreementsProcessed: number };
+      slack?: { documentsIngested: number; messagesProcessed: number };
     };
     message: string;
   } | null>(null);
@@ -56,79 +69,13 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   useEffect(() => {
     const loadSources = async () => {
       try {
-        const [sourcesRes, statusRes] = await Promise.all([
-          api.get<{ success: boolean; sources: EvidenceSource[] }>('/api/evidence/sources'),
-          api.getIntegrationsStatus(tenantSlug || 'beta')
-        ]);
+        if (!tenantSlug) {
+          setSources([]);
+          return;
+        }
 
-        const connectedProviders: EvidenceSource[] = [];
-        const platforms = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
-        const apiSources = sourcesRes.ok && sourcesRes.data?.sources ? sourcesRes.data.sources : [];
-        const statusData = statusRes.ok && statusRes.data ? statusRes.data : null;
-
-        platforms.forEach((p) => {
-          let isConnected = false;
-          let lastSync: string | null = null;
-          
-          try {
-            const statusObj = statusData as any;
-            
-            // Check direct exact match in providerIngest
-            if (statusObj?.providerIngest?.[p]?.connected === true) {
-              isConnected = true;
-              lastSync = statusObj.providerIngest[p].lastIngest || null;
-            }
-            
-            // Check capitalized
-            const capitalized = p.charAt(0).toUpperCase() + p.slice(1);
-            if (!isConnected && statusObj?.providerIngest?.[capitalized]?.connected === true) {
-              isConnected = true;
-              lastSync = statusObj.providerIngest[capitalized].lastIngest || null;
-            }
-            
-            // Check legacy `providers`
-            if (!isConnected && statusObj?.providers?.[p] === true) isConnected = true;
-            if (!isConnected && statusObj?.providers?.[capitalized] === true) isConnected = true;
-            
-            // Handle google_drive vs gdrive mapping
-            if (!isConnected && p === 'gdrive' && statusObj?.providerIngest?.['google_drive']?.connected === true) {
-              isConnected = true;
-              lastSync = statusObj.providerIngest['google_drive'].lastIngest || null;
-            }
-            if (!isConnected && p === 'gdrive' && statusObj?.providers?.['google_drive'] === true) isConnected = true;
-            
-            // Check root field e.g. `gmail_connected`
-            if (!isConnected && statusObj && statusObj[`${p}_connected`] === true) isConnected = true;
-
-            // Lastly check evidence sources array
-            if (!isConnected && apiSources.length > 0) {
-              const matchingSource = apiSources.find((s: any) => {
-                const sLower = s.provider?.toLowerCase() || '';
-                const pLower = p.toLowerCase();
-                return s.status === 'connected' && 
-                       (sLower === pLower || (pLower === 'gdrive' && sLower === 'google_drive'));
-              });
-              if (matchingSource) {
-                isConnected = true;
-                lastSync = matchingSource.last_sync_at || null;
-              }
-            }
-          } catch (e) {
-            console.error("Error checking connection status for", p, e);
-          }
-
-          if (isConnected) {
-            connectedProviders.push({
-              id: `integration-${p}`,
-              provider: p as 'gmail' | 'outlook' | 'gdrive' | 'dropbox',
-              account_email: '',
-              status: 'connected',
-              last_sync_at: lastSync,
-            });
-          }
-        });
-
-        setSources(connectedProviders);
+        const sourcesRes = await api.getEvidenceSources(tenantSlug);
+        setSources(sourcesRes.ok && sourcesRes.data?.sources ? sourcesRes.data.sources : []);
       } catch (error) {
         console.error('Failed to load evidence sources:', error);
       } finally {
@@ -138,7 +85,8 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
     loadSources();
   }, [tenantSlug]);
 
-  const hasConnectedSources = sources.length > 0;
+  const hasConnectedSources = sources.some((source) => source.connected);
+  const hasIngestableSources = sources.some((source) => source.ingestable);
 
   // Listen for SSE events
   useEffect(() => {
@@ -183,13 +131,22 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
   }, [ingesting, tenantSlug, toast]);
 
   const handleIngest = async () => {
-    if (!hasConnectedSources) {
+    if (!tenantSlug) {
       toast({
-        title: 'No Sources Connected',
-        description: 'Please connect at least one source (Gmail, Outlook, Google Drive, or Dropbox) to ingest evidence documents.',
+        title: 'Workspace Required',
+        description: 'A tenant workspace is required before evidence ingestion can start.',
         variant: 'destructive',
       });
-      onLogEvent?.({ type: 'warning', category: 'system', message: 'No evidence sources connected' }, 0);
+      return;
+    }
+
+    if (!hasIngestableSources) {
+      toast({
+        title: 'No Ingestable Sources',
+        description: 'A source may be connected, but the backend could not confirm usable auth for ingestion.',
+        variant: 'destructive',
+      });
+      onLogEvent?.({ type: 'warning', category: 'system', message: 'No ingestable evidence sources were confirmed by the backend' }, 0);
       return;
     }
 
@@ -201,13 +158,16 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
       const res = await api.ingestAllEvidence({
         maxResults: 50,
         autoParse: true,
-      });
+      }, tenantSlug);
 
       if (res.ok && res.data) {
         setResult({
           success: res.data.success,
           totalDocumentsIngested: res.data.totalDocumentsIngested || 0,
           totalItemsProcessed: res.data.totalItemsProcessed || 0,
+          documentsInserted: res.data.documentsInserted || 0,
+          sourcesResolved: res.data.sourcesResolved || 0,
+          providersAttempted: res.data.providersAttempted || [],
           errors: res.data.errors || [],
           results: res.data.results,
           message: res.data.message || `Ingested ${res.data.totalDocumentsIngested || 0} documents from ${res.data.totalItemsProcessed || 0} items.`,
@@ -244,6 +204,9 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           success: false,
           totalDocumentsIngested: 0,
           totalItemsProcessed: 0,
+          documentsInserted: 0,
+          sourcesResolved: 0,
+          providersAttempted: [],
           errors: [res.error || 'Unknown error'],
           message: 'Ingestion failed',
         });
@@ -260,6 +223,9 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         success: false,
         totalDocumentsIngested: 0,
         totalItemsProcessed: 0,
+        documentsInserted: 0,
+        sourcesResolved: 0,
+        providersAttempted: [],
         errors: ['Network error'],
         message: 'Ingestion failed',
       });
@@ -275,6 +241,9 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
       case 'outlook': return 'Outlook';
       case 'gdrive': return 'Google Drive';
       case 'dropbox': return 'Dropbox';
+      case 'onedrive': return 'OneDrive';
+      case 'adobe_sign': return 'Adobe Sign';
+      case 'slack': return 'Slack';
       default: return provider;
     }
   };
@@ -299,9 +268,9 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <div className={cn("h-1.5 w-1.5 rounded-full", hasConnectedSources ? "bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" : "bg-rose-500")} />
+            <div className={cn("h-1.5 w-1.5 rounded-full", hasIngestableSources ? "bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.18)]" : "bg-rose-500")} />
             <span className="text-[9px] font-sans font-bold text-white/40 uppercase tracking-tight">
-              {sources.length} Active sources
+              {sources.filter((source) => source.ingestable).length} Ingestable sources
             </span>
           </div>
         )}
@@ -312,7 +281,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           <div className="flex flex-wrap gap-2">
             {sources.map((source) => (
               <div key={source.id} className="px-2 py-0.5 bg-white/[0.03] border border-white/10 text-[9px] font-sans font-bold text-white/55 uppercase tracking-tight rounded-sm">
-                {getProviderName(source.provider)}
+                {getProviderName(source.provider)}{source.ingestable ? '' : ' · Not Ready'}
               </div>
             ))}
           </div>
@@ -321,7 +290,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
         <div className="relative">
           <Button
             onClick={handleIngest}
-            disabled={ingesting || !hasConnectedSources}
+            disabled={ingesting || !hasIngestableSources}
             className={cn(
               "w-full h-10 px-6 text-[11px] font-sans font-bold uppercase tracking-tight rounded-lg transition-all",
               ingesting
@@ -352,11 +321,11 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
           )}
         </div>
 
-        {!hasConnectedSources && !loadingSources && (
+        {!hasIngestableSources && !loadingSources && (
           <div className="flex items-start gap-3 p-4 bg-rose-500/[0.02] border border-rose-500/10 rounded-lg">
             <AlertCircle className="w-3.5 h-3.5 text-rose-500/40 mt-0.5" />
             <span className="text-[10px] font-sans font-bold text-rose-500/60 uppercase tracking-tight leading-relaxed">
-              Sync Paused: No active data sources identified. Please connect a source to start.
+              Sync Paused: Connected sources are not yet confirmed ingestable by the backend.
             </span>
           </div>
         )}
@@ -372,13 +341,13 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Documents Found</div>
-                  <div className="text-sm font-sans font-bold text-white tracking-tight">{result.totalDocumentsIngested}</div>
+                  <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Documents Inserted</div>
+                  <div className="text-sm font-sans font-bold text-white tracking-tight">{result.documentsInserted}</div>
                 </div>
                 <div className="h-6 w-[1px] bg-white/5" />
                 <div className="text-right">
-                  <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Items Scanned</div>
-                  <div className="text-sm font-sans font-bold text-white tracking-tight">{result.totalItemsProcessed}</div>
+                  <div className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">Sources Resolved</div>
+                  <div className="text-sm font-sans font-bold text-white tracking-tight">{result.sourcesResolved}</div>
                 </div>
               </div>
             </div>
@@ -387,8 +356,19 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
               <div className="grid grid-cols-2 gap-3 pt-3 border-t border-white/5">
                 {Object.entries(result.results).map(([source, data]: [string, any]) => (
                   <div key={source} className="flex flex-col gap-0.5">
-                    <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">{source}</span>
+                    <span className="text-[8px] font-sans font-bold text-white/20 uppercase tracking-tight">{getProviderName(source)}</span>
                     <span className="text-[10px] font-sans font-bold text-white/60 tracking-tight">{data.documentsIngested || 0} docs found</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {result.errors.length > 0 && (
+              <div className="pt-3 border-t border-white/5 space-y-2">
+                <div className="text-[8px] font-sans font-bold text-rose-500/60 uppercase tracking-tight">Error Details</div>
+                {result.errors.slice(0, 3).map((error, index) => (
+                  <div key={`${error}-${index}`} className="text-[10px] font-sans font-bold text-rose-500/75 leading-relaxed tracking-tight">
+                    {error}
                   </div>
                 ))}
               </div>

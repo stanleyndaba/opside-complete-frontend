@@ -1194,12 +1194,19 @@ export const api = {
       success: boolean;
       totalDocumentsIngested: number;
       totalItemsProcessed: number;
+      documentsInserted: number;
+      sourcesResolved: number;
+      providersAttempted: string[];
+      skippedProviders: Array<{ provider: string; reason: string }>;
       errors: string[];
       results: {
         gmail?: { success: boolean; documentsIngested: number; emailsProcessed: number; errors: string[] };
         outlook?: { success: boolean; documentsIngested: number; emailsProcessed: number; errors: string[] };
         gdrive?: { success: boolean; documentsIngested: number; filesProcessed: number; errors: string[] };
         dropbox?: { success: boolean; documentsIngested: number; filesProcessed: number; errors: string[] };
+        onedrive?: { success: boolean; documentsIngested: number; filesProcessed: number; errors: string[] };
+        adobe_sign?: { success: boolean; documentsIngested: number; agreementsProcessed: number; errors: string[] };
+        slack?: { success: boolean; documentsIngested: number; messagesProcessed: number; errors: string[] };
       };
       message: string;
     }>(`/api/evidence/ingest/all${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, {
@@ -1217,9 +1224,14 @@ export const api = {
     if (!tenantSlug) throw new Error("tenantSlug required for getEvidenceStatus");
     return requestJson<{
       hasConnectedSource: boolean;
+      hasIngestableSource: boolean;
       lastIngestion?: string;
       documentsCount: number;
       processingCount: number;
+      parsedCount: number;
+      matchReadyCount: number;
+      sourcesResolved: number;
+      skippedProviders: Array<{ provider: string; reason: string }>;
     }>(`/api/evidence/status?tenantSlug=${tenantSlug}`);
   },
   // Evidence source management
@@ -1231,14 +1243,23 @@ export const api = {
       success: boolean;
       sources: Array<{
         id: string;
-        provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox';
+        provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'onedrive' | 'adobe_sign' | 'slack';
         account_email: string;
         status: 'connected' | 'disconnected' | 'error';
-        last_sync_at: string | null;
-        created_at: string;
+        connected: boolean;
+        ingestable: boolean;
+        ingestable_reason: string | null;
+        last_ingested_at: string | null;
+        created_at: string | null;
+        documents_count: number;
+        parsed_count: number;
+        match_ready_count: number;
         metadata: Record<string, any>;
       }>;
       count: number;
+      connectedCount: number;
+      ingestableCount: number;
+      skippedProviders: Array<{ provider: string; reason: string }>;
     }>(`/api/evidence/sources?tenantSlug=${slug}`);
   },
   getEvidenceSource: (id: string) => requestJson<{
