@@ -28,6 +28,9 @@ type BillingRecordStatus =
 type InvoiceRecord = {
   id: string;
   invoiceId: string;
+  paymentReference: string | null;
+  paymentReferenceStatus: 'available' | 'missing' | 'not_applicable';
+  confirmationRequiresReference: boolean;
   invoiceType: 'subscription_invoice' | 'legacy_recovery_fee_invoice';
   invoiceModel: 'subscription' | 'legacy_recovery_fee';
   billingModel: 'flat_subscription' | 'legacy_recovery_fee';
@@ -198,6 +201,7 @@ function renderBadge(status: BillingRecordStatus | null) {
 function canShowPayAction(record: InvoiceRecord): boolean {
   if (record.invoiceModel !== 'subscription') return false;
   if (!record.paymentLinkUrl) return false;
+  if (record.paymentReferenceStatus !== 'available') return false;
   return ['draft', 'pending', 'scheduled', 'pending_payment_method', 'sent'].includes(record.status || '');
 }
 
@@ -214,6 +218,7 @@ export default function Billing() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | BillingRecordStatus>('all');
   const [confirmingInvoiceId, setConfirmingInvoiceId] = useState<string | null>(null);
+  const [paymentReferenceInputs, setPaymentReferenceInputs] = useState<Record<string, string>>({});
 
   async function loadBillingData(slug: string) {
     const [invoiceRes, statusRes] = await Promise.all([
@@ -227,6 +232,15 @@ export default function Billing() {
     setRecords((invoiceRes.data?.invoices || []).map((invoice) => ({
       id: String(invoice.id || ''),
       invoiceId: String(invoice.invoice_id || invoice.id || ''),
+      paymentReference: toOptionalString(invoice.payment_reference),
+      paymentReferenceStatus: invoice.payment_reference_status || (
+        toOptionalString(invoice.payment_reference)
+          ? 'available'
+          : invoice.invoice_model === 'subscription'
+            ? 'missing'
+            : 'not_applicable'
+      ),
+      confirmationRequiresReference: Boolean(invoice.confirmation_requires_reference),
       invoiceType: invoice.invoice_type,
       invoiceModel: invoice.invoice_model,
       billingModel: invoice.billing_model,
@@ -331,6 +345,7 @@ export default function Billing() {
     return records.filter((record) => {
       const matchesSearch = !term
         || record.invoiceId.toLowerCase().includes(term)
+        || (record.paymentReference || '').toLowerCase().includes(term)
         || (record.summaryLabel || '').toLowerCase().includes(term)
         || (record.paymentLinkKey || '').toLowerCase().includes(term)
         || (record.providerInvoiceId || '').toLowerCase().includes(term)
@@ -343,12 +358,25 @@ export default function Billing() {
 
   async function handleConfirmPayment(record: InvoiceRecord) {
     if (!activeSlug) return;
+    const enteredPaymentReference = (paymentReferenceInputs[record.id] || '').trim();
+
+    if (record.confirmationRequiresReference && !enteredPaymentReference) {
+      toast({
+        title: 'Payment reference required',
+        description: 'Enter the invoice payment reference before confirming payment.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setConfirmingInvoiceId(record.id);
     try {
       const response = await api.confirmBillingInvoicePayment(
         record.invoiceId || record.id,
-        { confirmation_source: 'manual_dashboard' },
+        {
+          confirmation_source: 'manual_dashboard',
+          payment_reference: enteredPaymentReference,
+        },
         activeSlug,
       );
 
@@ -357,6 +385,11 @@ export default function Billing() {
       }
 
       await loadBillingData(activeSlug);
+      setPaymentReferenceInputs((current) => {
+        const next = { ...current };
+        delete next[record.id];
+        return next;
+      });
       toast({
         title: response.data?.already_confirmed ? 'Payment already confirmed' : 'Payment confirmed',
         description: `Invoice ${record.invoiceId || record.id} is now using backend-confirmed paid status.`,
@@ -455,7 +488,7 @@ export default function Billing() {
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by invoice ID, status, or payment link key" className="h-10 min-w-[280px] rounded-none border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans" />
+                <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by invoice ID, payment reference, status, or link key" className="h-10 min-w-[280px] rounded-none border-white/10 bg-white/5 text-sm text-white placeholder:text-white/25 font-sans" />
                 <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as 'all' | BillingRecordStatus)}>
                   <SelectTrigger className="h-10 min-w-[180px] rounded-none border-white/10 bg-white/5 text-white font-sans">
                     <SelectValue placeholder="All statuses" />
@@ -505,6 +538,7 @@ export default function Billing() {
                             <div className="mt-2 space-y-1 text-[11px] text-white/50">
                               <div>Invoice type: {record.invoiceType === 'subscription_invoice' ? 'Subscription Invoice' : 'Legacy Recovery Fee Invoice'}</div>
                               <div>Payment provider: {record.paymentProvider === 'yoco' ? 'YOCO' : NOT_AVAILABLE}</div>
+                              <div>Payment reference: {record.paymentReference || NOT_AVAILABLE}</div>
                               <div>Payment link key: {record.paymentLinkKey || NOT_AVAILABLE}</div>
                               <div>Period: {record.periodStart && record.periodEnd ? `${formatDate(record.periodStart)} - ${formatDate(record.periodEnd)}` : NOT_AVAILABLE}</div>
                               <div>Paid at: {formatDateTime(record.paidAt)}</div>
@@ -524,6 +558,13 @@ export default function Billing() {
                           <TableCell className="text-right text-[13px] font-sans text-white/70">{formatMoney(record.amountCharged, record.currency)}</TableCell>
                           <TableCell className="pr-0 text-right">
                             <div className="flex flex-col items-end gap-2">
+                              {record.invoiceModel === 'subscription' ? (
+                                <div className="max-w-[16rem] text-right text-[11px] font-sans leading-5 text-white/45">
+                                  {record.paymentReferenceStatus === 'available'
+                                    ? 'Use this payment reference when completing your YOCO payment.'
+                                    : NOT_AVAILABLE}
+                                </div>
+                              ) : null}
                               {canShowPayAction(record) ? (
                                 <Button
                                   variant="outline"
@@ -536,20 +577,31 @@ export default function Billing() {
                                 </Button>
                               ) : record.invoiceModel === 'subscription' && record.status === 'paid' ? (
                                 <div className="text-[11px] font-sans text-white/45">Paid</div>
-                              ) : record.invoiceModel === 'subscription' && record.paymentLinkUrl ? (
+                              ) : record.invoiceModel === 'subscription' && record.paymentLinkUrl && record.paymentReferenceStatus === 'available' ? (
                                 <div className="text-[11px] font-sans text-white/45">Not Payable</div>
                               ) : (
                                 <div className="text-[11px] font-sans text-white/45">{record.invoiceModel === 'subscription' ? NOT_AVAILABLE : 'Legacy Record'}</div>
                               )}
                               {record.canConfirmPayment ? (
-                                <Button
-                                  variant="outline"
-                                  disabled={confirmingInvoiceId === record.id}
-                                  className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight disabled:opacity-50"
-                                  onClick={() => void handleConfirmPayment(record)}
-                                >
-                                  {confirmingInvoiceId === record.id ? 'Confirming...' : 'Confirm Payment'}
-                                </Button>
+                                <>
+                                  <Input
+                                    value={paymentReferenceInputs[record.id] || ''}
+                                    onChange={(event) => setPaymentReferenceInputs((current) => ({
+                                      ...current,
+                                      [record.id]: event.target.value,
+                                    }))}
+                                    placeholder="Enter payment reference"
+                                    className="h-9 w-[220px] rounded-none border-white/10 bg-white/5 text-right text-[11px] text-white placeholder:text-white/25 font-sans"
+                                  />
+                                  <Button
+                                    variant="outline"
+                                    disabled={confirmingInvoiceId === record.id || (record.confirmationRequiresReference && !(paymentReferenceInputs[record.id] || '').trim())}
+                                    className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight disabled:opacity-50"
+                                    onClick={() => void handleConfirmPayment(record)}
+                                  >
+                                    {confirmingInvoiceId === record.id ? 'Confirming...' : 'Confirm Payment'}
+                                  </Button>
+                                </>
                               ) : null}
                               <Button
                                 variant="outline"

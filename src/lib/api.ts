@@ -2116,6 +2116,9 @@ export const api = {
       invoices: Array<{
         id: string;
         invoice_id: string;
+        payment_reference?: string | null;
+        payment_reference_status?: 'available' | 'missing' | 'not_applicable';
+        confirmation_requires_reference?: boolean;
         invoice_type: 'subscription_invoice' | 'legacy_recovery_fee_invoice';
         invoice_model: 'subscription' | 'legacy_recovery_fee';
         billing_model: 'flat_subscription' | 'legacy_recovery_fee';
@@ -2187,6 +2190,9 @@ export const api = {
       invoice: {
         id: string;
         invoice_id: string;
+        payment_reference?: string | null;
+        payment_reference_status?: 'available' | 'missing' | 'not_applicable';
+        confirmation_requires_reference?: boolean;
         invoice_type: 'subscription_invoice' | 'legacy_recovery_fee_invoice';
         invoice_model: 'subscription' | 'legacy_recovery_fee';
         billing_model: 'flat_subscription' | 'legacy_recovery_fee';
@@ -2233,6 +2239,7 @@ export const api = {
     payload?: {
       confirmation_source?: 'manual_dashboard' | 'manual_api';
       confirmation_note?: string;
+      payment_reference?: string;
     },
     tenantSlug?: string,
     userId?: string,
@@ -2248,6 +2255,9 @@ export const api = {
       invoice: {
         id: string;
         invoice_id: string;
+        payment_reference?: string | null;
+        payment_reference_status?: 'available' | 'missing' | 'not_applicable';
+        confirmation_requires_reference?: boolean;
         invoice_type: 'subscription_invoice' | 'legacy_recovery_fee_invoice';
         invoice_model: 'subscription' | 'legacy_recovery_fee';
         billing_model: 'flat_subscription' | 'legacy_recovery_fee';
