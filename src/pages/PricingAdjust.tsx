@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check, CreditCard } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -51,12 +51,6 @@ const pricingTiers: PricingTier[] = [
   },
 ];
 
-const subscriptionPromise = [
-  'Pay once a month.',
-  'For the first 60 days you keep 100% of everything we recover.',
-  'After that you continue at the same monthly price - no commissions, no surprises, ever.',
-];
-
 export default function PricingAdjust() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
@@ -97,43 +91,21 @@ export default function PricingAdjust() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-8 flex flex-col gap-6"
+            className="mb-12 flex flex-col items-center text-center"
           >
             <div className="flex items-center gap-3">
-              <div className="rounded-xl border border-white/10 bg-[#111111] p-2">
-                <CreditCard className="h-5 w-5 text-white/80" />
-              </div>
               <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
-              <Badge variant="outline" className="ml-2 border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+              <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
                 Flat Subscription
               </Badge>
             </div>
-            <div className="max-w-4xl space-y-3">
+            <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight">
-                Keep 100% of every recovery for your first 60 days.
+                Flat subscription pricing. No commissions. No surprises.
               </h2>
-              <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight">
-                Pay once a month. Start with the plan that fits your seller stage, keep every recovered dollar for the first 60 days,
-                and stay on the same flat monthly price after that.
+              <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
+                Choose the plan that fits your seller stage. Margin charges one flat subscription price monthly or annually, and for the first 60 days you still keep 100% of every recovery.
               </p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8"
-          >
-            <div className="flex flex-col gap-4">
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/40">
-                Clear Monthly Billing
-              </div>
-              {subscriptionPromise.map((line) => (
-                <p key={line} className="text-lg md:text-xl leading-relaxed text-white/82 tracking-tight">
-                  {line}
-                </p>
-              ))}
             </div>
           </motion.div>
 
@@ -247,7 +219,7 @@ export default function PricingAdjust() {
                       )}
 
                       <p className="text-[11px] leading-5 text-white/38">
-                        First 60 days: keep 100% of what we recover. After that: same flat monthly subscription, no commissions.
+                        Keep 100% of every recovery. We charge a simple monthly subscription - no commissions, ever.
                       </p>
                     </div>
                   </div>
@@ -255,38 +227,6 @@ export default function PricingAdjust() {
               );
             })}
           </div>
-
-          <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
-            <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-end">
-              <div className="space-y-4">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">How Margin Bills</div>
-                <h3 className="text-2xl md:text-3xl font-light tracking-tight text-white">
-                  No commissions, no recovery cuts, no surprise percentage fees.
-                </h3>
-                <p className="max-w-3xl text-sm md:text-base leading-7 text-white/45">
-                  Margin is now a flat monthly software subscription. You pay once a month, keep 100% of recovered funds for the first 60 days,
-                  and continue on the same plan after that. The price does not switch into a commission model later.
-                </p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Included Across Plans</div>
-                <div className="mt-4 space-y-3 text-sm text-white/75">
-                  <div className="flex items-start gap-3">
-                    <Check className="mt-1 h-4 w-4 text-white/45 shrink-0" />
-                    <span>Monthly billing with a fixed software price</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="mt-1 h-4 w-4 text-white/45 shrink-0" />
-                    <span>60-day keep-100% recovery window for every new account</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="mt-1 h-4 w-4 text-white/45 shrink-0" />
-                    <span>No commissions, no per-recovery billing, no surprise overages</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
 
         <div className="relative z-10 mt-24 w-full">
