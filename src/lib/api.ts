@@ -2132,6 +2132,7 @@ export const api = {
         status: string | null;
         created_at?: string | null;
         due_date?: string | null;
+        paid_at?: string | null;
         promo_type?: string | null;
         promo_note?: string | null;
         provider_invoice_id?: string | null;
@@ -2139,6 +2140,10 @@ export const api = {
         payment_provider?: 'yoco' | null;
         payment_link_key?: string | null;
         payment_link_url?: string | null;
+        payment_confirmation_source?: 'manual_dashboard' | 'manual_api' | 'legacy_status_backfill' | null;
+        payment_confirmed_by_user_id?: string | null;
+        payment_confirmation_note?: string | null;
+        can_confirm_payment?: boolean;
         summary_label?: string | null;
         legacy_source_transaction_id?: string | null;
         settlement_id?: string | null;
@@ -2157,6 +2162,67 @@ export const api = {
         promo_end_at: string | null;
       } | null;
     }>(`/api/billing/invoices${query ? `?${query}` : ''}`);
+  },
+  confirmBillingInvoicePayment: (
+    invoiceId: string,
+    payload?: {
+      confirmation_source?: 'manual_dashboard' | 'manual_api';
+      confirmation_note?: string;
+    },
+    tenantSlug?: string,
+    userId?: string,
+  ) => {
+    if (!tenantSlug) throw new Error('tenantSlug required for confirmBillingInvoicePayment');
+    const queryParams = new URLSearchParams();
+    queryParams.append('tenantSlug', tenantSlug);
+    if (userId) queryParams.append('userId', userId);
+    const query = queryParams.toString();
+    return requestJson<{
+      success: boolean;
+      already_confirmed: boolean;
+      invoice: {
+        id: string;
+        invoice_id: string;
+        invoice_type: 'subscription_invoice' | 'legacy_recovery_fee_invoice';
+        invoice_model: 'subscription' | 'legacy_recovery_fee';
+        billing_model: 'flat_subscription' | 'legacy_recovery_fee';
+        legacy_label: string | null;
+        plan_tier: string | null;
+        plan_tier_label: string | null;
+        billing_interval: string | null;
+        billing_interval_label: string | null;
+        currency: string | null;
+        period_start: string | null;
+        period_end: string | null;
+        total_amount: number | null;
+        amount_charged?: number | null;
+        status: string | null;
+        created_at?: string | null;
+        due_date?: string | null;
+        paid_at?: string | null;
+        promo_type?: string | null;
+        promo_note?: string | null;
+        provider_invoice_id?: string | null;
+        provider_charge_id?: string | null;
+        payment_provider?: 'yoco' | null;
+        payment_link_key?: string | null;
+        payment_link_url?: string | null;
+        payment_confirmation_source?: 'manual_dashboard' | 'manual_api' | 'legacy_status_backfill' | null;
+        payment_confirmed_by_user_id?: string | null;
+        payment_confirmation_note?: string | null;
+        can_confirm_payment?: boolean;
+        summary_label?: string | null;
+        legacy_source_transaction_id?: string | null;
+        settlement_id?: string | null;
+        payout_batch_id?: string | null;
+        reference_ids?: string[];
+        event_ids?: string[];
+        current_subscription_plan?: string | null;
+      };
+    }>(`/api/billing/invoices/${encodeURIComponent(invoiceId)}/confirm-payment${query ? `?${query}` : ''}`, {
+      method: 'POST',
+      body: JSON.stringify(payload || {}),
+    });
   },
   downloadInvoicePdf: async (invoiceId: string, tenantSlug?: string, userId?: string): Promise<void> => {
     if (!tenantSlug) throw new Error("tenantSlug required for downloadInvoicePdf");

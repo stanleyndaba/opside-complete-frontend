@@ -42,10 +42,14 @@ type InvoiceRecord = {
   status: BillingRecordStatus | null;
   createdAt: string | null;
   dueDate: string | null;
+  paidAt: string | null;
   promoNote: string | null;
   paymentProvider: 'yoco' | null;
   paymentLinkKey: string | null;
   paymentLinkUrl: string | null;
+  paymentConfirmationSource: 'manual_dashboard' | 'manual_api' | 'legacy_status_backfill' | null;
+  paymentConfirmationNote: string | null;
+  canConfirmPayment: boolean;
   providerInvoiceId: string | null;
   providerChargeId: string | null;
   summaryLabel: string | null;
@@ -155,6 +159,26 @@ function formatDate(value: string | null | undefined): string {
   });
 }
 
+function formatDateTime(value: string | null | undefined): string {
+  if (!value) return NOT_AVAILABLE;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
+  return parsed.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+function formatConfirmationSource(value: InvoiceRecord['paymentConfirmationSource']): string {
+  if (value === 'manual_dashboard') return 'Manual dashboard';
+  if (value === 'manual_api') return 'Manual API';
+  if (value === 'legacy_status_backfill') return 'Legacy backfill';
+  return NOT_AVAILABLE;
+}
+
 function renderBadge(status: BillingRecordStatus | null) {
   if (!status) {
     return (
@@ -189,6 +213,82 @@ export default function Billing() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | BillingRecordStatus>('all');
+  const [confirmingInvoiceId, setConfirmingInvoiceId] = useState<string | null>(null);
+
+  async function loadBillingData(slug: string) {
+    const [invoiceRes, statusRes] = await Promise.all([
+      api.getBillingInvoices({ limit: 100 }, slug),
+      api.getBillingStatus(undefined, slug),
+    ]);
+
+    if (!invoiceRes.ok) throw new Error(invoiceRes.error || 'Failed to load billing records');
+    if (!statusRes.ok) throw new Error(statusRes.error || 'Failed to load billing summary');
+
+    setRecords((invoiceRes.data?.invoices || []).map((invoice) => ({
+      id: String(invoice.id || ''),
+      invoiceId: String(invoice.invoice_id || invoice.id || ''),
+      invoiceType: invoice.invoice_type,
+      invoiceModel: invoice.invoice_model,
+      billingModel: invoice.billing_model,
+      legacyLabel: invoice.legacy_label || null,
+      planTierLabel: invoice.plan_tier_label || null,
+      billingIntervalLabel: invoice.billing_interval_label || null,
+      currency: invoice.currency || null,
+      periodStart: invoice.period_start || null,
+      periodEnd: invoice.period_end || null,
+      totalAmount: toOptionalNumber(invoice.total_amount),
+      amountCharged: toOptionalNumber(invoice.amount_charged),
+      status: toStatus(invoice.status),
+      createdAt: toOptionalString(invoice.created_at),
+      dueDate: toOptionalString(invoice.due_date),
+      paidAt: toOptionalString(invoice.paid_at),
+      promoNote: invoice.promo_note || null,
+      paymentProvider: invoice.payment_provider || null,
+      paymentLinkKey: invoice.payment_link_key || null,
+      paymentLinkUrl: invoice.payment_link_url || null,
+      paymentConfirmationSource: invoice.payment_confirmation_source || null,
+      paymentConfirmationNote: invoice.payment_confirmation_note || null,
+      canConfirmPayment: Boolean(invoice.can_confirm_payment),
+      providerInvoiceId: invoice.provider_invoice_id || null,
+      providerChargeId: invoice.provider_charge_id || null,
+      summaryLabel: invoice.summary_label || null,
+    })));
+
+    const status = statusRes.data?.status;
+    setSummary(status ? {
+      billingModel: 'flat_subscription',
+      planTier: status.plan_tier || null,
+      planTierLabel: status.plan_tier_label || null,
+      billingInterval: status.billing_interval || null,
+      billingIntervalLabel: status.billing_interval_label || null,
+      monthlyPrice: toOptionalNumber(status.monthly_price),
+      annualMonthlyEquivalentPrice: toOptionalNumber(status.annual_monthly_equivalent_price),
+      subscriptionAmount: toOptionalNumber(status.subscription_amount),
+      summaryCurrency: status.summary_currency || null,
+      promoStartAt: status.promo_start_at || null,
+      promoEndAt: status.promo_end_at || null,
+      promoType: status.promo_type || null,
+      promoNote: status.promo_note || null,
+      promoActive: Boolean(status.promo_active),
+      subscriptionStatus: status.subscription_status || null,
+      nextBillingDate: status.next_billing_date || null,
+      currentPeriodStartAt: status.current_period_start_at || null,
+      currentPeriodEndAt: status.current_period_end_at || null,
+      billingProvider: status.billing_provider || null,
+      billingCustomerId: status.billing_customer_id || null,
+      billingSubscriptionId: status.billing_subscription_id || null,
+      legacyRecoveryBillingDisabledAt: status.legacy_recovery_billing_disabled_at || null,
+      invoicesTotal: toOptionalNumber(status.invoices_total),
+      paidInvoiceTotal: toOptionalNumber(status.paid_invoice_total),
+      pendingInvoiceTotal: toOptionalNumber(status.pending_invoice_total),
+      paidInvoiceCount: toOptionalNumber(status.paid_invoice_count),
+      pendingInvoiceCount: toOptionalNumber(status.pending_invoice_count),
+      lastInvoiceDate: status.last_invoice_date || null,
+      lastPaidInvoiceDate: status.last_paid_invoice_date || null,
+      legacyRecoveryFeeCount: toOptionalNumber(status.legacy_recovery_fee_count),
+      legacyRecoveryFeeTotal: toOptionalNumber(status.legacy_recovery_fee_total),
+    } : null);
+  }
 
   useEffect(() => {
     if (!isReady) return;
@@ -207,75 +307,8 @@ export default function Billing() {
       setError(null);
 
       try {
-        const [invoiceRes, statusRes] = await Promise.all([
-          api.getBillingInvoices({ limit: 100 }, activeSlug),
-          api.getBillingStatus(undefined, activeSlug),
-        ]);
-
         if (cancelled) return;
-        if (!invoiceRes.ok) throw new Error(invoiceRes.error || 'Failed to load billing records');
-        if (!statusRes.ok) throw new Error(statusRes.error || 'Failed to load billing summary');
-
-        setRecords((invoiceRes.data?.invoices || []).map((invoice) => ({
-          id: String(invoice.id || ''),
-          invoiceId: String(invoice.invoice_id || invoice.id || ''),
-          invoiceType: invoice.invoice_type,
-          invoiceModel: invoice.invoice_model,
-          billingModel: invoice.billing_model,
-          legacyLabel: invoice.legacy_label || null,
-          planTierLabel: invoice.plan_tier_label || null,
-          billingIntervalLabel: invoice.billing_interval_label || null,
-          currency: invoice.currency || null,
-          periodStart: invoice.period_start || null,
-          periodEnd: invoice.period_end || null,
-          totalAmount: toOptionalNumber(invoice.total_amount),
-          amountCharged: toOptionalNumber(invoice.amount_charged),
-          status: toStatus(invoice.status),
-          createdAt: toOptionalString(invoice.created_at),
-          dueDate: toOptionalString(invoice.due_date),
-          promoNote: invoice.promo_note || null,
-          paymentProvider: invoice.payment_provider || null,
-          paymentLinkKey: invoice.payment_link_key || null,
-          paymentLinkUrl: invoice.payment_link_url || null,
-          providerInvoiceId: invoice.provider_invoice_id || null,
-          providerChargeId: invoice.provider_charge_id || null,
-          summaryLabel: invoice.summary_label || null,
-        })));
-
-        const status = statusRes.data?.status;
-        setSummary(status ? {
-          billingModel: 'flat_subscription',
-          planTier: status.plan_tier || null,
-          planTierLabel: status.plan_tier_label || null,
-          billingInterval: status.billing_interval || null,
-          billingIntervalLabel: status.billing_interval_label || null,
-          monthlyPrice: toOptionalNumber(status.monthly_price),
-          annualMonthlyEquivalentPrice: toOptionalNumber(status.annual_monthly_equivalent_price),
-          subscriptionAmount: toOptionalNumber(status.subscription_amount),
-          summaryCurrency: status.summary_currency || null,
-          promoStartAt: status.promo_start_at || null,
-          promoEndAt: status.promo_end_at || null,
-          promoType: status.promo_type || null,
-          promoNote: status.promo_note || null,
-          promoActive: Boolean(status.promo_active),
-          subscriptionStatus: status.subscription_status || null,
-          nextBillingDate: status.next_billing_date || null,
-          currentPeriodStartAt: status.current_period_start_at || null,
-          currentPeriodEndAt: status.current_period_end_at || null,
-          billingProvider: status.billing_provider || null,
-          billingCustomerId: status.billing_customer_id || null,
-          billingSubscriptionId: status.billing_subscription_id || null,
-          legacyRecoveryBillingDisabledAt: status.legacy_recovery_billing_disabled_at || null,
-          invoicesTotal: toOptionalNumber(status.invoices_total),
-          paidInvoiceTotal: toOptionalNumber(status.paid_invoice_total),
-          pendingInvoiceTotal: toOptionalNumber(status.pending_invoice_total),
-          paidInvoiceCount: toOptionalNumber(status.paid_invoice_count),
-          pendingInvoiceCount: toOptionalNumber(status.pending_invoice_count),
-          lastInvoiceDate: status.last_invoice_date || null,
-          lastPaidInvoiceDate: status.last_paid_invoice_date || null,
-          legacyRecoveryFeeCount: toOptionalNumber(status.legacy_recovery_fee_count),
-          legacyRecoveryFeeTotal: toOptionalNumber(status.legacy_recovery_fee_total),
-        } : null);
+        await loadBillingData(activeSlug);
       } catch (fetchError: unknown) {
         const message = fetchError instanceof Error ? fetchError.message : 'Billing information is Not Available.';
         if (!cancelled) {
@@ -308,6 +341,37 @@ export default function Billing() {
     });
   }, [records, search, statusFilter]);
 
+  async function handleConfirmPayment(record: InvoiceRecord) {
+    if (!activeSlug) return;
+
+    setConfirmingInvoiceId(record.id);
+    try {
+      const response = await api.confirmBillingInvoicePayment(
+        record.invoiceId || record.id,
+        { confirmation_source: 'manual_dashboard' },
+        activeSlug,
+      );
+
+      if (!response.ok) {
+        throw new Error(response.error || 'Unable to confirm payment');
+      }
+
+      await loadBillingData(activeSlug);
+      toast({
+        title: response.data?.already_confirmed ? 'Payment already confirmed' : 'Payment confirmed',
+        description: `Invoice ${record.invoiceId || record.id} is now using backend-confirmed paid status.`,
+      });
+    } catch (confirmError: unknown) {
+      toast({
+        title: 'Unable to confirm payment',
+        description: confirmError instanceof Error ? confirmError.message : 'Payment confirmation is Not Available.',
+        variant: 'destructive',
+      });
+    } finally {
+      setConfirmingInvoiceId(null);
+    }
+  }
+
   return (
     <PageLayout title="Billing" midnight>
       <div className="min-h-screen bg-[#070707] text-white">
@@ -321,7 +385,7 @@ export default function Billing() {
                   Billing now reflects flat subscription truth: plan, interval, invoice state, promo window, YOCO checkout execution, and historical legacy records. Recoveries remain proof of value, but they do not create new charges.
                 </p>
                 <p className="text-sm font-sans leading-6 text-white/42">
-                  If subscription, invoice, payment-link, or provider truth is absent, this page renders {NOT_AVAILABLE} instead of inferring a charge state.
+                  If subscription, invoice, payment-link, provider, or payment-confirmation truth is absent, this page renders {NOT_AVAILABLE} instead of inferring a paid state.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
@@ -376,7 +440,7 @@ export default function Billing() {
                 <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4"><span className="text-white/40">Pending invoice count</span><span className="text-right font-bold text-white/90">{summary?.pendingInvoiceCount ?? NOT_AVAILABLE}</span></div>
                 <div className="flex items-start justify-between gap-6 border-b border-white/10 pb-4"><span className="text-white/40">Paid invoice count</span><span className="text-right font-bold text-white/90">{summary?.paidInvoiceCount ?? NOT_AVAILABLE}</span></div>
                 <p className="pt-2 text-[13px] leading-6 text-white/50">
-                  YOCO is the checkout execution layer. This page does not assume payment confirmation is automatic; invoice status stays backend-owned, and missing payment-link truth renders as {NOT_AVAILABLE}.
+                  YOCO is the checkout execution layer. A checkout click is not payment truth. Invoice status stays backend-owned until an explicit backend confirmation marks the invoice paid, and missing payment-link or confirmation truth renders as {NOT_AVAILABLE}.
                 </p>
               </div>
             </section>
@@ -443,6 +507,9 @@ export default function Billing() {
                               <div>Payment provider: {record.paymentProvider === 'yoco' ? 'YOCO' : NOT_AVAILABLE}</div>
                               <div>Payment link key: {record.paymentLinkKey || NOT_AVAILABLE}</div>
                               <div>Period: {record.periodStart && record.periodEnd ? `${formatDate(record.periodStart)} - ${formatDate(record.periodEnd)}` : NOT_AVAILABLE}</div>
+                              <div>Paid at: {formatDateTime(record.paidAt)}</div>
+                              <div>Confirmation source: {formatConfirmationSource(record.paymentConfirmationSource)}</div>
+                              {record.paymentConfirmationNote ? <div>Confirmation note: {record.paymentConfirmationNote}</div> : null}
                               {record.invoiceModel === 'legacy_recovery_fee' ? <div>Provider invoice: {record.providerInvoiceId || NOT_AVAILABLE}</div> : null}
                               {record.invoiceModel === 'legacy_recovery_fee' ? <div>Provider charge: {record.providerChargeId || NOT_AVAILABLE}</div> : null}
                               {record.promoNote ? <div>{record.promoNote}</div> : null}
@@ -474,6 +541,16 @@ export default function Billing() {
                               ) : (
                                 <div className="text-[11px] font-sans text-white/45">{record.invoiceModel === 'subscription' ? NOT_AVAILABLE : 'Legacy Record'}</div>
                               )}
+                              {record.canConfirmPayment ? (
+                                <Button
+                                  variant="outline"
+                                  disabled={confirmingInvoiceId === record.id}
+                                  className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight disabled:opacity-50"
+                                  onClick={() => void handleConfirmPayment(record)}
+                                >
+                                  {confirmingInvoiceId === record.id ? 'Confirming...' : 'Confirm Payment'}
+                                </Button>
+                              ) : null}
                               <Button
                                 variant="outline"
                                 className="rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 font-sans font-bold text-[10px] uppercase tracking-tight"
@@ -537,7 +614,7 @@ export default function Billing() {
                 },
                 {
                   q: 'Does this page auto-confirm payment after checkout?',
-                  a: 'No automatic settlement is implied here. Invoice status stays backend-owned, and the page does not mark an invoice paid unless the backend later confirms that state.',
+                  a: 'No automatic settlement is implied here. A YOCO link click does not mark an invoice paid. Invoice status stays backend-owned until an explicit backend confirmation marks that invoice paid.',
                 },
               ].map((item, index) => (
                 <AccordionItem key={item.q} value={`item-${index}`} className="border-b border-white/10">
