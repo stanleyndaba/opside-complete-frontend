@@ -81,6 +81,41 @@ interface SidebarHealthState {
   tone: SidebarHealthTone;
 }
 
+function getSidebarPlanMeta(plan: 'free' | 'starter' | 'professional' | 'enterprise' | undefined) {
+  switch (plan) {
+    case 'enterprise':
+      return {
+        label: 'Enterprise',
+        border: 'border-amber-500/20',
+        text: 'text-amber-200/85',
+        background: 'bg-amber-500/10'
+      };
+    case 'professional':
+      return {
+        label: 'Pro',
+        border: 'border-sky-500/20',
+        text: 'text-sky-200/85',
+        background: 'bg-sky-500/10'
+      };
+    case 'starter':
+      return {
+        label: 'Starter',
+        border: 'border-emerald-500/20',
+        text: 'text-emerald-200/85',
+        background: 'bg-emerald-500/10'
+      };
+    case 'free':
+      return {
+        label: 'Free',
+        border: 'border-foreground/10',
+        text: 'text-foreground/45',
+        background: 'bg-foreground/5'
+      };
+    default:
+      return null;
+  }
+}
+
 export function Sidebar({
   isCollapsed,
   onToggle,
@@ -101,6 +136,7 @@ export function Sidebar({
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
+  const planMeta = useMemo(() => getSidebarPlanMeta(tenant?.plan), [tenant?.plan]);
 
   // Referral link helpers
   const referralLink = typeof window !== 'undefined'
@@ -422,6 +458,18 @@ export function Sidebar({
               <span className={cn("text-[8px] font-sans font-bold uppercase tracking-tight", healthStyles.text)}>
                 {healthState.label}
               </span>
+              {planMeta && (
+                <span
+                  className={cn(
+                    "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-sans font-semibold tracking-tight",
+                    planMeta.border,
+                    planMeta.text,
+                    planMeta.background
+                  )}
+                >
+                  {planMeta.label}
+                </span>
+              )}
             </div>
           )}
         </div>
