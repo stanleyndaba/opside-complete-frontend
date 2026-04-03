@@ -876,11 +876,6 @@ export default function Reports() {
     value: detectionStats?.estimatedRecovery ? formatCurrency(detectionStats.estimatedRecovery) : '$0.00',
     note: 'Current estimated value from live detections',
     tone: 'text-white'
-  }, {
-    label: 'Average paid cycle',
-    value: keyMetrics.paidCasesWithDates > 0 ? `${keyMetrics.avgRecoveryTime} days` : 'Not available',
-    note: keyMetrics.paidCasesWithDates > 0 ? 'Measured from paid cases with timestamps' : 'Waiting for paid-case timing data',
-    tone: 'text-white'
   }];
   const panelClass = 'rounded-2xl border border-white/10 bg-[#111111] text-white shadow-none';
   const mutedLabelClass = 'text-xs font-medium text-white/45';
@@ -936,7 +931,7 @@ export default function Reports() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {reportMetrics.map(metric => <Card key={metric.label} className={panelClass}>
             <CardContent className="space-y-3 p-5">
               <p className={mutedLabelClass}>{metric.label}</p>
@@ -946,7 +941,7 @@ export default function Reports() {
           </Card>)}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+      <div className="grid grid-cols-1 gap-6">
         <Card className={panelClass}>
           <CardContent className="space-y-6 p-6">
             <div className="space-y-1">
@@ -962,25 +957,9 @@ export default function Reports() {
             </div>
           </CardContent>
         </Card>
-
-        <Card className={panelClass}>
-          <CardContent className="space-y-6 p-6">
-            <div className="space-y-1">
-              <h3 className="text-base font-semibold text-white">Confidence distribution</h3>
-              <p className="text-sm leading-6 text-white/50">Current spread of confidence buckets from the live detection backend.</p>
-            </div>
-            <div className="h-80 w-full">
-              {confidenceHistogramData.length > 0 ? <Suspense fallback={<ChartSkeleton />}>
-                  <ConfidenceHistogram data={confidenceHistogramData} />
-                </Suspense> : <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-white/10 text-sm text-white/35">
-                  No confidence data is available yet.
-                </div>}
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6">
         <Card className={panelClass}>
           <CardContent className="space-y-6 p-6">
             <div className="space-y-1">
@@ -992,22 +971,6 @@ export default function Reports() {
                   <AnomalyTypeChart data={anomalyTypeChartData} />
                 </Suspense> : <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-white/10 text-sm text-white/35">
                   We could not map category data for this view.
-                </div>}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className={panelClass}>
-          <CardContent className="space-y-6 p-6">
-            <div className="space-y-1">
-              <h3 className="text-base font-semibold text-white">Recovery rates by confidence</h3>
-              <p className="text-sm leading-6 text-white/50">Probability trend from the live confidence distribution feed.</p>
-            </div>
-            <div className="h-80 w-full">
-              {recoveryRatesChartData.length > 0 ? <Suspense fallback={<ChartSkeleton />}>
-                  <RecoveryRatesChart data={recoveryRatesChartData} />
-                </Suspense> : <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-white/10 text-sm text-white/35">
-                  No recovery-rate data is available yet.
                 </div>}
             </div>
           </CardContent>

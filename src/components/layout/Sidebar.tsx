@@ -307,7 +307,7 @@ export function Sidebar({
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') },
-    // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
+    { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
   ];
 
   const secondaryItems: NavItem[] = []; // Moved to "More" menu
@@ -393,7 +393,7 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-start gap-3 w-full px-4 py-3 transition-all duration-300 group rounded-2xl mb-1.5 border",
+          "relative flex items-start gap-2.5 w-full px-4 py-2.5 transition-all duration-300 group rounded-2xl mb-0.5 border",
           isActive
             ? "border-white/10 bg-white/[0.045] text-white shadow-[0_14px_34px_rgba(0,0,0,0.35)]"
             : "border-transparent text-foreground/42 hover:border-white/8 hover:bg-white/[0.02] hover:text-white/88"
@@ -498,8 +498,8 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2" : "px-3"
           )}>
-          <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
-            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
+          <nav className={cn("w-full flex flex-col items-center pt-5 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-2")}>
+            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
               {primaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
               ))}
@@ -612,35 +612,6 @@ export function Sidebar({
                 </div>
                 <span>Updates</span>
               </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigate(tenantRoute(currentTenantSlug, '/reports'))}
-              className={cn(
-                "group/more-item flex items-center justify-between px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
-                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                location.pathname.startsWith(tenantRoute(currentTenantSlug, '/reports')) && "bg-white text-black"
-              )}>
-              <div className="flex items-center gap-3">
-                <BarChart3
-                  className={cn(
-                    "h-4 w-4 transition-colors",
-                    location.pathname.startsWith(tenantRoute(currentTenantSlug, '/reports'))
-                      ? "text-black"
-                      : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
-                  )}
-                  strokeWidth={1.5}
-                />
-                <span>Reports</span>
-              </div>
-              <span className={cn(
-                "text-[8px] px-1.5 py-0.5 rounded font-sans font-bold tracking-tight border",
-                location.pathname.startsWith(tenantRoute(currentTenantSlug, '/reports'))
-                  ? "border-black/15 bg-black/10 text-black/75"
-                  : "border-white/10 bg-white/[0.03] text-white/45 group-data-[highlighted]/more-item:border-black/10 group-data-[highlighted]/more-item:bg-black/10 group-data-[highlighted]/more-item:text-black/70"
-              )}>
-                LIVE
-              </span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
