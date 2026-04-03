@@ -7,6 +7,7 @@ import { ArrowRight, Clock, ShieldCheck } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { CookieConsent } from '@/components/landing/CookieConsent';
+import { RecoveryEngineVisualization } from '@/components/landing/RecoveryEngineVisualization';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
@@ -183,14 +184,23 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-y border-white/8 py-5">
-          <div className={`${containerClass} overflow-x-auto`}>
-            <div className="flex min-w-max items-center gap-8 text-sm text-white/56 md:gap-12 md:text-base">
-              {trustStatements.map((item) => (
-                <div key={item} className="whitespace-nowrap">
-                  {item}
-                </div>
-              ))}
+        <section className="relative border-y border-white/8 py-16 md:py-20">
+          <div className={containerClass}>
+            <div className="grid gap-8 md:grid-cols-[minmax(0,280px)_minmax(0,1fr)] md:gap-12">
+              <div className="max-w-[260px]">
+                <div className={eyebrowClass}>Why sellers trust Margin</div>
+                <p className="mt-3 text-base leading-7 text-white/52">
+                  The system should reduce risk, reduce manual follow-up, and make the work visible.
+                </p>
+              </div>
+
+              <div className="grid gap-x-8 gap-y-5 border-t border-white/8 pt-5 sm:grid-cols-2 md:border-t-0 md:pt-0">
+                {trustStatements.map((item) => (
+                  <div key={item} className="text-base leading-7 text-white/72">
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -243,6 +253,8 @@ export default function Index() {
                 </div>
               ))}
             </div>
+
+            <RecoveryEngineVisualization />
           </div>
         </section>
 
