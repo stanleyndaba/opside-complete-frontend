@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Cloud, Database, FileText, Mail, Package, Truck } from 'lucide-react';
 
 type NodeKind = 'input' | 'stage' | 'output' | 'source';
 
@@ -10,6 +9,8 @@ interface SceneNode {
   x: number;
   y: number;
   kind: NodeKind;
+  iconSrc?: string;
+  iconAlt?: string;
 }
 
 interface SceneRoute {
@@ -26,6 +27,16 @@ const stageLabels = [
   'Submitted',
   'Reconciled'
 ];
+
+const amazonNode: SceneNode = {
+  id: 'amazon',
+  label: 'Amazon',
+  x: 0.05,
+  y: 0.52,
+  kind: 'input',
+  iconSrc: '/AMZN.png',
+  iconAlt: 'Amazon'
+};
 
 const inputNodes: SceneNode[] = [
   { id: 'inventory', label: 'FBA Inventory', x: 0.09, y: 0.18, kind: 'input' },
@@ -51,18 +62,29 @@ const outputNodes: SceneNode[] = [
   { id: 'recovered', label: 'Recovered $', x: 0.93, y: 0.82, kind: 'output' }
 ];
 
-const evidenceSourceNodes: Array<SceneNode & { icon: typeof FileText }> = [
-  { id: 'invoice-source', label: 'Invoices', shortLabel: 'Invoices', x: 0.47, y: 0.3, kind: 'source', icon: FileText },
-  { id: 'mail-source', label: 'Email', shortLabel: 'Email', x: 0.4, y: 0.41, kind: 'source', icon: Mail },
-  { id: 'drive-source', label: 'Drive', shortLabel: 'Drive', x: 0.4, y: 0.63, kind: 'source', icon: Cloud },
-  { id: 'shipment-source', label: 'Shipment Docs', shortLabel: 'Shipment', x: 0.47, y: 0.74, kind: 'source', icon: Truck },
-  { id: 'ledger-source', label: 'Ledger', shortLabel: 'Ledger', x: 0.59, y: 0.3, kind: 'source', icon: Database },
-  { id: 'returns-source', label: 'Returns', shortLabel: 'Returns', x: 0.59, y: 0.74, kind: 'source', icon: Package }
+const evidenceSourceNodes: SceneNode[] = [
+  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.47, y: 0.3, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
+  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.4, y: 0.41, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook' },
+  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.4, y: 0.63, kind: 'source', iconSrc: '/DPP.png', iconAlt: 'Dropbox' },
+  { id: 'onedrive-source', label: 'OneDrive', shortLabel: 'OneDrive', x: 0.47, y: 0.74, kind: 'source', iconSrc: '/onedrivelogo.png', iconAlt: 'OneDrive' },
+  { id: 'adobe-sign-source', label: 'Adobe Sign', shortLabel: 'Adobe Sign', x: 0.59, y: 0.3, kind: 'source', iconSrc: '/adobesign.png', iconAlt: 'Adobe Sign' },
+  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.59, y: 0.74, kind: 'source', iconSrc: '/slack2.png', iconAlt: 'Slack' }
 ];
 
-const allNodes = [...inputNodes, ...stageNodes, ...outputNodes, ...evidenceSourceNodes];
+const allNodes = [amazonNode, ...inputNodes, ...stageNodes, ...outputNodes, ...evidenceSourceNodes];
 
 const routes: SceneRoute[] = [
+  ...inputNodes.map((node) => ({
+    id: `amazon-${node.id}`,
+    stage: 0,
+    role: 'intake' as const,
+    points: [
+      { x: amazonNode.x, y: amazonNode.y },
+      { x: 0.06, y: amazonNode.y },
+      { x: 0.06, y: node.y },
+      { x: node.x, y: node.y }
+    ]
+  })),
   ...inputNodes.map((node) => ({
     id: `${node.id}-intake`,
     stage: 0,
@@ -151,7 +173,7 @@ const routes: SceneRoute[] = [
     ]
   },
   {
-    id: 'invoice-evidence',
+    id: 'gmail-evidence',
     stage: 1,
     role: 'evidence',
     points: [
@@ -162,7 +184,7 @@ const routes: SceneRoute[] = [
     ]
   },
   {
-    id: 'mail-evidence',
+    id: 'outlook-evidence',
     stage: 1,
     role: 'evidence',
     points: [
@@ -173,7 +195,7 @@ const routes: SceneRoute[] = [
     ]
   },
   {
-    id: 'drive-evidence',
+    id: 'dropbox-evidence',
     stage: 1,
     role: 'evidence',
     points: [
@@ -184,7 +206,7 @@ const routes: SceneRoute[] = [
     ]
   },
   {
-    id: 'shipment-evidence',
+    id: 'onedrive-evidence',
     stage: 1,
     role: 'evidence',
     points: [
@@ -195,7 +217,7 @@ const routes: SceneRoute[] = [
     ]
   },
   {
-    id: 'ledger-evidence',
+    id: 'adobe-sign-evidence',
     stage: 1,
     role: 'evidence',
     points: [
@@ -207,7 +229,7 @@ const routes: SceneRoute[] = [
     ]
   },
   {
-    id: 'returns-evidence',
+    id: 'slack-evidence',
     stage: 1,
     role: 'evidence',
     points: [
@@ -613,13 +635,6 @@ export function RecoveryEngineVisualization() {
           Resolved outcomes
         </div>
 
-        <div className="pointer-events-none absolute left-1/2 top-[26%] w-[300px] -translate-x-1/2 text-center">
-          <div className="text-[11px] font-medium tracking-tight text-white/45">Margin Recovery Engine</div>
-          <div className="mt-3 text-2xl font-medium tracking-tight text-white md:text-[32px]">
-            Detection, evidence, filing, and payout on one routed machine.
-          </div>
-        </div>
-
         {inputOverlayNodes.map((node) => (
           <div
             key={node.id}
@@ -652,23 +667,42 @@ export function RecoveryEngineVisualization() {
           </div>
         ))}
 
-        {evidenceSourceNodes.map((node) => {
-          const Icon = node.icon;
-          return (
-            <div
-              key={node.id}
-              className="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-1/2 md:block"
-              style={{ left: `${node.x * 100}%`, top: `${node.y * 100}%` }}
-            >
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-white/70 backdrop-blur-sm">
-                  <Icon className="h-4 w-4" />
-                </div>
-                <div className="text-[10px] font-medium tracking-tight text-white/45">{node.shortLabel}</div>
+        {evidenceSourceNodes.map((node) => (
+          <div
+            key={node.id}
+            className="pointer-events-none absolute hidden -translate-x-1/2 -translate-y-1/2 md:block"
+            style={{ left: `${node.x * 100}%`, top: `${node.y * 100}%` }}
+          >
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/45 backdrop-blur-sm">
+                {node.iconSrc ? (
+                  <img
+                    src={node.iconSrc}
+                    alt={node.iconAlt || node.label}
+                    className="max-h-5 max-w-5 object-contain opacity-85"
+                  />
+                ) : null}
               </div>
+              <div className="text-[10px] font-medium tracking-tight text-white/45">{node.shortLabel}</div>
             </div>
-          );
-        })}
+          </div>
+        ))}
+
+        <div
+          className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
+          style={{ left: `${(amazonNode.x + 0.018) * 100}%`, top: `${amazonNode.y * 100}%` }}
+        >
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/45 px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/74 backdrop-blur-sm">
+            {amazonNode.iconSrc ? (
+              <img
+                src={amazonNode.iconSrc}
+                alt={amazonNode.iconAlt || amazonNode.label}
+                className="max-h-3.5 max-w-[18px] object-contain opacity-90"
+              />
+            ) : null}
+            <span>{amazonNode.label}</span>
+          </div>
+        </div>
 
         <div className="pointer-events-none absolute bottom-6 left-6 right-6">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
