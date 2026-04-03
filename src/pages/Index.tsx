@@ -1,952 +1,409 @@
-import React, { useEffect, useMemo, useState } from 'react'; // Vercel Redeploy Trigger: 2026-03-11-1536
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Upload, Gift, Sparkles, CircleDollarSign, ShieldAlert, ShieldCheck, FileText, Search, Briefcase, BoxSelect, BadgePercent, Database } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { AmazonConnect } from '@/components/AmazonConnect';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Bell, CircleDollarSign, Clock, FileText, Search, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
-import { AGENT_HIGHLIGHTS, HERO_METRICS, SITE_META } from '@/config/site';
-import { usePageMeta } from '@/hooks/usePageMeta';
-import { CookieConsent } from '@/components/landing/CookieConsent';
-import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
-import { InteractiveDemo } from '@/components/landing/InteractiveDemo';
+import { CookieConsent } from '@/components/landing/CookieConsent';
+import { SITE_META } from '@/config/site';
+import { usePageMeta } from '@/hooks/usePageMeta';
 
-const heroImage = '/FRONTIMAGE.png';
-
-const WORKFLOW_STEPS = [
+const sellerNeeds = [
   {
-    title: "Import History",
-    color: "bg-emerald-500/50",
-    description: "This agent performs a continuous forensic audit of your Amazon SP-API data—cross-referencing inventory movements, shipments, returns, reimbursements, fees, and claims across 26 detection models to uncover financial discrepancies and recovery opportunities that standard tools miss.",
-    duration: 3000
+    title: 'Find money Amazon still owes',
+    detail: 'Sellers do not want more reporting. They want missed reimbursements surfaced with enough truth to act on them.'
   },
   {
-    title: "Deep Audit Review 18Mo",
-    color: "bg-amber-500/50",
-    description: "The engine automatically analyzes 18 months of inventory history to identify over 26 types of FBA errors, from lost inbound shipments to unpaid refunds, identifying funds that Amazon owes you.",
-    duration: 9000
+    title: 'Stay inside Amazon policy',
+    detail: 'They want automation that is careful, not aggressive. Weak or duplicate claims are worse than no claim at all.'
   },
   {
-    title: "Verify Claims",
-    color: "bg-emerald-500/50",
-    description: "Our Evidence Engine autonomously locates and matches required documentation—like BOLs, PODs, and supplier invoices—directly from your email or Google Drive to build a watertight case.",
-    duration: 6000
-  },
-  {
-    title: "Logic-Based Filing",
-    color: "bg-blue-500/50",
-    description: "Margin constructs a perfect claim package and validates it against Amazon policy. We prepare all documentation for your review, ensuring a streamlined audit trail for successful reimbursements.",
-    duration: 5000
-  },
-  {
-    title: "Reimbursement Payout",
-    color: "bg-emerald-500/50",
-    description: "Approved reimbursements are deposited directly into your Amazon account. Margin does not receive or route those funds; we invoice software fees separately after the recovery is verified in-platform.",
-    duration: 4000
-  },
-  {
-    title: "Instant Ledger Update",
-    color: "bg-emerald-500/50",
-    description: "Stay in the loop with real-time alerts for every action—from new discrepancies found to successful reimbursements deposited. You never have to guess what Margin is doing.",
-    duration: 6000
+    title: 'Know what is actually happening',
+    detail: 'If nothing is moving, they want the exact blocker. If Amazon responds, they want to see it immediately.'
   }
 ];
 
-const PadlockIcon: React.FC = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-    <path
-      d="M12 15V10C12 6.13401 15.134 3 19 3C22.866 3 26 6.13401 26 10V15"
-      stroke="#065f46"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      fill="none"
-    />
-    <rect x="9" y="15" width="20" height="17" rx="4" fill="#059669" />
-    <path
-      d="M19 21C20.1046 21 21 21.8954 21 23C21 23.8894 20.4212 24.6538 19.6154 24.9133L20 28H18L18.3846 24.9133C17.5788 24.6538 17 23.8894 17 23C17 21.8954 17.8954 21 19 21Z"
-      fill="white"
-    />
-  </svg>
-);
+const objectionAnswers = [
+  {
+    title: 'This might spam Amazon',
+    detail: 'Margin blocks duplicate and weak filings before anything is sent.'
+  },
+  {
+    title: 'I will not know what it is doing',
+    detail: 'Every case moves through clear states: detect, verify, file, wait, needs evidence, approved, paid.'
+  },
+  {
+    title: 'It will create more work for me',
+    detail: 'You only step in when Amazon asks for more proof or critical identifiers are missing.'
+  }
+];
 
+const trustBullets = [
+  'Read-only discovery before filing',
+  'Evidence checked before any claim goes out',
+  'No duplicate or thread-only blind filings',
+  'Amazon still pays directly into your seller account'
+];
 
-const Index = () => {
+const processSteps = [
+  {
+    step: '01',
+    title: 'Detect missed reimbursement opportunities',
+    detail: 'Margin audits inventory, shipments, returns, fees, and reimbursements to surface what is supportable.'
+  },
+  {
+    step: '02',
+    title: 'Verify identifiers and evidence',
+    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, and supporting documents are checked before a case is considered ready.'
+  },
+  {
+    step: '03',
+    title: 'File only supportable cases',
+    detail: 'If a case is weak, duplicate, or missing truth, it is held instead of pushed into Seller Support.'
+  },
+  {
+    step: '04',
+    title: 'Track Amazon thread changes',
+    detail: 'When Amazon asks for more evidence or resolves a case, Margin updates the case state and keeps the thread linked.'
+  },
+  {
+    step: '05',
+    title: 'Notify you until payout',
+    detail: 'You see what moved, what is blocked, and when reimbursements are approved or paid.'
+  }
+];
+
+const filingRules = [
+  'Verified identifiers are present',
+  'Evidence is matched or the case is otherwise supportable',
+  'The issue is not already active or duplicated',
+  'The case is still inside Amazon’s policy window'
+];
+
+const holdRules = [
+  'Shipment, product, or quantity truth is missing',
+  'The same issue already has a live case or thread',
+  'Amazon email exists but should stay thread-only',
+  'The evidence is not strong enough to support a filing yet'
+];
+
+const faqs = [
+  {
+    question: 'Which services help automate FBA reimbursement claims?',
+    answer: 'The real need is not “automation” by itself. Sellers want a system that detects missed reimbursements, verifies the claim truth, files only supportable cases, and tracks Amazon until payout. That is the lane Margin is built for.'
+  },
+  {
+    question: 'What are common reasons for FBA reimbursement denials?',
+    answer: 'Weak identifiers, missing quantity truth, unsupported evidence, expired policy windows, and duplicate or already-active issues are common reasons. Margin is designed to hold those cases instead of filing them blindly.'
+  },
+  {
+    question: 'What documentation is required to submit a successful FBA reimbursement claim?',
+    answer: 'It depends on the case type, but common proof includes shipment IDs, ASIN or FNSKU, quantity truth, supplier invoices, bills of lading, proof of delivery, and any Amazon thread-specific evidence requested during follow-up.'
+  },
+  {
+    question: 'How can I check if I am eligible for FBA reimbursements?',
+    answer: 'You need a trustworthy audit across your inventory, shipment, fee, return, and reimbursement data. Margin’s job is to surface supportable opportunities and separate them from weak or expired ones.'
+  },
+  {
+    question: 'How do I track the status of reimbursement requests?',
+    answer: 'You should be able to see whether a case is waiting on Amazon, needs evidence, approved, rejected, or paid. Margin is built to show that progression instead of leaving you guessing.'
+  },
+  {
+    question: 'Will using an automated tool get my Amazon account suspended?',
+    answer: 'A risky tool can create account problems if it files weak, duplicate, or careless cases. Margin is built around a pre-filing truth gate so unsupported cases are blocked before submission.'
+  },
+  {
+    question: 'Do I have to manually upload invoices for every claim?',
+    answer: 'Not necessarily. When your evidence sources are connected, Margin can use what is already available. If a critical document is missing, the system should tell you exactly what is needed rather than pretending the case is ready.'
+  },
+  {
+    question: 'What is the typical timeframe for FBA reimbursement claim resolution?',
+    answer: 'That depends on Amazon’s path for the specific case. Some cases move quickly, some need more evidence, and some are approved before payout is confirmed. The important part is having truthful visibility into what stage each case is in.'
+  }
+];
+
+export default function Index() {
   const navigate = useNavigate();
+  const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   usePageMeta(SITE_META);
-  const [showMoreFAQs, setShowMoreFAQs] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [agentHighlightIndex, setAgentHighlightIndex] = useState(0);
-
-  // Auto-Play Effect
-  useEffect(() => {
-    if (activeStep === -1 || isPaused) return;
-
-    const stepDuration = WORKFLOW_STEPS[activeStep]?.duration || 5000;
-    const timer = setTimeout(() => {
-      setActiveStep((prev) => (prev + 1) % WORKFLOW_STEPS.length);
-    }, stepDuration);
-
-    return () => clearTimeout(timer);
-  }, [activeStep, isPaused]);
-
-  const handleLogin = () => {
+  const handleConnectAmazon = () => {
     navigate('/login');
   };
 
-  const handleUploadCsv = () => {
-    navigate('/login?intent=upload-csv');
+  const scrollToHowItWorks = () => {
+    if (typeof document === 'undefined') return;
+    document.getElementById('how-margin-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
-  const benefitWords = useMemo(
-    () => [
-      'Recover Faster',
-      'Save More',
-      'Gain Clarity',
-      'Re-Assert More'
-    ],
-    []
-  );
-  const [benefitIndex, setBenefitIndex] = useState(0);
-  const [precisionCount, setPrecisionCount] = useState(0);
-  const [metricValues, setMetricValues] = useState<number[]>(() => HERO_METRICS.map(() => 0));
-  const metricIntervals = React.useRef<number[]>([]);
-  const metricsRef = React.useRef<HTMLDivElement>(null);
-  const [metricsInView, setMetricsInView] = useState(false);
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    const previousBodyBg = document.body.style.backgroundColor;
-    const previousHtmlBg = document.documentElement.style.backgroundColor;
-    document.body.style.backgroundColor = '#050505';
-    document.documentElement.style.backgroundColor = '#050505';
-    return () => {
-      document.body.style.backgroundColor = previousBodyBg;
-      document.documentElement.style.backgroundColor = previousHtmlBg;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    const interval = window.setInterval(() => {
-      setAgentHighlightIndex((prev) => (prev + 1) % AGENT_HIGHLIGHTS.length);
-    }, 3200);
-    return () => window.clearInterval(interval);
-  }, []);
-
-
-  // Animate precision counter from 0 to 99.27
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const targetValue = 99.27;
-    const duration = 1500; // 1.5 seconds for fast animation
-    const steps = 60; // 60 steps for smooth animation
-    const increment = targetValue / steps;
-    const stepDuration = duration / steps;
-
-    let currentStep = 0;
-    const interval = window.setInterval(() => {
-      currentStep++;
-      const newValue = Math.min(increment * currentStep, targetValue);
-      setPrecisionCount(parseFloat(newValue.toFixed(2)));
-
-      if (newValue >= targetValue) {
-        clearInterval(interval);
-      }
-    }, stepDuration);
-
-    return () => clearInterval(interval);
-  }, []);
-
-
-
-  // Scroll detection for banner visibility
-  // Banner hides when scrolling down (towards footer)
-  // Banner shows when scrolling up (towards top)
-  const lastScrollYRef = React.useRef(0);
-  const tickingRef = React.useRef(false);
-
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-
-    const getScrollTop = () => window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    lastScrollYRef.current = getScrollTop();
-
-    const updateBanner = () => {
-      const currentScrollY = getScrollTop();
-      const lastScrollY = lastScrollYRef.current;
-      const diff = currentScrollY - lastScrollY;
-
-      // Lower threshold for mobile touch scrolling
-      if (diff > 8) {
-        setShowBanner(false);
-        lastScrollYRef.current = currentScrollY;
-      } else if (diff < -8) {
-        setShowBanner(true);
-        lastScrollYRef.current = currentScrollY;
-      }
-      tickingRef.current = false;
-    };
-
-    const handleScroll = () => {
-      if (!tickingRef.current) {
-        tickingRef.current = true;
-        requestAnimationFrame(updateBanner);
-      }
-    };
-
-    // Listen on multiple targets for maximum compatibility
-    document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Touch events for mobile
-    document.addEventListener('touchmove', handleScroll, { passive: true });
-
-    return () => {
-      document.removeEventListener('scroll', handleScroll, { capture: true });
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('touchmove', handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    const ticker = window.setInterval(() => {
-      setBenefitIndex((prev) => (prev + 1) % benefitWords.length);
-    }, 3200);
-    return () => window.clearInterval(ticker);
-  }, [benefitWords]);
-
-
-  const primaryLinks: { label: string; href: string }[] = [
-    // { label: 'API', href: '/developer-api' } // Hidden temporarily
-  ];
-
-
-  // Intersection Observer to detect when metrics section scrolls into view
-  useEffect(() => {
-    if (typeof window === 'undefined' || !metricsRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Reset and trigger animation when scrolling into view
-            setMetricsInView(false);
-            // Small delay to ensure state resets before re-animating
-            setTimeout(() => setMetricsInView(true), 50);
-          }
-        });
-      },
-      {
-        threshold: 0.3, // Trigger when 30% of the element is visible
-        rootMargin: '0px'
-      }
-    );
-
-    observer.observe(metricsRef.current);
-
-    // Trigger initial animation
-    setMetricsInView(true);
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Animate metrics when they come into view
-  useEffect(() => {
-    if (typeof window === 'undefined' || !metricsInView) return;
-
-    // Clear any existing intervals
-    metricIntervals.current.forEach(id => window.clearInterval(id));
-
-    // Reset values to 0
-    setMetricValues(HERO_METRICS.map(() => 0));
-
-    // Start counting up animations
-    metricIntervals.current = HERO_METRICS.map((metric, index) => {
-      const duration = 1500; // 1.5 seconds for the animation
-      const steps = 60; // 60 steps for smooth animation
-      const increment = metric.target / steps;
-      const stepDuration = duration / steps;
-
-      const intervalId = window.setInterval(() => {
-        setMetricValues(prev => {
-          const next = [...prev];
-          const nextValue = Math.min(next[index] + increment, metric.target);
-          next[index] = nextValue;
-          if (nextValue >= metric.target) {
-            window.clearInterval(metricIntervals.current[index]);
-          }
-          return next;
-        });
-      }, stepDuration);
-      return intervalId;
-    });
-
-    return () => {
-      metricIntervals.current.forEach(id => window.clearInterval(id));
-    };
-  }, [metricsInView]);
-
-  const currentYear = new Date().getFullYear();
 
   return (
-    <div
-      className="min-h-screen flex flex-col font-sans text-white relative overflow-x-hidden w-full bg-[#050505] selection:bg-emerald-500/30 selection:text-white"
-      style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
-
+    <div className="min-h-screen overflow-x-hidden bg-[#060606] font-sans text-white selection:bg-sky-400/20">
       <PublicNavbar />
-      <div className="relative z-10" style={{ background: '#050505' }}>
-        <main className="flex-1 relative z-10" style={{ background: '#050505' }}>
-          <section className="relative w-full pt-32 md:pt-32 lg:pt-36 pb-12 lg:pb-16 overflow-hidden">
-            {/* Premium Dual-Layer Background */}
-            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-              {/* Layer 1: Radial Mesh Gradients */}
-              <div className="absolute -top-[20%] -right-[10%] w-[1000px] h-[1000px] bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.08),transparent_70%)] blur-[120px]" />
-              <div className="absolute top-[10%] -left-[5%] w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06),transparent_70%)] blur-[100px]" />
-              <div className="absolute -bottom-[20%] right-[15%] w-[900px] h-[900px] bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.05),transparent_70%)] blur-[110px]" />
 
-              {/* Layer 2: Technical Noise Grain */}
-              <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+      <main className="relative">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(125,211,252,0.08),transparent_32%),radial-gradient(circle_at_15%_20%,rgba(251,191,36,0.06),transparent_24%)]" />
 
-              {/* Fade separation layer */}
-              <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent pointer-events-none" />
-            </div>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-start md:items-center text-left md:text-center max-w-6xl px-6 mx-auto">
+        <section className="relative border-b border-white/6 px-6 pb-20 pt-32 md:px-8 md:pb-24 md:pt-36">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto grid max-w-7xl gap-10 xl:grid-cols-[minmax(0,1.25fr)_minmax(340px,0.8fr)]"
+          >
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/10 px-3 py-1.5 text-[11px] font-medium text-sky-100">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Trust-first FBA reimbursement automation
+              </div>
 
-              {/* Text content - left aligned on mobile, centered on desktop */}
-              <div className="flex flex-col items-start md:items-center space-y-6 w-full">
-
-                {/* Institutional Trust Badge hidden as per request */}
-                <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm mb-4">
-                  <div className="relative flex items-center justify-center">
-                    <div className="absolute w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-60" />
-                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_8px_rgba(52,211,153,0.8)] z-10" />
-                  </div>
-                  <span className="text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight">
-                    <span className="text-white font-bold">only 17</span> spots left
-                  </span>
-                </div>
-
-                <h1 className="font-sans text-4xl md:text-5xl lg:text-7xl font-light tracking-tight text-white leading-[1.1] selection:bg-emerald-500/30 max-w-4xl">
-                  The Autonomous <br className="hidden lg:block" />
-                  FBA Recovery Engine.
+              <div className="space-y-5">
+                <h1 className="max-w-5xl text-4xl font-medium tracking-tight text-white md:text-6xl">
+                  Recover missed FBA reimbursements without weak claims or Seller Central guesswork.
                 </h1>
-
-                <p className="font-sans text-base md:text-lg text-white/40 font-light max-w-xl leading-[1.6] tracking-tight">
-                  Your inventory vanished at FTW1? Our 11-agent engine automatically detects these discrepancies, builds policy-proof claims with your exact documentation, and recovers your lost margins at machine speed.
-                </p>
-                <p className="text-[10px] text-white/20 font-sans uppercase tracking-tight">
-                  Automated detection within Amazon-approved policy windows.
-                </p>
-
-                {/* Buttons - left aligned on mobile, centered on desktop */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto mt-6">
-                  <button
-                    onClick={handleUploadCsv}
-                    className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
-                    {/* Glass backdrop with glow */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
-                      <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
-                    </div>
-                    <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
-
-                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
-                      Upload CSV
-                      <Upload className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:-translate-y-0.5 transition-all duration-300" />
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={handleLogin}
-                    className="group relative inline-flex items-center justify-center w-full sm:w-auto min-w-[240px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]">
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
-                      <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
-                    </div>
-                    <div className="absolute inset-0 bg-white/[0.03] group-hover:bg-white/[0.07] transition-colors duration-500" />
-
-                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
-                      Log In
-                      <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
-                    </span>
-                  </button>
-                </div>
-
-                {/* Integrations Separator */}
-                <div className="w-full flex items-center justify-center gap-4 mt-20 mb-10 px-6">
-                  <div className="h-[1px] flex-1 max-w-[300px] bg-white/10" />
-                  <div className="px-5 py-2 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-md">
-                    <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Integrations</span>
-                  </div>
-                  <div className="h-[1px] flex-1 max-w-[300px] bg-white/10" />
-                </div>
-
-                {/* Infinite Logo Carousel */}
-                <div className="w-full mt-4 overflow-hidden relative">
-                  <div className="flex relative">
-                    <motion.div
-                      className="flex items-center whitespace-nowrap"
-                      style={{ willChange: "transform", width: "max-content" }}
-                      animate={{ x: ["0%", "-50%"] }}
-                      transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                        repeatType: "loop"
-                      }}
-                    >
-                      {[...Array(2)].map((_, outerIndex) => (
-                        <div key={outerIndex} className="flex flex-none items-center">
-                          <img src="/AMZN.png" alt="Amazon" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/gmailicon.png" alt="Gmail" className="h-[28px] md:h-[40px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/outlookicon.webp" alt="Outlook" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/onedrivelogo.png" alt="OneDrive" className="h-[100px] md:h-[120px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/adobesign.png" alt="Adobe Sign" className="h-[100px] md:h-[120px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/slack2.png" alt="Slack" className="h-[30px] md:h-[42px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/DPP.png" alt="Dropbox" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                          <img src="/gd.png" alt="Google Drive" className="h-[32px] md:h-[44px] w-auto opacity-80 transition-all duration-700 hover:opacity-100 cursor-default mr-16 md:mr-32 pointer-events-none" />
-                        </div>
-                      ))}
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </section>
-
-          {/* Interactive Demo Section - Standalone Polished Block */}
-          <section className="w-full relative z-20 mt-24 md:mt-36 mb-24">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-20px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-[1400px] mx-auto px-4 md:px-8">
-              {/* Technical Header */}
-              <div className="text-center space-y-6 max-w-3xl mx-auto mb-16 relative z-10">
-                <div className="flex items-center justify-center gap-3 mb-2">
-                  <div className="h-[1px] w-8 bg-gray-200" />
-                  <span className="text-[10px] font-bold text-gray-400 font-sans tracking-tight uppercase">
-                    DEMO
-                  </span>
-                  <div className="h-[1px] w-8 bg-gray-200" />
-                </div>
-                <h2 className="text-3xl md:text-5xl font-sans font-light tracking-tight text-white leading-tight">
-                  Finally, clarity for your missing FBA inventory.
-                </h2>
-                <p className="text-base md:text-lg text-white/50 font-sans tracking-tight leading-relaxed max-w-xl mx-auto">
-                  Don't drown in cross-referenced spreadsheets. Margin audits 18 months of your inventory data to find the exact units Amazon lost. We do the complex math and hand you the undeniable proof. You just file the ticket and get paid.
+                <p className="max-w-3xl text-base leading-8 text-white/60 md:text-lg">
+                  Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout. If something is blocked, it should tell you exactly why instead of pretending progress.
                 </p>
               </div>
 
-              {/* Dark container for "Startup" feel */}
-              <div className="bg-[#050505] rounded-none relative overflow-hidden shadow-2xl border border-white/5">
-
-                {/* Background Accents (Subtle) */}
-                <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-gradient-to-b from-indigo-500/5 to-purple-500/5 blur-[120px] pointer-events-none opacity-40" />
-                <div className="absolute bottom-0 left-0 w-[600px] h-[500px] bg-gradient-to-t from-emerald-500/5 to-blue-500/5 blur-[100px] pointer-events-none opacity-30" />
-
-                <div className="flex flex-col items-center relative z-10 w-full mx-auto">
-
-                  {/* Video Demo Placeholder */}
-                  <div className="w-full aspect-video relative bg-[#0a0a0a] group cursor-pointer">
-                    <img src="/thumbnailThabi.png" alt="Product Demo Preview" className="absolute inset-0 w-full h-full object-cover" />
-                    {/* Dark overlay for play button visibility */}
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-500" />
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-
-                    {/* Play Button Overlay */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
-                      <div className="w-24 h-24 rounded-full bg-white/5 backdrop-blur-md flex items-center justify-center border border-white/10 group-hover:scale-110 group-hover:bg-white/10 transition-all duration-500">
-                        <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-2xl">
-                          <svg className="w-6 h-6 text-black ml-1" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="text-center space-y-2 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-tight">Institutional Preview</p>
-                        <p className="text-white/20 text-xs font-sans tracking-tight">ENCRYPTED_FEED_STREAM_V2</p>
-                      </div>
-                    </div>
-
-                    {/* Corner Markers */}
-                    <div className="absolute top-4 left-4 h-4 w-4 border-t border-l border-white/20" />
-                    <div className="absolute top-4 right-4 h-4 w-4 border-t border-r border-white/20" />
-                    <div className="absolute bottom-4 left-4 h-4 w-4 border-b border-l border-white/20" />
-                    <div className="absolute bottom-4 right-4 h-4 w-4 border-b border-r border-white/20" />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </section>
-
-          {/* Corporate Profile Section (Moved from About.tsx) */}
-          <section className="bg-[#050505] py-24 md:py-32 relative overflow-hidden">
-            <div className="container mx-auto px-6 max-w-7xl">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="space-y-8"
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button
+                  onClick={handleConnectAmazon}
+                  className="h-12 rounded-full bg-sky-100 px-6 text-sm font-medium text-black hover:bg-sky-200"
                 >
-                  <div className="space-y-4">
-                    <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
-                      CORPORATE MANDATE
-                    </span>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-sans font-light text-white tracking-tight leading-[1.1]">
-                      Corporate Profile & <br />
-                      <span className="text-white/40 italic">Operational Mandate</span>
-                    </h2>
-                  </div>
-                  <p className="max-w-md text-white/30 text-base md:text-lg font-sans tracking-tight leading-relaxed font-light">
-                    To ensure institutional-grade forensic validation and priority API rate limits, Margin is strictly optimized for high-complexity FBA operations.
-                  </p>
-                </motion.div>
+                  Connect Amazon
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={scrollToHowItWorks}
+                  className="h-12 rounded-full border-white/10 bg-white/[0.03] px-6 text-sm font-medium text-white hover:bg-white/[0.06]"
+                >
+                  See how Margin decides to file
+                </Button>
+              </div>
 
-                <div className="grid grid-cols-1 gap-8">
-                  {[
-                    {
-                      id: '01',
-                      title: 'Algorithmic Reconciliation',
-                      color: 'text-emerald-500',
-                      desc: 'Margin functions as a high-frequency forensic audit layer for Amazon FBA sellers. Unlike manual virtual assistants, our proprietary logic nodes continually monitor inventory ledgers against financial settlements.'
-                    },
-                    {
-                      id: '02',
-                      title: 'Data Sovereignty & Security',
-                      color: 'text-blue-500',
-                      desc: 'We treat seller data as a financial asset. Margin is built on an isolated, multi-tenant architecture that ensures strict data segregation and utilizes official SP-API protocols.'
-                    },
-                    {
-                      id: '03',
-                      title: 'Strict Policy Compliance',
-                      color: 'text-amber-500',
-                      desc: 'Margin is engineered to operate strictly within the bounds of Amazon’s Terms of Service. Our claim engine ensures that all reimbursement requests are validated before generation.'
-                    }
-                  ].map((item) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="group border-t border-white/10 py-8 first:border-0"
-                    >
-                      <div className="flex gap-8">
-                        <span className={`text-[10px] font-sans tracking-tight ${item.color.replace('text-', 'text-opacity-20 ')} mt-1.5 font-bold`}>{item.id}</span>
-                        <div className="space-y-2">
-                          <h3 className={`text-sm font-bold text-white font-sans uppercase tracking-tight group-hover:${item.color} transition-colors`}>
-                            {item.title}
-                          </h3>
-                          <p className="text-white/40 text-[13px] font-sans tracking-tight leading-relaxed font-light">
-                            {item.desc}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {trustBullets.map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-white/72">
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-3xl border border-white/8 bg-[#0f1115] px-5 py-5">
+                <div className="text-xs font-medium uppercase tracking-tight text-white/38">What sellers actually want</div>
+                <div className="mt-4 grid gap-4 md:grid-cols-3">
+                  {sellerNeeds.map((item) => (
+                    <div key={item.title} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                      <div className="text-base font-medium text-white">{item.title}</div>
+                      <p className="mt-2 text-sm leading-6 text-white/48">{item.detail}</p>
+                    </div>
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Infrastructure Metrics */}
-              <div className="border-t border-white/5 pt-24 mt-24">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12">
-                  <div className="space-y-6">
-                    <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">THROUGHPUT CAPACITY</span>
-                    <div className="text-4xl md:text-5xl font-sans font-light text-white tracking-tight">10k TPS</div>
-                    <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed font-light">
-                      Enterprise-grade ingestion engine capable of processing 10,000 inventory events per second.
+            <div className="rounded-[28px] border border-white/8 bg-[#0f1115] p-6 shadow-2xl">
+              <div className="text-xs font-medium uppercase tracking-tight text-white/38">Why sellers say no</div>
+              <div className="mt-5 space-y-4">
+                {objectionAnswers.map((item) => (
+                  <div key={item.title} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                    <div className="flex items-start gap-3">
+                      <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-200" />
+                      <div>
+                        <div className="text-base font-medium text-white">{item.title}</div>
+                        <p className="mt-1 text-sm leading-6 text-white/48">{item.detail}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 rounded-2xl border border-sky-400/15 bg-sky-400/10 px-4 py-4">
+                <div className="flex items-start gap-3">
+                  <CircleDollarSign className="mt-0.5 h-4 w-4 shrink-0 text-sky-100" />
+                  <div>
+                    <div className="text-base font-medium text-white">Margin never routes your reimbursement money.</div>
+                    <p className="mt-1 text-sm leading-6 text-white/60">
+                      Amazon pays approved reimbursements into your seller account directly. Margin tracks the case, the thread, and the payout truth inside the platform.
                     </p>
                   </div>
-                  <div className="space-y-6">
-                    <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">AUDIT LATENCY</span>
-                    <div className="text-4xl md:text-5xl font-sans font-light text-white tracking-tight">&lt; 200ms</div>
-                    <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed font-light">
-                      Real-time discrepancy detection. Logic nodes execute immediately upon data ingress from SP-API.
-                    </p>
-                  </div>
-                  <div className="space-y-6">
-                    <span className="text-[10px] font-bold text-white/30 font-sans tracking-tight uppercase">SYSTEM UPTIME</span>
-                    <div className="text-4xl md:text-5xl font-sans font-light text-white tracking-tight">99.99%</div>
-                    <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed font-light">
-                      Redundant server clusters ensure your audit process never sleeps, even during surges.
-                    </p>
-                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                  <Search className="h-4 w-4 text-sky-200" />
+                  <div className="mt-3 text-sm font-medium text-white">Detect</div>
+                  <div className="mt-1 text-sm text-white/45">Audit what Amazon owes</div>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                  <FileText className="h-4 w-4 text-sky-200" />
+                  <div className="mt-3 text-sm font-medium text-white">Verify</div>
+                  <div className="mt-1 text-sm text-white/45">Check identifiers and evidence</div>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                  <Bell className="h-4 w-4 text-sky-200" />
+                  <div className="mt-3 text-sm font-medium text-white">Track</div>
+                  <div className="mt-1 text-sm text-white/45">Follow Amazon until payout</div>
                 </div>
               </div>
             </div>
-          </section>
+          </motion.div>
+        </section>
 
-
-          <div className="relative z-10 w-full" style={{ background: '#050505' }}>
-
-
-            <section className="bg-[#050505] pt-16 pb-8 md:pt-24 md:pb-12 w-full overflow-x-hidden">
-              <div className="container mx-auto px-6 max-w-4xl">
-                <div className="text-center mb-16 sm:mb-24 space-y-6">
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <div className="h-[1px] w-8 bg-gray-200" />
-                    <span className="text-[10px] font-bold text-gray-400 font-sans tracking-tight uppercase">
-                      frequently asked questions
-                    </span>
-                    <div className="h-[1px] w-8 bg-gray-200" />
-                  </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-5xl font-sans font-light tracking-tight text-white leading-[1.1] md:leading-[1.2] max-w-4xl mx-auto">
-                    Frequently Asked Questions
-                  </h2>
-                  <p className="text-white/40 text-base md:text-lg font-sans tracking-tight max-w-2xl mx-auto leading-relaxed">
-                    Everything you need to know before we connect to your Seller Central account.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <Accordion type="single" collapsible className="w-full space-y-4">
-                    <AccordionItem value="data" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                        What data do you access? Do you look at my customer info or sales?
-                      </AccordionTrigger>
-                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                        <p>
-                          No. Margin operates strictly on the SP-API endpoints related to inbound inventory, fee ledgers, and fulfillment reports. We have zero access to your customer data, messaging, or storefront. We operate with read-only access for discovery, and strictly restricted write-access just to file the reimbursement cases.
-                        </p>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="cost" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                        How much does Margin cost?
-                      </AccordionTrigger>
-                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                        <p>
-                          Margin uses flat subscription pricing: Starter, Pro, or Enterprise, billed monthly or annually depending on the plan. For the first 60 days you keep 100% of recoveries, then continue on the same subscription price with no commissions or recovery-based charges.
-                        </p>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="safety" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                        Will using an automated tool get my Amazon account suspended?
-                      </AccordionTrigger>
-                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                        <p>
-                          No. Margin is 100% compliant with Amazon&aposs 2026 Terms of Service. We do not &quot;spam&quot; Seller Support with blind claims. Our 11-agent constellation only files a case when it has successfully matched a missing FNSKU to a verified, policy-proof document (like your stamped BOL and supplier invoice). We play exactly by Amazon&aposs rules; we just do it faster.
-                        </p>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    <AccordionItem value="invoices" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                      <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                        Do I have to manually upload my supplier invoices for every claim?
-                      </AccordionTrigger>
-                      <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                        <p>
-                          No. That is what makes Margin autonomous. You connect your Google Drive or email during onboarding. Our neural agents autonomously locate the correct supplier invoice, match it line-by-line to the missing inventory, and attach it to the Amazon claim without you ever clicking a button.
-                        </p>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    {showMoreFAQs && (
-                      <>
-
-                        <AccordionItem value="coexist" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                        <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                          What if I already use another reimbursement service?
-                        </AccordionTrigger>
-                            <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                              <p>
-                                No problem. Run Margin alongside your current tool. Our pricing stays flat subscription pricing either way, so recoveries do not trigger extra commissions or percentage-based invoices.
-                              </p>
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="cancel" className="border border-white/5 rounded-2xl bg-white/[0.02] backdrop-blur-md px-6 py-1 transition-all hover:bg-white/[0.04] hover:border-white/10 group overflow-hidden">
-                          <AccordionTrigger className="font-sans text-left text-lg font-normal text-white hover:no-underline py-6 tracking-tight">
-                            What if I want to cancel?
-                          </AccordionTrigger>
-                          <AccordionContent className="font-sans tracking-tight pb-6 text-base text-white/40 leading-relaxed space-y-4">
-                            <p>
-                              You can cancel anytime. Disconnect Margin from Seller Central and you&apos;re done. We only bill for the subscription period already in effect; cancellation never converts your account into recovery-fee or commission billing.
-                            </p>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </>
-                    )}
-                  </Accordion>
-
-                  {!showMoreFAQs && (
-                    <div className="flex justify-center pt-8">
-                      <button
-                        onClick={() => setShowMoreFAQs(true)}
-                        className="group flex items-center gap-3 text-[11px] font-bold text-white/30 font-sans tracking-tight hover:text-white transition-all uppercase">
-                        <Search className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
-                        <span>Query Extended Database</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {/* Market Intelligence / Forensic Briefs Section */}
-          <section className="bg-[#050505] py-24 md:py-32 relative overflow-hidden">
-            {/* Subtle background glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-white/[0.02] rounded-full blur-[120px] pointer-events-none" />
-
-            <div className="container mx-auto px-6 max-w-7xl relative z-10">
-              {/* Technical Header */}
-              <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <div className="h-[1px] w-8 bg-white/25" />
-                    <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                      Case studies
-                    </span>
-                  </div>
-                  <h2 className="text-4xl md:text-5xl font-sans font-light tracking-tight text-white leading-tight">
-                    Re-establishing your target equity cushion
-                  </h2>
-                </div>
-                <div className="md:text-right">
-                  <p className="text-white/30 text-sm font-sans tracking-tight max-w-xs md:ml-auto leading-relaxed">
-                    See exactly how our 11-agent engine extracts lost capital from Amazon&aposs warehouse network.
-                  </p>
-                </div>
-              </div>
-
-              {/* Research Grid - Horizontal Scroller */}
-              <div className="relative group/scroller">
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 scrollbar-hide -mx-6 px-6 scroll-smooth">
-                  {/* Brief 01 */}
-                  <div className="flex-none w-[85vw] md:w-[450px] snap-center">
-                    <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
-                      <div className="flex-1">
-                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                          Intel_Report_V4
-                        </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
-                          The Invisible Tax: Why FBA Inventory Drift Exceeds 3% at Scale
-                        </h3>
-                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
-                          Analysis of 47 seller accounts reveals systematic inventory variance patterns. Our forensic protocol recovered an average of $8,400 per account in the first 30 days.
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-2">
-                        <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Verified_Intel</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Brief 02 */}
-                  <div className="flex-none w-[85vw] md:w-[450px] snap-center">
-                    <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
-                      <div className="flex-1">
-                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                          Forensic_Case_019
-                        </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
-                          Case File 019: Recovering $14,200 in &ldquo;Warehouse Damaged&rdquo; Assets
-                        </h3>
-                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
-                          A single seller with 3,000+ units flagged as &ldquo;damaged.&rdquo; Agent 3 detected pattern inconsistencies, Agent 4 found original photos in email, Agent 6 matched 94% of claims. Full recovery in 19 days.
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-2">
-                        <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Case_Secure</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Brief 03 */}
-                  <div className="flex-none w-[85vw] md:w-[450px] snap-center">
-                    <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
-                      <div className="flex-1">
-                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                          Tech_Spec_Algo26
-                        </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
-                          Algo-26 Detection Protocol: Inside the Engineering Stack
-                        </h3>
-                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
-                          How our 26th algorithm identifies dimensional weight discrepancies across 1M+ SKUs. Technical deep dive on neural matching confidence scores and false-positive reduction.
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-2">
-                        <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Protocol_Stack</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Brief 04 */}
-                  <div className="flex-none w-[85vw] md:w-[450px] snap-center">
-                    <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                            Valuation_Strategy
-                          </span>
-                          <div className="flex items-end gap-[1px]">
-                            <div className="w-[2px] h-2 bg-white/10" />
-                            <div className="w-[2px] h-3 bg-white/20" />
-                            <div className="w-[2px] h-5 bg-white/25" />
-                          </div>
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4">
-                          The Valuation Delta: How Unclaimed Margin Erodes 12-Month Rolling EBITDA
-                        </h3>
-                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
-                          For aggregators and high-volume sellers, every $1 of recovered margin adds $4 to valuation (at a 4x multiple). Protect your final exit price by repairing your P&L before due diligence.
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-2">
-                        <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">EBITDA_Impact</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Brief 05 */}
-                  <div className="flex-none w-[85vw] md:w-[450px] snap-center">
-                    <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                            Temporal_Expiry_Alert
-                          </span>
-                          <div className="w-10 h-[1px] bg-gradient-to-r from-white/25 via-white/10 to-transparent" />
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-4 mb-4">
-                          Temporal Decay: The 18-Month Audit Cliff & Liquidity Forfeiture
-                        </h3>
-                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
-                          Amazon data expires. If you don&apos;t audit the shipment from 19 months ago today, that capital is legally forfeited. We identify and arrest the decay of your claimable assets in real-time.
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-2">
-                        <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Expiry_Guard</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Brief 06 */}
-                  <div className="flex-none w-[85vw] md:w-[450px] snap-center">
-                    <div className="group relative flex flex-col h-full bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all duration-500 p-8 md:p-10">
-                      <div className="flex-1">
-                        <span className="text-[10px] font-medium text-white/55 font-sans tracking-tight uppercase">
-                          Logistics_Recon_01
-                        </span>
-                        <h3 className="text-xl md:text-2xl font-sans font-bold text-white mt-6 mb-4">
-                          Inbound Reconciliation: Mapping the &ldquo;Black Hole&rdquo; Between 3PL and FC Transfer
-                        </h3>
-                        <p className="text-white/40 text-sm font-sans tracking-tight leading-relaxed line-clamp-4">
-                          We don&apos;t accept &ldquo;Received in Full&rdquo; as a status. Our engine validates against the Bill of Lading and Carrier Weight to find units that vanish in the void between shipment and arrival.
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center gap-2">
-                        <div className="h-px flex-1 bg-white/5" />
-                        <span className="text-[8px] font-bold text-white/10 font-sans uppercase tracking-tight">Logistics_Recon</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Subtle Scroll Indicator - Hidden per user request */}
-                {/*
-                <div className="mt-8 flex items-center gap-4">
-                  <div className="h-[1px] flex-1 bg-white/5 relative">
-                    <div className="absolute top-0 left-0 h-full w-1/6 bg-emerald-500/40" />
-                  </div>
-                  <span className="text-[9px] font-bold text-white/20 font-sans uppercase tracking-tight">
-                    Hold Shift + Scroll to Navigate // Briefs 01-06
-                  </span>
-                  <div className="h-[1px] flex-1 bg-white/5" />
-                </div>
-                */}
-              </div>
-            </div>
-          </section>
-
-          <section className="bg-[#050505] pt-24 pb-24 md:pt-32 md:pb-32 flex flex-col items-center text-center px-6 relative overflow-hidden">
-            {/* Background Mesh Accent */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-20px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 space-y-8 max-w-4xl mx-auto">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <div className="h-[1px] w-8 bg-white/10" />
-                <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">
-                  PROTOCOL_26_DEPLOYED
-                </span>
-                <div className="h-[1px] w-8 bg-white/10" />
-              </div>
-
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight text-white leading-[1.1]">
-                Bring Your Ledger. <br className="hidden md:block" />
-                Achieve 100% Accuracy.
+        <section className="border-b border-white/6 px-6 py-20 md:px-8" id="how-margin-works">
+          <div className="mx-auto max-w-7xl">
+            <div className="max-w-3xl space-y-4">
+              <div className="text-xs font-medium uppercase tracking-tight text-white/34">How Margin works</div>
+              <h2 className="text-3xl font-medium tracking-tight text-white md:text-5xl">
+                Detect, verify, file, track, and follow through.
               </h2>
-
-              <p className="text-[10px] text-white/20 font-sans uppercase tracking-tight mt-4">
-                Refers to internal reconciliation precision; individual recovery outcomes vary by account health.
+              <p className="text-base leading-8 text-white/56">
+                The landing-page promise should be operationally true. Margin should not act like a reimbursement agency with no controls. It should behave like a careful operator that knows when to move and when to hold.
               </p>
+            </div>
 
-              <div className="flex flex-col items-center gap-8 pt-4">
-                <div className="max-w-xl mx-auto">
-                  <p className="text-base text-white/40 font-light leading-relaxed font-sans tracking-tight">
-                    Eliminate supply chain uncertainty. Our 26-point forensic protocol <br className="hidden md:block" />
-                    is ready to reconcile your inbound shipments.
-                  </p>
-                </div>
+            <div className="mt-10 grid gap-4 lg:grid-cols-5">
+              {processSteps.map((item) => (
+                <motion.div
+                  key={item.step}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.45 }}
+                  className="rounded-3xl border border-white/8 bg-[#0f1115] px-5 py-5"
+                >
+                  <div className="text-xs font-medium text-sky-200">{item.step}</div>
+                  <div className="mt-4 text-lg font-medium tracking-tight text-white">{item.title}</div>
+                  <p className="mt-3 text-sm leading-6 text-white/48">{item.detail}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <div className="flex flex-col items-center gap-1 pt-6">
-                  <button
-                    onClick={() => navigate('/app/default/data-upload')}
-                    className="group relative inline-flex items-center justify-center min-w-[280px] h-12 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] shadow-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
-                    {/* Glass backdrop with glow */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent p-[1px] rounded-full">
-                      <div className="absolute inset-0 bg-[#0c0c0c] rounded-full" />
-                    </div>
-                    <div className="absolute inset-0 bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors duration-500" />
-
-                    <span className="relative z-10 flex items-center gap-3 text-[11px] font-sans font-light text-white uppercase tracking-tight">
-                      Get Started
-                      <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-100" />
-                    </span>
-                  </button>
-                  {/* <AmazonConnect
-                    label="VERIFY MY INVENTORY"
-                    className="min-w-[280px] h-12 text-[13px] transition-all duration-500 font-bold active:scale-95 px-8"
-                  /> */}
-                </div>
+        <section className="border-b border-white/6 px-6 py-20 md:px-8">
+          <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-2">
+            <div className="rounded-[28px] border border-white/8 bg-[#0f1115] p-6">
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="h-5 w-5 text-sky-200" />
+                <h3 className="text-2xl font-medium tracking-tight text-white">When Margin should file</h3>
               </div>
-            </motion.div>
-          </section>
+              <p className="mt-3 text-sm leading-7 text-white/55">
+                Sellers want a tool that knows when a case is truly ready. That means concrete identifiers, supportable evidence, and no duplicate risk.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {filingRules.map((item) => (
+                  <li key={item} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-white/74">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <BrandFooter />
-          <CookieConsent />
-        </main >
-      </div >
+            <div className="rounded-[28px] border border-white/8 bg-[#0f1115] p-6">
+              <div className="flex items-center gap-3">
+                <Clock className="h-5 w-5 text-amber-200" />
+                <h3 className="text-2xl font-medium tracking-tight text-white">When Margin should wait</h3>
+              </div>
+              <p className="mt-3 text-sm leading-7 text-white/55">
+                Saying “not yet” is part of the product. If the case is weak, already active, or missing truth, the right move is to hold it instead of filing noise.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {holdRules.map((item) => (
+                  <li key={item} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-white/74">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
 
-    </div >
+        <section className="px-6 py-20 md:px-8">
+          <div className="mx-auto max-w-5xl">
+            <div className="space-y-4 text-center">
+              <div className="text-xs font-medium uppercase tracking-tight text-white/34">Questions sellers ask before they buy</div>
+              <h2 className="text-3xl font-medium tracking-tight text-white md:text-5xl">
+                The page should answer the real objections, not dodge them.
+              </h2>
+              <p className="mx-auto max-w-3xl text-base leading-8 text-white/56">
+                These are the questions FBA sellers ask on Google, in communities, and in AI tools before they trust a reimbursement platform. The answers have to sound careful, specific, and believable.
+              </p>
+            </div>
+
+            <div className="mt-10">
+              <Accordion type="single" collapsible className="space-y-4">
+                {faqs.slice(0, showMoreFaqs ? faqs.length : 5).map((item, index) => (
+                  <AccordionItem
+                    key={item.question}
+                    value={`faq-${index}`}
+                    className="rounded-2xl border border-white/8 bg-white/[0.03] px-5 py-1"
+                  >
+                    <AccordionTrigger className="py-5 text-left text-base font-medium tracking-tight text-white hover:no-underline">
+                      {item.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-5 text-sm leading-7 text-white/55">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+
+              {!showMoreFaqs ? (
+                <div className="mt-8 flex justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowMoreFaqs(true)}
+                    className="rounded-full border-white/10 bg-white/[0.03] px-6 text-sm text-white hover:bg-white/[0.06]"
+                  >
+                    Show more questions
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 pb-24 md:px-8">
+          <div className="mx-auto max-w-6xl rounded-[32px] border border-white/8 bg-[#0f1115] px-6 py-8 md:px-10 md:py-10">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_auto] lg:items-end">
+              <div>
+                <div className="text-xs font-medium uppercase tracking-tight text-white/34">Final trust check</div>
+                <h2 className="mt-3 text-3xl font-medium tracking-tight text-white md:text-4xl">
+                  The real promise is simple: find the money, protect the account, and show the work.
+                </h2>
+                <p className="mt-4 max-w-3xl text-base leading-8 text-white/56">
+                  If Margin cannot prove the case, it should not file it. If Amazon replies, you should see it. If something is blocked, you should know exactly what is missing. That is the standard sellers actually care about.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <Button
+                  onClick={handleConnectAmazon}
+                  className="h-12 rounded-full bg-sky-100 px-6 text-sm font-medium text-black hover:bg-sky-200"
+                >
+                  Connect Amazon
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={scrollToHowItWorks}
+                  className="h-12 rounded-full border-white/10 bg-white/[0.03] px-6 text-sm font-medium text-white hover:bg-white/[0.06]"
+                >
+                  Review the filing safeguards
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <BrandFooter />
+      <CookieConsent />
+    </div>
   );
-};
-
-export default Index;
+}
