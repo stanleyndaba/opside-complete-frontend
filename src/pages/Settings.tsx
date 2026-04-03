@@ -123,7 +123,7 @@ const Settings = () => {
       setAutoFileError(null);
 
       try {
-        const response = await api.getAutoFilePreference();
+        const response = await api.getAutoFilePreference(activeTenantSlug);
         if (response.ok && response.data) {
           setAutoFileEnabled(response.data.enabled);
         } else {
@@ -147,7 +147,7 @@ const Settings = () => {
     setAutoFileError(null);
 
     try {
-      const response = await api.saveAutoFilePreference(enabled);
+      const response = await api.saveAutoFilePreference(enabled, activeTenantSlug);
       if (!response.ok) {
         setAutoFileEnabled(previousValue);
         setAutoFileError(response.error || 'Failed to save auto-file setting');

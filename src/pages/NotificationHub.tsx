@@ -32,80 +32,130 @@ interface NotificationPreference {
 
 const DEFAULT_PREFERENCES: NotificationPreference[] = [
   {
-    id: 'recovery-guaranteed',
-    title: 'Recovery Is Guaranteed',
-    description: 'Filed and approved recovery milestones.',
-    category: 'Financial Milestones',
+    id: 'case_filed',
+    title: 'Case Filed',
+    description: 'When Margin submits a case to Amazon.',
+    category: 'Cases & Recoveries',
     email: true,
     inApp: true,
     supported: true
   },
   {
-    id: 'payout-confirmed',
-    title: 'Payout Is Confirmed',
-    description: 'When confirmed recovered funds are deposited.',
-    category: 'Financial Milestones',
+    id: 'needs_evidence',
+    title: 'Amazon Needs Evidence',
+    description: 'High-priority thread updates requesting more information.',
+    category: 'Cases & Recoveries',
     email: true,
     inApp: true,
     supported: true
   },
   {
-    id: 'invoice-issued',
-    title: 'New Invoice Is Issued',
-    description: 'Billing notification when a payment_processed event is emitted.',
-    category: 'Financial Milestones',
+    id: 'approved',
+    title: 'Case Approved',
+    description: 'When Amazon resolves a case in your favor.',
+    category: 'Cases & Recoveries',
     email: true,
     inApp: true,
-    supported: false,
-    supportNote: 'Not yet enforced by a live billing notification event.'
+    supported: true
   },
   {
-    id: 'team-member-joins',
-    title: 'New Team Member Joins',
-    description: 'When an invited user accepts their invitation.',
-    category: 'Account & Security',
+    id: 'rejected',
+    title: 'Case Rejected',
+    description: 'When Amazon denies or closes a case without reimbursement.',
+    category: 'Cases & Recoveries',
     email: true,
     inApp: true,
-    supported: false,
-    supportNote: 'Not yet enforced by backend events.'
+    supported: true
   },
   {
-    id: 'document-processed',
-    title: 'Document Successfully Processed',
-    description: 'Confirmation that evidence was processed and attached.',
-    category: 'Account & Security',
+    id: 'paid',
+    title: 'Reimbursement Issued',
+    description: 'When Amazon confirms reimbursement on a case thread.',
+    category: 'Cases & Recoveries',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'funds_deposited',
+    title: 'Funds Deposited',
+    description: 'When recovered funds are confirmed in payout flows.',
+    category: 'Cases & Recoveries',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'claim_detected',
+    title: 'Recovery Opportunity Detected',
+    description: 'High-value discrepancy and detection alerts.',
+    category: 'Evidence & Sync',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'evidence_found',
+    title: 'Evidence Ready',
+    description: 'When useful evidence enters the recovery lane.',
+    category: 'Evidence & Sync',
     email: false,
     inApp: true,
     supported: true
   },
   {
-    id: 'device-login',
-    title: 'New Device Logs In',
-    description: 'Critical security alert for account access.',
-    category: 'Account & Security',
+    id: 'amazon_challenge',
+    title: 'Amazon Challenge',
+    description: 'When Amazon pushes back on a case and escalation begins.',
+    category: 'Cases & Recoveries',
     email: true,
     inApp: true,
-    supported: false,
-    supportNote: 'Not yet enforced by backend events.'
+    supported: true
   },
   {
-    id: 'weekly-summary',
-    title: 'Weekly Performance Summary',
-    description: 'Curated weekly digest of delivered value.',
-    category: 'Platform & Performance',
+    id: 'sync_started',
+    title: 'Amazon Sync Started',
+    description: 'When Margin begins refreshing Amazon data.',
+    category: 'Evidence & Sync',
+    email: false,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'sync_completed',
+    title: 'Amazon Sync Completed',
+    description: 'When a data refresh completes successfully.',
+    category: 'Evidence & Sync',
+    email: false,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'sync_failed',
+    title: 'Amazon Sync Failed',
+    description: 'When a refresh run hits a real error and needs attention.',
+    category: 'Evidence & Sync',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
+    id: 'weekly_summary',
+    title: 'Weekly Recovery Summary',
+    description: 'Curated digest of detections, cases, and recovered funds.',
+    category: 'Platform Learning',
     email: true,
     inApp: false,
     supported: true
   },
   {
-    id: 'product-updates',
-    title: 'Product News & Updates',
-    description: 'Alerts about new features and improvements.',
-    category: 'Platform & Performance',
+    id: 'learning_insight',
+    title: 'Learning Insight',
+    description: 'Model and pattern-learning improvements from Agent 11.',
+    category: 'Platform Learning',
     email: false,
     inApp: true,
-    supported: false,
-    supportNote: 'Not yet enforced by backend events.'
+    supported: true
   }
 ];
 
@@ -167,6 +217,10 @@ export default function NotificationHub() {
 
   // Load notifications from API
   useEffect(() => {
+    if (!activeSlug) {
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
       setLoading(true);
@@ -221,7 +275,7 @@ export default function NotificationHub() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [activeSlug]);
 
   // Filter notifications based on search and filters
   const filteredNotifications = useMemo(() => {
@@ -372,9 +426,13 @@ export default function NotificationHub() {
   };
 
   const loadPreferences = async () => {
+    if (!activeSlug) {
+      setPreferencesLoaded(false);
+      return false;
+    }
     try {
       setPreferencesError(null);
-      const response = await api.getNotificationPreferences();
+      const response = await api.getNotificationPreferences(activeSlug);
       if (response.ok && response.data) {
         setPreferences(mergePreferencesWithDefaults(response.data));
         setPreferencesLoaded(true);
@@ -397,9 +455,14 @@ export default function NotificationHub() {
   // Load preferences from backend on mount
   useEffect(() => {
     void loadPreferences();
-  }, []);
+  }, [activeSlug]);
 
   const updatePreference = async (id: string, channel: 'email' | 'inApp', value: boolean) => {
+    if (!activeSlug) {
+      toast({ title: 'Workspace unavailable', description: 'Notification preferences require an active workspace.', variant: 'destructive' });
+      return;
+    }
+
     const previousPreferences = preferences;
     const nextPreferences = preferences.map(pref =>
       pref.id === id ? { ...pref, [channel]: value } : pref
@@ -414,7 +477,7 @@ export default function NotificationHub() {
     });
 
     try {
-      const response = await api.saveNotificationPreferences(prefsToSave);
+      const response = await api.saveNotificationPreferences(prefsToSave, activeSlug);
       if (response.ok) {
         const reloaded = await loadPreferences();
         if (reloaded) {
@@ -436,9 +499,9 @@ export default function NotificationHub() {
   };
 
   const categories = [
-    'Financial Milestones',
-    'Account & Security',
-    'Platform & Performance'
+    'Cases & Recoveries',
+    'Evidence & Sync',
+    'Platform Learning'
   ];
 
   return (

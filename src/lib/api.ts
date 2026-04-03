@@ -2464,32 +2464,42 @@ export const api = {
       count: number;
     }>(`/api/notifications/unread?${queryParams.toString()}`);
   },
-  getNotificationPreferences: () => requestJson<{
-    success: boolean;
-    data: Record<string, { email: boolean; inApp: boolean }>;
-  }>('/api/notifications/preferences'),
-  saveNotificationPreferences: (preferences: Record<string, { email: boolean; inApp: boolean }>) =>
-    requestJson<{ success: boolean; message: string }>('/api/notifications/preferences', {
+  getNotificationPreferences: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getNotificationPreferences");
+    return requestJson<{
+      success: boolean;
+      data: Record<string, { email: boolean; inApp: boolean }>;
+    }>(`/api/notifications/preferences?tenantSlug=${encodeURIComponent(tenantSlug)}`);
+  },
+  saveNotificationPreferences: (preferences: Record<string, { email: boolean; inApp: boolean }>, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for saveNotificationPreferences");
+    return requestJson<{ success: boolean; message: string }>(`/api/notifications/preferences?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
       method: 'PUT',
       body: JSON.stringify(preferences),
-    }),
-  getAutoFilePreference: () => requestJson<{
-    success: boolean;
-    data: {
-      enabled: boolean;
-    };
-  }>('/api/notifications/preferences/filing'),
-  saveAutoFilePreference: (enabled: boolean) =>
-    requestJson<{
+    });
+  },
+  getAutoFilePreference: (tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getAutoFilePreference");
+    return requestJson<{
+      success: boolean;
+      data: {
+        enabled: boolean;
+      };
+    }>(`/api/notifications/preferences/filing?tenantSlug=${encodeURIComponent(tenantSlug)}`);
+  },
+  saveAutoFilePreference: (enabled: boolean, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for saveAutoFilePreference");
+    return requestJson<{
       success: boolean;
       message: string;
       data: {
         enabled: boolean;
       };
-    }>('/api/notifications/preferences/filing', {
+    }>(`/api/notifications/preferences/filing?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
       method: 'PUT',
       body: JSON.stringify({ enabled }),
-    }),
+    });
+  },
 
 
   // Agent 11: Learning endpoints

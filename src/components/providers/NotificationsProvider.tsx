@@ -3,7 +3,6 @@ import { useStatusStream } from '@/hooks/use-status-stream';
 import { usePhase3Notifications } from '@/hooks/use-phase3-notifications';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
-import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'react-router-dom';
 import { useSession } from '@/contexts/SessionContext';
 
@@ -32,7 +31,6 @@ const NotificationsContext = createContext<NotificationsContextType | undefined>
 export function NotificationsProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { toast } = useToast();
   const { isAuthReady, authToken } = useSession();
 
   const { tenant } = useTenant();
@@ -70,14 +68,9 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   // Handle real-time updates from SSE
   useEffect(() => {
     if (lastEvent && lastEvent.type === 'notification') {
-      const newNotification = lastEvent.data;
-      // Add to list if not already present
-      setNotifications(prev => {
-        if (prev.some(n => n.id === newNotification.id)) return prev;
-        return [newNotification, ...prev];
-      });
+      fetchNotifications();
     }
-  }, [lastEvent]);
+  }, [fetchNotifications, lastEvent]);
 
   // Cleanup SSE on unmount
   useEffect(() => {

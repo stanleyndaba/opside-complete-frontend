@@ -212,13 +212,8 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
                 break;
 
               case 'notification':
-                const notifData = notificationEvent.data;
-                toast({
-                  title: notifData.title,
-                  description: notifData.message,
-                  variant: notifData.type === 'error' ? 'destructive' : 'default',
-                  duration: 5000,
-                });
+                // Persisted notifications are re-fetched by NotificationsProvider.
+                // Avoid rendering raw SSE payloads as source-of-truth UI records here.
                 break;
 
               case 'heartbeat':
