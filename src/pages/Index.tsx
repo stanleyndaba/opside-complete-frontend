@@ -415,16 +415,54 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-32 md:py-40">
           <div className={containerClass}>
-            <div className="max-w-[900px]">
-              <div className={eyebrowClass}>Final trust check</div>
-              <h2 className="mt-4 text-5xl font-light tracking-tight text-white md:text-7xl">
-                Find the money, protect the account, and show the work.
+            <div className="max-w-[980px]">
+              <div className={eyebrowClass}>Start with clarity</div>
+              <h2 className="mt-4 max-w-[860px] text-5xl font-light tracking-tight text-white md:text-7xl">
+                Start recovering missed FBA money without adding more work.
               </h2>
-              <p className="mt-8 max-w-[760px] text-lg leading-8 text-white/60">
-                If Margin cannot prove the case, it should not file it. If Amazon replies, you should see it. If something is blocked, you should know exactly what is missing.
+              <p className="mt-8 max-w-[700px] text-lg leading-8 text-white/60">
+                The first step should feel simple, safe, and controlled. You should understand what happens before anything is ever filed.
               </p>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-16 max-w-[880px] space-y-10 md:space-y-12">
+                <div className="grid gap-4 border-t border-white/8 pt-6 md:grid-cols-[72px_minmax(0,1fr)] md:pt-8">
+                  <div className="text-sm font-medium tracking-tight text-white/34">01</div>
+                  <div>
+                    <h3 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      Connect your Amazon account
+                    </h3>
+                    <p className="mt-3 max-w-[620px] text-lg leading-8 text-white/58">
+                      Secure, read-only access gives Margin the data it needs to audit reimbursement opportunities.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 border-t border-white/8 pt-6 md:grid-cols-[72px_minmax(0,1fr)] md:pt-8">
+                  <div className="text-sm font-medium tracking-tight text-white/34">02</div>
+                  <div>
+                    <h3 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      We detect and prepare cases
+                    </h3>
+                    <p className="mt-3 max-w-[620px] text-lg leading-8 text-white/58">
+                      Real discrepancies are surfaced, matched with evidence, and separated from weak or duplicate noise.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 border-t border-white/8 pt-6 md:grid-cols-[72px_minmax(0,1fr)] md:pt-8">
+                  <div className="text-sm font-medium tracking-tight text-white/34">03</div>
+                  <div>
+                    <h3 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      You review or let it run
+                    </h3>
+                    <p className="mt-3 max-w-[620px] text-lg leading-8 text-white/58">
+                      Only strong, supportable cases move forward, while everything blocked stays explicit and visible.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-14 flex flex-col gap-3 sm:flex-row">
                 <Button
                   onClick={handleConnectAmazon}
                   className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white hover:bg-[#1b1b1b]"
@@ -437,7 +475,7 @@ export default function Index() {
                   onClick={scrollToHowItWorks}
                   className="h-11 rounded-full border border-white/10 bg-transparent px-6 text-sm font-medium text-white hover:bg-white/[0.04]"
                 >
-                  Review the filing safeguards
+                  See how it works
                 </Button>
               </div>
             </div>
