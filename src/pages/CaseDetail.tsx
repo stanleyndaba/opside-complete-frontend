@@ -366,12 +366,22 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   amazonCaseId: null,
   case_state: 'unlinked',
   amazon_thread_linked: false,
+  case_origin: null,
+  origin_metadata: {},
+  thread_backfilled_at: null,
   can_reply_to_thread: false,
   case_messages: [],
   currency: 'USD'
 });
 
-const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
+const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
+  const caseOrigin = apiData.case_origin || null;
+  const originMetadata = apiData.origin_metadata && typeof apiData.origin_metadata === 'object'
+    ? apiData.origin_metadata
+    : {};
+  const claimAmountUnknown = caseOrigin === 'amazon_thread_backfill' && originMetadata?.claim_amount_unknown === true;
+
+  return {
   ...apiData,
   id: apiData.id || fallbackId || null,
   entity_type: apiData.entity_type || null,
@@ -391,6 +401,9 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   operational_explanation: apiData.operational_explanation || apiData.evidence_attachments?.decision_intelligence?.operational_explanation || null,
   recovery_status: apiData.recovery_status || null,
   billing_status: apiData.billing_status || null,
+  case_origin: caseOrigin,
+  origin_metadata: originMetadata,
+  thread_backfilled_at: apiData.thread_backfilled_at || null,
   block_reasons: Array.isArray(apiData.block_reasons) ? apiData.block_reasons : [],
   last_error: apiData.last_error || null,
   proof_status: apiData.proof_status || null,
@@ -399,9 +412,9 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   payout_proof_status: apiData.payout_proof_status || null,
   quarantine_reason: apiData.quarantine_reason || null,
   updated_at: apiData.updated_at || apiData.created_at || apiData.createdDate || null,
-  guaranteedAmount: apiData.guaranteedAmount ?? apiData.requested_amount ?? apiData.claim_amount ?? apiData.estimated_claim_value ?? apiData.estimated_value ?? null,
-  estimated_claim_value: apiData.estimated_claim_value ?? apiData.estimated_recovery_amount ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null,
-  requested_amount: apiData.requested_amount ?? apiData.claim_amount ?? apiData.guaranteedAmount ?? null,
+  guaranteedAmount: claimAmountUnknown ? null : (apiData.guaranteedAmount ?? apiData.requested_amount ?? apiData.claim_amount ?? apiData.estimated_claim_value ?? apiData.estimated_value ?? null),
+  estimated_claim_value: claimAmountUnknown ? null : (apiData.estimated_claim_value ?? apiData.estimated_recovery_amount ?? apiData.estimated_value ?? apiData.guaranteedAmount ?? null),
+  requested_amount: claimAmountUnknown ? null : (apiData.requested_amount ?? apiData.claim_amount ?? apiData.guaranteedAmount ?? null),
   approved_amount: apiData.approved_amount ?? null,
   recovered_amount: apiData.recovered_amount ?? apiData.actual_payout_amount ?? null,
   actual_payout_amount: apiData.actual_payout_amount ?? apiData.recovered_amount ?? null,
@@ -431,7 +444,8 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   next_step_context: apiData.next_step_context || null,
   rejection_category: apiData.rejection_category || apiData.evidence_attachments?.rejection_category || null,
   rejection_reason: apiData.rejection_reason || null,
-});
+  };
+};
 
 const isEvidenceRelatedEvent = (event: any) => {
   const type = String(event?.type || '').toLowerCase();
@@ -846,6 +860,8 @@ export default function CaseDetail() {
   const canOpenCanonicalFiling = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
   const caseThreadMessages = Array.isArray(backendTruthCase?.case_messages) ? backendTruthCase.case_messages : [];
   const amazonThreadLinked = Boolean(backendTruthCase?.amazon_thread_linked);
+  const isAmazonThreadBackfillCase = backendTruthCase?.case_origin === 'amazon_thread_backfill';
+  const threadBackfilledAt = backendTruthCase?.thread_backfilled_at || null;
   const canReplyToAmazonThread = Boolean(backendTruthCase?.can_reply_to_thread && activeSlug && confirmedLinkedDisputeCaseId);
   const replyEligibleDocuments = Array.isArray(backendTruthCase?.documents) ? backendTruthCase.documents : [];
   const backendConfidencePct = useMemo<number | null>(() => {
@@ -1826,6 +1842,19 @@ export default function CaseDetail() {
                     </div>
 
                     <div className="space-y-4">
+                      {isAmazonThreadBackfillCase ? (
+                        <div className="rounded-lg border border-amber-500/20 bg-amber-500/[0.06] px-4 py-4 text-sm text-amber-100">
+                          <div className="text-[10px] font-bold uppercase tracking-tight text-amber-300/80">Amazon Thread Backfill</div>
+                          <div className="mt-1 font-semibold text-amber-50">
+                            Margin linked an existing Amazon support thread to this case. Margin did not create the original filing.
+                          </div>
+                          <div className="mt-2 text-[11px] leading-relaxed text-amber-100/75">
+                            Unknown filing details remain Not Available until real seller-side proof exists.
+                            {threadBackfilledAt ? ` Backfilled ${formatEventTimestamp(threadBackfilledAt)}.` : ''}
+                          </div>
+                        </div>
+                      ) : null}
+
                       <div className="flex items-center gap-3">
                         <h4 className="text-sm font-bold text-white">Amazon Thread</h4>
                         <Badge variant="outline" className={cn("text-[10px] uppercase tracking-tight border", getThreadStateTone(backendTruthCase?.case_state))}>
