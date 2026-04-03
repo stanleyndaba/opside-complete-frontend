@@ -11,6 +11,7 @@ interface SceneNode {
   kind: NodeKind;
   iconSrc?: string;
   iconAlt?: string;
+  iconClassName?: string;
 }
 
 interface SceneRoute {
@@ -63,12 +64,12 @@ const outputNodes: SceneNode[] = [
 ];
 
 const evidenceSourceNodes: SceneNode[] = [
-  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.47, y: 0.3, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail' },
-  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.4, y: 0.41, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook' },
-  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.4, y: 0.63, kind: 'source', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox' },
+  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.47, y: 0.3, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail', iconClassName: 'max-h-4.5 max-w-4.5' },
+  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.4, y: 0.41, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook', iconClassName: 'max-h-4.5 max-w-4.5' },
+  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.4, y: 0.63, kind: 'source', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox', iconClassName: 'max-h-4.5 max-w-4.5' },
   { id: 'onedrive-source', label: 'OneDrive', shortLabel: 'OneDrive', x: 0.47, y: 0.74, kind: 'source', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
   { id: 'adobe-sign-source', label: 'Adobe Sign', shortLabel: 'Adobe Sign', x: 0.59, y: 0.3, kind: 'source', iconSrc: '/dobe.png', iconAlt: 'Adobe Sign' },
-  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.59, y: 0.74, kind: 'source', iconSrc: '/slack-icon-2019.png', iconAlt: 'Slack' }
+  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.59, y: 0.74, kind: 'source', iconSrc: '/slack-icon-2019.png', iconAlt: 'Slack', iconClassName: 'max-h-4.5 max-w-4.5' }
 ];
 
 const allNodes = [amazonNode, ...inputNodes, ...stageNodes, ...outputNodes, ...evidenceSourceNodes];
@@ -679,7 +680,7 @@ export function RecoveryEngineVisualization() {
                   <img
                     src={node.iconSrc}
                     alt={node.iconAlt || node.label}
-                    className="max-h-5.5 max-w-5.5 object-contain opacity-90"
+                    className={`${node.iconClassName || 'max-h-5.5 max-w-5.5'} object-contain opacity-90`}
                   />
                 ) : null}
               </div>
