@@ -76,6 +76,7 @@ const STATUS_BADGE_STYLES: Record<string, string> = {
   approved: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
   reconciled: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
   pending_approval: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
+  pending_safety_verification: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
   failed: 'bg-red-500/10 text-red-300 border-red-500/20',
   retrying: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
   billed: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',

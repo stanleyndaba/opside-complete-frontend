@@ -45,6 +45,10 @@ const DISPUTE_REASON_LABELS: Record<string, string> = {
   user_disabled_auto_file: 'Seller auto-file disabled',
   queue_unavailable: 'Queue unavailable',
   missing_required_identifiers: 'Missing required identifiers',
+  missing_trustworthy_product_identifier: 'Needs verified product identifier',
+  missing_trustworthy_order_identifier: 'Needs verified order identifier',
+  missing_trustworthy_shipment_identifier: 'Needs verified shipment identifier',
+  awaiting_verified_identifiers: 'Awaiting seller-verified identifiers',
   outside_claim_window: 'Outside claim window',
 };
 
