@@ -283,39 +283,77 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-28 md:py-36">
           <div className={containerClass}>
-            <div className="grid gap-8 xl:grid-cols-2">
-              <div className="rounded-2xl border border-white/8 bg-white/[0.015] px-6 py-7 md:px-8 md:py-8">
-                <div className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 text-white/72" />
-                  <h3 className="text-2xl font-medium tracking-tight text-white">When Margin should file</h3>
-                </div>
-                <p className="mt-4 text-lg leading-8 text-white/58">
-                  Sellers want a tool that knows when a case is truly ready. That means concrete identifiers, supportable evidence, and no duplicate risk.
-                </p>
-                <ul className="mt-8 space-y-3">
-                  {filingRules.map((item) => (
-                    <li key={item} className="border-t border-white/8 py-4 text-base text-white/78">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="max-w-[780px]">
+              <div className={eyebrowClass}>Decision system</div>
+              <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl">
+                We don’t file everything. We file what wins.
+              </h2>
+              <p className="mt-6 max-w-[680px] text-lg leading-8 text-white/58">
+                The system evaluates readiness before taking action.
+              </p>
+            </div>
 
-              <div className="rounded-2xl border border-white/8 bg-white/[0.015] px-6 py-7 md:px-8 md:py-8">
-                <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-amber-200/90" />
-                  <h3 className="text-2xl font-medium tracking-tight text-white">When Margin should wait</h3>
-                </div>
-                <p className="mt-4 text-lg leading-8 text-white/58">
-                  Saying “not yet” is part of the product. If the case is weak, already active, or missing truth, the right move is to hold it instead of filing noise.
-                </p>
-                <ul className="mt-8 space-y-3">
-                  {holdRules.map((item) => (
-                    <li key={item} className="border-t border-white/8 py-4 text-base text-white/78">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+            <div className="relative mt-16 max-w-[980px] md:mt-20">
+              <div className="absolute bottom-10 left-3 top-8 hidden w-px bg-white/10 md:block" />
+
+              <div className="space-y-16 md:space-y-20">
+                <article className="relative md:pl-16">
+                  <div className="absolute left-0 top-2 hidden h-6 w-6 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] md:flex">
+                    <ShieldCheck className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+
+                  <div className="max-w-[760px]">
+                    <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
+                    <h3 className="mt-4 text-3xl font-medium tracking-tight text-white md:text-5xl">
+                      Cases move only when the claim is fully supportable.
+                    </h3>
+                    <p className="mt-5 max-w-[700px] text-lg leading-8 text-white/68">
+                      Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
+                    </p>
+                  </div>
+
+                  <div className="mt-10 max-w-[820px] border-t border-white/10">
+                    {filingRules.map((item) => (
+                      <div key={item} className="grid gap-3 border-b border-white/8 py-5 md:grid-cols-[28px_minmax(0,1fr)] md:py-6">
+                        <div className="text-sm font-medium tracking-tight text-white/30">IF</div>
+                        <div className="text-base leading-7 text-white/84 md:text-lg">{item}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 text-sm font-medium tracking-tight text-white">
+                    → SYSTEM ACTION: FILE
+                  </div>
+                </article>
+
+                <article className="relative md:pl-16">
+                  <div className="absolute left-0 top-2 hidden h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] md:flex">
+                    <Clock className="h-3.5 w-3.5 text-white/48" />
+                  </div>
+
+                  <div className="max-w-[700px]">
+                    <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
+                    <h3 className="mt-4 text-2xl font-medium tracking-tight text-white/82 md:text-4xl">
+                      The system holds weak, incomplete, or already-active cases.
+                    </h3>
+                    <p className="mt-5 max-w-[660px] text-lg leading-8 text-white/50">
+                      Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
+                    </p>
+                  </div>
+
+                  <div className="mt-8 max-w-[760px] border-t border-white/8">
+                    {holdRules.map((item) => (
+                      <div key={item} className="grid gap-3 border-b border-white/6 py-4 md:grid-cols-[28px_minmax(0,1fr)]">
+                        <div className="text-sm font-medium tracking-tight text-white/22">OR</div>
+                        <div className="text-base leading-7 text-white/60">{item}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-7 text-sm font-medium tracking-tight text-white/56">
+                    → SYSTEM ACTION: HOLD
+                  </div>
+                </article>
               </div>
             </div>
           </div>
