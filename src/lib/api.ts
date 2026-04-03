@@ -1950,10 +1950,12 @@ export const api = {
         claim_number: string | null;
         case_type: string | null;
         anomaly_type: string | null;
+        case_origin?: string | null;
         status: string | null;
         filing_status: string | null;
         recovery_status: string | null;
         billing_status: string | null;
+        eligibility_status?: 'READY' | 'DUPLICATE_BLOCKED' | 'INSUFFICIENT_DATA' | 'THREAD_ONLY' | 'SAFETY_HOLD' | null;
         eligible_to_file: boolean | null;
         block_reasons: string[];
         last_error?: string | null;

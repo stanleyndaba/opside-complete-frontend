@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { formatAutonomyLabel, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
+  formatEligibilityStatus,
   formatDisputeReason,
   formatPayoutProofStatus,
   formatProofStatus,
@@ -234,6 +235,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   const entityKind = getQueueEntityKind(row);
   const entityNoun = getQueueEntityNoun(row);
   const hasRealDisputeCase = entityKind === 'dispute_case';
+  const eligibilityStatus = String(row.eligibility_status || '').toUpperCase();
   const filingStatus = String(row.filing_status || '').toLowerCase();
   const status = String(row.status || '').toLowerCase();
   const billingStatus = String(row.billing_status || '').toLowerCase();
@@ -364,6 +366,46 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
           : 'A backend approval amount is recorded. Payment is still awaiting financial confirmation.',
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
+    };
+  }
+
+  if (eligibilityStatus === 'THREAD_ONLY') {
+    return {
+      tone: 'attention',
+      headline: 'Amazon thread detected',
+      detail: 'An existing Amazon support thread is linked, but Margin will not file again until verified identifiers support a safe path.',
+      strengths: strengths.slice(0, 2),
+      risks: ['Existing case already linked']
+    };
+  }
+
+  if (eligibilityStatus === 'DUPLICATE_BLOCKED') {
+    return {
+      tone: 'blocked',
+      headline: 'Duplicate detected',
+      detail: 'Margin found an existing case, filing, or claim signature that makes a new Amazon submission unsafe.',
+      strengths: strengths.slice(0, 2),
+      risks: risks.slice(0, 3)
+    };
+  }
+
+  if (eligibilityStatus === 'INSUFFICIENT_DATA') {
+    return {
+      tone: 'attention',
+      headline: 'Awaiting verified identifiers',
+      detail: 'Required seller-verified identifiers are still missing or contradictory, so filing stays paused.',
+      strengths: strengths.slice(0, 2),
+      risks: risks.slice(0, 3)
+    };
+  }
+
+  if (eligibilityStatus === 'SAFETY_HOLD' && filingStatus === 'blocked') {
+    return {
+      tone: 'blocked',
+      headline: 'Safety hold',
+      detail: lastError || 'Agent 7 is holding this case because the current proof or runtime state is not safe enough to submit.',
+      strengths: strengths.slice(0, 2),
+      risks: risks.slice(0, 3)
     };
   }
 
@@ -1817,6 +1859,7 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Status', value: formatLabel(detailsRow.status) },
                   { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
+                  { label: 'Eligibility', value: formatEligibilityStatus(detailsRow.eligibility_status) },
                   { label: 'Filing Strategy', value: detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : 'Not Available' },
                   { label: 'Runtime State', value: detailsRow.operational_state ? formatAutonomyLabel(detailsRow.operational_state) : 'Not Available' },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },

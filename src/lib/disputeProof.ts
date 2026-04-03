@@ -49,6 +49,19 @@ const DISPUTE_REASON_LABELS: Record<string, string> = {
   missing_trustworthy_order_identifier: 'Needs verified order identifier',
   missing_trustworthy_shipment_identifier: 'Needs verified shipment identifier',
   awaiting_verified_identifiers: 'Awaiting seller-verified identifiers',
+  missing_quantity_value: 'Missing quantity',
+  invalid_quantity_value: 'Invalid quantity',
+  contradictory_order_identifiers: 'Conflicting order identifiers',
+  contradictory_shipment_identifiers: 'Conflicting shipment identifiers',
+  contradictory_product_identifiers: 'Conflicting product identifiers',
+  contradictory_quantity_values: 'Conflicting quantities',
+  duplicate_exact_amazon_case_id: 'Existing case already linked',
+  duplicate_claim_signature: 'Duplicate detected - not filed',
+  existing_submission_already_recorded: 'Existing submission already recorded',
+  existing_amazon_thread_active: 'Amazon thread already active',
+  thread_continuation_detected: 'Amazon thread detected',
+  submission_explanation_too_short: 'Explanation too short',
+  submission_explanation_repetitive: 'Repeated template language',
   outside_claim_window: 'Outside claim window',
 };
 
@@ -175,4 +188,16 @@ export function payoutProofTone(value: string | null | undefined): string {
     default:
       return 'border-white/10 bg-white/5 text-white/50';
   }
+}
+
+export function formatEligibilityStatus(value: string | null | undefined): string {
+  const normalized = normalizeToken(value);
+  const labels: Record<string, string> = {
+    ready: 'Ready',
+    duplicate_blocked: 'Duplicate detected - not filed',
+    insufficient_data: 'Awaiting verified identifiers',
+    thread_only: 'Amazon thread detected',
+    safety_hold: 'Safety hold',
+  };
+  return labels[normalized] || humanize(value);
 }

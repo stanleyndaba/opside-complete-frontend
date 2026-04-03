@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { api } from '@/lib/api';
 import { formatAutonomyLabel, summarizeExplanationPayload, summarizeOperationalExplanation } from '@/lib/autonomyTruth';
 import {
+  formatEligibilityStatus,
   formatDisputeReason,
   formatPayoutProofStatus,
   formatProofStatus,
@@ -313,6 +314,7 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   manual_review_reason: null,
   payout_proof_status: null,
   quarantine_reason: null,
+  eligibility_status: null,
   guaranteedAmount: null,
   estimated_claim_value: null,
   requested_amount: null,
@@ -401,6 +403,7 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
   operational_explanation: apiData.operational_explanation || apiData.evidence_attachments?.decision_intelligence?.operational_explanation || null,
   recovery_status: apiData.recovery_status || null,
   billing_status: apiData.billing_status || null,
+  eligibility_status: apiData.eligibility_status || apiData.evidence_attachments?.decision_intelligence?.eligibility_status || null,
   case_origin: caseOrigin,
   origin_metadata: originMetadata,
   thread_backfilled_at: apiData.thread_backfilled_at || null,
@@ -857,12 +860,18 @@ export default function CaseDetail() {
     ? backendTruthCase.linked_dispute_case_id
     : null;
   const canPreviewBrief = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
-  const canOpenCanonicalFiling = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
+  const backendEligibilityStatus = String(backendTruthCase?.eligibility_status || '').toUpperCase();
+  const canOpenCanonicalFiling = Boolean(activeSlug && confirmedLinkedDisputeCaseId && backendEligibilityStatus === 'READY');
   const caseThreadMessages = Array.isArray(backendTruthCase?.case_messages) ? backendTruthCase.case_messages : [];
   const amazonThreadLinked = Boolean(backendTruthCase?.amazon_thread_linked);
   const isAmazonThreadBackfillCase = backendTruthCase?.case_origin === 'amazon_thread_backfill';
   const threadBackfilledAt = backendTruthCase?.thread_backfilled_at || null;
-  const canReplyToAmazonThread = Boolean(backendTruthCase?.can_reply_to_thread && activeSlug && confirmedLinkedDisputeCaseId);
+  const canReplyToAmazonThread = Boolean(
+    backendTruthCase?.can_reply_to_thread &&
+    activeSlug &&
+    confirmedLinkedDisputeCaseId &&
+    backendEligibilityStatus === 'READY'
+  );
   const replyEligibleDocuments = Array.isArray(backendTruthCase?.documents) ? backendTruthCase.documents : [];
   const backendConfidencePct = useMemo<number | null>(() => {
     if (!backendTruthCase || backendTruthCase.truth_unavailable) return null;
@@ -1457,6 +1466,12 @@ export default function CaseDetail() {
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Eligibility</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {formatEligibilityStatus(effectiveCase.eligibility_status)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Filing Strategy</dt>
                           <dd className="text-xs font-sans font-bold text-white">
                             {effectiveCase.filing_strategy ? formatAutonomyLabel(effectiveCase.filing_strategy) : NOT_AVAILABLE}
@@ -1948,62 +1963,74 @@ export default function CaseDetail() {
                           <div>
                             <div className="text-xs font-bold text-white">Reply to Amazon</div>
                             <div className="text-[11px] text-white/45 mt-1">
-                              Continue the linked Amazon support thread from inside Margin.
-                            </div>
-                          </div>
-
-                          <Textarea
-                            value={replyBody}
-                            onChange={(event) => setReplyBody(event.target.value)}
-                            placeholder={canReplyToAmazonThread ? 'Write the evidence-backed reply you want Amazon to receive.' : 'Reply will unlock after the first Amazon thread message is linked.'}
-                            disabled={!canReplyToAmazonThread || sendingReply}
-                            className="min-h-[140px] rounded-lg border-white/10 bg-white/[0.03] text-sm text-white placeholder:text-white/25"
-                          />
-
-                          {replyEligibleDocuments.length > 0 ? (
-                            <div className="space-y-3">
-                              <div className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                                Attach linked evidence
-                              </div>
-                              <div className="space-y-2">
-                                {replyEligibleDocuments.map((doc: any) => {
-                                  const documentId = String(doc?.id || '').trim();
-                                  if (!documentId) return null;
-                                  const isChecked = selectedReplyAttachmentIds.includes(documentId);
-                                  return (
-                                    <label
-                                      key={documentId}
-                                      className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
-                                    >
-                                      <Checkbox
-                                        checked={isChecked}
-                                        onCheckedChange={(checked) => toggleReplyAttachment(documentId, checked === true)}
-                                        disabled={!canReplyToAmazonThread || sendingReply}
-                                      />
-                                      <span className="font-sans font-bold">{doc?.filename || doc?.name || documentId}</span>
-                                    </label>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          ) : null}
-
-                          <div className="flex items-center justify-between gap-4">
-                            <div className="text-[11px] text-white/40">
                               {canReplyToAmazonThread
-                                ? 'Thread linkage is confirmed. This reply will stay on the stored Amazon conversation.'
-                                : 'Reply is blocked until the Amazon thread is linked and at least one inbound message is stored.'}
+                                ? 'Continue the linked Amazon support thread from inside Margin.'
+                                : backendEligibilityStatus === 'THREAD_ONLY'
+                                  ? 'Amazon thread detected. Reply stays disabled until verified identifiers support a safe case path.'
+                                  : 'Reply stays disabled until this case is filing-ready.'}
                             </div>
-                            <Button
-                              type="button"
-                              onClick={handleSendCaseReply}
-                              disabled={!canReplyToAmazonThread || sendingReply || !replyBody.trim()}
-                              className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
-                            >
-                              {sendingReply ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                              Send Reply
-                            </Button>
                           </div>
+
+                          {canReplyToAmazonThread ? (
+                            <>
+                              <Textarea
+                                value={replyBody}
+                                onChange={(event) => setReplyBody(event.target.value)}
+                                placeholder="Write the evidence-backed reply you want Amazon to receive."
+                                disabled={sendingReply}
+                                className="min-h-[140px] rounded-lg border-white/10 bg-white/[0.03] text-sm text-white placeholder:text-white/25"
+                              />
+
+                              {replyEligibleDocuments.length > 0 ? (
+                                <div className="space-y-3">
+                                  <div className="text-[10px] font-bold uppercase tracking-tight text-white/35">
+                                    Attach linked evidence
+                                  </div>
+                                  <div className="space-y-2">
+                                    {replyEligibleDocuments.map((doc: any) => {
+                                      const documentId = String(doc?.id || '').trim();
+                                      if (!documentId) return null;
+                                      const isChecked = selectedReplyAttachmentIds.includes(documentId);
+                                      return (
+                                        <label
+                                          key={documentId}
+                                          className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
+                                        >
+                                          <Checkbox
+                                            checked={isChecked}
+                                            onCheckedChange={(checked) => toggleReplyAttachment(documentId, checked === true)}
+                                            disabled={sendingReply}
+                                          />
+                                          <span className="font-sans font-bold">{doc?.filename || doc?.name || documentId}</span>
+                                        </label>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              ) : null}
+
+                              <div className="flex items-center justify-between gap-4">
+                                <div className="text-[11px] text-white/40">
+                                  Thread linkage is confirmed. This reply will stay on the stored Amazon conversation.
+                                </div>
+                                <Button
+                                  type="button"
+                                  onClick={handleSendCaseReply}
+                                  disabled={sendingReply || !replyBody.trim()}
+                                  className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
+                                >
+                                  {sendingReply ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                  Send Reply
+                                </Button>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[11px] text-white/55">
+                              {backendEligibilityStatus === 'THREAD_ONLY'
+                                ? 'Amazon thread detected. Margin will not expose a reply action here until verified identifiers support a safe case path.'
+                                : 'Reply is not available from the browser while this case is blocked from filing.'}
+                            </div>
+                          )}
                         </div>
                       ) : null}
                     </div>
@@ -2285,15 +2312,18 @@ export default function CaseDetail() {
                               </ul>
                             </div>
                             <div className="flex flex-col justify-end gap-3">
-                              <button
-                                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all rounded-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-500"
-                                onClick={() => openCanonicalFilingScreen('resubmit')}
-                                disabled={!canOpenCanonicalFiling}
-                              >
-                                {canOpenCanonicalFiling
-                                  ? (escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation')
-                                  : 'Not Available'}
-                              </button>
+                              {canOpenCanonicalFiling ? (
+                                <button
+                                  className="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xs h-9 transition-all rounded-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-500"
+                                  onClick={() => openCanonicalFilingScreen('resubmit')}
+                                >
+                                  {escalationPlaybooks[rejectionPlaybookReason].autoTriggerable ? 'Auto-Trigger Escalation' : 'Confirm Manual Escalation'}
+                                </button>
+                              ) : (
+                                <div className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-center text-[10px] font-bold uppercase tracking-tight text-white/40">
+                                  Not available while filing is blocked
+                                </div>
+                              )}
                               <p className="text-[9px] text-white/30 text-center">
                                 {canOpenCanonicalFiling ? `Escalation managed by ${AGENT_NAMES['refund_filing']}` : NOT_AVAILABLE}
                               </p>
