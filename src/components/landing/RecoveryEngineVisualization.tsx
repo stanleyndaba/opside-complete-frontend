@@ -12,6 +12,7 @@ interface SceneNode {
   iconSrc?: string;
   iconAlt?: string;
   iconClassName?: string;
+  tileClassName?: string;
 }
 
 interface SceneRoute {
@@ -64,12 +65,12 @@ const outputNodes: SceneNode[] = [
 ];
 
 const evidenceSourceNodes: SceneNode[] = [
-  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.47, y: 0.3, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail', iconClassName: 'max-h-4.5 max-w-4.5' },
-  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.4, y: 0.41, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook', iconClassName: 'max-h-4.5 max-w-4.5' },
-  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.4, y: 0.63, kind: 'source', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox', iconClassName: 'max-h-4.5 max-w-4.5' },
+  { id: 'gmail-source', label: 'Gmail', shortLabel: 'Gmail', x: 0.47, y: 0.3, kind: 'source', iconSrc: '/gmailicon.png', iconAlt: 'Gmail', iconClassName: 'max-h-3.5 max-w-3.5', tileClassName: 'h-7.5 w-7.5' },
+  { id: 'outlook-source', label: 'Outlook', shortLabel: 'Outlook', x: 0.4, y: 0.41, kind: 'source', iconSrc: '/outlookicon.webp', iconAlt: 'Outlook', iconClassName: 'max-h-3.5 max-w-3.5', tileClassName: 'h-7.5 w-7.5' },
+  { id: 'dropbox-source', label: 'Dropbox', shortLabel: 'Dropbox', x: 0.4, y: 0.63, kind: 'source', iconSrc: '/Dropbox_Icon.svg.png', iconAlt: 'Dropbox', iconClassName: 'max-h-3.5 max-w-3.5', tileClassName: 'h-7.5 w-7.5' },
   { id: 'onedrive-source', label: 'OneDrive', shortLabel: 'OneDrive', x: 0.47, y: 0.74, kind: 'source', iconSrc: '/onedriive.png', iconAlt: 'OneDrive' },
   { id: 'adobe-sign-source', label: 'Adobe Sign', shortLabel: 'Adobe Sign', x: 0.59, y: 0.3, kind: 'source', iconSrc: '/dobe.png', iconAlt: 'Adobe Sign' },
-  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.59, y: 0.74, kind: 'source', iconSrc: '/slack-icon-2019.png', iconAlt: 'Slack', iconClassName: 'max-h-4.5 max-w-4.5' }
+  { id: 'slack-source', label: 'Slack', shortLabel: 'Slack', x: 0.59, y: 0.74, kind: 'source', iconSrc: '/slack-icon-2019.png', iconAlt: 'Slack', iconClassName: 'max-h-3.5 max-w-3.5', tileClassName: 'h-7.5 w-7.5' }
 ];
 
 const allNodes = [amazonNode, ...inputNodes, ...stageNodes, ...outputNodes, ...evidenceSourceNodes];
@@ -675,7 +676,7 @@ export function RecoveryEngineVisualization() {
             style={{ left: `${node.x * 100}%`, top: `${node.y * 100}%` }}
           >
             <div className="flex flex-col items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-black/45 backdrop-blur-sm">
+              <div className={`flex items-center justify-center rounded-xl border border-white/10 bg-black/45 backdrop-blur-sm ${node.tileClassName || 'h-10 w-10'}`}>
                 {node.iconSrc ? (
                   <img
                     src={node.iconSrc}
