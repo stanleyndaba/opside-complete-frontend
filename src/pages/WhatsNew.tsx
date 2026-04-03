@@ -12,7 +12,7 @@ const updates = [{
   tag: "New Feature",
   description: "We heard from many of you that you wanted an easier way to analyze quarterly performance, so we've added a powerful new Date Range Picker to the Reports page.",
   highlights: ["Filter reports by custom date ranges", "Compare performance across different time periods", "Export filtered data for deeper analysis"],
-  cta: { text: "View Reports", href: "/reports" },
+  cta: { text: "View Recoveries", href: "/recoveries" },
   updateId: "REF_004"
 }, {
   id: 2,

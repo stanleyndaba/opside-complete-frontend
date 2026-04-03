@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, NotebookPen, ChevronLeft, ChevronRight, BarChart3, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCcw } from 'lucide-react';
+import { Gauge, ShieldCheck, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -25,9 +25,6 @@ const prefetchRoute = (path: string) => {
     switch (basePath || '/') {
       case '/':
         import('@/components/layout/Dashboard');
-        break;
-      case '/reports':
-        import('@/pages/Reports');
         break;
       case '/recoveries':
         import('@/pages/RecoveryPipelineAgent8');
@@ -307,7 +304,6 @@ export function Sidebar({
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') },
-    { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
   ];
 
   const secondaryItems: NavItem[] = []; // Moved to "More" menu

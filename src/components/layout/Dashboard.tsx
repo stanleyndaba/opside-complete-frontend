@@ -12,9 +12,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import {
-  FileText, BarChart3, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
+  FileText, Link2, Search, Send, CircleDollarSign, Info, Mail, Cloud,
   ArrowRight, ArrowUp, ArrowDown, Plus, CheckCircle, RefreshCw, RotateCcw,
-  Download, Bell, TrendingDown, TrendingUp, Loader2, X, AlertTriangle,
+  Download, Bell, TrendingDown, TrendingUp, Loader2, X,
   ChevronDown, Clock, MoreVertical, Files
 } from 'lucide-react';
 import { api, detectionApi, buildApiUrl } from '@/lib/api';
@@ -187,17 +187,6 @@ const formatIssueStatusLabel = (status?: string | null) => {
     default:
       return normalized ? toTitleCase(normalized.replace(/_/g, ' ')) : 'Needs review';
   }
-};
-
-const formatLaunchMetricValue = (value: number | null) =>
-  typeof value === 'number' ? value.toLocaleString('en-US') : 'Not Available';
-
-const launchAlertTone = (alert: LaunchMonitorAlert) => {
-  if (alert.active === null) return 'border-white/10 bg-white/[0.03] text-white/55';
-  if (!alert.active) return 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-200';
-  return alert.severity === 'high'
-    ? 'border-red-500/25 bg-red-500/[0.08] text-red-200'
-    : 'border-amber-500/25 bg-amber-500/[0.08] text-amber-200';
 };
 
 const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
@@ -1201,23 +1190,6 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
     return formatDistanceToNow(timestamp, { addSuffix: true });
   }, [dashboardSummary?.last_updated_at]);
-  const launchMonitorCards = useMemo(() => {
-    return [
-      { key: 'agent7_ready_count', label: 'Ready to file', value: launchMetrics?.agent7_ready_count ?? null, detail: 'Cases that fully passed the filing truth gate.' },
-      { key: 'agent7_duplicate_blocked_count', label: 'Duplicate blocked', value: launchMetrics?.agent7_duplicate_blocked_count ?? null, detail: 'Cases blocked because the same issue is already active.' },
-      { key: 'agent7_insufficient_data_count', label: 'Insufficient data', value: launchMetrics?.agent7_insufficient_data_count ?? null, detail: 'Cases missing verified identifiers or quantity truth.' },
-      { key: 'agent7_thread_only_count', label: 'Thread only', value: launchMetrics?.agent7_thread_only_count ?? null, detail: 'Amazon thread cases that should never trigger a fresh filing.' },
-      { key: 'agent7_pending_safety_verification_count', label: 'Safety backlog', value: launchMetrics?.agent7_pending_safety_verification_count ?? null, detail: 'Cases still waiting on verified identifiers or review.' },
-      { key: 'agent7_filed_count', label: 'Filed', value: launchMetrics?.agent7_filed_count ?? null, detail: 'Cases currently in flight with Amazon.' },
-      { key: 'agent7_needs_evidence_count', label: 'Needs evidence', value: launchMetrics?.agent7_needs_evidence_count ?? null, detail: 'Cases where Amazon requested more proof.' },
-      { key: 'agent7_approved_count', label: 'Approved', value: launchMetrics?.agent7_approved_count ?? null, detail: 'Cases Amazon has approved.' },
-      { key: 'agent7_rejected_count', label: 'Rejected', value: launchMetrics?.agent7_rejected_count ?? null, detail: 'Cases Amazon has rejected.' },
-      { key: 'agent7_paid_count', label: 'Paid', value: launchMetrics?.agent7_paid_count ?? null, detail: 'Cases marked paid from Amazon thread truth.' },
-      { key: 'unmatched_amazon_email_count', label: 'Unmatched emails', value: launchMetrics?.unmatched_amazon_email_count ?? null, detail: 'Amazon emails still waiting for a safe case link.' },
-      { key: 'notification_failed_count', label: 'Notification failed', value: launchMetrics?.notification_failed_count ?? null, detail: 'Notifications with failed delivery.' },
-      { key: 'notification_partial_count', label: 'Notification partial', value: launchMetrics?.notification_partial_count ?? null, detail: 'Notifications with mixed delivery outcomes.' }
-    ];
-  }, [launchMetrics]);
   const activeLaunchAlerts = useMemo(
     () => (launchMonitor?.alerts || []).filter((alert) => alert.active !== false),
     [launchMonitor?.alerts]
@@ -1228,6 +1200,13 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Not Available';
     return `${formatDistanceToNow(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
   }, [launchMonitor?.last_updated_at]);
+  const headerLastUpdated = useMemo(() => {
+    if (launchMonitor?.last_updated_at) return formattedLaunchLastUpdated;
+    if (!dashboardSummary?.last_updated_at) return 'Not Available';
+    const timestamp = new Date(dashboardSummary.last_updated_at);
+    if (Number.isNaN(timestamp.getTime())) return 'Not Available';
+    return `${formatDistanceToNow(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
+  }, [dashboardSummary?.last_updated_at, formattedLaunchLastUpdated, launchMonitor?.last_updated_at]);
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
@@ -1613,7 +1592,7 @@ export function Dashboard() {
           <div className="relative pt-8">
             <div className="relative w-full max-w-full mx-auto px-8 pb-8 text-slate-900">
               {/* Command Center Header */}
-              <div className="flex items-center justify-between mb-10">
+              <div className="mb-10 flex items-start justify-between gap-6">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
@@ -1653,12 +1632,22 @@ export function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setQuickNoticeOpen(true)}
-                  className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
-                >
-                  Quick Notice
-                </button>
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <button
+                    onClick={() => setQuickNoticeOpen(true)}
+                    className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
+                  >
+                    Quick Notice
+                  </button>
+                  <div className="text-right">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                      Last updated
+                    </div>
+                    <div className="mt-1 text-[10px] font-sans leading-5 text-white/44">
+                      {headerLastUpdated}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {activeTab === 'overview' ? (
@@ -1870,90 +1859,6 @@ export function Dashboard() {
                               </div>
                             </ScrollArea>
                           )}
-                        </div>
-                      </div>
-
-                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-5 py-4">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                Launch monitor
-                              </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                                Tenant-scoped Agent 7, Amazon thread, and Agent 10 launch truth.
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
-                                Last updated
-                              </div>
-                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                {formattedLaunchLastUpdated}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="px-5 py-4 space-y-4">
-                          <div className="flex flex-wrap gap-2">
-                            {(launchMonitor?.alerts || []).length === 0 ? (
-                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/55">
-                                Not Available
-                              </span>
-                            ) : activeLaunchAlerts.length === 0 ? (
-                              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-emerald-200">
-                                No active launch alerts
-                              </span>
-                            ) : (
-                              activeLaunchAlerts.map((alert) => (
-                                <span
-                                  key={alert.key}
-                                  className={cn(
-                                    'rounded-full border px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight',
-                                    launchAlertTone(alert)
-                                  )}
-                                >
-                                  {alert.label}: {formatLaunchMetricValue(alert.count)}
-                                  {typeof alert.threshold === 'number' ? ` / ${alert.threshold}` : ''}
-                                </span>
-                              ))
-                            )}
-                          </div>
-
-                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
-                            {launchMonitorCards.map((item) => (
-                              <div key={item.key} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
-                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
-                                  {item.label}
-                                </div>
-                                <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
-                                  {formatLaunchMetricValue(item.value)}
-                                </div>
-                                <p className="mt-2 text-[10px] font-sans leading-5 text-white/38">
-                                  {item.detail}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="space-y-2">
-                            {(launchMonitor?.alerts || []).map((alert) => (
-                              <div key={`${alert.key}-detail`} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
-                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/55">
-                                  <AlertTriangle className="h-3.5 w-3.5" />
-                                  {alert.label}
-                                </div>
-                                <p className="mt-2 text-[11px] font-sans leading-5 text-white/42">
-                                  {alert.detail}
-                                  {alert.active === null
-                                    ? ' Metric unavailable.'
-                                    : alert.active
-                                      ? ` Current count: ${formatLaunchMetricValue(alert.count)}.`
-                                      : ' No current spike detected.'}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
                         </div>
                       </div>
                     </div>

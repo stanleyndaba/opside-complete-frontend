@@ -21,7 +21,6 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
 const ConnectAmazonAccount = lazy(() => import("./pages/ConnectAmazonAccount"));
 const Sync = lazy(() => import("./pages/Sync"));
-const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/RecoveryPipelineAgent8"));
@@ -161,7 +160,7 @@ const App = () => (
                         <Route path="/app" element={<TenantRedirect />} />
                         <Route path="/app/:tenantSlug" element={<Dashboard />} />
                         <Route path="/app/:tenantSlug/dashboard" element={<Dashboard />} />
-                        <Route path="/app/:tenantSlug/reports" element={<Reports />} />
+                        <Route path="/app/:tenantSlug/reports" element={<Navigate to="../dashboard" replace />} />
                         <Route path="/app/:tenantSlug/export" element={<ExportCenter />} />
                         <Route path="/app/:tenantSlug/learning-insights" element={<LearningInsights />} />
                         <Route path="/app/:tenantSlug/sync" element={<Sync />} />

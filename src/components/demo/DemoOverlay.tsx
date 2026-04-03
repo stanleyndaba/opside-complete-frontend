@@ -53,7 +53,7 @@ const steps = [
     ]
   },
   {
-    id: 8, title: 'Recoveries Lifecycle', icon: CheckCircle, cta: { to: '/reports', label: 'Confirm Payouts' }, bullets: [
+    id: 8, title: 'Recoveries Lifecycle', icon: CheckCircle, cta: { to: '/recoveries', label: 'Confirm Payouts' }, bullets: [
       'Approval → reimbursement scheduled',
       'Confirm funds credited',
       'Auto‑reconcile'
