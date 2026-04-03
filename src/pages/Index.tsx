@@ -217,6 +217,21 @@ export default function Index() {
           </div>
         </section>
 
+        <section className="relative border-b border-white/8 py-24 md:py-28">
+          <div className={containerClass}>
+            <div className="max-w-[760px]">
+              <div className={eyebrowClass}>The orchestration layer</div>
+              <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl">
+                See how the recovery engine turns Amazon signals into filed cases and recovered money.
+              </h2>
+            </div>
+          </div>
+
+          <div className="relative left-1/2 mt-16 w-screen max-w-[1320px] -translate-x-1/2 px-4 md:px-8">
+            <RecoveryEngineVisualization />
+          </div>
+        </section>
+
         <section className="relative py-28 md:py-36">
           <div className={containerClass}>
             <div className="max-w-[760px]">
@@ -264,10 +279,6 @@ export default function Index() {
                   </div>
                 </div>
               ))}
-            </div>
-
-            <div className="relative left-1/2 mt-20 w-screen max-w-[1320px] -translate-x-1/2 px-4 md:px-8">
-              <RecoveryEngineVisualization />
             </div>
           </div>
         </section>
