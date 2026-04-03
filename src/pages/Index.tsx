@@ -3,75 +3,64 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Bell, CircleDollarSign, Clock, FileText, Search, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Clock, ShieldCheck } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { CookieConsent } from '@/components/landing/CookieConsent';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
-const sellerNeeds = [
-  {
-    title: 'Find money Amazon still owes',
-    detail: 'Sellers do not want more reporting. They want missed reimbursements surfaced with enough truth to act on them.'
-  },
-  {
-    title: 'Stay inside Amazon policy',
-    detail: 'They want automation that is careful, not aggressive. Weak or duplicate claims are worse than no claim at all.'
-  },
-  {
-    title: 'Know what is actually happening',
-    detail: 'If nothing is moving, they want the exact blocker. If Amazon responds, they want to see it immediately.'
-  }
-];
-
-const objectionAnswers = [
-  {
-    title: 'This might spam Amazon',
-    detail: 'Margin blocks duplicate and weak filings before anything is sent.'
-  },
-  {
-    title: 'I will not know what it is doing',
-    detail: 'Every case moves through clear states: detect, verify, file, wait, needs evidence, approved, paid.'
-  },
-  {
-    title: 'It will create more work for me',
-    detail: 'You only step in when Amazon asks for more proof or critical identifiers are missing.'
-  }
-];
-
-const trustBullets = [
+const trustStatements = [
   'Read-only discovery before filing',
-  'Evidence checked before any claim goes out',
-  'No duplicate or thread-only blind filings',
-  'Amazon still pays directly into your seller account'
+  'Weak or duplicate claims are blocked',
+  'Amazon still pays directly into your seller account',
+  'You only step in when real evidence is needed'
+];
+
+const whatWeDoPoints = [
+  'Find missed reimbursement opportunities across inventory, shipments, returns, fees, and reimbursements.',
+  'Verify identifiers, quantities, and evidence before a case is considered ready.',
+  'File only supportable cases, track Amazon replies, and stay with the case through payout.'
 ];
 
 const processSteps = [
   {
     step: '01',
-    title: 'Detect missed reimbursement opportunities',
-    detail: 'Margin audits inventory, shipments, returns, fees, and reimbursements to surface what is supportable.'
+    title: 'Detect what is supportable',
+    detail: 'Margin audits reimbursement opportunities and separates real claim candidates from noise.'
   },
   {
     step: '02',
-    title: 'Verify identifiers and evidence',
-    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, and supporting documents are checked before a case is considered ready.'
+    title: 'Verify the claim truth',
+    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, policy timing, and evidence are checked before anything is filed.'
   },
   {
     step: '03',
-    title: 'File only supportable cases',
-    detail: 'If a case is weak, duplicate, or missing truth, it is held instead of pushed into Seller Support.'
+    title: 'File or hold with a clear reason',
+    detail: 'Supportable cases move forward. Weak, duplicate, or thread-only cases are held instead of being pushed into Seller Support.'
   },
   {
     step: '04',
-    title: 'Track Amazon thread changes',
-    detail: 'When Amazon asks for more evidence or resolves a case, Margin updates the case state and keeps the thread linked.'
+    title: 'Track Amazon until payout',
+    detail: 'Case state, Amazon thread changes, approvals, requests for evidence, and payout truth stay visible in one place.'
+  }
+];
+
+const proofBlocks = [
+  {
+    label: 'What sellers want',
+    value: 'Fewer missed reimbursements',
+    detail: 'Not more dashboards. Not more busywork. Just supportable cases that move.'
   },
   {
-    step: '05',
-    title: 'Notify you until payout',
-    detail: 'You see what moved, what is blocked, and when reimbursements are approved or paid.'
+    label: 'What Margin protects',
+    value: 'Your Amazon trust',
+    detail: 'The system is built to stop duplicate, weak, and thread-only blind filings before they happen.'
+  },
+  {
+    label: 'What you should see',
+    value: 'Clear case truth',
+    detail: 'Waiting on Amazon, needs evidence, approved, rejected, and paid should all be explicit.'
   }
 ];
 
@@ -92,7 +81,7 @@ const holdRules = [
 const faqs = [
   {
     question: 'Which services help automate FBA reimbursement claims?',
-    answer: 'The real need is not “automation” by itself. Sellers want a system that detects missed reimbursements, verifies the claim truth, files only supportable cases, and tracks Amazon until payout. That is the lane Margin is built for.'
+    answer: 'The real need is not automation by itself. Sellers want a system that detects missed reimbursements, verifies the claim truth, files only supportable cases, and tracks Amazon until payout. That is the lane Margin is built for.'
   },
   {
     question: 'What are common reasons for FBA reimbursement denials?',
@@ -124,9 +113,8 @@ const faqs = [
   }
 ];
 
-const sectionEyebrow = 'text-[11px] font-medium tracking-tight text-white/45';
-const surfaceClass = 'rounded-2xl border border-white/10 bg-[#111111]';
-const insetSurfaceClass = 'rounded-xl border border-white/10 bg-white/[0.02]';
+const eyebrowClass = 'text-[11px] font-medium tracking-tight text-white/42';
+const containerClass = 'mx-auto w-full max-w-[1160px] px-6 md:px-8';
 
 export default function Index() {
   const navigate = useNavigate();
@@ -147,36 +135,34 @@ export default function Index() {
       <PublicNavbar />
 
       <main className="relative">
-        <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.025]" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.02]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#070707] to-[#050505]" />
 
-        <section className="relative border-b border-white/8 px-6 pb-20 pt-32 md:px-8 md:pb-24 md:pt-36">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mx-auto grid max-w-7xl gap-8 xl:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.82fr)]"
-          >
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[12px] font-medium text-white/72">
-                <ShieldCheck className="h-3.5 w-3.5 text-white/72" />
-                Trust-first FBA reimbursement automation
+        <section className="relative pb-28 pt-32 md:pb-36 md:pt-40">
+          <div className={containerClass}>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-[840px]"
+            >
+              <div className="inline-flex items-center gap-2 text-sm text-white/68">
+                <ShieldCheck className="h-4 w-4 text-white/60" />
+                <span>Trust-first FBA reimbursement automation</span>
               </div>
 
-              <div className="space-y-5">
-                <h1 className="max-w-5xl text-4xl font-light tracking-tight text-white md:text-6xl">
-                  Recover missed FBA reimbursements without weak claims or Seller Central guesswork.
-                </h1>
-                <p className="max-w-3xl text-base leading-8 text-white/62 md:text-lg">
-                  Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout. If something is blocked, it should tell you exactly why instead of pretending progress.
-                </p>
-              </div>
+              <h1 className="mt-8 max-w-[900px] text-5xl font-light leading-[0.98] tracking-tight text-white md:text-7xl">
+                Recover missed FBA reimbursements without weak claims or Seller Central guesswork.
+              </h1>
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <p className="mt-8 max-w-[760px] text-lg leading-8 text-white/62 md:text-xl">
+                Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout.
+              </p>
+
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Button
                   onClick={handleConnectAmazon}
-                  className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white shadow-[0_0_20px_rgba(0,0,0,0.25)] hover:bg-[#1b1b1b]"
+                  className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white hover:bg-[#1b1b1b]"
                 >
                   Connect Amazon
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -184,175 +170,167 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToHowItWorks}
-                  className="h-11 rounded-full border border-white/10 bg-white/[0.02] px-6 text-sm font-medium text-white hover:bg-white/[0.05]"
+                  className="h-11 rounded-full border border-white/10 bg-transparent px-6 text-sm font-medium text-white hover:bg-white/[0.04]"
                 >
                   See how Margin decides to file
                 </Button>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                {trustBullets.map((item) => (
-                  <div key={item} className={`${insetSurfaceClass} px-4 py-3 text-sm text-white/72`}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              <div className={`${surfaceClass} px-5 py-5 md:px-6`}>
-                <div className={sectionEyebrow}>What sellers actually want</div>
-                <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  {sellerNeeds.map((item) => (
-                    <div key={item.title} className={`${insetSurfaceClass} px-4 py-4`}>
-                      <div className="text-base font-medium text-white">{item.title}</div>
-                      <p className="mt-2 text-sm leading-6 text-white/52">{item.detail}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className={`${surfaceClass} p-6 md:p-7`}>
-              <div className={sectionEyebrow}>Why sellers say no</div>
-              <div className="mt-5 space-y-4">
-                {objectionAnswers.map((item) => (
-                  <div key={item.title} className={`${insetSurfaceClass} px-4 py-4`}>
-                    <div className="flex items-start gap-3">
-                      <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-200/90" />
-                      <div>
-                        <div className="text-base font-medium text-white">{item.title}</div>
-                        <p className="mt-1 text-sm leading-6 text-white/52">{item.detail}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4">
-                <div className="flex items-start gap-3">
-                  <CircleDollarSign className="mt-0.5 h-4 w-4 shrink-0 text-white/70" />
-                  <div>
-                    <div className="text-base font-medium text-white">Margin never routes your reimbursement money.</div>
-                    <p className="mt-1 text-sm leading-6 text-white/58">
-                      Amazon pays approved reimbursements into your seller account directly. Margin tracks the case, the thread, and the payout truth inside the platform.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                <div className={`${insetSurfaceClass} px-4 py-4`}>
-                  <Search className="h-4 w-4 text-white/70" />
-                  <div className="mt-3 text-sm font-medium text-white">Detect</div>
-                  <div className="mt-1 text-sm text-white/45">Audit what Amazon owes</div>
-                </div>
-                <div className={`${insetSurfaceClass} px-4 py-4`}>
-                  <FileText className="h-4 w-4 text-white/70" />
-                  <div className="mt-3 text-sm font-medium text-white">Verify</div>
-                  <div className="mt-1 text-sm text-white/45">Check identifiers and evidence</div>
-                </div>
-                <div className={`${insetSurfaceClass} px-4 py-4`}>
-                  <Bell className="h-4 w-4 text-white/70" />
-                  <div className="mt-3 text-sm font-medium text-white">Track</div>
-                  <div className="mt-1 text-sm text-white/45">Follow Amazon until payout</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+              <p className="mt-8 max-w-[860px] text-sm leading-7 text-white/50 md:text-base">
+                Read-only discovery before filing. Weak or duplicate claims are blocked. Amazon still pays directly into your seller account.
+              </p>
+            </motion.div>
+          </div>
         </section>
 
-        <section className="relative border-b border-white/8 px-6 py-20 md:px-8" id="how-margin-works">
-          <div className="mx-auto max-w-7xl">
-            <div className="max-w-3xl space-y-4">
-              <div className={sectionEyebrow}>How Margin works</div>
-              <h2 className="text-3xl font-light tracking-tight text-white md:text-5xl">
-                Detect, verify, file, track, and follow through.
-              </h2>
-              <p className="text-base leading-8 text-white/58">
-                The landing-page promise should be operationally true. Margin should not act like a reimbursement agency with no controls. It should behave like a careful operator that knows when to move and when to hold.
-              </p>
-            </div>
-
-            <div className="mt-10 grid gap-4 lg:grid-cols-5">
-              {processSteps.map((item) => (
-                <motion.div
-                  key={item.step}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.45 }}
-                  className={`${surfaceClass} px-5 py-5`}
-                >
-                  <div className="text-[12px] font-medium tracking-tight text-white/42">{item.step}</div>
-                  <div className="mt-4 text-lg font-medium tracking-tight text-white">{item.title}</div>
-                  <p className="mt-3 text-sm leading-6 text-white/50">{item.detail}</p>
-                </motion.div>
+        <section className="relative border-y border-white/8 py-5">
+          <div className={`${containerClass} overflow-x-auto`}>
+            <div className="flex min-w-max items-center gap-8 text-sm text-white/56 md:gap-12 md:text-base">
+              {trustStatements.map((item) => (
+                <div key={item} className="whitespace-nowrap">
+                  {item}
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="relative border-b border-white/8 px-6 py-20 md:px-8">
-          <div className="mx-auto grid max-w-7xl gap-6 xl:grid-cols-2">
-            <div className={`${surfaceClass} p-6`}>
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="h-5 w-5 text-white/72" />
-                <h3 className="text-2xl font-light tracking-tight text-white">When Margin should file</h3>
-              </div>
-              <p className="mt-3 text-sm leading-7 text-white/56">
-                Sellers want a tool that knows when a case is truly ready. That means concrete identifiers, supportable evidence, and no duplicate risk.
+        <section className="relative py-28 md:py-36">
+          <div className={containerClass}>
+            <div className="max-w-[760px]">
+              <div className={eyebrowClass}>What Margin does</div>
+              <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl">
+                Find the money, verify the case, and move only when the claim is real.
+              </h2>
+              <p className="mt-6 max-w-[700px] text-lg leading-8 text-white/60">
+                This should not feel like another dashboard. It should feel like a careful operator running reimbursement work in the background and telling you the truth when action is needed.
               </p>
-              <ul className="mt-6 space-y-3">
-                {filingRules.map((item) => (
-                  <li key={item} className={`${insetSurfaceClass} px-4 py-3 text-sm text-white/74`}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </div>
 
-            <div className={`${surfaceClass} p-6`}>
-              <div className="flex items-center gap-3">
-                <Clock className="h-5 w-5 text-amber-200/90" />
-                <h3 className="text-2xl font-light tracking-tight text-white">When Margin should wait</h3>
-              </div>
-              <p className="mt-3 text-sm leading-7 text-white/56">
-                Saying “not yet” is part of the product. If the case is weak, already active, or missing truth, the right move is to hold it instead of filing noise.
-              </p>
-              <ul className="mt-6 space-y-3">
-                {holdRules.map((item) => (
-                  <li key={item} className={`${insetSurfaceClass} px-4 py-3 text-sm text-white/74`}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            <div className="mt-14 max-w-[980px] space-y-8">
+              {whatWeDoPoints.map((point, index) => (
+                <div key={point} className="grid gap-4 border-t border-white/8 pt-6 md:grid-cols-[72px_minmax(0,1fr)] md:pt-8">
+                  <div className="text-sm font-medium tracking-tight text-white/34">0{index + 1}</div>
+                  <p className="max-w-[820px] text-xl leading-9 text-white/82 md:text-2xl">
+                    {point}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="relative px-6 py-20 md:px-8">
-          <div className="mx-auto max-w-5xl">
-            <div className="space-y-4 text-center">
-              <div className={sectionEyebrow}>Questions sellers ask before they buy</div>
-              <h2 className="text-3xl font-light tracking-tight text-white md:text-5xl">
-                The page should answer the real objections, not dodge them.
+        <section className="relative border-t border-white/8 py-28 md:py-36" id="how-margin-works">
+          <div className={containerClass}>
+            <div className="max-w-[780px]">
+              <div className={eyebrowClass}>How Margin works</div>
+              <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl">
+                Detect, verify, file, track, and follow through.
               </h2>
-              <p className="mx-auto max-w-3xl text-base leading-8 text-white/58">
-                These are the questions FBA sellers ask on Google, in communities, and in AI tools before they trust a reimbursement platform. The answers have to sound careful, specific, and believable.
+              <p className="mt-6 max-w-[720px] text-lg leading-8 text-white/60">
+                The promise has to stay operationally true. Margin should know when to move, when to wait, and how to make that visible.
               </p>
             </div>
 
-            <div className="mt-10">
-              <Accordion type="single" collapsible className="space-y-4">
+            <div className="mt-16 max-w-[980px] space-y-12">
+              {processSteps.map((item) => (
+                <div key={item.step} className="grid gap-4 border-t border-white/8 pt-8 md:grid-cols-[88px_minmax(0,1fr)]">
+                  <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
+                  <div>
+                    <h3 className="text-2xl font-medium tracking-tight text-white md:text-3xl">{item.title}</h3>
+                    <p className="mt-4 max-w-[760px] text-lg leading-8 text-white/58">{item.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-white/8 py-28 md:py-36">
+          <div className={containerClass}>
+            <div className="max-w-[760px]">
+              <div className={eyebrowClass}>Proof</div>
+              <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl">
+                The product has to feel careful, visible, and safe.
+              </h2>
+            </div>
+
+            <div className="mt-14 grid gap-4 md:grid-cols-3">
+              {proofBlocks.map((item) => (
+                <div key={item.label} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-6">
+                  <div className="text-[11px] font-medium tracking-tight text-white/38">{item.label}</div>
+                  <div className="mt-4 text-2xl font-medium tracking-tight text-white">{item.value}</div>
+                  <p className="mt-3 text-base leading-7 text-white/55">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-white/8 py-28 md:py-36">
+          <div className={containerClass}>
+            <div className="grid gap-8 xl:grid-cols-2">
+              <div className="rounded-2xl border border-white/8 bg-white/[0.015] px-6 py-7 md:px-8 md:py-8">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="h-5 w-5 text-white/72" />
+                  <h3 className="text-2xl font-medium tracking-tight text-white">When Margin should file</h3>
+                </div>
+                <p className="mt-4 text-lg leading-8 text-white/58">
+                  Sellers want a tool that knows when a case is truly ready. That means concrete identifiers, supportable evidence, and no duplicate risk.
+                </p>
+                <ul className="mt-8 space-y-3">
+                  {filingRules.map((item) => (
+                    <li key={item} className="border-t border-white/8 py-4 text-base text-white/78">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-white/[0.015] px-6 py-7 md:px-8 md:py-8">
+                <div className="flex items-center gap-3">
+                  <Clock className="h-5 w-5 text-amber-200/90" />
+                  <h3 className="text-2xl font-medium tracking-tight text-white">When Margin should wait</h3>
+                </div>
+                <p className="mt-4 text-lg leading-8 text-white/58">
+                  Saying “not yet” is part of the product. If the case is weak, already active, or missing truth, the right move is to hold it instead of filing noise.
+                </p>
+                <ul className="mt-8 space-y-3">
+                  {holdRules.map((item) => (
+                    <li key={item} className="border-t border-white/8 py-4 text-base text-white/78">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-white/8 py-28 md:py-36">
+          <div className={containerClass}>
+            <div className="mx-auto max-w-[900px] text-center">
+              <div className={eyebrowClass}>Questions sellers ask before they buy</div>
+              <h2 className="mt-4 text-4xl font-light tracking-tight text-white md:text-6xl">
+                The page should answer the real objections, not dodge them.
+              </h2>
+              <p className="mx-auto mt-6 max-w-[760px] text-lg leading-8 text-white/60">
+                These are the questions FBA sellers ask before they trust a reimbursement platform. The answers have to sound careful, specific, and believable.
+              </p>
+            </div>
+
+            <div className="mx-auto mt-14 max-w-[920px]">
+              <Accordion type="single" collapsible className="space-y-5">
                 {faqs.slice(0, showMoreFaqs ? faqs.length : 5).map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
-                    className={`${surfaceClass} px-5 py-1`}
+                    className="border-t border-white/8 px-1"
                   >
-                    <AccordionTrigger className="py-5 text-left text-base font-medium tracking-tight text-white hover:no-underline">
+                    <AccordionTrigger className="py-5 text-left text-lg font-medium tracking-tight text-white hover:no-underline">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="pb-5 text-sm leading-7 text-white/58">
+                    <AccordionContent className="pb-5 text-base leading-8 text-white/58">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -360,11 +338,11 @@ export default function Index() {
               </Accordion>
 
               {!showMoreFaqs ? (
-                <div className="mt-8 flex justify-center">
+                <div className="mt-10 flex justify-center">
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-full border border-white/10 bg-white/[0.02] px-6 text-sm text-white hover:bg-white/[0.05]"
+                    className="rounded-full border border-white/10 bg-transparent px-6 text-sm text-white hover:bg-white/[0.04]"
                   >
                     Show more questions
                   </Button>
@@ -374,23 +352,21 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative px-6 pb-24 md:px-8">
-          <div className={`mx-auto max-w-6xl ${surfaceClass} px-6 py-8 md:px-10 md:py-10`}>
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_auto] lg:items-end">
-              <div>
-                <div className={sectionEyebrow}>Final trust check</div>
-                <h2 className="mt-3 text-3xl font-light tracking-tight text-white md:text-4xl">
-                  The real promise is simple: find the money, protect the account, and show the work.
-                </h2>
-                <p className="mt-4 max-w-3xl text-base leading-8 text-white/58">
-                  If Margin cannot prove the case, it should not file it. If Amazon replies, you should see it. If something is blocked, you should know exactly what is missing. That is the standard sellers actually care about.
-                </p>
-              </div>
+        <section className="relative border-t border-white/8 py-32 md:py-40">
+          <div className={containerClass}>
+            <div className="max-w-[900px]">
+              <div className={eyebrowClass}>Final trust check</div>
+              <h2 className="mt-4 text-5xl font-light tracking-tight text-white md:text-7xl">
+                Find the money, protect the account, and show the work.
+              </h2>
+              <p className="mt-8 max-w-[760px] text-lg leading-8 text-white/60">
+                If Margin cannot prove the case, it should not file it. If Amazon replies, you should see it. If something is blocked, you should know exactly what is missing.
+              </p>
 
-              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Button
                   onClick={handleConnectAmazon}
-                  className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white shadow-[0_0_20px_rgba(0,0,0,0.25)] hover:bg-[#1b1b1b]"
+                  className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white hover:bg-[#1b1b1b]"
                 >
                   Connect Amazon
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -398,7 +374,7 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToHowItWorks}
-                  className="h-11 rounded-full border border-white/10 bg-white/[0.02] px-6 text-sm font-medium text-white hover:bg-white/[0.05]"
+                  className="h-11 rounded-full border border-white/10 bg-transparent px-6 text-sm font-medium text-white hover:bg-white/[0.04]"
                 >
                   Review the filing safeguards
                 </Button>
