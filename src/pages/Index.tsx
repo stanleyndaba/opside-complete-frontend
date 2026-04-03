@@ -137,6 +137,21 @@ export default function Index() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#070707] to-[#050505]" />
 
         <section className="relative pb-28 pt-32 md:pb-36 md:pt-40">
+          <div className="pointer-events-none absolute inset-x-0 top-12 overflow-hidden">
+            <motion.div
+              aria-hidden="true"
+              className="absolute left-[10%] h-64 w-64 rounded-full border border-white/8 bg-white/[0.015] blur-3xl"
+              animate={{ opacity: [0.18, 0.3, 0.18], y: [0, 14, 0] }}
+              transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <motion.div
+              aria-hidden="true"
+              className="absolute right-[12%] top-24 h-72 w-72 rounded-full border border-white/6 bg-white/[0.02] blur-3xl"
+              animate={{ opacity: [0.12, 0.24, 0.12], y: [0, -12, 0] }}
+              transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </div>
+
           <div className={containerClass}>
             <motion.div
               initial={{ opacity: 0, y: 18 }}
@@ -149,12 +164,16 @@ export default function Index() {
                 <span>Trust-first FBA reimbursement automation</span>
               </div>
 
-              <h1 className="mt-8 max-w-[900px] text-5xl font-light leading-[0.98] tracking-tight text-white md:text-7xl">
-                Recover missed FBA reimbursements without weak claims or Seller Central guesswork.
+              <h1 className="mt-8 max-w-[760px] text-5xl font-light leading-[0.96] tracking-tight text-white md:text-7xl">
+                Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
-              <p className="mt-8 max-w-[760px] text-lg leading-8 text-white/62 md:text-xl">
+              <p className="mt-10 max-w-[760px] text-lg leading-8 text-white/62 md:text-xl">
                 Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout.
+              </p>
+
+              <p className="mt-6 max-w-[700px] text-base leading-7 text-white/46 md:text-lg">
+                No weak claims. No duplicates. No Seller Central guesswork.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -170,13 +189,9 @@ export default function Index() {
                   onClick={scrollToHowItWorks}
                   className="h-11 rounded-full border border-white/10 bg-transparent px-6 text-sm font-medium text-white hover:bg-white/[0.04]"
                 >
-                  See how Margin decides to file
+                  See how it works
                 </Button>
               </div>
-
-              <p className="mt-8 max-w-[860px] text-sm leading-7 text-white/50 md:text-base">
-                Read-only discovery before filing. Weak or duplicate claims are blocked. Amazon still pays directly into your seller account.
-              </p>
             </motion.div>
           </div>
         </section>
