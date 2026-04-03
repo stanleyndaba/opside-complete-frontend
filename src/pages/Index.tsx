@@ -49,19 +49,16 @@ const processSteps = [
 
 const proofBlocks = [
   {
-    label: 'What sellers want',
     value: 'Fewer missed reimbursements',
-    detail: 'Not more dashboards. Not more busywork. Just supportable cases that move.'
+    detail: 'Not more dashboards. Not more busywork. Only supportable cases that move.'
   },
   {
-    label: 'What Margin protects',
-    value: 'Your Amazon trust',
-    detail: 'The system is built to stop duplicate, weak, and thread-only blind filings before they happen.'
+    value: 'Your Amazon trust protected',
+    detail: 'Duplicate, weak, and thread-only filings are stopped before they happen.'
   },
   {
-    label: 'What you should see',
     value: 'Clear case truth',
-    detail: 'Waiting on Amazon, needs evidence, approved, rejected, and paid should all be explicit.'
+    detail: 'Waiting, evidence, approvals, and payouts are always explicit.'
   }
 ];
 
@@ -269,12 +266,24 @@ export default function Index() {
               </h2>
             </div>
 
-            <div className="mt-14 grid gap-4 md:grid-cols-3">
-              {proofBlocks.map((item) => (
-                <div key={item.label} className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-6">
-                  <div className="text-[11px] font-medium tracking-tight text-white/38">{item.label}</div>
-                  <div className="mt-4 text-2xl font-medium tracking-tight text-white">{item.value}</div>
-                  <p className="mt-3 text-base leading-7 text-white/55">{item.detail}</p>
+            <div className="mt-24 max-w-[960px] space-y-16 md:mt-28 md:space-y-20">
+              {proofBlocks.map((item, index) => (
+                <div
+                  key={item.value}
+                  className={`grid gap-5 md:grid-cols-[84px_minmax(0,1fr)] md:gap-10 ${index > 0 ? 'border-t border-white/7 pt-14 md:pt-16' : ''}`}
+                >
+                  <div className="pt-1 text-sm font-medium tracking-tight text-white/28">
+                    0{index + 1}
+                  </div>
+
+                  <div className="max-w-[700px]">
+                    <h3 className="text-[32px] font-medium leading-[1.02] tracking-tight text-white md:text-[56px]">
+                      {item.value}
+                    </h3>
+                    <p className="mt-5 max-w-[560px] text-lg leading-8 text-white/60 md:text-[22px] md:leading-9">
+                      {item.detail}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
