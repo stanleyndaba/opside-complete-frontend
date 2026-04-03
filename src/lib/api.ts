@@ -874,6 +874,58 @@ export const api = {
       };
     }>(`/api/metrics/dashboard-summary?tenantSlug=${encodeURIComponent(slug)}`);
   },
+  getLaunchMonitor: (tenantSlug?: string, limit: number = 20) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getLaunchMonitor");
+    const slug = tenantSlug;
+    if (!slug) throw new Error("Tenant slug required for scoped API call");
+    return requestJson<{
+      success: boolean;
+      data: {
+        metrics: {
+          agent7_ready_count: number | null;
+          agent7_duplicate_blocked_count: number | null;
+          agent7_insufficient_data_count: number | null;
+          agent7_thread_only_count: number | null;
+          agent7_pending_safety_verification_count: number | null;
+          agent7_filed_count: number | null;
+          agent7_needs_evidence_count: number | null;
+          agent7_approved_count: number | null;
+          agent7_rejected_count: number | null;
+          agent7_paid_count: number | null;
+          unmatched_amazon_email_count: number | null;
+          notification_failed_count: number | null;
+          notification_partial_count: number | null;
+        };
+        alerts: Array<{
+          key: 'duplicate_blocked_spike' | 'unmatched_amazon_email_spike' | 'notification_failure_present' | 'pending_safety_verification_backlog';
+          label: string;
+          severity: 'medium' | 'high';
+          active: boolean | null;
+          count: number | null;
+          threshold: number | null;
+          detail: string;
+        }>;
+        recent_events: Array<{
+          id: string;
+          event_type: 'case_blocked' | 'case_filed' | 'amazon_thread_linked' | 'needs_evidence' | 'approved' | 'rejected' | 'paid' | 'notification_failed' | 'notification_partial' | 'unmatched_email_created';
+          title: string;
+          detail: string;
+          severity: 'low' | 'medium' | 'high';
+          timestamp: string;
+          dispute_case_id: string | null;
+          amazon_case_id: string | null;
+          notification_id: string | null;
+          source_table: 'dispute_cases' | 'dispute_submissions' | 'unmatched_case_messages' | 'notifications';
+          source_id: string;
+          status: string | null;
+        }> | null;
+        last_updated_at: string | null;
+      };
+    }>(`/api/metrics/launch-monitor?${new URLSearchParams({
+      tenantSlug: slug,
+      limit: String(limit)
+    }).toString()}`);
+  },
   getRecoveriesMetrics: (tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getRecoveriesMetrics");
     const slug = tenantSlug;

@@ -98,6 +98,54 @@ interface DashboardSummary {
   blockers: DashboardBlocker[];
 }
 
+interface LaunchMonitorMetrics {
+  agent7_ready_count: number | null;
+  agent7_duplicate_blocked_count: number | null;
+  agent7_insufficient_data_count: number | null;
+  agent7_thread_only_count: number | null;
+  agent7_pending_safety_verification_count: number | null;
+  agent7_filed_count: number | null;
+  agent7_needs_evidence_count: number | null;
+  agent7_approved_count: number | null;
+  agent7_rejected_count: number | null;
+  agent7_paid_count: number | null;
+  unmatched_amazon_email_count: number | null;
+  notification_failed_count: number | null;
+  notification_partial_count: number | null;
+}
+
+interface LaunchMonitorAlert {
+  key: 'duplicate_blocked_spike' | 'unmatched_amazon_email_spike' | 'notification_failure_present' | 'pending_safety_verification_backlog';
+  label: string;
+  severity: 'medium' | 'high';
+  active: boolean | null;
+  count: number | null;
+  threshold: number | null;
+  detail: string;
+}
+
+interface LaunchMonitorEvent {
+  id: string;
+  event_type: 'case_blocked' | 'case_filed' | 'amazon_thread_linked' | 'needs_evidence' | 'approved' | 'rejected' | 'paid' | 'notification_failed' | 'notification_partial' | 'unmatched_email_created';
+  title: string;
+  detail: string;
+  severity: 'low' | 'medium' | 'high';
+  timestamp: string;
+  dispute_case_id: string | null;
+  amazon_case_id: string | null;
+  notification_id: string | null;
+  source_table: 'dispute_cases' | 'dispute_submissions' | 'unmatched_case_messages' | 'notifications';
+  source_id: string;
+  status: string | null;
+}
+
+interface LaunchMonitorPayload {
+  metrics: LaunchMonitorMetrics;
+  alerts: LaunchMonitorAlert[];
+  recent_events: LaunchMonitorEvent[] | null;
+  last_updated_at: string | null;
+}
+
 const pluralize = (count: number, singular: string, plural = `${singular}s`) =>
   `${count} ${count === 1 ? singular : plural}`;
 
@@ -132,6 +180,23 @@ const formatIssueStatusLabel = (status?: string | null) => {
   }
 };
 
+const formatLaunchMetricValue = (value: number | null) =>
+  typeof value === 'number' ? value.toLocaleString('en-US') : 'Not Available';
+
+const launchAlertTone = (alert: LaunchMonitorAlert) => {
+  if (alert.active === null) return 'border-white/10 bg-white/[0.03] text-white/55';
+  if (!alert.active) return 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-200';
+  return alert.severity === 'high'
+    ? 'border-red-500/25 bg-red-500/[0.08] text-red-200'
+    : 'border-amber-500/25 bg-amber-500/[0.08] text-amber-200';
+};
+
+const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
+  if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
+  if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
+  return 'text-emerald-200 border-emerald-500/25 bg-emerald-500/[0.08]';
+};
+
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes' | 'evidence'>('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -152,6 +217,7 @@ export function Dashboard() {
 
   const [isExporting, setIsExporting] = useState(false);
   const [dashboardSummary, setDashboardSummary] = useState<DashboardSummary | null>(null);
+  const [launchMonitor, setLaunchMonitor] = useState<LaunchMonitorPayload | null>(null);
 
   const handleBatchExport = async () => {
     if (isExporting) return;
@@ -496,6 +562,7 @@ export function Dashboard() {
   // Reset metrics when activeSlug changes to prevent "old data flash"
   useEffect(() => {
     setDashboardSummary(null);
+    setLaunchMonitor(null);
     setRecoveredTotal(null);
     setSubmittedClaimsCount(null);
     setPendingRecoveryAmount(null);
@@ -523,6 +590,19 @@ export function Dashboard() {
       }
     } catch (error) {
       console.error('Failed to fetch dashboard summary:', error);
+    }
+  }, [activeSlug, isReady]);
+
+  const fetchLaunchMonitor = useCallback(async () => {
+    if (!isReady || !activeSlug) return;
+    try {
+      const response = await api.getLaunchMonitor(activeSlug, 20);
+      if (!mountedRef.current) return;
+      if (response.ok && response.data?.data) {
+        setLaunchMonitor(response.data.data as LaunchMonitorPayload);
+      }
+    } catch (error) {
+      console.error('Failed to fetch launch monitor:', error);
     }
   }, [activeSlug, isReady]);
 
@@ -1041,9 +1121,10 @@ export function Dashboard() {
   const refreshDashboardLive = useCallback(async () => {
     await Promise.all([
       fetchDashboardSummary(),
+      fetchLaunchMonitor(),
       fetchDisputeMetrics()
     ]);
-  }, [fetchDashboardSummary, fetchDisputeMetrics]);
+  }, [fetchDashboardSummary, fetchLaunchMonitor, fetchDisputeMetrics]);
 
   useStatusStream((event) => {
     if (!activeSlug) return;
@@ -1055,7 +1136,8 @@ export function Dashboard() {
       event.type === 'case' ||
       event.type === 'filing' ||
       event.type === 'payout' ||
-      event.type === 'recovery'
+      event.type === 'recovery' ||
+      event.type === 'notification'
     ) {
       void refreshDashboardLive();
     }
@@ -1116,6 +1198,34 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
     return `Updated ${format(timestamp, 'MMM dd, yyyy, HH:mm')}`;
   }, [dashboardSummary?.last_updated_at]);
+  const launchMonitorCards = useMemo(() => {
+    const metrics = launchMonitor?.metrics || null;
+    return [
+      { key: 'agent7_ready_count', label: 'Ready to file', value: metrics?.agent7_ready_count ?? null, detail: 'Cases that fully passed the filing truth gate.' },
+      { key: 'agent7_duplicate_blocked_count', label: 'Duplicate blocked', value: metrics?.agent7_duplicate_blocked_count ?? null, detail: 'Cases blocked because the same issue is already active.' },
+      { key: 'agent7_insufficient_data_count', label: 'Insufficient data', value: metrics?.agent7_insufficient_data_count ?? null, detail: 'Cases missing verified identifiers or quantity truth.' },
+      { key: 'agent7_thread_only_count', label: 'Thread only', value: metrics?.agent7_thread_only_count ?? null, detail: 'Amazon thread cases that should never trigger a fresh filing.' },
+      { key: 'agent7_pending_safety_verification_count', label: 'Safety backlog', value: metrics?.agent7_pending_safety_verification_count ?? null, detail: 'Cases still waiting on verified identifiers or review.' },
+      { key: 'agent7_filed_count', label: 'Filed', value: metrics?.agent7_filed_count ?? null, detail: 'Cases currently in flight with Amazon.' },
+      { key: 'agent7_needs_evidence_count', label: 'Needs evidence', value: metrics?.agent7_needs_evidence_count ?? null, detail: 'Cases where Amazon requested more proof.' },
+      { key: 'agent7_approved_count', label: 'Approved', value: metrics?.agent7_approved_count ?? null, detail: 'Cases Amazon has approved.' },
+      { key: 'agent7_rejected_count', label: 'Rejected', value: metrics?.agent7_rejected_count ?? null, detail: 'Cases Amazon has rejected.' },
+      { key: 'agent7_paid_count', label: 'Paid', value: metrics?.agent7_paid_count ?? null, detail: 'Cases marked paid from Amazon thread truth.' },
+      { key: 'unmatched_amazon_email_count', label: 'Unmatched emails', value: metrics?.unmatched_amazon_email_count ?? null, detail: 'Amazon emails still waiting for a safe case link.' },
+      { key: 'notification_failed_count', label: 'Notification failed', value: metrics?.notification_failed_count ?? null, detail: 'Notifications with failed delivery.' },
+      { key: 'notification_partial_count', label: 'Notification partial', value: metrics?.notification_partial_count ?? null, detail: 'Notifications with mixed delivery outcomes.' }
+    ];
+  }, [launchMonitor?.metrics]);
+  const activeLaunchAlerts = useMemo(
+    () => (launchMonitor?.alerts || []).filter((alert) => alert.active !== false),
+    [launchMonitor?.alerts]
+  );
+  const formattedLaunchLastUpdated = useMemo(() => {
+    if (!launchMonitor?.last_updated_at) return 'Not Available';
+    const timestamp = new Date(launchMonitor.last_updated_at);
+    if (Number.isNaN(timestamp.getTime())) return 'Not Available';
+    return `${formatDistanceToNow(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
+  }, [launchMonitor?.last_updated_at]);
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
@@ -1493,6 +1603,156 @@ export function Dashboard() {
                         <p className="mt-2 text-sm font-sans leading-relaxed text-white/56">
                           {overviewPressureNote}
                         </p>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                        <div className="border-b border-white/5 px-5 py-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                Launch monitor
+                              </div>
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                                Tenant-scoped Agent 7, Amazon thread, and Agent 10 launch truth.
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                Last updated
+                              </div>
+                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/44">
+                                {formattedLaunchLastUpdated}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="px-5 py-4 space-y-4">
+                          <div className="flex flex-wrap gap-2">
+                            {(launchMonitor?.alerts || []).length === 0 ? (
+                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/55">
+                                Not Available
+                              </span>
+                            ) : activeLaunchAlerts.length === 0 ? (
+                              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-emerald-200">
+                                No active launch alerts
+                              </span>
+                            ) : (
+                              activeLaunchAlerts.map((alert) => (
+                                <span
+                                  key={alert.key}
+                                  className={cn(
+                                    'rounded-full border px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight',
+                                    launchAlertTone(alert)
+                                  )}
+                                >
+                                  {alert.label}: {formatLaunchMetricValue(alert.count)}
+                                  {typeof alert.threshold === 'number' ? ` / ${alert.threshold}` : ''}
+                                </span>
+                              ))
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
+                            {launchMonitorCards.map((item) => (
+                              <div key={item.key} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
+                                  {item.label}
+                                </div>
+                                <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                                  {formatLaunchMetricValue(item.value)}
+                                </div>
+                                <p className="mt-2 text-[10px] font-sans leading-5 text-white/38">
+                                  {item.detail}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="space-y-2">
+                            {(launchMonitor?.alerts || []).map((alert) => (
+                              <div key={`${alert.key}-detail`} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
+                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/55">
+                                  <AlertTriangle className="h-3.5 w-3.5" />
+                                  {alert.label}
+                                </div>
+                                <p className="mt-2 text-[11px] font-sans leading-5 text-white/42">
+                                  {alert.detail}
+                                  {alert.active === null
+                                    ? ' Metric unavailable.'
+                                    : alert.active
+                                      ? ` Current count: ${formatLaunchMetricValue(alert.count)}.`
+                                      : ' No current spike detected.'}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                        <div className="border-b border-white/5 px-5 py-4">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                            Recent operator feed
+                          </div>
+                          <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                            Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
+                          </p>
+                        </div>
+                        <div className="divide-y divide-white/5">
+                          {launchMonitor?.recent_events === null ? (
+                            <div className="px-5 py-6 text-[11px] font-sans text-white/45">
+                              Not Available
+                            </div>
+                          ) : (launchMonitor?.recent_events || []).length === 0 ? (
+                            <div className="px-5 py-6 text-[11px] font-sans text-white/45">
+                              No recent operational events recorded for this tenant.
+                            </div>
+                          ) : (
+                            launchMonitor?.recent_events?.map((event) => (
+                              <div key={event.id} className="px-5 py-4">
+                                <div className="flex items-start justify-between gap-4">
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className={cn('rounded-full border px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
+                                        {event.event_type.replace(/_/g, ' ')}
+                                      </span>
+                                      <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                        {event.source_table.replace(/_/g, ' ')}
+                                      </span>
+                                    </div>
+                                    <div className="mt-3 text-[13px] font-sans font-medium tracking-tight text-white">
+                                      {event.title}
+                                    </div>
+                                    <p className="mt-2 text-[11px] font-sans leading-5 text-white/42">
+                                      {event.detail}
+                                    </p>
+                                    <div className="mt-3 flex flex-wrap gap-3 text-[10px] font-sans text-white/34">
+                                      <span>{formatDistanceToNow(new Date(event.timestamp), { addSuffix: true })}</span>
+                                      {event.amazon_case_id ? <span>Amazon case: {event.amazon_case_id}</span> : null}
+                                      {event.status ? <span>Status: {event.status}</span> : null}
+                                    </div>
+                                  </div>
+                                  {event.dispute_case_id ? (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/60 hover:bg-white/[0.07] hover:text-white"
+                                      onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`))}
+                                    >
+                                      Open Case
+                                    </Button>
+                                  ) : (
+                                    <div className="text-[10px] font-sans text-white/25">
+                                      Logged only
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
                       </div>
                     </div>
 
