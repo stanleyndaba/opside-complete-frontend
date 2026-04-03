@@ -66,6 +66,7 @@ interface SidebarProps {
 }
 interface NavItem {
   title: string;
+  description?: string;
   icon: React.ElementType;
   href: string;
 }
@@ -302,11 +303,36 @@ export function Sidebar({
     location.pathname === `/app/${currentTenantSlug}/`;
 
   const primaryItems: NavItem[] = [
-    { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
-    { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
-    { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') },
+    {
+      title: 'Overview',
+      description: 'Recovery position, machine status, and the next seller action.',
+      icon: Gauge,
+      href: tenantRoute(currentTenantSlug, '')
+    },
+    {
+      title: 'Recovery Pipeline',
+      description: 'What can move into filing next and what is still under review.',
+      icon: ShieldCheck,
+      href: tenantRoute(currentTenantSlug, '/recoveries')
+    },
+    {
+      title: 'Dispute Cases',
+      description: 'Filed, blocked, and Amazon-facing case truth in one place.',
+      icon: Inbox,
+      href: tenantRoute(currentTenantSlug, '/dispute-cases')
+    },
+    {
+      title: 'Documents and Files',
+      description: 'Evidence, inbox imports, and parsing results tied to cases.',
+      icon: FileText,
+      href: tenantRoute(currentTenantSlug, '/evidence-locker')
+    },
+    {
+      title: 'Reopen Claims',
+      description: 'Older or previously closed recovery work that may still matter.',
+      icon: RefreshCcw,
+      href: tenantRoute(currentTenantSlug, '/appeals')
+    },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
   ];
 
@@ -360,27 +386,34 @@ export function Sidebar({
                 className={cn(
                   "relative flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-xl group",
                   isActive
-                    ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+                    ? "border border-white/10 bg-white/[0.05] text-white shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
                     : "text-foreground/30 hover:bg-foreground/5 hover:text-foreground"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
+                    className="absolute left-0 top-3 bottom-3 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
                   />
                 )}
                 <item.icon
                   className={cn(
                     "h-5 w-5 transition-colors duration-300",
-                    isActive ? "text-foreground/35" : "text-foreground/20 group-hover:text-foreground/35"
+                    isActive ? "text-white/85" : "text-foreground/20 group-hover:text-foreground/45"
                   )}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="bg-popover border border-border text-emerald-500 text-[11px] font-sans font-bold uppercase tracking-tight px-3 py-1.5 backdrop-blur-xl">
-              {item.title}
+            <TooltipContent side="right" className="max-w-[220px] bg-popover border border-border px-3 py-2 backdrop-blur-xl">
+              <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-white/88">
+                {item.title}
+              </div>
+              {item.description ? (
+                <div className="mt-1 text-[10px] font-sans leading-4 text-white/52 normal-case">
+                  {item.description}
+                </div>
+              ) : null}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -391,37 +424,60 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-center gap-3 w-full px-5 py-2.5 transition-all duration-300 group rounded-xl mb-1",
+          "relative flex items-start gap-3 w-full px-4 py-3 transition-all duration-300 group rounded-2xl mb-1.5 border",
           isActive
-            ? "bg-foreground/[0.03] text-foreground dark:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-            : "text-foreground/40 hover:bg-foreground/[0.02] hover:text-foreground"
+            ? "border-white/10 bg-white/[0.045] text-white shadow-[0_14px_34px_rgba(0,0,0,0.35)]"
+            : "border-transparent text-foreground/42 hover:border-white/8 hover:bg-white/[0.02] hover:text-white/88"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
-            className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500 rounded-r-full shadow-[0_0_12px_rgba(16,185,129,0.6)]"
+            className="absolute left-0 top-3 bottom-3 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
           />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-emerald-500/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-sky-300/25 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
         <item.icon
           strokeWidth={isActive ? 2 : 1.5}
           className={cn(
-            "h-4 w-4 shrink-0 transition-all duration-300",
-            isActive ? "text-foreground/35 scale-110" : "text-foreground/20 group-hover:text-foreground/35"
+            "mt-0.5 h-4 w-4 shrink-0 transition-all duration-300",
+            isActive ? "text-white/82 scale-105" : "text-foreground/24 group-hover:text-white/55"
           )}
         />
-        <span className={cn(
-          "text-[11px] font-sans transition-colors tracking-tight uppercase",
-          isActive ? "font-bold text-foreground" : "font-light"
-        )}>{item.title}</span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className={cn(
+              "text-[11px] font-sans transition-colors tracking-tight uppercase",
+              isActive ? "font-semibold text-white" : "font-medium"
+            )}>
+              {item.title}
+            </span>
+          </div>
+          {item.description ? (
+            <p className={cn(
+              "mt-1 text-[10px] font-sans leading-4 tracking-tight normal-case transition-colors",
+              isActive ? "text-white/52" : "text-white/28 group-hover:text-white/42"
+            )}>
+              {item.description}
+            </p>
+          ) : null}
+        </div>
+        <ChevronRight
+          className={cn(
+            "mt-0.5 h-4 w-4 shrink-0 transition-all duration-300",
+            isActive
+              ? "translate-x-0 text-sky-200/80"
+              : "translate-x-[-2px] text-white/10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/35"
+          )}
+          strokeWidth={1.6}
+        />
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
             "ml-auto text-[11px] font-sans font-bold tabular-nums px-2 py-0.5 rounded-md border tracking-tight",
             isActive
-              ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
+              ? "text-sky-100 bg-sky-400/10 border-sky-300/20 shadow-[0_0_10px_rgba(125,211,252,0.1)]"
               : "text-foreground/20 bg-foreground/5 border-foreground/5"
           )}>
             {claimCount}
@@ -482,6 +538,16 @@ export function Sidebar({
             isCollapsed ? "px-2" : "px-3"
           )}>
           <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
+            {!isCollapsed && (
+              <div className="w-full rounded-2xl border border-white/6 bg-white/[0.015] px-4 py-3">
+                <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-white/26">
+                  Workspace flow
+                </div>
+                <p className="mt-1.5 text-[10px] font-sans leading-4 text-white/38">
+                  Move from account visibility to evidence, filed cases, and Amazon thread follow-up without losing truth.
+                </p>
+              </div>
+            )}
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
               {primaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />
