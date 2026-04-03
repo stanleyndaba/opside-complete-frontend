@@ -1752,91 +1752,7 @@ export function Dashboard() {
 
                     </div>
 
-                    <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-5 py-4">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                Launch monitor
-                              </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                                Tenant-scoped Agent 7, Amazon thread, and Agent 10 launch truth.
-                              </p>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
-                                Last updated
-                              </div>
-                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                {formattedLaunchLastUpdated}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="px-5 py-4 space-y-4">
-                          <div className="flex flex-wrap gap-2">
-                            {(launchMonitor?.alerts || []).length === 0 ? (
-                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/55">
-                                Not Available
-                              </span>
-                            ) : activeLaunchAlerts.length === 0 ? (
-                              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-emerald-200">
-                                No active launch alerts
-                              </span>
-                            ) : (
-                              activeLaunchAlerts.map((alert) => (
-                                <span
-                                  key={alert.key}
-                                  className={cn(
-                                    'rounded-full border px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight',
-                                    launchAlertTone(alert)
-                                  )}
-                                >
-                                  {alert.label}: {formatLaunchMetricValue(alert.count)}
-                                  {typeof alert.threshold === 'number' ? ` / ${alert.threshold}` : ''}
-                                </span>
-                              ))
-                            )}
-                          </div>
-
-                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
-                            {launchMonitorCards.map((item) => (
-                              <div key={item.key} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
-                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
-                                  {item.label}
-                                </div>
-                                <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
-                                  {formatLaunchMetricValue(item.value)}
-                                </div>
-                                <p className="mt-2 text-[10px] font-sans leading-5 text-white/38">
-                                  {item.detail}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="space-y-2">
-                            {(launchMonitor?.alerts || []).map((alert) => (
-                              <div key={`${alert.key}-detail`} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
-                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/55">
-                                  <AlertTriangle className="h-3.5 w-3.5" />
-                                  {alert.label}
-                                </div>
-                                <p className="mt-2 text-[11px] font-sans leading-5 text-white/42">
-                                  {alert.detail}
-                                  {alert.active === null
-                                    ? ' Metric unavailable.'
-                                    : alert.active
-                                      ? ` Current count: ${formatLaunchMetricValue(alert.count)}.`
-                                      : ' No current spike detected.'}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
+                    <div className="space-y-4">
                       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
                         <div className="border-b border-white/5 px-5 py-4">
                           <div className="flex items-start justify-between gap-4">
@@ -1961,6 +1877,90 @@ export function Dashboard() {
                               <ScrollBar orientation="horizontal" />
                             </ScrollArea>
                           )}
+                        </div>
+                      </div>
+
+                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                        <div className="border-b border-white/5 px-5 py-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                Launch monitor
+                              </div>
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                                Tenant-scoped Agent 7, Amazon thread, and Agent 10 launch truth.
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                Last updated
+                              </div>
+                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/44">
+                                {formattedLaunchLastUpdated}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="px-5 py-4 space-y-4">
+                          <div className="flex flex-wrap gap-2">
+                            {(launchMonitor?.alerts || []).length === 0 ? (
+                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/55">
+                                Not Available
+                              </span>
+                            ) : activeLaunchAlerts.length === 0 ? (
+                              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-emerald-200">
+                                No active launch alerts
+                              </span>
+                            ) : (
+                              activeLaunchAlerts.map((alert) => (
+                                <span
+                                  key={alert.key}
+                                  className={cn(
+                                    'rounded-full border px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight',
+                                    launchAlertTone(alert)
+                                  )}
+                                >
+                                  {alert.label}: {formatLaunchMetricValue(alert.count)}
+                                  {typeof alert.threshold === 'number' ? ` / ${alert.threshold}` : ''}
+                                </span>
+                              ))
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 2xl:grid-cols-3">
+                            {launchMonitorCards.map((item) => (
+                              <div key={item.key} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-4">
+                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
+                                  {item.label}
+                                </div>
+                                <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                                  {formatLaunchMetricValue(item.value)}
+                                </div>
+                                <p className="mt-2 text-[10px] font-sans leading-5 text-white/38">
+                                  {item.detail}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="space-y-2">
+                            {(launchMonitor?.alerts || []).map((alert) => (
+                              <div key={`${alert.key}-detail`} className="rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
+                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/55">
+                                  <AlertTriangle className="h-3.5 w-3.5" />
+                                  {alert.label}
+                                </div>
+                                <p className="mt-2 text-[11px] font-sans leading-5 text-white/42">
+                                  {alert.detail}
+                                  {alert.active === null
+                                    ? ' Metric unavailable.'
+                                    : alert.active
+                                      ? ` Current count: ${formatLaunchMetricValue(alert.count)}.`
+                                      : ' No current spike detected.'}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
