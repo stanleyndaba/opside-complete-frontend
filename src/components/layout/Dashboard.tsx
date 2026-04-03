@@ -35,7 +35,7 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
 import { format, formatDistanceToNow } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { useStatusStream } from '@/hooks/use-status-stream';
@@ -1784,8 +1784,8 @@ export function Dashboard() {
                               No recent operational events recorded for this tenant.
                             </div>
                           ) : (
-                            <ScrollArea className="w-full whitespace-nowrap">
-                              <div className="flex min-w-max gap-4 pb-4 pr-2">
+                            <ScrollArea className="h-[560px] w-full">
+                              <div className="space-y-4 pr-4">
                                 {launchMonitor?.recent_events?.map((event) => {
                                   const eventTimestamp = new Date(event.timestamp);
                                   const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
@@ -1796,7 +1796,7 @@ export function Dashboard() {
                                   return (
                                     <div
                                       key={event.id}
-                                      className="flex min-h-[272px] w-[320px] shrink-0 snap-start flex-col rounded-2xl border border-white/8 bg-black/20 p-5 sm:w-[340px] xl:w-[360px]"
+                                      className="w-full rounded-2xl border border-white/8 bg-black/20 p-5"
                                     >
                                       <div className="flex items-start justify-between gap-4">
                                         <div className="min-w-0">
@@ -1819,39 +1819,49 @@ export function Dashboard() {
                                         </div>
                                       </div>
 
-                                      <div className="mt-5">
-                                        <div className="text-[16px] font-sans font-medium leading-tight tracking-tight text-white">
-                                          {event.title}
+                                      <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.5fr)_280px] xl:items-start">
+                                        <div className="min-w-0">
+                                          <div className="text-[22px] font-sans font-medium leading-tight tracking-tight text-white">
+                                            {event.title}
+                                          </div>
+                                          <p className="mt-3 max-w-3xl text-[12px] font-sans leading-6 text-white/46 whitespace-normal">
+                                            {event.detail}
+                                          </p>
                                         </div>
-                                        <p className="mt-3 text-[11px] font-sans leading-5 text-white/42 whitespace-normal">
-                                          {event.detail}
-                                        </p>
-                                      </div>
 
-                                      <div className="mt-5 space-y-2">
-                                        {event.amazon_case_id ? (
-                                          <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2">
-                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
-                                              Amazon case
+                                        <div className="space-y-2">
+                                          {event.amazon_case_id ? (
+                                            <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2.5">
+                                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                                Amazon case
+                                              </div>
+                                              <div className="mt-1 text-[11px] font-sans text-white/68">
+                                                {event.amazon_case_id}
+                                              </div>
                                             </div>
-                                            <div className="mt-1 text-[11px] font-sans text-white/64">
-                                              {event.amazon_case_id}
+                                          ) : null}
+                                          {formattedStatus ? (
+                                            <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2.5">
+                                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                                Status
+                                              </div>
+                                              <div className="mt-1 text-[11px] font-sans text-white/68">
+                                                {formattedStatus}
+                                              </div>
+                                            </div>
+                                          ) : null}
+                                          <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2.5">
+                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                              Source
+                                            </div>
+                                            <div className="mt-1 text-[11px] font-sans text-white/68">
+                                              {formatLaunchSourceLabel(event.source_table)}
                                             </div>
                                           </div>
-                                        ) : null}
-                                        {formattedStatus ? (
-                                          <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2">
-                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
-                                              Status
-                                            </div>
-                                            <div className="mt-1 text-[11px] font-sans text-white/64">
-                                              {formattedStatus}
-                                            </div>
-                                          </div>
-                                        ) : null}
+                                        </div>
                                       </div>
 
-                                      <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/6 pt-4">
+                                      <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/6 pt-4">
                                         <div className="text-[10px] font-sans text-white/28 whitespace-normal">
                                           {event.dispute_case_id ? 'Linked to a dispute case record.' : 'Operator log only.'}
                                         </div>
@@ -1874,7 +1884,6 @@ export function Dashboard() {
                                   );
                                 })}
                               </div>
-                              <ScrollBar orientation="horizontal" />
                             </ScrollArea>
                           )}
                         </div>
