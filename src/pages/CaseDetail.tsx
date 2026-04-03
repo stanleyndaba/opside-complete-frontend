@@ -8,7 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Timeline from '@/components/layout/Timeline';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import {
   ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle,
@@ -269,6 +271,22 @@ const formatEventTimestamp = (value?: string | null) => {
   });
 };
 
+const formatThreadStateLabel = (value?: string | null) => {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized) return NOT_AVAILABLE;
+  return normalized.replace(/_/g, ' ');
+};
+
+const getThreadStateTone = (value?: string | null) => {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'paid') return 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10';
+  if (normalized === 'approved') return 'text-blue-400 border-blue-500/20 bg-blue-500/10';
+  if (normalized === 'needs_evidence') return 'text-amber-400 border-amber-500/20 bg-amber-500/10';
+  if (normalized === 'rejected') return 'text-red-400 border-red-500/20 bg-red-500/10';
+  if (normalized === 'unlinked') return 'text-white/40 border-white/10 bg-white/[0.03]';
+  return 'text-white/70 border-white/10 bg-white/[0.03]';
+};
+
 const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string | null) => ({
   id: fallbackId,
   truth_unavailable: true,
@@ -346,6 +364,10 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   store_name: NOT_AVAILABLE,
   prior_case_id: NOT_AVAILABLE,
   amazonCaseId: null,
+  case_state: 'unlinked',
+  amazon_thread_linked: false,
+  can_reply_to_thread: false,
+  case_messages: [],
   currency: 'USD'
 });
 
@@ -361,6 +383,7 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   detection_result_id: apiData.detection_result_id || null,
   title: apiData.title || apiData.details || apiData.anomaly_type || 'Claim Details',
   status: apiData.status || null,
+  case_state: apiData.case_state || (apiData.amazonCaseId || apiData.amazon_case_id ? 'pending' : 'unlinked'),
   filing_status: apiData.filing_status || null,
   filing_strategy: apiData.filing_strategy || apiData.evidence_attachments?.decision_intelligence?.filing_strategy || null,
   explanation_payload: apiData.explanation_payload || apiData.evidence_attachments?.decision_intelligence?.explanation_payload || null,
@@ -395,8 +418,11 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => ({
   unitCost: apiData.unitCost ?? apiData.unit_cost ?? null,
   confidence: typeof apiData.confidence === 'number' ? apiData.confidence : null,
   evidenceStatus: apiData.evidenceStatus || apiData.evidence_status || null,
+  amazon_thread_linked: apiData.amazon_thread_linked === true,
+  can_reply_to_thread: apiData.can_reply_to_thread === true,
   documents: Array.isArray(apiData.documents) ? apiData.documents : [],
   events: Array.isArray(apiData.events) ? apiData.events : [],
+  case_messages: Array.isArray(apiData.case_messages) ? apiData.case_messages : [],
   evidence: apiData.evidence || {},
   evidence_summary: apiData.evidence_summary || {},
   evidence_attachments: apiData.evidence_attachments || null,
@@ -593,6 +619,9 @@ export default function CaseDetail() {
   const [selectedMetric, setSelectedMetric] = useState('payout');
   const [activeTab, setActiveTab] = useState<'RECORD' | 'PROTOCOL'>('RECORD');
   const [statusFeedUnavailable, setStatusFeedUnavailable] = useState(false);
+  const [replyBody, setReplyBody] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+  const [selectedReplyAttachmentIds, setSelectedReplyAttachmentIds] = useState<string[]>([]);
 
   const formatDateOrDash = (value?: string | null) => {
     if (!value) return NOT_AVAILABLE;
@@ -815,6 +844,10 @@ export default function CaseDetail() {
     : null;
   const canPreviewBrief = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
   const canOpenCanonicalFiling = Boolean(activeSlug && confirmedLinkedDisputeCaseId);
+  const caseThreadMessages = Array.isArray(backendTruthCase?.case_messages) ? backendTruthCase.case_messages : [];
+  const amazonThreadLinked = Boolean(backendTruthCase?.amazon_thread_linked);
+  const canReplyToAmazonThread = Boolean(backendTruthCase?.can_reply_to_thread && activeSlug && confirmedLinkedDisputeCaseId);
+  const replyEligibleDocuments = Array.isArray(backendTruthCase?.documents) ? backendTruthCase.documents : [];
   const backendConfidencePct = useMemo<number | null>(() => {
     if (!backendTruthCase || backendTruthCase.truth_unavailable) return null;
     const backendValue = typeof backendTruthCase?.confidence_score === 'number'
@@ -825,6 +858,11 @@ export default function CaseDetail() {
     if (backendValue === null) return null;
     return Math.max(0, Math.min(100, Math.round(backendValue)));
   }, [backendTruthCase]);
+
+  useEffect(() => {
+    const allowedIds = new Set(replyEligibleDocuments.map((doc: any) => String(doc?.id || '').trim()).filter(Boolean));
+    setSelectedReplyAttachmentIds((current) => current.filter((id) => allowedIds.has(id)));
+  }, [replyEligibleDocuments]);
 
   const backendEvidenceStatus = typeof backendTruthCase?.evidenceStatus === 'string' && backendTruthCase.evidenceStatus.trim()
     ? backendTruthCase.evidenceStatus
@@ -1002,6 +1040,68 @@ export default function CaseDetail() {
   }, [pdfPreviewTitle, pdfPreviewUrl]);
 
   const isReviewPdfPreview = pdfPreviewLabel === 'Browser-Generated PDF Preview' || pdfPreviewLabel === 'Brief PDF Preview';
+
+  const toggleReplyAttachment = useCallback((documentId: string, checked: boolean) => {
+    setSelectedReplyAttachmentIds((current) => {
+      if (checked) {
+        return current.includes(documentId) ? current : [...current, documentId];
+      }
+      return current.filter((id) => id !== documentId);
+    });
+  }, []);
+
+  const handleSendCaseReply = useCallback(async () => {
+    if (!activeSlug || !confirmedLinkedDisputeCaseId) {
+      toast({
+        variant: 'destructive',
+        title: 'Reply unavailable',
+        description: 'Amazon thread not yet linked'
+      });
+      return;
+    }
+
+    const message = replyBody.trim();
+    if (!message) {
+      toast({
+        variant: 'destructive',
+        title: 'Reply required',
+        description: 'Write a reply before sending it to Amazon.'
+      });
+      return;
+    }
+
+    setSendingReply(true);
+    try {
+      const response = await api.sendCaseReply(
+        confirmedLinkedDisputeCaseId,
+        {
+          message,
+          attachmentDocumentIds: selectedReplyAttachmentIds
+        },
+        activeSlug
+      );
+
+      if (!response.ok) {
+        throw new Error(response.error || 'Failed to send Amazon thread reply.');
+      }
+
+      setReplyBody('');
+      setSelectedReplyAttachmentIds([]);
+      toast({
+        title: 'Reply sent',
+        description: 'The reply was sent to the linked Amazon case thread.'
+      });
+      await refreshCaseDetail(caseId, { showLoading: false });
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Reply failed',
+        description: err?.message || 'Failed to send the Amazon thread reply.'
+      });
+    } finally {
+      setSendingReply(false);
+    }
+  }, [activeSlug, caseId, confirmedLinkedDisputeCaseId, refreshCaseDetail, replyBody, selectedReplyAttachmentIds, toast]);
 
   // Early return guards (all hooks must be called before these)
   if (!caseId) {
@@ -1326,6 +1426,12 @@ export default function CaseDetail() {
                           <dt className="text-[11px] text-white/40 font-medium">Current Status</dt>
                           <dd className="text-xs font-sans font-bold text-white">
                             {toStatusLabel(effectiveCase.status || (statusFeedUnavailable ? 'unavailable' : '-'))}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Amazon Thread State</dt>
+                          <dd className="text-xs font-sans font-bold text-white">
+                            {formatThreadStateLabel(effectiveCase.case_state)}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
@@ -1717,6 +1823,160 @@ export default function CaseDetail() {
                     {/* Timeline View */}
                     <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-lg">
                       <Timeline claimId={effectiveCase.id} tenantSlug={activeSlug} liveUpdatesUnavailable={statusFeedUnavailable} />
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <h4 className="text-sm font-bold text-white">Amazon Thread</h4>
+                        <Badge variant="outline" className={cn("text-[10px] uppercase tracking-tight border", getThreadStateTone(backendTruthCase?.case_state))}>
+                          {formatThreadStateLabel(backendTruthCase?.case_state)}
+                        </Badge>
+                      </div>
+
+                      {!amazonThreadLinked ? (
+                        <div className="rounded-lg border border-dashed border-white/10 bg-white/[0.02] px-4 py-5 text-sm text-white/55">
+                          Amazon thread not yet linked
+                        </div>
+                      ) : caseThreadMessages.length === 0 ? (
+                        <div className="rounded-lg border border-white/10 bg-white/[0.02] px-4 py-5 text-sm text-white/55">
+                          No thread activity yet
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {caseThreadMessages.map((message: any) => {
+                            const attachmentRows = Array.isArray(message.attachments) ? message.attachments : [];
+                            const eventAt = message.received_at || message.sent_at || message.created_at;
+                            return (
+                              <div
+                                key={message.id}
+                                className={cn(
+                                  "rounded-lg border px-4 py-4 space-y-3",
+                                  message.direction === 'inbound'
+                                    ? 'border-blue-500/20 bg-blue-500/[0.05]'
+                                    : 'border-emerald-500/20 bg-emerald-500/[0.05]'
+                                )}
+                              >
+                                <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-tight">
+                                  <Badge variant="outline" className={cn("border text-[10px] uppercase tracking-tight", message.direction === 'inbound' ? 'border-blue-500/20 text-blue-300 bg-blue-500/10' : 'border-emerald-500/20 text-emerald-300 bg-emerald-500/10')}>
+                                    {message.direction === 'inbound' ? 'Inbound' : 'Outbound'}
+                                  </Badge>
+                                  <span className="text-white/40">{formatEventTimestamp(eventAt)}</span>
+                                  {message.state_signal ? (
+                                    <Badge variant="outline" className={cn("border text-[10px] uppercase tracking-tight", getThreadStateTone(message.state_signal))}>
+                                      {formatThreadStateLabel(message.state_signal)}
+                                    </Badge>
+                                  ) : null}
+                                </div>
+                                <div className="space-y-1">
+                                  <div className="text-sm font-bold text-white">{message.subject || NOT_AVAILABLE}</div>
+                                  <div className="text-[11px] text-white/45">
+                                    {message.direction === 'inbound'
+                                      ? `From ${message.sender || NOT_AVAILABLE}`
+                                      : `To ${(Array.isArray(message.recipients) && message.recipients.length ? message.recipients.join(', ') : NOT_AVAILABLE)}`}
+                                  </div>
+                                </div>
+                                <div className="text-sm text-white/75 leading-relaxed whitespace-pre-wrap">
+                                  {message.body_text || NOT_AVAILABLE}
+                                </div>
+                                {attachmentRows.length > 0 ? (
+                                  <div className="space-y-2">
+                                    <div className="text-[10px] font-bold uppercase tracking-tight text-white/35">Attachments</div>
+                                    <div className="flex flex-wrap gap-2">
+                                      {attachmentRows.map((attachment: any, attachmentIdx: number) => {
+                                        const linkedDocumentId = String(attachment?.evidence_document_id || '').trim();
+                                        const label = attachment?.filename || `Attachment ${attachmentIdx + 1}`;
+                                        return linkedDocumentId && activeSlug ? (
+                                          <Button
+                                            key={`${message.id}-attachment-${attachmentIdx}`}
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 rounded-md border border-white/10 bg-white/[0.03] px-2 text-[10px] font-bold text-white/70 hover:text-white"
+                                            onClick={() => window.open(`/app/${activeSlug}/documents/${encodeURIComponent(linkedDocumentId)}`, '_blank')}
+                                          >
+                                            {label}
+                                          </Button>
+                                        ) : (
+                                          <span
+                                            key={`${message.id}-attachment-${attachmentIdx}`}
+                                            className="inline-flex h-7 items-center rounded-md border border-white/10 bg-white/[0.03] px-2 text-[10px] font-bold text-white/55"
+                                          >
+                                            {label}
+                                          </span>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                ) : null}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {amazonThreadLinked ? (
+                        <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 space-y-4">
+                          <div>
+                            <div className="text-xs font-bold text-white">Reply to Amazon</div>
+                            <div className="text-[11px] text-white/45 mt-1">
+                              Continue the linked Amazon support thread from inside Margin.
+                            </div>
+                          </div>
+
+                          <Textarea
+                            value={replyBody}
+                            onChange={(event) => setReplyBody(event.target.value)}
+                            placeholder={canReplyToAmazonThread ? 'Write the evidence-backed reply you want Amazon to receive.' : 'Reply will unlock after the first Amazon thread message is linked.'}
+                            disabled={!canReplyToAmazonThread || sendingReply}
+                            className="min-h-[140px] rounded-lg border-white/10 bg-white/[0.03] text-sm text-white placeholder:text-white/25"
+                          />
+
+                          {replyEligibleDocuments.length > 0 ? (
+                            <div className="space-y-3">
+                              <div className="text-[10px] font-bold uppercase tracking-tight text-white/35">
+                                Attach linked evidence
+                              </div>
+                              <div className="space-y-2">
+                                {replyEligibleDocuments.map((doc: any) => {
+                                  const documentId = String(doc?.id || '').trim();
+                                  if (!documentId) return null;
+                                  const isChecked = selectedReplyAttachmentIds.includes(documentId);
+                                  return (
+                                    <label
+                                      key={documentId}
+                                      className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white/75"
+                                    >
+                                      <Checkbox
+                                        checked={isChecked}
+                                        onCheckedChange={(checked) => toggleReplyAttachment(documentId, checked === true)}
+                                        disabled={!canReplyToAmazonThread || sendingReply}
+                                      />
+                                      <span className="font-sans font-bold">{doc?.filename || doc?.name || documentId}</span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ) : null}
+
+                          <div className="flex items-center justify-between gap-4">
+                            <div className="text-[11px] text-white/40">
+                              {canReplyToAmazonThread
+                                ? 'Thread linkage is confirmed. This reply will stay on the stored Amazon conversation.'
+                                : 'Reply is blocked until the Amazon thread is linked and at least one inbound message is stored.'}
+                            </div>
+                            <Button
+                              type="button"
+                              onClick={handleSendCaseReply}
+                              disabled={!canReplyToAmazonThread || sendingReply || !replyBody.trim()}
+                              className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
+                            >
+                              {sendingReply ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                              Send Reply
+                            </Button>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
 
                   </div>

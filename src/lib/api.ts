@@ -2040,6 +2040,29 @@ export const api = {
       updated_at: string;
     };
   }>(`/api/disputes/${encodeURIComponent(caseId)}`),
+  sendCaseReply: (
+    caseId: string,
+    payload: {
+      message: string;
+      attachmentDocumentIds?: string[];
+    },
+    tenantSlug?: string
+  ) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for sendCaseReply");
+    return requestJson<{
+      success: boolean;
+      message: string;
+      provider_message_id: string;
+      provider_thread_id: string | null;
+      case_message_id: string;
+    }>(`/api/disputes/${encodeURIComponent(caseId)}/reply?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        message: payload.message,
+        attachmentDocumentIds: payload.attachmentDocumentIds || []
+      })
+    });
+  },
   confirmDisputeUnlockAndFile: (tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for confirmDisputeUnlockAndFile");
     return requestJson<{
