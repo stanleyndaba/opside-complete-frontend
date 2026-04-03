@@ -33,7 +33,7 @@ import {
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
@@ -1198,14 +1198,14 @@ export function Dashboard() {
     if (!launchMonitor?.last_updated_at) return 'Not Available';
     const timestamp = new Date(launchMonitor.last_updated_at);
     if (Number.isNaN(timestamp.getTime())) return 'Not Available';
-    return `${formatDistanceToNow(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
+    return `${formatDistanceToNowStrict(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
   }, [launchMonitor?.last_updated_at]);
   const headerLastUpdated = useMemo(() => {
     if (launchMonitor?.last_updated_at) return formattedLaunchLastUpdated;
     if (!dashboardSummary?.last_updated_at) return 'Not Available';
     const timestamp = new Date(dashboardSummary.last_updated_at);
     if (Number.isNaN(timestamp.getTime())) return 'Not Available';
-    return `${formatDistanceToNow(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
+    return `${formatDistanceToNowStrict(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
   }, [dashboardSummary?.last_updated_at, formattedLaunchLastUpdated, launchMonitor?.last_updated_at]);
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
@@ -1640,10 +1640,10 @@ export function Dashboard() {
                     Quick Notice
                   </button>
                   <div className="text-right">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/72">
                       Last updated
                     </div>
-                    <div className="mt-1 text-[10px] font-sans leading-5 text-white/44">
+                    <div className="mt-1 text-[10px] font-sans leading-5 text-white">
                       {headerLastUpdated}
                     </div>
                   </div>
@@ -1803,7 +1803,7 @@ export function Dashboard() {
                                             </span>
                                           </div>
 
-                                          <div className="mt-3 text-[16px] font-sans font-medium leading-tight tracking-tight text-white">
+                                          <div className="mt-3 text-[14px] font-sans font-medium leading-snug tracking-tight text-white">
                                             {event.title}
                                           </div>
                                           <p
