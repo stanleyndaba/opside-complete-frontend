@@ -152,6 +152,9 @@ const pluralize = (count: number, singular: string, plural = `${singular}s`) =>
 const toTitleCase = (value: string) =>
   value.replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 
+const formatLaunchEventTypeLabel = (value: LaunchMonitorEvent['event_type']) =>
+  toTitleCase(value.replace(/_/g, ' '));
+
 const formatIssueTypeLabel = (value?: string | null) => {
   if (!value) return 'Unknown issue';
   return toTitleCase(value.replace(/_/g, ' ').trim());
@@ -1177,45 +1180,38 @@ export function Dashboard() {
   const detectedOpportunitiesCount = dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
   const filedClaimsCount = dashboardSummary?.filed_count ?? 0;
   const approvedClaimsCount = dashboardSummary?.approved_count ?? 0;
+  const recoveredClaimsCount = dashboardSummary?.recovered_count ?? 0;
   const recoveredCashTotal = dashboardSummary?.recovered_cash_total ?? 0;
   const estimatedValueTotal = dashboardSummary?.estimated_value_total ?? 0;
   const filedValueTotal = dashboardSummary?.filed_value_total ?? 0;
   const approvedValueTotal = dashboardSummary?.approved_value_total ?? 0;
   const activeBlockers = dashboardSummary?.blockers ?? [];
   const primaryBlocker = activeBlockers[0] || null;
-  const monthlyPlanBenchmark = 99;
   const hasLiveRecoveryValue = estimatedValueTotal > 0 || filedValueTotal > 0 || approvedValueTotal > 0 || recoveredCashTotal > 0;
-  const planCoverageMultiple = estimatedValueTotal > 0 ? estimatedValueTotal / monthlyPlanBenchmark : 0;
+  const launchMetrics = launchMonitor?.metrics ?? null;
   const formattedLastUpdated = useMemo(() => {
     if (!dashboardSummary?.last_updated_at) return 'Unavailable';
     const timestamp = new Date(dashboardSummary.last_updated_at);
     if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
     return formatDistanceToNow(timestamp, { addSuffix: true });
   }, [dashboardSummary?.last_updated_at]);
-  const formattedLastUpdatedAbsolute = useMemo(() => {
-    if (!dashboardSummary?.last_updated_at) return 'Unavailable';
-    const timestamp = new Date(dashboardSummary.last_updated_at);
-    if (Number.isNaN(timestamp.getTime())) return 'Unavailable';
-    return `Updated ${format(timestamp, 'MMM dd, yyyy, HH:mm')}`;
-  }, [dashboardSummary?.last_updated_at]);
   const launchMonitorCards = useMemo(() => {
-    const metrics = launchMonitor?.metrics || null;
     return [
-      { key: 'agent7_ready_count', label: 'Ready to file', value: metrics?.agent7_ready_count ?? null, detail: 'Cases that fully passed the filing truth gate.' },
-      { key: 'agent7_duplicate_blocked_count', label: 'Duplicate blocked', value: metrics?.agent7_duplicate_blocked_count ?? null, detail: 'Cases blocked because the same issue is already active.' },
-      { key: 'agent7_insufficient_data_count', label: 'Insufficient data', value: metrics?.agent7_insufficient_data_count ?? null, detail: 'Cases missing verified identifiers or quantity truth.' },
-      { key: 'agent7_thread_only_count', label: 'Thread only', value: metrics?.agent7_thread_only_count ?? null, detail: 'Amazon thread cases that should never trigger a fresh filing.' },
-      { key: 'agent7_pending_safety_verification_count', label: 'Safety backlog', value: metrics?.agent7_pending_safety_verification_count ?? null, detail: 'Cases still waiting on verified identifiers or review.' },
-      { key: 'agent7_filed_count', label: 'Filed', value: metrics?.agent7_filed_count ?? null, detail: 'Cases currently in flight with Amazon.' },
-      { key: 'agent7_needs_evidence_count', label: 'Needs evidence', value: metrics?.agent7_needs_evidence_count ?? null, detail: 'Cases where Amazon requested more proof.' },
-      { key: 'agent7_approved_count', label: 'Approved', value: metrics?.agent7_approved_count ?? null, detail: 'Cases Amazon has approved.' },
-      { key: 'agent7_rejected_count', label: 'Rejected', value: metrics?.agent7_rejected_count ?? null, detail: 'Cases Amazon has rejected.' },
-      { key: 'agent7_paid_count', label: 'Paid', value: metrics?.agent7_paid_count ?? null, detail: 'Cases marked paid from Amazon thread truth.' },
-      { key: 'unmatched_amazon_email_count', label: 'Unmatched emails', value: metrics?.unmatched_amazon_email_count ?? null, detail: 'Amazon emails still waiting for a safe case link.' },
-      { key: 'notification_failed_count', label: 'Notification failed', value: metrics?.notification_failed_count ?? null, detail: 'Notifications with failed delivery.' },
-      { key: 'notification_partial_count', label: 'Notification partial', value: metrics?.notification_partial_count ?? null, detail: 'Notifications with mixed delivery outcomes.' }
+      { key: 'agent7_ready_count', label: 'Ready to file', value: launchMetrics?.agent7_ready_count ?? null, detail: 'Cases that fully passed the filing truth gate.' },
+      { key: 'agent7_duplicate_blocked_count', label: 'Duplicate blocked', value: launchMetrics?.agent7_duplicate_blocked_count ?? null, detail: 'Cases blocked because the same issue is already active.' },
+      { key: 'agent7_insufficient_data_count', label: 'Insufficient data', value: launchMetrics?.agent7_insufficient_data_count ?? null, detail: 'Cases missing verified identifiers or quantity truth.' },
+      { key: 'agent7_thread_only_count', label: 'Thread only', value: launchMetrics?.agent7_thread_only_count ?? null, detail: 'Amazon thread cases that should never trigger a fresh filing.' },
+      { key: 'agent7_pending_safety_verification_count', label: 'Safety backlog', value: launchMetrics?.agent7_pending_safety_verification_count ?? null, detail: 'Cases still waiting on verified identifiers or review.' },
+      { key: 'agent7_filed_count', label: 'Filed', value: launchMetrics?.agent7_filed_count ?? null, detail: 'Cases currently in flight with Amazon.' },
+      { key: 'agent7_needs_evidence_count', label: 'Needs evidence', value: launchMetrics?.agent7_needs_evidence_count ?? null, detail: 'Cases where Amazon requested more proof.' },
+      { key: 'agent7_approved_count', label: 'Approved', value: launchMetrics?.agent7_approved_count ?? null, detail: 'Cases Amazon has approved.' },
+      { key: 'agent7_rejected_count', label: 'Rejected', value: launchMetrics?.agent7_rejected_count ?? null, detail: 'Cases Amazon has rejected.' },
+      { key: 'agent7_paid_count', label: 'Paid', value: launchMetrics?.agent7_paid_count ?? null, detail: 'Cases marked paid from Amazon thread truth.' },
+      { key: 'unmatched_amazon_email_count', label: 'Unmatched emails', value: launchMetrics?.unmatched_amazon_email_count ?? null, detail: 'Amazon emails still waiting for a safe case link.' },
+      { key: 'notification_failed_count', label: 'Notification failed', value: launchMetrics?.notification_failed_count ?? null, detail: 'Notifications with failed delivery.' },
+      { key: 'notification_partial_count', label: 'Notification partial', value: launchMetrics?.notification_partial_count ?? null, detail: 'Notifications with mixed delivery outcomes.' }
     ];
-  }, [launchMonitor?.metrics]);
+  }, [launchMetrics]);
   const activeLaunchAlerts = useMemo(
     () => (launchMonitor?.alerts || []).filter((alert) => alert.active !== false),
     [launchMonitor?.alerts]
@@ -1230,12 +1226,6 @@ export function Dashboard() {
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
   );
-  const formattedLastPayoutDate = useMemo(() => {
-    if (!dashboardSummary?.last_payout_date) return 'No payout recorded';
-    const timestamp = new Date(dashboardSummary.last_payout_date);
-    if (Number.isNaN(timestamp.getTime())) return 'No payout recorded';
-    return format(timestamp, 'MMM dd, yyyy');
-  }, [dashboardSummary?.last_payout_date]);
   const lastSyncResult = useMemo(() => {
     if (activeSyncId || syncTriggered) {
       return {
@@ -1270,120 +1260,330 @@ export function Dashboard() {
       detail: 'No sync result recorded yet.'
     };
   }, [activeSyncId, dashboardSummary?.integrations_summary?.last_ingest_at, lastSyncTime, needsSync, syncMessage, syncTriggered]);
+  const latestOperationalEvent = useMemo(() => {
+    const recentEvents = launchMonitor?.recent_events;
+    if (!recentEvents || recentEvents.length === 0) return null;
+    return recentEvents[0];
+  }, [launchMonitor?.recent_events]);
   const overviewHeadline = useMemo(() => {
-    if (!dashboardSummary) return 'Building your current recovery position.';
-    if (estimatedValueTotal > 0) {
-      return `Margin has found ${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} across ${pluralize(detectedOpportunitiesCount, 'recoverable issue')}.`;
+    const readyCount = launchMetrics?.agent7_ready_count ?? 0;
+    const filedCount = launchMetrics?.agent7_filed_count ?? filedClaimsCount;
+    const approvedCount = launchMetrics?.agent7_approved_count ?? approvedClaimsCount;
+    const paidCount = launchMetrics?.agent7_paid_count ?? 0;
+    const needsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
+    const safetyVerificationCount = launchMetrics?.agent7_pending_safety_verification_count ?? 0;
+    const insufficientDataCount = launchMetrics?.agent7_insufficient_data_count ?? 0;
+
+    if (!dashboardSummary && !launchMonitor) {
+      return 'Margin is checking your latest recovery position.';
+    }
+    if (activeSyncId || syncTriggered) {
+      return 'Margin is pulling your latest Amazon activity now.';
+    }
+    if (needsEvidenceCount > 0) {
+      return `Amazon needs more proof before ${pluralize(needsEvidenceCount, 'case')} can keep moving.`;
+    }
+    if (safetyVerificationCount > 0 || insufficientDataCount > 0) {
+      return `Verified identifiers are still missing on ${pluralize(safetyVerificationCount + insufficientDataCount, 'case')}, so Margin is holding them safely.`;
+    }
+    if (approvedCount > 0 && paidCount === 0) {
+      return `Amazon has approved ${pluralize(approvedCount, 'case')}; payout confirmation is the next checkpoint.`;
+    }
+    if (filedCount > 0) {
+      return `Margin already has ${pluralize(filedCount, 'case')} moving with Amazon.`;
+    }
+    if (readyCount > 0) {
+      return `Margin has ${pluralize(readyCount, 'case')} ready to file with full supporting truth.`;
+    }
+    if (detectedOpportunitiesCount > 0) {
+      return `Margin has ${pluralize(detectedOpportunitiesCount, 'issue')} in view and is turning supportable ones into cases.`;
     }
     if (recoveredCashTotal > 0) {
-      return `Margin has already verified ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} back into this account.`;
+      return `Margin has already confirmed ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} back to this account.`;
     }
-    return 'Margin is ready to watch this account for missed reimbursements.';
-  }, [dashboardSummary, estimatedValueTotal, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
-  const overviewNarrative = useMemo(() => {
-    if (!dashboardSummary) {
-      return 'Margin is assembling your current recovery picture from detected issues, filed cases, reimbursements, and payout events.';
-    }
-    if (estimatedValueTotal > 0 && recoveredCashTotal > 0) {
-      return `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} is already confirmed as paid back. The remaining value is still moving through review, filing, approval, and payout confirmation.`;
-    }
-    if (estimatedValueTotal > 0) {
-      if (filedClaimsCount > 0 || approvedClaimsCount > 0) {
-        const movementNotes = [
-          filedClaimsCount > 0 ? `${pluralize(filedClaimsCount, 'case')} already filed with Amazon` : null,
-          approvedClaimsCount > 0 ? `${pluralize(approvedClaimsCount, 'case')} approved and waiting for payout` : null
-        ].filter(Boolean).join('. ');
-        return `${movementNotes}. Margin is still watching the remaining value so nothing supportable gets missed.`;
-      }
-      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} are visible right now. Margin can now help move them from evidence into filing.`;
-    }
-    if (recoveredCashTotal > 0) {
-      return 'Recovered cash is already showing for this account, and Margin will keep watching for the next supportable issue.';
-    }
-    return 'No live Amazon activity is showing yet. Connect more data or load the demo pack to see how Margin flags inbound shortages, lost units, and transfer losses.';
-  }, [approvedClaimsCount, dashboardSummary, detectedOpportunitiesCount, estimatedValueTotal, filedClaimsCount, formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]);
-  const overviewStatusRows = useMemo(() => ([
-    {
-      label: 'Paid back so far',
-      value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
-      detail: recoveredCashTotal > 0
-        ? `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')} now tied to confirmed payout events`
-        : 'No confirmed reimbursement recorded yet'
-    },
-    {
-      label: 'Approved and awaiting payout',
-      value: formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency),
-      detail: approvedClaimsCount > 0
-        ? `${pluralize(approvedClaimsCount, 'approved case')} still waiting for payout confirmation`
-        : 'No approved cases are currently waiting for payout'
-    },
-    {
-      label: 'Already filed with Amazon',
-      value: formatCurrencyWithSelection(filedValueTotal, recoveredCurrency),
-      detail: filedClaimsCount > 0
-        ? `${pluralize(filedClaimsCount, 'filed case')} currently in review after filing`
-        : 'Nothing has entered filing yet'
-    },
-    {
-      label: 'Latest account update',
-      value: lastSyncResult.value,
-      detail: lastSyncResult.detail
-    }
-  ]), [
+    return 'Margin is connected and watching this account for missed reimbursements.';
+  }, [
+    activeSyncId,
     approvedClaimsCount,
-    approvedValueTotal,
-    dashboardSummary?.recovered_count,
+    dashboardSummary,
+    detectedOpportunitiesCount,
     filedClaimsCount,
-    filedValueTotal,
     formatCurrencyWithSelection,
-    lastSyncResult.detail,
-    lastSyncResult.value,
+    launchMetrics,
+    launchMonitor,
+    recoveredCashTotal,
+    recoveredCurrency,
+    syncTriggered
+  ]);
+  const overviewNarrative = useMemo(() => {
+    const latestEventTimestamp = latestOperationalEvent?.timestamp
+      ? new Date(latestOperationalEvent.timestamp)
+      : null;
+    const latestMovementSummary = latestEventTimestamp && !Number.isNaN(latestEventTimestamp.getTime())
+      ? `Last movement ${formatDistanceToNow(latestEventTimestamp, { addSuffix: true })}: ${latestOperationalEvent?.title}.`
+      : dashboardSummary
+        ? `Recovery summary refreshed ${formattedLastUpdated}.`
+        : 'Margin is assembling your latest filing, thread, and notification truth.';
+
+    if (primaryBlocker) {
+      return `${latestMovementSummary} ${primaryBlocker.label} is the main thing holding up ${pluralize(primaryBlocker.count, 'case')} right now.`;
+    }
+    if (needsSync) {
+      return `${latestMovementSummary} A refresh is still needed to pull the latest Amazon records.`;
+    }
+    if (recoveredCashTotal > 0) {
+      return `${latestMovementSummary} ${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} is already confirmed as paid back while Margin keeps watching what can move next.`;
+    }
+    return `${latestMovementSummary} The status cards beside this summary show whether Amazon is waiting, whether you need to step in, and what Margin is doing next.`;
+  }, [
+    dashboardSummary,
+    formattedLastUpdated,
+    formatCurrencyWithSelection,
+    latestOperationalEvent,
+    needsSync,
+    primaryBlocker,
     recoveredCashTotal,
     recoveredCurrency
   ]);
+  const overviewStatusRows = useMemo(() => {
+    const readyCount = launchMetrics?.agent7_ready_count ?? 0;
+    const duplicateBlockedCount = launchMetrics?.agent7_duplicate_blocked_count ?? 0;
+    const insufficientDataCount = launchMetrics?.agent7_insufficient_data_count ?? 0;
+    const safetyVerificationCount = launchMetrics?.agent7_pending_safety_verification_count ?? 0;
+    const filedCount = launchMetrics?.agent7_filed_count ?? filedClaimsCount;
+    const approvedCount = launchMetrics?.agent7_approved_count ?? approvedClaimsCount;
+    const paidCount = launchMetrics?.agent7_paid_count ?? 0;
+    const needsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
+
+    const currentStatus = (() => {
+      if (!dashboardSummary && !launchMonitor) {
+        return {
+          label: 'Current status',
+          value: 'Checking account status',
+          detail: 'Margin is loading the latest filing, thread, and notification truth.'
+        };
+      }
+      if (activeSyncId || syncTriggered) {
+        return {
+          label: 'Current status',
+          value: 'Syncing Amazon data',
+          detail: lastSyncResult.detail
+        };
+      }
+      if (needsEvidenceCount > 0) {
+        return {
+          label: 'Current status',
+          value: 'Needs your input',
+          detail: `Amazon asked for more proof on ${pluralize(needsEvidenceCount, 'case')}.`
+        };
+      }
+      if (safetyVerificationCount > 0 || insufficientDataCount > 0) {
+        return {
+          label: 'Current status',
+          value: 'Awaiting verified identifiers',
+          detail: `${pluralize(safetyVerificationCount + insufficientDataCount, 'case')} are paused until shipment or product truth is confirmed.`
+        };
+      }
+      if (approvedCount > 0 && paidCount === 0) {
+        return {
+          label: 'Current status',
+          value: 'Approved, awaiting payout',
+          detail: `${pluralize(approvedCount, 'case')} are approved and waiting for payout confirmation.`
+        };
+      }
+      if (filedCount > 0) {
+        return {
+          label: 'Current status',
+          value: 'Waiting on Amazon',
+          detail: `${pluralize(filedCount, 'case')} are already filed and currently in Amazon review.`
+        };
+      }
+      if (readyCount > 0) {
+        return {
+          label: 'Current status',
+          value: 'Ready to file',
+          detail: `${pluralize(readyCount, 'case')} fully passed the truth gate and can move forward safely.`
+        };
+      }
+      if (detectedOpportunitiesCount > 0) {
+        return {
+          label: 'Current status',
+          value: 'Reviewing new issues',
+          detail: `${pluralize(detectedOpportunitiesCount, 'issue')} are in view and Margin is sorting what is supportable.`
+        };
+      }
+      if (recoveredCashTotal > 0) {
+        return {
+          label: 'Current status',
+          value: 'Watching for the next issue',
+          detail: `${formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)} has already been confirmed back to this account.`
+        };
+      }
+      return {
+        label: 'Current status',
+        value: 'Watching for issues',
+        detail: 'Margin is connected and checking for missed reimbursements.'
+      };
+    })();
+
+    const lastMovement = (() => {
+      if (latestOperationalEvent) {
+        const timestamp = new Date(latestOperationalEvent.timestamp);
+        const relativeTime = Number.isNaN(timestamp.getTime())
+          ? 'recently'
+          : formatDistanceToNow(timestamp, { addSuffix: true });
+
+        return {
+          label: 'Last movement',
+          value: formatLaunchEventTypeLabel(latestOperationalEvent.event_type),
+          detail: `${latestOperationalEvent.title}. Recorded ${relativeTime}.${latestOperationalEvent.amazon_case_id ? ` Amazon case ${latestOperationalEvent.amazon_case_id}.` : ''}`
+        };
+      }
+      if (dashboardSummary?.last_updated_at) {
+        return {
+          label: 'Last movement',
+          value: 'Dashboard refreshed',
+          detail: `Recovery summary updated ${formattedLastUpdated}.`
+        };
+      }
+      return {
+        label: 'Last movement',
+        value: 'No movement yet',
+        detail: 'Margin has not recorded a filing, Amazon thread change, or notification event for this workspace yet.'
+      };
+    })();
+
+    const needsFromYou = (() => {
+      const notificationFailureAlert = activeLaunchAlerts.find((alert) => alert.key === 'notification_failure_present');
+      const unmatchedEmailAlert = activeLaunchAlerts.find((alert) => alert.key === 'unmatched_amazon_email_spike');
+
+      if (needsEvidenceCount > 0) {
+        return {
+          label: 'Needs from you',
+          value: 'Send evidence',
+          detail: `${pluralize(needsEvidenceCount, 'case')} are waiting on Amazon-requested proof.`
+        };
+      }
+      if (safetyVerificationCount > 0 || insufficientDataCount > 0) {
+        return {
+          label: 'Needs from you',
+          value: 'Verify identifiers',
+          detail: `${pluralize(safetyVerificationCount + insufficientDataCount, 'case')} still need shipment, order, or product truth before filing.`
+        };
+      }
+      if (needsSync) {
+        return {
+          label: 'Needs from you',
+          value: 'Refresh account',
+          detail: syncMessage || 'Run a refresh so Margin can pull the latest Amazon records.'
+        };
+      }
+      if (duplicateBlockedCount > 0) {
+        return {
+          label: 'Needs from you',
+          value: 'Review duplicate holds',
+          detail: `${pluralize(duplicateBlockedCount, 'case')} were held to avoid redundant Amazon filings.`
+        };
+      }
+      if (notificationFailureAlert?.active) {
+        return {
+          label: 'Needs from you',
+          value: 'Check notifications',
+          detail: notificationFailureAlert.detail
+        };
+      }
+      if (unmatchedEmailAlert?.active) {
+        return {
+          label: 'Needs from you',
+          value: 'Review unmatched emails',
+          detail: unmatchedEmailAlert.detail
+        };
+      }
+      if (readyCount > 0) {
+        return {
+          label: 'Needs from you',
+          value: 'Nothing urgent',
+          detail: `${pluralize(readyCount, 'case')} already passed the truth gate and can move when you are ready.`
+        };
+      }
+      return {
+        label: 'Needs from you',
+        value: 'Nothing needed',
+        detail: 'Margin is watching for issues and you do not need to act right now.'
+      };
+    })();
+
+    return [currentStatus, lastMovement, needsFromYou];
+  }, [
+    activeLaunchAlerts,
+    activeSyncId,
+    approvedClaimsCount,
+    dashboardSummary,
+    detectedOpportunitiesCount,
+    filedClaimsCount,
+    formattedLastUpdated,
+    formatCurrencyWithSelection,
+    lastSyncResult.detail,
+    latestOperationalEvent,
+    launchMetrics,
+    launchMonitor,
+    needsSync,
+    recoveredCashTotal,
+    recoveredCurrency,
+    syncMessage,
+    syncTriggered
+  ]);
   const overviewMetricRows = useMemo(() => ([
     {
-      label: 'Open value worth review',
-      value: formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency),
-      detail: `${pluralize(detectedOpportunitiesCount, 'opportunity')} currently detected`
+      label: 'Issues in view',
+      value: pluralize(detectedOpportunitiesCount, 'issue'),
+      detail: `${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} currently traceable across live detections`
     },
     {
-      label: 'Paid back so far',
-      value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
-      detail: `${pluralize(dashboardSummary?.recovered_count ?? 0, 'reconciled case')}`
-    },
-    {
-      label: 'Monthly plan benchmark',
-      value: '$99',
-      detail: estimatedValueTotal > 0
-        ? `Current open value is about ${planCoverageMultiple.toFixed(1)}x the monthly plan.`
-        : recoveredCashTotal > 0
-          ? 'Recovered value already exceeds one month of Pro pricing.'
-          : 'One supportable case can justify the monthly plan.'
-    },
-    {
-      label: 'Already filed with Amazon',
-      value: formatCurrencyWithSelection(filedValueTotal, recoveredCurrency),
+      label: 'Filed with Amazon',
+      value: pluralize(filedClaimsCount, 'case'),
       detail: filedClaimsCount > 0
-        ? `${pluralize(filedClaimsCount, 'case')} already in motion`
-        : 'Nothing has been filed yet'
+        ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} currently in Amazon review`
+        : 'Nothing has entered filing yet'
+    },
+    {
+      label: 'Approved',
+      value: pluralize(approvedClaimsCount, 'case'),
+      detail: approvedClaimsCount > 0
+        ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} waiting for payout confirmation`
+        : 'No approved cases are currently waiting for payout'
+    },
+    {
+      label: 'Paid back',
+      value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
+      detail: recoveredCashTotal > 0
+        ? `${pluralize(recoveredClaimsCount, 'reconciled case')} now tied to confirmed payout events`
+        : 'No confirmed reimbursement recorded yet'
     }
   ]), [
     approvedClaimsCount,
     approvedValueTotal,
-    dashboardSummary?.recovered_count,
     detectedOpportunitiesCount,
     estimatedValueTotal,
     filedClaimsCount,
     filedValueTotal,
     formatCurrencyWithSelection,
-    planCoverageMultiple,
+    recoveredClaimsCount,
     recoveredCashTotal,
     recoveredCurrency
   ]);
   const overviewPressureNote = useMemo(() => {
+    const notificationFailureAlert = activeLaunchAlerts.find((alert) => alert.key === 'notification_failure_present');
+    const unmatchedEmailAlert = activeLaunchAlerts.find((alert) => alert.key === 'unmatched_amazon_email_spike');
+
     if (primaryBlocker) {
       return `${primaryBlocker.label} is the main thing holding money back right now across ${pluralize(primaryBlocker.count, 'case')}.`;
+    }
+    if (notificationFailureAlert?.active) {
+      return notificationFailureAlert.detail;
+    }
+    if (unmatchedEmailAlert?.active) {
+      return unmatchedEmailAlert.detail;
     }
     if (approvedClaimsCount > 0) {
       return `${pluralize(approvedClaimsCount, 'approved case')} are now just waiting for payout confirmation.`;
@@ -1395,7 +1595,7 @@ export function Dashboard() {
       return `${pluralize(detectedOpportunitiesCount, 'opportunity')} can move into evidence review and filing next.`;
     }
     return 'No live opportunities are showing yet. Upload the demo pack or keep syncing so Margin can prove the workflow with real cases.';
-  }, [approvedClaimsCount, detectedOpportunitiesCount, filedClaimsCount, primaryBlocker]);
+  }, [activeLaunchAlerts, approvedClaimsCount, detectedOpportunitiesCount, filedClaimsCount, primaryBlocker]);
 
   if (!activeSlug) {
     return (
@@ -1499,7 +1699,7 @@ export function Dashboard() {
                         <div className="grid gap-10 xl:grid-cols-[1.45fr_0.95fr]">
                           <div>
                             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
-                              Recovery value today
+                              Recovery value in view
                             </div>
                             <h2 className="mt-4 max-w-4xl text-4xl font-sans font-medium tracking-tight text-white xl:text-5xl">
                               {overviewHeadline}
@@ -1571,7 +1771,7 @@ export function Dashboard() {
 
                       <div className="border-t border-white/5 px-8 py-5">
                         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                          Current pressure
+                          What needs attention
                         </div>
                         <p className="mt-2 text-sm font-sans leading-relaxed text-white/56">
                           {overviewPressureNote}
