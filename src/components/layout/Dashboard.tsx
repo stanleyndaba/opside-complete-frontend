@@ -1270,33 +1270,6 @@ export function Dashboard() {
       detail: 'No sync result recorded yet.'
     };
   }, [activeSyncId, dashboardSummary?.integrations_summary?.last_ingest_at, lastSyncTime, needsSync, syncMessage, syncTriggered]);
-  const recentFinancialActivity = useMemo(() => {
-    const payoutCount = dashboardSummary?.payout_count ?? 0;
-    const recoveredCount = dashboardSummary?.recovered_count ?? 0;
-    return [
-      {
-        label: 'Last payout',
-        value: formattedLastPayoutDate,
-        detail: payoutCount > 0
-          ? `${payoutCount} payout event${payoutCount === 1 ? '' : 's'} recorded`
-          : 'Waiting for the first reimbursement event'
-      },
-      {
-        label: 'Paid back so far',
-        value: recoveredCashTotal > 0
-          ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
-          : 'No payout yet',
-        detail: recoveredCount > 0
-          ? `${pluralize(recoveredCount, 'reconciled case')} tied to confirmed payout activity`
-          : 'No verified reimbursement recorded yet'
-      },
-      {
-        label: 'Latest account refresh',
-        value: lastSyncResult.value,
-        detail: lastSyncResult.detail
-      }
-    ];
-  }, [dashboardSummary?.payout_count, dashboardSummary?.recovered_count, formatCurrencyWithSelection, formattedLastPayoutDate, lastSyncResult.detail, lastSyncResult.value, recoveredCashTotal, recoveredCurrency]);
   const overviewHeadline = useMemo(() => {
     if (!dashboardSummary) return 'Building your current recovery position.';
     if (estimatedValueTotal > 0) {
@@ -1756,89 +1729,6 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-5 py-4">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                            Account activity
-                          </div>
-                          <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                            Your latest payout activity, paid-back cash, and account refresh status.
-                          </p>
-                        </div>
-                        <div className="divide-y divide-white/5">
-                          {recentFinancialActivity.map((item) => (
-                            <div key={item.label} className="px-5 py-4">
-                              <div className="grid gap-2 md:grid-cols-[0.82fr_1fr] md:items-start">
-                                <div>
-                                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                    {item.label}
-                                  </div>
-                                  <div className="mt-2 text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
-                                    {item.value}
-                                  </div>
-                                </div>
-                                <p className="text-[10px] font-sans leading-5 text-white/44">
-                                  {item.detail}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-5 py-4">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                            What happens next
-                          </div>
-                          <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                            A quick read of what has been found, what is already filed, and what is still waiting on Amazon.
-                          </p>
-                        </div>
-                        <div className="divide-y divide-white/5 px-5 py-4">
-                          <div className="flex items-start justify-between gap-3 py-4 pt-0">
-                            <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                Open opportunities
-                              </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                {pluralize(detectedOpportunitiesCount, 'opportunity')} are currently visible and worth reviewing.
-                              </p>
-                            </div>
-                            <div className="text-right text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
-                              {detectedOpportunitiesCount}
-                            </div>
-                          </div>
-                          <div className="flex items-start justify-between gap-3 py-4">
-                            <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                Already filed
-                              </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                Value already in Amazon review or waiting for payout confirmation.
-                              </p>
-                            </div>
-                            <div className="text-right text-[18px] font-sans font-medium leading-[1.12] tracking-tight text-white">
-                              {formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)}
-                            </div>
-                          </div>
-                          <div className="flex items-start justify-between gap-3 pb-0 pt-4">
-                            <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                Last updated
-                              </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/44">
-                                The most recent recovery summary available in Margin.
-                              </p>
-                            </div>
-                            <div className="text-right text-[12px] font-sans font-medium leading-5 tracking-tight text-white/72">
-                              {formattedLastUpdatedAbsolute}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   {/* System Activity - Audit Registry Sidebar */}
