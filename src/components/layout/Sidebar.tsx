@@ -66,7 +66,6 @@ interface SidebarProps {
 }
 interface NavItem {
   title: string;
-  description?: string;
   icon: React.ElementType;
   href: string;
 }
@@ -303,36 +302,11 @@ export function Sidebar({
     location.pathname === `/app/${currentTenantSlug}/`;
 
   const primaryItems: NavItem[] = [
-    {
-      title: 'Overview',
-      description: 'Recovery position, machine status, and the next seller action.',
-      icon: Gauge,
-      href: tenantRoute(currentTenantSlug, '')
-    },
-    {
-      title: 'Recovery Pipeline',
-      description: 'What can move into filing next and what is still under review.',
-      icon: ShieldCheck,
-      href: tenantRoute(currentTenantSlug, '/recoveries')
-    },
-    {
-      title: 'Dispute Cases',
-      description: 'Filed, blocked, and Amazon-facing case truth in one place.',
-      icon: Inbox,
-      href: tenantRoute(currentTenantSlug, '/dispute-cases')
-    },
-    {
-      title: 'Documents and Files',
-      description: 'Evidence, inbox imports, and parsing results tied to cases.',
-      icon: FileText,
-      href: tenantRoute(currentTenantSlug, '/evidence-locker')
-    },
-    {
-      title: 'Reopen Claims',
-      description: 'Older or previously closed recovery work that may still matter.',
-      icon: RefreshCcw,
-      href: tenantRoute(currentTenantSlug, '/appeals')
-    },
+    { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
+    { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
+    { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
+    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+    { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') },
     // { title: 'Reports', icon: BarChart3, href: tenantRoute(currentTenantSlug, '/reports') },
   ];
 
@@ -405,15 +379,10 @@ export function Sidebar({
                 />
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right" className="max-w-[220px] bg-popover border border-border px-3 py-2 backdrop-blur-xl">
+            <TooltipContent side="right" className="bg-popover border border-border px-3 py-2 backdrop-blur-xl">
               <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-white/88">
                 {item.title}
               </div>
-              {item.description ? (
-                <div className="mt-1 text-[10px] font-sans leading-4 text-white/52 normal-case">
-                  {item.description}
-                </div>
-              ) : null}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -455,14 +424,6 @@ export function Sidebar({
               {item.title}
             </span>
           </div>
-          {item.description ? (
-            <p className={cn(
-              "mt-1 text-[10px] font-sans leading-4 tracking-tight normal-case transition-colors",
-              isActive ? "text-white/52" : "text-white/28 group-hover:text-white/42"
-            )}>
-              {item.description}
-            </p>
-          ) : null}
         </div>
         <ChevronRight
           className={cn(
@@ -538,16 +499,6 @@ export function Sidebar({
             isCollapsed ? "px-2" : "px-3"
           )}>
           <nav className={cn("w-full flex flex-col items-center pt-6 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-3")}>
-            {!isCollapsed && (
-              <div className="w-full rounded-2xl border border-white/6 bg-white/[0.015] px-4 py-3">
-                <div className="text-[9px] font-sans font-semibold uppercase tracking-tight text-white/26">
-                  Workspace flow
-                </div>
-                <p className="mt-1.5 text-[10px] font-sans leading-4 text-white/38">
-                  Move from account visibility to evidence, filed cases, and Amazon thread follow-up without losing truth.
-                </p>
-              </div>
-            )}
             <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-1" : "items-start space-y-1")}>
               {primaryItems.map((item) => (
                 <NavItemComponent key={item.title} item={item} />

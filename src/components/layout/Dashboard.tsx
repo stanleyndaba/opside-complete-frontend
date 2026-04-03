@@ -1572,31 +1572,6 @@ export function Dashboard() {
     recoveredCashTotal,
     recoveredCurrency
   ]);
-  const overviewPressureNote = useMemo(() => {
-    const notificationFailureAlert = activeLaunchAlerts.find((alert) => alert.key === 'notification_failure_present');
-    const unmatchedEmailAlert = activeLaunchAlerts.find((alert) => alert.key === 'unmatched_amazon_email_spike');
-
-    if (primaryBlocker) {
-      return `${primaryBlocker.label} is the main thing holding money back right now across ${pluralize(primaryBlocker.count, 'case')}.`;
-    }
-    if (notificationFailureAlert?.active) {
-      return notificationFailureAlert.detail;
-    }
-    if (unmatchedEmailAlert?.active) {
-      return unmatchedEmailAlert.detail;
-    }
-    if (approvedClaimsCount > 0) {
-      return `${pluralize(approvedClaimsCount, 'approved case')} are now just waiting for payout confirmation.`;
-    }
-    if (filedClaimsCount > 0) {
-      return `${pluralize(filedClaimsCount, 'filed case')} are already with Amazon and waiting on review or payout confirmation.`;
-    }
-    if (detectedOpportunitiesCount > 0) {
-      return `${pluralize(detectedOpportunitiesCount, 'opportunity')} can move into evidence review and filing next.`;
-    }
-    return 'No live opportunities are showing yet. Upload the demo pack or keep syncing so Margin can prove the workflow with real cases.';
-  }, [activeLaunchAlerts, approvedClaimsCount, detectedOpportunitiesCount, filedClaimsCount, primaryBlocker]);
-
   if (!activeSlug) {
     return (
       <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
@@ -1769,14 +1744,6 @@ export function Dashboard() {
                         ))}
                       </div>
 
-                      <div className="border-t border-white/5 px-8 py-5">
-                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                          What needs attention
-                        </div>
-                        <p className="mt-2 text-sm font-sans leading-relaxed text-white/56">
-                          {overviewPressureNote}
-                        </p>
-                      </div>
                     </div>
 
                     <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
