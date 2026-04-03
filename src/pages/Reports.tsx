@@ -354,6 +354,7 @@ const prettifyLabel = (value: any, fallback: string) => {
 
 const normalizeClaimRecord = (raw: any, index: number): ClaimRecord => {
   const amount =
+    parseNumericAmount(raw.actual_payout_amount) ??
     parseNumericAmount(raw.actual_amount) ??
     parseNumericAmount(raw.amount_recovered) ??
     parseNumericAmount(raw.amount) ??
@@ -398,6 +399,7 @@ type SortDirection = 'asc' | 'desc';
 export default function Reports() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { toast } = useToast();
+  const activeTenantSlug = (tenantSlug || '').trim();
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedClaimTypes, setSelectedClaimTypes] = useState<string[]>([]);
@@ -505,9 +507,11 @@ export default function Reports() {
   }, []);
 
   useStatusStream((event: StatusEvent) => {
+    if (!activeTenantSlug) return;
+
     if (event.eventType === 'detection.created') {
       setClaimsLoading(true);
-      recoveryApi.getRecoveries()
+      recoveryApi.getRecoveries(activeTenantSlug)
         .then((recoveries) => {
           if (!Array.isArray(recoveries)) return;
           const normalized = recoveries
@@ -520,7 +524,7 @@ export default function Reports() {
     }
 
     if (event.eventType === 'payout.detected') {
-      detectionApi.getDetectionStatistics().then((res) => {
+      detectionApi.getDetectionStatistics(undefined, activeTenantSlug).then((res) => {
         if (res.ok && res.data?.statistics) {
           setDetectionStats(res.data.statistics);
         }
@@ -534,17 +538,24 @@ export default function Reports() {
     ) {
       applyClaimEvent(event);
     }
-  }, tenantSlug);
+  }, activeTenantSlug);
 
   // Fetch Phase 3 detection statistics
   useEffect(() => {
+    if (!activeTenantSlug) {
+      setDetectionStats(null);
+      setConfidenceDistribution(null);
+      setLoadingStats(false);
+      return;
+    }
+
     let cancelled = false;
     (async () => {
       setLoadingStats(true);
       try {
         const [statsRes, distRes] = await Promise.all([
-          detectionApi.getDetectionStatistics().catch(() => ({ ok: false, data: null })),
-          detectionApi.getConfidenceDistribution().catch(() => ({ ok: false, data: null })),
+          detectionApi.getDetectionStatistics(undefined, activeTenantSlug).catch(() => ({ ok: false, data: null })),
+          detectionApi.getConfidenceDistribution(undefined, activeTenantSlug).catch(() => ({ ok: false, data: null })),
         ]);
         if (!cancelled) {
           if (statsRes.ok && statsRes.data?.statistics) {
@@ -561,14 +572,20 @@ export default function Reports() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [activeTenantSlug]);
 
   useEffect(() => {
+    if (!activeTenantSlug) {
+      setClaims([]);
+      setClaimsLoading(false);
+      return;
+    }
+
     let cancelled = false;
     (async () => {
       setClaimsLoading(true);
       try {
-        const recoveries = await recoveryApi.getRecoveries();
+        const recoveries = await recoveryApi.getRecoveries(activeTenantSlug);
         if (cancelled) return;
         if (Array.isArray(recoveries) && recoveries.length > 0) {
           const normalized = recoveries
@@ -586,7 +603,7 @@ export default function Reports() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [activeTenantSlug]);
 
   // Filter and sort data
   const filteredClaims = useMemo(() => {
@@ -634,23 +651,26 @@ export default function Reports() {
 
   // Calculate key metrics
   const keyMetrics = useMemo(() => {
-    const totalRecovered = filteredClaims.reduce((sum, claim) => sum + claim.amountRecovered, 0);
-    const claimsSubmitted = filteredClaims.length;
-    const paidClaims = filteredClaims.filter(claim => claim.status === 'Paid').length;
-    const successRate = claimsSubmitted > 0 ? paidClaims / claimsSubmitted * 100 : 0;
+    const totalValueInView = filteredClaims.reduce((sum, claim) => sum + claim.amountRecovered, 0);
+    const casesInView = filteredClaims.length;
+    const paidClaimsWithStatus = filteredClaims.filter((claim) => ['Paid', 'Reconciled'].includes(claim.status));
+    const paidClaims = paidClaimsWithStatus.length;
+    const confirmedRecovered = paidClaimsWithStatus.reduce((sum, claim) => sum + claim.amountRecovered, 0);
 
     // Calculate average recovery time (for paid claims only)
-    const paidClaimsWithDates = filteredClaims.filter(claim => claim.status === 'Paid' && claim.payoutDate);
+    const paidClaimsWithDates = filteredClaims.filter(claim => ['Paid', 'Reconciled'].includes(claim.status) && claim.payoutDate);
     const avgRecoveryTime = paidClaimsWithDates.length > 0 ? paidClaimsWithDates.reduce((sum, claim) => {
       const created = new Date(claim.dateCreated);
       const paid = new Date(claim.payoutDate!);
       return sum + Math.floor((paid.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
     }, 0) / paidClaimsWithDates.length : 0;
     return {
-      totalRecovered,
-      claimsSubmitted,
-      successRate,
-      avgRecoveryTime: Math.round(avgRecoveryTime)
+      totalValueInView,
+      casesInView,
+      paidClaims,
+      confirmedRecovered,
+      avgRecoveryTime: Math.round(avgRecoveryTime),
+      paidCasesWithDates: paidClaimsWithDates.length
     };
   }, [filteredClaims]);
   const handleSort = (field: SortField) => {
@@ -708,7 +728,7 @@ export default function Reports() {
     }
   };
   const exportToCSV = () => {
-    const headers = ['Claim ID', 'Date Created', 'Claim Type', 'Status', 'Amount Recovered', 'Payout Date'];
+    const headers = ['Claim ID', 'Date Created', 'Claim Type', 'Status', 'Case Value', 'Payout Date'];
     const csvContent = [headers.join(','), ...filteredClaims.map(claim => [claim.id, claim.dateCreated, claim.claimType, claim.status, claim.amountRecovered, claim.payoutDate || ''].join(','))].join('\n');
     const blob = new Blob([csvContent], {
       type: 'text/csv'
@@ -717,7 +737,12 @@ export default function Reports() {
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    const filename = reportType === 'fee_dispute' ? 'fee-dispute-history.csv' : reportType === 'evidence_log' ? 'evidence-locker-log.csv' : 'recovery-payout-history.csv';
+    const filename =
+      reportType === 'fee_dispute'
+        ? 'claim-value-by-type.csv'
+        : reportType === 'evidence_log'
+          ? 'case-status-ledger.csv'
+          : 'claims-ledger.csv';
     a.setAttribute('download', filename);
     document.body.appendChild(a);
     a.click();
@@ -728,7 +753,7 @@ export default function Reports() {
       exportToCSV();
       toast({
         title: "Export Complete",
-        description: "Report exported as CSV",
+        description: "Current filtered claims ledger exported as CSV",
       });
     }
     if (exportFormat === 'pdf') {
@@ -744,7 +769,7 @@ export default function Reports() {
     if (filteredClaims.length === 0) return [];
     const buckets = new Map<string, number>();
     filteredClaims.forEach((claim) => {
-      const rawDate = claim.payoutDate || claim.dateCreated;
+      const rawDate = claim.dateCreated;
       if (!rawDate) return;
       const isoKey = format(new Date(rawDate), 'yyyy-MM-dd');
       const current = buckets.get(isoKey) ?? 0;
@@ -836,28 +861,16 @@ export default function Reports() {
     <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
     <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-    {/* Beta Blur Overlay */}
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-      <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full backdrop-blur-sm">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[11px] font-mono font-bold text-emerald-500 uppercase tracking-[0.3em]">Coming Soon</span>
-        </div>
-        <h2 className="text-4xl md:text-5xl font-serif text-white tracking-tighter">Beta Roll Out Soon</h2>
-        <p className="text-white/40 font-serif italic text-lg max-w-md mx-auto">Advanced analytics and reporting features are currently in development.</p>
-      </div>
-    </div>
-
-    <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white space-y-8 pt-8 blur-[6px] select-none">
+    <div className="relative w-full max-w-full mx-auto px-8 pb-10 text-white space-y-8 pt-8">
       {/* Page Header & Controls */}
       <div className="mb-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex flex-col gap-1 mb-2">
-            <span className="text-[10px] font-mono font-bold text-emerald-500/50 tracking-[0.3em] uppercase">PERFORMANCE_ANALYTICS</span>
+            <span className="text-[10px] font-mono font-bold text-sky-400/60 tracking-[0.3em] uppercase">PERFORMANCE_ANALYTICS</span>
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-serif font-medium text-white tracking-tight uppercase italic">Reports</h1>
-              <span className="text-[10px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-1.5 py-0.5 rounded font-mono font-bold tracking-tighter">BETA</span>
-              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] border border-white/10 bg-white/[0.03] text-white/55 px-1.5 py-0.5 rounded font-mono font-bold tracking-tighter">LIVE</span>
+              <div className="h-1 w-1 rounded-full bg-sky-300 animate-pulse" />
             </div>
           </div>
           <p className="text-[11px] font-mono text-white/30 uppercase tracking-widest leading-relaxed">Financial analytics and recovery performance insights</p>
@@ -868,9 +881,9 @@ export default function Reports() {
               placeholder="SEARCH_CLAIMS..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="pl-9 md:w-56 border-white/10 bg-white/[0.03] text-white placeholder:text-white/20 text-[10px] font-mono h-9 uppercase tracking-widest rounded-xl focus:border-emerald-500/30 transition-all font-bold"
+              className="pl-9 md:w-56 border-white/10 bg-white/[0.03] text-white placeholder:text-white/20 text-[10px] font-mono h-9 uppercase tracking-widest rounded-xl focus:border-sky-400/30 transition-all font-bold"
             />
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20 group-focus-within:text-sky-300 transition-colors" />
           </div>
           <div className="flex gap-1.5 p-1 bg-white/[0.02] border border-white/5 rounded-xl">
             <Button variant="ghost" size="sm" className="text-white/40 hover:text-white hover:bg-white/5 text-[9px] font-mono uppercase tracking-widest h-7 px-3" onClick={() => setQuickDateRange('30days')}>30D</Button>
@@ -880,7 +893,7 @@ export default function Reports() {
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className={cn("min-w-[240px] justify-start text-left font-mono text-[10px] bg-white/[0.03] text-white/60 border-white/10 hover:bg-white/5 hover:text-white rounded-xl h-9 uppercase tracking-widest font-bold", !dateRange && "text-white/20")}>
-                <CalendarIcon className="mr-2 h-4 w-4 text-emerald-500/50" />
+                <CalendarIcon className="mr-2 h-4 w-4 text-sky-300/60" />
                 {dateRange?.from ? dateRange.to ? <>
                   {format(dateRange.from, "LLL dd, y")} -{" "}
                   {format(dateRange.to, "LLL dd, y")}
@@ -891,7 +904,7 @@ export default function Reports() {
               <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={setDateRange} numberOfMonths={2} className="text-white" />
             </PopoverContent>
           </Popover>
-          <Button size="sm" onClick={() => setExportOpen(true)} className="gap-2 bg-white text-black hover:bg-emerald-500 hover:text-black text-[10px] font-mono uppercase tracking-[0.2em] font-bold h-9 px-5 rounded-xl transition-all shadow-lg">
+          <Button size="sm" onClick={() => setExportOpen(true)} className="gap-2 bg-white text-black hover:bg-sky-300 hover:text-black text-[10px] font-mono uppercase tracking-[0.2em] font-bold h-9 px-5 rounded-xl transition-all shadow-lg">
             <Download className="h-4 w-4" /> EXPORT_MATRIX
           </Button>
         </div>
@@ -901,31 +914,38 @@ export default function Reports() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {[
           {
-            label: 'TOTAL_RECOVERED',
-            value: detectionStats?.total_value ? formatCurrency(detectionStats.total_value) : formatCurrency(keyMetrics.totalRecovered),
-            subtitle: `FROM_${filteredClaims.length}_CLAIMS`,
-            trend: '+12.4%',
+            label: 'VALUE_IN_VIEW',
+            value: detectionStats?.total_value ? formatCurrency(detectionStats.total_value) : formatCurrency(keyMetrics.totalValueInView),
+            subtitle: `ACROSS_${filteredClaims.length}_CASES`,
+            trend: 'LIVE',
             color: 'text-emerald-500'
           },
           {
-            label: 'SUCCESS_RATE',
-            value: `${keyMetrics.successRate.toFixed(1)}%`,
-            subtitle: 'AUDIT_EFFICIENCY',
-            trend: 'STABLE',
+            label: 'CASES_IN_VIEW',
+            value: `${keyMetrics.casesInView}`,
+            subtitle: 'CURRENT_WORKSPACE_BUFFER',
+            trend: 'LIVE',
             color: 'text-blue-500'
           },
           {
-            label: 'EST_RECOVERY',
+            label: 'PAID_BACK_CONFIRMED',
+            value: formatCurrency(keyMetrics.confirmedRecovered),
+            subtitle: `${keyMetrics.paidClaims}_PAID_CASES`,
+            trend: keyMetrics.paidClaims > 0 ? 'TRACKED' : 'NONE',
+            color: 'text-emerald-500'
+          },
+          {
+            label: 'DETECTION_VALUE',
             value: detectionStats?.estimatedRecovery ? formatCurrency(detectionStats.estimatedRecovery) : '$0.00',
-            subtitle: 'PREDICTED_REVENUE',
+            subtitle: 'CURRENT_DETECTION_TOTAL',
             trend: 'ACTIVE',
             color: 'text-emerald-500'
           },
           {
-            label: 'AVG_REC_TIME',
-            value: `${keyMetrics.avgRecoveryTime}D`,
-            subtitle: 'CYCLE_VELOCITY',
-            trend: '-2.1D',
+            label: 'AVG_PAID_CYCLE',
+            value: keyMetrics.paidCasesWithDates > 0 ? `${keyMetrics.avgRecoveryTime}D` : 'N/A',
+            subtitle: keyMetrics.paidCasesWithDates > 0 ? 'PAID_CASE_TIMING' : 'WAITING_ON_PAID_CASES',
+            trend: keyMetrics.paidCasesWithDates > 0 ? 'TRACKED' : 'N/A',
             color: 'text-white'
           }
         ].map((metric, idx) => (
@@ -955,8 +975,8 @@ export default function Reports() {
           <CardContent className="p-8">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h3 className="text-sm font-serif italic text-white mb-1 uppercase tracking-tight">Recoveries Over Time</h3>
-                <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Time-series financial reconciliation analysis</p>
+                <h3 className="text-sm font-serif italic text-white mb-1 uppercase tracking-tight">Claim Value Over Time</h3>
+                <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Time-series of case value entering the workspace ledger</p>
               </div>
               <div className="h-2 w-2 rounded-full bg-emerald-500/40 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
             </div>
@@ -969,7 +989,7 @@ export default function Reports() {
                 </Suspense>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-white/20 space-y-4">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] border border-white/10 px-4 py-2 rounded-full">NO_RECOVERY_DATA_AVAILABLE</p>
+                  <p className="text-[10px] font-mono uppercase tracking-[0.2em] border border-white/10 px-4 py-2 rounded-full">NO_CLAIM_VALUE_AVAILABLE</p>
                 </div>
               )}
             </div>
@@ -1054,15 +1074,15 @@ export default function Reports() {
         <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-emerald-500/30 rounded-tl-lg" />
         <CardContent className="p-0">
           <div className="p-8 border-b border-white/5">
-            <h3 className="text-sm font-serif italic text-white mb-1 uppercase tracking-tight">Detailed Breakdown: Recoveries by Claim Type</h3>
-            <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Full audit ledger of financial discrepancies</p>
+            <h3 className="text-sm font-serif italic text-white mb-1 uppercase tracking-tight">Detailed Breakdown: Claim Value by Type</h3>
+            <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Full audit ledger of tenant-scoped case value and status</p>
           </div>
           <Table>
             <TableHeader className="bg-white/[0.02]">
               <TableRow className="border-white/5 hover:bg-transparent">
                 <TableHead className="text-white/40 font-mono text-[10px] uppercase tracking-widest h-12">Claim Type</TableHead>
-                <TableHead className="text-white/40 font-mono text-[10px] uppercase tracking-widest h-12">Claims Filed</TableHead>
-                <TableHead className="text-white/40 font-mono text-[10px] uppercase tracking-widest h-12">Amount Recovered</TableHead>
+                <TableHead className="text-white/40 font-mono text-[10px] uppercase tracking-widest h-12">Cases In View</TableHead>
+                <TableHead className="text-white/40 font-mono text-[10px] uppercase tracking-widest h-12">Case Value</TableHead>
                 <TableHead className="text-white/40 font-mono text-[10px] uppercase tracking-widest h-12">% of Total</TableHead>
               </TableRow>
             </TableHeader>
@@ -1134,9 +1154,9 @@ export default function Reports() {
                 <SelectValue placeholder="CHOOSE_AUDIT_REPORT" />
               </SelectTrigger>
               <SelectContent className="bg-[#0c0c0c] border-white/10 text-white shadow-2xl backdrop-blur-3xl rounded-xl">
-                <SelectItem value="recovery_payout" className="font-mono text-[10px] uppercase tracking-widest focus:bg-white/5 focus:text-emerald-500 py-3">Recovery and Payout History — Master report</SelectItem>
-                <SelectItem value="fee_dispute" className="font-mono text-[10px] uppercase tracking-widest focus:bg-white/5 focus:text-emerald-500 py-3">Fee Dispute History — Value recovered</SelectItem>
-                <SelectItem value="evidence_log" className="font-mono text-[10px] uppercase tracking-widest focus:bg-white/5 focus:text-emerald-500 py-3">Evidence Locker Log — Inventory</SelectItem>
+                <SelectItem value="recovery_payout" className="font-mono text-[10px] uppercase tracking-widest focus:bg-white/5 focus:text-emerald-500 py-3">Claims Ledger CSV — Tenant-scoped case buffer</SelectItem>
+                <SelectItem value="fee_dispute" className="font-mono text-[10px] uppercase tracking-widest focus:bg-white/5 focus:text-emerald-500 py-3">Claim Value by Type — Current filtered buffer</SelectItem>
+                <SelectItem value="evidence_log" className="font-mono text-[10px] uppercase tracking-widest focus:bg-white/5 focus:text-emerald-500 py-3">Case Status Ledger — Current filtered buffer</SelectItem>
               </SelectContent>
             </Select>
           </div>
