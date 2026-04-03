@@ -254,7 +254,9 @@ export default function Index() {
               ))}
             </div>
 
-            <RecoveryEngineVisualization />
+            <div className="relative left-1/2 mt-20 w-screen max-w-[1320px] -translate-x-1/2 px-4 md:px-8">
+              <RecoveryEngineVisualization />
+            </div>
           </div>
         </section>
 

@@ -31,20 +31,20 @@ const stageLabels = [
 const amazonNode: SceneNode = {
   id: 'amazon',
   label: 'Amazon',
-  x: 0.05,
-  y: 0.52,
+  x: 0.035,
+  y: 0.08,
   kind: 'input',
   iconSrc: '/AMZN.png',
   iconAlt: 'Amazon'
 };
 
 const inputNodes: SceneNode[] = [
-  { id: 'inventory', label: 'FBA Inventory', x: 0.09, y: 0.18, kind: 'input' },
-  { id: 'shipments', label: 'Shipments', x: 0.09, y: 0.3, kind: 'input' },
-  { id: 'returns', label: 'Returns / Refunds', x: 0.09, y: 0.42, kind: 'input' },
-  { id: 'fees', label: 'Fee Events', x: 0.09, y: 0.54, kind: 'input' },
-  { id: 'settlements', label: 'Settlement / Ledger', x: 0.09, y: 0.66, kind: 'input' },
-  { id: 'reimbursements', label: 'Reimbursements', x: 0.09, y: 0.78, kind: 'input' }
+  { id: 'inventory', label: 'FBA Inventory', x: 0.14, y: 0.18, kind: 'input' },
+  { id: 'shipments', label: 'Shipments', x: 0.14, y: 0.3, kind: 'input' },
+  { id: 'returns', label: 'Returns / Refunds', x: 0.14, y: 0.42, kind: 'input' },
+  { id: 'fees', label: 'Fee Events', x: 0.14, y: 0.54, kind: 'input' },
+  { id: 'settlements', label: 'Settlement / Ledger', x: 0.14, y: 0.66, kind: 'input' },
+  { id: 'reimbursements', label: 'Reimbursements', x: 0.14, y: 0.78, kind: 'input' }
 ];
 
 const stageNodes: SceneNode[] = [
@@ -80,8 +80,8 @@ const routes: SceneRoute[] = [
     role: 'intake' as const,
     points: [
       { x: amazonNode.x, y: amazonNode.y },
-      { x: 0.06, y: amazonNode.y },
-      { x: 0.06, y: node.y },
+      { x: 0.08, y: amazonNode.y },
+      { x: 0.08, y: node.y },
       { x: node.x, y: node.y }
     ]
   })),
@@ -91,8 +91,8 @@ const routes: SceneRoute[] = [
     role: 'intake' as const,
     points: [
       { x: node.x, y: node.y },
-      { x: 0.22, y: node.y },
-      { x: 0.22, y: 0.52 },
+      { x: 0.25, y: node.y },
+      { x: 0.25, y: 0.52 },
       { x: 0.34, y: 0.52 }
     ]
   })),
@@ -622,7 +622,7 @@ export function RecoveryEngineVisualization() {
   return (
     <div className="relative mt-16 overflow-hidden rounded-[28px] border border-white/10 bg-[#090909]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.035),transparent_55%)]" />
-      <div className="relative h-[640px] w-full md:h-[720px]">
+      <div className="relative h-[700px] w-full md:h-[780px] xl:h-[820px]">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
         <div className="pointer-events-none absolute left-6 top-6 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-medium tracking-tight text-white/58 backdrop-blur-sm">
@@ -639,7 +639,7 @@ export function RecoveryEngineVisualization() {
           <div
             key={node.id}
             className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
-            style={{ left: `${(node.x + 0.025) * 100}%`, top: `${node.y * 100}%` }}
+            style={{ left: `${(node.x + 0.032) * 100}%`, top: `${node.y * 100}%` }}
           >
             <div className="text-[11px] font-medium tracking-tight text-white/62">{node.label}</div>
           </div>
