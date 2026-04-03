@@ -35,7 +35,7 @@ import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { SyncLogModal } from '@/components/modals/SyncLogModal';
 import { format, formatDistanceToNow } from 'date-fns';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
 import { useStatusStream } from '@/hooks/use-status-stream';
@@ -155,6 +155,12 @@ const toTitleCase = (value: string) =>
 const formatLaunchEventTypeLabel = (value: LaunchMonitorEvent['event_type']) =>
   toTitleCase(value.replace(/_/g, ' '));
 
+const formatLaunchSourceLabel = (value: LaunchMonitorEvent['source_table']) =>
+  toTitleCase(value.replace(/_/g, ' '));
+
+const formatLaunchStatusLabel = (value?: string | null) =>
+  value ? toTitleCase(value.replace(/_/g, ' ')) : null;
+
 const formatIssueTypeLabel = (value?: string | null) => {
   if (!value) return 'Unknown issue';
   return toTitleCase(value.replace(/_/g, ' ').trim());
@@ -197,7 +203,7 @@ const launchAlertTone = (alert: LaunchMonitorAlert) => {
 const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
   if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
   if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
-  return 'text-emerald-200 border-emerald-500/25 bg-emerald-500/[0.08]';
+  return 'text-sky-200 border-sky-500/25 bg-sky-500/[0.08]';
 };
 
 export function Dashboard() {
@@ -1833,64 +1839,127 @@ export function Dashboard() {
 
                       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
                         <div className="border-b border-white/5 px-5 py-4">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                            Recent operator feed
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                Recent operator feed
+                              </div>
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                                Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                Reading mode
+                              </div>
+                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/40">
+                                Most recent first
+                              </div>
+                            </div>
                           </div>
-                          <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
-                            Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
-                          </p>
                         </div>
-                        <div className="divide-y divide-white/5">
+                        <div className="px-5 py-5">
                           {launchMonitor?.recent_events === null ? (
-                            <div className="px-5 py-6 text-[11px] font-sans text-white/45">
+                            <div className="py-6 text-[11px] font-sans text-white/45">
                               Not Available
                             </div>
                           ) : (launchMonitor?.recent_events || []).length === 0 ? (
-                            <div className="px-5 py-6 text-[11px] font-sans text-white/45">
+                            <div className="py-6 text-[11px] font-sans text-white/45">
                               No recent operational events recorded for this tenant.
                             </div>
                           ) : (
-                            launchMonitor?.recent_events?.map((event) => (
-                              <div key={event.id} className="px-5 py-4">
-                                <div className="flex items-start justify-between gap-4">
-                                  <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                      <span className={cn('rounded-full border px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
-                                        {event.event_type.replace(/_/g, ' ')}
-                                      </span>
-                                      <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                                        {event.source_table.replace(/_/g, ' ')}
-                                      </span>
-                                    </div>
-                                    <div className="mt-3 text-[13px] font-sans font-medium tracking-tight text-white">
-                                      {event.title}
-                                    </div>
-                                    <p className="mt-2 text-[11px] font-sans leading-5 text-white/42">
-                                      {event.detail}
-                                    </p>
-                                    <div className="mt-3 flex flex-wrap gap-3 text-[10px] font-sans text-white/34">
-                                      <span>{formatDistanceToNow(new Date(event.timestamp), { addSuffix: true })}</span>
-                                      {event.amazon_case_id ? <span>Amazon case: {event.amazon_case_id}</span> : null}
-                                      {event.status ? <span>Status: {event.status}</span> : null}
-                                    </div>
-                                  </div>
-                                  {event.dispute_case_id ? (
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/60 hover:bg-white/[0.07] hover:text-white"
-                                      onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`))}
+                            <ScrollArea className="w-full whitespace-nowrap">
+                              <div className="flex min-w-max gap-4 pb-4 pr-2">
+                                {launchMonitor?.recent_events?.map((event) => {
+                                  const eventTimestamp = new Date(event.timestamp);
+                                  const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
+                                    ? 'Time unavailable'
+                                    : formatDistanceToNow(eventTimestamp, { addSuffix: true });
+                                  const formattedStatus = formatLaunchStatusLabel(event.status);
+
+                                  return (
+                                    <div
+                                      key={event.id}
+                                      className="flex min-h-[272px] w-[320px] shrink-0 snap-start flex-col rounded-2xl border border-white/8 bg-black/20 p-5 sm:w-[340px] xl:w-[360px]"
                                     >
-                                      Open Case
-                                    </Button>
-                                  ) : (
-                                    <div className="text-[10px] font-sans text-white/25">
-                                      Logged only
+                                      <div className="flex items-start justify-between gap-4">
+                                        <div className="min-w-0">
+                                          <div className="flex flex-wrap items-center gap-2">
+                                            <span className={cn('rounded-full border px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
+                                              {formatLaunchEventTypeLabel(event.event_type)}
+                                            </span>
+                                            <span className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/34">
+                                              {formatLaunchSourceLabel(event.source_table)}
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div className="shrink-0 text-right">
+                                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                            Recorded
+                                          </div>
+                                          <div className="mt-1 text-[10px] font-sans text-white/42">
+                                            {eventTimeLabel}
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div className="mt-5">
+                                        <div className="text-[16px] font-sans font-medium leading-tight tracking-tight text-white">
+                                          {event.title}
+                                        </div>
+                                        <p className="mt-3 text-[11px] font-sans leading-5 text-white/42 whitespace-normal">
+                                          {event.detail}
+                                        </p>
+                                      </div>
+
+                                      <div className="mt-5 space-y-2">
+                                        {event.amazon_case_id ? (
+                                          <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2">
+                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                              Amazon case
+                                            </div>
+                                            <div className="mt-1 text-[11px] font-sans text-white/64">
+                                              {event.amazon_case_id}
+                                            </div>
+                                          </div>
+                                        ) : null}
+                                        {formattedStatus ? (
+                                          <div className="rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2">
+                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                              Status
+                                            </div>
+                                            <div className="mt-1 text-[11px] font-sans text-white/64">
+                                              {formattedStatus}
+                                            </div>
+                                          </div>
+                                        ) : null}
+                                      </div>
+
+                                      <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/6 pt-4">
+                                        <div className="text-[10px] font-sans text-white/28 whitespace-normal">
+                                          {event.dispute_case_id ? 'Linked to a dispute case record.' : 'Operator log only.'}
+                                        </div>
+                                        {event.dispute_case_id ? (
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/60 hover:bg-white/[0.07] hover:text-white"
+                                            onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`))}
+                                          >
+                                            Open Case
+                                          </Button>
+                                        ) : (
+                                          <div className="text-[10px] font-sans text-white/25">
+                                            Logged only
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
-                                  )}
-                                </div>
+                                  );
+                                })}
                               </div>
-                            ))
+                              <ScrollBar orientation="horizontal" />
+                            </ScrollArea>
                           )}
                         </div>
                       </div>
