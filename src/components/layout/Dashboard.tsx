@@ -1658,10 +1658,10 @@ export function Dashboard() {
                     Quick Notice
                   </button>
                   <div className="text-right">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/72">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white">
                       Last updated
                     </div>
-                    <div className="mt-1 text-[10px] font-sans leading-5 text-white">
+                    <div className="mt-1 whitespace-nowrap text-[11px] font-sans leading-none text-white">
                       {headerLastUpdated}
                     </div>
                   </div>
@@ -1683,7 +1683,29 @@ export function Dashboard() {
                   {/* Main Content - 3 columns */}
                   <div className="lg:col-span-4 space-y-6">
                     <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                      <div className="border-b border-white/5 px-8 py-8">
+                      <div className="border-b border-white/5 bg-[#0d0d0d]">
+                        <div className="grid grid-cols-1 gap-px bg-white/6 md:grid-cols-2 xl:grid-cols-4">
+                          {overviewMetricRows.map((item) => (
+                            <div key={item.label} className="bg-[#0d0d0d] px-6 py-4">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
+                                {item.label}
+                              </div>
+                              <div className="mt-2.5 text-[18px] font-sans font-medium tracking-tight text-white">
+                                {!dashboardSummary ? (
+                                  <Skeleton className="h-6 w-24 bg-white/10" />
+                                ) : (
+                                  item.value
+                                )}
+                              </div>
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/34">
+                                {item.detail}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="px-8 py-8">
                         <div className="grid gap-10 xl:grid-cols-[1.45fr_0.95fr]">
                           <div>
                             <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
@@ -1736,27 +1758,6 @@ export function Dashboard() {
                           </div>
                         </div>
                       </div>
-
-                      <div className="grid grid-cols-1 gap-px bg-white/6 md:grid-cols-2 xl:grid-cols-4">
-                        {overviewMetricRows.map((item) => (
-                          <div key={item.label} className="bg-[#0d0d0d] px-8 py-7">
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                              {item.label}
-                            </div>
-                            <div className="mt-4 text-3xl font-sans font-medium tracking-tight text-white">
-                              {!dashboardSummary ? (
-                                <Skeleton className="h-9 w-32 bg-white/10" />
-                              ) : (
-                                item.value
-                              )}
-                            </div>
-                            <p className="mt-3 text-[11px] font-sans leading-relaxed text-white/34">
-                              {item.detail}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-
                     </div>
 
                     <div className="space-y-4">
