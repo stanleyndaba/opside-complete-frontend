@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, LogOut, User, CreditCard, Store, Box, Upload } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Store, Box, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from './NotificationBell';
@@ -99,7 +98,6 @@ export function Navbar({
     location.pathname.startsWith('/evidence-locker') ||
     location.pathname.startsWith('/recoveries');
 
-  const [showSignOutModal, setShowSignOutModal] = useState(false);
   const { selectedCurrency, setSelectedCurrency } = useCurrency();
 
   // User profile state
@@ -639,12 +637,25 @@ export function Navbar({
                     <p className="mt-1 text-[11px] font-sans text-white/42 truncate">
                       {accountEmail}
                     </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-2 text-[10px] font-sans tracking-tight text-white/38">
-                      <span className="uppercase">{accountRoleLabel}</span>
-                      <span className="h-1 w-1 rounded-full bg-white/14" />
-                      <span className="uppercase">Member since {memberSinceLabel}</span>
+                    <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/30">
+                          Role
+                        </div>
+                        <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/78 truncate">
+                          {accountRoleLabel}
+                        </div>
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/30">
+                          Member since
+                        </div>
+                        <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/78 truncate">
+                          {memberSinceLabel}
+                        </div>
+                      </div>
                     </div>
-                    <div className="mt-2 text-[10px] font-sans tracking-tight text-white/46">
+                    <div className="mt-4 border-t border-white/5 pt-3 text-[11px] font-sans tracking-tight text-white/46">
                       {connectedPlatformsCount > 0
                         ? `${connectedPlatformsCount} source${connectedPlatformsCount === 1 ? '' : 's'} connected`
                         : 'No sources connected yet'}
@@ -652,7 +663,7 @@ export function Navbar({
                   </div>
                 </div>
 
-                <div className="px-6 py-5 border-b border-white/5">
+                <div className="px-6 py-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
@@ -680,53 +691,11 @@ export function Navbar({
                     </div>
                   </div>
                 </div>
-
-                  <div className="p-5">
-                    <button
-                      onClick={() => setShowSignOutModal(true)}
-                      className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-[11px] font-sans font-medium text-white/52 hover:bg-white/[0.03] hover:text-white transition-colors tracking-tight"
-                    >
-                      <span>Sign out</span>
-                      <LogOut className="h-4 w-4 opacity-55" />
-                    </button>
-                  </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
       </header>
-      {/* Sign Out Confirmation Modal */}
-      <Dialog open={showSignOutModal} onOpenChange={setShowSignOutModal}>
-        <DialogContent className="sm:max-w-[420px] bg-[#0c0c0c] border border-white/10 p-0 gap-0 overflow-hidden shadow-3xl rounded-2xl backdrop-blur-3xl">
-          <DialogHeader className="px-8 pt-10 pb-6 text-center">
-            <div className="mx-auto w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mb-6 border border-rose-500/20">
-              <LogOut className="h-8 w-8 text-rose-500" />
-            </div>
-            <DialogTitle className="text-[16px] font-sans font-bold text-white uppercase tracking-tight">Sign out?</DialogTitle>
-            <DialogDescription className="text-[12px] text-white/40 mt-4 font-sans font-bold italic leading-relaxed max-w-[280px] mx-auto">
-              "Margin core continues to monitor your assets and recover funds 24/7. Re-authorize anytime to audit recent anomalies."
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="px-8 pb-10 pt-2 flex flex-col gap-3">
-            <Button
-              onClick={async () => {
-                setShowSignOutModal(false);
-                try { await api.logout(); } catch (_) { }
-                navigate('/');
-              }}
-              className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-sans font-bold transition-all uppercase tracking-tight rounded-xl shadow-[0_0_20px_rgba(244,63,94,0.1)]">
-              SIGN OUT
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setShowSignOutModal(false)}
-              className="w-full h-12 text-[10px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/5 transition-all uppercase tracking-tight">
-              Cancel
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
