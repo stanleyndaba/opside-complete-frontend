@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -43,19 +43,23 @@ const processSteps = [
 const mobileOrchestrationSteps = [
   {
     title: 'Detection',
-    detail: 'Amazon inventory, shipment, return, fee, and reimbursement signals enter Margin and real claim candidates are separated from noise.'
+    detail: 'Amazon inventory, shipment, return, fee, and reimbursement signals enter Margin and real claim candidates are separated from noise.',
+    signals: ['FBA Inventory', 'Shipments', 'Returns / Refunds']
   },
   {
     title: 'Evidence',
-    detail: 'Identifiers, quantities, policy timing, and supporting documents are matched before a case is considered ready.'
+    detail: 'Identifiers, quantities, policy timing, and supporting documents are matched before a case is considered ready.',
+    signals: ['Gmail', 'Outlook', 'Dropbox']
   },
   {
     title: 'Filing',
-    detail: 'Only supportable cases move forward. Weak, duplicate, or thread-only issues are held instead of pushed into Seller Support.'
+    detail: 'Only supportable cases move forward. Weak, duplicate, or thread-only issues are held instead of pushed into Seller Support.',
+    signals: ['Ready to file', 'Filed']
   },
   {
     title: 'Payout',
-    detail: 'Amazon replies, approvals, evidence requests, and recovered dollars stay visible until the case is actually finished.'
+    detail: 'Amazon replies, approvals, evidence requests, and recovered dollars stay visible until the case is actually finished.',
+    signals: ['Approved', 'Recovered $']
   }
 ];
 
@@ -72,6 +76,12 @@ const proofBlocks = [
     value: 'Clear case truth',
     detail: 'Waiting, evidence, approvals, and payouts are always explicit.'
   }
+];
+
+const mobileProofArtifacts = [
+  ['Detected', 'Evidence Ready', 'Filed'],
+  ['Weak', 'Duplicate', 'Thread-only'],
+  ['Waiting', 'Evidence', 'Approvals', 'Payouts']
 ];
 
 const filingRules = [
@@ -126,11 +136,33 @@ const faqs = [
 const eyebrowClass = 'text-[11px] font-medium tracking-tight text-white/42';
 const containerClass = 'mx-auto w-full max-w-[1160px] px-6 md:px-8';
 const mobileColumnClass = 'mx-auto max-w-[430px] md:mx-0 md:max-w-none';
+const mobileRevealProps = {
+  initial: { opacity: 0, y: 18 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.22 },
+  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
+};
 
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
   usePageMeta(SITE_META);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const sync = () => setIsMobileLayout(mediaQuery.matches);
+    sync();
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', sync);
+      return () => mediaQuery.removeEventListener('change', sync);
+    }
+
+    mediaQuery.addListener(sync);
+    return () => mediaQuery.removeListener(sync);
+  }, []);
 
   const handleConnectAmazon = () => {
     navigate('/login');
@@ -138,8 +170,11 @@ export default function Index() {
 
   const scrollToHowItWorks = () => {
     if (typeof document === 'undefined') return;
-    document.getElementById('how-margin-works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const targetId = isMobileLayout ? 'how-margin-works-mobile' : 'how-margin-works';
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 3 : 5;
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#070707] font-sans text-white selection:bg-white/15">
@@ -210,13 +245,31 @@ export default function Index() {
                   See how it works
                 </Button>
               </div>
+
+              <motion.div
+                {...mobileRevealProps}
+                className="mt-6 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03] md:hidden"
+              >
+                <div className="grid grid-cols-2 gap-px bg-white/8">
+                  {mobileOrchestrationSteps.map((step) => (
+                    <div key={step.title} className="bg-[#0a0a0a] px-4 py-3">
+                      <div className="text-[11px] font-medium tracking-tight text-white/42">{step.title}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-4 py-4">
+                  <p className="text-[15px] leading-6 text-white/58">
+                    No weak claims. No duplicates. No Seller Central guesswork.
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </section>
 
-        <section className="relative border-b border-white/8 py-16 md:py-28">
+        <section className="relative border-b border-white/8 bg-white/[0.02] md:bg-transparent py-16 md:py-28">
           <div className={containerClass}>
-            <div className={`max-w-[720px] ${mobileColumnClass}`}>
+            <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>The orchestration layer</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 <span className="md:hidden">Follow the recovery flow from signal to payout.</span>
@@ -225,27 +278,41 @@ export default function Index() {
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/56 md:hidden">
                 On mobile, this should read like a guided machine, not a crowded graph.
               </p>
-            </div>
+            </motion.div>
           </div>
 
           <div className="mx-auto mt-8 max-w-[430px] px-6 md:hidden">
-            <div className="border-y border-white/8 py-2">
+            <div className="relative border-y border-white/8 py-2">
+              <div className="absolute bottom-8 left-[9px] top-8 w-px bg-white/10" />
               <div className="space-y-0">
                 {mobileOrchestrationSteps.map((step, index) => (
-                  <div
+                  <motion.div
+                    {...mobileRevealProps}
                     key={step.title}
                     className={`flex gap-4 py-5 ${index > 0 ? 'border-t border-white/8' : ''}`}
                   >
-                    <div className="pt-0.5 text-[11px] font-medium tracking-tight text-white/30">
-                      0{index + 1}
+                    <div className="relative z-10 pt-0.5 text-[11px] font-medium tracking-tight text-white/30">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full border border-white/10 bg-[#0a0a0a]">
+                        0{index + 1}
+                      </div>
                     </div>
                     <div>
                       <h3 className="text-[22px] font-medium tracking-tight text-white">{step.title}</h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58">
                         {step.detail}
                       </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {step.signals.map((signal) => (
+                          <span
+                            key={signal}
+                            className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
+                          >
+                            {signal}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -256,7 +323,35 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-20 md:py-36">
+        <section className="relative border-t border-white/8 bg-white/[0.015] py-20 md:hidden" id="how-margin-works-mobile">
+          <div className={containerClass}>
+            <motion.div {...mobileRevealProps} className={mobileColumnClass}>
+              <div className={eyebrowClass}>What Margin does</div>
+              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white">
+                Find the money, verify the case, and move only when the claim is real.
+              </h2>
+              <p className="mt-4 max-w-[340px] text-[15px] leading-6 text-white/60">
+                This should not feel like another dashboard. It should feel like a careful operator running reimbursement work in the background and telling you the truth when action is needed.
+              </p>
+            </motion.div>
+
+            <div className={`mt-10 space-y-0 ${mobileColumnClass}`}>
+              {processSteps.map((item) => (
+                <motion.div
+                  {...mobileRevealProps}
+                  key={item.step}
+                  className="border-t border-white/8 py-5"
+                >
+                  <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
+                  <h3 className="mt-2 text-[24px] font-medium tracking-tight text-white">{item.title}</h3>
+                  <p className="mt-2 max-w-[340px] text-[15px] leading-6 text-white/58">{item.detail}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative hidden md:block md:py-36">
           <div className={containerClass}>
             <div className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>What Margin does</div>
@@ -281,7 +376,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-20 md:py-36" id="how-margin-works">
+        <section className="relative hidden border-t border-white/8 md:block md:py-36" id="how-margin-works">
           <div className={containerClass}>
             <div className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>How Margin works</div>
@@ -307,16 +402,56 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-20 md:py-36">
+        <section className="relative border-t border-white/8 bg-white/[0.015] md:bg-transparent py-20 md:py-36">
           <div className={containerClass}>
-            <div className={`max-w-[760px] ${mobileColumnClass}`}>
+            <motion.div {...mobileRevealProps} className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 The product has to feel careful, visible, and safe.
               </h2>
+            </motion.div>
+
+            <div className={`mt-10 max-w-[960px] space-y-8 md:hidden ${mobileColumnClass}`}>
+              {proofBlocks.map((item, index) => (
+                <motion.div
+                  {...mobileRevealProps}
+                  key={item.value}
+                  className={`${index > 0 ? 'border-t border-white/7 pt-8' : ''}`}
+                >
+                  <div className="text-sm font-medium tracking-tight text-white/28">0{index + 1}</div>
+                  <div className="mt-3 max-w-[360px]">
+                    <h3 className="text-[28px] font-medium leading-[1.02] tracking-tight text-white">
+                      {item.value}
+                    </h3>
+                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/60">
+                      {item.detail}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03]">
+                    <div className="grid gap-px bg-white/8">
+                      <div className="bg-[#0a0a0a] px-4 py-3 text-[11px] font-medium tracking-tight text-white/42">
+                        System proof
+                      </div>
+                      <div className="bg-[#0a0a0a] px-4 py-4">
+                        <div className="flex flex-wrap gap-2">
+                          {mobileProofArtifacts[index].map((artifact) => (
+                            <span
+                              key={artifact}
+                              className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
+                            >
+                              {artifact}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
 
-            <div className={`mt-10 max-w-[960px] space-y-8 md:mt-28 md:space-y-20 ${mobileColumnClass}`}>
+            <div className={`mt-12 hidden max-w-[960px] space-y-10 md:mt-28 md:block md:space-y-20 ${mobileColumnClass}`}>
               {proofBlocks.map((item, index) => (
                 <div
                   key={item.value}
@@ -342,7 +477,7 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-36">
           <div className={containerClass}>
-            <div className={`max-w-[780px] ${mobileColumnClass}`}>
+            <motion.div {...mobileRevealProps} className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 We don’t file everything. We file what wins.
@@ -350,9 +485,63 @@ export default function Index() {
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/58 md:mt-6 md:max-w-[680px] md:text-lg md:leading-8">
                 The system evaluates readiness before taking action.
               </p>
+            </motion.div>
+
+            <div className={`mt-10 space-y-5 md:hidden ${mobileColumnClass}`}>
+              <motion.article
+                {...mobileRevealProps}
+                className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5"
+              >
+                <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
+                <h3 className="mt-3 text-[28px] font-medium tracking-tight text-white">
+                  Cases move only when the claim is fully supportable.
+                </h3>
+                <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/68">
+                  Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
+                </p>
+
+                <div className="mt-6 border-t border-white/10">
+                  {filingRules.map((item) => (
+                    <div key={item} className="grid gap-2 border-b border-white/8 py-4">
+                      <div className="text-sm font-medium tracking-tight text-white/30">IF</div>
+                      <div className="text-[15px] leading-6 text-white/84">{item}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 text-sm font-medium tracking-tight text-white">
+                  → SYSTEM ACTION: FILE
+                </div>
+              </motion.article>
+
+              <motion.article
+                {...mobileRevealProps}
+                className="rounded-[24px] border border-white/8 bg-white/[0.02] p-5"
+              >
+                <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
+                <h3 className="mt-3 text-[26px] font-medium tracking-tight text-white/82">
+                  The system holds weak, incomplete, or already-active cases.
+                </h3>
+                <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/50">
+                  Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
+                </p>
+
+                <div className="mt-6 border-t border-white/8">
+                  {holdRules.map((item) => (
+                    <div key={item} className="grid gap-2 border-b border-white/6 py-4">
+                      <div className="text-sm font-medium tracking-tight text-white/22">OR</div>
+                      <div className="text-[15px] leading-6 text-white/60">{item}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 text-sm font-medium tracking-tight text-white/56">
+                  → SYSTEM ACTION: HOLD
+                </div>
+              </motion.article>
             </div>
 
-            <div className={`relative mt-10 max-w-[980px] md:mt-20 ${mobileColumnClass}`}>
+            <div className={`relative mt-10 hidden max-w-[980px] md:mt-20 md:block ${mobileColumnClass}`}>
               <div className="absolute bottom-10 left-3 top-8 hidden w-px bg-white/10 md:block" />
 
               <div className="space-y-12 md:space-y-20">
@@ -420,7 +609,7 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-36">
           <div className={containerClass}>
-            <div className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
+            <motion.div {...mobileRevealProps} className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
               <div className={eyebrowClass}>Questions sellers ask before they buy</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 The page should answer the real objections, not dodge them.
@@ -428,11 +617,11 @@ export default function Index() {
               <p className="mt-4 max-w-[360px] text-[15px] leading-6 text-white/60 md:mx-auto md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
                 These are the questions FBA sellers ask before they trust a reimbursement platform. The answers have to sound careful, specific, and believable.
               </p>
-            </div>
+            </motion.div>
 
             <div className="mx-auto mt-10 max-w-[430px] md:mt-14 md:max-w-[920px]">
               <Accordion type="single" collapsible className="space-y-3 md:space-y-5">
-                {faqs.slice(0, showMoreFaqs ? faqs.length : 5).map((item, index) => (
+                {faqs.slice(0, visibleFaqCount).map((item, index) => (
                   <AccordionItem
                     key={item.question}
                     value={`faq-${index}`}
@@ -463,9 +652,9 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-20 md:py-40">
+        <section className="relative border-t border-white/8 bg-white/[0.02] md:bg-transparent py-20 md:py-40">
           <div className={containerClass}>
-            <div className={`max-w-[980px] ${mobileColumnClass}`}>
+            <motion.div {...mobileRevealProps} className={`max-w-[980px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Start with clarity</div>
               <h2 className="mt-3 max-w-[720px] text-[38px] font-light tracking-tight text-white md:mt-4 md:max-w-[860px] md:text-7xl">
                 Start recovering missed FBA money without adding more work.
@@ -475,7 +664,7 @@ export default function Index() {
               </p>
 
               <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
-                <div className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">01</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
@@ -485,9 +674,9 @@ export default function Index() {
                       Secure, read-only access gives Margin the data it needs to audit reimbursement opportunities.
                     </p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">02</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
@@ -497,9 +686,9 @@ export default function Index() {
                       Real discrepancies are surfaced, matched with evidence, and separated from weak or duplicate noise.
                     </p>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">03</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
@@ -509,10 +698,10 @@ export default function Index() {
                       Only strong, supportable cases move forward, while everything blocked stays explicit and visible.
                     </p>
                   </div>
-                </div>
+                </motion.div>
               </div>
 
-              <div className="mt-10 flex flex-col gap-3 sm:mt-14 sm:flex-row">
+              <motion.div {...mobileRevealProps} className="mt-10 flex flex-col gap-3 sm:mt-14 sm:flex-row">
                 <Button
                   onClick={handleConnectAmazon}
                   className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white hover:bg-[#1b1b1b]"
@@ -527,8 +716,17 @@ export default function Index() {
                 >
                   See how it works
                 </Button>
-              </div>
-            </div>
+              </motion.div>
+
+              <motion.div
+                {...mobileRevealProps}
+                className="mt-6 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 md:hidden"
+              >
+                <p className="max-w-[320px] text-[15px] leading-6 text-white/58">
+                  Only strong, supportable cases move forward, while everything blocked stays explicit and visible.
+                </p>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
       </main>
