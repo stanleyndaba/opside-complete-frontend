@@ -93,42 +93,47 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
                         <p className="rounded-lg border border-red-500/20 bg-red-500/[0.05] px-4 py-3 text-sm text-red-200">{error}</p>
                     )}
 
-                    <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start">
-                        <Button
-                            type="button"
-                            onClick={handleSignInAgain}
-                            className="h-11 rounded-lg bg-white px-5 text-sm font-medium text-black hover:bg-white/92"
-                        >
-                            Sign in again
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handleRefreshSession}
-                            disabled={loading}
-                            className="h-11 rounded-lg border-white/12 bg-white/[0.03] px-5 text-sm text-white/72 hover:bg-white/[0.06] hover:text-white"
-                        >
-                            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                            {loading ? 'Refreshing session' : 'Refresh session'}
-                        </Button>
-                        <button
-                            type="button"
-                            onClick={handleSignInAgain}
-                            className="text-sm text-white/42 transition-colors hover:text-white/70"
-                        >
-                            Use a different account
-                        </button>
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="text-sm text-white/30 transition-colors hover:text-white/56 sm:ml-auto"
-                        >
-                            Dismiss
-                        </button>
+                    <div className="mt-2 space-y-3">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start">
+                            <Button
+                                type="button"
+                                onClick={handleSignInAgain}
+                                className="h-11 rounded-lg bg-white px-5 text-sm font-medium text-black hover:bg-white/92"
+                            >
+                                Sign in again
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleRefreshSession}
+                                disabled={loading}
+                                className="h-11 rounded-lg border-white/12 bg-white/[0.03] px-5 text-sm text-white/72 hover:bg-white/[0.06] hover:text-white"
+                            >
+                                <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                                {loading ? 'Refreshing session' : 'Refresh session'}
+                            </Button>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4 text-sm">
+                            <button
+                                type="button"
+                                onClick={handleSignInAgain}
+                                className="whitespace-nowrap text-white/42 transition-colors hover:text-white/70"
+                            >
+                                Use a different account
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="whitespace-nowrap text-white/30 transition-colors hover:text-white/56"
+                            >
+                                Dismiss
+                            </button>
+                        </div>
                     </div>
                 </div>
-                </div>
+            </div>
             </div>
         </div>
     );

@@ -23,6 +23,7 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
     const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
+    const [sessionRecoveryDismissed, setSessionRecoveryDismissed] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
     const [isAuthReady, setIsAuthReady] = useState(false);
@@ -76,10 +77,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 localStorage.removeItem('active_tenant_id');
                 localStorage.removeItem('active_tenant_slug');
                 setAuthToken(null);
+                setSessionRecoveryDismissed(false);
                 setIsAuthReady(true);
             } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || !!session) {
                 setIsSessionValid(true);
                 setSessionTimeoutOpen(false);
+                setSessionRecoveryDismissed(false);
                 if (session.access_token) {
                     localStorage.setItem('session_token', session.access_token);
                     setAuthToken(session.access_token);
@@ -114,6 +117,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         if (typeof window === 'undefined') return;
 
         const handleRecoveryRequired = () => {
+            if (sessionRecoveryDismissed) return;
             setIsSessionValid(false);
             setSessionTimeoutOpen(true);
         };
@@ -122,19 +126,22 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         return () => {
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
-    }, []);
+    }, [sessionRecoveryDismissed]);
 
     const showSessionTimeout = useCallback(() => {
+        setSessionRecoveryDismissed(false);
         setSessionTimeoutOpen(true);
     }, []);
 
     const hideSessionTimeout = useCallback(() => {
+        setSessionRecoveryDismissed(true);
         setSessionTimeoutOpen(false);
     }, []);
 
     const handleSessionRestored = useCallback(() => {
         setIsSessionValid(true);
         setSessionTimeoutOpen(false);
+        setSessionRecoveryDismissed(false);
         if (typeof window !== 'undefined') {
             window.location.reload();
         }
