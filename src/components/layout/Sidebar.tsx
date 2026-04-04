@@ -299,6 +299,20 @@ export function Sidebar({
     { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') }
   ];
   const workspaceLabel = tenant?.name || currentTenantSlug || 'Margin workspace';
+  const systemStatusLabel = useMemo(() => {
+    switch (healthState.tone) {
+      case 'healthy':
+        return 'Healthy';
+      case 'degraded':
+        return 'Degraded';
+      case 'attention':
+        return 'Needs attention';
+      case 'checking':
+        return 'Checking live status';
+      default:
+        return 'Status pending';
+    }
+  }, [healthState.tone]);
   const NavItemComponent = React.memo(({
     item,
     variant = 'default'
@@ -341,7 +355,7 @@ export function Sidebar({
     }, [item.href, queryClient]);
     if (isCollapsed) {
       const collapsedBaseClasses = variant === 'core'
-        ? "w-11 h-11 rounded-2xl border border-white/8 bg-white/[0.025]"
+        ? "w-11 h-11 rounded-xl"
         : variant === 'utility'
           ? "w-9 h-9 rounded-xl"
           : "w-10 h-10 rounded-xl";
@@ -357,9 +371,9 @@ export function Sidebar({
                   "relative flex items-center justify-center transition-all duration-300 group",
                   collapsedBaseClasses,
                   isActive
-                    ? "border-white/12 bg-white/[0.07] text-white shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+                    ? "bg-white/[0.065] text-white"
                     : variant === 'core'
-                      ? "text-white/62 hover:border-white/12 hover:bg-white/[0.045] hover:text-white"
+                      ? "text-white/62 hover:bg-white/[0.04] hover:text-white"
                       : "text-foreground/30 hover:bg-foreground/5 hover:text-foreground"
                 )}
                 style={{ willChange: 'background-color' }}>
@@ -397,21 +411,21 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-start w-full transition-all duration-300 group border",
+          "relative flex items-start w-full transition-all duration-300 group",
           variant === 'core'
-            ? "gap-3 rounded-[20px] px-4 py-3.5"
+            ? "gap-3 rounded-xl px-3 py-2.5"
             : variant === 'utility'
-              ? "gap-2 rounded-xl px-3 py-2 border-transparent"
-              : "gap-2.5 rounded-2xl px-4 py-2.5",
+              ? "gap-2 rounded-lg px-2.5 py-1.5"
+              : "gap-2.5 rounded-xl px-3 py-2",
           isActive
             ? variant === 'core'
-              ? "border-white/12 bg-white/[0.07] text-white shadow-[0_18px_38px_rgba(0,0,0,0.4)]"
-              : "border-white/10 bg-white/[0.045] text-white shadow-[0_14px_34px_rgba(0,0,0,0.35)]"
+              ? "bg-white/[0.06] text-white"
+              : "bg-white/[0.04] text-white"
             : variant === 'core'
-              ? "border-white/8 bg-white/[0.02] text-white/78 hover:border-white/12 hover:bg-white/[0.045] hover:text-white"
+              ? "text-white/78 hover:bg-white/[0.03] hover:text-white"
               : variant === 'utility'
                 ? "text-white/42 hover:bg-white/[0.02] hover:text-white/72"
-                : "border-transparent text-foreground/42 hover:border-white/8 hover:bg-white/[0.02] hover:text-white/88"
+                : "text-foreground/42 hover:bg-white/[0.02] hover:text-white/88"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
@@ -421,7 +435,7 @@ export function Sidebar({
           />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-3 bottom-3 w-[3px] bg-sky-300/25 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="absolute left-0 top-2.5 bottom-2.5 w-[2px] bg-sky-300/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
         <item.icon
           strokeWidth={isActive ? 2 : 1.5}
@@ -452,9 +466,9 @@ export function Sidebar({
         </div>
         <ChevronRight
           className={cn(
-            "mt-0.5 h-4 w-4 shrink-0 transition-all duration-300",
+            "mt-0.5 h-3.5 w-3.5 shrink-0 transition-all duration-300",
             isActive
-              ? "translate-x-0 text-sky-200/80"
+              ? "translate-x-0 text-sky-200/72"
               : "translate-x-[-2px] text-white/10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/35"
           )}
           strokeWidth={1.6}
@@ -486,24 +500,24 @@ export function Sidebar({
       <div
         className={cn(
           "border-b border-border",
-          isCollapsed ? "px-2 py-4" : "px-4 py-4"
+          isCollapsed ? "px-2 py-4" : "px-4 py-5"
         )}>
         <Link
           to={overviewHref}
           className={cn(
-            "w-full rounded-2xl border border-white/8 bg-white/[0.02] transition-colors hover:border-white/12 hover:bg-white/[0.035]",
-            isCollapsed ? "flex flex-col items-center gap-2 px-2 py-3" : "block px-4 py-4"
+            "w-full transition-colors",
+            isCollapsed ? "flex flex-col items-center gap-2 px-1 py-1" : "block px-1 py-1"
           )}
         >
-          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between")}>
+          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
             <img
               src="/logoimagetwo.png"
               alt="Margin"
               className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
             />
             {!isCollapsed && (
-              <span className="text-[9px] font-semibold uppercase tracking-tight text-white/34">
-                System overview
+              <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-white/18">
+                Live system
               </span>
             )}
           </div>
@@ -512,15 +526,21 @@ export function Sidebar({
             <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
           ) : (
             <div className="mt-4 space-y-3">
+              <div>
+                <div className="truncate text-[13px] font-medium tracking-tight text-white/84">
+                  {workspaceLabel}
+                </div>
+              </div>
+
               <div className="flex flex-wrap items-center gap-1.5">
                 <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
                 <span className={cn("text-[9px] font-bold uppercase tracking-tight", healthStyles.text)}>
-                  {healthState.label}
+                  {systemStatusLabel}
                 </span>
                 {planMeta && (
                   <span
                     className={cn(
-                      "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-semibold tracking-tight",
+                      "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-semibold tracking-tight opacity-90",
                       planMeta.border,
                       planMeta.text,
                       planMeta.background
@@ -531,14 +551,11 @@ export function Sidebar({
                 )}
               </div>
 
-              <div>
-                <div className="text-[9px] font-semibold uppercase tracking-tight text-white/26">
-                  Workspace
+              {connectedEmail ? (
+                <div className="truncate text-[11px] tracking-tight text-white/34">
+                  {connectedEmail}
                 </div>
-                <div className="mt-1 truncate text-[12px] font-medium tracking-tight text-white/82">
-                  {workspaceLabel}
-                </div>
-              </div>
+              ) : null}
             </div>
           )}
         </Link>
@@ -550,7 +567,7 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2" : "px-3"
           )}>
-          <nav className={cn("w-full flex flex-col pt-5 pb-4", isCollapsed ? "items-center gap-5" : "gap-6")}>
+          <nav className={cn("w-full flex flex-col pt-5 pb-4", isCollapsed ? "items-center gap-4" : "gap-7")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -559,8 +576,8 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-2 px-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/24">
-                  Core engine
+                <div className="mb-1.5 px-1 text-[8px] font-semibold uppercase tracking-[0.22em] text-white/16">
+                  Engine
                 </div>
               )}
               <div className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
@@ -570,11 +587,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-2 px-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/24">
+                <div className="mb-1.5 px-1 text-[8px] font-semibold uppercase tracking-[0.22em] text-white/16">
                   Operations
                 </div>
               )}
-              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
+              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-0.5")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -583,11 +600,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-2 px-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/24">
+                <div className="mb-1.5 px-1 text-[8px] font-semibold uppercase tracking-[0.22em] text-white/16">
                   Actions
                 </div>
               )}
-              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
+              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-0.5")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -610,12 +627,12 @@ export function Sidebar({
           )}
         >
           <span className={cn(
-            "text-[10px] font-sans font-bold text-foreground/20 uppercase tracking-tight group-hover:text-white/60 transition-colors",
+            "text-[9px] font-sans font-semibold text-foreground/16 uppercase tracking-tight group-hover:text-white/36 transition-colors",
             isCollapsed ? "block" : ""
           )}>
             {isCollapsed ? "v1" : "v1.0.0-GOLD"}
           </span>
-          <div className="h-1.5 w-1.5 rounded-full bg-white/35 flex-shrink-0" />
+          <div className="h-1 w-1 rounded-full bg-white/24 flex-shrink-0" />
         </Link>
       </div>
 
@@ -638,11 +655,11 @@ export function Sidebar({
               className={cn(
                 "w-full flex items-center transition-all group outline-none",
                 isCollapsed
-                  ? "justify-center p-3 rounded-xl hover:bg-foreground/5"
-                  : "gap-3 px-6 py-3 text-left hover:bg-foreground/[0.02] text-foreground/50 hover:text-foreground"
+                  ? "justify-center p-2.5 rounded-xl hover:bg-foreground/5"
+                  : "gap-3 px-6 py-2.5 text-left hover:bg-foreground/[0.02] text-foreground/34 hover:text-foreground/72"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors text-foreground/20", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[11px] font-sans font-light uppercase tracking-tight text-foreground/50">More</span>}
+              {!isCollapsed && <span className="text-[10px] font-sans font-medium uppercase tracking-[0.18em] text-foreground/30">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
