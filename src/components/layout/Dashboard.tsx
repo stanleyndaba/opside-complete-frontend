@@ -1594,40 +1594,58 @@ export function Dashboard() {
               {/* Command Center Header */}
               <div className="mb-10 flex items-start justify-between gap-6">
                 <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
+                  <div className="border-b border-white/8">
+                    <div className="flex items-center gap-6">
                       <button
                         onClick={() => handleTabChange('overview')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight",
+                          "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'overview'
-                            ? "text-white bg-white/[0.08]"
-                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
+                            ? "text-white font-semibold"
+                            : "text-white/36 hover:text-white/58"
                         )}
                       >
                         Overview
+                        <span
+                          className={cn(
+                            "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
+                            activeTab === 'overview' ? "bg-white opacity-100" : "bg-transparent opacity-0"
+                          )}
+                        />
                       </button>
                       <button
                         onClick={() => handleTabChange('discrepancies')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight",
+                          "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'discrepancies'
-                            ? "text-white bg-white/[0.08]"
-                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
+                            ? "text-white font-semibold"
+                            : "text-white/36 hover:text-white/58"
                         )}
                       >
                         Issues Found
+                        <span
+                          className={cn(
+                            "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
+                            activeTab === 'discrepancies' ? "bg-white opacity-100" : "bg-transparent opacity-0"
+                          )}
+                        />
                       </button>
                       <button
                         onClick={() => handleTabChange('evidence')}
                         className={cn(
-                          "px-3 py-1.5 rounded-full text-[10px] font-mono font-bold transition-all duration-300 uppercase tracking-tight flex items-center gap-2",
+                          "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'evidence'
-                            ? "text-white bg-white/[0.08]"
-                            : "text-white/30 hover:text-white/50 hover:bg-white/[0.03]"
+                            ? "text-white font-semibold"
+                            : "text-white/36 hover:text-white/58"
                         )}
                       >
                         Evidence
+                        <span
+                          className={cn(
+                            "absolute inset-x-0 -bottom-px h-px transition-opacity duration-200",
+                            activeTab === 'evidence' ? "bg-white opacity-100" : "bg-transparent opacity-0"
+                          )}
+                        />
                       </button>
                     </div>
                   </div>
