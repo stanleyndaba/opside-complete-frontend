@@ -199,10 +199,10 @@ export function Sidebar({
     }, [item.href, queryClient]);
     if (isCollapsed) {
       const collapsedBaseClasses = variant === 'core'
-        ? "w-10.5 h-10.5 rounded-lg"
+        ? "h-11 w-11 rounded-xl"
         : variant === 'utility'
-          ? "w-8.5 h-8.5 rounded-lg"
-          : "w-9 h-9 rounded-lg";
+          ? "h-9.5 w-9.5 rounded-lg"
+          : "h-10 w-10 rounded-xl";
 
       return (
         <TooltipProvider>
@@ -212,30 +212,30 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center transition-all duration-300 group",
+                  "group relative flex items-center justify-center transition-all duration-200",
                   collapsedBaseClasses,
                   isActive
-                    ? "bg-white/[0.065] text-white"
+                    ? "bg-white/[0.06] text-white"
                     : variant === 'core'
-                      ? "bg-white/[0.03] text-white/78 hover:bg-white/[0.05] hover:text-white"
-                      : "text-foreground/30 hover:bg-foreground/5 hover:text-foreground"
+                      ? "text-white/72 hover:bg-white/[0.04] hover:text-white"
+                      : "text-white/42 hover:bg-white/[0.03] hover:text-white/82"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute left-0 top-2.5 bottom-2.5 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
+                    className="absolute left-0 top-2.5 bottom-2.5 w-[2px] rounded-r-full bg-white/80"
                   />
                 )}
                 <item.icon
                   className={cn(
-                    "transition-colors duration-300",
-                    variant === 'core' ? "h-[18px] w-[18px]" : "h-4 w-4",
+                    "transition-colors duration-200",
+                    variant === 'core' ? "h-[17px] w-[17px]" : "h-4 w-4",
                     isActive
-                      ? "text-white/88"
+                      ? "text-white"
                       : variant === 'core'
-                        ? "text-white/68 group-hover:text-white/88"
-                        : "text-foreground/20 group-hover:text-foreground/45"
+                        ? "text-white/62 group-hover:text-white/88"
+                        : "text-white/34 group-hover:text-white/62"
                   )}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
@@ -255,60 +255,50 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-start w-full transition-all duration-300 group",
+          "group relative flex w-full items-center transition-all duration-200",
           variant === 'core'
-            ? "gap-2.5 rounded-lg px-2.5 py-2.25"
+            ? "gap-3 rounded-xl px-3.5 py-3"
             : variant === 'utility'
-              ? "gap-1.75 rounded-md px-2 py-1.5"
-              : "gap-2 rounded-lg px-2.25 py-1.5",
+              ? "gap-3 rounded-lg px-3 py-2.5"
+              : "gap-3 rounded-lg px-3 py-2.5",
           isActive
             ? variant === 'core'
-              ? "bg-white/[0.07] text-white"
+              ? "bg-white/[0.05] text-white"
               : "bg-white/[0.04] text-white"
             : variant === 'core'
-              ? "bg-white/[0.028] text-white/88 hover:bg-white/[0.045] hover:text-white"
+              ? "text-white/82 hover:bg-white/[0.03] hover:text-white"
               : variant === 'utility'
-                ? "text-white/50 hover:bg-white/[0.02] hover:text-white/78"
-                : "text-foreground/42 hover:bg-white/[0.02] hover:text-white/88"
+                ? "text-white/56 hover:bg-white/[0.025] hover:text-white/82"
+                : "text-white/62 hover:bg-white/[0.025] hover:text-white/88"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
-            className="absolute left-0 top-2.5 bottom-2.5 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
-          />
-        )}
-        {!isActive && (
-          <span
-            className={cn(
-              "absolute left-0 top-2 bottom-2 w-[2px] rounded-r-full transition-opacity",
-              variant === 'core'
-                ? "bg-sky-300/30 opacity-100"
-                : "bg-sky-300/20 opacity-0 group-hover:opacity-100"
-            )}
+            className="absolute left-0 top-2.5 bottom-2.5 w-[2px] rounded-r-full bg-white/80"
           />
         )}
         <item.icon
           strokeWidth={isActive ? 2 : 1.5}
           className={cn(
-            "shrink-0 transition-all duration-300",
-            variant === 'core' ? "mt-0.5 h-[18px] w-[18px]" : "mt-0.5 h-3.5 w-3.5",
+            "h-4 w-4 shrink-0 transition-all duration-200",
+            variant === 'core' ? "h-[17px] w-[17px]" : "",
             isActive
-              ? "text-white/84 scale-105"
+              ? "text-white"
               : variant === 'core'
-                ? "text-white/64 group-hover:text-white/86"
-                : "text-foreground/24 group-hover:text-white/55"
+                ? "text-white/58 group-hover:text-white/86"
+                : "text-white/34 group-hover:text-white/62"
           )}
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span className={cn(
-              "font-sans transition-colors tracking-tight",
+              "font-sans tracking-tight transition-colors",
               variant === 'core'
-                ? "text-[16px] font-semibold leading-[1.15]"
+                ? "text-[15px] font-semibold leading-5"
                 : variant === 'utility'
-                  ? "text-[16px] font-medium leading-[1.15] text-white/58"
-                  : "text-[16px] font-medium leading-[1.15]",
+                  ? "text-[14px] font-medium leading-5"
+                  : "text-[15px] font-medium leading-5",
               isActive ? "text-white" : ""
             )}>
               {item.title}
@@ -317,10 +307,10 @@ export function Sidebar({
         </div>
         <ChevronRight
           className={cn(
-            "mt-0.5 h-3 w-3 shrink-0 transition-all duration-300",
+            "h-3.5 w-3.5 shrink-0 transition-all duration-200",
             isActive
-              ? "translate-x-0 text-sky-200/72"
-              : "translate-x-[-2px] text-white/10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/35"
+              ? "translate-x-0 text-white/44"
+              : "translate-x-[-2px] text-white/12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/32"
           )}
           strokeWidth={1.6}
         />
@@ -340,8 +330,8 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 transition-all duration-500 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-sans",
-        isCollapsed ? "w-[74px]" : "w-[240px]",
+        "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
+        isCollapsed ? "w-[78px]" : "w-[256px]",
         "text-foreground/60 border-r border-border",
         "bg-sidebar-background dark:shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
         className
@@ -351,13 +341,13 @@ export function Sidebar({
       <div
         className={cn(
           "",
-          isCollapsed ? "px-2 py-3.5" : "px-3.5 py-4"
+          isCollapsed ? "px-2 py-4" : "px-4 py-5"
         )}>
         <Link
           to={overviewHref}
           className={cn(
             "w-full transition-colors",
-            isCollapsed ? "flex items-center justify-center px-1 py-1" : "block px-0.5 py-0.5"
+            isCollapsed ? "flex items-center justify-center px-1 py-1.5" : "block px-1 py-1.5"
           )}
         >
           <div className={cn("flex items-center", isCollapsed ? "justify-center" : "")}>
@@ -374,9 +364,9 @@ export function Sidebar({
         <div
           className={cn(
             "h-full flex",
-            isCollapsed ? "px-2" : "px-2.5"
+            isCollapsed ? "px-2.5" : "px-3"
           )}>
-          <nav className={cn("w-full flex flex-col pt-2.5 pb-3.5", isCollapsed ? "items-center gap-3.5" : "gap-5.5")}>
+          <nav className={cn("flex w-full flex-col pb-4", isCollapsed ? "items-center gap-4 pt-3" : "gap-7 pt-4")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -385,7 +375,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.25 px-1 text-[10px] font-medium tracking-tight text-white/28">
+                <div className="mb-2 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Engine
                 </div>
               )}
@@ -396,11 +386,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.25 px-1 text-[10px] font-medium tracking-tight text-white/28">
+                <div className="mb-2 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Operations
                 </div>
               )}
-              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.25")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -409,11 +399,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.25 px-1 text-[10px] font-medium tracking-tight text-white/28">
+                <div className="mb-2 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Actions
                 </div>
               )}
-              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.25")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -425,18 +415,18 @@ export function Sidebar({
 
       {/* Version Badge */}
       <div className={cn(
-        "border-t border-border py-2.5",
-        isCollapsed ? "px-2 text-center" : "px-5"
+        "border-t border-border py-3",
+        isCollapsed ? "px-2.5 text-center" : "px-4"
       )}>
         <Link
           to={tenantRoute(currentTenantSlug, '/whats-new')}
           className={cn(
-            "group flex items-center gap-2 w-fit transition-colors",
+            "group flex w-fit items-center gap-2 transition-colors",
             isCollapsed ? "justify-center" : ""
           )}
         >
           <span className={cn(
-            "text-[9px] font-sans font-medium text-foreground/24 tracking-tight group-hover:text-white/40 transition-colors",
+            "font-sans text-[10px] font-medium tracking-tight text-white/26 transition-colors group-hover:text-white/44",
             isCollapsed ? "block" : ""
           )}>
             {isCollapsed ? "v1" : "v1.0.0 Gold"}
@@ -447,8 +437,8 @@ export function Sidebar({
 
       {/* More Menu / Logout */}
       <div className={cn(
-        "mt-auto border-t border-border py-2.5",
-        isCollapsed ? "px-2 flex justify-center" : ""
+        "mt-auto border-t border-border py-3",
+        isCollapsed ? "flex justify-center px-2.5" : "px-3"
       )}>
         {(() => {
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
@@ -461,13 +451,13 @@ export function Sidebar({
           <DropdownMenuTrigger asChild>
             <button
               className={cn(
-                "w-full flex items-center transition-all group outline-none",
+                "group flex w-full items-center transition-all outline-none",
                 isCollapsed
-                  ? "justify-center p-2 rounded-lg hover:bg-foreground/5"
-                  : "gap-2 px-5 py-2 text-left hover:bg-foreground/[0.02] text-foreground/34 hover:text-foreground/72"
+                  ? "justify-center rounded-lg p-2.5 hover:bg-white/[0.03]"
+                  : "gap-3 rounded-lg px-3 py-2.5 text-left text-white/40 hover:bg-white/[0.02] hover:text-white/72"
               )}>
-              <Menu className={cn("h-4 w-4 transition-colors text-foreground/20", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[10px] font-sans font-medium tracking-tight text-foreground/34">More</span>}
+              <Menu className={cn("h-4 w-4 transition-colors text-white/24", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
+              {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-white/38">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
