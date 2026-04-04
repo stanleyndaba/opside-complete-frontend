@@ -304,10 +304,10 @@ export function Sidebar({
             <span className={cn(
               "font-sans tracking-tight transition-colors",
               variant === 'core'
-                ? "text-[15px] font-semibold leading-5"
+                ? "text-[14px] font-semibold leading-5"
                 : variant === 'utility'
-                  ? "text-[14px] font-medium leading-5"
-                  : "text-[15px] font-medium leading-5",
+                  ? "text-[13px] font-medium leading-5"
+                  : "text-[14px] font-medium leading-5",
               isActive ? "text-white" : ""
             )}>
               {item.title}
@@ -380,7 +380,7 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2.5" : "px-3"
           )}>
-          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.6rem] pt-2.5" : "gap-[0.8rem] pt-3")}>
+          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.58rem] pt-2.5" : "gap-[0.775rem] pt-3")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -404,7 +404,7 @@ export function Sidebar({
                   Operations
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.24rem]" : "gap-[0.44rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.23rem]" : "gap-[0.425rem]")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -417,7 +417,7 @@ export function Sidebar({
                   Actions
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.24rem]" : "gap-[0.44rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.23rem]" : "gap-[0.425rem]")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -479,7 +479,7 @@ export function Sidebar({
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className={cn(
                 "group/more-item flex items-center gap-3 px-3 py-2.5 cursor-pointer rounded-lg font-sans transition-colors",
-                "text-[11px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "text-[13px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 helpActive && "bg-white text-black"
               )}>
@@ -503,7 +503,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
               className={cn(
-                "group/more-item flex items-center justify-between px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
+                "group/more-item flex items-center justify-between px-3 py-2 text-[13px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
                 "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 updatesActive && "bg-white text-black"
@@ -528,7 +528,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
+                "group/more-item flex items-center gap-3 px-3 py-2 text-[13px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
                 "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 notesActive && "bg-white text-black"
@@ -584,7 +584,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
+                "group/more-item flex items-center gap-3 px-3 py-2 text-[13px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
                 "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 settingsActive && "bg-white text-black"
@@ -601,7 +601,7 @@ export function Sidebar({
             <DropdownMenuSeparator className="bg-border my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[13px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light tracking-tight">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
