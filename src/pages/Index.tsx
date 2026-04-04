@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Clock, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Clock } from 'lucide-react';
 import { BrandFooter } from '@/components/layout/BrandFooter';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { CookieConsent } from '@/components/landing/CookieConsent';
@@ -12,38 +12,38 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const whatWeDoPoints = [
-  'Find missed reimbursement opportunities across inventory, shipments, returns, fees, and reimbursements.',
+  'Detect reimbursement discrepancies across inventory, shipments, returns, fees, and reimbursements.',
   'Verify identifiers, quantities, and evidence before a case is considered ready.',
-  'File only supportable cases, track Amazon replies, and stay with the case through payout.'
+  'File only cases supported by evidence and policy, track Amazon replies, and stay with the case through payout.'
 ];
 
 const processSteps = [
   {
     step: '01',
-    title: 'Detect what is supportable',
-    detail: 'Margin audits reimbursement opportunities and separates real claim candidates from noise.'
+    title: 'Detect reimbursable discrepancies',
+    detail: 'Margin audits reimbursement data and separates supported cases from unsupported or duplicate issues.'
   },
   {
     step: '02',
-    title: 'Verify the claim truth',
-    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, policy timing, and evidence are checked before anything is filed.'
+    title: 'Verify identifiers and evidence',
+    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, policy timing, and supporting documents are checked before any filing is prepared.'
   },
   {
     step: '03',
-    title: 'File or hold with a clear reason',
-    detail: 'Supportable cases move forward. Weak, duplicate, or thread-only cases are held instead of being pushed into Seller Support.'
+    title: 'File or hold with a reason',
+    detail: 'Supported cases move forward. Cases that are weak, duplicate, or thread-only are held with an explicit reason.'
   },
   {
     step: '04',
-    title: 'Track Amazon until payout',
-    detail: 'Case state, Amazon thread changes, approvals, requests for evidence, and payout truth stay visible in one place.'
+    title: 'Track Amazon to final outcome',
+    detail: 'Case status, Amazon thread changes, approvals, evidence requests, and payout confirmation stay visible in one place.'
   }
 ];
 
 const mobileOrchestrationSteps = [
   {
     title: 'Detection',
-    detail: 'Amazon inventory, shipment, return, fee, and reimbursement signals enter Margin and real claim candidates are separated from noise.',
+    detail: 'Amazon inventory, shipment, return, fee, and reimbursement signals enter Margin and are screened for discrepancies that can be supported by evidence and policy.',
     signals: ['FBA Inventory', 'Shipments', 'Returns / Refunds']
   },
   {
@@ -53,12 +53,12 @@ const mobileOrchestrationSteps = [
   },
   {
     title: 'Filing',
-    detail: 'Only supportable cases move forward. Weak, duplicate, or thread-only issues are held instead of pushed into Seller Support.',
+    detail: 'Only cases supported by evidence and policy move forward. Weak, duplicate, or thread-only issues are held.',
     signals: ['Ready to file', 'Filed']
   },
   {
     title: 'Payout',
-    detail: 'Amazon replies, approvals, evidence requests, and recovered dollars stay visible until the case is actually finished.',
+    detail: 'Amazon replies, approvals, evidence requests, and payout confirmation remain visible until the case is closed.',
     signals: ['Approved', 'Recovered $']
   }
 ];
@@ -76,16 +76,16 @@ const mobileIntegrationLogos = [
 
 const proofBlocks = [
   {
-    value: 'Fewer missed reimbursements',
-    detail: 'Not more dashboards. Not more busywork. Only supportable cases that move.'
+    value: 'Missed reimbursement cases are surfaced',
+    detail: 'Cases that can be supported are identified for review instead of staying buried in operational data.'
   },
   {
-    value: 'Your Amazon trust protected',
-    detail: 'Duplicate, weak, and thread-only filings are stopped before they happen.'
+    value: 'Unsupported filings are blocked',
+    detail: 'Duplicate, weak, and thread-only filings are stopped before they reach Amazon.'
   },
   {
-    value: 'Clear case truth',
-    detail: 'Waiting, evidence, approvals, and payouts are always explicit.'
+    value: 'Case status stays explicit',
+    detail: 'Waiting, evidence requests, approvals, rejections, and payouts remain visible.'
   }
 ];
 
@@ -97,7 +97,7 @@ const mobileProofArtifacts = [
 
 const filingRules = [
   'Verified identifiers are present',
-  'Evidence is matched or the case is otherwise supportable',
+  'Evidence is matched or the case can otherwise be supported by policy and records',
   'The issue is not already active or duplicated',
   'The case is still inside Amazon’s policy window'
 ];
@@ -112,11 +112,11 @@ const holdRules = [
 const faqs = [
   {
     question: 'Which services help automate FBA reimbursement claims?',
-    answer: 'The real need is not automation by itself. Sellers want a system that detects missed reimbursements, verifies the claim truth, files only supportable cases, and tracks Amazon until payout. That is the lane Margin is built for.'
+    answer: 'Sellers do not just want automation. They want a system that detects reimbursement discrepancies, verifies the evidence, files only supported cases, and tracks Amazon until payout.'
   },
   {
     question: 'What are common reasons for FBA reimbursement denials?',
-    answer: 'Weak identifiers, missing quantity truth, unsupported evidence, expired policy windows, and duplicate or already-active issues are common reasons. Margin is designed to hold those cases instead of filing them blindly.'
+    answer: 'Weak identifiers, missing quantity truth, unsupported evidence, expired policy windows, and duplicate or already-active issues are common reasons for denial. Margin is designed to hold those cases instead of filing them.'
   },
   {
     question: 'What documentation is required to submit a successful FBA reimbursement claim?',
@@ -124,23 +124,23 @@ const faqs = [
   },
   {
     question: 'How can I check if I am eligible for FBA reimbursements?',
-    answer: 'You need a trustworthy audit across your inventory, shipment, fee, return, and reimbursement data. Margin’s job is to surface supportable opportunities and separate them from weak or expired ones.'
+    answer: 'You need an audit across inventory, shipments, fees, returns, and reimbursements that distinguishes supported cases from expired, duplicate, or unsupported ones.'
   },
   {
     question: 'How do I track the status of reimbursement requests?',
-    answer: 'You should be able to see whether a case is waiting on Amazon, needs evidence, approved, rejected, or paid. Margin is built to show that progression instead of leaving you guessing.'
+    answer: 'You should be able to see whether a case is waiting on Amazon, needs evidence, approved, rejected, or paid. Margin is designed to keep that case status explicit.'
   },
   {
     question: 'Will using an automated tool get my Amazon account suspended?',
-    answer: 'A risky tool can create account problems if it files weak, duplicate, or careless cases. Margin is built around a pre-filing truth gate so unsupported cases are blocked before submission.'
+    answer: 'A risky tool can create account problems if it files weak, duplicate, or careless cases. Margin applies a pre-filing truth gate so unsupported cases are blocked before submission.'
   },
   {
     question: 'Do I have to manually upload invoices for every claim?',
-    answer: 'Not necessarily. When your evidence sources are connected, Margin can use what is already available. If a critical document is missing, the system should tell you exactly what is needed rather than pretending the case is ready.'
+    answer: 'Not necessarily. When evidence sources are connected, Margin uses the available documents. If a required document is missing, the system should tell you exactly what is missing before a case is filed.'
   },
   {
     question: 'What is the typical timeframe for FBA reimbursement claim resolution?',
-    answer: 'That depends on Amazon’s path for the specific case. Some cases move quickly, some need more evidence, and some are approved before payout is confirmed. The important part is having truthful visibility into what stage each case is in.'
+    answer: 'That depends on Amazon’s handling of the case. Some cases move quickly, some require more evidence, and some are approved before payout is confirmed. The important part is keeping the current case state explicit.'
   }
 ];
 
@@ -256,21 +256,16 @@ export default function Index() {
               transition={{ duration: 0.6 }}
               className={`max-w-[840px] ${mobileColumnClass}`}
             >
-              <div className="inline-flex items-center gap-2 text-[13px] text-white/68 md:text-sm">
-                <ShieldCheck className="h-4 w-4 text-white/60" />
-                <span>Trust-first FBA reimbursement automation</span>
-              </div>
-
-              <h1 className="mt-6 max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:mt-8 md:max-w-[760px] md:text-7xl">
+              <h1 className="max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:max-w-[760px] md:text-7xl">
                 Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
               <p className="mt-6 max-w-[700px] text-base leading-7 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
                 <span className="md:hidden">
-                  Margin checks the case, files only what is real, and tracks Amazon until payout without weak claims, duplicate filings, or Seller Central guesswork.
+                  Margin reviews the case, files only when the evidence and policy conditions are met, and tracks Amazon until payout.
                 </span>
                 <span className="hidden md:inline">
-                  Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout without weak claims, duplicate filings, or Seller Central guesswork.
+                  Margin detects reimbursement discrepancies, verifies the identifiers and evidence, files only cases supported by evidence and policy, and tracks Amazon until payout.
                 </span>
               </p>
 
@@ -304,10 +299,10 @@ export default function Index() {
               <div className={eyebrowClass}>The orchestration layer</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 <span className="md:hidden">Follow the recovery flow from signal to payout.</span>
-                <span className="hidden md:inline">See how the recovery engine turns Amazon signals into filed cases and recovered money.</span>
+                <span className="hidden md:inline">See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.</span>
               </h2>
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/56 md:hidden">
-                On mobile, this should read like a guided machine, not a crowded graph.
+                On mobile, this section shows the operating sequence rather than the full system map.
               </p>
             </motion.div>
           </div>
@@ -359,10 +354,10 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className={mobileColumnClass}>
               <div className={eyebrowClass}>What Margin does</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white">
-                Find the money, verify the case, and move only when the claim is real.
+                Detect discrepancies, verify the case, and file only when the evidence is there.
               </h2>
               <p className="mt-4 max-w-[340px] text-[15px] leading-6 text-white/60">
-                This should not feel like another dashboard. It should feel like a careful operator running reimbursement work in the background and telling you the truth when action is needed.
+                The system should surface discrepancies, explain why a case is ready or blocked, and keep Amazon&apos;s response visible through payout.
               </p>
             </motion.div>
 
@@ -387,10 +382,10 @@ export default function Index() {
             <div className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>What Margin does</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
-                Find the money, verify the case, and move only when the claim is real.
+                Detect discrepancies, verify the case, and file only when the evidence is there.
               </h2>
               <p className="mt-4 max-w-[620px] text-[15px] leading-6 text-white/60 md:mt-6 md:max-w-[700px] md:text-lg md:leading-8">
-                This should not feel like another dashboard. It should feel like a careful operator running reimbursement work in the background and telling you the truth when action is needed.
+                The system should surface discrepancies, explain why a case is ready or blocked, and keep Amazon&apos;s response visible through payout.
               </p>
             </div>
 
@@ -438,7 +433,7 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
-                The product has to feel careful, visible, and safe.
+                The system has to stay visible, controlled, and evidence-based.
               </h2>
             </motion.div>
 
@@ -462,7 +457,7 @@ export default function Index() {
                   <div className="mt-5 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03]">
                     <div className="grid gap-px bg-white/8">
                       <div className="bg-[#0a0a0a] px-4 py-3 text-[11px] font-medium tracking-tight text-white/42">
-                        System proof
+                        Observed states
                       </div>
                       <div className="bg-[#0a0a0a] px-4 py-4">
                         <div className="flex flex-wrap gap-2">
@@ -511,10 +506,10 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
-                We don’t file everything. We file what wins.
+                Not every discrepancy should be filed. Only supported cases move.
               </h2>
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/58 md:mt-6 md:max-w-[680px] md:text-lg md:leading-8">
-                The system evaluates readiness before taking action.
+                The system evaluates readiness before any case is filed.
               </p>
             </motion.div>
 
@@ -525,7 +520,7 @@ export default function Index() {
               >
                 <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
                 <h3 className="mt-3 text-[28px] font-medium tracking-tight text-white">
-                  Cases move only when the claim is fully supportable.
+                  Cases move only when the evidence and policy conditions are met.
                 </h3>
                 <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/68">
                   Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
@@ -551,7 +546,7 @@ export default function Index() {
               >
                 <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
                 <h3 className="mt-3 text-[26px] font-medium tracking-tight text-white/82">
-                  The system holds weak, incomplete, or already-active cases.
+                  The system holds cases that are incomplete, unsupported, or already active.
                 </h3>
                 <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/50">
                   Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
@@ -584,7 +579,7 @@ export default function Index() {
                   <div className="max-w-[760px]">
                     <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
                     <h3 className="mt-3 text-[28px] font-medium tracking-tight text-white md:mt-4 md:text-5xl">
-                      Cases move only when the claim is fully supportable.
+                      Cases move only when the evidence and policy conditions are met.
                     </h3>
                     <p className="mt-3 max-w-[620px] text-[15px] leading-6 text-white/68 md:mt-5 md:max-w-[700px] md:text-lg md:leading-8">
                       Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
@@ -613,7 +608,7 @@ export default function Index() {
                   <div className="max-w-[700px]">
                     <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
                     <h3 className="mt-3 text-[26px] font-medium tracking-tight text-white/82 md:mt-4 md:text-4xl">
-                      The system holds weak, incomplete, or already-active cases.
+                      The system holds cases that are incomplete, unsupported, or already active.
                     </h3>
                     <p className="mt-3 max-w-[600px] text-[15px] leading-6 text-white/50 md:mt-5 md:max-w-[660px] md:text-lg md:leading-8">
                       Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
@@ -643,10 +638,10 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
               <div className={eyebrowClass}>Questions sellers ask before they buy</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
-                The page should answer the real objections, not dodge them.
+                Answer the questions a skeptical seller will ask.
               </h2>
               <p className="mt-4 max-w-[360px] text-[15px] leading-6 text-white/60 md:mx-auto md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
-                These are the questions FBA sellers ask before they trust a reimbursement platform. The answers have to sound careful, specific, and believable.
+                These are the questions sellers ask before they connect account data or let a system file reimbursement cases on their behalf.
               </p>
             </motion.div>
 
@@ -688,10 +683,10 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className={`max-w-[980px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Start with clarity</div>
               <h2 className="mt-3 max-w-[720px] text-[38px] font-light tracking-tight text-white md:mt-4 md:max-w-[860px] md:text-7xl">
-                Start recovering missed FBA money without adding more work.
+                Start with a read-only review of missed FBA reimbursements.
               </h2>
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/60 md:mt-8 md:max-w-[700px] md:text-lg md:leading-8">
-                The first step should feel simple, safe, and controlled. You should understand what happens before anything is ever filed.
+                The first step is read-only. Margin reviews your reimbursement data before any case is considered for filing.
               </p>
 
               <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
@@ -711,10 +706,10 @@ export default function Index() {
                   <div className="text-sm font-medium tracking-tight text-white/34">02</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
-                      We detect and prepare cases
+                      Margin detects and prepares cases
                     </h3>
                     <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                      Real discrepancies are surfaced, matched with evidence, and separated from weak or duplicate noise.
+                      Supported discrepancies are surfaced, matched with evidence, and separated from weak or duplicate issues.
                     </p>
                   </div>
                 </motion.div>
@@ -723,10 +718,10 @@ export default function Index() {
                   <div className="text-sm font-medium tracking-tight text-white/34">03</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
-                      You review or let it run
+                      You review or keep the workflow automated
                     </h3>
                     <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                      Only strong, supportable cases move forward, while everything blocked stays explicit and visible.
+                      Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
                     </p>
                   </div>
                 </motion.div>
@@ -754,7 +749,7 @@ export default function Index() {
                 className="mt-6 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 md:hidden"
               >
                 <p className="max-w-[320px] text-[15px] leading-6 text-white/58">
-                  Only strong, supportable cases move forward, while everything blocked stays explicit and visible.
+                  Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
                 </p>
               </motion.div>
             </motion.div>
