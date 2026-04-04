@@ -70,6 +70,7 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
+const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
 
 
 // New Evidence Pages
@@ -158,6 +159,7 @@ const App = () => (
                         <Route path="/analyzing" element={<AnalyzingScreen />} />
                         {/* TENANT-SCOPED ROUTES - Require :tenantSlug */}
                         <Route path="/app" element={<TenantRedirect />} />
+                        <Route path="/app/redirect" element={<EmailActionRedirect />} />
                         <Route path="/app/:tenantSlug" element={<Dashboard />} />
                         <Route path="/app/:tenantSlug/dashboard" element={<Dashboard />} />
                         <Route path="/app/:tenantSlug/reports" element={<Navigate to="../dashboard" replace />} />
@@ -170,6 +172,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
                         <Route path="/app/:tenantSlug/dispute-cases" element={<DisputeCases />} />
                         <Route path="/app/:tenantSlug/appeals" element={<Appeals />} />
+                        <Route path="/app/:tenantSlug/cases/:caseId" element={<CaseDetail />} />
                         <Route path="/app/:tenantSlug/recoveries/:caseId" element={<CaseDetail />} />
                         <Route path="/app/:tenantSlug/resolve/:id" element={<ResolveCase />} />
                         <Route path="/app/:tenantSlug/history" element={<Navigate to="../billing" replace />} />
