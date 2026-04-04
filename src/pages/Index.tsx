@@ -63,6 +63,17 @@ const mobileOrchestrationSteps = [
   }
 ];
 
+const mobileIntegrationLogos = [
+  { name: 'Amazon', src: '/AMZN.png', className: 'max-h-4 max-w-[28px]' },
+  { name: 'Gmail', src: '/gmailicon.png', className: 'max-h-5 max-w-5' },
+  { name: 'Outlook', src: '/outlookicon.webp', className: 'max-h-5 max-w-5' },
+  { name: 'Google Drive', src: '/gd.png', className: 'max-h-5 max-w-5' },
+  { name: 'Dropbox', src: '/Dropbox_Icon.svg.png', className: 'max-h-5 max-w-5' },
+  { name: 'OneDrive', src: '/onedriive.png', className: 'max-h-5 max-w-5' },
+  { name: 'Adobe Sign', src: '/dobe.png', className: 'max-h-5 max-w-5' },
+  { name: 'Slack', src: '/slack-icon-2019.png', className: 'max-h-5 max-w-5' }
+];
+
 const proofBlocks = [
   {
     value: 'Fewer missed reimbursements',
@@ -282,6 +293,34 @@ export default function Index() {
           </div>
 
           <div className="mx-auto mt-8 max-w-[430px] px-6 md:hidden">
+            <motion.div {...mobileRevealProps} className="mb-6">
+              <div className="text-[11px] font-medium tracking-tight text-white/42">Integrations</div>
+              <div className="relative mt-3 overflow-hidden rounded-[22px] border border-white/10 bg-[#0a0a0a] py-4">
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#0a0a0a] to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#0a0a0a] to-transparent" />
+                <motion.div
+                  className="flex w-max gap-3 px-4"
+                  animate={{ x: ['0%', '-50%'] }}
+                  transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+                >
+                  {[...mobileIntegrationLogos, ...mobileIntegrationLogos].map((logo, index) => (
+                    <div
+                      key={`${logo.name}-${index}`}
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]"
+                      aria-label={logo.name}
+                      title={logo.name}
+                    >
+                      <img
+                        src={logo.src}
+                        alt={logo.name}
+                        className={`${logo.className} object-contain opacity-90`}
+                      />
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+            </motion.div>
+
             <div className="relative border-y border-white/8 py-2">
               <div className="absolute bottom-8 left-[9px] top-8 w-px bg-white/10" />
               <div className="space-y-0">
