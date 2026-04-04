@@ -462,10 +462,10 @@ export function Sidebar({
             <span className={cn(
               "font-sans transition-colors tracking-tight",
               variant === 'core'
-                ? "text-[12px] font-semibold leading-[1.2]"
+                ? "text-[16px] font-semibold leading-[1.15]"
                 : variant === 'utility'
-                  ? "text-[10px] font-medium leading-[1.2] text-white/52"
-                  : "text-[10.5px] font-medium leading-[1.2]",
+                  ? "text-[16px] font-medium leading-[1.15] text-white/58"
+                  : "text-[16px] font-medium leading-[1.15]",
               isActive ? "text-white" : ""
             )}>
               {item.title}
@@ -579,7 +579,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.25 px-1 text-[8px] font-medium tracking-tight text-white/24">
+                <div className="mb-1.25 px-1 text-[10px] font-medium tracking-tight text-white/28">
                   Engine
                 </div>
               )}
@@ -590,7 +590,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.25 px-1 text-[8px] font-medium tracking-tight text-white/24">
+                <div className="mb-1.25 px-1 text-[10px] font-medium tracking-tight text-white/28">
                   Operations
                 </div>
               )}
@@ -603,7 +603,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.25 px-1 text-[8px] font-medium tracking-tight text-white/24">
+                <div className="mb-1.25 px-1 text-[10px] font-medium tracking-tight text-white/28">
                   Actions
                 </div>
               )}
