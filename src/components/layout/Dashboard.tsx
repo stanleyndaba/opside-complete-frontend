@@ -1602,7 +1602,7 @@ export function Dashboard() {
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'overview'
                             ? "text-white font-semibold"
-                            : "text-white/36 hover:text-white/58"
+                            : "text-white/42 hover:text-white/62"
                         )}
                       >
                         Overview
@@ -1619,7 +1619,7 @@ export function Dashboard() {
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'discrepancies'
                             ? "text-white font-semibold"
-                            : "text-white/36 hover:text-white/58"
+                            : "text-white/42 hover:text-white/62"
                         )}
                       >
                         Issues Found
@@ -1636,7 +1636,7 @@ export function Dashboard() {
                           "relative pb-3 text-[11px] font-sans transition-colors duration-200 tracking-tight",
                           activeTab === 'evidence'
                             ? "text-white font-semibold"
-                            : "text-white/36 hover:text-white/58"
+                            : "text-white/42 hover:text-white/62"
                         )}
                       >
                         Evidence
