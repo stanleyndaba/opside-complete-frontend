@@ -113,43 +113,43 @@ const Waitlist = () => {
 
             <PublicNavbar />
 
-            <main className="relative z-10 pt-32 pb-24 px-6 min-h-[90vh] flex flex-col justify-center">
-                <div className="container mx-auto max-w-2xl">
+            <main className="relative z-10 pt-28 pb-24 px-6">
+                <div className="container mx-auto max-w-5xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-12"
+                        className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-start"
                     >
                         {/* Header Section */}
-                        <div className="space-y-8 text-center md:text-left">
+                        <div className="space-y-8">
                             <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-none">
                                 <span className="text-[10px] font-bold text-white/70 font-sans tracking-tight uppercase">Node Authorization</span>
                                 <div className="h-3 w-[1px] bg-white/10" />
                                 <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">Waitlist Protocol</span>
                             </div>
 
-                            <h1 className="text-4xl md:text-7xl font-sans font-light leading-tight tracking-tight">
+                            <h1 className="text-4xl md:text-6xl font-sans font-light leading-tight tracking-tight">
                                 Request <br />
                                 Early Access
                             </h1>
 
-                            <p className="max-w-md text-lg text-white/50 font-sans tracking-tight leading-relaxed border-l-2 border-white/10 pl-6 mx-auto md:mx-0">
+                            <p className="max-w-md text-base md:text-lg text-white/50 font-sans tracking-tight leading-relaxed border-l-2 border-white/10 pl-6">
                                 Currently operating at maximum institutional bandwidth. Join the priority node release queue.
                             </p>
-                        </div>
 
-                        {/* Progress Strip */}
-                        {!isSuccess && (
-                            <div className="flex items-center gap-1 h-1 w-full bg-white/5 mb-12">
-                                {[1, 2, 3].map((s) => (
-                                    <div
-                                        key={s}
-                                        className={`h-full flex-1 transition-all duration-700 ${step >= s ? 'bg-white/40 shadow-[0_0_15px_rgba(255,255,255,0.12)]' : 'bg-transparent'}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
+                            {/* Progress Strip */}
+                            {!isSuccess && (
+                                <div className="flex items-center gap-1 h-1 w-full max-w-sm bg-white/5">
+                                    {[1, 2, 3].map((s) => (
+                                        <div
+                                            key={s}
+                                            className={`h-full flex-1 transition-all duration-700 ${step >= s ? 'bg-white/40 shadow-[0_0_12px_rgba(255,255,255,0.12)]' : 'bg-transparent'}`}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
                         <AnimatePresence mode="wait">
                             {!isSuccess ? (
@@ -160,7 +160,7 @@ const Waitlist = () => {
                                     animate="animate"
                                     exit="exit"
                                     transition={{ duration: 0.4 }}
-                                    className="bg-white/[0.02] border border-white/10 p-8 md:p-12 shadow-2xl relative"
+                                    className="bg-white/[0.015] border border-white/10 p-8 md:p-10 shadow-2xl relative"
                                 >
                                     <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-l border-t border-white/15" />
                                     <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-r border-b border-white/15" />
@@ -214,7 +214,7 @@ const Waitlist = () => {
                                             <div className="pt-8">
                                                 <Button
                                                     onClick={nextStep}
-                                                    className="w-full h-16 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
+                                                    className="w-full h-14 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
                                                 >
                                                     Transmit Signal
                                                 </Button>
@@ -234,7 +234,7 @@ const Waitlist = () => {
                                                             name="email"
                                                             type="email"
                                                             placeholder="AUTHORITY@DOMAIN.COM"
-                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
+                                                            className="h-14 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
                                                             value={formData.email}
                                                             onChange={handleInputChange}
                                                         />
@@ -249,7 +249,7 @@ const Waitlist = () => {
                                                             id="contact_handle"
                                                             name="contact_handle"
                                                             placeholder="WHATSAPP / TELEGRAM ID"
-                                                            className="h-16 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
+                                                            className="h-14 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
                                                             value={formData.contact_handle}
                                                             onChange={handleInputChange}
                                                         />
@@ -261,13 +261,13 @@ const Waitlist = () => {
                                                 <Button
                                                     variant="outline"
                                                     onClick={prevStep}
-                                                    className="h-16 px-10 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
+                                                    className="h-14 px-8 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
                                                 >
                                                     <ChevronLeft className="w-5 h-5 text-white/40" />
                                                 </Button>
                                                 <Button
                                                     onClick={nextStep}
-                                                    className="flex-1 h-16 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
+                                                    className="flex-1 h-14 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
                                                 >
                                                     Verify Node
                                                 </Button>
@@ -308,14 +308,14 @@ const Waitlist = () => {
                                                     variant="outline"
                                                     onClick={prevStep}
                                                     disabled={isSubmitting}
-                                                    className="h-16 px-10 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
+                                                    className="h-14 px-8 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
                                                 >
                                                     <ChevronLeft className="w-5 h-5 text-white/40" />
                                                 </Button>
                                                 <Button
                                                     onClick={handleSubmit}
                                                     disabled={isSubmitting}
-                                                    className={`flex-1 h-16 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-white text-black hover:bg-white/90 active:scale-[0.98]'
+                                                    className={`flex-1 h-14 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-white text-black hover:bg-white/90 active:scale-[0.98]'
                                                         }`}
                                                 >
                                                     {isSubmitting ? (
@@ -343,7 +343,7 @@ const Waitlist = () => {
                                     key="success"
                                     initial={{ opacity: 0, scale: 0.98 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="bg-white/[0.02] border border-white/10 p-16 md:p-24 shadow-3xl text-center space-y-12 relative overflow-hidden"
+                                    className="bg-white/[0.02] border border-white/10 p-12 md:p-16 shadow-3xl text-center space-y-10 relative overflow-hidden"
                                 >
                                     <div className="absolute top-0 left-0 w-8 h-8 border-l border-t border-white/20" />
                                     <div className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-white/20" />
@@ -368,7 +368,7 @@ const Waitlist = () => {
                                         <Button
                                             variant="outline"
                                             asChild
-                                            className="h-16 px-12 border border-white/10 bg-transparent text-white/50 hover:text-white rounded-none font-sans font-light text-[10px] uppercase tracking-tight transition-all"
+                                            className="h-14 px-10 border border-white/10 bg-transparent text-white/50 hover:text-white rounded-none font-sans font-light text-[10px] uppercase tracking-tight transition-all"
                                         >
                                             <Link to="/">
                                                 Back to Portal Interface
