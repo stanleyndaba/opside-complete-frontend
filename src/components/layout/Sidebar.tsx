@@ -293,7 +293,8 @@ export function Sidebar({
   const coreItem: NavItem = { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') };
   const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') }
+    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+    { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') }
   ];
   const actionItems: NavItem[] = [
     { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') }
@@ -398,7 +399,7 @@ export function Sidebar({
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-popover border border-border px-3 py-2 backdrop-blur-xl">
-              <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-white/88">
+              <div className="text-[11px] font-sans font-medium tracking-tight text-white/88">
                 {item.title}
               </div>
             </TooltipContent>
@@ -454,10 +455,10 @@ export function Sidebar({
             <span className={cn(
               "font-sans transition-colors tracking-tight",
               variant === 'core'
-                ? "text-[12px] font-semibold uppercase"
+                ? "text-[12px] font-semibold"
                 : variant === 'utility'
-                  ? "text-[10px] font-medium uppercase text-white/46"
-                  : "text-[11px] font-medium uppercase",
+                  ? "text-[10px] font-medium text-white/46"
+                  : "text-[11px] font-medium",
               isActive ? "text-white" : ""
             )}>
               {item.title}
@@ -515,11 +516,6 @@ export function Sidebar({
               alt="Margin"
               className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
             />
-            {!isCollapsed && (
-              <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-white/18">
-                Live system
-              </span>
-            )}
           </div>
 
           {isCollapsed ? (
@@ -534,7 +530,7 @@ export function Sidebar({
 
               <div className="flex flex-wrap items-center gap-1.5">
                 <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
-                <span className={cn("text-[9px] font-bold uppercase tracking-tight", healthStyles.text)}>
+                <span className={cn("text-[9px] font-medium tracking-tight", healthStyles.text)}>
                   {systemStatusLabel}
                 </span>
                 {planMeta && (
@@ -576,7 +572,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-1 text-[8px] font-semibold uppercase tracking-[0.22em] text-white/16">
+                <div className="mb-1.5 px-1 text-[8px] font-medium tracking-tight text-white/18">
                   Engine
                 </div>
               )}
@@ -587,7 +583,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-1 text-[8px] font-semibold uppercase tracking-[0.22em] text-white/16">
+                <div className="mb-1.5 px-1 text-[8px] font-medium tracking-tight text-white/18">
                   Operations
                 </div>
               )}
@@ -600,7 +596,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-1 text-[8px] font-semibold uppercase tracking-[0.22em] text-white/16">
+                <div className="mb-1.5 px-1 text-[8px] font-medium tracking-tight text-white/18">
                   Actions
                 </div>
               )}
@@ -627,10 +623,10 @@ export function Sidebar({
           )}
         >
           <span className={cn(
-            "text-[9px] font-sans font-semibold text-foreground/16 uppercase tracking-tight group-hover:text-white/36 transition-colors",
+            "text-[9px] font-sans font-medium text-foreground/16 tracking-tight group-hover:text-white/36 transition-colors",
             isCollapsed ? "block" : ""
           )}>
-            {isCollapsed ? "v1" : "v1.0.0-GOLD"}
+            {isCollapsed ? "v1" : "v1.0.0 Gold"}
           </span>
           <div className="h-1 w-1 rounded-full bg-white/24 flex-shrink-0" />
         </Link>
@@ -645,7 +641,6 @@ export function Sidebar({
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
           const updatesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/notifications'));
           const notesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/whats-new'));
-          const billingActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/billing'));
           const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
 
           return (
@@ -659,7 +654,7 @@ export function Sidebar({
                   : "gap-3 px-6 py-2.5 text-left hover:bg-foreground/[0.02] text-foreground/34 hover:text-foreground/72"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors text-foreground/20", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[10px] font-sans font-medium uppercase tracking-[0.18em] text-foreground/30">More</span>}
+              {!isCollapsed && <span className="text-[10px] font-sans font-medium tracking-tight text-foreground/30">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
@@ -679,7 +674,7 @@ export function Sidebar({
                 strokeWidth={1.5}
               />
               <div className="min-w-0">
-                <div className="uppercase tracking-tight">Report a problem</div>
+                <div className="tracking-tight">Report a problem</div>
                 <div className={cn(
                   "mt-0.5 text-[10px] font-sans tracking-tight normal-case",
                   helpActive ? "text-black/60" : "text-foreground/30 group-data-[highlighted]/more-item:text-black/60"
@@ -691,7 +686,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
               className={cn(
-                "group/more-item flex items-center justify-between px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
+                "group/more-item flex items-center justify-between px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
                 "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 updatesActive && "bg-white text-black"
@@ -716,7 +711,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
+                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
                 "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 notesActive && "bg-white text-black"
@@ -730,24 +725,6 @@ export function Sidebar({
               />
               <span>Latest Changes</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
-              className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
-                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                billingActive && "bg-white text-black"
-              )}>
-              <CreditCard
-                className={cn(
-                  "h-4 w-4 transition-colors",
-                  billingActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
-                )}
-                strokeWidth={1.5}
-              />
-              <span>Billing</span>
-            </DropdownMenuItem>
-
             {/* Limited Offer / Referral */}
             {/* <DropdownMenuItem
               onClick={(e) => {
@@ -790,7 +767,7 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight transition-colors",
+                "group/more-item flex items-center gap-3 px-3 py-2 text-[11px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
                 "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
                 "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
                 settingsActive && "bg-white text-black"
@@ -807,7 +784,7 @@ export function Sidebar({
             <DropdownMenuSeparator className="bg-border my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light uppercase tracking-tight">
+              className="flex items-center gap-3 px-3 py-2 text-[11px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light tracking-tight">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
