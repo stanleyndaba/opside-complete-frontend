@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { Gauge, ShieldCheck, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCcw } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -67,48 +67,6 @@ interface NavItem {
   href: string;
 }
 
-type SidebarHealthTone = 'healthy' | 'degraded' | 'attention' | 'checking' | 'unknown';
-
-interface SidebarHealthState {
-  label: string;
-  tone: SidebarHealthTone;
-}
-
-function getSidebarPlanMeta(plan: 'free' | 'starter' | 'professional' | 'enterprise' | undefined) {
-  switch (plan) {
-    case 'enterprise':
-      return {
-        label: 'Enterprise',
-        border: 'border-amber-500/20',
-        text: 'text-amber-200/85',
-        background: 'bg-amber-500/10'
-      };
-    case 'professional':
-      return {
-        label: 'Pro',
-        border: 'border-sky-500/20',
-        text: 'text-sky-200/85',
-        background: 'bg-sky-500/10'
-      };
-    case 'starter':
-      return {
-        label: 'Starter',
-        border: 'border-emerald-500/20',
-        text: 'text-emerald-200/85',
-        background: 'bg-emerald-500/10'
-      };
-    case 'free':
-      return {
-        label: 'Free',
-        border: 'border-foreground/10',
-        text: 'text-foreground/45',
-        background: 'bg-foreground/5'
-      };
-    default:
-      return null;
-  }
-}
-
 export function Sidebar({
   isCollapsed,
   onToggle,
@@ -119,9 +77,7 @@ export function Sidebar({
   const queryClient = useQueryClient();
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant, isReady } = useTenant();
-  const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
   const [claimCount, setClaimCount] = useState<number | null>(null);
-  const [healthState, setHealthState] = useState<SidebarHealthState>({ label: 'Checking', tone: 'checking' });
   const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
   // States for referral functionality
@@ -129,8 +85,6 @@ export function Sidebar({
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [linkCopied, setLinkCopied] = useState(false);
-  const planMeta = useMemo(() => getSidebarPlanMeta(tenant?.plan), [tenant?.plan]);
-
   // Referral link helpers
   const referralLink = typeof window !== 'undefined'
     ? `${window.location.origin}/signup?ref=demo-user`
@@ -164,26 +118,8 @@ export function Sidebar({
 
   // Reset state when tenant changes to prevent flicker
   React.useEffect(() => {
-    setConnectedEmail(null);
     setClaimCount(null);
-    setHealthState({ label: 'Checking', tone: 'checking' });
   }, [currentTenantSlug]);
-
-  // Fetch connected email from evidence sources
-  React.useEffect(() => {
-    if (!isReady) return;
-    (async () => {
-      try {
-        const r = await api.getEvidenceSources(currentTenantSlug);
-        if (r.ok && r.data?.sources) {
-          const gmailSource = r.data.sources.find((s: any) => s.provider === 'gmail' && s.status === 'connected');
-          if (gmailSource?.account_email) {
-            setConnectedEmail(gmailSource.account_email);
-          }
-        }
-      } catch { }
-    })();
-  }, [isReady, currentTenantSlug]);
 
   // Fetch claim count from Agent 8 so the sidebar reflects the same source as the Recovery Pipeline page
   React.useEffect(() => {
@@ -211,86 +147,8 @@ export function Sidebar({
     return () => { cancelled = true; };
   }, [currentTenantSlug, isReady]);
 
-  React.useEffect(() => {
-    if (!isReady || !currentTenantSlug) return;
-    let cancelled = false;
-
-    const fetchSidebarHealth = async () => {
-      try {
-        const response = await api.getDashboardSummary(currentTenantSlug);
-        if (cancelled) return;
-
-        if (!response.ok || !response.data?.summary) {
-          setHealthState({ label: 'Unknown', tone: 'unknown' });
-          return;
-        }
-
-        const summary = response.data.summary as {
-          integrations_summary?: { connected_count?: number; stale_count?: number };
-          blockers?: Array<{ severity?: 'low' | 'medium' | 'high' }>;
-        };
-
-        const connectedCount = Number(summary.integrations_summary?.connected_count || 0);
-        const staleCount = Number(summary.integrations_summary?.stale_count || 0);
-        const blockers = Array.isArray(summary.blockers) ? summary.blockers : [];
-        const hasHighBlocker = blockers.some((blocker) => blocker?.severity === 'high');
-        const hasMediumBlocker = blockers.some((blocker) => blocker?.severity === 'medium');
-
-        if (connectedCount === 0 || hasHighBlocker) {
-          setHealthState({ label: 'Needs Attention', tone: 'attention' });
-          return;
-        }
-
-        if (staleCount > 0 || hasMediumBlocker) {
-          setHealthState({ label: 'Degraded', tone: 'degraded' });
-          return;
-        }
-
-        setHealthState({ label: 'Healthy', tone: 'healthy' });
-      } catch (error) {
-        if (!cancelled) {
-          console.warn('[Sidebar] Failed to resolve truthful health state.', error);
-          setHealthState({ label: 'Unknown', tone: 'unknown' });
-        }
-      }
-    };
-
-    void fetchSidebarHealth();
-    return () => { cancelled = true; };
-  }, [currentTenantSlug, isReady]);
-
-  const healthStyles = useMemo(() => {
-    switch (healthState.tone) {
-      case 'healthy':
-        return {
-          dot: 'bg-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.25)]',
-          text: 'text-slate-400'
-        };
-      case 'degraded':
-        return {
-          dot: 'bg-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.25)]',
-          text: 'text-slate-400'
-        };
-      case 'attention':
-        return {
-          dot: 'bg-slate-400 shadow-[0_0_8px_rgba(148,163,184,0.25)]',
-          text: 'text-slate-400'
-        };
-      case 'checking':
-        return {
-          dot: 'bg-white/40',
-          text: 'text-white/50'
-        };
-      default:
-        return {
-          dot: 'bg-white/30',
-          text: 'text-white/40'
-        };
-    }
-  }, [healthState.tone]);
-
   const overviewHref = tenantRoute(currentTenantSlug, '');
-  const coreItem: NavItem = { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') };
+  const coreItem: NavItem = { title: 'Recovery Pipeline', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };
   const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
@@ -299,21 +157,6 @@ export function Sidebar({
   const actionItems: NavItem[] = [
     { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') }
   ];
-  const workspaceLabel = tenant?.name || currentTenantSlug || 'Margin workspace';
-  const systemStatusLabel = useMemo(() => {
-    switch (healthState.tone) {
-      case 'healthy':
-        return 'Healthy';
-      case 'degraded':
-        return 'Degraded';
-      case 'attention':
-        return 'Needs attention';
-      case 'checking':
-        return 'Checking live status';
-      default:
-        return 'Status pending';
-    }
-  }, [healthState.tone]);
   const NavItemComponent = React.memo(({
     item,
     variant = 'default'
@@ -507,60 +350,23 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-border",
+          "",
           isCollapsed ? "px-2 py-3.5" : "px-3.5 py-4"
         )}>
         <Link
           to={overviewHref}
           className={cn(
             "w-full transition-colors",
-            isCollapsed ? "flex flex-col items-center gap-1.5 px-1 py-1" : "block px-0.5 py-0.5"
+            isCollapsed ? "flex items-center justify-center px-1 py-1" : "block px-0.5 py-0.5"
           )}
         >
-          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
+          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "")}>
             <img
               src="/logoimagetwo.png"
               alt="Margin"
               className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
             />
           </div>
-
-          {isCollapsed ? (
-            <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
-          ) : (
-            <div className="mt-3 space-y-2">
-              <div>
-                <div className="truncate text-[12.5px] font-medium tracking-tight text-white/86">
-                  {workspaceLabel}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-1.5">
-                <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
-                <span className={cn("text-[9px] font-medium tracking-tight", healthStyles.text)}>
-                  {systemStatusLabel}
-                </span>
-                {planMeta && (
-                  <span
-                    className={cn(
-                      "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[7.5px] font-semibold tracking-tight opacity-90",
-                      planMeta.border,
-                      planMeta.text,
-                      planMeta.background
-                    )}
-                  >
-                    {planMeta.label}
-                  </span>
-                )}
-              </div>
-
-              {connectedEmail ? (
-                <div className="truncate text-[10.5px] tracking-tight text-white/34">
-                  {connectedEmail}
-                </div>
-              ) : null}
-            </div>
-          )}
         </Link>
       </div>
 
@@ -570,7 +376,7 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2" : "px-2.5"
           )}>
-          <nav className={cn("w-full flex flex-col pt-4 pb-3.5", isCollapsed ? "items-center gap-3.5" : "gap-5.5")}>
+          <nav className={cn("w-full flex flex-col pt-2.5 pb-3.5", isCollapsed ? "items-center gap-3.5" : "gap-5.5")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
