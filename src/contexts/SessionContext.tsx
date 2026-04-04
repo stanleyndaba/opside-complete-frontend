@@ -7,6 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { SessionTimeoutModal } from '@/components/modals/SessionTimeoutModal';
+import { SESSION_RECOVERY_EVENT } from '@/lib/sessionRecovery';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -109,6 +110,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         return () => subscription.unsubscribe();
     }, []);
 
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const handleRecoveryRequired = () => {
+            setIsSessionValid(false);
+            setSessionTimeoutOpen(true);
+        };
+
+        window.addEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
+        return () => {
+            window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
+        };
+    }, []);
+
     const showSessionTimeout = useCallback(() => {
         setSessionTimeoutOpen(true);
     }, []);
@@ -120,6 +135,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const handleSessionRestored = useCallback(() => {
         setIsSessionValid(true);
         setSessionTimeoutOpen(false);
+        if (typeof window !== 'undefined') {
+            window.location.reload();
+        }
     }, []);
 
     return (

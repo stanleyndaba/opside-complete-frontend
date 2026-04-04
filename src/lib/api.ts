@@ -13,6 +13,7 @@ export interface BlobApiResponse {
 }
 
 import { getFrontendAuthContext } from './authSession';
+import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
 
 export function buildApiUrl(path: string): string {
   // Normalize provided path
@@ -82,7 +83,8 @@ async function requestJsonWithRetry<T>(
   path: string,
   options?: RequestInit,
   retryCount = 0,
-  maxRetries = 3
+  maxRetries = 3,
+  didRetryAfterRefresh = false
 ): Promise<ApiResponse<T>> {
   const requestStartTime = performance.now();
   const url = buildApiUrl(path);
@@ -156,6 +158,13 @@ async function requestJsonWithRetry<T>(
     console.log(`[API] Response parsing took ${Math.round(parseDuration)}ms, total request time: ${Math.round(totalDuration)}ms`);
 
     if (!res.ok) {
+      if (res.status === 401 && !didRetryAfterRefresh) {
+        const refreshed = await attemptSilentSessionRefresh();
+        if (refreshed) {
+          return requestJsonWithRetry<T>(path, options, retryCount, maxRetries, true);
+        }
+      }
+
       const errorMsg = data?.error || data?.message || res.statusText || 'Request failed';
 
       // Provide specific error messages based on status code
@@ -166,7 +175,12 @@ async function requestJsonWithRetry<T>(
           ? errorMsg
           : `Not found (404): ${path}`;
       } else if (res.status === 401) {
-        userFriendlyError = `Unauthorized (401): Please log in or refresh your session.`;
+        userFriendlyError = 'Session expired. Sign in again to continue.';
+        dispatchSessionRecovery({
+          status: res.status,
+          source: path,
+          message: typeof errorMsg === 'string' ? errorMsg : 'Unauthorized',
+        });
       } else if (res.status === 403) {
         userFriendlyError = `Forbidden (403): You don't have permission to access this resource.`;
       } else if (res.status >= 500) {
@@ -275,7 +289,8 @@ async function requestJsonWithRetry<T>(
 
 async function requestBlob(
   path: string,
-  options?: RequestInit
+  options?: RequestInit,
+  didRetryAfterRefresh = false
 ): Promise<BlobApiResponse> {
   const url = buildApiUrl(path);
   const { token: sessionToken, userId, tenantId } = await getFrontendAuthContext();
@@ -294,11 +309,27 @@ async function requestBlob(
   });
 
   if (!res.ok) {
+    if (res.status === 401 && !didRetryAfterRefresh) {
+      const refreshed = await attemptSilentSessionRefresh();
+      if (refreshed) {
+        return requestBlob(path, options, true);
+      }
+    }
+
     const text = await res.text().catch(() => '');
+    if (res.status === 401) {
+      dispatchSessionRecovery({
+        status: res.status,
+        source: path,
+        message: text || res.statusText || 'Unauthorized',
+      });
+    }
     return {
       ok: false,
       status: res.status,
-      error: text || res.statusText || 'Request failed',
+      error: res.status === 401
+        ? 'Session expired. Sign in again to continue.'
+        : (text || res.statusText || 'Request failed'),
     };
   }
 
