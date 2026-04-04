@@ -189,6 +189,69 @@ const formatIssueStatusLabel = (status?: string | null) => {
   }
 };
 
+const getFindingStateMeta = (status?: string | null) => {
+  const normalized = (status || '').toLowerCase();
+
+  switch (normalized) {
+    case 'ready_to_file':
+      return {
+        label: 'Ready to file',
+        detail: 'Policy and identifier checks passed, so this can move into a recovery case.',
+        actionLabel: 'Open recovery',
+        tone: 'border-sky-400/20 bg-sky-400/[0.08] text-sky-200',
+        Icon: CheckCircle,
+      };
+    case 'filed':
+      return {
+        label: 'Filed with Amazon',
+        detail: 'This discrepancy is already in Amazon review through a filed case.',
+        actionLabel: 'Open cases',
+        tone: 'border-white/10 bg-white/[0.04] text-white/78',
+        Icon: Send,
+      };
+    case 'converted':
+      return {
+        label: 'Moved to case',
+        detail: 'This finding has already been turned into a recovery case for follow-through.',
+        actionLabel: 'Open cases',
+        tone: 'border-white/10 bg-white/[0.04] text-white/72',
+        Icon: ArrowRight,
+      };
+    case 'resolved':
+      return {
+        label: 'Closed',
+        detail: 'This finding is already tied off and no further filing is needed.',
+        actionLabel: 'Open cases',
+        tone: 'border-white/10 bg-white/[0.03] text-white/58',
+        Icon: CheckCircle,
+      };
+    case 'pending':
+      return {
+        label: 'Pending review',
+        detail: 'Margin is still checking whether this discrepancy should move forward.',
+        actionLabel: 'Review finding',
+        tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+        Icon: Clock,
+      };
+    case 'detected':
+      return {
+        label: 'Issue found',
+        detail: 'Margin found a discrepancy, but it still needs review before it becomes a case.',
+        actionLabel: 'Review finding',
+        tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+        Icon: Info,
+      };
+    default:
+      return {
+        label: formatIssueStatusLabel(status),
+        detail: 'Review this discrepancy to decide whether it should move into a case.',
+        actionLabel: 'Review finding',
+        tone: 'border-white/10 bg-white/[0.04] text-white/68',
+        Icon: Info,
+      };
+  }
+};
+
 const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
   if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
   if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
@@ -1211,6 +1274,36 @@ export function Dashboard() {
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
   );
+  const readyToFileFindingsCount = useMemo(
+    () => detectionResults.filter(result => (result.status || '').toLowerCase() === 'ready_to_file').length,
+    [detectionResults]
+  );
+  const needsReviewFindingsCount = useMemo(
+    () => detectionResults.filter(result => ['detected', 'pending'].includes((result.status || '').toLowerCase())).length,
+    [detectionResults]
+  );
+  const issuesFoundSummaryRows = useMemo(() => ([
+    {
+      label: 'Findings in view',
+      value: pluralize(visibleDetectionResults.length, 'finding'),
+      detail: 'Currently shown in this queue'
+    },
+    {
+      label: 'Ready to file',
+      value: pluralize(readyToFileFindingsCount, 'finding'),
+      detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is filing-ready yet'
+    },
+    {
+      label: 'Filed with Amazon',
+      value: pluralize(filedClaimsCount, 'case'),
+      detail: filedClaimsCount > 0 ? 'Already moved into case review' : 'No filed cases yet'
+    },
+    {
+      label: 'Needs review',
+      value: pluralize(needsReviewFindingsCount, 'finding'),
+      detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
+    }
+  ]), [filedClaimsCount, needsReviewFindingsCount, readyToFileFindingsCount, visibleDetectionResults.length]);
   const lastSyncResult = useMemo(() => {
     if (activeSyncId || syncTriggered) {
       return {
@@ -2039,46 +2132,31 @@ export function Dashboard() {
                 <div className="space-y-6">
                   {/* Issues Found View */}
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
-                    <div className="flex items-start justify-between gap-8 mb-8">
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-tight uppercase">Issues Found</h2>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-base font-sans font-semibold text-white tracking-tight">Recent findings</span>
-                          </div>
+                    <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+                      <div className="max-w-xl">
+                        <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-tight uppercase">Issues Found</h2>
+                        <div className="mt-0.5">
+                          <span className="text-base font-sans font-semibold text-white tracking-tight">Recent findings</span>
                         </div>
+                        <p className="mt-3 text-[12px] font-sans leading-6 text-white/42">
+                          Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.
+                        </p>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-10">
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-tight uppercase">Issues found</span>
-                            <span className="text-xl font-sans font-semibold text-white leading-none mt-1.5">
-                              {detectedOpportunitiesCount}
-                            </span>
-                          </div>
 
-                          <button
-                            onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                            className="flex flex-col transition-colors text-left hover:text-white"
-                          >
-                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-tight uppercase">Claims</span>
-                            <div className="flex items-center gap-2 mt-1.5">
-                              <span className="text-xl font-sans font-semibold text-white leading-none">
-                                {filedClaimsCount}
-                              </span>
-                              <ArrowRight className="h-3 w-3 text-white/25" />
+                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                        {issuesFoundSummaryRows.map((item) => (
+                          <div key={item.label} className="min-w-[120px]">
+                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                              {item.label}
                             </div>
-                          </button>
-
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-sans font-medium text-white/40 tracking-tight uppercase">Verified recovered</span>
-                            <span className="text-xl font-sans font-semibold text-white leading-none mt-1.5">
-                              {dashboardSummary
-                                ? formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency)
-                                : 'Unavailable'}
-                            </span>
+                            <div className="mt-1.5 text-[20px] font-sans font-medium leading-none tracking-tight text-white">
+                              {item.value}
+                            </div>
+                            <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/32">
+                              {item.detail}
+                            </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
 
@@ -2107,8 +2185,27 @@ export function Dashboard() {
                         </button>
                       </div>
                     ) : (
-                      <div className="overflow-x-auto">
-                        <div className="flex items-center justify-end mb-4 gap-4">
+                      <div>
+                        <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="text-[11px] font-sans tracking-tight text-white/38">
+                            This queue shows what Margin found, the current case state, and the next action available.
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
+                              <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">Show processed</span>
+                              <button
+                                onClick={() => setShowProcessed(!showProcessed)}
+                                className={cn(
+                                  "w-8 h-4 rounded-full relative transition-colors duration-300",
+                                  showProcessed ? "bg-white/35" : "bg-white/10"
+                                )}
+                              >
+                                <div className={cn(
+                                  "absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform duration-300",
+                                  showProcessed ? "translate-x-4" : "translate-x-0"
+                                )} />
+                              </button>
+                            </div>
                           <Button
                             onClick={handleBatchExport}
                             disabled={isExporting}
@@ -2121,153 +2218,120 @@ export function Dashboard() {
                             )}
                             Export findings
                           </Button>
-                          <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
-                            <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">Show processed</span>
-                            <button
-                              onClick={() => setShowProcessed(!showProcessed)}
-                              className={cn(
-                                "w-8 h-4 rounded-full relative transition-colors duration-300",
-                                showProcessed ? "bg-white/35" : "bg-white/10"
-                              )}
-                            >
-                              <div className={cn(
-                                "absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white transition-transform duration-300",
-                                showProcessed ? "translate-x-4" : "translate-x-0"
-                              )} />
-                            </button>
                           </div>
                         </div>
-                        <table className="w-full text-left">
-                          <thead>
-                            <tr className="border-b border-white/5">
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">Issue</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">Found on</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight text-right">Estimated value</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight text-center">Confidence</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight">Status</th>
-                              <th className="pb-4 text-[10px] font-sans font-medium text-white/35 uppercase tracking-tight text-right">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-white/5">
-                            {visibleDetectionResults
-                              .map((result) => {
-                                const isProcessed = isProcessedFindingStatus(result.status);
-                                return (
-                                  <tr
-                                    key={result.id}
-                                    className={cn(
-                                      "group transition-colors",
-                                      isProcessed ? "opacity-40 grayscale" : "hover:bg-white/[0.02]"
-                                    )}
-                                  >
-                                    <td className="py-5">
-                                      <div className="flex flex-col">
-                                        <span className="text-[13px] font-sans font-semibold text-white tracking-tight">
-                                          {formatIssueTypeLabel(result.anomaly_type)}
-                                        </span>
-                                        <span className="text-[11px] font-sans font-medium text-white/30 tracking-tight mt-1">
-                                          Ref {result.id?.substring(0, 8) || 'N/A'}
-                                        </span>
-                                      </div>
-                                    </td>
-                                    <td className="py-5 text-[12px] font-sans font-medium text-white/55 tracking-tight">
-                                      {result.discovery_date
-                                        ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                                        : 'N/A'
-                                      }
-                                    </td>
-                                    <td className="py-5 text-[13px] font-sans font-semibold text-white text-right tracking-tight">
+
+                        <div className="space-y-3">
+                          {visibleDetectionResults.map((result) => {
+                            const isProcessed = isProcessedFindingStatus(result.status);
+                            const stateMeta = getFindingStateMeta(result.status);
+                            const StateIcon = stateMeta.Icon;
+                            const foundOnLabel = result.discovery_date
+                              ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                              : 'Date unavailable';
+
+                            return (
+                              <div
+                                key={result.id}
+                                className={cn(
+                                  "rounded-xl border px-5 py-4 transition-colors",
+                                  isProcessed
+                                    ? "border-white/6 bg-[#090909]"
+                                    : "border-white/8 bg-black/20 hover:border-white/12"
+                                )}
+                              >
+                                <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center">
+                                  <div className="min-w-0">
+                                    <div className="text-[14px] font-sans font-medium tracking-tight text-white">
+                                      {formatIssueTypeLabel(result.anomaly_type)}
+                                    </div>
+                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/30">
+                                      <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
+                                      <span>Found {foundOnLabel}</span>
+                                    </div>
+                                  </div>
+
+                                  <div className="xl:text-right">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                      Estimated value
+                                    </div>
+                                    <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white">
                                       {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
-                                    </td>
-                                    <td className="py-5">
-                                      <div className="flex items-center justify-center gap-2">
-                                        <div className="w-12 h-1.5 bg-white/8 rounded-full overflow-hidden">
-                                          <div
-                                            className="h-full bg-white/55"
-                                            style={{ width: `${(result.confidence_score || 0) * 100}%` }}
-                                          />
-                                        </div>
-                                        <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">
-                                          {((result.confidence_score || 0) * 100).toFixed(0)}%
-                                        </span>
-                                      </div>
-                                    </td>
-                                    <td className="py-5">
-                                      <div className="flex gap-2">
-                                        <span className={cn(
-                                          "px-2.5 py-1 rounded-full text-[10px] font-sans font-medium tracking-tight",
-                                          isProcessed ? "bg-white/5 text-white/40 border border-white/10" :
-                                            result.status === 'detected' || result.status === 'pending' ? "bg-amber-500/10 text-amber-300 border border-amber-500/20" :
-                                              "bg-white/5 text-white/65 border border-white/10"
-                                        )}>
-                                          {formatIssueStatusLabel(result.status)}
-                                        </span>
-                                      </div>
-                                    </td>
-                                    <td className="py-5 text-right">
-                                      {isProcessed ? (
+                                    </div>
+                                  </div>
+
+                                  <div className="min-w-0">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                      Case state
+                                    </div>
+                                    <div className={cn(
+                                      "mt-1.5 inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight",
+                                      stateMeta.tone
+                                    )}>
+                                      <StateIcon className="h-3.5 w-3.5" />
+                                      <span>{stateMeta.label}</span>
+                                    </div>
+                                    <p className="mt-2 max-w-md text-[11px] font-sans leading-5 text-white/42">
+                                      {stateMeta.detail}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center justify-between gap-3 xl:justify-end">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 px-3 text-[11px] font-sans font-medium text-white/55 hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all tracking-tight"
+                                      onClick={() => {
+                                        if (isProcessed) {
+                                          navigate(tenantRoute(activeSlug, '/recoveries'));
+                                          return;
+                                        }
+
+                                        setActiveDiscrepancy({
+                                          id: result.id,
+                                          reason: result.anomaly_type,
+                                          estimatedRecovery: result.estimated_value,
+                                          occurrenceDate: result.discovery_date
+                                        });
+                                        setShowDiscrepancyModal(true);
+                                      }}
+                                    >
+                                      {isProcessed ? 'Open cases' : stateMeta.actionLabel}
+                                    </Button>
+
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
                                         <Button
                                           variant="ghost"
-                                          size="sm"
-                                          onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                                          className="h-8 px-3 text-[11px] font-sans font-medium text-white/45 hover:text-white hover:bg-white/[0.04] pointer-events-auto tracking-tight"
+                                          size="icon"
+                                          className="h-8 w-8 text-white/25 hover:text-white hover:bg-white/[0.04] transition-all rounded-md border border-transparent hover:border-white/10"
                                         >
-                                          View case
+                                          <MoreVertical className="h-3.5 w-3.5" />
                                         </Button>
-                                      ) : (
-                                        <div className="flex items-center justify-end gap-4">
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-8 px-3 text-[11px] font-sans font-medium text-white/55 hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all tracking-tight"
-                                            onClick={() => {
-                                              setActiveDiscrepancy({
-                                                id: result.id,
-                                                reason: result.anomaly_type,
-                                                estimatedRecovery: result.estimated_value,
-                                                occurrenceDate: result.discovery_date
-                                              });
-                                              setShowDiscrepancyModal(true);
-                                            }}
-                                          >
-                                            Open recovery
-                                          </Button>
-
-                                          <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                              <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-8 w-8 text-white/25 hover:text-white hover:bg-white/[0.04] transition-all rounded-md border border-transparent hover:border-white/10"
-                                              >
-                                                <MoreVertical className="h-3.5 w-3.5" />
-                                              </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent
-                                              align="end"
-                                              className="bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-3xl p-1 min-w-[180px]"
-                                            >
-                                              <DropdownMenuItem
-                                                onClick={() => handleRowExport(result.id)}
-                                                className="text-[11px] font-sans font-medium tracking-tight text-white/65 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
-                                              >
-                                                <Download className="h-3 w-3 mr-2" />
-                                                Download evidence
-                                              </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                          </DropdownMenu>
-                                        </div>
-                                      )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                          </tbody>
-                        </table>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent
+                                        align="end"
+                                        className="bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-3xl p-1 min-w-[180px]"
+                                      >
+                                        <DropdownMenuItem
+                                          onClick={() => handleRowExport(result.id)}
+                                          className="text-[11px] font-sans font-medium tracking-tight text-white/65 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                        >
+                                          <Download className="h-3 w-3 mr-2" />
+                                          Download evidence
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
 
                         {/* Heartbeat / Audit Log Footer */}
-                        <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
-                          <div className="flex items-center gap-6">
+                        <div className="mt-8 flex flex-col gap-3 border-t border-white/5 pt-6 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="flex flex-wrap items-center gap-6">
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-white/40" />
                               <span className="text-[10px] font-sans font-medium text-white/35 tracking-tight">
@@ -2284,7 +2348,7 @@ export function Dashboard() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
-                            Showing current findings and review status
+                            Showing findings with current case state and next action
                           </div>
                         </div>
                       </div>
