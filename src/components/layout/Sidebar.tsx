@@ -257,10 +257,10 @@ export function Sidebar({
         className={cn(
           "group relative flex w-full items-center transition-all duration-200",
           variant === 'core'
-            ? "gap-2.5 rounded-xl px-3 py-2.25"
+            ? "gap-2.5 rounded-xl px-3.25 py-2.5"
             : variant === 'utility'
-              ? "gap-2.5 rounded-lg px-2.75 py-1.75"
-              : "gap-2.5 rounded-lg px-2.75 py-1.75",
+              ? "gap-2.5 rounded-lg px-3 py-2"
+              : "gap-2.5 rounded-lg px-3 py-2",
           isActive
             ? variant === 'core'
               ? "bg-white/[0.05] text-white"
@@ -341,7 +341,7 @@ export function Sidebar({
       <div
         className={cn(
           "",
-          isCollapsed ? "px-2 py-3" : "px-4 py-3.5"
+          isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
         <Link
           to={overviewHref}
@@ -366,7 +366,7 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2.5" : "px-3"
           )}>
-          <nav className={cn("flex w-full flex-col pb-3", isCollapsed ? "items-center gap-2.5 pt-2" : "gap-3 pt-2")}>
+          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-3 pt-2.5" : "gap-4 pt-3")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -375,7 +375,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1.5 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Engine
                 </div>
               )}
@@ -386,11 +386,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1.5 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Operations
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-0.5")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.75")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -399,11 +399,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1.5 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Actions
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-0.5")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.75")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
