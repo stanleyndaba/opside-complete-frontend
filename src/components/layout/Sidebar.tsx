@@ -257,7 +257,7 @@ export function Sidebar({
         className={cn(
           "group relative flex w-full items-center transition-all duration-200",
           variant === 'core'
-            ? "gap-2.5 rounded-xl px-3.25 py-2.5"
+            ? "gap-2.5 rounded-xl px-3.5 py-2.5"
             : variant === 'utility'
               ? "gap-2.5 rounded-lg px-3 py-2"
               : "gap-2.5 rounded-lg px-3 py-2",
@@ -390,7 +390,7 @@ export function Sidebar({
                   Operations
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.75")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.3rem]" : "gap-[0.55rem]")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -403,7 +403,7 @@ export function Sidebar({
                   Actions
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.75")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.3rem]" : "gap-[0.55rem]")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
