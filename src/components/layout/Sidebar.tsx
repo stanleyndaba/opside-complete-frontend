@@ -257,10 +257,10 @@ export function Sidebar({
         className={cn(
           "group relative flex w-full items-center transition-all duration-200",
           variant === 'core'
-            ? "gap-3 rounded-xl px-3.5 py-3"
+            ? "gap-2.5 rounded-xl px-3 py-2.25"
             : variant === 'utility'
-              ? "gap-3 rounded-lg px-3 py-2.5"
-              : "gap-3 rounded-lg px-3 py-2.5",
+              ? "gap-2.5 rounded-lg px-2.75 py-1.75"
+              : "gap-2.5 rounded-lg px-2.75 py-1.75",
           isActive
             ? variant === 'core'
               ? "bg-white/[0.05] text-white"
@@ -307,7 +307,7 @@ export function Sidebar({
         </div>
         <ChevronRight
           className={cn(
-            "h-3.5 w-3.5 shrink-0 transition-all duration-200",
+            "h-3 w-3 shrink-0 transition-all duration-200",
             isActive
               ? "translate-x-0 text-white/44"
               : "translate-x-[-2px] text-white/12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/32"
@@ -341,7 +341,7 @@ export function Sidebar({
       <div
         className={cn(
           "",
-          isCollapsed ? "px-2 py-4" : "px-4 py-5"
+          isCollapsed ? "px-2 py-3" : "px-4 py-3.5"
         )}>
         <Link
           to={overviewHref}
@@ -366,7 +366,7 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2.5" : "px-3"
           )}>
-          <nav className={cn("flex w-full flex-col pb-4", isCollapsed ? "items-center gap-4 pt-3" : "gap-7 pt-4")}>
+          <nav className={cn("flex w-full flex-col pb-3", isCollapsed ? "items-center gap-2.5 pt-2" : "gap-3 pt-2")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -375,7 +375,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-2 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Engine
                 </div>
               )}
@@ -386,11 +386,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-2 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Operations
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-0.5")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -399,11 +399,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-2 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Actions
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-0.5")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
