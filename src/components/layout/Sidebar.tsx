@@ -116,6 +116,15 @@ export function Sidebar({
     normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) ||
     '';
 
+  const subscriptionTierLabel =
+    tenant?.plan === 'enterprise'
+      ? 'Enterprise'
+      : tenant?.plan === 'professional'
+        ? 'Pro'
+        : tenant?.plan === 'starter' || tenant?.plan === 'free'
+          ? 'Basic'
+          : null;
+
   // Reset state when tenant changes to prevent flicker
   React.useEffect(() => {
     setClaimCount(null);
@@ -350,12 +359,17 @@ export function Sidebar({
             isCollapsed ? "flex items-center justify-center px-1 py-1.5" : "block px-1 py-1.5"
           )}
         >
-          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "")}>
+          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
             <img
               src="/logoimagetwo.png"
               alt="Margin"
               className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
             />
+            {!isCollapsed && subscriptionTierLabel ? (
+              <span className="inline-flex h-6 items-center rounded-[5px] border border-sky-300/35 bg-sky-400/12 px-2.5 text-[11px] font-medium tracking-tight text-sky-200">
+                {subscriptionTierLabel}
+              </span>
+            ) : null}
           </div>
         </Link>
       </div>
