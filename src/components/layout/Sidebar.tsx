@@ -356,10 +356,10 @@ export function Sidebar({
     }, [item.href, queryClient]);
     if (isCollapsed) {
       const collapsedBaseClasses = variant === 'core'
-        ? "w-11 h-11 rounded-xl"
+        ? "w-10 h-10 rounded-lg"
         : variant === 'utility'
-          ? "w-9 h-9 rounded-xl"
-          : "w-10 h-10 rounded-xl";
+          ? "w-8.5 h-8.5 rounded-lg"
+          : "w-9 h-9 rounded-lg";
 
       return (
         <TooltipProvider>
@@ -381,13 +381,13 @@ export function Sidebar({
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute left-0 top-3 bottom-3 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
+                    className="absolute left-0 top-2.5 bottom-2.5 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
                   />
                 )}
                 <item.icon
                   className={cn(
                     "transition-colors duration-300",
-                    variant === 'core' ? "h-5 w-5" : "h-4.5 w-4.5",
+                    variant === 'core' ? "h-4.5 w-4.5" : "h-4 w-4",
                     isActive
                       ? "text-white/88"
                       : variant === 'core'
@@ -399,7 +399,7 @@ export function Sidebar({
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-popover border border-border px-3 py-2 backdrop-blur-xl">
-              <div className="text-[11px] font-sans font-medium tracking-tight text-white/88">
+              <div className="text-[10px] font-sans font-medium tracking-tight text-white/88">
                 {item.title}
               </div>
             </TooltipContent>
@@ -414,10 +414,10 @@ export function Sidebar({
         className={cn(
           "relative flex items-start w-full transition-all duration-300 group",
           variant === 'core'
-            ? "gap-3 rounded-xl px-3 py-2.5"
+            ? "gap-2.5 rounded-lg px-2.5 py-2"
             : variant === 'utility'
-              ? "gap-2 rounded-lg px-2.5 py-1.5"
-              : "gap-2.5 rounded-xl px-3 py-2",
+              ? "gap-1.5 rounded-md px-2 py-1.25"
+              : "gap-2 rounded-lg px-2.25 py-1.5",
           isActive
             ? variant === 'core'
               ? "bg-white/[0.06] text-white"
@@ -432,17 +432,17 @@ export function Sidebar({
         {isActive && (
           <motion.span
             layoutId="active-indicator"
-            className="absolute left-0 top-3 bottom-3 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
+            className="absolute left-0 top-2.5 bottom-2.5 w-[3px] bg-sky-300 rounded-r-full shadow-[0_0_12px_rgba(125,211,252,0.45)]"
           />
         )}
         {!isActive && (
-          <span className="absolute left-0 top-2.5 bottom-2.5 w-[2px] bg-sky-300/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
+          <span className="absolute left-0 top-2 bottom-2 w-[2px] bg-sky-300/20 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
         <item.icon
           strokeWidth={isActive ? 2 : 1.5}
           className={cn(
             "shrink-0 transition-all duration-300",
-            variant === 'core' ? "mt-0.5 h-5 w-5" : "mt-0.5 h-4 w-4",
+            variant === 'core' ? "mt-0.5 h-4.5 w-4.5" : "mt-0.5 h-3.5 w-3.5",
             isActive
               ? "text-white/84 scale-105"
               : variant === 'core'
@@ -451,14 +451,14 @@ export function Sidebar({
           )}
         />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <span className={cn(
               "font-sans transition-colors tracking-tight",
               variant === 'core'
-                ? "text-[12px] font-semibold"
+                ? "text-[11px] font-semibold leading-[1.2]"
                 : variant === 'utility'
-                  ? "text-[10px] font-medium text-white/46"
-                  : "text-[11px] font-medium",
+                  ? "text-[9px] font-medium leading-[1.2] text-white/46"
+                  : "text-[10px] font-medium leading-[1.2]",
               isActive ? "text-white" : ""
             )}>
               {item.title}
@@ -467,7 +467,7 @@ export function Sidebar({
         </div>
         <ChevronRight
           className={cn(
-            "mt-0.5 h-3.5 w-3.5 shrink-0 transition-all duration-300",
+            "mt-0.5 h-3 w-3 shrink-0 transition-all duration-300",
             isActive
               ? "translate-x-0 text-sky-200/72"
               : "translate-x-[-2px] text-white/10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/35"
@@ -476,7 +476,7 @@ export function Sidebar({
         />
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
-            "ml-auto text-[11px] font-sans font-bold tabular-nums px-2 py-0.5 rounded-md border tracking-tight",
+            "ml-auto text-[10px] font-sans font-bold tabular-nums px-1.5 py-0.5 rounded-md border tracking-tight",
             isActive
               ? "text-sky-100 bg-sky-400/10 border-sky-300/20 shadow-[0_0_10px_rgba(125,211,252,0.1)]"
               : "text-foreground/20 bg-foreground/5 border-foreground/5"
@@ -491,7 +491,7 @@ export function Sidebar({
     <aside
       className={cn(
         "fixed left-0 top-0 transition-all duration-500 ease-in-out flex flex-col h-screen z-40 gpu-accelerated font-sans",
-        isCollapsed ? "w-20" : "w-64",
+        isCollapsed ? "w-[74px]" : "w-[236px]",
         "text-foreground/60 border-r border-border",
         "bg-sidebar-background dark:shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
         className
@@ -501,13 +501,13 @@ export function Sidebar({
       <div
         className={cn(
           "border-b border-border",
-          isCollapsed ? "px-2 py-4" : "px-4 py-5"
+          isCollapsed ? "px-2 py-3.5" : "px-3.5 py-4"
         )}>
         <Link
           to={overviewHref}
           className={cn(
             "w-full transition-colors",
-            isCollapsed ? "flex flex-col items-center gap-2 px-1 py-1" : "block px-1 py-1"
+            isCollapsed ? "flex flex-col items-center gap-1.5 px-1 py-1" : "block px-0.5 py-0.5"
           )}
         >
           <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
@@ -521,22 +521,22 @@ export function Sidebar({
           {isCollapsed ? (
             <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
           ) : (
-            <div className="mt-4 space-y-3">
+            <div className="mt-3 space-y-2">
               <div>
-                <div className="truncate text-[13px] font-medium tracking-tight text-white/84">
+                <div className="truncate text-[12px] font-medium tracking-tight text-white/84">
                   {workspaceLabel}
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-1.5">
                 <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
-                <span className={cn("text-[9px] font-medium tracking-tight", healthStyles.text)}>
+                <span className={cn("text-[8px] font-medium tracking-tight", healthStyles.text)}>
                   {systemStatusLabel}
                 </span>
                 {planMeta && (
                   <span
                     className={cn(
-                      "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-semibold tracking-tight opacity-90",
+                      "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[7px] font-semibold tracking-tight opacity-90",
                       planMeta.border,
                       planMeta.text,
                       planMeta.background
@@ -548,7 +548,7 @@ export function Sidebar({
               </div>
 
               {connectedEmail ? (
-                <div className="truncate text-[11px] tracking-tight text-white/34">
+                <div className="truncate text-[10px] tracking-tight text-white/34">
                   {connectedEmail}
                 </div>
               ) : null}
@@ -561,9 +561,9 @@ export function Sidebar({
         <div
           className={cn(
             "h-full flex",
-            isCollapsed ? "px-2" : "px-3"
+            isCollapsed ? "px-2" : "px-2.5"
           )}>
-          <nav className={cn("w-full flex flex-col pt-5 pb-4", isCollapsed ? "items-center gap-4" : "gap-7")}>
+          <nav className={cn("w-full flex flex-col pt-4 pb-3.5", isCollapsed ? "items-center gap-3.5" : "gap-5")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -572,7 +572,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-1 text-[8px] font-medium tracking-tight text-white/18">
+                <div className="mb-1 px-1 text-[7px] font-medium tracking-tight text-white/18">
                   Engine
                 </div>
               )}
@@ -583,11 +583,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-1 text-[8px] font-medium tracking-tight text-white/18">
+                <div className="mb-1 px-1 text-[7px] font-medium tracking-tight text-white/18">
                   Operations
                 </div>
               )}
-              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-0.5")}>
+              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.25")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -596,11 +596,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-1 text-[8px] font-medium tracking-tight text-white/18">
+                <div className="mb-1 px-1 text-[7px] font-medium tracking-tight text-white/18">
                   Actions
                 </div>
               )}
-              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-0.5")}>
+              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.25" : "gap-0.25")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -612,8 +612,8 @@ export function Sidebar({
 
       {/* Version Badge */}
       <div className={cn(
-        "border-t border-border py-3",
-        isCollapsed ? "px-2 text-center" : "px-6"
+        "border-t border-border py-2.5",
+        isCollapsed ? "px-2 text-center" : "px-5"
       )}>
         <Link
           to={tenantRoute(currentTenantSlug, '/whats-new')}
@@ -623,7 +623,7 @@ export function Sidebar({
           )}
         >
           <span className={cn(
-            "text-[9px] font-sans font-medium text-foreground/16 tracking-tight group-hover:text-white/36 transition-colors",
+            "text-[8px] font-sans font-medium text-foreground/16 tracking-tight group-hover:text-white/36 transition-colors",
             isCollapsed ? "block" : ""
           )}>
             {isCollapsed ? "v1" : "v1.0.0 Gold"}
@@ -634,7 +634,7 @@ export function Sidebar({
 
       {/* More Menu / Logout */}
       <div className={cn(
-        "mt-auto border-t border-border py-3",
+        "mt-auto border-t border-border py-2.5",
         isCollapsed ? "px-2 flex justify-center" : ""
       )}>
         {(() => {
@@ -650,11 +650,11 @@ export function Sidebar({
               className={cn(
                 "w-full flex items-center transition-all group outline-none",
                 isCollapsed
-                  ? "justify-center p-2.5 rounded-xl hover:bg-foreground/5"
-                  : "gap-3 px-6 py-2.5 text-left hover:bg-foreground/[0.02] text-foreground/34 hover:text-foreground/72"
+                  ? "justify-center p-2 rounded-lg hover:bg-foreground/5"
+                  : "gap-2 px-5 py-2 text-left hover:bg-foreground/[0.02] text-foreground/34 hover:text-foreground/72"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors text-foreground/20", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="text-[10px] font-sans font-medium tracking-tight text-foreground/30">More</span>}
+              {!isCollapsed && <span className="text-[9px] font-sans font-medium tracking-tight text-foreground/30">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
