@@ -366,7 +366,7 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2.5" : "px-3"
           )}>
-          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-3 pt-2.5" : "gap-4 pt-3")}>
+          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.6rem] pt-2.5" : "gap-[0.8rem] pt-3")}>
             {!isCollapsed && (
               <div className="w-full">
                 <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
@@ -375,7 +375,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1.25 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Engine
                 </div>
               )}
@@ -386,11 +386,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1.25 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Operations
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.3rem]" : "gap-[0.55rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.24rem]" : "gap-[0.44rem]")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -399,11 +399,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-1.5 px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-1.25 px-3 text-[11px] font-medium tracking-tight text-white/30">
                   Actions
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.3rem]" : "gap-[0.55rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.24rem]" : "gap-[0.44rem]")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
