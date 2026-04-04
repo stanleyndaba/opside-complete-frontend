@@ -11,13 +11,6 @@ import { RecoveryEngineVisualization } from '@/components/landing/RecoveryEngine
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
-const trustStatements = [
-  'Read-only discovery before filing',
-  'Weak or duplicate claims are blocked',
-  'Amazon still pays directly into your seller account',
-  'You only step in when real evidence is needed'
-];
-
 const whatWeDoPoints = [
   'Find missed reimbursement opportunities across inventory, shipments, returns, fees, and reimbursements.',
   'Verify identifiers, quantities, and evidence before a case is considered ready.',
@@ -193,27 +186,6 @@ export default function Index() {
                 </Button>
               </div>
             </motion.div>
-          </div>
-        </section>
-
-        <section className="relative border-y border-white/8 py-16 md:py-20">
-          <div className={containerClass}>
-            <div className="grid gap-8 md:grid-cols-[minmax(0,280px)_minmax(0,1fr)] md:gap-12">
-              <div className="max-w-[260px]">
-                <div className={eyebrowClass}>Why sellers trust Margin</div>
-                <p className="mt-3 text-base leading-7 text-white/52">
-                  The system should reduce risk, reduce manual follow-up, and make the work visible.
-                </p>
-              </div>
-
-              <div className="grid gap-x-8 gap-y-5 border-t border-white/8 pt-5 sm:grid-cols-2 md:border-t-0 md:pt-0">
-                {trustStatements.map((item) => (
-                  <div key={item} className="text-base leading-7 text-white/72">
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
