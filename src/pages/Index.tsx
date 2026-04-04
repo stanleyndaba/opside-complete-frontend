@@ -124,7 +124,8 @@ const faqs = [
 ];
 
 const eyebrowClass = 'text-[11px] font-medium tracking-tight text-white/42';
-const containerClass = 'mx-auto w-full max-w-[1160px] px-5 md:px-8';
+const containerClass = 'mx-auto w-full max-w-[1160px] px-6 md:px-8';
+const mobileColumnClass = 'mx-auto max-w-[430px] md:mx-0 md:max-w-none';
 
 export default function Index() {
   const navigate = useNavigate();
@@ -169,8 +170,8 @@ export default function Index() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-            className="max-w-[840px]"
-          >
+              className={`max-w-[840px] ${mobileColumnClass}`}
+            >
               <div className="inline-flex items-center gap-2 text-[13px] text-white/68 md:text-sm">
                 <ShieldCheck className="h-4 w-4 text-white/60" />
                 <span>Trust-first FBA reimbursement automation</span>
@@ -215,7 +216,7 @@ export default function Index() {
 
         <section className="relative border-b border-white/8 py-16 md:py-28">
           <div className={containerClass}>
-            <div className="max-w-[720px]">
+            <div className={`max-w-[720px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>The orchestration layer</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 <span className="md:hidden">Follow the recovery flow from signal to payout.</span>
@@ -227,23 +228,23 @@ export default function Index() {
             </div>
           </div>
 
-          <div className="mx-auto mt-10 max-w-[720px] px-5 md:hidden">
-            <div className="rounded-[24px] border border-white/10 bg-[#0a0a0a] p-5">
-              <div className="space-y-5">
+          <div className="mx-auto mt-8 max-w-[430px] px-6 md:hidden">
+            <div className="border-y border-white/8 py-2">
+              <div className="space-y-0">
                 {mobileOrchestrationSteps.map((step, index) => (
                   <div
                     key={step.title}
-                    className={`${index > 0 ? 'border-t border-white/8 pt-5' : ''}`}
+                    className={`flex gap-4 py-5 ${index > 0 ? 'border-t border-white/8' : ''}`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[11px] font-medium tracking-tight text-white/68">
-                        0{index + 1}
-                      </div>
-                      <h3 className="text-lg font-medium tracking-tight text-white">{step.title}</h3>
+                    <div className="pt-0.5 text-[11px] font-medium tracking-tight text-white/30">
+                      0{index + 1}
                     </div>
-                    <p className="mt-3 max-w-[560px] text-[15px] leading-6 text-white/58">
-                      {step.detail}
-                    </p>
+                    <div>
+                      <h3 className="text-[22px] font-medium tracking-tight text-white">{step.title}</h3>
+                      <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58">
+                        {step.detail}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -257,7 +258,7 @@ export default function Index() {
 
         <section className="relative py-20 md:py-36">
           <div className={containerClass}>
-            <div className="max-w-[760px]">
+            <div className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>What Margin does</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 Find the money, verify the case, and move only when the claim is real.
@@ -267,11 +268,11 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="mt-10 max-w-[980px] space-y-6 md:mt-14 md:space-y-8">
+            <div className={`mt-10 max-w-[980px] space-y-6 md:mt-14 md:space-y-8 ${mobileColumnClass}`}>
               {whatWeDoPoints.map((point, index) => (
-                <div key={point} className="grid gap-3 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <div key={point} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">0{index + 1}</div>
-                  <p className="max-w-[720px] text-[22px] leading-8 text-white/82 md:max-w-[820px] md:text-2xl md:leading-9">
+                  <p className="max-w-[360px] text-[22px] leading-8 text-white/82 md:max-w-[820px] md:text-2xl md:leading-9">
                     {point}
                   </p>
                 </div>
@@ -282,7 +283,7 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-36" id="how-margin-works">
           <div className={containerClass}>
-            <div className="max-w-[780px]">
+            <div className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>How Margin works</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 Detect, verify, file, track, and follow through.
@@ -292,13 +293,13 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="mt-10 max-w-[980px] space-y-8 md:mt-16 md:space-y-12">
+            <div className={`mt-10 max-w-[980px] space-y-6 md:mt-16 md:space-y-12 ${mobileColumnClass}`}>
               {processSteps.map((item) => (
-                <div key={item.step} className="grid gap-3 border-t border-white/8 pt-5 md:grid-cols-[88px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <div key={item.step} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[88px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">{item.title}</h3>
-                    <p className="mt-3 max-w-[700px] text-[15px] leading-6 text-white/58 md:mt-4 md:max-w-[760px] md:text-lg md:leading-8">{item.detail}</p>
+                    <p className="mt-2 max-w-[340px] text-[15px] leading-6 text-white/58 md:mt-4 md:max-w-[760px] md:text-lg md:leading-8">{item.detail}</p>
                   </div>
                 </div>
               ))}
@@ -308,28 +309,28 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-36">
           <div className={containerClass}>
-            <div className="max-w-[760px]">
+            <div className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 The product has to feel careful, visible, and safe.
               </h2>
             </div>
 
-            <div className="mt-12 max-w-[960px] space-y-10 md:mt-28 md:space-y-20">
+            <div className={`mt-10 max-w-[960px] space-y-8 md:mt-28 md:space-y-20 ${mobileColumnClass}`}>
               {proofBlocks.map((item, index) => (
                 <div
                   key={item.value}
-                  className={`grid gap-4 md:grid-cols-[84px_minmax(0,1fr)] md:gap-10 ${index > 0 ? 'border-t border-white/7 pt-8 md:pt-16' : ''}`}
+                  className={`grid gap-3 md:grid-cols-[84px_minmax(0,1fr)] md:gap-10 ${index > 0 ? 'border-t border-white/7 pt-8 md:pt-16' : ''}`}
                 >
                   <div className="pt-1 text-sm font-medium tracking-tight text-white/28">
                     0{index + 1}
                   </div>
 
-                  <div className="max-w-[700px]">
+                  <div className="max-w-[360px] md:max-w-[700px]">
                     <h3 className="text-[28px] font-medium leading-[1.02] tracking-tight text-white md:text-[56px]">
                       {item.value}
                     </h3>
-                    <p className="mt-3 max-w-[520px] text-[15px] leading-6 text-white/60 md:mt-5 md:max-w-[560px] md:text-[22px] md:leading-9">
+                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/60 md:mt-5 md:max-w-[560px] md:text-[22px] md:leading-9">
                       {item.detail}
                     </p>
                   </div>
@@ -341,7 +342,7 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-36">
           <div className={containerClass}>
-            <div className="max-w-[780px]">
+            <div className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 We don’t file everything. We file what wins.
@@ -351,7 +352,7 @@ export default function Index() {
               </p>
             </div>
 
-            <div className="relative mt-10 max-w-[980px] md:mt-20">
+            <div className={`relative mt-10 max-w-[980px] md:mt-20 ${mobileColumnClass}`}>
               <div className="absolute bottom-10 left-3 top-8 hidden w-px bg-white/10 md:block" />
 
               <div className="space-y-12 md:space-y-20">
@@ -370,7 +371,7 @@ export default function Index() {
                     </p>
                   </div>
 
-                  <div className="mt-6 max-w-[820px] border-t border-white/10 md:mt-10">
+                  <div className="mt-6 max-w-[360px] border-t border-white/10 md:mt-10 md:max-w-[820px]">
                     {filingRules.map((item) => (
                       <div key={item} className="grid gap-2 border-b border-white/8 py-4 md:grid-cols-[28px_minmax(0,1fr)] md:gap-3 md:py-6">
                         <div className="text-sm font-medium tracking-tight text-white/30">IF</div>
@@ -399,7 +400,7 @@ export default function Index() {
                     </p>
                   </div>
 
-                  <div className="mt-6 max-w-[760px] border-t border-white/8 md:mt-8">
+                  <div className="mt-6 max-w-[360px] border-t border-white/8 md:mt-8 md:max-w-[760px]">
                     {holdRules.map((item) => (
                       <div key={item} className="grid gap-2 border-b border-white/6 py-4 md:grid-cols-[28px_minmax(0,1fr)] md:gap-3">
                         <div className="text-sm font-medium tracking-tight text-white/22">OR</div>
@@ -419,17 +420,17 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-36">
           <div className={containerClass}>
-            <div className="mx-auto max-w-[900px] text-center">
+            <div className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
               <div className={eyebrowClass}>Questions sellers ask before they buy</div>
               <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
                 The page should answer the real objections, not dodge them.
               </h2>
-              <p className="mx-auto mt-4 max-w-[620px] text-[15px] leading-6 text-white/60 md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
+              <p className="mt-4 max-w-[360px] text-[15px] leading-6 text-white/60 md:mx-auto md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
                 These are the questions FBA sellers ask before they trust a reimbursement platform. The answers have to sound careful, specific, and believable.
               </p>
             </div>
 
-            <div className="mx-auto mt-10 max-w-[920px] md:mt-14">
+            <div className="mx-auto mt-10 max-w-[430px] md:mt-14 md:max-w-[920px]">
               <Accordion type="single" collapsible className="space-y-3 md:space-y-5">
                 {faqs.slice(0, showMoreFaqs ? faqs.length : 5).map((item, index) => (
                   <AccordionItem
@@ -464,7 +465,7 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 py-20 md:py-40">
           <div className={containerClass}>
-            <div className="max-w-[980px]">
+            <div className={`max-w-[980px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Start with clarity</div>
               <h2 className="mt-3 max-w-[720px] text-[38px] font-light tracking-tight text-white md:mt-4 md:max-w-[860px] md:text-7xl">
                 Start recovering missed FBA money without adding more work.
@@ -473,38 +474,38 @@ export default function Index() {
                 The first step should feel simple, safe, and controlled. You should understand what happens before anything is ever filed.
               </p>
 
-              <div className="mt-10 max-w-[880px] space-y-6 md:mt-16 md:space-y-12">
-                <div className="grid gap-3 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+              <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
+                <div className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">01</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
                       Connect your Amazon account
                     </h3>
-                    <p className="mt-2 max-w-[540px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
+                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
                       Secure, read-only access gives Margin the data it needs to audit reimbursement opportunities.
                     </p>
                   </div>
                 </div>
 
-                <div className="grid gap-3 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <div className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">02</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
                       We detect and prepare cases
                     </h3>
-                    <p className="mt-2 max-w-[540px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
+                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
                       Real discrepancies are surfaced, matched with evidence, and separated from weak or duplicate noise.
                     </p>
                   </div>
                 </div>
 
-                <div className="grid gap-3 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                <div className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">03</div>
                   <div>
                     <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
                       You review or let it run
                     </h3>
-                    <p className="mt-2 max-w-[540px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
+                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
                       Only strong, supportable cases move forward, while everything blocked stays explicit and visible.
                     </p>
                   </div>
