@@ -154,6 +154,44 @@ const mobileRevealProps = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
 };
 
+function MobileIntegrationsCarousel() {
+  return (
+    <motion.div {...mobileRevealProps} className="md:hidden">
+      <div className="relative pt-5">
+        <div className="absolute left-0 right-0 top-0 h-px bg-white/10" />
+        <div className="relative mx-auto inline-flex rounded-full border border-white/10 bg-[#0b0b0b] px-4 py-1.5 text-[11px] font-medium tracking-tight text-white/52">
+          Integrations
+        </div>
+      </div>
+
+      <div className="relative mt-6 overflow-hidden">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#070707] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#070707] to-transparent" />
+        <motion.div
+          className="flex w-max items-center gap-10 px-2"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        >
+          {[...mobileIntegrationLogos, ...mobileIntegrationLogos].map((logo, index) => (
+            <div
+              key={`${logo.name}-${index}`}
+              className="flex h-10 shrink-0 items-center justify-center"
+              aria-label={logo.name}
+              title={logo.name}
+            >
+              <img
+                src={logo.src}
+                alt={logo.name}
+                className={`${logo.className} object-contain opacity-90`}
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -257,23 +295,9 @@ export default function Index() {
                 </Button>
               </div>
 
-              <motion.div
-                {...mobileRevealProps}
-                className="mt-6 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03] md:hidden"
-              >
-                <div className="grid grid-cols-2 gap-px bg-white/8">
-                  {mobileOrchestrationSteps.map((step) => (
-                    <div key={step.title} className="bg-[#0a0a0a] px-4 py-3">
-                      <div className="text-[11px] font-medium tracking-tight text-white/42">{step.title}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-4 py-4">
-                  <p className="text-[15px] leading-6 text-white/58">
-                    No weak claims. No duplicates. No Seller Central guesswork.
-                  </p>
-                </div>
-              </motion.div>
+              <div className="mt-8">
+                <MobileIntegrationsCarousel />
+              </div>
             </motion.div>
           </div>
         </section>
@@ -293,34 +317,6 @@ export default function Index() {
           </div>
 
           <div className="mx-auto mt-8 max-w-[430px] px-6 md:hidden">
-            <motion.div {...mobileRevealProps} className="mb-6">
-              <div className="text-[11px] font-medium tracking-tight text-white/42">Integrations</div>
-              <div className="relative mt-3 overflow-hidden rounded-[22px] border border-white/10 bg-[#0a0a0a] py-4">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#0a0a0a] to-transparent" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#0a0a0a] to-transparent" />
-                <motion.div
-                  className="flex w-max gap-3 px-4"
-                  animate={{ x: ['0%', '-50%'] }}
-                  transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-                >
-                  {[...mobileIntegrationLogos, ...mobileIntegrationLogos].map((logo, index) => (
-                    <div
-                      key={`${logo.name}-${index}`}
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]"
-                      aria-label={logo.name}
-                      title={logo.name}
-                    >
-                      <img
-                        src={logo.src}
-                        alt={logo.name}
-                        className={`${logo.className} object-contain opacity-90`}
-                      />
-                    </div>
-                  ))}
-                </motion.div>
-              </div>
-            </motion.div>
-
             <div className="relative border-y border-white/8 py-2">
               <div className="absolute bottom-8 left-[9px] top-8 w-px bg-white/10" />
               <div className="space-y-0">
