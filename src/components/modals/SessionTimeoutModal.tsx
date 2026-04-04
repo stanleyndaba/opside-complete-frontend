@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Lock, ArrowRight, RefreshCw } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
@@ -58,28 +57,26 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
         navigate(loginPath);
     };
 
+    if (!isOpen) return null;
+
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent
-                className="sm:max-w-lg border border-white/10 bg-[#0c0c0c] p-0 text-white shadow-2xl backdrop-blur-xl [&>button]:hidden"
-                onEscapeKeyDown={(event) => event.preventDefault()}
-                onPointerDownOutside={(event) => event.preventDefault()}
-            >
-                <div className="p-7 sm:p-8">
-                <DialogHeader className="space-y-0 text-left">
+        <div className="pointer-events-none fixed inset-x-0 top-20 z-[80] flex justify-center px-4 sm:top-24 sm:justify-end sm:px-6">
+            <div className="pointer-events-auto w-full max-w-md rounded-xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl backdrop-blur-xl">
+                <div className="p-6 sm:p-7">
+                <div className="space-y-0 text-left">
                     <div className="mb-4 flex items-center gap-3 text-white/60">
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]">
                             <Lock className="h-4 w-4 text-white/72" />
                         </div>
                         <span className="text-sm font-medium tracking-tight">Session expired</span>
                     </div>
-                    <DialogTitle className="text-[28px] font-medium tracking-tight text-white">
+                    <h2 className="text-[28px] font-medium tracking-tight text-white">
                         Sign in again to continue
-                    </DialogTitle>
-                    <DialogDescription className="mt-3 max-w-md text-[15px] leading-7 text-white/56">
+                    </h2>
+                    <p className="mt-3 max-w-md text-[15px] leading-7 text-white/56">
                         For security, your session ended after inactivity. Sign in again to reopen this workspace and continue where you left off.
-                    </DialogDescription>
-                </DialogHeader>
+                    </p>
+                </div>
 
                 <div className="mt-6 space-y-4">
                     {userEmail && (
@@ -96,7 +93,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
                         <p className="rounded-lg border border-red-500/20 bg-red-500/[0.05] px-4 py-3 text-sm text-red-200">{error}</p>
                     )}
 
-                    <DialogFooter className="mt-2 flex-col gap-3 sm:flex-row sm:items-center sm:justify-start sm:space-x-0">
+                    <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start">
                         <Button
                             type="button"
                             onClick={handleSignInAgain}
@@ -122,11 +119,18 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
                         >
                             Use a different account
                         </button>
-                    </DialogFooter>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="text-sm text-white/30 transition-colors hover:text-white/56 sm:ml-auto"
+                        >
+                            Dismiss
+                        </button>
+                    </div>
                 </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </div>
     );
 }
 
