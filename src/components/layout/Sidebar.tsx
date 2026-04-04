@@ -66,10 +66,6 @@ interface NavItem {
   icon: React.ElementType;
   href: string;
 }
-interface NavSection {
-  title: string;
-  items: NavItem[];
-}
 
 type SidebarHealthTone = 'healthy' | 'degraded' | 'attention' | 'checking' | 'unknown';
 
@@ -293,24 +289,22 @@ export function Sidebar({
     }
   }, [healthState.tone]);
 
-  // Check if we're on the Dashboard (Command Center) page
-  const isDashboard = location.pathname.endsWith('/dashboard') ||
-    location.pathname === `/app/${currentTenantSlug}` ||
-    location.pathname === `/app/${currentTenantSlug}/`;
-
-  const primaryItems: NavItem[] = [
-    { title: 'Overview', icon: Gauge, href: tenantRoute(currentTenantSlug, '') },
-    { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') },
+  const overviewHref = tenantRoute(currentTenantSlug, '');
+  const coreItem: NavItem = { title: 'Recovery Pipeline', icon: ShieldCheck, href: tenantRoute(currentTenantSlug, '/recoveries') };
+  const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') },
+    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') }
   ];
-
-  const secondaryItems: NavItem[] = []; // Moved to "More" menu
+  const actionItems: NavItem[] = [
+    { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') }
+  ];
+  const workspaceLabel = tenant?.name || currentTenantSlug || 'Margin workspace';
   const NavItemComponent = React.memo(({
-    item
+    item,
+    variant = 'default'
   }: {
     item: NavItem;
+    variant?: 'core' | 'default' | 'utility';
   }) => {
     const isActive = location.pathname === item.href;
     const handlePrefetch = useCallback(() => {
@@ -346,6 +340,12 @@ export function Sidebar({
       }
     }, [item.href, queryClient]);
     if (isCollapsed) {
+      const collapsedBaseClasses = variant === 'core'
+        ? "w-11 h-11 rounded-2xl border border-white/8 bg-white/[0.025]"
+        : variant === 'utility'
+          ? "w-9 h-9 rounded-xl"
+          : "w-10 h-10 rounded-xl";
+
       return (
         <TooltipProvider>
           <Tooltip>
@@ -354,10 +354,13 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "relative flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-xl group",
+                  "relative flex items-center justify-center transition-all duration-300 group",
+                  collapsedBaseClasses,
                   isActive
-                    ? "border border-white/10 bg-white/[0.05] text-white shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
-                    : "text-foreground/30 hover:bg-foreground/5 hover:text-foreground"
+                    ? "border-white/12 bg-white/[0.07] text-white shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+                    : variant === 'core'
+                      ? "text-white/62 hover:border-white/12 hover:bg-white/[0.045] hover:text-white"
+                      : "text-foreground/30 hover:bg-foreground/5 hover:text-foreground"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
@@ -368,8 +371,13 @@ export function Sidebar({
                 )}
                 <item.icon
                   className={cn(
-                    "h-5 w-5 transition-colors duration-300",
-                    isActive ? "text-white/85" : "text-foreground/20 group-hover:text-foreground/45"
+                    "transition-colors duration-300",
+                    variant === 'core' ? "h-5 w-5" : "h-4.5 w-4.5",
+                    isActive
+                      ? "text-white/88"
+                      : variant === 'core'
+                        ? "text-white/58 group-hover:text-white/85"
+                        : "text-foreground/20 group-hover:text-foreground/45"
                   )}
                   strokeWidth={isActive ? 2 : 1.5}
                 />
@@ -389,10 +397,21 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "relative flex items-start gap-2.5 w-full px-4 py-2.5 transition-all duration-300 group rounded-2xl mb-0.5 border",
+          "relative flex items-start w-full transition-all duration-300 group border",
+          variant === 'core'
+            ? "gap-3 rounded-[20px] px-4 py-3.5"
+            : variant === 'utility'
+              ? "gap-2 rounded-xl px-3 py-2 border-transparent"
+              : "gap-2.5 rounded-2xl px-4 py-2.5",
           isActive
-            ? "border-white/10 bg-white/[0.045] text-white shadow-[0_14px_34px_rgba(0,0,0,0.35)]"
-            : "border-transparent text-foreground/42 hover:border-white/8 hover:bg-white/[0.02] hover:text-white/88"
+            ? variant === 'core'
+              ? "border-white/12 bg-white/[0.07] text-white shadow-[0_18px_38px_rgba(0,0,0,0.4)]"
+              : "border-white/10 bg-white/[0.045] text-white shadow-[0_14px_34px_rgba(0,0,0,0.35)]"
+            : variant === 'core'
+              ? "border-white/8 bg-white/[0.02] text-white/78 hover:border-white/12 hover:bg-white/[0.045] hover:text-white"
+              : variant === 'utility'
+                ? "text-white/42 hover:bg-white/[0.02] hover:text-white/72"
+                : "border-transparent text-foreground/42 hover:border-white/8 hover:bg-white/[0.02] hover:text-white/88"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
@@ -407,15 +426,25 @@ export function Sidebar({
         <item.icon
           strokeWidth={isActive ? 2 : 1.5}
           className={cn(
-            "mt-0.5 h-4 w-4 shrink-0 transition-all duration-300",
-            isActive ? "text-white/82 scale-105" : "text-foreground/24 group-hover:text-white/55"
+            "shrink-0 transition-all duration-300",
+            variant === 'core' ? "mt-0.5 h-5 w-5" : "mt-0.5 h-4 w-4",
+            isActive
+              ? "text-white/84 scale-105"
+              : variant === 'core'
+                ? "text-white/52 group-hover:text-white/78"
+                : "text-foreground/24 group-hover:text-white/55"
           )}
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className={cn(
-              "text-[11px] font-sans transition-colors tracking-tight uppercase",
-              isActive ? "font-semibold text-white" : "font-medium"
+              "font-sans transition-colors tracking-tight",
+              variant === 'core'
+                ? "text-[12px] font-semibold uppercase"
+                : variant === 'utility'
+                  ? "text-[10px] font-medium uppercase text-white/46"
+                  : "text-[11px] font-medium uppercase",
+              isActive ? "text-white" : ""
             )}>
               {item.title}
             </span>
@@ -456,36 +485,63 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "border-b border-border flex items-center h-16",
-          isCollapsed ? "justify-center px-2" : "justify-between px-6"
+          "border-b border-border",
+          isCollapsed ? "px-2 py-4" : "px-4 py-4"
         )}>
-        <div className={cn("flex flex-col items-start gap-1", isCollapsed ? "items-center" : "")}>
-          <img
-            src="/logoimagetwo.png"
-            alt="Margin"
-            className={cn(isCollapsed ? "h-3.5" : "h-3.5", "w-auto object-contain dark:invert dark:brightness-0")}
-          />
-          {!isCollapsed && (
-            <div className="flex items-center gap-1.5 translate-x-0.5">
-              <div className={cn("h-1 w-1 rounded-full", healthStyles.dot)} />
-              <span className={cn("text-[8px] font-sans font-bold uppercase tracking-tight", healthStyles.text)}>
-                {healthState.label}
+        <Link
+          to={overviewHref}
+          className={cn(
+            "w-full rounded-2xl border border-white/8 bg-white/[0.02] transition-colors hover:border-white/12 hover:bg-white/[0.035]",
+            isCollapsed ? "flex flex-col items-center gap-2 px-2 py-3" : "block px-4 py-4"
+          )}
+        >
+          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between")}>
+            <img
+              src="/logoimagetwo.png"
+              alt="Margin"
+              className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
+            />
+            {!isCollapsed && (
+              <span className="text-[9px] font-semibold uppercase tracking-tight text-white/34">
+                System overview
               </span>
-              {planMeta && (
-                <span
-                  className={cn(
-                    "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-sans font-semibold tracking-tight",
-                    planMeta.border,
-                    planMeta.text,
-                    planMeta.background
-                  )}
-                >
-                  {planMeta.label}
+            )}
+          </div>
+
+          {isCollapsed ? (
+            <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
+          ) : (
+            <div className="mt-4 space-y-3">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <div className={cn("h-1.5 w-1.5 rounded-full", healthStyles.dot)} />
+                <span className={cn("text-[9px] font-bold uppercase tracking-tight", healthStyles.text)}>
+                  {healthState.label}
                 </span>
-              )}
+                {planMeta && (
+                  <span
+                    className={cn(
+                      "inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-semibold tracking-tight",
+                      planMeta.border,
+                      planMeta.text,
+                      planMeta.background
+                    )}
+                  >
+                    {planMeta.label}
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <div className="text-[9px] font-semibold uppercase tracking-tight text-white/26">
+                  Workspace
+                </div>
+                <div className="mt-1 truncate text-[12px] font-medium tracking-tight text-white/82">
+                  {workspaceLabel}
+                </div>
+              </div>
             </div>
           )}
-        </div>
+        </Link>
       </div>
 
       <ScrollArea className="flex-1">
@@ -494,17 +550,48 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2" : "px-3"
           )}>
-          <nav className={cn("w-full flex flex-col items-center pt-5 pb-4 space-y-1", isCollapsed ? "space-y-0.5" : "space-y-2")}>
-            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
-              {primaryItems.map((item) => (
-                <NavItemComponent key={item.title} item={item} />
-              ))}
+          <nav className={cn("w-full flex flex-col pt-5 pb-4", isCollapsed ? "items-center gap-5" : "gap-6")}>
+            {!isCollapsed && (
+              <div className="w-full">
+                <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
+              </div>
+            )}
+
+            <div className="w-full">
+              {!isCollapsed && (
+                <div className="mb-2 px-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/24">
+                  Core engine
+                </div>
+              )}
+              <div className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
+                <NavItemComponent item={coreItem} variant="core" />
+              </div>
             </div>
-            {!isCollapsed && <div className="h-px bg-border w-full mx-4 my-2" />}
-            <div className={cn("w-full flex flex-col", isCollapsed ? "items-center space-y-0.5" : "items-start space-y-0.5")}>
-              {secondaryItems.map((item) => (
-                <NavItemComponent key={item.title} item={item} />
-              ))}
+
+            <div className="w-full">
+              {!isCollapsed && (
+                <div className="mb-2 px-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/24">
+                  Operations
+                </div>
+              )}
+              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
+                {operationItems.map((item) => (
+                  <NavItemComponent key={item.title} item={item} />
+                ))}
+              </div>
+            </div>
+
+            <div className="w-full">
+              {!isCollapsed && (
+                <div className="mb-2 px-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/24">
+                  Actions
+                </div>
+              )}
+              <div className={cn("w-full flex flex-col", isCollapsed ? "items-center gap-1.5" : "gap-1")}>
+                {actionItems.map((item) => (
+                  <NavItemComponent key={item.title} item={item} />
+                ))}
+              </div>
             </div>
           </nav>
         </div>
