@@ -160,7 +160,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             {children}
             <SessionTimeoutModal
                 isOpen={sessionTimeoutOpen}
-                onClose={() => setSessionTimeoutOpen(false)}
+                onClose={hideSessionTimeout}
                 onSuccess={handleSessionRestored}
                 userEmail={userEmail || undefined}
             />
