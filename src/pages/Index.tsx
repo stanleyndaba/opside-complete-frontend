@@ -157,9 +157,9 @@ const mobileRevealProps = {
 function MobileIntegrationsCarousel() {
   return (
     <motion.div {...mobileRevealProps} className="md:hidden">
-      <div className="relative pt-5">
-        <div className="absolute left-0 right-0 top-0 h-px bg-white/10" />
-        <div className="relative mx-auto inline-flex rounded-full border border-white/10 bg-[#0b0b0b] px-4 py-1.5 text-[11px] font-medium tracking-tight text-white/52">
+      <div className="relative flex items-center justify-center py-2">
+        <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/10" />
+        <div className="relative z-10 mx-auto inline-flex rounded-full border border-white/10 bg-[#0b0b0b]/85 px-4 py-1.5 text-[11px] font-medium tracking-tight text-white/52 backdrop-blur-sm">
           Integrations
         </div>
       </div>
@@ -265,17 +265,13 @@ export default function Index() {
                 Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
-              <p className="mt-6 max-w-[620px] text-base leading-7 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
+              <p className="mt-6 max-w-[700px] text-base leading-7 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
                 <span className="md:hidden">
-                  Margin checks the case, files only what is real, and tracks Amazon until payout.
+                  Margin checks the case, files only what is real, and tracks Amazon until payout without weak claims, duplicate filings, or Seller Central guesswork.
                 </span>
                 <span className="hidden md:inline">
-                  Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout.
+                  Margin finds reimbursement opportunities, verifies the identifiers and evidence, files only supportable cases, and tracks Amazon until payout without weak claims, duplicate filings, or Seller Central guesswork.
                 </span>
-              </p>
-
-              <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/48 md:mt-6 md:max-w-[700px] md:text-lg md:leading-7">
-                No weak claims. No duplicates. No Seller Central guesswork.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row">
