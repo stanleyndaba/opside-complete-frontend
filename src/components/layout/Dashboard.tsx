@@ -2517,16 +2517,16 @@ export function Dashboard() {
 
       {/* Finding detail modal */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="max-w-xl bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl p-0 overflow-hidden backdrop-blur-3xl">
+        <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl p-0 overflow-hidden backdrop-blur-3xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="px-6 py-5 border-b border-white/6 bg-white/[0.02]">
+              <DialogHeader className="px-5 py-4 border-b border-white/6 bg-white/[0.02]">
                 <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-2">
-                    <DialogTitle className="text-[20px] font-sans font-semibold tracking-tight text-white">
+                  <div className="space-y-1.5">
+                    <DialogTitle className="text-[18px] font-sans font-semibold tracking-tight text-white">
                       {formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
-                    <DialogDescription className="text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
+                    <DialogDescription className="text-[12px] font-sans leading-5 tracking-tight text-[#d6d6d6]">
                       {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
                   </div>
@@ -2539,33 +2539,33 @@ export function Dashboard() {
                 </div>
               </DialogHeader>
 
-              <div className="px-6 py-6 space-y-6">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
+              <div className="px-5 py-5 space-y-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
                     <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Reference</div>
-                    <div className="mt-1.5 text-[14px] font-sans tracking-tight text-white">
+                    <div className="mt-1 text-[13px] font-sans tracking-tight text-white">
                       {activeDiscrepancy.id?.substring(0, 12) || 'Not available'}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
+                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
                     <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Found on</div>
-                    <div className="mt-1.5 text-[14px] font-sans tracking-tight text-white">
+                    <div className="mt-1 text-[13px] font-sans tracking-tight text-white">
                       {activeDiscrepancy.occurrenceDate
                         ? new Date(activeDiscrepancy.occurrenceDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                         : 'Date unavailable'}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
+                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
                     <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Estimated value</div>
-                    <div className="mt-1.5 text-[18px] font-sans font-medium tracking-tight text-white">
+                    <div className="mt-1 text-[16px] font-sans font-medium tracking-tight text-white">
                       {typeof activeDiscrepancy.estimatedRecovery === 'number'
                         ? formatCurrency(activeDiscrepancy.estimatedRecovery, activeDiscrepancy.currency || 'USD')
                         : 'Not available'}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
+                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
                     <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Case state</div>
-                    <div className="mt-1.5">
+                    <div className="mt-1">
                       <span
                         className={cn(
                           "inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight",
@@ -2584,11 +2584,7 @@ export function Dashboard() {
                   <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
                     {activeDiscrepancy.stateDetail || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                   </p>
-                </div>
-
-                <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
-                  <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">What happens next</div>
-                  <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
+                  <p className="mt-3 text-[12px] font-sans leading-5 tracking-tight text-[#bfbfbf]">
                     {activeDiscrepancy.isProcessed
                       ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
                       : 'Margin will keep this finding in review until it is either ready to move into a case or held with a clear reason.'}
@@ -2596,8 +2592,8 @@ export function Dashboard() {
                 </div>
               </div>
 
-              <DialogFooter className="px-6 py-4 border-t border-white/6 bg-white/[0.02] flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-[12px] font-sans tracking-tight text-[#d0d0d0]">
+              <DialogFooter className="px-5 py-3 border-t border-white/6 bg-white/[0.02] flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[11px] font-sans tracking-tight text-[#d0d0d0]">
                   Margin files only what can be supported by evidence and policy.
                 </div>
                 <div className="flex items-center gap-3">
