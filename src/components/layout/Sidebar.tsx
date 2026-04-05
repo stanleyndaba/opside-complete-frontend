@@ -160,7 +160,7 @@ export function Sidebar({
   const coreItem: NavItem = { title: 'Recovery Engine', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };
   const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
-    { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
+    { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
     { title: 'Settings', icon: Settings2, href: tenantRoute(currentTenantSlug, '/settings') }
   ];
@@ -312,10 +312,10 @@ export function Sidebar({
             <span className={cn(
               "font-sans tracking-tight transition-colors",
               variant === 'core'
-                ? "text-[14px] font-[300] leading-5"
+                ? "text-[13.5px] font-[300] leading-5"
                 : variant === 'utility'
                   ? "text-[13px] font-medium leading-5"
-                  : "text-[14px] font-[300] leading-5",
+                  : "text-[13.5px] font-[300] leading-5",
               isActive ? "text-white" : ""
             )}>
               {item.title}
