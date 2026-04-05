@@ -2138,7 +2138,7 @@ export function Dashboard() {
                         <div className="mt-0.5">
                           <span className="text-base font-sans font-semibold text-white tracking-tight">Recent findings</span>
                         </div>
-                        <p className="mt-3 text-[12px] font-sans leading-6 text-white/42">
+                        <p className="mt-3 text-[12px] font-sans leading-6 text-[#dcdcdc]">
                           Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.
                         </p>
                       </div>
@@ -2146,13 +2146,13 @@ export function Dashboard() {
                       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                         {issuesFoundSummaryRows.map((item) => (
                           <div key={item.label} className="min-w-[120px]">
-                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#d8d8d8]">
                               {item.label}
                             </div>
-                            <div className="mt-1.5 text-[20px] font-sans font-medium leading-none tracking-tight text-white">
+                            <div className="mt-1.5 text-[17px] font-sans font-medium leading-none tracking-tight text-white">
                               {item.value}
                             </div>
-                            <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/32">
+                            <div className="mt-1.5 text-[10px] font-sans leading-5 text-[#d6d6d6]">
                               {item.detail}
                             </div>
                           </div>
@@ -2245,14 +2245,14 @@ export function Dashboard() {
                                     <div className="text-[14px] font-sans font-medium tracking-tight text-white">
                                       {formatIssueTypeLabel(result.anomaly_type)}
                                     </div>
-                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/30">
+                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-[#b8b8b8]">
                                       <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
                                       <span>Found {foundOnLabel}</span>
                                     </div>
                                   </div>
 
                                   <div className="xl:text-right">
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#d0d0d0]">
                                       Estimated value
                                     </div>
                                     <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white">
@@ -2261,7 +2261,7 @@ export function Dashboard() {
                                   </div>
 
                                   <div className="min-w-0">
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#d0d0d0]">
                                       Case state
                                     </div>
                                     <div className={cn(
@@ -2271,7 +2271,7 @@ export function Dashboard() {
                                       <StateIcon className="h-3.5 w-3.5" />
                                       <span>{stateMeta.label}</span>
                                     </div>
-                                    <p className="mt-2 max-w-md text-[11px] font-sans leading-5 text-white/42">
+                                    <p className="mt-2 max-w-md text-[11px] font-sans leading-5 text-[#cfcfcf]">
                                       {stateMeta.detail}
                                     </p>
                                   </div>
