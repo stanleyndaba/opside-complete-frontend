@@ -312,10 +312,10 @@ export function Sidebar({
             <span className={cn(
               "font-sans tracking-tight transition-colors",
               variant === 'core'
-                ? "text-[14px] font-medium leading-5"
+                ? "text-[14px] font-[300] leading-5"
                 : variant === 'utility'
                   ? "text-[13px] font-medium leading-5"
-                  : "text-[14px] font-medium leading-5",
+                  : "text-[14px] font-[300] leading-5",
               isActive ? "text-white" : ""
             )}>
               {item.title}
