@@ -1613,30 +1613,36 @@ export function Dashboard() {
   ]);
   const overviewMetricRows = useMemo(() => ([
     {
-      label: 'Issues in view',
+      label: 'Needs review',
       value: pluralize(detectedOpportunitiesCount, 'issue'),
-      detail: `${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} currently traceable across live detections`
+      detail: detectedOpportunitiesCount > 0
+        ? `${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} at risk`
+        : 'Nothing waiting'
     },
     {
-      label: 'Filed with Amazon',
+      label: 'In Amazon review',
       value: pluralize(filedClaimsCount, 'case'),
       detail: filedClaimsCount > 0
-        ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} currently in Amazon review`
-        : 'Nothing has entered filing yet'
+        ? (filedValueTotal > 0
+          ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review`
+          : 'Filed already')
+        : 'Nothing filed'
     },
     {
-      label: 'Approved',
+      label: 'Waiting for payout',
       value: pluralize(approvedClaimsCount, 'case'),
       detail: approvedClaimsCount > 0
-        ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} waiting for payout confirmation`
-        : 'No approved cases are currently waiting for payout'
+        ? (approvedValueTotal > 0
+          ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} approved`
+          : 'Awaiting payout')
+        : 'No approvals yet'
     },
     {
       label: 'Paid back',
       value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
       detail: recoveredCashTotal > 0
-        ? `${pluralize(recoveredClaimsCount, 'reconciled case')} now tied to confirmed payout events`
-        : 'No confirmed reimbursement recorded yet'
+        ? `${pluralize(recoveredClaimsCount, 'case')} confirmed`
+        : 'Nothing confirmed'
     }
   ]), [
     approvedClaimsCount,
