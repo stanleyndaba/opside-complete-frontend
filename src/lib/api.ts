@@ -13,7 +13,7 @@ export interface BlobApiResponse {
 }
 
 import { getFrontendAuthContext } from './authSession';
-import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
+import { attemptSilentSessionRefresh, clearSessionRecoverySuppression, dispatchSessionRecovery } from './sessionRecovery';
 
 export function buildApiUrl(path: string): string {
   // Normalize provided path
@@ -206,6 +206,10 @@ async function requestJsonWithRetry<T>(
       };
     }
 
+    if (sessionToken) {
+      clearSessionRecoverySuppression();
+    }
+
     console.log(`[API] Success for ${url}:`, data);
     return {
       ok: true,
@@ -331,6 +335,10 @@ async function requestBlob(
         ? 'Session expired. Sign in again to continue.'
         : (text || res.statusText || 'Request failed'),
     };
+  }
+
+  if (sessionToken) {
+    clearSessionRecoverySuppression();
   }
 
   return {

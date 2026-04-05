@@ -23,7 +23,10 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
     const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
-    const [sessionRecoveryDismissed, setSessionRecoveryDismissed] = useState(false);
+    const [sessionRecoveryDismissed, setSessionRecoveryDismissed] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        return window.sessionStorage.getItem('margin:session-recovery-suppressed') === '1';
+    });
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
     const [isAuthReady, setIsAuthReady] = useState(false);

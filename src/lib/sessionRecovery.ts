@@ -8,22 +8,35 @@ export interface SessionRecoveryDetail {
   message?: string;
 }
 
+const SESSION_RECOVERY_SUPPRESSED_KEY = 'margin:session-recovery-suppressed';
+
 let refreshPromise: Promise<boolean> | null = null;
 let lastDispatchAt = 0;
 let sessionRecoverySuppressed = false;
 
+function readSuppressedFlag() {
+  if (typeof window === 'undefined') return sessionRecoverySuppressed;
+  return sessionRecoverySuppressed || window.sessionStorage.getItem(SESSION_RECOVERY_SUPPRESSED_KEY) === '1';
+}
+
 export function suppressSessionRecovery() {
   sessionRecoverySuppressed = true;
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.setItem(SESSION_RECOVERY_SUPPRESSED_KEY, '1');
+  }
 }
 
 export function clearSessionRecoverySuppression() {
   sessionRecoverySuppressed = false;
   lastDispatchAt = 0;
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.removeItem(SESSION_RECOVERY_SUPPRESSED_KEY);
+  }
 }
 
 export function dispatchSessionRecovery(detail: SessionRecoveryDetail = {}) {
   if (typeof window === 'undefined') return;
-  if (sessionRecoverySuppressed) return;
+  if (readSuppressedFlag()) return;
 
   const now = Date.now();
   if (now - lastDispatchAt < 1000) return;
