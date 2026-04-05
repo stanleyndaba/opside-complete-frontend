@@ -409,7 +409,7 @@ export function Sidebar({
                   Main Menu
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.3rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.26875rem]")}>
                 {mainMenuItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
