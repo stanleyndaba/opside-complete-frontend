@@ -66,6 +66,7 @@ interface NavItem {
   title: string;
   icon: React.ElementType;
   href: string;
+  count?: number | null;
 }
 
 export function Sidebar({
@@ -159,6 +160,10 @@ export function Sidebar({
   }, [authToken, currentTenantSlug, isAuthReady, isReady, isSessionValid]);
 
   const overviewHref = tenantRoute(currentTenantSlug, '');
+  const mainMenuItems: NavItem[] = [
+    { title: 'Overview', icon: Gauge, href: overviewHref },
+    { title: 'Messages', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }
+  ];
   const coreItem: NavItem = { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };
   const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
@@ -335,14 +340,14 @@ export function Sidebar({
             strokeWidth={1.6}
           />
         ) : null}
-        {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
+        {item.count != null && !isCollapsed && (
           <span className={cn(
-            "ml-auto text-[10px] font-sans font-bold tabular-nums px-1.5 py-0.5 rounded-md border tracking-tight",
+            "ml-auto text-[10px] font-sans font-medium tabular-nums px-1.5 py-0.5 rounded-[5px] border tracking-tight",
             isActive
-              ? "text-sky-100 bg-sky-400/10 border-sky-300/20 shadow-[0_0_10px_rgba(125,211,252,0.1)]"
-              : "text-foreground/20 bg-foreground/5 border-foreground/5"
+              ? "text-sky-100 bg-sky-400/10 border-sky-300/20"
+              : "text-white/62 bg-white/[0.04] border-white/10"
           )}>
-            {claimCount}
+            {item.count}
           </span>
         )}
       </Link>
@@ -388,11 +393,6 @@ export function Sidebar({
               ) : null}
             </div>
           </Link>
-          {!isCollapsed ? (
-            <div className="px-1">
-              <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
-            </div>
-          ) : null}
         </div>
       </div>
 
@@ -403,6 +403,19 @@ export function Sidebar({
             isCollapsed ? "px-2.5" : "px-3"
           )}>
           <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.48rem] pt-2.5" : "gap-[0.58rem] pt-1.5")}>
+            <div className="w-full">
+              {!isCollapsed && (
+                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
+                  Main Menu
+                </div>
+              )}
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.3rem]")}>
+                {mainMenuItems.map((item) => (
+                  <NavItemComponent key={item.title} item={item} />
+                ))}
+              </div>
+            </div>
+
             <div className="w-full">
               {!isCollapsed && (
                 <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
@@ -467,7 +480,6 @@ export function Sidebar({
         )}
         {(() => {
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
-          const updatesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/notifications'));
           const notesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/whats-new'));
           return (
         <DropdownMenu>
@@ -507,31 +519,6 @@ export function Sidebar({
                 )}>
                   5 minute response
                 </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigate(tenantRoute(currentTenantSlug, '/notifications'))}
-              className={cn(
-                "group/more-item flex items-center justify-between px-3 py-2 text-[13px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
-                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                updatesActive && "bg-white text-black"
-              )}>
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Mail
-                    className={cn(
-                      "h-4 w-4 transition-colors",
-                      updatesActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
-                    )}
-                    strokeWidth={1.5}
-                  />
-                  <div className={cn(
-                    "absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full",
-                    unreadCount > 0 ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-white/10"
-                  )} />
-                </div>
-                <span>Updates</span>
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem
