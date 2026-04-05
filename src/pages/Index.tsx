@@ -256,13 +256,18 @@ export default function Index() {
               transition={{ duration: 0.6 }}
               className={`max-w-[840px] ${mobileColumnClass}`}
             >
-              <div className="md:hidden">
-                <div className="inline-flex rounded-[5px] border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+              <div className="flex justify-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: [0.78, 1, 0.78], y: [0, -2, 0] }}
+                  transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+                  className="inline-flex rounded-[5px] border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72 md:px-3.5"
+                >
                   Web-based only. Mobile experience rollout mid-April 2026.
-                </div>
+                </motion.div>
               </div>
 
-              <h1 className="mt-5 max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:mt-0 md:max-w-[760px] md:text-7xl">
+              <h1 className="mt-5 max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:mt-6 md:max-w-[760px] md:text-7xl">
                 Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
@@ -275,10 +280,10 @@ export default function Index() {
                 </span>
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row">
+              <div className="mt-8 flex flex-col items-start gap-3 sm:mt-10 sm:flex-row">
                 <Button
                   onClick={handleConnectAmazon}
-                  className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white hover:bg-[#1b1b1b]"
+                  className="h-11 min-w-[168px] rounded-[5px] border border-white/10 bg-[#141414] px-5 text-sm font-medium text-white hover:bg-[#1b1b1b]"
                 >
                   Connect Amazon
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -286,7 +291,7 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToHowItWorks}
-                  className="h-11 rounded-full border border-white/10 bg-transparent px-6 text-sm font-medium text-white hover:bg-white/[0.04]"
+                  className="h-11 min-w-[168px] rounded-[5px] border border-white/10 bg-transparent px-5 text-sm font-medium text-white hover:bg-white/[0.04]"
                 >
                   See how it works
                 </Button>
