@@ -268,23 +268,28 @@ export function Sidebar({
           variant === 'core'
             ? "gap-2.5 rounded-xl px-3.5 py-2.5"
             : variant === 'utility'
-              ? "gap-2.5 rounded-lg px-3 py-2"
+              ? "gap-2 rounded-lg px-2.5 py-1.5"
               : "gap-2.5 rounded-lg px-3 py-2",
           isActive
             ? variant === 'core'
               ? "bg-white/[0.05] text-white"
-              : "bg-white/[0.04] text-white"
+              : variant === 'utility'
+                ? "bg-transparent text-white"
+                : "bg-white/[0.04] text-white"
             : variant === 'core'
               ? "text-white/82 hover:bg-white/[0.03] hover:text-white"
               : variant === 'utility'
-                ? "text-white/56 hover:bg-white/[0.025] hover:text-white/82"
+                ? "text-white/42 hover:text-white/72"
                 : "text-white/62 hover:bg-white/[0.025] hover:text-white/88"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
-            className="absolute left-0 top-2.5 bottom-2.5 w-[2px] rounded-r-full bg-white/80"
+            className={cn(
+              "absolute left-0 w-[2px] rounded-r-full bg-white/80",
+              variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2.5 bottom-2.5"
+            )}
           />
         )}
         <item.icon
@@ -296,6 +301,8 @@ export function Sidebar({
               ? "text-white"
               : variant === 'core'
                 ? "text-white/58 group-hover:text-white/86"
+                : variant === 'utility'
+                  ? "text-white/34 group-hover:text-white/58"
                 : "text-white/34 group-hover:text-white/62"
           )}
         />
@@ -314,15 +321,17 @@ export function Sidebar({
             </span>
           </div>
         </div>
-        <ChevronRight
-          className={cn(
-            "h-3 w-3 shrink-0 transition-all duration-200",
-            isActive
-              ? "translate-x-0 text-white/44"
-              : "translate-x-[-2px] text-white/12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/32"
-          )}
-          strokeWidth={1.6}
-        />
+        {variant !== 'utility' ? (
+          <ChevronRight
+            className={cn(
+              "h-3 w-3 shrink-0 transition-all duration-200",
+              isActive
+                ? "translate-x-0 text-white/44"
+                : "translate-x-[-2px] text-white/12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-white/32"
+            )}
+            strokeWidth={1.6}
+          />
+        ) : null}
         {item.title === 'Claims' && claimCount !== null && !isCollapsed && (
           <span className={cn(
             "ml-auto text-[10px] font-sans font-bold tabular-nums px-1.5 py-0.5 rounded-md border tracking-tight",
@@ -352,26 +361,33 @@ export function Sidebar({
           "",
           isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
-        <Link
-          to={overviewHref}
-          className={cn(
-            "w-full transition-colors",
-            isCollapsed ? "flex items-center justify-center px-1 py-1.5" : "block px-1 py-1.5"
-          )}
-        >
-          <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
-            <img
-              src="/logoimagetwo.png"
-              alt="Margin"
-              className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
-            />
-            {!isCollapsed && subscriptionTierLabel ? (
-              <span className="inline-flex h-6 items-center rounded-[5px] border border-sky-300/35 bg-sky-400/12 px-2.5 text-[11px] font-medium tracking-tight text-sky-200">
-                {subscriptionTierLabel}
-              </span>
-            ) : null}
-          </div>
-        </Link>
+        <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-3")}>
+          <Link
+            to={overviewHref}
+            className={cn(
+              "w-full transition-colors",
+              isCollapsed ? "flex items-center justify-center px-1 py-1.5" : "block px-1 py-1"
+            )}
+          >
+            <div className={cn("flex items-center", isCollapsed ? "justify-center" : "justify-between gap-3")}>
+              <img
+                src="/logoimagetwo.png"
+                alt="Margin"
+                className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
+              />
+              {!isCollapsed && subscriptionTierLabel ? (
+                <span className="inline-flex h-6 items-center rounded-[5px] border border-sky-300/35 bg-sky-400/12 px-2.5 text-[11px] font-medium tracking-tight text-sky-200">
+                  {subscriptionTierLabel}
+                </span>
+              ) : null}
+            </div>
+          </Link>
+          {!isCollapsed ? (
+            <div className="px-1">
+              <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <ScrollArea className="flex-1">
@@ -380,16 +396,10 @@ export function Sidebar({
             "h-full flex",
             isCollapsed ? "px-2.5" : "px-3"
           )}>
-          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.52rem] pt-2.5" : "gap-[0.7rem] pt-3")}>
-            {!isCollapsed && (
-              <div className="w-full">
-                <NavItemComponent item={{ title: 'Overview', icon: Gauge, href: overviewHref }} variant="utility" />
-              </div>
-            )}
-
+          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.48rem] pt-2.5" : "gap-[0.58rem] pt-1.5")}>
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-[0.26rem] px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-[0.18rem] px-3 text-[10px] font-medium tracking-tight text-white/22">
                   Engine
                 </div>
               )}
@@ -400,11 +410,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-[0.26rem] px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-[0.18rem] px-3 text-[10px] font-medium tracking-tight text-white/22">
                   Operations
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.2rem]" : "gap-[0.38rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.3rem]")}>
                 {operationItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -413,11 +423,11 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-[0.26rem] px-3 text-[11px] font-medium tracking-tight text-white/30">
+                <div className="mb-[0.18rem] px-3 text-[10px] font-medium tracking-tight text-white/22">
                   Actions
                 </div>
               )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.2rem]" : "gap-[0.38rem]")}>
+              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.3rem]")}>
                 {actionItems.map((item) => (
                   <NavItemComponent key={item.title} item={item} />
                 ))}
@@ -427,33 +437,28 @@ export function Sidebar({
         </div>
       </ScrollArea>
 
-      {/* Version Badge */}
-      <div className={cn(
-        "border-t border-border py-3",
-        isCollapsed ? "px-2.5 text-center" : "px-4"
-      )}>
-        <Link
-          to={tenantRoute(currentTenantSlug, '/whats-new')}
-          className={cn(
-            "group flex w-fit items-center gap-2 transition-colors",
-            isCollapsed ? "justify-center" : ""
-          )}
-        >
-          <span className={cn(
-            "font-sans text-[10px] font-medium tracking-tight text-white/26 transition-colors group-hover:text-white/44",
-            isCollapsed ? "block" : ""
-          )}>
-            {isCollapsed ? "v1" : "v1.0.0 Gold"}
-          </span>
-          <div className="h-1 w-1 rounded-full bg-white/24 flex-shrink-0" />
-        </Link>
-      </div>
-
-      {/* More Menu / Logout */}
+      {/* Footer Utilities */}
       <div className={cn(
         "mt-auto border-t border-border py-3",
-        isCollapsed ? "flex justify-center px-2.5" : "px-3"
+        isCollapsed ? "px-2.5" : "px-3"
       )}>
+        {!isCollapsed ? (
+          <Link
+            to={tenantRoute(currentTenantSlug, '/whats-new')}
+            className="mb-2 flex items-center px-3 text-[10px] font-medium tracking-tight text-white/22 transition-colors hover:text-white/38"
+          >
+            <span>v1.0.0 Gold</span>
+          </Link>
+        ) : (
+          <div className="mb-2 flex justify-center">
+            <Link
+              to={tenantRoute(currentTenantSlug, '/whats-new')}
+              className="text-[10px] font-medium tracking-tight text-white/22 transition-colors hover:text-white/38"
+            >
+              v1
+            </Link>
+          </div>
+        )}
         {(() => {
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
           const updatesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/notifications'));
@@ -468,10 +473,10 @@ export function Sidebar({
                 "group flex w-full items-center transition-all outline-none",
                 isCollapsed
                   ? "justify-center rounded-lg p-2.5 hover:bg-white/[0.03]"
-                  : "gap-3 rounded-lg px-3 py-2.5 text-left text-white/40 hover:bg-white/[0.02] hover:text-white/72"
+                  : "gap-3 rounded-lg px-3 py-2.5 text-left text-white/34 hover:bg-white/[0.02] hover:text-white/62"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors text-white/24", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
-              {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-white/38">More</span>}
+              {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-white/34">More</span>}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
