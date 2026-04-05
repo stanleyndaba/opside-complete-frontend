@@ -665,31 +665,31 @@ export function Navbar({
                 </div>
 
                 <div className="px-6 py-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/34">
-                          Amazon
-                        </div>
-                        <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
-                          {amazonStatusLabel}
-                        </div>
+                  <div className="rounded-[5px] border border-white/6 bg-white/[0.02] px-4 py-3.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/36">
+                        Amazon
                       </div>
-                      <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
+                      <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-sans font-semibold uppercase tracking-tight text-white/62">
+                        {amazonStatusLabel}
+                      </div>
+                    </div>
+                    <div className="mt-3 min-w-0">
+                      <div className="text-[13px] font-sans font-semibold tracking-tight text-white">
                         {amazonConnectionHeadline}
                       </div>
-                      <p className="mt-1.5 max-w-[240px] text-[11px] font-sans leading-5 text-white/48">
+                      <p className="mt-1.5 text-[11px] font-sans leading-[1.5] text-white/56">
                         {userProfile?.amazon_connected
                           ? (userProfile?.amazon_display_name || 'Margin can keep your Amazon records up to date.')
                           : 'Connect Amazon to keep your records up to date.'}
                       </p>
-                      <button
-                        onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
-                        className="mt-2 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/58 transition-colors hover:text-white"
-                      >
-                        Open integrations
-                      </button>
                     </div>
+                    <button
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
+                      className="mt-3 text-[10px] font-sans font-semibold uppercase tracking-tight text-white/60 transition-colors hover:text-white"
+                    >
+                      Open integrations
+                    </button>
                   </div>
                 </div>
               </DropdownMenuContent>

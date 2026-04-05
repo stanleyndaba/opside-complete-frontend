@@ -233,7 +233,7 @@ export default function Index() {
         <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.02]" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#070707] to-[#050505]" />
 
-        <section className="relative pb-20 pt-24 md:pb-36 md:pt-40">
+        <section className="relative pb-20 pt-32 md:pb-36 md:pt-40">
           <div className="pointer-events-none absolute inset-x-0 top-12 overflow-hidden">
             <motion.div
               aria-hidden="true"
@@ -256,7 +256,13 @@ export default function Index() {
               transition={{ duration: 0.6 }}
               className={`max-w-[840px] ${mobileColumnClass}`}
             >
-              <h1 className="max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:max-w-[760px] md:text-7xl">
+              <div className="md:hidden">
+                <div className="inline-flex rounded-[5px] border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                  Web-based only. Mobile experience rollout mid-April 2026.
+                </div>
+              </div>
+
+              <h1 className="mt-5 max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:mt-0 md:max-w-[760px] md:text-7xl">
                 Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
