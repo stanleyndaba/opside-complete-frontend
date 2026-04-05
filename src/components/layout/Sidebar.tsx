@@ -354,7 +354,10 @@ export function Sidebar({
         "bg-sidebar-background dark:shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
         className
       )}
-      style={{ willChange: 'width' }}>
+      style={{
+        willChange: 'width',
+        fontFamily: "Inter, 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      }}>
       {/* Branding Header */}
       <div
         className={cn(
@@ -399,7 +402,7 @@ export function Sidebar({
           <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.48rem] pt-2.5" : "gap-[0.58rem] pt-1.5")}>
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-[0.18rem] px-3 text-[10px] font-medium tracking-tight text-white/22">
+                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
                   Engine
                 </div>
               )}
@@ -410,7 +413,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-[0.18rem] px-3 text-[10px] font-medium tracking-tight text-white/22">
+                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
                   Operations
                 </div>
               )}
@@ -423,7 +426,7 @@ export function Sidebar({
 
             <div className="w-full">
               {!isCollapsed && (
-                <div className="mb-[0.18rem] px-3 text-[10px] font-medium tracking-tight text-white/22">
+                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
                   Actions
                 </div>
               )}
