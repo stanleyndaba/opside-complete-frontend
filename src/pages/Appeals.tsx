@@ -601,48 +601,56 @@ export default function Appeals() {
                   </SheetHeader>
 
                   <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                    <div className="overflow-hidden rounded-none border border-white/8 bg-white/[0.02]">
+                      <div className="grid gap-3 px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
                         <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Recoverable upside</div>
-                        <div className="mt-2 text-[28px] font-sans font-bold tracking-tight text-white">{money(selectedRow.appealGap, selectedRow.currency)}</div>
-                        <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
-                          {amount(selectedRow.requested_amount) != null ? <div>Claimed {money(selectedRow.requested_amount, selectedRow.currency)}</div> : null}
-                          {amount(selectedRow.approved_amount) != null ? <div>Approved {money(selectedRow.approved_amount, selectedRow.currency)}</div> : null}
+                        <div>
+                          <div className="text-[28px] font-sans font-bold tracking-tight text-white">{money(selectedRow.appealGap, selectedRow.currency)}</div>
+                          <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                            {amount(selectedRow.requested_amount) != null ? <div>Claimed {money(selectedRow.requested_amount, selectedRow.currency)}</div> : null}
+                            {amount(selectedRow.approved_amount) != null ? <div>Approved {money(selectedRow.approved_amount, selectedRow.currency)}</div> : null}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                      <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
                         <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Reopen state</div>
-                        <Badge className={cn('mt-3 w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
-                          {selectedRow.strengthLabel}
-                        </Badge>
-                        <div className="mt-3 text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/82">
-                          {reopenStateSummary(selectedRow)}
+                        <div>
+                          <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
+                            {selectedRow.strengthLabel}
+                          </Badge>
+                          <div className="mt-3 text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/82">
+                            {reopenStateSummary(selectedRow)}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                      <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
                         <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Missing proof</div>
-                        <div className="mt-2 text-[13px] font-sans font-semibold leading-5 tracking-tight text-white/84">
-                          {missingProofSummary(selectedRow)}
-                        </div>
-                        <div className="mt-2 text-[11px] font-sans leading-5 text-white/52">
-                          {evidenceRebuildSummary(selectedRow)}
+                        <div>
+                          <div className="text-[13px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+                            {missingProofSummary(selectedRow)}
+                          </div>
+                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/52">
+                            {evidenceRebuildSummary(selectedRow)}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                      <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
                         <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">What happens next</div>
-                        <div className="mt-2 text-[13px] font-sans font-semibold leading-5 tracking-tight text-white/84">
-                          {selectedRow.nextStep}
-                        </div>
-                        <div className="mt-2 text-[11px] font-sans leading-5 text-white/52">
-                          {selectedRow.policyAngle}
+                        <div>
+                          <div className="text-[13px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+                            {selectedRow.nextStep}
+                          </div>
+                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/52">
+                            {selectedRow.policyAngle}
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                    <div className="rounded-[5px] border border-white/8 bg-white/[0.02] p-4">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Amazon pushback</div>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <Badge className={cn('w-fit rounded-full border bg-white/[0.06] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', selectedRow.appealState === 'underpaid' ? 'border-white/12 text-white/78' : 'border-white/12 text-white/92')}>
@@ -654,24 +662,24 @@ export default function Appeals() {
                           </div>
                         ) : null}
                       </div>
-                      <div className="mt-4 rounded-xl border border-white/[0.06] bg-black/30 p-4 text-[12px] font-sans leading-6 text-white/80">
+                      <div className="mt-4 rounded-[5px] border border-white/[0.06] bg-black/30 p-4 text-[12px] font-sans leading-6 text-white/80">
                         {cleanAmazonResponse(selectedRow.rejection_reason) || selectedRow.appealReasonText}
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                    <div className="rounded-[5px] border border-white/8 bg-white/[0.02] p-4">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Rebuild plan</div>
                       <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                         {selectedRow.policyAngle}
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-xl border border-white/[0.06] bg-black/30 p-4">
+                        <div className="rounded-[5px] border border-white/[0.06] bg-black/30 p-4">
                           <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Source records</div>
                           <div className="mt-2 text-[12px] font-sans leading-5 text-white/76">
                             {Math.max(Number(selectedRow.matched_document_count || 0), 0)} linked document{Number(selectedRow.matched_document_count || 0) === 1 ? '' : 's'}
                           </div>
                         </div>
-                        <div className="rounded-xl border border-white/[0.06] bg-black/30 p-4">
+                        <div className="rounded-[5px] border border-white/[0.06] bg-black/30 p-4">
                           <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Missing requirements</div>
                           <div className="mt-2 text-[12px] font-sans leading-5 text-white/76">
                             {missingProofItems(selectedRow).length > 0
