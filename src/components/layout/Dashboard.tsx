@@ -1756,13 +1756,8 @@ export function Dashboard() {
                   >
                     Quick Notice
                   </button>
-                  <div className="text-right">
-                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white">
-                      Last updated
-                    </div>
-                    <div className="mt-1 whitespace-nowrap text-[11px] font-sans leading-none text-white">
-                      {headerLastUpdated}
-                    </div>
+                  <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-white">
+                    Updated {headerLastUpdated}
                   </div>
                 </div>
               </div>
