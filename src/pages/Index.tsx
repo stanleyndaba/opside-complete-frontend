@@ -738,10 +738,10 @@ export default function Index() {
                 </motion.div>
               </div>
 
-              <motion.div {...mobileRevealProps} className="mt-10 flex flex-col gap-3 sm:mt-14 sm:flex-row">
+              <motion.div {...mobileRevealProps} className="mt-10 flex flex-col items-center gap-3 sm:mt-14 sm:flex-row sm:items-start">
                 <Button
                   onClick={handleConnectAmazon}
-                  className="h-11 rounded-full border border-white/10 bg-[#141414] px-6 text-sm font-medium text-white hover:bg-[#1b1b1b]"
+                  className="h-11 min-w-[168px] rounded-[5px] border border-white/10 bg-transparent px-5 text-sm font-medium text-white hover:bg-white/[0.04]"
                 >
                   Connect Amazon
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -749,7 +749,7 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToHowItWorks}
-                  className="h-11 rounded-full border border-white/10 bg-transparent px-6 text-sm font-medium text-white hover:bg-white/[0.04]"
+                  className="h-11 min-w-[168px] rounded-[5px] border border-white bg-white px-5 text-sm font-medium text-black hover:bg-white/90 hover:text-black"
                 >
                   See how it works
                 </Button>
