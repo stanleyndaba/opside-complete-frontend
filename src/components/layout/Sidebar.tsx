@@ -11,6 +11,7 @@ import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
+import { useSession } from '@/contexts/SessionContext';
 import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -77,6 +78,7 @@ export function Sidebar({
   const queryClient = useQueryClient();
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
   const { tenant, isReady } = useTenant();
+  const { isAuthReady, authToken, isSessionValid } = useSession();
   const [claimCount, setClaimCount] = useState<number | null>(null);
   const { unreadCount } = useNotifications();
   const [signOutOpen, setSignOutOpen] = useState(false);
@@ -132,7 +134,7 @@ export function Sidebar({
 
   // Fetch claim count from Agent 8 so the sidebar reflects the same source as the Recovery Pipeline page
   React.useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || !isAuthReady || !authToken || !isSessionValid) return;
     let cancelled = false;
     
     const fetchRecoveries = async () => {
@@ -154,7 +156,7 @@ export function Sidebar({
 
     fetchRecoveries();
     return () => { cancelled = true; };
-  }, [currentTenantSlug, isReady]);
+  }, [authToken, currentTenantSlug, isAuthReady, isReady, isSessionValid]);
 
   const overviewHref = tenantRoute(currentTenantSlug, '');
   const coreItem: NavItem = { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };

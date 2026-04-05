@@ -10,9 +10,20 @@ export interface SessionRecoveryDetail {
 
 let refreshPromise: Promise<boolean> | null = null;
 let lastDispatchAt = 0;
+let sessionRecoverySuppressed = false;
+
+export function suppressSessionRecovery() {
+  sessionRecoverySuppressed = true;
+}
+
+export function clearSessionRecoverySuppression() {
+  sessionRecoverySuppressed = false;
+  lastDispatchAt = 0;
+}
 
 export function dispatchSessionRecovery(detail: SessionRecoveryDetail = {}) {
   if (typeof window === 'undefined') return;
+  if (sessionRecoverySuppressed) return;
 
   const now = Date.now();
   if (now - lastDispatchAt < 1000) return;

@@ -65,7 +65,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
   const maxReconnectAttempts = 5;
   const reconnectDelay = 3000; // 3 seconds
   const handledPayloadsRef = useRef<Set<string>>(new Set());
-  const { isAuthReady, authToken } = useSession();
+  const { isAuthReady, authToken, isSessionValid } = useSession();
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -82,7 +82,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
 
     try {
       const slug = tenantSlug;
-      if (!slug || !isAuthReady || !authToken) return;
+      if (!slug || !isAuthReady || !authToken || !isSessionValid) return;
       const url = api.buildApiUrl(`/api/sse/notifications?tenantSlug=${slug}`);
       const eventSource = createAuthenticatedEventStream(url);
 
@@ -284,7 +284,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
     } catch (error) {
       console.error('[Phase3 Notifications] Failed to create EventSource:', error);
     }
-  }, [authToken, isAuthReady, onEvent, tenantSlug]);
+  }, [authToken, isAuthReady, isSessionValid, onEvent, tenantSlug]);
 
   useEffect(() => {
     connect();

@@ -10,6 +10,7 @@ import { api } from '@/lib/api';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
+import { useSession } from '@/contexts/SessionContext';
 
 /**
  * Get the stored tenant slug from localStorage
@@ -109,6 +110,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
     const navigate = useNavigate();
     const location = useLocation();
     const { tenantSlug: paramsSlug } = useParams<{ tenantSlug?: string }>();
+    const { isAuthReady, isSessionValid, authToken } = useSession();
 
     // Fallback: Parse slug from URL if useParams is empty (occurs if provider is outside Routes)
     const tenantSlug = useMemo(() => {
@@ -116,11 +118,30 @@ export function TenantProvider({ children }: TenantProviderProps) {
         const match = location.pathname.match(/^\/app\/([^\/]+)/);
         return match ? normalizeTenantSlug(match[1]) : null;
     }, [paramsSlug, location.pathname]);
+    const isAppRoute = location.pathname.startsWith('/app');
 
     /**
      * Load current tenant context
      */
     const loadTenantContext = useCallback(async () => {
+        if (!isAppRoute) {
+            setIsLoading(false);
+            setIsReady(true);
+            setError(null);
+            return;
+        }
+
+        if (!isAuthReady) {
+            setIsReady(false);
+            return;
+        }
+
+        if (!isSessionValid || !authToken) {
+            setIsLoading(false);
+            setIsReady(true);
+            return;
+        }
+
         try {
             setIsLoading(true);
             setError(null);
@@ -191,7 +212,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
             setIsLoading(false);
             setIsReady(true);
         }
-    }, [location.hash, location.pathname, location.search, navigate, paramsSlug, tenantSlug]);
+    }, [authToken, isAppRoute, isAuthReady, isSessionValid, location.hash, location.pathname, location.search, navigate, paramsSlug, tenantSlug]);
 
     /**
      * Handle URL-based tenant switching

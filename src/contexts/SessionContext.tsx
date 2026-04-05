@@ -7,7 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { SessionTimeoutModal } from '@/components/modals/SessionTimeoutModal';
-import { SESSION_RECOVERY_EVENT } from '@/lib/sessionRecovery';
+import { SESSION_RECOVERY_EVENT, clearSessionRecoverySuppression, suppressSessionRecovery } from '@/lib/sessionRecovery';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -77,12 +77,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 localStorage.removeItem('active_tenant_id');
                 localStorage.removeItem('active_tenant_slug');
                 setAuthToken(null);
-                setSessionRecoveryDismissed(false);
                 setIsAuthReady(true);
-            } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || !!session) {
+            } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
                 setIsSessionValid(true);
                 setSessionTimeoutOpen(false);
                 setSessionRecoveryDismissed(false);
+                clearSessionRecoverySuppression();
                 if (session.access_token) {
                     localStorage.setItem('session_token', session.access_token);
                     setAuthToken(session.access_token);
@@ -104,6 +104,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 if (session.user?.id) {
                     localStorage.setItem('user_id', session.user.id);
                 }
+                setIsAuthReady(true);
+            } else if (event === 'INITIAL_SESSION') {
+                const accessToken = session?.access_token || null;
+                setIsSessionValid(Boolean(accessToken));
+                setAuthToken(accessToken);
+
+                if (accessToken) {
+                    localStorage.setItem('session_token', accessToken);
+                } else {
+                    localStorage.removeItem('session_token');
+                }
+
+                if (session?.user?.email) {
+                    setUserEmail(session.user.email);
+                    localStorage.setItem('user_email', session.user.email);
+                }
+
+                if (session?.user?.id) {
+                    localStorage.setItem('user_id', session.user.id);
+                }
+
                 setIsAuthReady(true);
             } else {
                 setIsAuthReady(true);
@@ -129,11 +150,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }, [sessionRecoveryDismissed]);
 
     const showSessionTimeout = useCallback(() => {
+        clearSessionRecoverySuppression();
         setSessionRecoveryDismissed(false);
         setSessionTimeoutOpen(true);
     }, []);
 
     const hideSessionTimeout = useCallback(() => {
+        suppressSessionRecovery();
         setSessionRecoveryDismissed(true);
         setSessionTimeoutOpen(false);
     }, []);
@@ -142,6 +165,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setIsSessionValid(true);
         setSessionTimeoutOpen(false);
         setSessionRecoveryDismissed(false);
+        clearSessionRecoverySuppression();
         if (typeof window !== 'undefined') {
             window.location.reload();
         }

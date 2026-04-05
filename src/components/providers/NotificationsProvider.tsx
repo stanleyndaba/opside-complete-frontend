@@ -31,7 +31,7 @@ const NotificationsContext = createContext<NotificationsContextType | undefined>
 export function NotificationsProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { isAuthReady, authToken } = useSession();
+  const { isAuthReady, authToken, isSessionValid } = useSession();
 
   const { tenant } = useTenant();
   const location = useLocation();
@@ -43,7 +43,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const { close: closePhase3Notifications, lastEvent } = usePhase3Notifications(undefined, activeSlug);
 
   const fetchNotifications = useCallback(async () => {
-    if (!activeSlug || !isAuthReady || !authToken) return;
+    if (!activeSlug || !isAuthReady || !authToken || !isSessionValid) return;
     try {
       const response = await api.getNotifications({ limit: 50 }, activeSlug);
       if (response.ok && response.data) {
@@ -58,7 +58,7 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
     } finally {
       setIsLoading(false);
     }
-  }, [activeSlug, authToken, isAuthReady]);
+  }, [activeSlug, authToken, isAuthReady, isSessionValid]);
 
   // Initial fetch
   useEffect(() => {

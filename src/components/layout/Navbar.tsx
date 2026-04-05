@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { api } from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTenant } from '@/contexts/TenantContext';
+import { useSession } from '@/contexts/SessionContext';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -49,6 +50,7 @@ export function Navbar({
   const location = useLocation();
   const navigate = useNavigate();
   const { tenant } = useTenant();
+  const { isAuthReady, authToken, isSessionValid } = useSession();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -121,15 +123,14 @@ export function Navbar({
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!activeTenantSlug) {
+      if (!activeTenantSlug || !isAuthReady || !authToken || !isSessionValid) {
         setIsProfileLoading(false);
         return;
       }
 
       try {
-        const sessionToken = localStorage.getItem('session_token');
         const [meRes, statusRes] = await Promise.all([
-          sessionToken ? api.getMe(activeTenantSlug) : Promise.resolve(null),
+          api.getMe(activeTenantSlug),
           api.getIntegrationsStatus(activeTenantSlug)
         ]);
 
@@ -173,7 +174,7 @@ export function Navbar({
       }
     };
     fetchProfile();
-  }, [activeTenantSlug]);
+  }, [activeTenantSlug, authToken, isAuthReady, isSessionValid]);
 
   const amazonStatusLabel =
     isProfileLoading || !userProfile?.amazon_status

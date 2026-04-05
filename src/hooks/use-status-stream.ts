@@ -28,7 +28,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
   const handledPayloadsRef = useRef<Set<string>>(new Set());
   const onEventRef = useRef<typeof onEvent>();
   const queryClient = useQueryClient();
-  const { isAuthReady, authToken } = useSession();
+  const { isAuthReady, authToken, isSessionValid } = useSession();
 
   useEffect(() => {
     onEventRef.current = onEvent;
@@ -37,7 +37,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
   useEffect(() => {
     const slug = tenantSlug;
     if (!slug) return;
-    if (!isAuthReady || !authToken) return;
+    if (!isAuthReady || !authToken || !isSessionValid) return;
     const activeTenantId = typeof window !== 'undefined'
       ? String(localStorage.getItem('active_tenant_id') || '').trim()
       : '';
@@ -247,7 +247,7 @@ export const useStatusStream = (onEvent?: (event: StatusEvent) => void, tenantSl
       removeNamedListeners();
       eventSource.close();
     };
-  }, [authToken, isAuthReady, queryClient, tenantSlug]);
+  }, [authToken, isAuthReady, isSessionValid, queryClient, tenantSlug]);
 
   return {
     close: () => {
