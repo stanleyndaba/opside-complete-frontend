@@ -161,7 +161,8 @@ export function Sidebar({
   const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents and Files', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') }
+    { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
+    { title: 'Settings', icon: Settings2, href: tenantRoute(currentTenantSlug, '/settings') }
   ];
   const actionItems: NavItem[] = [
     { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') }
@@ -466,8 +467,6 @@ export function Sidebar({
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
           const updatesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/notifications'));
           const notesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/whats-new'));
-          const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
-
           return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -589,23 +588,6 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
-            <DropdownMenuItem
-              onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
-              className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[13px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
-                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                settingsActive && "bg-white text-black"
-              )}>
-              <Settings2
-                className={cn(
-                  "h-4 w-4 transition-colors",
-                  settingsActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
-                )}
-                strokeWidth={1.5}
-              />
-              <span>Settings</span>
-            </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border my-1" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}

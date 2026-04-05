@@ -451,10 +451,10 @@ export default function Help() {
 
                 <div className="space-y-5">
                   <a
-                    href="mailto:usersupport@margin-finance.com"
+                    href="mailto:support@margin-finance.com"
                     className="block text-2xl font-sans font-light text-white tracking-tight hover:text-white/80 transition-colors break-all"
                   >
-                    usersupport@margin-finance.com
+                    support@margin-finance.com
                   </a>
                   <div className="text-sm font-sans text-white/60">For tracked request IDs and request status, use the support request form above.</div>
                   <div className="space-y-2 text-sm font-sans text-white/55">
