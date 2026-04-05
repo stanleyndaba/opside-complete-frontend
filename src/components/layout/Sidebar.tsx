@@ -157,7 +157,7 @@ export function Sidebar({
   }, [currentTenantSlug, isReady]);
 
   const overviewHref = tenantRoute(currentTenantSlug, '');
-  const coreItem: NavItem = { title: 'Recovery Engine', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };
+  const coreItem: NavItem = { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };
   const operationItems: NavItem[] = [
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
