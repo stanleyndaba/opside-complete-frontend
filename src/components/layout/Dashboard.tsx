@@ -149,6 +149,8 @@ interface LaunchMonitorPayload {
 const pluralize = (count: number, singular: string, plural = `${singular}s`) =>
   `${count} ${count === 1 ? singular : plural}`;
 
+const SYNC_SCOPED_DETECTION_RESULTS_LIMIT = 500;
+
 const toTitleCase = (value: string) =>
   value.replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 
@@ -813,7 +815,7 @@ export function Dashboard() {
       try {
         const res = await detectionApi.getDetectionResults(
           uploadSyncId
-            ? { limit: 500, syncId: uploadSyncId }
+            ? { limit: SYNC_SCOPED_DETECTION_RESULTS_LIMIT, syncId: uploadSyncId }
             : { limit: 50 },
           activeSlug
         );
@@ -1313,6 +1315,12 @@ export function Dashboard() {
     if (typeof detectionTotal === 'number' && detectionTotal > 0) return detectionTotal;
     return detectionResults.length;
   }, [detectionResults.length, detectionTotal, isSyncScopedDetections]);
+  const syncScopedResultCapDisclosure = useMemo(() => {
+    if (!isSyncScopedDetections) return null;
+    if (detectionResults.length < SYNC_SCOPED_DETECTION_RESULTS_LIMIT) return null;
+    if (syncScopedDetectionCount <= detectionResults.length) return null;
+    return `This upload returned ${pluralize(syncScopedDetectionCount, 'finding')}. The dashboard currently loads only the first ${SYNC_SCOPED_DETECTION_RESULTS_LIMIT} rows for this sync, so the table below shows a subset of the upload results.`;
+  }, [detectionResults.length, isSyncScopedDetections, syncScopedDetectionCount]);
   const detectedOpportunitiesCount = isSyncScopedDetections
     ? syncScopedDetectionCount
     : dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
@@ -2476,6 +2484,11 @@ export function Dashboard() {
                           </Button>
                           </div>
                         </div>
+                        {isSyncScopedDetections && syncScopedResultCapDisclosure ? (
+                          <div className="mb-5 rounded-lg border border-amber-500/20 bg-amber-500/[0.08] px-4 py-3 text-[11px] font-sans leading-5 tracking-tight text-amber-100">
+                            {syncScopedResultCapDisclosure}
+                          </div>
+                        ) : null}
 
                         <div className="space-y-3">
                           {visibleDetectionResults.map((result) => {
