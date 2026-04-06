@@ -1359,6 +1359,58 @@ export function Dashboard() {
     }
     return `Updated ${headerLastUpdated}`;
   }, [activeTab, headerLastUpdated, isSyncScopedDetections, syncScopedIssuesUpdatedLabel]);
+  const syncScopedDetectionStatusMeta = useMemo(() => {
+    const normalizedStatus = (detectionResultsMeta?.status || '').toLowerCase();
+    switch (normalizedStatus) {
+      case 'completed':
+        return {
+          label: 'Completed',
+          tone: 'border-emerald-500/25 bg-emerald-500/[0.08] text-emerald-100'
+        };
+      case 'processing':
+        return {
+          label: 'Processing',
+          tone: 'border-amber-500/25 bg-amber-500/[0.08] text-amber-100'
+        };
+      case 'pending':
+        return {
+          label: 'Pending',
+          tone: 'border-sky-500/25 bg-sky-500/[0.08] text-sky-100'
+        };
+      case 'failed':
+        return {
+          label: 'Failed',
+          tone: 'border-red-500/25 bg-red-500/[0.08] text-red-100'
+        };
+      default:
+        return {
+          label: 'Not Available',
+          tone: 'border-white/10 bg-white/[0.03] text-white/60'
+        };
+    }
+  }, [detectionResultsMeta?.status]);
+  const syncScopedDetectionMetaRows = useMemo(() => {
+    if (!isSyncScopedDetections || !uploadSyncId) return [];
+    return [
+      {
+        label: 'Upload sync',
+        value: uploadSyncId,
+      },
+      {
+        label: 'Detection status',
+        value: syncScopedDetectionStatusMeta.label,
+        tone: syncScopedDetectionStatusMeta.tone,
+      },
+      {
+        label: 'Finished processing',
+        value: syncScopedIssuesUpdatedLabel,
+      },
+      {
+        label: 'Findings in this upload',
+        value: pluralize(syncScopedDetectionCount, 'finding'),
+      },
+    ];
+  }, [isSyncScopedDetections, syncScopedDetectionCount, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedIssuesUpdatedLabel, uploadSyncId]);
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
@@ -2234,6 +2286,27 @@ export function Dashboard() {
                           Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.
                         </p>
                       </div>
+
+                      {isSyncScopedDetections ? (
+                        <div className="grid gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-2 xl:grid-cols-4">
+                          {syncScopedDetectionMetaRows.map((item) => (
+                            <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
+                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                                {item.label}
+                              </div>
+                              {item.tone ? (
+                                <div className={cn("mt-2 inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight", item.tone)}>
+                                  {item.value}
+                                </div>
+                              ) : (
+                                <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white">
+                                  {item.value}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
 
                       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-4">
                         {issuesFoundSummaryRows.map((item) => (
