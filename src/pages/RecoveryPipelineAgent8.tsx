@@ -545,22 +545,26 @@ function getFinalityEventMatch(row: Row, event: StatusEvent) {
   const eventType = String(event.eventType || '').toLowerCase();
   const isRecovery = eventType.startsWith('recovery.');
   const isBilling = eventType.startsWith('billing.');
-  if (!isRecovery && !isBilling) {
+  const isPayoutFinality = eventType === 'payout.detected' || eventType === 'detection.payout_received';
+  if (!isRecovery && !isBilling && !isPayoutFinality) {
     return {
       payload,
       eventType,
       isRecovery,
       isBilling,
+      isPayoutFinality,
       matchesRecovery: false,
       matchesBilling: false,
+      matchesPayoutFinality: false,
       matched: false,
     };
   }
 
   const recoveryWorkItemId = String(payload.recovery_work_item_id || '').trim();
   const billingWorkItemId = String(payload.billing_work_item_id || '').trim();
-  const disputeCaseId = String(payload.dispute_case_id || payload.entity_id || '').trim();
-  const billingEntityId = String(payload.recovery_id || payload.entity_id || '').trim();
+  const disputeCaseId = String(payload.dispute_case_id || payload.claimId || payload.claim_id || payload.entity_id || '').trim();
+  const recoveryId = String(payload.recovery_id || payload.recoveryId || '').trim();
+  const billingEntityId = String(payload.recovery_id || payload.recoveryId || payload.entity_id || '').trim();
   const rowDisputeCaseId = String(row.linked_dispute_case_id || row.dispute_case_id || '').trim();
   const rowRecoveryRecordId = String(row.recovery_record_id || '').trim();
 
@@ -573,21 +577,27 @@ function getFinalityEventMatch(row: Row, event: StatusEvent) {
     (disputeCaseId && disputeCaseId === rowDisputeCaseId) ||
     (billingEntityId && billingEntityId === rowRecoveryRecordId)
   );
+  const matchesPayoutFinality = isPayoutFinality && (
+    (recoveryId && rowRecoveryRecordId && recoveryId === rowRecoveryRecordId) ||
+    (disputeCaseId && rowDisputeCaseId && disputeCaseId === rowDisputeCaseId)
+  );
 
   return {
     payload,
     eventType,
     isRecovery,
     isBilling,
+    isPayoutFinality,
     matchesRecovery,
     matchesBilling,
-    matched: matchesRecovery || matchesBilling,
+    matchesPayoutFinality,
+    matched: matchesRecovery || matchesBilling || matchesPayoutFinality,
   };
 }
 
 function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   const match = getFinalityEventMatch(row, event);
-  if (!match.matched) {
+  if (!match.matched || match.isPayoutFinality) {
     return row;
   }
 
@@ -887,6 +897,7 @@ export default function RecoveryPipelineAgent8() {
 
     const isRecoveryRelevant =
       eventType === 'payout.detected' ||
+      eventType === 'detection.payout_received' ||
       eventType === 'recovery.work_claimed' ||
       eventType === 'recovery.work_created' ||
       eventType === 'recovery.work_deferred' ||
