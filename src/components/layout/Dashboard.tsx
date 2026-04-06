@@ -1364,9 +1364,11 @@ export function Dashboard() {
     }
     return `Updated ${headerLastUpdated}`;
   }, [activeTab, headerLastUpdated, isSyncScopedDetections, syncScopedIssuesUpdatedLabel]);
+  const syncScopedDetectionStatus = (detectionResultsMeta?.status || '').toLowerCase();
+  const syncScopedErrorMessage = detectionResultsMeta?.errorMessage?.trim() || null;
+  const isSyncScopedSandbox = detectionResultsMeta?.isSandbox === true;
   const syncScopedDetectionStatusMeta = useMemo(() => {
-    const normalizedStatus = (detectionResultsMeta?.status || '').toLowerCase();
-    switch (normalizedStatus) {
+    switch (syncScopedDetectionStatus) {
       case 'completed':
         return {
           label: 'Completed',
@@ -1393,10 +1395,10 @@ export function Dashboard() {
           tone: 'border-white/10 bg-white/[0.03] text-white/60'
         };
     }
-  }, [detectionResultsMeta?.status]);
+  }, [syncScopedDetectionStatus]);
   const syncScopedDetectionMetaRows = useMemo(() => {
     if (!isSyncScopedDetections || !uploadSyncId) return [];
-    return [
+    const rows = [
       {
         label: 'Upload sync',
         value: uploadSyncId,
@@ -1406,6 +1408,11 @@ export function Dashboard() {
         value: syncScopedDetectionStatusMeta.label,
         tone: syncScopedDetectionStatusMeta.tone,
       },
+      ...(isSyncScopedSandbox ? [{
+        label: 'Environment',
+        value: 'Sandbox upload',
+        tone: 'border-fuchsia-500/25 bg-fuchsia-500/[0.08] text-fuchsia-100',
+      }] : []),
       {
         label: 'Finished processing',
         value: syncScopedIssuesUpdatedLabel,
@@ -1415,7 +1422,14 @@ export function Dashboard() {
         value: pluralize(syncScopedDetectionCount, 'finding'),
       },
     ];
-  }, [isSyncScopedDetections, syncScopedDetectionCount, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedIssuesUpdatedLabel, uploadSyncId]);
+    if (syncScopedDetectionStatus === 'failed' && syncScopedErrorMessage) {
+      rows.push({
+        label: 'Failure reason',
+        value: syncScopedErrorMessage,
+      });
+    }
+    return rows;
+  }, [isSyncScopedDetections, isSyncScopedSandbox, syncScopedDetectionCount, syncScopedDetectionStatus, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedErrorMessage, syncScopedIssuesUpdatedLabel, uploadSyncId]);
   const issuesFoundHeading = isSyncScopedDetections ? 'This upload\'s findings' : 'Recent findings';
   const issuesFoundDescription = isSyncScopedDetections
     ? 'Showing detections from your latest CSV upload. Review what this upload found, what is ready, and what still needs review.'
@@ -1459,11 +1473,9 @@ export function Dashboard() {
   const syncScopedEmptyState = useMemo(() => {
     if (!isSyncScopedDetections) return null;
 
-    const normalizedStatus = (detectionResultsMeta?.status || '').toLowerCase();
-    const errorMessage = detectionResultsMeta?.errorMessage?.trim() || null;
     const syncLabel = uploadSyncId ? `Sync ${uploadSyncId}` : 'This upload';
 
-    if (normalizedStatus === 'processing' || normalizedStatus === 'pending') {
+    if (syncScopedDetectionStatus === 'processing' || syncScopedDetectionStatus === 'pending') {
       return {
         title: 'Detection is still processing for this upload.',
         description: `${syncLabel} is still running through Agent 3. Findings for this upload are not final yet.`,
@@ -1471,10 +1483,10 @@ export function Dashboard() {
       };
     }
 
-    if (normalizedStatus === 'failed') {
+    if (syncScopedDetectionStatus === 'failed') {
       return {
         title: 'Detection failed for this upload.',
-        description: errorMessage || `${syncLabel} failed before upload-scoped findings could be returned.`,
+        description: syncScopedErrorMessage || `${syncLabel} failed before upload-scoped findings could be returned.`,
         showViewAllCta: false,
       };
     }
@@ -1487,7 +1499,7 @@ export function Dashboard() {
       };
     }
 
-    if (normalizedStatus === 'completed' && syncScopedDetectionCount === 0) {
+    if (syncScopedDetectionStatus === 'completed' && syncScopedDetectionCount === 0) {
       return {
         title: 'No new issues were found for this upload.',
         description: `${syncLabel} completed successfully and returned zero findings for this upload.`,
@@ -1497,15 +1509,15 @@ export function Dashboard() {
 
     return {
       title: 'Findings for this upload are not available yet.',
-      description: errorMessage || `${syncLabel} has not returned a final upload-scoped findings state yet.`,
+      description: syncScopedErrorMessage || `${syncLabel} has not returned a final upload-scoped findings state yet.`,
       showViewAllCta: false,
     };
   }, [
-    detectionResultsMeta?.errorMessage,
-    detectionResultsMeta?.status,
     isSyncScopedDetections,
     showProcessed,
+    syncScopedDetectionStatus,
     syncScopedDetectionCount,
+    syncScopedErrorMessage,
     uploadSyncId,
   ]);
   const lastSyncResult = useMemo(() => {
