@@ -272,6 +272,7 @@ export function Dashboard() {
     const normalized = typeof raw === 'string' ? raw.trim() : '';
     return normalized.length > 0 ? normalized : null;
   }, [searchParams]);
+  const isSyncScopedDetections = Boolean(uploadSyncId);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarCollapsed(prev => !prev);
@@ -2188,19 +2189,35 @@ export function Dashboard() {
                         <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
                           <Files className="h-6 w-6 text-white/40" />
                         </div>
-                        <h3 className="text-lg font-sans font-semibold text-white tracking-tight">No open issues right now</h3>
+                        <h3 className="text-lg font-sans font-semibold text-white tracking-tight">
+                          {isSyncScopedDetections ? 'No new issues were found for this upload.' : 'No open issues right now'}
+                        </h3>
                         <p className="text-[13px] text-white/45 mt-3 font-sans max-w-sm mx-auto leading-relaxed">
-                          Margin is not holding any unresolved findings in this view right now.
+                          {isSyncScopedDetections
+                            ? 'Your uploaded data did not produce new discrepancies.'
+                            : 'Margin is not holding any unresolved findings in this view right now.'}
                         </p>
-                        <button
-                          onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                          className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
-                        >
-                          <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
-                            View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}
-                          </span>
-                          <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        {isSyncScopedDetections ? (
+                          <button
+                            onClick={() => navigate(tenantRoute(activeSlug, '/dashboard'))}
+                            className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
+                          >
+                            <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
+                              View all detections
+                            </span>
+                            <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
+                            className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
+                          >
+                            <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
+                              View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}
+                            </span>
+                            <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
+                          </button>
+                        )}
                       </div>
                     ) : (
                       <div>
