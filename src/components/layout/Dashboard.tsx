@@ -556,6 +556,13 @@ export function Dashboard() {
   const [detectionResults, setDetectionResults] = useState<any[]>([]);
   const [loadingDetections, setLoadingDetections] = useState<boolean>(false);
   const [detectionTotal, setDetectionTotal] = useState<number>(0);
+  const [detectionResultsMeta, setDetectionResultsMeta] = useState<{
+    syncId: string;
+    status: 'pending' | 'processing' | 'completed' | 'failed';
+    processedAt?: string | null;
+    errorMessage?: string | null;
+    isSandbox?: boolean;
+  } | null>(null);
   const [showProcessed, setShowProcessed] = useState<boolean>(false);
 
   // Case ID Linking State
@@ -682,6 +689,7 @@ export function Dashboard() {
     setEvidenceStatus(null);
     setDetectionResults([]);
     setDetectionTotal(0);
+    setDetectionResultsMeta(null);
   }, [activeSlug, uploadSyncId]);
 
   const fetchDashboardSummary = useCallback(async () => {
@@ -807,10 +815,12 @@ export function Dashboard() {
         if (!cancelled && res.ok && res.data?.results) {
           setDetectionResults(res.data.results);
           setDetectionTotal(res.data.total);
+          setDetectionResultsMeta(res.data.meta ?? null);
         }
       } catch (error) {
         console.error('Failed to fetch detections:', error);
         if (!cancelled) {
+          setDetectionResultsMeta(null);
           toast({
           title: 'FETCH_PROTOCOL_ERROR',
           description: 'Failed to retrieve forensic discrepancy data.',
@@ -825,6 +835,7 @@ export function Dashboard() {
     };
     setDetectionResults([]);
     setDetectionTotal(0);
+    setDetectionResultsMeta(null);
     fetchDetections();
     return () => { cancelled = true; };
   }, [activeSlug, isReady, toast, uploadSyncId]);
@@ -1292,7 +1303,14 @@ export function Dashboard() {
 
   const mainClass = isSidebarCollapsed ? 'ml-16' : 'ml-60';
 
-  const detectedOpportunitiesCount = dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
+  const syncScopedDetectionCount = useMemo(() => {
+    if (!isSyncScopedDetections) return detectionTotal;
+    if (typeof detectionTotal === 'number' && detectionTotal > 0) return detectionTotal;
+    return detectionResults.length;
+  }, [detectionResults.length, detectionTotal, isSyncScopedDetections]);
+  const detectedOpportunitiesCount = isSyncScopedDetections
+    ? syncScopedDetectionCount
+    : dashboardSummary?.detections_count ?? detectionStats?.totalDetections ?? detectionTotal ?? detectionResults.length;
   const filedClaimsCount = dashboardSummary?.filed_count ?? 0;
   const approvedClaimsCount = dashboardSummary?.approved_count ?? 0;
   const recoveredClaimsCount = dashboardSummary?.recovered_count ?? 0;
@@ -1327,6 +1345,20 @@ export function Dashboard() {
     if (Number.isNaN(timestamp.getTime())) return 'Not Available';
     return `${formatDistanceToNowStrict(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
   }, [dashboardSummary?.last_updated_at, formattedLaunchLastUpdated, launchMonitor?.last_updated_at]);
+  const syncScopedIssuesUpdatedLabel = useMemo(() => {
+    if (!isSyncScopedDetections) return formattedLastUpdated;
+    const processedAt = detectionResultsMeta?.processedAt;
+    if (!processedAt) return 'Not Available';
+    const timestamp = new Date(processedAt);
+    if (Number.isNaN(timestamp.getTime())) return 'Not Available';
+    return `${formatDistanceToNowStrict(timestamp, { addSuffix: true })} (${format(timestamp, 'MMM dd, yyyy, HH:mm')})`;
+  }, [detectionResultsMeta?.processedAt, formattedLastUpdated, isSyncScopedDetections]);
+  const discrepancyHeaderLastUpdatedLabel = useMemo(() => {
+    if (activeTab === 'discrepancies' && isSyncScopedDetections) {
+      return `Upload processed: ${syncScopedIssuesUpdatedLabel}`;
+    }
+    return `Updated ${headerLastUpdated}`;
+  }, [activeTab, headerLastUpdated, isSyncScopedDetections, syncScopedIssuesUpdatedLabel]);
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
@@ -1351,16 +1383,18 @@ export function Dashboard() {
       detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is filing-ready yet'
     },
     {
-      label: 'Filed',
-      value: pluralize(filedClaimsCount, 'case'),
-      detail: filedClaimsCount > 0 ? 'Already moved into case review' : 'No filed cases yet'
+      label: isSyncScopedDetections ? 'Filed cases' : 'Filed',
+      value: isSyncScopedDetections ? 'Not Available' : pluralize(filedClaimsCount, 'case'),
+      detail: isSyncScopedDetections
+        ? 'This upload view does not include account-wide case totals.'
+        : filedClaimsCount > 0 ? 'Already moved into case review' : 'No filed cases yet'
     },
     {
       label: 'Needs review',
       value: pluralize(needsReviewFindingsCount, 'finding'),
       detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
     }
-  ]), [filedClaimsCount, needsReviewFindingsCount, readyToFileFindingsCount, visibleDetectionResults.length]);
+  ]), [filedClaimsCount, isSyncScopedDetections, needsReviewFindingsCount, readyToFileFindingsCount, visibleDetectionResults.length]);
   const lastSyncResult = useMemo(() => {
     if (activeSyncId || syncTriggered) {
       return {
@@ -1814,7 +1848,7 @@ export function Dashboard() {
                     Quick Notice
                   </button>
                   <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-white">
-                    Updated {headerLastUpdated}
+                    {discrepancyHeaderLastUpdatedLabel}
                   </div>
                 </div>
               </div>
@@ -2424,11 +2458,11 @@ export function Dashboard() {
                             </div>
                             <span className="text-white/10">|</span>
                             <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                              Last updated: <span className="text-white/55">{formattedLastUpdated}</span>
+                              {isSyncScopedDetections ? 'Upload processed:' : 'Last updated:'} <span className="text-white/55">{isSyncScopedDetections ? syncScopedIssuesUpdatedLabel : formattedLastUpdated}</span>
                             </div>
                             <span className="text-white/10">|</span>
                             <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                              Scope: <span className="text-white/55">Account summary</span>
+                              Scope: <span className="text-white/55">{isSyncScopedDetections ? `Upload sync ${uploadSyncId}` : 'Account summary'}</span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
