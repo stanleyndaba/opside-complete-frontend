@@ -1411,6 +1411,10 @@ export function Dashboard() {
       },
     ];
   }, [isSyncScopedDetections, syncScopedDetectionCount, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedIssuesUpdatedLabel, uploadSyncId]);
+  const issuesFoundHeading = isSyncScopedDetections ? 'This upload\'s findings' : 'Recent findings';
+  const issuesFoundDescription = isSyncScopedDetections
+    ? 'Showing detections from your latest CSV upload. Review what this upload found, what is ready, and what still needs review.'
+    : 'Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.';
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
@@ -2280,10 +2284,10 @@ export function Dashboard() {
                       <div className="max-w-2xl">
                         <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-tight uppercase">Issues Found</h2>
                         <div className="mt-0.5">
-                          <span className="text-base font-sans font-semibold text-white tracking-tight">Recent findings</span>
+                          <span className="text-base font-sans font-semibold text-white tracking-tight">{issuesFoundHeading}</span>
                         </div>
                         <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-[#dcdcdc]">
-                          Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.
+                          {issuesFoundDescription}
                         </p>
                       </div>
 
@@ -2535,8 +2539,16 @@ export function Dashboard() {
                             </div>
                             <span className="text-white/10">|</span>
                             <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                              Scope: <span className="text-white/55">{isSyncScopedDetections ? `Upload sync ${uploadSyncId}` : 'Account summary'}</span>
+                              Scope: <span className="text-white/55">{isSyncScopedDetections ? 'This upload' : 'Account summary'}</span>
                             </div>
+                            {isSyncScopedDetections ? (
+                              <>
+                                <span className="text-white/10">|</span>
+                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
+                                  Sync: <span className="text-white/55">{uploadSyncId}</span>
+                                </div>
+                              </>
+                            ) : null}
                           </div>
                           <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
                             Showing findings with current case state and next action
