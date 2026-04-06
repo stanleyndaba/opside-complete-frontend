@@ -3,15 +3,16 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
 import { api, detectionApi } from '@/lib/api';
 import { getFrontendAuthContext } from '@/lib/authSession';
 import { supabase } from '@/lib/supabaseClient';
+import { tenantRoute } from '@/lib/routes';
 import {
     Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2, X,
-    Archive, Target, Info
+    Archive, Target, Info, ArrowRight
 } from 'lucide-react';
 
 // File state
@@ -297,6 +298,7 @@ const getDetectionStatusFromRunRecord = (run: CsvRunRehydrationRecord): UploadDe
 
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
+    const navigate = useNavigate();
     const { tenant } = useTenant();
     const currentTenantSlug = urlTenantSlug || tenant?.slug || 'default';
     const { toast } = useToast();
@@ -325,6 +327,7 @@ export default function DataUpload() {
     const latestCsvSyncStorageKey = `data_upload:last_csv_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const dismissedCsvSyncStorageKey = `data_upload:dismissed_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const detectionPollingRef = useRef({ token: 0, syncId: null as string | null });
+    const dashboardRedirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isMountedRef = useRef(true);
 
     const invalidateDetectionPolling = useCallback((clearSyncId = true) => {
@@ -339,6 +342,26 @@ export default function DataUpload() {
         detectionPollingRef.current.syncId = syncId;
         return detectionPollingRef.current.token;
     }, []);
+
+    const clearDashboardRedirect = useCallback(() => {
+        if (dashboardRedirectTimeoutRef.current) {
+            clearTimeout(dashboardRedirectTimeoutRef.current);
+            dashboardRedirectTimeoutRef.current = null;
+        }
+    }, []);
+
+    const goToDashboard = useCallback(() => {
+        clearDashboardRedirect();
+        navigate(tenantRoute(currentTenantSlug, '/dashboard'));
+    }, [clearDashboardRedirect, currentTenantSlug, navigate]);
+
+    const scheduleDashboardRedirect = useCallback((delayMs = 1400) => {
+        clearDashboardRedirect();
+        dashboardRedirectTimeoutRef.current = setTimeout(() => {
+            navigate(tenantRoute(currentTenantSlug, '/dashboard'));
+            dashboardRedirectTimeoutRef.current = null;
+        }, delayMs);
+    }, [clearDashboardRedirect, currentTenantSlug, navigate]);
 
     const isPollingCurrent = useCallback((syncId: string, token: number) => (
         isMountedRef.current
@@ -664,6 +687,10 @@ export default function DataUpload() {
         return () => { cancelled = true; };
     }, [currentTenantSlug, dismissedCsvSyncStorageKey, latestCsvSyncStorageKey]);
 
+    useEffect(() => () => {
+        clearDashboardRedirect();
+    }, [clearDashboardRedirect]);
+
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
     const isPreviewPartial = previewResults.length > 0 && isDetectionInFlight(previewState.status);
     const previewEmptyState = useMemo(
@@ -863,6 +890,7 @@ export default function DataUpload() {
     // Upload files to backend
     const handleUpload = async () => {
         if (files.length === 0 || isUploading) return;
+        clearDashboardRedirect();
         const { userId: resolvedUserId, tenantId: resolvedTenantId } = await resolveSessionIdentity();
         const { token: sessionToken } = await getFrontendAuthContext();
 
@@ -1008,6 +1036,10 @@ export default function DataUpload() {
                     variant: 'destructive',
                 });
             }
+
+            if (failedCount === 0 && (insertedFileCount > 0 || skippedOnlyCount > 0)) {
+                scheduleDashboardRedirect();
+            }
         } catch (error: any) {
             const failureMessage = combineBackendMessages(error?.message, 'Network error') || 'Network error';
             toast({ title: 'Upload failed', description: failureMessage, variant: 'destructive' });
@@ -1020,6 +1052,7 @@ export default function DataUpload() {
     // Reset for new upload
     const handleReset = () => {
         const dismissedSyncId = batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId;
+        clearDashboardRedirect();
 
         try {
             if (dismissedSyncId) {
@@ -1069,6 +1102,7 @@ export default function DataUpload() {
         || Boolean(previewState.syncId)
         || previewResults.length > 0
         || isPreviewOpen;
+    const canGoToDashboard = !isUploading && Boolean(batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId);
 
     return (
         <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
@@ -1263,6 +1297,15 @@ export default function DataUpload() {
                                 className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
                             >
                                 <X className="h-4 w-4 mr-2" />Clear & Restart
+                            </Button>
+                        )}
+
+                        {canGoToDashboard && (
+                            <Button
+                                onClick={goToDashboard}
+                                className="bg-white text-black hover:bg-white/90 h-10 px-6"
+                            >
+                                Go to Dashboard <ArrowRight className="h-4 w-4 ml-2" />
                             </Button>
                         )}
                     </motion.div>
