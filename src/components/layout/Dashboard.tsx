@@ -300,7 +300,12 @@ export function Dashboard() {
   const handleTabChange = useCallback((tab: DashboardTab) => {
     setActiveTab(tab);
     const nextSearchParams = new URLSearchParams(location.search);
-    if (!uploadSyncId && tab === 'overview') {
+    const leavingSyncScopedDiscrepancies = Boolean(uploadSyncId) && tab !== 'discrepancies';
+
+    if (leavingSyncScopedDiscrepancies) {
+      nextSearchParams.delete('syncId');
+      nextSearchParams.set('tab', tab);
+    } else if (!uploadSyncId && tab === 'overview') {
       nextSearchParams.delete('tab');
     } else {
       nextSearchParams.set('tab', tab);
