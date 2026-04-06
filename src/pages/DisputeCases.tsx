@@ -154,6 +154,41 @@ function getQueueEntityNoun(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'ha
   return 'record';
 }
 
+function formatQueueRowType(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'> | null | undefined) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') return 'Dispute-case queue row';
+  if (kind === 'detection') return 'Detection-only queue row';
+  return 'Not Available';
+}
+
+function formatCaseOrigin(value: string | null | undefined) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized) return 'Not Available';
+  if (normalized === 'amazon_thread_backfill') return 'Backfilled from Amazon thread';
+  if (normalized === 'detection_pipeline') return 'Detection pipeline';
+  return formatLabel(value);
+}
+
+function isThreadBackfilled(row: Pick<QueueRow, 'case_origin'> | null | undefined) {
+  return String(row?.case_origin || '').trim().toLowerCase() === 'amazon_thread_backfill';
+}
+
+function isSyntheticOpportunityReference(
+  row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case' | 'claim_number' | 'detection_result_id'> | null | undefined
+) {
+  if (!row || getQueueEntityKind(row) !== 'detection') return false;
+  return String(row.claim_number || row.detection_result_id || '').trim().toUpperCase().startsWith('OPP-');
+}
+
+function getQueueReferenceLabel(
+  row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case' | 'claim_number' | 'detection_result_id'> | null | undefined
+) {
+  const kind = getQueueEntityKind(row);
+  if (kind === 'dispute_case') return 'Case reference';
+  if (kind === 'detection') return isSyntheticOpportunityReference(row) ? 'Opportunity reference (synthetic)' : 'Opportunity reference';
+  return 'Queue reference';
+}
+
 function getQueueRecordIdentifier(row: QueueRow) {
   const kind = getQueueEntityKind(row);
   if (kind === 'dispute_case') {
@@ -1612,12 +1647,21 @@ export default function DisputeCases() {
                         const openRecordLabel = getOpenRecordLabel(row);
                         const recordDetailsLabel = getRecordDetailsLabel(row);
                         const recordIdentifier = getQueueRecordIdentifier(row);
+                        const recordIdentifierLabel = getQueueReferenceLabel(row);
                         const recordType = row.case_type || row.anomaly_type || 'Not Available';
+                        const rowTypeLabel = formatQueueRowType(row);
+                        const caseOriginLabel = formatCaseOrigin(row.case_origin);
+                        const threadBackfilled = isThreadBackfilled(row);
+                        const syntheticOpportunityReference = isSyntheticOpportunityReference(row);
+                        const hasRealDisputeCase = row.has_real_dispute_case === true;
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
                             <td className="px-6 py-5">
                               <div className="space-y-2 min-w-[220px]">
+                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
+                                  {recordIdentifierLabel}
+                                </div>
                                 {canOpenCaseDetail ? (
                                   <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
                                     {recordIdentifier}
@@ -1627,8 +1671,26 @@ export default function DisputeCases() {
                                     {recordIdentifier}
                                   </span>
                                 )}
+                                <div className="flex flex-wrap gap-2">
+                                  <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                    {hasRealDisputeCase ? 'Real dispute case' : 'Detection-only'}
+                                  </Badge>
+                                  {syntheticOpportunityReference ? (
+                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                      Synthetic ref
+                                    </Badge>
+                                  ) : null}
+                                  {threadBackfilled ? (
+                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
+                                      Thread-linked
+                                    </Badge>
+                                  ) : null}
+                                </div>
                                 <div className="space-y-1 text-[11px] text-white/50 font-sans">
                                   <div>Entity: {entityLabel}</div>
+                                  <div>Row Type: {rowTypeLabel}</div>
+                                  <div>Linked Dispute Case: {row.linked_dispute_case_id || 'Not Available'}</div>
+                                  <div>Origin: {caseOriginLabel}</div>
                                   <div>Store: {row.store_name || 'Not Available'}</div>
                                   <div>Type: {recordType}</div>
                                 </div>
@@ -1847,7 +1909,7 @@ export default function DisputeCases() {
             </DialogTitle>
             {detailsRow ? (
               <div className="pt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">
-                Entity: {getQueueEntityLabel(detailsRow)} · Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
+                {getQueueReferenceLabel(detailsRow)} · Entity: {getQueueEntityLabel(detailsRow)} · Origin: {formatCaseOrigin(detailsRow.case_origin)} · Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
               </div>
             ) : null}
           </DialogHeader>
@@ -1859,12 +1921,14 @@ export default function DisputeCases() {
               <DetailSection
                 title="Record"
                 rows={[
-                  { label: 'Entity', value: getQueueEntityLabel(detailsRow) },
-                  { label: 'Queue Identifier', value: getQueueRecordIdentifier(detailsRow) },
-                  { label: 'Claim Number', value: detailsRow.claim_number || 'Not Available' },
-                  { label: 'Dispute Case ID', value: hasRealDisputeCase ? (detailsRow.linked_dispute_case_id || detailsRow.dispute_case_id || 'Not Available') : 'Not Available' },
-                  { label: 'Detection Reference', value: detailsRow.detection_result_id || (!hasRealDisputeCase ? detailsRow.dispute_case_id : null) || 'Not Available' },
-                  { label: 'Amazon Case', value: hasRealDisputeCase ? (detailsRow.amazon_case_id || 'Not Available') : 'Not Available' },
+                  { label: 'Entity Type', value: getQueueEntityLabel(detailsRow) },
+                  { label: 'Row Type', value: formatQueueRowType(detailsRow) },
+                  { label: 'Real Dispute Case', value: detailsRow.has_real_dispute_case === true ? 'Yes' : 'No' },
+                  { label: getQueueReferenceLabel(detailsRow), value: getQueueRecordIdentifier(detailsRow) },
+                  { label: 'Linked Dispute Case ID', value: detailsRow.linked_dispute_case_id || 'Not Available' },
+                  { label: 'Detection Result ID', value: detailsRow.detection_result_id || (!hasRealDisputeCase ? detailsRow.dispute_case_id : null) || 'Not Available' },
+                  { label: 'Amazon Case ID', value: hasRealDisputeCase ? (detailsRow.amazon_case_id || 'Not Available') : 'Not Available' },
+                  { label: 'Case Origin', value: formatCaseOrigin(detailsRow.case_origin) },
                   { label: 'Store', value: detailsRow.store_name || 'Not Available' },
                   { label: 'Record Type', value: detailsRow.case_type || detailsRow.anomaly_type || 'Not Available' },
                 ]}
