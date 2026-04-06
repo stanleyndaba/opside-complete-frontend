@@ -343,6 +343,89 @@ function reconciliationTruthDetail(
   return 'No reliable reconciliation or payout truth is available yet.';
 }
 
+function hasRecoveryWorkEntity(
+  row: Pick<
+    Row,
+    | 'recovery_work_item_id'
+    | 'recovery_work_status'
+    | 'recovery_execution_lane'
+    | 'recovery_last_runtime_role'
+    | 'recovery_locked_by'
+    | 'recovery_lifecycle_state'
+    | 'recovery_operational_state'
+    | 'recovery_operational_explanation'
+    | 'recovery_work_payload'
+    | 'recovery_last_deferred_reason'
+    | 'recovery_last_processed_at'
+    | 'recovery_last_claimed_at'
+    | 'recovery_execution_processed_at'
+    | 'recovery_next_attempt_at'
+    | 'recovery_work_error'
+  >
+): boolean {
+  return Boolean(
+    row.recovery_work_item_id ||
+    row.recovery_work_status ||
+    row.recovery_execution_lane ||
+    row.recovery_last_runtime_role ||
+    row.recovery_locked_by ||
+    row.recovery_lifecycle_state ||
+    row.recovery_operational_state ||
+    row.recovery_operational_explanation ||
+    row.recovery_work_payload ||
+    row.recovery_last_deferred_reason ||
+    row.recovery_last_processed_at ||
+    row.recovery_last_claimed_at ||
+    row.recovery_execution_processed_at ||
+    row.recovery_next_attempt_at ||
+    row.recovery_work_error
+  );
+}
+
+function hasBillingWorkEntity(
+  row: Pick<
+    Row,
+    | 'billing_work_item_id'
+    | 'billing_work_status'
+    | 'billing_execution_lane'
+    | 'billing_last_runtime_role'
+    | 'billing_locked_by'
+    | 'billing_lifecycle_state'
+    | 'billing_operational_state'
+    | 'billing_operational_explanation'
+    | 'billing_work_payload'
+    | 'billing_last_deferred_reason'
+    | 'billing_last_processed_at'
+    | 'billing_last_claimed_at'
+    | 'billing_execution_processed_at'
+    | 'billing_next_attempt_at'
+    | 'billing_work_error'
+  >
+): boolean {
+  return Boolean(
+    row.billing_work_item_id ||
+    row.billing_work_status ||
+    row.billing_execution_lane ||
+    row.billing_last_runtime_role ||
+    row.billing_locked_by ||
+    row.billing_lifecycle_state ||
+    row.billing_operational_state ||
+    row.billing_operational_explanation ||
+    row.billing_work_payload ||
+    row.billing_last_deferred_reason ||
+    row.billing_last_processed_at ||
+    row.billing_last_claimed_at ||
+    row.billing_execution_processed_at ||
+    row.billing_next_attempt_at ||
+    row.billing_work_error
+  );
+}
+
+function runtimeCounterValue(value: number | null | undefined, hasEntity: boolean): string {
+  if (!hasEntity) return NOT_AVAILABLE;
+  return typeof value === 'number' && !Number.isNaN(value) ? String(value) : NOT_AVAILABLE;
+}
+
 function boolTruth(value: boolean | null | undefined): string {
   if (value === true) return 'Yes';
   if (value === false) return 'No';
@@ -1315,6 +1398,8 @@ export default function RecoveryPipelineAgent8() {
           </DialogHeader>
           {detailsRow ? (() => {
             const financialSummary = detailsFinancialSummary || getFinancialSummaryForRow(detailsRow, financialSummaries);
+            const hasRecoveryWork = hasRecoveryWorkEntity(detailsRow);
+            const hasBillingWork = hasBillingWorkEntity(detailsRow);
             return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
@@ -1355,9 +1440,9 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Recovery Lane', value: detailsRow.recovery_execution_lane ? label(detailsRow.recovery_execution_lane) : NOT_AVAILABLE },
                   { label: 'Recovery Runtime', value: detailsRow.recovery_last_runtime_role ? label(detailsRow.recovery_last_runtime_role) : NOT_AVAILABLE },
                   { label: 'Recovery Lock Owner', value: detailsRow.recovery_locked_by || NOT_AVAILABLE },
-                  { label: 'Recovery Attempts', value: String(detailsRow.recovery_work_attempts ?? 0) },
-                  { label: 'Recovery Max Attempts', value: String(detailsRow.recovery_work_max_attempts ?? 0) },
-                  { label: 'Recovery Defers', value: String(detailsRow.recovery_defer_count ?? 0) },
+                  { label: 'Recovery Attempts', value: runtimeCounterValue(detailsRow.recovery_work_attempts, hasRecoveryWork) },
+                  { label: 'Recovery Max Attempts', value: runtimeCounterValue(detailsRow.recovery_work_max_attempts, hasRecoveryWork) },
+                  { label: 'Recovery Defers', value: runtimeCounterValue(detailsRow.recovery_defer_count, hasRecoveryWork) },
                   { label: 'Deferred Reason', value: detailsRow.recovery_last_deferred_reason ? label(detailsRow.recovery_last_deferred_reason) : NOT_AVAILABLE },
                   { label: 'Last Claimed', value: stamp(detailsRow.recovery_last_claimed_at) },
                   { label: 'Last Processed', value: stamp(detailsRow.recovery_last_processed_at) },
@@ -1405,9 +1490,9 @@ export default function RecoveryPipelineAgent8() {
                   { label: 'Billing Lane', value: detailsRow.billing_execution_lane ? label(detailsRow.billing_execution_lane) : NOT_AVAILABLE },
                   { label: 'Billing Runtime', value: detailsRow.billing_last_runtime_role ? label(detailsRow.billing_last_runtime_role) : NOT_AVAILABLE },
                   { label: 'Billing Lock Owner', value: detailsRow.billing_locked_by || NOT_AVAILABLE },
-                  { label: 'Billing Attempts', value: String(detailsRow.billing_work_attempts ?? 0) },
-                  { label: 'Billing Max Attempts', value: String(detailsRow.billing_work_max_attempts ?? 0) },
-                  { label: 'Billing Defers', value: String(detailsRow.billing_defer_count ?? 0) },
+                  { label: 'Billing Attempts', value: runtimeCounterValue(detailsRow.billing_work_attempts, hasBillingWork) },
+                  { label: 'Billing Max Attempts', value: runtimeCounterValue(detailsRow.billing_work_max_attempts, hasBillingWork) },
+                  { label: 'Billing Defers', value: runtimeCounterValue(detailsRow.billing_defer_count, hasBillingWork) },
                   { label: 'Deferred Reason', value: detailsRow.billing_last_deferred_reason ? label(detailsRow.billing_last_deferred_reason) : NOT_AVAILABLE },
                   { label: 'Last Claimed', value: stamp(detailsRow.billing_last_claimed_at) },
                   { label: 'Last Processed', value: stamp(detailsRow.billing_last_processed_at) },
