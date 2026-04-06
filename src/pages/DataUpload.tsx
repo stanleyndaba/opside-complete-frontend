@@ -323,6 +323,7 @@ export default function DataUpload() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
     const latestCsvSyncStorageKey = `data_upload:last_csv_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
+    const dismissedCsvSyncStorageKey = `data_upload:dismissed_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const detectionPollingRef = useRef({ token: 0, syncId: null as string | null });
     const isMountedRef = useRef(true);
 
@@ -501,12 +502,16 @@ export default function DataUpload() {
         let cancelled = false;
 
         const rehydrateLatestCsvRun = async () => {
+            const dismissedSyncId = typeof window !== 'undefined'
+                ? sessionStorage.getItem(dismissedCsvSyncStorageKey)
+                : null;
+
             try {
                 const latestRunRes = await api.getLatestCsvUploadRun(currentTenantSlug);
                 if (cancelled) return;
 
                 const latestRun = latestRunRes?.ok ? latestRunRes.data?.run as CsvRunRehydrationRecord | null | undefined : null;
-                if (latestRun?.syncId) {
+                if (latestRun?.syncId && latestRun.syncId !== dismissedSyncId) {
                     try {
                         localStorage.setItem(latestCsvSyncStorageKey, latestRun.syncId);
                     } catch (_error) {
@@ -538,7 +543,7 @@ export default function DataUpload() {
             }
 
             const lastKnownSyncId = localStorage.getItem(latestCsvSyncStorageKey);
-            if (!lastKnownSyncId || cancelled) {
+            if (!lastKnownSyncId || lastKnownSyncId === dismissedSyncId || cancelled) {
                 return;
             }
 
@@ -657,7 +662,7 @@ export default function DataUpload() {
 
         rehydrateLatestCsvRun();
         return () => { cancelled = true; };
-    }, [currentTenantSlug, latestCsvSyncStorageKey]);
+    }, [currentTenantSlug, dismissedCsvSyncStorageKey, latestCsvSyncStorageKey]);
 
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
     const isPreviewPartial = previewResults.length > 0 && isDetectionInFlight(previewState.status);
@@ -813,6 +818,19 @@ export default function DataUpload() {
 
         setFiles(prev => [...prev, ...uploadFiles]);
         setBatchResult(null);
+        setIsPreviewOpen(false);
+        setPreviewResults([]);
+        setPreviewResultsTotal(null);
+        setPreviewMessage(null);
+        setPreviewState({
+            syncId: null,
+            status: null,
+            processedAt: null,
+            errorMessage: null,
+            isSandbox: false,
+        });
+        setRehydratedRun(null);
+        setRehydrationNotice(null);
     }, [toast]);
 
     // Remove a file
@@ -924,6 +942,7 @@ export default function DataUpload() {
             try {
                 if (result.syncId) {
                     localStorage.setItem(latestCsvSyncStorageKey, result.syncId);
+                    sessionStorage.removeItem(dismissedCsvSyncStorageKey);
                 }
             } catch (_error) {
                 // Local refresh fallback is best-effort only.
@@ -1000,6 +1019,18 @@ export default function DataUpload() {
 
     // Reset for new upload
     const handleReset = () => {
+        const dismissedSyncId = batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId;
+
+        try {
+            if (dismissedSyncId) {
+                sessionStorage.setItem(dismissedCsvSyncStorageKey, dismissedSyncId);
+            } else {
+                sessionStorage.removeItem(dismissedCsvSyncStorageKey);
+            }
+        } catch (_error) {
+            // Session dismissal is best-effort only.
+        }
+
         invalidateDetectionPolling();
         setFiles([]);
         setBatchResult(null);
@@ -1016,6 +1047,9 @@ export default function DataUpload() {
             errorMessage: null,
             isSandbox: false,
         });
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     // Format file size
@@ -1029,6 +1063,12 @@ export default function DataUpload() {
     const totalRowsSkipped = batchResult?.results?.reduce((sum, r) => sum + (r.rowsSkipped || 0), 0) || 0;
     const totalRowsFailed = batchResult?.results?.reduce((sum, r) => sum + r.rowsFailed, 0) || 0;
     const successCount = batchResult?.results?.filter(r => r.success).length || 0;
+    const hasResettableWorkspaceState = files.length > 0
+        || Boolean(batchResult)
+        || Boolean(rehydratedRun)
+        || Boolean(previewState.syncId)
+        || previewResults.length > 0
+        || isPreviewOpen;
 
     return (
         <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
@@ -1151,10 +1191,11 @@ export default function DataUpload() {
                                                 )}
 
                                                 {/* Remove button */}
-                                                {f.status === 'pending' && !isUploading && (
+                                                {!isUploading && !batchResult && f.status !== 'uploading' && (
                                                     <button
                                                         onClick={() => removeFile(f.id)}
                                                         className="p-1 rounded-md hover:bg-white/5 text-white/20 hover:text-white/50 transition-colors"
+                                                        aria-label={`Remove ${f.file.name}`}
                                                     >
                                                         <X className="h-3.5 w-3.5" />
                                                     </button>
@@ -1201,7 +1242,7 @@ export default function DataUpload() {
                         transition={{ delay: 0.15 }}
                         className="mt-6 flex items-center gap-3"
                     >
-                        {!batchResult ? (
+                        {!batchResult && (
                             <Button
                                 onClick={handleUpload}
                                 disabled={files.length === 0 || isUploading}
@@ -1213,16 +1254,24 @@ export default function DataUpload() {
                                     <>Upload & Ingest {files.length > 0 ? `(${files.length} file${files.length > 1 ? 's' : ''})` : ''}</>
                                 )}
                             </Button>
-                        ) : (
+                        )}
+
+                        {hasResettableWorkspaceState && !isUploading && (
                             <Button
                                 onClick={handleReset}
                                 variant="outline"
                                 className="bg-transparent border-white/[0.08] text-white/60 hover:bg-white/5 h-10 px-6"
                             >
-                                <Upload className="h-4 w-4 mr-2" />Upload More Files
+                                <X className="h-4 w-4 mr-2" />Clear & Restart
                             </Button>
                         )}
                     </motion.div>
+
+                    {hasResettableWorkspaceState && !isUploading && (
+                        <p className="mt-3 text-[11px] text-white/35 font-sans tracking-tight">
+                            Clears this upload workspace so you can start a fresh batch. Imported backend data is not removed here.
+                        </p>
+                    )}
 
                     {rehydratedRun && (!rehydratedRun.uploadSummaryAvailable || rehydrationNotice) && (
                         <motion.div
