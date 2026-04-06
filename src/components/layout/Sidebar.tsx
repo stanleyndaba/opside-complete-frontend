@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCcw } from 'lucide-react';
+import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -172,7 +172,7 @@ export function Sidebar({
     { title: 'Settings', icon: Settings2, href: tenantRoute(currentTenantSlug, '/settings') }
   ];
   const actionItems: NavItem[] = [
-    { title: 'Reopen Claims', icon: RefreshCcw, href: tenantRoute(currentTenantSlug, '/appeals') }
+    { title: 'Retry Filing', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
   ];
   const NavItemComponent = React.memo(({
     item,

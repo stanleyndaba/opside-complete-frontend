@@ -230,7 +230,7 @@ export default function Appeals() {
     if (!activeTenantSlug) {
       setRows([]);
       setLoading(false);
-      setError('A tenant workspace is required before the Reopen Claims page can load.');
+      setError('A tenant workspace is required before the Retry Filing page can load.');
       return;
     }
 
@@ -332,12 +332,12 @@ export default function Appeals() {
 
   if (isReady && !activeTenantSlug) {
     return (
-      <PageLayout title="Reopen Claims" midnight>
+      <PageLayout title="Retry Filing" midnight>
         <div className="min-h-screen bg-[#050505]">
           <div className="container mx-auto px-8 pb-20 pt-10">
             <Card className="rounded-2xl border-white/5 bg-[#0c0c0c] text-white">
               <CardContent className="space-y-3 p-8">
-                <h1 className="text-xl font-sans font-bold tracking-tight text-white">Reopen Claims unavailable</h1>
+                <h1 className="text-xl font-sans font-bold tracking-tight text-white">Retry Filing unavailable</h1>
                 <p className="text-sm font-sans text-white/50">Open this page from a tenant workspace before loading denied or underpaid reimbursements.</p>
               </CardContent>
             </Card>
@@ -348,14 +348,14 @@ export default function Appeals() {
   }
 
   return (
-    <PageLayout title="Reopen Claims" midnight>
+    <PageLayout title="Retry Filing" midnight>
       <div className="relative min-h-screen overflow-hidden bg-[#070707] text-white">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
         <div className="relative z-10 container mx-auto space-y-6 px-8 pb-20 pt-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
               <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Denied reimbursement recovery</div>
-              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Reopen denied reimbursements</h1>
+              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Retry filing denied reimbursements</h1>
               <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
                 When Amazon says no or pays short, Margin rebuilds the case with stronger proof and a tighter reimbursement argument.
               </p>
@@ -385,7 +385,7 @@ export default function Appeals() {
               <div className="border-b border-white/8 px-6 py-5">
                 <div className="flex flex-col gap-4">
                   <div>
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Reopen queue</div>
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Retry queue</div>
                     <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">What Amazon pushed back on</h2>
                     <p className="mt-2 max-w-3xl text-[12px] font-sans leading-5 text-white/42">
                       Margin re-checks the denial reason, rebuilds the evidence, and prepares a stronger resubmission path from here.
@@ -445,7 +445,7 @@ export default function Appeals() {
               ) : error ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
                   <AlertCircle className="h-5 w-5 text-white/35" />
-                  <p className="text-sm font-sans font-bold text-white/70">Failed to load Reopen Claims</p>
+                  <p className="text-sm font-sans font-bold text-white/70">Failed to load Retry Filing</p>
                   <p className="max-w-xl text-xs font-sans text-white/40">{error}</p>
                 </div>
               ) : filtered.length === 0 ? (
@@ -465,7 +465,7 @@ export default function Appeals() {
                     <table className="w-full min-w-[1180px]">
                       <thead className="border-b border-white/8 bg-white/[0.02]">
                         <tr className="text-left">
-                          {['Case', 'Amazon pushback', 'Reopen state', 'Missing proof', 'Appeal direction', 'Next move'].map((header) => (
+                          {['Case', 'Amazon pushback', 'Retry state', 'Missing proof', 'Appeal direction', 'Next move'].map((header) => (
                             <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{header}</th>
                           ))}
                         </tr>
@@ -614,7 +614,7 @@ export default function Appeals() {
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Reopen state</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Retry state</div>
                         <div>
                           <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
                             {selectedRow.strengthLabel}

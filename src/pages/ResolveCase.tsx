@@ -103,7 +103,7 @@ export default function ResolveCase() {
     const linkedDisputeId = effectiveCase?.linked_dispute_case_id || effectiveCase?.dispute_case_id || null;
     if (linkedDisputeId) {
       toast({
-        title: intent === 'resubmit' ? 'Use Reopen Claims / Dispute Cases to retry' : 'Use Dispute Cases to file',
+        title: intent === 'resubmit' ? 'Use Retry Filing / Dispute Cases to retry' : 'Use Dispute Cases to file',
         description: `This case must go through the canonical Agent 7 filing queue. Opening dispute case ${linkedDisputeId}.`
       });
       navigate(tenantRoute(activeTenantSlug, '/dispute-cases'), {
