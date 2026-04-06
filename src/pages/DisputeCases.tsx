@@ -762,6 +762,7 @@ export default function DisputeCases() {
   const [search, setSearch] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState('all');
+  const [gateState, setGateState] = useState('all');
   const [filingStatus, setFilingStatus] = useState('all');
   const [recoveryStatus, setRecoveryStatus] = useState('all');
   const [billingStatus, setBillingStatus] = useState('all');
@@ -827,6 +828,7 @@ export default function DisputeCases() {
         const response = await api.getDisputeCaseQueue({
           search: searchTerm || undefined,
           status: status !== 'all' ? status : undefined,
+          gate_state: gateState !== 'all' ? gateState : undefined,
           filing_status: filingStatus !== 'all' ? filingStatus : undefined,
           recovery_status: recoveryStatus !== 'all' ? recoveryStatus : undefined,
           billing_status: billingStatus !== 'all' ? billingStatus : undefined,
@@ -882,7 +884,7 @@ export default function DisputeCases() {
 
     void loadQueue();
     return () => { cancelled = true; };
-  }, [activeTenantSlug, searchTerm, status, filingStatus, recoveryStatus, billingStatus, evidenceState, rejectionCategory, sortBy, sortOrder, page, refreshKey]);
+  }, [activeTenantSlug, searchTerm, status, gateState, filingStatus, recoveryStatus, billingStatus, evidenceState, rejectionCategory, sortBy, sortOrder, page, refreshKey]);
 
   useEffect(() => {
     if (!activeTenantSlug || !rows.length) {
@@ -1533,16 +1535,34 @@ export default function DisputeCases() {
                     </SelectContent>
                   </Select>
 
+                  <Select value={gateState} onValueChange={(value) => { setGateState(value); setPage(1); }}>
+                    <SelectTrigger className="w-[200px] bg-white/5 border-white/10 text-white">
+                      <SelectValue placeholder="Gate" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black border-white/10 text-white">
+                      <SelectItem value="all">All gate states</SelectItem>
+                      <SelectItem value="ready">Ready</SelectItem>
+                      <SelectItem value="blocked">Blocked</SelectItem>
+                      <SelectItem value="duplicate_blocked">Duplicate blocked</SelectItem>
+                      <SelectItem value="insufficient_data">Insufficient data</SelectItem>
+                      <SelectItem value="thread_only">Thread-only</SelectItem>
+                      <SelectItem value="safety_hold">Safety hold</SelectItem>
+                      <SelectItem value="pending_safety_verification">Pending safety verification</SelectItem>
+                    </SelectContent>
+                  </Select>
+
                   <Select value={filingStatus} onValueChange={(value) => { setFilingStatus(value); setPage(1); }}>
                     <SelectTrigger className="w-[170px] bg-white/5 border-white/10 text-white">
                       <SelectValue placeholder="Filing" />
                     </SelectTrigger>
                     <SelectContent className="bg-black border-white/10 text-white">
                       <SelectItem value="all">All filing</SelectItem>
+                      <SelectItem value="blocked">Blocked</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="filed">Filed</SelectItem>
                       <SelectItem value="retrying">Retrying</SelectItem>
                       <SelectItem value="pending_approval">Pending approval</SelectItem>
+                      <SelectItem value="pending_safety_verification">Pending safety verification</SelectItem>
                       <SelectItem value="failed">Failed</SelectItem>
                     </SelectContent>
                   </Select>

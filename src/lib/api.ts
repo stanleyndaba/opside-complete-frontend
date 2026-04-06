@@ -1986,6 +1986,7 @@ export const api = {
   getDisputeCaseQueue: (params: {
     search?: string;
     status?: string;
+    gate_state?: string;
     filing_status?: string;
     recovery_status?: string;
     billing_status?: string;
@@ -2001,6 +2002,7 @@ export const api = {
     queryParams.append('tenantSlug', tenantSlug);
     if (params.search) queryParams.append('search', params.search);
     if (params.status) queryParams.append('status', params.status);
+    if (params.gate_state) queryParams.append('gate_state', params.gate_state);
     if (params.filing_status) queryParams.append('filing_status', params.filing_status);
     if (params.recovery_status) queryParams.append('recovery_status', params.recovery_status);
     if (params.billing_status) queryParams.append('billing_status', params.billing_status);
