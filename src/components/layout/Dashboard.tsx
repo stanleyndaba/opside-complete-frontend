@@ -2444,7 +2444,7 @@ export function Dashboard() {
                             </span>
                             <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
                           </button>
-                        )}
+                        ) : null}
                       </div>
                     ) : (
                       <div>
