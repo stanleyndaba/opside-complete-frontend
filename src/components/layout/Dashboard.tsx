@@ -2403,7 +2403,10 @@ export function Dashboard() {
                         </p>
                         {isSyncScopedDetections && syncScopedEmptyState?.showViewAllCta ? (
                           <button
-                            onClick={() => navigate(tenantRoute(activeSlug, '/dashboard'))}
+                            onClick={() => navigate({
+                              pathname: tenantRoute(activeSlug, '/dashboard'),
+                              search: '?tab=discrepancies',
+                            })}
                             className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
                           >
                             <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
