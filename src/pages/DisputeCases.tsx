@@ -726,51 +726,188 @@ function normalizeIdentifier(value: string | null | undefined) {
   return String(value || '').trim().toLowerCase();
 }
 
-function getQueueRowIdentifiers(row: QueueRow) {
-  return [
-    row.dispute_case_id,
-    row.case_number,
-    row.claim_number,
-    row.amazon_case_id,
-    row.detection_result_id
-  ]
-    .map(normalizeIdentifier)
-    .filter(Boolean);
+function dedupeIdentifiers(values: Array<string | null | undefined>) {
+  return Array.from(new Set(values.map(normalizeIdentifier).filter(Boolean)));
 }
 
-function getEventIdentifiers(event: { entityId?: string; data: Record<string, any> }) {
-  return [
-    event.entityId,
+function getQueuePrimaryRowKey(row: Pick<QueueRow, 'dispute_case_id' | 'linked_dispute_case_id' | 'detection_result_id'>) {
+  return normalizeIdentifier(row.dispute_case_id || row.linked_dispute_case_id || row.detection_result_id);
+}
+
+function getQueueCanonicalIdentifiers(
+  row: Pick<QueueRow, 'dispute_case_id' | 'linked_dispute_case_id' | 'detection_result_id'>
+) {
+  return dedupeIdentifiers([
+    row.dispute_case_id,
+    row.linked_dispute_case_id,
+    row.detection_result_id
+  ]);
+}
+
+function getQueueSecondaryIdentifiers(
+  row: Pick<QueueRow, 'case_number' | 'claim_number' | 'amazon_case_id'>
+) {
+  return dedupeIdentifiers([
+    row.case_number,
+    row.claim_number,
+    row.amazon_case_id
+  ]);
+}
+
+function getEventCanonicalIdentifiers(event: { entityType?: string; entityId?: string; data: Record<string, any> }) {
+  const inferredEntityIdentifier = (
+    event.entityType === 'dispute_case' ||
+    event.entityType === 'detection_result'
+  )
+    ? event.entityId
+    : undefined;
+
+  return dedupeIdentifiers([
     event.data?.dispute_case_id,
+    event.data?.disputeId,
+    event.data?.dispute_id,
+    event.data?.linked_dispute_case_id,
+    event.data?.linkedDisputeCaseId,
+    event.data?.detection_id,
+    event.data?.detectionId,
+    event.data?.detection_result_id,
+    event.data?.detectionResultId,
+    event.data?.claim_id,
+    event.data?.claimId,
+    inferredEntityIdentifier
+  ]);
+}
+
+function getEventSecondaryIdentifiers(event: { entityType?: string; entityId?: string; data: Record<string, any> }) {
+  return dedupeIdentifiers([
     event.data?.case_number,
     event.data?.claim_number,
     event.data?.amazon_case_id,
-    event.data?.detection_id
-  ]
-    .map(normalizeIdentifier)
-    .filter(Boolean);
+    event.data?.amazonCaseId
+  ]);
 }
 
-function rowMatchesEvent(row: QueueRow, event: { entityId?: string; data: Record<string, any> }) {
-  const rowIdentifiers = getQueueRowIdentifiers(row);
-  const eventIdentifiers = getEventIdentifiers(event);
+function hasSharedIdentifier(left: string[], right: string[]) {
+  if (!left.length || !right.length) return false;
+  return left.some((identifier) => right.includes(identifier));
+}
 
-  if (!rowIdentifiers.length || !eventIdentifiers.length) {
-    return false;
+function getMatchedRowKeysForEvent(rows: QueueRow[], event: { entityType?: string; entityId?: string; data: Record<string, any> }) {
+  const canonicalEventIdentifiers = getEventCanonicalIdentifiers(event);
+  if (canonicalEventIdentifiers.length) {
+    const canonicalMatchKeys = Array.from(new Set(rows
+      .filter((row) => hasSharedIdentifier(getQueueCanonicalIdentifiers(row), canonicalEventIdentifiers))
+      .map((row) => getQueuePrimaryRowKey(row))
+      .filter(Boolean)));
+
+    if (canonicalMatchKeys.length === 1) {
+      return canonicalMatchKeys;
+    }
+
+    if (canonicalMatchKeys.length > 1) {
+      return [];
+    }
   }
 
-  return eventIdentifiers.some((identifier) => rowIdentifiers.includes(identifier));
+  if (canonicalEventIdentifiers.length) {
+    return [];
+  }
+
+  const secondaryEventIdentifiers = getEventSecondaryIdentifiers(event);
+  if (!secondaryEventIdentifiers.length) {
+    return [];
+  }
+
+  const secondaryMatchKeys = Array.from(new Set(rows
+    .filter((row) => hasSharedIdentifier(getQueueSecondaryIdentifiers(row), secondaryEventIdentifiers))
+    .map((row) => getQueuePrimaryRowKey(row))
+    .filter(Boolean)));
+
+  if (secondaryMatchKeys.length !== 1) {
+    return [];
+  }
+
+  return secondaryMatchKeys;
+}
+
+function rowMatchesEvent(row: QueueRow, event: { entityType?: string; entityId?: string; data: Record<string, any> }) {
+  const rowCanonicalIdentifiers = getQueueCanonicalIdentifiers(row);
+  const eventCanonicalIdentifiers = getEventCanonicalIdentifiers(event);
+
+  if (rowCanonicalIdentifiers.length || eventCanonicalIdentifiers.length) {
+    return rowCanonicalIdentifiers.length > 0 &&
+      eventCanonicalIdentifiers.length > 0 &&
+      hasSharedIdentifier(rowCanonicalIdentifiers, eventCanonicalIdentifiers);
+  }
+
+  return hasSharedIdentifier(
+    getQueueSecondaryIdentifiers(row),
+    getEventSecondaryIdentifiers(event)
+  );
 }
 
 function rowsShareIdentity(left: QueueRow, right: QueueRow) {
-  const leftIdentifiers = getQueueRowIdentifiers(left);
-  const rightIdentifiers = getQueueRowIdentifiers(right);
+  const leftPrimaryKey = getQueuePrimaryRowKey(left);
+  const rightPrimaryKey = getQueuePrimaryRowKey(right);
 
-  if (!leftIdentifiers.length || !rightIdentifiers.length) {
-    return false;
+  if (leftPrimaryKey || rightPrimaryKey) {
+    return Boolean(leftPrimaryKey) && leftPrimaryKey === rightPrimaryKey;
   }
 
-  return leftIdentifiers.some((identifier) => rightIdentifiers.includes(identifier));
+  const leftCanonicalIdentifiers = getQueueCanonicalIdentifiers(left);
+  const rightCanonicalIdentifiers = getQueueCanonicalIdentifiers(right);
+
+  if (leftCanonicalIdentifiers.length || rightCanonicalIdentifiers.length) {
+    return leftCanonicalIdentifiers.length > 0 &&
+      rightCanonicalIdentifiers.length > 0 &&
+      hasSharedIdentifier(leftCanonicalIdentifiers, rightCanonicalIdentifiers);
+  }
+
+  return hasSharedIdentifier(
+    getQueueSecondaryIdentifiers(left),
+    getQueueSecondaryIdentifiers(right)
+  );
+}
+
+function findBestMatchingQueueRow(target: QueueRow, candidates: QueueRow[]) {
+  const targetPrimaryKey = getQueuePrimaryRowKey(target);
+  if (targetPrimaryKey) {
+    const primaryMatches = candidates.filter((row) => getQueuePrimaryRowKey(row) === targetPrimaryKey);
+    if (primaryMatches.length === 1) {
+      return primaryMatches[0];
+    }
+    if (primaryMatches.length > 1) {
+      return null;
+    }
+  }
+
+  const targetCanonicalIdentifiers = getQueueCanonicalIdentifiers(target);
+  if (targetCanonicalIdentifiers.length) {
+    const canonicalMatches = candidates.filter((row) =>
+      hasSharedIdentifier(getQueueCanonicalIdentifiers(row), targetCanonicalIdentifiers)
+    );
+
+    if (canonicalMatches.length === 1) {
+      return canonicalMatches[0];
+    }
+
+    if (canonicalMatches.length > 1) {
+      return null;
+    }
+
+    return null;
+  }
+
+  const targetSecondaryIdentifiers = getQueueSecondaryIdentifiers(target);
+  if (!targetSecondaryIdentifiers.length) {
+    return null;
+  }
+
+  const secondaryMatches = candidates.filter((row) =>
+    hasSharedIdentifier(getQueueSecondaryIdentifiers(row), targetSecondaryIdentifiers)
+  );
+
+  return secondaryMatches.length === 1 ? secondaryMatches[0] : null;
 }
 
 function readLiveTimestamp(timestamp: string | null | undefined) {
@@ -952,7 +1089,7 @@ export default function DisputeCases() {
         setRows(response.data.rows || []);
         setDetailsRow((currentDetails) => {
           if (!currentDetails) return currentDetails;
-          const matchedRow = (response.data.rows || []).find((row) => rowsShareIdentity(currentDetails, row));
+          const matchedRow = findBestMatchingQueueRow(currentDetails, response.data.rows || []);
           return matchedRow || currentDetails;
         });
         setSummary({
@@ -1085,24 +1222,21 @@ export default function DisputeCases() {
       event.eventType === 'evidence.linked' ||
       event.eventType === 'payout.detected'
     ) {
-      const eventIdentifiers = getEventIdentifiers(event);
-      if (!eventIdentifiers.length) {
+      const matchedRowKeys = getMatchedRowKeysForEvent(rows, event);
+      if (!matchedRowKeys.length) {
         scheduleLiveRefresh();
         return;
       }
 
-      if (!rows.some((row) => rowMatchesEvent(row, event))) {
-        scheduleLiveRefresh();
-        return;
-      }
-
+      const matchedRowKeySet = new Set(matchedRowKeys);
       let matchedAnyRow = false;
       let patchedAnyRow = false;
       let requiresRefresh = false;
 
       setRows((currentRows) => {
         const nextRows = currentRows.map((row) => {
-          if (!rowMatchesEvent(row, event)) return row;
+          const rowKey = getQueuePrimaryRowKey(row);
+          if (!rowKey || !matchedRowKeySet.has(rowKey)) return row;
           matchedAnyRow = true;
           const nextRow = updateQueueRow(row, event);
           if (!nextRow) {
@@ -1119,7 +1253,12 @@ export default function DisputeCases() {
       });
 
       setDetailsRow((currentDetails) => {
-        if (!currentDetails || !rowMatchesEvent(currentDetails, event)) return currentDetails;
+        if (!currentDetails) return currentDetails;
+        const detailsKey = getQueuePrimaryRowKey(currentDetails);
+        const shouldPatchDetails = detailsKey
+          ? matchedRowKeySet.has(detailsKey)
+          : rowMatchesEvent(currentDetails, event);
+        if (!shouldPatchDetails) return currentDetails;
         const nextDetails = updateQueueRow(currentDetails, event);
         if (!nextDetails) {
           requiresRefresh = true;
