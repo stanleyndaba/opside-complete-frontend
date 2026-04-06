@@ -225,6 +225,36 @@ function getActionAvailabilityLabel(isAvailable: boolean, label: string) {
   return isAvailable ? label : `${label} · Not Available`;
 }
 
+type QueueGateState = {
+  label: string;
+  tone: 'ready' | 'attention' | 'blocked';
+};
+
+function getQueueGateState(
+  row: Pick<QueueRow, 'eligibility_status' | 'filing_status'>
+): QueueGateState | null {
+  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
+  if (filingStatus === 'pending_safety_verification') {
+    return { label: 'Awaiting identifiers', tone: 'attention' };
+  }
+
+  const eligibilityStatus = String(row.eligibility_status || '').trim().toLowerCase();
+  switch (eligibilityStatus) {
+    case 'ready':
+      return { label: formatEligibilityStatus(row.eligibility_status), tone: 'ready' };
+    case 'duplicate_blocked':
+      return { label: formatEligibilityStatus(row.eligibility_status), tone: 'blocked' };
+    case 'safety_hold':
+      return { label: formatEligibilityStatus(row.eligibility_status), tone: 'blocked' };
+    case 'insufficient_data':
+      return { label: formatEligibilityStatus(row.eligibility_status), tone: 'attention' };
+    case 'thread_only':
+      return { label: formatEligibilityStatus(row.eligibility_status), tone: 'attention' };
+    default:
+      return null;
+  }
+}
+
 type FilingPosture = {
   tone: 'ready' | 'attention' | 'blocked' | 'in_flight' | 'resolved';
   headline: string;
@@ -1654,6 +1684,7 @@ export default function DisputeCases() {
                         const threadBackfilled = isThreadBackfilled(row);
                         const syntheticOpportunityReference = isSyntheticOpportunityReference(row);
                         const hasRealDisputeCase = row.has_real_dispute_case === true;
+                        const gateState = getQueueGateState(row);
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
@@ -1700,6 +1731,16 @@ export default function DisputeCases() {
                             <td className="px-6 py-5">
                               <div className="grid grid-cols-1 gap-2 min-w-[220px]">
                                 <Badge variant="outline" className={cn('w-fit justify-start border', badgeClass(row.status))}>Status: {formatLabel(row.status)}</Badge>
+                                {gateState ? (
+                                  <Badge variant="outline" className={cn('w-fit justify-start border', postureBadgeClass(gateState.tone))}>
+                                    Gate: {gateState.label}
+                                  </Badge>
+                                ) : null}
+                                {row.filing_status ? (
+                                  <div className="text-[11px] text-white/45 font-sans">
+                                    Filing state: {formatLabel(row.filing_status)}
+                                  </div>
+                                ) : null}
                               </div>
                             </td>
 
