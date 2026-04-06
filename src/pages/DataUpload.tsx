@@ -375,7 +375,11 @@ export default function DataUpload() {
             return basePath;
         }
 
-        return `${basePath}?syncId=${encodeURIComponent(syncId)}`;
+        const params = new URLSearchParams({
+            syncId,
+            tab: 'discrepancies',
+        });
+        return `${basePath}?${params.toString()}`;
     }, [currentTenantSlug]);
 
     const goToDashboard = useCallback(() => {

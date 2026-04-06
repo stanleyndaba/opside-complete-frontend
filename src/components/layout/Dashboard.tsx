@@ -258,8 +258,17 @@ const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
   return 'text-sky-200 border-sky-500/25 bg-sky-500/[0.08]';
 };
 
+type DashboardTab = 'overview' | 'discrepancies' | 'disputes' | 'evidence';
+
+const parseDashboardTab = (rawTab: string | null): DashboardTab | null => {
+  const normalized = typeof rawTab === 'string' ? rawTab.trim().toLowerCase() : '';
+  if (normalized === 'overview' || normalized === 'discrepancies' || normalized === 'disputes' || normalized === 'evidence') {
+    return normalized;
+  }
+  return null;
+};
+
 export function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'discrepancies' | 'disputes' | 'evidence'>('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
@@ -272,15 +281,42 @@ export function Dashboard() {
     const normalized = typeof raw === 'string' ? raw.trim() : '';
     return normalized.length > 0 ? normalized : null;
   }, [searchParams]);
+  const explicitTab = useMemo(() => parseDashboardTab(searchParams.get('tab')), [searchParams]);
+  const resolvedDashboardTab = useMemo<DashboardTab>(
+    () => explicitTab || (uploadSyncId ? 'discrepancies' : 'overview'),
+    [explicitTab, uploadSyncId]
+  );
+  const [activeTab, setActiveTab] = useState<DashboardTab>(resolvedDashboardTab);
   const isSyncScopedDetections = Boolean(uploadSyncId);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarCollapsed(prev => !prev);
   }, []);
 
-  const handleTabChange = (tab: 'overview' | 'discrepancies' | 'disputes' | 'evidence') => {
+  useEffect(() => {
+    setActiveTab(resolvedDashboardTab);
+  }, [resolvedDashboardTab]);
+
+  const handleTabChange = useCallback((tab: DashboardTab) => {
     setActiveTab(tab);
-  };
+    const nextSearchParams = new URLSearchParams(location.search);
+    if (!uploadSyncId && tab === 'overview') {
+      nextSearchParams.delete('tab');
+    } else {
+      nextSearchParams.set('tab', tab);
+    }
+    const nextSearch = nextSearchParams.toString();
+    const currentSearch = location.search.startsWith('?') ? location.search.slice(1) : location.search;
+    if (nextSearch !== currentSearch) {
+      navigate(
+        {
+          pathname: location.pathname,
+          search: nextSearch ? `?${nextSearch}` : '',
+        },
+        { replace: true }
+      );
+    }
+  }, [location.pathname, location.search, navigate, uploadSyncId]);
 
   const [isExporting, setIsExporting] = useState(false);
   const [dashboardSummary, setDashboardSummary] = useState<DashboardSummary | null>(null);
