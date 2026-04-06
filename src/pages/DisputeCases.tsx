@@ -235,6 +235,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   const entityKind = getQueueEntityKind(row);
   const entityNoun = getQueueEntityNoun(row);
   const hasRealDisputeCase = entityKind === 'dispute_case';
+  const hasLinkedDisputeCase = hasRealDisputeCase && Boolean(row.linked_dispute_case_id);
+  const backendFilingOpen = row.can_file === true;
   const eligibilityStatus = String(row.eligibility_status || '').toUpperCase();
   const filingStatus = String(row.filing_status || '').toLowerCase();
   const status = String(row.status || '').toLowerCase();
@@ -464,6 +466,15 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
   }
 
   if (row.eligible_to_file === true && ['pending', 'retrying'].includes(filingStatus)) {
+    if (!hasLinkedDisputeCase || !backendFilingOpen) {
+      return {
+        tone: 'attention',
+        headline: 'Detection only',
+        detail: 'This detection is supportable, but a real dispute case is not linked yet, so filing is not available from this queue row.',
+        strengths: strengths.slice(0, 3),
+        risks: risks.slice(0, 2)
+      };
+    }
     if (operationalState === 'retry_scheduled') {
       return {
         tone: 'attention',
