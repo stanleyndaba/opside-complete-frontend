@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
-import { tenantRoute } from '@/lib/routes';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -610,12 +610,8 @@ const generateNarrative = (claim: any): string => {
 export default function CaseDetail() {
   const { caseId, tenantSlug } = useParams<{ caseId: string; tenantSlug: string }>();
   const { tenant, isReady } = useTenant();
-  const activeSlug = tenantSlug || tenant?.slug;
+  const activeSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
   const navigate = useNavigate();
-
-  if (!activeSlug && isReady) {
-    throw new Error("tenantSlug required for CaseDetail");
-  }
 
   const location = useLocation() as any;
   const passedClaim = (location && location.state && (location.state as any).claim) || null;
@@ -683,7 +679,7 @@ export default function CaseDetail() {
   }, [activeSlug, caseData?.id, caseId, confirmedLinkedDisputeCaseId, navigate, toast]);
 
   const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
-    if (!currentCaseId) return;
+    if (!currentCaseId || !activeSlug) return;
     if (showLoading) setLoading(true);
     try {
       const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
@@ -756,12 +752,13 @@ export default function CaseDetail() {
     setMatchedDocs([]);
     setError(null);
     (async () => {
-      if (!caseId) return;
+      if (!caseId || !activeSlug) return;
       await refreshCaseDetail(caseId, { showLoading: true });
     })();
 
     let es: ReturnType<typeof createAuthenticatedEventStream> | null = null;
     try {
+      if (!activeSlug) return;
       es = createAuthenticatedEventStream(
         api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
         { autoReconnect: true, reconnectDelayMs: 3000 }
@@ -800,18 +797,18 @@ export default function CaseDetail() {
   }, [caseId, activeSlug, matchesRealtimeEvent, refreshCaseDetail]);
 
   useEffect(() => {
-    if (!statusFeedUnavailable || !caseId) return;
+    if (!statusFeedUnavailable || !caseId || !activeSlug) return;
     const intervalId = setInterval(() => {
       void refreshCaseDetail(caseId);
     }, 15000);
     return () => clearInterval(intervalId);
-  }, [caseId, refreshCaseDetail, statusFeedUnavailable]);
+  }, [activeSlug, caseId, refreshCaseDetail, statusFeedUnavailable]);
 
   // Attempt to fetch matched documents for this case
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (!caseId) return;
+      if (!caseId || !activeSlug) return;
       try {
         // First check if case data has evidence_attachments with document_id
         const docIdFromCase = caseData?.evidence_attachments?.document_id;
@@ -1135,11 +1132,30 @@ export default function CaseDetail() {
         <div className="text-center py-12">
           <h2 className="text-xl font-semibold mb-4">Case not found</h2>
           <Button asChild>
-            <Link to={`/app/${activeSlug}/recoveries`}>
+            <Link to={tenantRoute(activeSlug, '/recoveries')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Cases
             </Link>
           </Button>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (!activeSlug && isReady) {
+    return (
+      <PageLayout title="Workspace Required" midnight>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-4 text-white">Workspace context required</h2>
+            <p className="text-white/40 mb-6">This case detail link needs a tenant-scoped route.</p>
+            <Button asChild className="bg-white/10 border border-white/10 hover:bg-white/20 text-white">
+              <Link to={tenantRoute(activeSlug, '/recoveries')}>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Recoveries
+              </Link>
+            </Button>
+          </div>
         </div>
       </PageLayout>
     );
@@ -1168,7 +1184,7 @@ export default function CaseDetail() {
             <p className="text-white/40 mb-6 font-mono">Case ID: {caseId}</p>
             {error && <p className="text-red-400 mb-4">{error}</p>}
             <Button asChild className="bg-white/10 border border-white/10 hover:bg-white/20 text-white">
-              <Link to={`/app/${activeSlug}/recoveries`}>
+              <Link to={tenantRoute(activeSlug, '/recoveries')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Cases
               </Link>

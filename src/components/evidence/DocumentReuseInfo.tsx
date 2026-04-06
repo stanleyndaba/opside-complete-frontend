@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Link } from 'react-router-dom';
+import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { FileText, Link2, ExternalLink } from 'lucide-react';
 import { api } from '@/lib/api';
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
 import { normalizeTenantSlug } from '@/lib/routes';
 
@@ -9,8 +9,9 @@ import { normalizeTenantSlug } from '@/lib/routes';
  * Deterministically resolves the active tenant and redirects the user
  * from root-level paths (/app, /dashboard) to their scoped tenant dashboard.
  */
-export function TenantRedirect({ targetPath = '/dashboard' }: { targetPath?: string }) {
+export function TenantRedirect({ targetPath = '/dashboard', preservePath = false }: { targetPath?: string; preservePath?: boolean }) {
     const navigate = useNavigate();
+    const location = useLocation();
     const { tenant, tenants, isReady } = useTenant();
     const storedSlug = typeof window !== 'undefined' ? normalizeTenantSlug(localStorage.getItem('active_tenant_slug')) : null;
     const fallbackTenantSlug = tenants.find((item) => normalizeTenantSlug(item.slug))?.slug || null;
@@ -24,8 +25,12 @@ export function TenantRedirect({ targetPath = '/dashboard' }: { targetPath?: str
             return;
         }
 
-        navigate(`/app/${resolvedSlug}${targetPath.startsWith('/') ? targetPath : `/${targetPath}`}`, { replace: true });
-    }, [isReady, navigate, resolvedSlug, targetPath]);
+        const redirectPath = preservePath
+            ? `${location.pathname}${location.search}${location.hash}`
+            : (targetPath.startsWith('/') ? targetPath : `/${targetPath}`);
+
+        navigate(`/app/${resolvedSlug}${redirectPath}`, { replace: true });
+    }, [isReady, location.hash, location.pathname, location.search, navigate, preservePath, resolvedSlug, targetPath]);
 
     return (
         <div className="min-h-screen bg-black flex items-center justify-center">

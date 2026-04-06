@@ -14,7 +14,7 @@ import {
     ArrowRight,
     Search
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
