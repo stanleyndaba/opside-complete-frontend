@@ -24,6 +24,7 @@ const Sync = lazy(() => import("./pages/Sync"));
 const Settings = lazy(() => import("./pages/Settings"));
 const IntegrationsHub = lazy(() => import("./pages/IntegrationsHub"));
 const Recoveries = lazy(() => import("./pages/RecoveryPipelineAgent8"));
+const ApprovedReimbursements = lazy(() => import("./pages/ApprovedReimbursements"));
 const DisputeCases = lazy(() => import("./pages/DisputeCases"));
 const Appeals = lazy(() => import("./pages/Appeals"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
@@ -170,6 +171,7 @@ const App = () => (
                         <Route path="/app/:tenantSlug/auth/success" element={<OAuthSuccess />} />
                         <Route path="/app/:tenantSlug/integrations-hub" element={<IntegrationsHub />} />
                         <Route path="/app/:tenantSlug/recoveries" element={<Recoveries />} />
+                        <Route path="/app/:tenantSlug/approved-reimbursements" element={<ApprovedReimbursements />} />
                         <Route path="/app/:tenantSlug/dispute-cases" element={<DisputeCases />} />
                         <Route path="/app/:tenantSlug/appeals" element={<Appeals />} />
                         <Route path="/app/:tenantSlug/cases/:caseId" element={<CaseDetail />} />
@@ -209,6 +211,7 @@ const App = () => (
                         <Route path="/cases/:caseId" element={<TenantRedirect preservePath />} />
                         <Route path="/recoveries/:caseId" element={<TenantRedirect preservePath />} />
                         <Route path="/recoveries" element={<TenantRedirect />} />
+                        <Route path="/approved-reimbursements" element={<TenantRedirect targetPath="/approved-reimbursements" />} />
                         <Route path="/dispute-cases" element={<TenantRedirect />} />
                         <Route path="/appeals" element={<TenantRedirect />} />
                         <Route path="/sync" element={<TenantRedirect />} />

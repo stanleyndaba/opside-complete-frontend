@@ -1,0 +1,190 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { CircleCheck, RefreshCw } from 'lucide-react';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useTenant } from '@/contexts/TenantContext';
+import { api } from '@/lib/api';
+
+type ApprovedReimbursementRow = {
+  routeId: string;
+  caseReference: string;
+  approvedAmount: number | null;
+  payoutStatus: string | null;
+  lastUpdatedAt: string | null;
+  currency: string;
+};
+
+const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
+const NOT_AVAILABLE = 'Not Available';
+
+const isApprovedReimbursementRow = (row: any) => {
+  const status = String(row?.status || '').trim().toLowerCase();
+  return APPROVED_CASE_STATUSES.has(status) || (typeof row?.approved_amount === 'number' && !Number.isNaN(row.approved_amount));
+};
+
+const formatMoney = (value: number | null | undefined, currency = 'USD') =>
+  typeof value === 'number' && !Number.isNaN(value)
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value)
+    : NOT_AVAILABLE;
+
+const formatStamp = (value?: string | null) => {
+  if (!value) return NOT_AVAILABLE;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
+  return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
+
+const toTitleCase = (value?: string | null) => {
+  if (!value) return NOT_AVAILABLE;
+  return value
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+export default function ApprovedReimbursements() {
+  const { tenantSlug } = useParams<{ tenantSlug: string }>();
+  const { isReady } = useTenant();
+  const activeSlug = (tenantSlug || '').trim();
+  const [rows, setRows] = useState<ApprovedReimbursementRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchApprovedReimbursements = useCallback(async (mode: 'load' | 'refresh' = 'load') => {
+    if (!activeSlug) return;
+    if (mode === 'load') setLoading(true);
+    if (mode === 'refresh') setRefreshing(true);
+    setError(null);
+
+    try {
+      const response = await api.getRecoveriesLedger({
+        date_range: 'all',
+        sort_by: 'approved_amount',
+        sort_dir: 'desc',
+        page: 1,
+        page_size: 100,
+      }, activeSlug);
+
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Failed to load approved reimbursements.');
+      }
+
+      const ledgerRows = Array.isArray(response.data?.rows) ? response.data.rows : [];
+      const nextRows = ledgerRows
+        .filter(isApprovedReimbursementRow)
+        .map((row: any) => ({
+          routeId: String(row?.recovery_record_id || row?.dispute_case_id || row?.detection_result_id || row?.case_number || ''),
+          caseReference: String(row?.case_number || row?.provider_case_id || row?.merchant_reference || NOT_AVAILABLE),
+          approvedAmount: typeof row?.approved_amount === 'number' ? row.approved_amount : null,
+          payoutStatus: typeof row?.payout_status === 'string' ? row.payout_status : null,
+          lastUpdatedAt: typeof row?.last_updated_at === 'string' ? row.last_updated_at : null,
+          currency: typeof row?.currency === 'string' && row.currency.trim() ? row.currency : 'USD',
+        }));
+
+      setRows(nextRows);
+    } catch (err: any) {
+      setRows([]);
+      setError(err?.message || 'Failed to load approved reimbursements.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [activeSlug]);
+
+  useEffect(() => {
+    if (!isReady || !activeSlug) return;
+    fetchApprovedReimbursements('load');
+  }, [activeSlug, fetchApprovedReimbursements, isReady]);
+
+  const headingCount = useMemo(() => rows.length.toLocaleString('en-US'), [rows.length]);
+
+  return (
+    <PageLayout title="Approved Reimbursements" midnight>
+      <div className="min-h-screen bg-[#070707] text-white">
+        <div className="container mx-auto px-8 pb-20 pt-10">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10">
+                  <CircleCheck className="h-5 w-5 text-emerald-400" />
+                </div>
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved reimbursements</div>
+              </div>
+              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Approved Reimbursements</h1>
+              <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
+                Minimal approved recovery view for reimbursements Amazon has already approved.
+              </p>
+              <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
+                {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
+              </p>
+            </div>
+
+            <Button
+              onClick={() => fetchApprovedReimbursements('refresh')}
+              disabled={refreshing}
+              className="h-10 shrink-0 rounded-lg border border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/56 hover:bg-white/10 hover:text-white"
+            >
+              <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-white/5 hover:bg-transparent">
+                  <TableHead className="h-11 px-6 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case</TableHead>
+                  <TableHead className="h-11 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved</TableHead>
+                  <TableHead className="h-11 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Payout</TableHead>
+                  <TableHead className="h-11 pr-6 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Updated</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow className="border-white/5">
+                    <TableCell colSpan={4} className="px-6 py-8 text-center text-[11px] font-sans font-bold text-white/45">
+                      Loading approved reimbursements...
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow className="border-white/5">
+                    <TableCell colSpan={4} className="px-6 py-8 text-center text-[11px] font-sans font-bold text-white/45">
+                      {error}
+                    </TableCell>
+                  </TableRow>
+                ) : rows.length === 0 ? (
+                  <TableRow className="border-white/5">
+                    <TableCell colSpan={4} className="px-6 py-8 text-center text-[11px] font-sans font-bold text-white/45">
+                      No approved reimbursements yet.
+                    </TableCell>
+                  </TableRow>
+                ) : rows.map((row) => (
+                  <TableRow key={`${row.routeId}-${row.caseReference}`} className="border-white/5 text-white/70 hover:bg-white/[0.02]">
+                    <TableCell className="px-6 py-3 text-[11px] font-sans font-bold tracking-tight text-white/78">
+                      {row.caseReference}
+                    </TableCell>
+                    <TableCell className="py-3 text-[11px] font-sans font-bold text-white/70">
+                      {formatMoney(row.approvedAmount, row.currency)}
+                    </TableCell>
+                    <TableCell className="py-3 text-[11px] font-sans font-bold text-white/50">
+                      {toTitleCase(row.payoutStatus)}
+                    </TableCell>
+                    <TableCell className="py-3 pr-6 text-right text-[11px] font-sans font-bold text-white/40">
+                      {formatStamp(row.lastUpdatedAt)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  );
+}
