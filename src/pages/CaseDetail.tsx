@@ -657,27 +657,6 @@ export default function CaseDetail() {
     return 'Unknown';
   };
 
-  const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
-    if (confirmedLinkedDisputeCaseId && activeSlug) {
-      toast({
-        title: intent === 'resubmit' ? 'Use Dispute Cases to retry filing' : 'Use Dispute Cases to file',
-        description: `Opening the canonical Agent 7 filing screen for dispute case ${confirmedLinkedDisputeCaseId}.`
-      });
-      navigate(tenantRoute(activeSlug, '/dispute-cases'), {
-        state: {
-          highlightDisputeId: confirmedLinkedDisputeCaseId,
-          sourceRecoveryId: caseData?.id || caseId
-        }
-      });
-      return;
-    }
-
-    toast({
-      title: intent === 'resubmit' ? 'Retry blocked' : 'Filing blocked',
-      description: NOT_AVAILABLE
-    });
-  }, [activeSlug, caseData?.id, caseId, confirmedLinkedDisputeCaseId, navigate, toast]);
-
   const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
     if (!currentCaseId || !activeSlug) return;
     if (showLoading) setLoading(true);
@@ -869,6 +848,26 @@ export default function CaseDetail() {
     confirmedLinkedDisputeCaseId &&
     backendEligibilityStatus === 'READY'
   );
+  const openCanonicalFilingScreen = useCallback((intent: 'submit' | 'resubmit') => {
+    if (confirmedLinkedDisputeCaseId && activeSlug) {
+      toast({
+        title: intent === 'resubmit' ? 'Use Dispute Cases to retry filing' : 'Use Dispute Cases to file',
+        description: `Opening the canonical Agent 7 filing screen for dispute case ${confirmedLinkedDisputeCaseId}.`
+      });
+      navigate(tenantRoute(activeSlug, '/dispute-cases'), {
+        state: {
+          highlightDisputeId: confirmedLinkedDisputeCaseId,
+          sourceRecoveryId: caseData?.id || caseId
+        }
+      });
+      return;
+    }
+
+    toast({
+      title: intent === 'resubmit' ? 'Retry blocked' : 'Filing blocked',
+      description: NOT_AVAILABLE
+    });
+  }, [activeSlug, caseData?.id, caseId, confirmedLinkedDisputeCaseId, navigate, toast]);
   const replyEligibleDocuments = Array.isArray(backendTruthCase?.documents) ? backendTruthCase.documents : [];
   const backendConfidencePct = useMemo<number | null>(() => {
     if (!backendTruthCase || backendTruthCase.truth_unavailable) return null;
