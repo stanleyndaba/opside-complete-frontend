@@ -210,6 +210,59 @@ function entityTypeLabel(value: Row['entity_type'] | null | undefined): string {
   }
 }
 
+function isSyntheticOpportunityReference(
+  row: Pick<Row, 'entity_type' | 'row_type' | 'case_number'>
+): boolean {
+  if (row.entity_type !== 'detection' && row.row_type !== 'detection_projection') {
+    return false;
+  }
+  return String(row.case_number || '').trim().toUpperCase().startsWith('OPP-');
+}
+
+function displayIdentityLabel(
+  row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record' | 'has_real_dispute_case'>
+): string {
+  if (row.row_type === 'detection_projection' || row.entity_type === 'detection') {
+    return 'Detection Projection';
+  }
+  if (row.has_real_recovery_record === true) {
+    return 'Recovery-Linked Case';
+  }
+  if (row.row_type === 'dispute_case_projection' || row.has_real_dispute_case === true) {
+    return 'Dispute Case Projection';
+  }
+  return NOT_AVAILABLE;
+}
+
+function identityMetaLabel(
+  row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record' | 'has_real_dispute_case'>
+): string {
+  const entity = entityTypeLabel(row.entity_type);
+  const displayIdentity = displayIdentityLabel(row);
+
+  if (entity === NOT_AVAILABLE) return displayIdentity;
+  if (displayIdentity === NOT_AVAILABLE) return entity;
+  return `${entity} · ${displayIdentity}`;
+}
+
+function recordReferenceLabel(
+  row: Pick<Row, 'entity_type' | 'row_type' | 'has_real_recovery_record' | 'case_number'>
+): string {
+  if (isSyntheticOpportunityReference(row)) {
+    return 'Synthetic Opportunity Reference';
+  }
+  if (row.entity_type === 'detection' || row.row_type === 'detection_projection') {
+    return 'Opportunity Reference';
+  }
+  if (row.has_real_recovery_record === true) {
+    return 'Recovery-Linked Case Reference';
+  }
+  if (row.entity_type === 'dispute_case') {
+    return 'Case Reference';
+  }
+  return 'Record Reference';
+}
+
 function payoutSourceLabel(value: Row['expected_payout_source'] | Row['actual_payout_source'] | null | undefined): string {
   switch (value) {
     case 'approved_pending':
@@ -269,16 +322,10 @@ function getLedgerRowKey(row: Pick<Row, 'recovery_record_id' | 'linked_dispute_c
 }
 
 function identityTruthHeadline(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record' | 'has_real_dispute_case'>): string {
-  if (row.row_type === 'detection_projection' || row.entity_type === 'detection') {
-    return 'Detection Projection';
-  }
   if (row.has_real_recovery_record === true) {
     return 'Recovery Record Linked';
   }
-  if (row.row_type === 'dispute_case_projection' || row.has_real_dispute_case === true) {
-    return 'Dispute Case Projection';
-  }
-  return NOT_AVAILABLE;
+  return displayIdentityLabel(row);
 }
 
 function identityTruthDetail(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real_recovery_record' | 'has_real_dispute_case'>): string {
@@ -1034,11 +1081,14 @@ export default function RecoveryPipelineAgent8() {
                                 <td className="py-5 pr-4">
                                   <div className="space-y-2">
                                     <div className="text-[11px] font-sans font-semibold tracking-tight text-white/92">{row.case_number}</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
+                                      {recordReferenceLabel(row)}
+                                    </div>
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
                                       {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant Reference Not Available'}
                                     </div>
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                      {entityTypeLabel(row.entity_type)} · {rowTypeLabel(row.row_type)}
+                                      {identityMetaLabel(row)}
                                     </div>
                                     {row.provider_case_id ? (
                                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
@@ -1234,16 +1284,18 @@ export default function RecoveryPipelineAgent8() {
               <DetailSection
                 title="Record Identity"
                 rows={[
-                  { label: 'Record Reference', value: detailsRow.case_number || NOT_AVAILABLE },
+                  { label: recordReferenceLabel(detailsRow), value: detailsRow.case_number || NOT_AVAILABLE },
                   { label: 'Merchant Reference', value: detailsRow.merchant_reference || NOT_AVAILABLE },
                   { label: 'Entity Type', value: entityTypeLabel(detailsRow.entity_type) },
-                  { label: 'Row Type', value: rowTypeLabel(detailsRow.row_type) },
+                  { label: 'Display Identity', value: displayIdentityLabel(detailsRow) },
+                  { label: 'Backend Row Type', value: rowTypeLabel(detailsRow.row_type) },
                   { label: 'Confirmed Dispute Case', value: boolTruth(detailsRow.has_real_dispute_case) },
+                  { label: 'Dispute Case ID', value: detailsRow.dispute_case_id || NOT_AVAILABLE },
                   { label: 'Linked Dispute Case ID', value: detailsRow.linked_dispute_case_id || NOT_AVAILABLE },
                   { label: 'Confirmed Recovery Record', value: boolTruth(detailsRow.has_real_recovery_record) },
                   { label: 'Recovery Record ID', value: detailsRow.recovery_record_id || NOT_AVAILABLE },
                   { label: 'Provider Case', value: detailsRow.provider_case_id || NOT_AVAILABLE },
-                  { label: 'Detection Reference', value: detailsRow.detection_result_id || NOT_AVAILABLE },
+                  { label: 'Detection Result ID', value: detailsRow.detection_result_id || NOT_AVAILABLE },
                 ]}
               />
               <DetailSection
