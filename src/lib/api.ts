@@ -2836,7 +2836,7 @@ export const api = {
 // Phase 3: Detection/Claims API methods
 export const detectionApi = {
   // Get all detection results
-  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string; syncId?: string }, tenantSlug?: string) => {
+  getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string; syncId?: string; sourceType?: 'sp_api' | 'csv_upload' | 'unknown' }, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDetectionResults");
     const queryParams = new URLSearchParams();
     if (params?.status) queryParams.append('status', params.status);
@@ -2844,6 +2844,7 @@ export const detectionApi = {
     if (params?.offset) queryParams.append('offset', params.offset.toString());
     if (params?.userId) queryParams.append('userId', params.userId);
     if (params?.syncId) queryParams.append('syncId', params.syncId);
+    if (params?.sourceType) queryParams.append('sourceType', params.sourceType);
     queryParams.append('tenantSlug', tenantSlug);
     const query = queryParams.toString();
     return requestJson<{
@@ -2852,6 +2853,7 @@ export const detectionApi = {
         id: string;
         seller_id: string;
         sync_id: string;
+        source_type: 'sp_api' | 'csv_upload' | 'unknown';
         anomaly_type: string;
         severity: string;
         estimated_value: number;
