@@ -955,7 +955,7 @@ export default function RecoveryPipelineAgent8() {
                       <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">{filteredLabel}</div>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      {[['Paid back', summary?.reconciled_count ?? NOT_AVAILABLE], ['Partial payout', summary?.partial_recovery_count ?? NOT_AVAILABLE], ['Still waiting', summary?.unreconciled_count ?? NOT_AVAILABLE], ['Needs review', summary?.investigation_required_count ?? NOT_AVAILABLE]].map(([text, value]) => (
+                      {[['Paid back', summary?.reconciled_count ?? NOT_AVAILABLE], ['Partial payout', summary?.partial_recovery_count ?? NOT_AVAILABLE], ['Awaiting payout', summary?.awaiting_payout_queue_count ?? NOT_AVAILABLE], ['Needs review', summary?.investigation_required_count ?? NOT_AVAILABLE]].map(([text, value]) => (
                         <div key={String(text)} className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
                           {text}: <span className="text-white">{value}</span>
                         </div>
