@@ -328,7 +328,10 @@ export default function DataUpload() {
     const dismissedCsvSyncStorageKey = `data_upload:dismissed_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
     const detectionPollingRef = useRef({ token: 0, syncId: null as string | null });
     const dashboardRedirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const detectionGateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isMountedRef = useRef(true);
+    const [redirectGateSyncId, setRedirectGateSyncId] = useState<string | null>(null);
+    const [detectionRedirectTimedOut, setDetectionRedirectTimedOut] = useState(false);
 
     const invalidateDetectionPolling = useCallback((clearSyncId = true) => {
         detectionPollingRef.current.token += 1;
@@ -350,6 +353,22 @@ export default function DataUpload() {
         }
     }, []);
 
+    const clearDetectionGateTimeout = useCallback(() => {
+        if (detectionGateTimeoutRef.current) {
+            clearTimeout(detectionGateTimeoutRef.current);
+            detectionGateTimeoutRef.current = null;
+        }
+    }, []);
+
+    const startDetectionRedirectTimeout = useCallback(() => {
+        clearDetectionGateTimeout();
+        setDetectionRedirectTimedOut(false);
+        detectionGateTimeoutRef.current = setTimeout(() => {
+            setDetectionRedirectTimedOut(true);
+            detectionGateTimeoutRef.current = null;
+        }, 60000);
+    }, [clearDetectionGateTimeout]);
+
     const goToDashboard = useCallback(() => {
         clearDashboardRedirect();
         navigate(tenantRoute(currentTenantSlug, '/dashboard'));
@@ -363,6 +382,11 @@ export default function DataUpload() {
         }, delayMs);
     }, [clearDashboardRedirect, currentTenantSlug, navigate]);
 
+    const armDetectionRedirectGate = useCallback((syncId: string) => {
+        setRedirectGateSyncId(syncId);
+        startDetectionRedirectTimeout();
+    }, [startDetectionRedirectTimeout]);
+
     const isPollingCurrent = useCallback((syncId: string, token: number) => (
         isMountedRef.current
         && detectionPollingRef.current.token === token
@@ -373,8 +397,10 @@ export default function DataUpload() {
         return () => {
             isMountedRef.current = false;
             invalidateDetectionPolling();
+            clearDetectionGateTimeout();
+            clearDashboardRedirect();
         };
-    }, [invalidateDetectionPolling]);
+    }, [clearDashboardRedirect, clearDetectionGateTimeout, invalidateDetectionPolling]);
 
     const resolveSessionIdentity = useCallback(async () => {
         let resolvedUserId = localStorage.getItem('user_id') || '';
@@ -444,7 +470,7 @@ export default function DataUpload() {
     }, [currentTenantSlug, isPollingCurrent]);
 
     const pollForUploadDetections = useCallback(async (syncId: string, pollingToken: number, startWithDelay = false) => {
-        const maxAttempts = 15;
+        const maxAttempts = 120;
         let shouldDelay = startWithDelay;
 
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -470,7 +496,7 @@ export default function DataUpload() {
                 continue;
             }
 
-            if (shouldOpenDetectionPreview(statusData) && !isPreviewOpen) {
+            if (isDetectionTerminal(statusData.status) && !isPreviewOpen) {
                 setIsPreviewOpen(true);
             }
 
@@ -689,7 +715,38 @@ export default function DataUpload() {
 
     useEffect(() => () => {
         clearDashboardRedirect();
-    }, [clearDashboardRedirect]);
+        clearDetectionGateTimeout();
+    }, [clearDashboardRedirect, clearDetectionGateTimeout]);
+
+    useEffect(() => {
+        if (!redirectGateSyncId) {
+            return;
+        }
+
+        if (previewState.syncId !== redirectGateSyncId) {
+            return;
+        }
+
+        if (previewState.status === 'completed') {
+            clearDetectionGateTimeout();
+            setDetectionRedirectTimedOut(false);
+            setRedirectGateSyncId(null);
+            scheduleDashboardRedirect();
+            return;
+        }
+
+        if (previewState.status === 'failed') {
+            clearDetectionGateTimeout();
+            setDetectionRedirectTimedOut(false);
+            setRedirectGateSyncId(null);
+        }
+    }, [
+        clearDetectionGateTimeout,
+        previewState.status,
+        previewState.syncId,
+        redirectGateSyncId,
+        scheduleDashboardRedirect
+    ]);
 
     const currentUploadSyncId = batchResult?.syncId || previewState.syncId;
     const isPreviewPartial = previewResults.length > 0 && isDetectionInFlight(previewState.status);
@@ -891,6 +948,9 @@ export default function DataUpload() {
     const handleUpload = async () => {
         if (files.length === 0 || isUploading) return;
         clearDashboardRedirect();
+        clearDetectionGateTimeout();
+        setRedirectGateSyncId(null);
+        setDetectionRedirectTimedOut(false);
         const { userId: resolvedUserId, tenantId: resolvedTenantId } = await resolveSessionIdentity();
         const { token: sessionToken } = await getFrontendAuthContext();
 
@@ -1010,9 +1070,10 @@ export default function DataUpload() {
             let detectionTruth: any = null;
 
             if (result.detectionTriggered && result.syncId) {
+                armDetectionRedirectGate(result.syncId);
                 const pollingToken = beginDetectionPolling(result.syncId);
                 detectionTruth = await loadUploadDetectionTruth(result.syncId, pollingToken);
-                if (detectionTruth && shouldOpenDetectionPreview(detectionTruth)) {
+                if (detectionTruth && shouldOpenDetectionPreview(detectionTruth) && detectionTruth.status === 'completed') {
                     setIsPreviewOpen(true);
                 }
                 void pollForUploadDetections(result.syncId, pollingToken, true);
@@ -1037,9 +1098,6 @@ export default function DataUpload() {
                 });
             }
 
-            if (failedCount === 0 && (insertedFileCount > 0 || skippedOnlyCount > 0)) {
-                scheduleDashboardRedirect();
-            }
         } catch (error: any) {
             const failureMessage = combineBackendMessages(error?.message, 'Network error') || 'Network error';
             toast({ title: 'Upload failed', description: failureMessage, variant: 'destructive' });
@@ -1053,6 +1111,9 @@ export default function DataUpload() {
     const handleReset = () => {
         const dismissedSyncId = batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId;
         clearDashboardRedirect();
+        clearDetectionGateTimeout();
+        setRedirectGateSyncId(null);
+        setDetectionRedirectTimedOut(false);
 
         try {
             if (dismissedSyncId) {
@@ -1102,7 +1163,12 @@ export default function DataUpload() {
         || Boolean(previewState.syncId)
         || previewResults.length > 0
         || isPreviewOpen;
-    const canGoToDashboard = !isUploading && Boolean(batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId);
+    const isWaitingForDetectionGate = Boolean(redirectGateSyncId)
+        && previewState.syncId === redirectGateSyncId
+        && !isDetectionTerminal(previewState.status);
+    const canGoToDashboard = !isUploading
+        && Boolean(batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId)
+        && (!isWaitingForDetectionGate || detectionRedirectTimedOut);
 
     return (
         <PageLayout title="Data Upload" noPadding hideNavbar={true} hideSidebar={true} hideLogo={true} midnight>
@@ -1264,6 +1330,55 @@ export default function DataUpload() {
                                 <div>
                                     <p className="text-xs font-sans font-bold uppercase tracking-tight text-white/50">Upload In Progress</p>
                                     <p className="text-[11px] text-white/35 font-sans">Sending CSV files to the backend for ingestion.</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {isWaitingForDetectionGate && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-6 rounded-xl bg-white/[0.02] border border-white/10 p-4"
+                        >
+                            <div className="flex items-start gap-3">
+                                <Loader2 className="h-4 w-4 text-white/50 animate-spin mt-0.5 flex-shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/45">
+                                        Detection in progress
+                                    </p>
+                                    <p className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
+                                        Analyzing your data...
+                                    </p>
+                                    <p className="mt-2 text-[11px] font-sans leading-5 text-white/40">
+                                        Margin is waiting for detection to finish for this upload before sending you to the dashboard.
+                                    </p>
+                                    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                                        <div className="h-full w-1/3 rounded-full bg-white/70 animate-pulse" />
+                                    </div>
+
+                                    {detectionRedirectTimedOut && (
+                                        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                            <p className="text-[11px] font-sans leading-5 text-white/45">
+                                                Detection is taking longer than expected. You can keep waiting here or continue to the dashboard manually.
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    onClick={startDetectionRedirectTimeout}
+                                                    variant="outline"
+                                                    className="h-9 px-4 bg-transparent border-white/[0.08] text-white/65 hover:bg-white/5"
+                                                >
+                                                    Keep Waiting
+                                                </Button>
+                                                <Button
+                                                    onClick={goToDashboard}
+                                                    className="h-9 px-4 bg-white text-black hover:bg-white/90"
+                                                >
+                                                    Continue to Dashboard <ArrowRight className="h-4 w-4 ml-2" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
