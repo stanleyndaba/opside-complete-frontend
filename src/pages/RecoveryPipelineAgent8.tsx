@@ -303,8 +303,44 @@ function visiblePayoutStatusTone(value: Row['payout_status'] | null | undefined)
   return value ? financialStatusTone(value) : 'border-white/10 bg-white/[0.04] text-white/60';
 }
 
-function reconciliationTruthDetail(row: Pick<Row, 'reconciliation_source' | 'reconciliation_status' | 'payout_status'>): string {
-  return NOT_AVAILABLE;
+function reconciliationTruthDetail(
+  row: Pick<
+    Row,
+    | 'reconciliation_source'
+    | 'reconciliation_status'
+    | 'payout_status'
+    | 'expected_payout_source'
+    | 'actual_payout_source'
+    | 'outstanding_amount'
+    | 'variance_amount'
+  >
+): string {
+  if (row.reconciliation_source === 'canonical_financial_truth') {
+    if (row.reconciliation_status === 'reconciled' || row.payout_status === 'paid') {
+      return 'Confirmed financial events show this payout has been reconciled.';
+    }
+    if (row.reconciliation_status === 'partial_recovery' || row.payout_status === 'partially_paid') {
+      return 'Confirmed financial events show a partial payout, with value still outstanding.';
+    }
+    if (row.reconciliation_status === 'pending_payout' || row.payout_status === 'not_paid') {
+      return 'Confirmed financial events show this row is awaiting payout and is not financially final yet.';
+    }
+    return 'This reconciliation view is backed by confirmed financial events.';
+  }
+
+  if (row.reconciliation_source === 'projected_legacy_case_field' || row.actual_payout_source === 'legacy_case_field') {
+    return 'This row uses legacy dispute-case payout data and is not yet confirmed by financial events.';
+  }
+
+  if (row.reconciliation_source === 'detection_estimate' || row.expected_payout_source === 'detection_estimate') {
+    return 'This row reflects a detection estimate only, not a confirmed payout.';
+  }
+
+  if (row.expected_payout_source === 'approved_pending') {
+    return 'An expected payout is shown, but no reliable reconciliation or payout confirmation is available yet.';
+  }
+
+  return 'No reliable reconciliation or payout truth is available yet.';
 }
 
 function boolTruth(value: boolean | null | undefined): string {
