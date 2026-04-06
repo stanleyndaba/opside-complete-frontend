@@ -1127,8 +1127,9 @@ export default function DisputeCases() {
   };
 
   const primarySummaryCards = useMemo(() => ([
-    { label: 'Queue records', value: summary.total_cases },
+    { label: 'Filtered records', value: summary.filtered_results },
     { label: 'Ready to file', value: summary.ready_to_file_count },
+    { label: 'Blocked', value: summary.blocked_count },
     { label: 'Payout waiting', value: summary.approved_pending_payout_count },
   ]), [summary]);
 
@@ -1238,13 +1239,13 @@ export default function DisputeCases() {
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.02]"
             >
               <div className="min-w-0">
-                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Queue snapshot</p>
-                <p className="mt-2 text-xs font-sans text-white">Tap to view live counts across filing, payout follow-up, and verified payments.</p>
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Filtered queue snapshot</p>
+                <p className="mt-2 text-xs font-sans text-white">Tap to view counts for the current filtered queue view. Total queue records stay labeled separately.</p>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
                 <div className="text-left">
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Queue records</p>
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Total queue records</p>
                   <p className="mt-1 text-lg leading-none font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
                     {formatSummaryValue(summary.total_cases)}
                   </p>
@@ -1259,6 +1260,9 @@ export default function DisputeCases() {
 
             {summaryExpanded && (
               <div className="border-t border-white/8 px-5 py-4">
+                <p className="mb-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+                  Snapshot scope: current filtered view
+                </p>
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {[...primarySummaryCards, ...secondarySummaryCards].map((card) => (
                     <div key={card.label} className="flex items-center gap-3">
@@ -1559,7 +1563,7 @@ export default function DisputeCases() {
                 </div>
 
                 <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
-                  Filtered Results: {formatSummaryValue(summary.filtered_results)} of {formatSummaryValue(summary.total_cases)} total queue records
+                  Current filtered view: {formatSummaryValue(summary.filtered_results)} of {formatSummaryValue(summary.total_cases)} total queue records
                 </div>
               </div>
             </CardHeader>
