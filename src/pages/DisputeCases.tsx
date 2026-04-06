@@ -225,6 +225,8 @@ function getActionAvailabilityLabel(isAvailable: boolean, label: string) {
   return isAvailable ? label : `${label} · Not Available`;
 }
 
+type QueueUnavailableActionKind = 'primary' | 'brief' | 'details' | 'open_record';
+
 type QueueGateState = {
   label: string;
   tone: 'ready' | 'attention' | 'blocked';
@@ -253,6 +255,107 @@ function getQueueGateState(
     default:
       return null;
   }
+}
+
+function getUnavailableActionExplanation(
+  row: QueueRow,
+  kind: QueueUnavailableActionKind
+): { short: string; detail: string } {
+  const gateState = getQueueGateState(row);
+  const hasRealDisputeCase = row.has_real_dispute_case === true;
+  const hasLinkedDisputeCase = hasRealDisputeCase && Boolean(row.linked_dispute_case_id);
+  const entityKind = getQueueEntityKind(row);
+
+  if ((kind === 'brief' || kind === 'primary') && !hasLinkedDisputeCase) {
+    return kind === 'brief'
+      ? {
+          short: 'No linked case',
+          detail: 'A backend-confirmed dispute brief is not available because this row has no real linked dispute case.'
+        }
+      : {
+          short: 'No linked case',
+          detail: 'Filing is not available because this row has no real linked dispute case.'
+        };
+  }
+
+  const eligibilityStatus = String(row.eligibility_status || '').trim().toLowerCase();
+  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
+
+  if (filingStatus === 'pending_safety_verification') {
+    return {
+      short: 'Awaiting identifiers',
+      detail: 'This row is awaiting verified identifiers before filing can continue.'
+    };
+  }
+
+  switch (eligibilityStatus) {
+    case 'duplicate_blocked':
+      return {
+        short: 'Duplicate blocked',
+        detail: 'This row is duplicate-blocked, so a new filing is not available.'
+      };
+    case 'thread_only':
+      return {
+        short: 'Thread-only',
+        detail: 'This row is linked to an existing Amazon support thread, so Margin will not file again until a safe path is verified.'
+      };
+    case 'insufficient_data':
+      return {
+        short: 'Awaiting identifiers',
+        detail: 'This row is missing verified identifiers, so filing remains unavailable.'
+      };
+    case 'safety_hold':
+      return {
+        short: 'Safety hold',
+        detail: 'This row is under a safety hold, so filing remains unavailable.'
+      };
+    default:
+      break;
+  }
+
+  if ((kind === 'details' || kind === 'open_record') && row.can_open_case_detail !== true) {
+    return entityKind === 'detection'
+      ? {
+          short: 'Detection detail unavailable',
+          detail: 'Record detail is not backend-confirmed for this detection row.'
+        }
+      : {
+          short: 'Case detail unavailable',
+          detail: 'Record detail is not backend-confirmed for this dispute row.'
+        };
+  }
+
+  if (kind === 'brief' && row.can_open_brief !== true) {
+    return {
+      short: gateState?.label || 'Brief unavailable',
+      detail: gateState
+        ? `A backend-confirmed dispute brief is not available because this row is ${gateState.label.toLowerCase()}.`
+        : 'A backend-confirmed dispute brief is not available for this row.'
+    };
+  }
+
+  if (gateState) {
+    return {
+      short: gateState.label,
+      detail: `This row is currently ${gateState.label.toLowerCase()}, so the requested action is not available.`
+    };
+  }
+
+  return {
+    short: 'Not available',
+    detail: 'This action is not backend-confirmed for this row.'
+  };
+}
+
+function getActionAvailabilityText(
+  row: QueueRow,
+  kind: QueueUnavailableActionKind,
+  isAvailable: boolean,
+  label: string
+) {
+  if (isAvailable) return label;
+  const explanation = getUnavailableActionExplanation(row, kind);
+  return `${label} · ${explanation.short}`;
 }
 
 type FilingPosture = {
@@ -1044,10 +1147,11 @@ export default function DisputeCases() {
 
   const openCaseDetails = async (row: QueueRow) => {
     if (row.can_open_case_detail !== true) {
+      const explanation = getUnavailableActionExplanation(row, 'details');
       toast({
         variant: 'destructive',
         title: 'Not Available',
-        description: 'Record detail is not backend-confirmed for this row.'
+        description: explanation.detail
       });
       return;
     }
@@ -1084,10 +1188,11 @@ export default function DisputeCases() {
 
   const handleBriefPreview = async (row: QueueRow) => {
     if (row.can_open_brief !== true || !row.linked_dispute_case_id) {
+      const explanation = getUnavailableActionExplanation(row, 'brief');
       toast({
         variant: 'destructive',
         title: 'Not Available',
-        description: 'A backend-confirmed dispute brief is not available for this row.'
+        description: explanation.detail
       });
       return;
     }
@@ -1887,7 +1992,7 @@ export default function DisputeCases() {
                                         disabled
                                         className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
                                       >
-                                        {getActionAvailabilityLabel(false, openRecordLabel)}
+                                        {getActionAvailabilityText(row, 'open_record', false, openRecordLabel)}
                                       </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem
@@ -1895,14 +2000,14 @@ export default function DisputeCases() {
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
                                       onClick={() => handleBriefPreview(row)}
                                     >
-                                      {getActionAvailabilityLabel(canOpenBrief, 'Brief PDF')}
+                                      {getActionAvailabilityText(row, 'brief', canOpenBrief, 'Brief PDF')}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       disabled={!canOpenCaseDetail}
                                       className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white"
                                       onClick={() => openCaseDetails(row)}
                                     >
-                                      {getActionAvailabilityLabel(canOpenCaseDetail, recordDetailsLabel)}
+                                      {getActionAvailabilityText(row, 'details', canOpenCaseDetail, recordDetailsLabel)}
                                     </DropdownMenuItem>
                                     {actionButton ? (
                                       <DropdownMenuItem
@@ -1918,7 +2023,7 @@ export default function DisputeCases() {
                                         disabled
                                         className="rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/35"
                                       >
-                                        Not Available
+                                        {getActionAvailabilityText(row, 'primary', false, 'Action blocked')}
                                       </DropdownMenuItem>
                                     )}
                                   </DropdownMenuContent>
