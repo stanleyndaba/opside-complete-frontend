@@ -1451,6 +1451,58 @@ export function Dashboard() {
       detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
     }
   ]), [filedClaimsCount, isSyncScopedDetections, needsReviewFindingsCount, readyToFileFindingsCount, visibleDetectionResults.length]);
+  const syncScopedEmptyState = useMemo(() => {
+    if (!isSyncScopedDetections) return null;
+
+    const normalizedStatus = (detectionResultsMeta?.status || '').toLowerCase();
+    const errorMessage = detectionResultsMeta?.errorMessage?.trim() || null;
+    const syncLabel = uploadSyncId ? `Sync ${uploadSyncId}` : 'This upload';
+
+    if (normalizedStatus === 'processing' || normalizedStatus === 'pending') {
+      return {
+        title: 'Detection is still processing for this upload.',
+        description: `${syncLabel} is still running through Agent 3. Findings for this upload are not final yet.`,
+        showViewAllCta: false,
+      };
+    }
+
+    if (normalizedStatus === 'failed') {
+      return {
+        title: 'Detection failed for this upload.',
+        description: errorMessage || `${syncLabel} failed before upload-scoped findings could be returned.`,
+        showViewAllCta: false,
+      };
+    }
+
+    if (syncScopedDetectionCount > 0 && !showProcessed) {
+      return {
+        title: 'This upload has findings, but none are currently visible.',
+        description: `All findings for ${syncLabel} are already processed and hidden in this view. Turn on “Show processed” to review them.`,
+        showViewAllCta: false,
+      };
+    }
+
+    if (normalizedStatus === 'completed' && syncScopedDetectionCount === 0) {
+      return {
+        title: 'No new issues were found for this upload.',
+        description: `${syncLabel} completed successfully and returned zero findings for this upload.`,
+        showViewAllCta: true,
+      };
+    }
+
+    return {
+      title: 'Findings for this upload are not available yet.',
+      description: errorMessage || `${syncLabel} has not returned a final upload-scoped findings state yet.`,
+      showViewAllCta: false,
+    };
+  }, [
+    detectionResultsMeta?.errorMessage,
+    detectionResultsMeta?.status,
+    isSyncScopedDetections,
+    showProcessed,
+    syncScopedDetectionCount,
+    uploadSyncId,
+  ]);
   const lastSyncResult = useMemo(() => {
     if (activeSyncId || syncTriggered) {
       return {
@@ -2337,14 +2389,14 @@ export function Dashboard() {
                           <Files className="h-6 w-6 text-white/40" />
                         </div>
                         <h3 className="text-lg font-sans font-semibold text-white tracking-tight">
-                          {isSyncScopedDetections ? 'No new issues were found for this upload.' : 'No open issues right now'}
+                          {isSyncScopedDetections ? syncScopedEmptyState?.title : 'No open issues right now'}
                         </h3>
                         <p className="text-[13px] text-white/45 mt-3 font-sans max-w-sm mx-auto leading-relaxed">
                           {isSyncScopedDetections
-                            ? 'Your uploaded data did not produce new discrepancies.'
+                            ? syncScopedEmptyState?.description
                             : 'Margin is not holding any unresolved findings in this view right now.'}
                         </p>
-                        {isSyncScopedDetections ? (
+                        {isSyncScopedDetections && syncScopedEmptyState?.showViewAllCta ? (
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/dashboard'))}
                             className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
@@ -2354,7 +2406,7 @@ export function Dashboard() {
                             </span>
                             <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
                           </button>
-                        ) : (
+                        ) : !isSyncScopedDetections ? (
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
                             className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
