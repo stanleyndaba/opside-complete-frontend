@@ -369,18 +369,29 @@ export default function DataUpload() {
         }, 60000);
     }, [clearDetectionGateTimeout]);
 
+    const buildDashboardTarget = useCallback((syncId?: string | null) => {
+        const basePath = tenantRoute(currentTenantSlug, '/dashboard');
+        if (!syncId) {
+            return basePath;
+        }
+
+        return `${basePath}?syncId=${encodeURIComponent(syncId)}`;
+    }, [currentTenantSlug]);
+
     const goToDashboard = useCallback(() => {
         clearDashboardRedirect();
-        navigate(tenantRoute(currentTenantSlug, '/dashboard'));
-    }, [clearDashboardRedirect, currentTenantSlug, navigate]);
+        const targetSyncId = redirectGateSyncId || previewState.syncId || batchResult?.syncId || rehydratedRun?.syncId || null;
+        navigate(buildDashboardTarget(targetSyncId));
+    }, [batchResult?.syncId, buildDashboardTarget, clearDashboardRedirect, navigate, previewState.syncId, redirectGateSyncId, rehydratedRun?.syncId]);
 
     const scheduleDashboardRedirect = useCallback((delayMs = 1400) => {
         clearDashboardRedirect();
+        const targetSyncId = redirectGateSyncId || previewState.syncId || batchResult?.syncId || rehydratedRun?.syncId || null;
         dashboardRedirectTimeoutRef.current = setTimeout(() => {
-            navigate(tenantRoute(currentTenantSlug, '/dashboard'));
+            navigate(buildDashboardTarget(targetSyncId));
             dashboardRedirectTimeoutRef.current = null;
         }, delayMs);
-    }, [clearDashboardRedirect, currentTenantSlug, navigate]);
+    }, [batchResult?.syncId, buildDashboardTarget, clearDashboardRedirect, navigate, previewState.syncId, redirectGateSyncId, rehydratedRun?.syncId]);
 
     const armDetectionRedirectGate = useCallback((syncId: string) => {
         setRedirectGateSyncId(syncId);

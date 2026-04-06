@@ -267,6 +267,11 @@ export function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const uploadSyncId = useMemo(() => {
+    const raw = searchParams.get('syncId');
+    const normalized = typeof raw === 'string' ? raw.trim() : '';
+    return normalized.length > 0 ? normalized : null;
+  }, [searchParams]);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarCollapsed(prev => !prev);
@@ -639,7 +644,8 @@ export function Dashboard() {
     setDetectionStats(null);
     setEvidenceStatus(null);
     setDetectionResults([]);
-  }, [activeSlug]);
+    setDetectionTotal(0);
+  }, [activeSlug, uploadSyncId]);
 
   const fetchDashboardSummary = useCallback(async () => {
     if (!isReady || !activeSlug) return;
@@ -749,28 +755,42 @@ export function Dashboard() {
 
   // Fetch detection results for anomaly ledger counter
   useEffect(() => {
-    if (!isReady || !activeSlug || detectionResults.length !== 0) return;
+    if (!isReady || !activeSlug) return;
+
+    let cancelled = false;
     const fetchDetections = async () => {
       setLoadingDetections(true);
       try {
-        const res = await detectionApi.getDetectionResults({ limit: 50 }, activeSlug);
-        if (res.ok && res.data?.results) {
+        const res = await detectionApi.getDetectionResults(
+          uploadSyncId
+            ? { limit: 500, syncId: uploadSyncId }
+            : { limit: 50 },
+          activeSlug
+        );
+        if (!cancelled && res.ok && res.data?.results) {
           setDetectionResults(res.data.results);
           setDetectionTotal(res.data.total);
         }
       } catch (error) {
         console.error('Failed to fetch detections:', error);
-        toast({
+        if (!cancelled) {
+          toast({
           title: 'FETCH_PROTOCOL_ERROR',
           description: 'Failed to retrieve forensic discrepancy data.',
           variant: 'destructive'
         });
+        }
       } finally {
-        setLoadingDetections(false);
+        if (!cancelled) {
+          setLoadingDetections(false);
+        }
       }
     };
+    setDetectionResults([]);
+    setDetectionTotal(0);
     fetchDetections();
-  }, [activeSlug, detectionResults.length, toast, isReady]);
+    return () => { cancelled = true; };
+  }, [activeSlug, isReady, toast, uploadSyncId]);
 
   const updateUpcomingMetrics = useCallback((payments: any[]) => {
     upcomingPaymentsLoadedRef.current = true;
