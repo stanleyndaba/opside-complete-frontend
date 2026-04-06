@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Store, Box, Upload } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search, Link2, Mail, Copy, Check, X, FileText, Package, DollarSign, Clock, NotebookPen, User, CreditCard, Box, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { NotificationBell } from './NotificationBell';
 import { useCurrency, currencies } from '@/components/providers/CurrencyProvider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -39,6 +39,35 @@ const toTitleCase = (value?: string | null) => {
     .filter(Boolean)
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+};
+
+const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
+const NOT_AVAILABLE = 'Not Available';
+
+type ApprovedReimbursementRow = {
+  routeId: string;
+  caseReference: string;
+  approvedAmount: number | null;
+  payoutStatus: string | null;
+  lastUpdatedAt: string | null;
+  currency: string;
+};
+
+const isApprovedReimbursementRow = (row: any) => {
+  const status = String(row?.status || '').trim().toLowerCase();
+  return APPROVED_CASE_STATUSES.has(status) || (typeof row?.approved_amount === 'number' && !Number.isNaN(row.approved_amount));
+};
+
+const formatMoney = (value: number | null | undefined, currency = 'USD') =>
+  typeof value === 'number' && !Number.isNaN(value)
+    ? new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value)
+    : NOT_AVAILABLE;
+
+const formatStamp = (value?: string | null) => {
+  if (!value) return NOT_AVAILABLE;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
+  return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 export function Navbar({
@@ -213,6 +242,9 @@ export function Navbar({
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
+  const [approvedReimbursements, setApprovedReimbursements] = useState<ApprovedReimbursementRow[]>([]);
+  const [approvedReimbursementsLoading, setApprovedReimbursementsLoading] = useState(false);
+  const [approvedReimbursementsError, setApprovedReimbursementsError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchConnectionsCount = async () => {
@@ -275,6 +307,57 @@ export function Navbar({
     
     fetchConnectionsCount();
   }, [activeTenantSlug]);
+
+  useEffect(() => {
+    const fetchApprovedReimbursements = async () => {
+      if (!activeTenantSlug || !isAuthReady || !authToken || !isSessionValid) {
+        setApprovedReimbursements([]);
+        setApprovedReimbursementsError(null);
+        setApprovedReimbursementsLoading(false);
+        return;
+      }
+
+      setApprovedReimbursementsLoading(true);
+      setApprovedReimbursementsError(null);
+
+      try {
+        const response = await api.getRecoveriesLedger({
+          date_range: 'all',
+          sort_by: 'approved_amount',
+          sort_dir: 'desc',
+          page: 1,
+          page_size: 12,
+        }, activeTenantSlug);
+
+        if (!response.ok || !response.data?.success) {
+          throw new Error(response.error || 'Failed to load approved reimbursements.');
+        }
+
+        const rows = Array.isArray(response.data?.rows) ? response.data.rows : [];
+        const nextRows = rows
+          .filter(isApprovedReimbursementRow)
+          .slice(0, 8)
+          .map((row: any) => ({
+            routeId: String(row?.recovery_record_id || row?.dispute_case_id || row?.detection_result_id || row?.case_number || ''),
+            caseReference: String(row?.case_number || row?.provider_case_id || row?.merchant_reference || NOT_AVAILABLE),
+            approvedAmount: typeof row?.approved_amount === 'number' ? row.approved_amount : null,
+            payoutStatus: typeof row?.payout_status === 'string' ? row.payout_status : null,
+            lastUpdatedAt: typeof row?.last_updated_at === 'string' ? row.last_updated_at : null,
+            currency: typeof row?.currency === 'string' && row.currency.trim() ? row.currency : 'USD',
+          }));
+
+        setApprovedReimbursements(nextRows);
+      } catch (error: any) {
+        console.error('Failed to load approved reimbursements:', error);
+        setApprovedReimbursements([]);
+        setApprovedReimbursementsError(error?.message || 'Failed to load approved reimbursements.');
+      } finally {
+        setApprovedReimbursementsLoading(false);
+      }
+    };
+
+    fetchApprovedReimbursements();
+  }, [activeTenantSlug, authToken, isAuthReady, isSessionValid]);
 
   // State for notes feature
   const [showNotesModal, setShowNotesModal] = useState(false);
@@ -541,43 +624,75 @@ export function Navbar({
                   iconClassName="h-5 w-5"
                 />
 
-                {/* Store Connection */}
+                {/* Approved Reimbursements */}
                 <HoverCard openDelay={100} closeDelay={200}>
                   <HoverCardTrigger asChild>
                     <button
-                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/integrations-hub'))}
+                      onClick={() => navigate(tenantRoute(activeTenantSlug, '/recoveries'))}
                       className="h-10 w-10 flex items-center justify-center text-white/40 hover:bg-white/[0.03] rounded-xl border border-transparent hover:border-white/5 transition-all relative"
-                      aria-label="Store connections">
-                      <Store className="h-5 w-5" />
-                      <span className="absolute top-2.5 right-2.5 h-1.5 w-1.5 bg-white/20 rounded-full" />
+                      aria-label="Approved reimbursements">
+                      <DollarSign className="h-5 w-5" />
                     </button>
                   </HoverCardTrigger>
                   <HoverCardContent
                     side="bottom"
                     align="center"
                     sideOffset={12}
-                    className="w-72 p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
-                    <div className="p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="h-8 w-8 rounded-lg bg-white/[0.04] flex items-center justify-center border border-white/10">
-                          <Store className="h-4 w-4 text-white/70" />
-                        </div>
-                        <span className="text-[11px] font-sans font-bold text-white uppercase tracking-tight">Store Setup</span>
-                      </div>
-                      <h4 className="text-[13px] font-sans font-bold text-white mb-2 uppercase tracking-tight">Connections</h4>
-                      <p className="text-[11px] text-white/40 leading-relaxed font-sans font-bold italic">
-                        "Consolidate institutional data flows from Amazon, Shopify, or Walmart to maximize multi-vector recoveries."
-                      </p>
-                      <div className="mt-6">
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            navigate(tenantRoute(activeTenantSlug, '/integrations-hub'));
-                          }}
-                          className="w-full h-10 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 text-white/75 hover:text-white text-[10px] font-sans font-bold uppercase tracking-tight transition-all rounded-xl">
-                          Manage connections
-                        </Button>
-                      </div>
+                    className="w-[560px] p-0 bg-[#0c0c0c] border border-white/10 shadow-3xl rounded-2xl overflow-hidden backdrop-blur-3xl">
+                    <div className="border-b border-white/10 px-5 py-4">
+                      <h4 className="text-[13px] font-sans font-bold text-white uppercase tracking-tight">Approved Reimbursements</h4>
+                    </div>
+                    <div className="max-h-[360px] overflow-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="border-white/5 hover:bg-transparent">
+                            <TableHead className="h-10 px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Payout</TableHead>
+                            <TableHead className="h-10 pr-5 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Updated</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {approvedReimbursementsLoading ? (
+                            <TableRow className="border-white/5">
+                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
+                                Loading approved reimbursements...
+                              </TableCell>
+                            </TableRow>
+                          ) : approvedReimbursementsError ? (
+                            <TableRow className="border-white/5">
+                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
+                                Unable to load approved reimbursements.
+                              </TableCell>
+                            </TableRow>
+                          ) : approvedReimbursements.length === 0 ? (
+                            <TableRow className="border-white/5">
+                              <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
+                                No approved reimbursements yet.
+                              </TableCell>
+                            </TableRow>
+                          ) : approvedReimbursements.map((row) => (
+                            <TableRow
+                              key={`${row.routeId}-${row.caseReference}`}
+                              className="cursor-pointer border-white/5 text-white/70 transition-colors hover:bg-white/[0.03] hover:text-white"
+                              onClick={() => navigate(tenantRoute(activeTenantSlug, '/recoveries'))}
+                            >
+                              <TableCell className="px-5 py-3 text-[11px] font-sans font-bold tracking-tight text-white/78">
+                                {row.caseReference}
+                              </TableCell>
+                              <TableCell className="py-3 text-[11px] font-sans font-bold text-white/70">
+                                {formatMoney(row.approvedAmount, row.currency)}
+                              </TableCell>
+                              <TableCell className="py-3 text-[11px] font-sans font-bold text-white/50">
+                                {toTitleCase(row.payoutStatus) || NOT_AVAILABLE}
+                              </TableCell>
+                              <TableCell className="py-3 pr-5 text-right text-[11px] font-sans font-bold text-white/40">
+                                {formatStamp(row.lastUpdatedAt)}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
                   </HoverCardContent>
                 </HoverCard>
