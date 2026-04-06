@@ -1418,7 +1418,7 @@ export function Dashboard() {
         value: syncScopedIssuesUpdatedLabel,
       },
       {
-        label: 'Findings in this upload',
+        label: 'Total findings in this upload',
         value: pluralize(syncScopedDetectionCount, 'finding'),
       },
     ];
@@ -1432,7 +1432,7 @@ export function Dashboard() {
   }, [isSyncScopedDetections, isSyncScopedSandbox, syncScopedDetectionCount, syncScopedDetectionStatus, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedErrorMessage, syncScopedIssuesUpdatedLabel, uploadSyncId]);
   const issuesFoundHeading = isSyncScopedDetections ? 'This upload\'s findings' : 'Recent findings';
   const issuesFoundDescription = isSyncScopedDetections
-    ? 'Showing detections from your latest CSV upload. Review what this upload found, what is ready, and what still needs review.'
+    ? 'Showing detections from your latest CSV upload. The upload total above reflects everything this sync found, while the table below reflects only the findings currently visible in this view.'
     : 'Review what Margin found, whether a discrepancy is ready, already moved into a case, or still needs review.';
   const visibleDetectionResults = useMemo(
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
@@ -1448,9 +1448,9 @@ export function Dashboard() {
   );
   const issuesFoundSummaryRows = useMemo(() => ([
     {
-      label: 'In view',
+      label: isSyncScopedDetections ? 'Findings currently in view' : 'In view',
       value: pluralize(visibleDetectionResults.length, 'finding'),
-      detail: 'Currently shown in this queue'
+      detail: isSyncScopedDetections ? 'Currently shown in the table for this upload view' : 'Currently shown in this queue'
     },
     {
       label: 'Ready to file',
@@ -2442,7 +2442,9 @@ export function Dashboard() {
                       <div>
                         <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                           <div className="text-[11px] font-sans tracking-tight text-[#d8d8d8]">
-                            Open the findings below to review what is ready, what is filed, and what still needs attention.
+                            {isSyncScopedDetections
+                              ? 'Review the findings currently shown for this upload. Processed rows and active filters can make the table count smaller than the upload total above.'
+                              : 'Open the findings below to review what is ready, what is filed, and what still needs attention.'}
                           </div>
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
@@ -2602,7 +2604,7 @@ export function Dashboard() {
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-white/40" />
                               <span className="text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                                Open issues loaded: <span className="text-white/55">{visibleDetectionResults.length}</span>
+                                {isSyncScopedDetections ? 'Findings currently shown:' : 'Open issues loaded:'} <span className="text-white/55">{visibleDetectionResults.length}</span>
                               </span>
                             </div>
                             <span className="text-white/10">|</span>
