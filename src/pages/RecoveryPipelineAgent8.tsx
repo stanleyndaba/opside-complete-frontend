@@ -878,19 +878,19 @@ export default function RecoveryPipelineAgent8() {
       <div className="relative w-full flex-1 overflow-x-hidden bg-[#050505]">
         <div className="relative w-full max-w-full px-8 pt-8 pb-24">
           <div className="mb-8 border-b border-white/10 pb-8">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovery value</div>
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Account-wide recovery ledger</div>
             <div className="mt-3 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
               <div>
                 <h1 className="text-4xl font-light tracking-tight text-white">Recoveries In Motion</h1>
                 <p className="mt-3 max-w-3xl text-[12px] font-sans leading-6 text-white/40">
-                  See what Amazon already approved, what is still waiting for payout, and what has already been paid back.
+                  Review account-wide recovery history across approved claims, pending payouts, and completed paybacks. This ledger reflects workspace-level activity over time, not the results of a single CSV upload.
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {summary?.last_updated_at ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">Last updated {stamp(summary.last_updated_at)}</div> : null}
+                {summary?.last_updated_at ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">Account ledger updated {stamp(summary.last_updated_at)}</div> : null}
                 <Button variant="outline" className="h-10 rounded-lg border-white/10 bg-white/5 px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:bg-white/10 hover:text-white" onClick={() => fetchLedger('refresh')} disabled={loading || refreshing}>
                   <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  Refresh account
+                  Refresh ledger
                 </Button>
               </div>
             </div>
@@ -951,7 +951,7 @@ export default function RecoveryPipelineAgent8() {
                 <CardContent className="space-y-5 p-6">
                   <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                     <div>
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">What is happening now</div>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Account-wide status</div>
                       <div className="mt-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/32">{filteredLabel}</div>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -1010,7 +1010,7 @@ export default function RecoveryPipelineAgent8() {
                     </div>
                   </div>
 
-                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No ledger records match the current filters.</div> : (
+                  {rows.length === 0 ? <div className="text-sm font-sans font-bold text-white/50">No account-wide ledger records match the current filters.</div> : (
                     <>
                       <div className="overflow-x-auto">
                         <table className="w-full min-w-[1120px] border-collapse">
