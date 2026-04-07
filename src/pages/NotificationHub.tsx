@@ -3,7 +3,8 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, X } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ChevronRight, Search, X } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { useToast } from '@/hooks/use-toast';
@@ -175,6 +176,12 @@ const mergePreferencesWithDefaults = (
   });
 };
 
+const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  'Cases & Recoveries': 'Case filing, approvals, thread responses, and payout milestones.',
+  'Evidence & Sync': 'Evidence readiness, sync progress, and detection movement.',
+  'Platform Learning': 'Digest and platform-learning updates from Margin.'
+};
+
 // Format timestamp to relative time
 const formatTimestamp = (createdAt: string): string => {
   try {
@@ -204,6 +211,7 @@ export default function NotificationHub() {
   const [preferences, setPreferences] = useState<NotificationPreference[]>(DEFAULT_PREFERENCES);
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
   const [preferencesError, setPreferencesError] = useState<string | null>(null);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
   const { toast } = useToast();
 
   const { tenant } = useTenant();
@@ -504,24 +512,56 @@ export default function NotificationHub() {
     'Platform Learning'
   ];
 
+  const unreadCount = useMemo(() => notifications.filter((notification) => !notification.read).length, [notifications]);
+  const activePreferenceCount = useMemo(
+    () => preferences.filter((preference) => preference.email || preference.inApp).length,
+    [preferences]
+  );
+
   return (
     <PageLayout title="Notifications" midnight>
       <div className="relative min-h-screen overflow-hidden bg-[#050505]">
         <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
+        <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
         <div className="relative max-w-[1600px] mx-auto px-8 py-12">
           {/* Analysis Header */}
-          <div className="flex flex-col gap-1 mb-12 border-b border-white/5 pb-10">
+          <div className="flex flex-col gap-1 mb-8 border-b border-white/5 pb-8">
             <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Communication Registry</div>
-            <h1 className="text-4xl font-light text-white tracking-tight font-sans mt-2">Notifications <span className="text-white/40">and settings</span></h1>
+            <h1 className="text-4xl font-light text-white tracking-tight font-sans mt-2">Notifications</h1>
             <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
-              Updates and communication preferences.
+              Review updates clearly, then open preferences only when you need them.
             </p>
           </div>
 
+          <div className="mb-4 rounded-2xl border border-white/8 bg-white/[0.02] shadow-2xl backdrop-blur-xl">
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-6 px-5 py-4 text-left transition-colors hover:bg-white/[0.03]"
+              >
+                <div className="min-w-0">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Preferences</div>
+                  <div className="mt-1.5 text-[13px] font-sans font-semibold tracking-tight text-white">
+                    Notification preferences
+                  </div>
+                  <p className="mt-1 text-[11px] font-sans leading-5 text-white/44">
+                    Configuration active across {activePreferenceCount} notification lanes. Opens in a side panel so the update log stays readable.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="rounded-full border border-white/8 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/45">
+                    {unreadCount} unread
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-white/38" />
+                </div>
+              </button>
+            </SheetTrigger>
+          </div>
+
           {/* Notification Log */}
-          <div className="bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl flex flex-col mb-12" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+          <div className="bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl flex min-h-[72vh] lg:min-h-[calc(100vh-220px)] flex-col mb-12">
             {/* Fixed Header */}
             <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between flex-shrink-0">
               <div>
@@ -697,95 +737,6 @@ export default function NotificationHub() {
             </div>
           </div>
 
-          {/* Notification Preferences */}
-          <div className="bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
-            <div className="px-8 py-6 border-b border-white/5 bg-white/[0.02]">
-              <div className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">Settings</div>
-              <div className="flex items-center gap-3 mt-1.5">
-                <span className="text-sm font-sans font-medium text-white tracking-tight uppercase">Preferences</span>
-                <div className="h-1.5 w-[1px] bg-white/10" />
-                <span className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Configuration Active</span>
-              </div>
-            </div>
-
-            <div className="p-8 space-y-12">
-              {preferencesError && (
-                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 px-5 py-4">
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-rose-300">
-                    Saved preferences are unavailable right now. Toggles are locked until the page reloads from backend truth.
-                  </p>
-                </div>
-              )}
-              {categories.map((category, catIdx) => {
-                const categoryPrefs = preferences.filter(pref => pref.category === category);
-
-                return (
-                  <div key={category} className="space-y-6">
-                    <div className="flex flex-col gap-1">
-                      <h3 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                        {category}
-                      </h3>
-                      <p className="text-xs text-white/40 font-sans font-bold uppercase tracking-tight">
-                        {category === 'Financial Milestones' && 'High-signal, essential updates about your money'}
-                        {category === 'Account & Security' && 'Important account and security notifications'}
-                        {category === 'Platform & Performance' && 'Updates about platform features and performance'}
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {categoryPrefs.map((pref) => {
-                        return (
-                          <div key={pref.id} className="flex items-start gap-5 p-5 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors rounded-2xl group/pref">
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-medium text-white mb-1 uppercase tracking-tight font-sans">
-                                {pref.title}
-                              </h4>
-                              <p className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight mb-4 leading-relaxed">
-                                {pref.description}
-                              </p>
-                              {!pref.supported && (
-                                <p className="text-[10px] font-sans font-bold text-amber-300/80 uppercase tracking-tight mb-4">
-                                  {pref.supportNote}
-                                </p>
-                              )}
-
-                              <div className="flex items-center gap-8">
-                                <div className="flex items-center gap-3">
-                                  <Switch
-                                    checked={pref.email}
-                                    disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
-                                    onCheckedChange={(checked) =>
-                                      updatePreference(pref.id, 'email', checked)
-                                    }
-                                    className="scale-90 data-[state=checked]:bg-white"
-                                  />
-                                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Email</span>
-                                </div>
-
-                                <div className="flex items-center gap-3">
-                                  <Switch
-                                    checked={pref.inApp}
-                                    disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
-                                    onCheckedChange={(checked) =>
-                                      updatePreference(pref.id, 'inApp', checked)
-                                    }
-                                    className="scale-90 data-[state=checked]:bg-white"
-                                  />
-                                  <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">In-App</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Analysis Footer */}
           <div className="mt-12 text-center border-t border-white/5 pt-8 mb-12">
             <p className="text-[10px] text-gray-600 font-sans font-bold uppercase tracking-tight">
@@ -793,6 +744,111 @@ export default function NotificationHub() {
             </p>
           </div>
         </div>
+
+        <SheetContent
+          side="right"
+          className="w-full border-l border-white/10 bg-[#0c0c0c] p-0 text-white shadow-[0_0_40px_rgba(0,0,0,0.5)] sm:max-w-[46vw]"
+        >
+          <SheetHeader className="border-b border-white/5 bg-white/[0.02] px-8 py-6 text-left">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/34">Settings</div>
+            <SheetTitle className="mt-2 text-2xl font-light tracking-tight text-white">
+              Notification preferences
+            </SheetTitle>
+            <p className="max-w-md text-[12px] font-sans leading-5 text-white/48">
+              Manage email and in-app delivery without shrinking the update log.
+            </p>
+          </SheetHeader>
+
+          <div className="h-full overflow-y-auto px-8 py-8">
+            <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/34">Configuration active</div>
+              <div className="mt-2 text-sm font-sans font-semibold tracking-tight text-white">
+                {activePreferenceCount} of {preferences.length} notification lanes enabled
+              </div>
+              <p className="mt-1 text-[11px] font-sans leading-5 text-white/46">
+                Preference changes save back to backend truth as you toggle them.
+              </p>
+            </div>
+
+            {preferencesError && (
+              <div className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 px-5 py-4">
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-rose-300">
+                  Saved preferences are unavailable right now. Toggles are locked until the page reloads from backend truth.
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-10 pb-10">
+              {categories.map((category) => {
+                const categoryPrefs = preferences.filter(pref => pref.category === category);
+
+                return (
+                  <div key={category} className="space-y-4">
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-[10px] font-sans font-bold text-white/38 uppercase tracking-tight">
+                        {category}
+                      </h3>
+                      <p className="text-[11px] font-sans leading-5 text-white/42">
+                        {CATEGORY_DESCRIPTIONS[category] || 'Notification routing and delivery preferences.'}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {categoryPrefs.map((pref) => {
+                        return (
+                          <div key={pref.id} className="rounded-2xl border border-white/6 bg-white/[0.02] px-5 py-4 transition-colors hover:bg-white/[0.035]">
+                            <div className="flex items-start justify-between gap-5">
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-[13px] font-sans font-semibold tracking-tight text-white">
+                                  {pref.title}
+                                </h4>
+                                <p className="mt-1 text-[11px] font-sans leading-5 text-white/42">
+                                  {pref.description}
+                                </p>
+                                {!pref.supported && (
+                                  <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-300/80">
+                                    {pref.supportNote}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="mt-4 flex items-center gap-8">
+                              <div className="flex items-center gap-3">
+                                <Switch
+                                  checked={pref.email}
+                                  disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
+                                  onCheckedChange={(checked) =>
+                                    updatePreference(pref.id, 'email', checked)
+                                  }
+                                  className="scale-90 data-[state=checked]:bg-white"
+                                />
+                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Email</span>
+                              </div>
+
+                              <div className="flex items-center gap-3">
+                                <Switch
+                                  checked={pref.inApp}
+                                  disabled={!preferencesLoaded || !!preferencesError || !pref.supported}
+                                  onCheckedChange={(checked) =>
+                                    updatePreference(pref.id, 'inApp', checked)
+                                  }
+                                  className="scale-90 data-[state=checked]:bg-white"
+                                />
+                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">In-App</span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </SheetContent>
+        </Sheet>
       </div>
     </PageLayout>
   );
