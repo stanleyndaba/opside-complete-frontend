@@ -1921,7 +1921,7 @@ export default function DisputeCases() {
                   <table className="w-full min-w-[1440px]">
                     <thead className="bg-white/[0.02] border-b border-white/5">
                       <tr className="text-left">
-                        {['Queue record', 'Record status', 'Money at stake', 'Evidence', 'Next best move', 'Updated', 'Actions'].map((header) => (
+                        {['Queue record', 'Record status', 'Amount at stake', 'Evidence', 'Next best move', 'Updated', 'Actions'].map((header) => (
                           <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
                             {header}
                           </th>
@@ -2023,24 +2023,42 @@ export default function DisputeCases() {
                             </td>
 
                             <td className="px-6 py-5">
-                              <div className="space-y-2 min-w-[180px]">
-                                <Badge variant="outline" className={cn('border', badgeClass(row.evidence_state))}>
+                              <div className="min-w-[190px] max-w-[220px] space-y-2.5">
+                                <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>
                                   {row.evidence_state}
                                 </Badge>
                                 {getProofStatus(row) ? (
-                                  <Badge variant="outline" className={cn('border', proofStatusTone(getProofStatus(row)))}>
-                                    Proof: {formatProofStatus(getProofStatus(row))}
-                                  </Badge>
+                                  <div className={cn('rounded-xl border px-3 py-2', proofStatusTone(getProofStatus(row)))}>
+                                    <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/35">
+                                      Proof
+                                    </div>
+                                    <div className="mt-1 break-words text-[11px] font-sans font-bold leading-snug text-white/78">
+                                      {formatProofStatus(getProofStatus(row))}
+                                    </div>
+                                  </div>
                                 ) : null}
                                 {getPayoutProofStatus(row) && getPayoutProofStatus(row) !== 'not_applicable' ? (
-                                  <Badge variant="outline" className={cn('border', payoutProofTone(getPayoutProofStatus(row)))}>
-                                    Payout: {formatPayoutProofStatus(getPayoutProofStatus(row))}
-                                  </Badge>
+                                  <div className={cn('rounded-xl border px-3 py-2', payoutProofTone(getPayoutProofStatus(row)))}>
+                                    <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/35">
+                                      Payout proof
+                                    </div>
+                                    <div className="mt-1 break-words text-[11px] font-sans font-bold leading-snug text-white/78">
+                                      {formatPayoutProofStatus(getPayoutProofStatus(row))}
+                                    </div>
+                                  </div>
                                 ) : null}
-                                <div className="text-[11px] text-white/50 font-sans space-y-1">
-                                  <div>Documents linked: {row.matched_document_count}</div>
+                                <div className="space-y-1.5 text-[11px] font-sans text-white/50">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <span className="text-white/32">Documents linked</span>
+                                    <span className="text-right text-white/65">{row.matched_document_count}</span>
+                                  </div>
                                   {getMissingRequirements(row).length ? (
-                                    <div>Still needed: {formatRequirementList(getMissingRequirements(row), 2)}</div>
+                                    <div className="space-y-1">
+                                      <div className="text-white/32">Still needed</div>
+                                      <div className="break-words leading-snug text-white/62">
+                                        {formatRequirementList(getMissingRequirements(row), 2)}
+                                      </div>
+                                    </div>
                                   ) : null}
                                 </div>
                               </div>
