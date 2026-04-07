@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
+import { useSession } from '@/contexts/SessionContext';
 
 interface EventItem {
   id: string;
@@ -55,9 +56,11 @@ export function Timeline({
   const [error, setError] = useState<string | null>(null);
   const [lastLoadedAt, setLastLoadedAt] = useState<string | null>(null);
   const { tenant } = useTenant();
+  const { isAuthReady, isSessionValid } = useSession();
   const activeSlug = tenantSlug || tenant?.slug || 'default';
 
   const loadEvents = useCallback(async (cancelledRef?: { current: boolean }) => {
+    if (!claimId || !activeSlug || !isAuthReady || !isSessionValid) return;
     try {
       const res = await api.get(`/api/recoveries/${encodeURIComponent(claimId)}/events?tenantSlug=${encodeURIComponent(activeSlug)}`);
       if (!cancelledRef?.current) {
@@ -72,9 +75,13 @@ export function Timeline({
     } catch (e: any) {
       if (!cancelledRef?.current) setError(e?.message || 'Reconstructed history unavailable');
     }
-  }, [activeSlug, claimId]);
+  }, [activeSlug, claimId, isAuthReady, isSessionValid]);
 
   useEffect(() => {
+    if (!claimId || !activeSlug || !isAuthReady || !isSessionValid) {
+      return;
+    }
+
     const cancelledRef = { current: false };
     let intervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -95,7 +102,7 @@ export function Timeline({
       cancelledRef.current = true;
       if (intervalId) clearInterval(intervalId);
     };
-  }, [liveUpdatesUnavailable, loadEvents]);
+  }, [activeSlug, claimId, isAuthReady, isSessionValid, liveUpdatesUnavailable, loadEvents]);
 
   if (error) return <div className="text-xs text-red-400">{error}</div>;
   if (!events) return <div className="text-xs text-gray-400">Loading reconstructed history...</div>;

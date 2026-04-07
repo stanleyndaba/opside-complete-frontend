@@ -1,4 +1,5 @@
 import { getFrontendAuthToken } from './authSession';
+import { dispatchSessionRecovery } from './sessionRecovery';
 
 export interface EventStreamLike {
   readonly readyState: number;
@@ -32,6 +33,7 @@ class AuthenticatedEventStream implements EventStreamLike {
   private abortController: AbortController | null = null;
   private reconnectTimer: number | null = null;
   private closedManually = false;
+  private reconnectDisabled = false;
 
   constructor(url: string, options: AuthenticatedEventStreamOptions = {}) {
     this.url = url;
@@ -63,6 +65,10 @@ class AuthenticatedEventStream implements EventStreamLike {
   }
 
   private async open(): Promise<void> {
+    if (this.closedManually || this.reconnectDisabled) {
+      return;
+    }
+
     this.abortController?.abort();
     this.abortController = new AbortController();
     this.readyState = CONNECTING;
@@ -86,6 +92,22 @@ class AuthenticatedEventStream implements EventStreamLike {
       });
 
       if (!response.ok || !response.body) {
+        if (response.status === 401) {
+          const message = await response.text().catch(() => '');
+          dispatchSessionRecovery({
+            status: response.status,
+            source: this.url,
+            message: message || 'Authentication is required for live updates.',
+          });
+          this.handleError({ disableReconnect: true });
+          return;
+        }
+
+        if (response.status === 403) {
+          this.handleError({ disableReconnect: true });
+          return;
+        }
+
         this.handleError();
         return;
       }
@@ -179,11 +201,15 @@ class AuthenticatedEventStream implements EventStreamLike {
     }
   }
 
-  private handleError(): void {
+  private handleError(options: { disableReconnect?: boolean } = {}): void {
+    if (options.disableReconnect) {
+      this.reconnectDisabled = true;
+    }
+
     this.readyState = CLOSED;
     this.onerror?.(new Event('error'));
 
-    if (!this.autoReconnect || this.closedManually) {
+    if (!this.autoReconnect || this.closedManually || this.reconnectDisabled) {
       return;
     }
 

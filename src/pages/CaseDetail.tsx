@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useTenant } from '@/contexts/TenantContext';
+import { useSession } from '@/contexts/SessionContext';
 import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -610,6 +611,7 @@ const generateNarrative = (claim: any): string => {
 export default function CaseDetail() {
   const { caseId, tenantSlug } = useParams<{ caseId: string; tenantSlug: string }>();
   const { tenant, isReady } = useTenant();
+  const { isAuthReady, isSessionValid } = useSession();
   const activeSlug = normalizeTenantSlug(tenantSlug) || normalizeTenantSlug(tenant?.slug);
   const navigate = useNavigate();
 
@@ -658,7 +660,7 @@ export default function CaseDetail() {
   };
 
   const refreshCaseDetail = useCallback(async (currentCaseId: string, { showLoading = false }: { showLoading?: boolean } = {}) => {
-    if (!currentCaseId || !activeSlug) return;
+    if (!currentCaseId || !activeSlug || !isAuthReady || !isSessionValid) return;
     if (showLoading) setLoading(true);
     try {
       const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
@@ -688,7 +690,7 @@ export default function CaseDetail() {
       setHasResolvedBackend(true);
       if (showLoading) setLoading(false);
     }
-  }, [activeSlug]);
+  }, [activeSlug, isAuthReady, isSessionValid]);
 
   const effectiveCase = hasResolvedBackend ? caseData : seedCaseData;
 
@@ -731,13 +733,13 @@ export default function CaseDetail() {
     setMatchedDocs([]);
     setError(null);
     (async () => {
-      if (!caseId || !activeSlug) return;
+      if (!caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
       await refreshCaseDetail(caseId, { showLoading: true });
     })();
 
     let es: ReturnType<typeof createAuthenticatedEventStream> | null = null;
     try {
-      if (!activeSlug) return;
+      if (!activeSlug || !isAuthReady || !isSessionValid) return;
       es = createAuthenticatedEventStream(
         api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
         { autoReconnect: true, reconnectDelayMs: 3000 }
@@ -773,21 +775,21 @@ export default function CaseDetail() {
       // Keep the existing page state when the live status stream cannot initialize.
     }
     return () => { cancelled = true; if (es) es.close(); };
-  }, [caseId, activeSlug, matchesRealtimeEvent, refreshCaseDetail]);
+  }, [activeSlug, caseId, isAuthReady, isSessionValid, matchesRealtimeEvent, refreshCaseDetail]);
 
   useEffect(() => {
-    if (!statusFeedUnavailable || !caseId || !activeSlug) return;
+    if (!statusFeedUnavailable || !caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
     const intervalId = setInterval(() => {
       void refreshCaseDetail(caseId);
     }, 15000);
     return () => clearInterval(intervalId);
-  }, [activeSlug, caseId, refreshCaseDetail, statusFeedUnavailable]);
+  }, [activeSlug, caseId, isAuthReady, isSessionValid, refreshCaseDetail, statusFeedUnavailable]);
 
   // Attempt to fetch matched documents for this case
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (!caseId || !activeSlug) return;
+      if (!caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
       try {
         // First check if case data has evidence_attachments with document_id
         const docIdFromCase = caseData?.evidence_attachments?.document_id;
@@ -821,7 +823,7 @@ export default function CaseDetail() {
       }
     })();
     return () => { cancelled = true; };
-  }, [caseId, caseData?.evidence_attachments?.document_id, caseData?.documents, activeSlug]);
+  }, [activeSlug, caseData?.documents, caseData?.evidence_attachments?.document_id, caseId, isAuthReady, isSessionValid]);
 
   const entityTypeLabel = useMemo(() => (
     effectiveCase?.truth_unavailable ? NOT_AVAILABLE : toEntityLabel(effectiveCase?.entity_type)

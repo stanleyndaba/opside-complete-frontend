@@ -68,13 +68,13 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]">
                             <Lock className="h-4 w-4 text-white/72" />
                         </div>
-                        <span className="text-sm font-medium tracking-tight">Session expired</span>
+                        <span className="text-sm font-medium tracking-tight">Session check needed</span>
                     </div>
                     <h2 className="text-[28px] font-medium tracking-tight text-white">
-                        Sign in again to continue
+                        Sign in again to restore access
                     </h2>
                     <p className="mt-3 max-w-md text-[15px] leading-7 text-white/56">
-                        For security, your session ended after inactivity. Sign in again to reopen this workspace and continue where you left off.
+                        We could not verify your session for a protected request. Sign in again to restore access to this workspace.
                     </p>
                 </div>
 
@@ -86,7 +86,7 @@ export function SessionTimeoutModal({ isOpen, onClose, onSuccess, userEmail }: S
                     )}
 
                     <p className="text-sm leading-6 text-white/62">
-                        Your workspace data is still here. We just need to restore your session before protected pages can load again.
+                        Your workspace data is still here. Once your session is restored, protected pages and live updates can resume.
                     </p>
 
                     {error && (

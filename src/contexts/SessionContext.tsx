@@ -153,6 +153,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }, [sessionRecoveryDismissed]);
 
     const showSessionTimeout = useCallback(() => {
+        setIsSessionValid(false);
         clearSessionRecoverySuppression();
         setSessionRecoveryDismissed(false);
         setSessionTimeoutOpen(true);

@@ -13,7 +13,28 @@ export interface BlobApiResponse {
 }
 
 import { getFrontendAuthContext } from './authSession';
-import { attemptSilentSessionRefresh, clearSessionRecoverySuppression, dispatchSessionRecovery } from './sessionRecovery';
+import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
+
+const SESSION_RECOVERY_ERROR_MESSAGE = "We couldn't verify your session. Sign in again to continue.";
+
+function shouldDispatchSessionRecovery(status: number, errorMessage: unknown): boolean {
+  if (status !== 401) return false;
+
+  const normalized = String(errorMessage || '').trim().toLowerCase();
+  if (!normalized) return true;
+
+  // Several backend routes currently use 401 for tenant/workspace resolution failures.
+  // Those are real request problems, but they are not true session-expiry events.
+  if (
+    normalized.includes('tenant context missing') ||
+    normalized.includes('tenant context required') ||
+    normalized.includes('tenant not found')
+  ) {
+    return false;
+  }
+
+  return true;
+}
 
 export function buildApiUrl(path: string): string {
   // Normalize provided path
@@ -169,18 +190,24 @@ async function requestJsonWithRetry<T>(
 
       // Provide specific error messages based on status code
       let userFriendlyError = errorMsg;
+      const shouldRecoverSession = shouldDispatchSessionRecovery(res.status, errorMsg);
+
       if (res.status === 404) {
         // If backend returned an error message, use it; otherwise show generic
         userFriendlyError = errorMsg && errorMsg !== 'Not Found'
           ? errorMsg
           : `Not found (404): ${path}`;
       } else if (res.status === 401) {
-        userFriendlyError = 'Session expired. Sign in again to continue.';
-        dispatchSessionRecovery({
-          status: res.status,
-          source: path,
-          message: typeof errorMsg === 'string' ? errorMsg : 'Unauthorized',
-        });
+        userFriendlyError = shouldRecoverSession
+          ? SESSION_RECOVERY_ERROR_MESSAGE
+          : errorMsg;
+        if (shouldRecoverSession) {
+          dispatchSessionRecovery({
+            status: res.status,
+            source: path,
+            message: typeof errorMsg === 'string' ? errorMsg : 'Unauthorized',
+          });
+        }
       } else if (res.status === 403) {
         userFriendlyError = `Forbidden (403): You don't have permission to access this resource.`;
       } else if (res.status >= 500) {
@@ -204,10 +231,6 @@ async function requestJsonWithRetry<T>(
         error: userFriendlyError,
         data: data, // Include parsed response body for error responses (e.g., 409 with existingSyncId)
       };
-    }
-
-    if (sessionToken) {
-      clearSessionRecoverySuppression();
     }
 
     console.log(`[API] Success for ${url}:`, data);
@@ -321,7 +344,8 @@ async function requestBlob(
     }
 
     const text = await res.text().catch(() => '');
-    if (res.status === 401) {
+    const shouldRecoverSession = shouldDispatchSessionRecovery(res.status, text || res.statusText || 'Unauthorized');
+    if (shouldRecoverSession) {
       dispatchSessionRecovery({
         status: res.status,
         source: path,
@@ -332,13 +356,9 @@ async function requestBlob(
       ok: false,
       status: res.status,
       error: res.status === 401
-        ? 'Session expired. Sign in again to continue.'
+        ? (shouldRecoverSession ? SESSION_RECOVERY_ERROR_MESSAGE : (text || res.statusText || 'Request failed'))
         : (text || res.statusText || 'Request failed'),
     };
-  }
-
-  if (sessionToken) {
-    clearSessionRecoverySuppression();
   }
 
   return {
