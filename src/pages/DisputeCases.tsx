@@ -124,6 +124,11 @@ function formatBlockReason(value: string) {
   return formatDisputeReason(value);
 }
 
+function formatMissingRequirementCount(value: number) {
+  if (!Number.isFinite(value) || value <= 0) return 'No missing requirements';
+  return value === 1 ? '1 missing requirement' : `${value} missing requirements`;
+}
+
 function formatCompactDate(value: string | null | undefined) {
   if (!value) return 'Not Available';
   return format(new Date(value), 'yyyy/MM/dd');
@@ -1949,6 +1954,7 @@ export default function DisputeCases() {
                         const syntheticOpportunityReference = isSyntheticOpportunityReference(row);
                         const hasRealDisputeCase = row.has_real_dispute_case === true;
                         const gateState = getQueueGateState(row);
+                        const missingRequirements = getMissingRequirements(row);
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
@@ -2027,36 +2033,16 @@ export default function DisputeCases() {
                                 <Badge variant="outline" className={cn('w-fit max-w-full border', badgeClass(row.evidence_state))}>
                                   {row.evidence_state}
                                 </Badge>
-                                {getProofStatus(row) ? (
-                                  <div className={cn('rounded-xl border px-3 py-2', proofStatusTone(getProofStatus(row)))}>
-                                    <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/35">
-                                      Proof
-                                    </div>
-                                    <div className="mt-1 break-words text-[11px] font-sans font-bold leading-snug text-white/78">
-                                      {formatProofStatus(getProofStatus(row))}
-                                    </div>
-                                  </div>
-                                ) : null}
-                                {getPayoutProofStatus(row) && getPayoutProofStatus(row) !== 'not_applicable' ? (
-                                  <div className={cn('rounded-xl border px-3 py-2', payoutProofTone(getPayoutProofStatus(row)))}>
-                                    <div className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/35">
-                                      Payout proof
-                                    </div>
-                                    <div className="mt-1 break-words text-[11px] font-sans font-bold leading-snug text-white/78">
-                                      {formatPayoutProofStatus(getPayoutProofStatus(row))}
-                                    </div>
-                                  </div>
-                                ) : null}
                                 <div className="space-y-1.5 text-[11px] font-sans text-white/50">
                                   <div className="flex items-start justify-between gap-3">
                                     <span className="text-white/32">Documents linked</span>
                                     <span className="text-right text-white/65">{row.matched_document_count}</span>
                                   </div>
-                                  {getMissingRequirements(row).length ? (
+                                  {missingRequirements.length ? (
                                     <div className="space-y-1">
-                                      <div className="text-white/32">Still needed</div>
+                                      <div className="text-white/32">Evidence gaps</div>
                                       <div className="break-words leading-snug text-white/62">
-                                        {formatRequirementList(getMissingRequirements(row), 2)}
+                                        {formatMissingRequirementCount(missingRequirements.length)}
                                       </div>
                                     </div>
                                   ) : null}
@@ -2239,6 +2225,9 @@ export default function DisputeCases() {
           {detailsRow ? (() => {
             const financialSummary = detailsFinancialSummary || getFinancialSummaryForRow(detailsRow, financialSummaries);
             const hasRealDisputeCase = getQueueEntityKind(detailsRow) === 'dispute_case';
+            const detailsProofStatus = getProofStatus(detailsRow);
+            const detailsPayoutProofStatus = getPayoutProofStatus(detailsRow);
+            const detailsMissingRequirements = getMissingRequirements(detailsRow);
             return (
             <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
               <DetailSection
@@ -2266,8 +2255,8 @@ export default function DisputeCases() {
                   { label: 'Runtime State', value: detailsRow.operational_state ? formatAutonomyLabel(detailsRow.operational_state) : 'Not Available' },
                   { label: 'Recovery Status', value: formatLabel(detailsRow.recovery_status) },
                   { label: 'Billing Status', value: formatLabel(detailsRow.billing_status) },
-                  { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
-                  { label: 'Payout Proof', value: formatPayoutProofStatus(getPayoutProofStatus(detailsRow)) },
+                  { label: 'Proof Status', value: formatProofStatus(detailsProofStatus) },
+                  { label: 'Payout Proof', value: formatPayoutProofStatus(detailsPayoutProofStatus) },
                   { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
                   { label: 'Next Action', value: detailsRow.next_action || 'Not Available' },
                 ]}
@@ -2282,7 +2271,7 @@ export default function DisputeCases() {
                   { label: 'Eligible To File', value: detailsRow.eligible_to_file == null ? 'Not Available' : detailsRow.eligible_to_file ? 'Yes' : 'No' },
                   { label: 'Block Reasons', value: detailsRow.block_reasons?.length ? detailsRow.block_reasons.map(formatBlockReason).join(', ') : 'Not Available' },
                   { label: 'Last Filing Error', value: detailsRow.last_error || 'Not Available' },
-                  { label: 'Missing Requirements', value: formatRequirementList(getMissingRequirements(detailsRow)) },
+                  { label: 'Missing Requirements', value: formatRequirementList(detailsMissingRequirements) },
                   { label: 'Manual Review Reason', value: getManualReviewReason(detailsRow) ? formatDisputeReason(getManualReviewReason(detailsRow)) : 'Not Available' },
                   { label: 'Quarantine Reason', value: getQuarantineReason(detailsRow) || 'Not Available' },
                 ]}
@@ -2315,11 +2304,58 @@ export default function DisputeCases() {
                 rows={[
                   { label: 'Evidence State', value: detailsRow.evidence_state || 'Not Available' },
                   { label: 'Matched Documents', value: String(detailsRow.matched_document_count ?? 0) },
-                  { label: 'Proof Status', value: formatProofStatus(getProofStatus(detailsRow)) },
+                  { label: 'Proof Status', value: formatProofStatus(detailsProofStatus) },
+                  { label: 'Payout Proof', value: formatPayoutProofStatus(detailsPayoutProofStatus) },
+                  { label: 'Still Needed', value: formatRequirementList(detailsMissingRequirements) },
                   { label: 'Rejection Category', value: detailsRow.rejection_category || 'Not Available' },
                   { label: 'Rejection Reason', value: detailsRow.rejection_reason || 'Not Available' },
                 ]}
               />
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Detection Evidence Detail</div>
+                <div className="mt-4 space-y-4">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className={cn('border', badgeClass(detailsRow.evidence_state))}>
+                      {detailsRow.evidence_state || 'Not Available'}
+                    </Badge>
+                    {detailsProofStatus ? (
+                      <Badge variant="outline" className={cn('border', proofStatusTone(detailsProofStatus))}>
+                        Proof: {formatProofStatus(detailsProofStatus)}
+                      </Badge>
+                    ) : null}
+                    {detailsPayoutProofStatus && detailsPayoutProofStatus !== 'not_applicable' ? (
+                      <Badge variant="outline" className={cn('border', payoutProofTone(detailsPayoutProofStatus))}>
+                        Payout Proof: {formatPayoutProofStatus(detailsPayoutProofStatus)}
+                      </Badge>
+                    ) : null}
+                  </div>
+                  <div className="space-y-2 text-[11px] font-sans">
+                    <div className="flex items-start justify-between gap-4 border-b border-white/[0.04] pb-2">
+                      <span className="text-white/35">Documents linked</span>
+                      <span className="text-right font-semibold tracking-tight text-white/82">
+                        {String(detailsRow.matched_document_count ?? 0)}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="text-white/35">Still needed</div>
+                      {detailsMissingRequirements.length ? (
+                        <div className="flex flex-wrap gap-2">
+                          {detailsMissingRequirements.map((requirement) => (
+                            <span
+                              key={`detail-missing-${detailsRow.dispute_case_id}-${requirement}`}
+                              className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold tracking-tight text-white/72"
+                            >
+                              {formatRequirement(requirement)}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-[11px] leading-5 text-white/68">No missing requirements recorded.</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
               <DetailSection
                 title="Currentness"
                 rows={[
