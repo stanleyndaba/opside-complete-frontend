@@ -9,14 +9,28 @@ export interface SessionRecoveryDetail {
 }
 
 const SESSION_RECOVERY_SUPPRESSED_KEY = 'margin:session-recovery-suppressed';
+const SESSION_RECOVERY_PENDING_KEY = 'margin:session-recovery-pending';
 
 let refreshPromise: Promise<boolean> | null = null;
 let lastDispatchAt = 0;
 let sessionRecoverySuppressed = false;
+let sessionRecoveryPending = false;
 
 function readSuppressedFlag() {
   if (typeof window === 'undefined') return sessionRecoverySuppressed;
   return sessionRecoverySuppressed || window.sessionStorage.getItem(SESSION_RECOVERY_SUPPRESSED_KEY) === '1';
+}
+
+export function isSessionRecoveryPending() {
+  if (typeof window === 'undefined') return sessionRecoveryPending;
+  return sessionRecoveryPending || window.sessionStorage.getItem(SESSION_RECOVERY_PENDING_KEY) === '1';
+}
+
+export function clearSessionRecoveryPending() {
+  sessionRecoveryPending = false;
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.removeItem(SESSION_RECOVERY_PENDING_KEY);
+  }
 }
 
 export function suppressSessionRecovery() {
@@ -41,6 +55,8 @@ export function dispatchSessionRecovery(detail: SessionRecoveryDetail = {}) {
   const now = Date.now();
   if (now - lastDispatchAt < 1000) return;
   lastDispatchAt = now;
+  sessionRecoveryPending = true;
+  window.sessionStorage.setItem(SESSION_RECOVERY_PENDING_KEY, '1');
 
   window.dispatchEvent(new CustomEvent<SessionRecoveryDetail>(SESSION_RECOVERY_EVENT, { detail }));
 }

@@ -17,19 +17,57 @@ import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionR
 
 const SESSION_RECOVERY_ERROR_MESSAGE = "We couldn't verify your session. Sign in again to continue.";
 
+const NON_SESSION_401_PATTERNS = [
+  'tenant context',
+  'tenantslug',
+  'tenant slug',
+  'tenant not found',
+  'tenant required',
+  'tenant missing',
+  'invalid tenant context',
+  'failed to resolve tenant context',
+  'explicit tenant context is required',
+  'no active workspace selected',
+  'active workspace',
+  'workspace route',
+  'workspace selected',
+  'workspace membership',
+  'workspace context',
+  'no tenant-bound user profile found',
+  'user id is required',
+];
+
+function normalizeErrorMessage(errorMessage: unknown): string {
+  if (typeof errorMessage === 'string') return errorMessage.trim().toLowerCase();
+
+  if (errorMessage && typeof errorMessage === 'object') {
+    const candidate = errorMessage as Record<string, unknown>;
+    const parts = [
+      candidate.error,
+      candidate.message,
+      candidate.details,
+      candidate.code,
+      (candidate.error as Record<string, unknown> | undefined)?.message,
+      (candidate.error as Record<string, unknown> | undefined)?.code,
+    ]
+      .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      .map((value) => value.trim().toLowerCase());
+
+    return parts.join(' ');
+  }
+
+  return String(errorMessage || '').trim().toLowerCase();
+}
+
 function shouldDispatchSessionRecovery(status: number, errorMessage: unknown): boolean {
   if (status !== 401) return false;
 
-  const normalized = String(errorMessage || '').trim().toLowerCase();
+  const normalized = normalizeErrorMessage(errorMessage);
   if (!normalized) return true;
 
-  // Several backend routes currently use 401 for tenant/workspace resolution failures.
-  // Those are real request problems, but they are not true session-expiry events.
-  if (
-    normalized.includes('tenant context missing') ||
-    normalized.includes('tenant context required') ||
-    normalized.includes('tenant not found')
-  ) {
+  // Several backend routes still use 401 for tenant/workspace resolution failures.
+  // Those should not surface as "sign in again" interruptions.
+  if (NON_SESSION_401_PATTERNS.some((pattern) => normalized.includes(pattern))) {
     return false;
   }
 

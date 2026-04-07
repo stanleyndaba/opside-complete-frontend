@@ -3,6 +3,7 @@ import { toast } from '@/hooks/use-toast';
 import { useSession } from '@/contexts/SessionContext';
 import { api } from '@/lib/api';
 import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
+import { isSessionRecoveryPending } from '@/lib/sessionRecovery';
 
 export interface DetectionUpdateEvent {
   sync_id: string;
@@ -28,7 +29,7 @@ export const useDetectionUpdates = (
   const reconnectAttemptsRef = useRef(0);
   const maxReconnectAttempts = 3;
   const reconnectDelay = 2000;
-  const { isAuthReady, authToken } = useSession();
+  const { isAuthReady, authToken, isSessionValid } = useSession();
 
   const formatCurrency = (amount: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
@@ -41,7 +42,7 @@ export const useDetectionUpdates = (
     if (!syncId) {
       return;
     }
-    if (!isAuthReady || !authToken) {
+    if (!isAuthReady || !authToken || !isSessionValid || isSessionRecoveryPending()) {
       return;
     }
 
@@ -96,6 +97,11 @@ export const useDetectionUpdates = (
       eventSource.onerror = (error) => {
         console.error('[Detection Updates] SSE error:', error);
 
+        if (isSessionRecoveryPending() || !isAuthReady || !authToken || !isSessionValid) {
+          eventSource.close();
+          return;
+        }
+
         // Attempt to reconnect
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
@@ -114,7 +120,7 @@ export const useDetectionUpdates = (
     } catch (error) {
       console.error('[Detection Updates] Failed to create EventSource:', error);
     }
-  }, [authToken, isAuthReady, syncId, onUpdate, tenantSlug]);
+  }, [authToken, isAuthReady, isSessionValid, syncId, onUpdate, tenantSlug]);
 
   useEffect(() => {
     if (syncId) {

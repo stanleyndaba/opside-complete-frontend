@@ -4,6 +4,7 @@ import { useSession } from '@/contexts/SessionContext';
 import { api } from '@/lib/api';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 import { createAuthenticatedEventStream, type EventStreamLike } from '@/lib/authenticatedSSE';
+import { isSessionRecoveryPending } from '@/lib/sessionRecovery';
 
 export type Phase3NotificationEvent =
   | { type: 'claim_expiring'; data: Phase3ClaimExpiringEvent }
@@ -82,7 +83,7 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
 
     try {
       const slug = tenantSlug;
-      if (!slug || !isAuthReady || !authToken || !isSessionValid) return;
+      if (!slug || !isAuthReady || !authToken || !isSessionValid || isSessionRecoveryPending()) return;
       const url = api.buildApiUrl(`/api/sse/notifications?tenantSlug=${slug}`);
       const eventSource = createAuthenticatedEventStream(url);
 
@@ -254,6 +255,11 @@ export const usePhase3Notifications = (onEvent?: (event: Phase3NotificationEvent
 
       eventSource.onerror = (error) => {
         console.error('[Phase3 Notifications] SSE error:', error);
+
+        if (isSessionRecoveryPending() || !isAuthReady || !authToken || !isSessionValid) {
+          eventSource.close();
+          return;
+        }
 
         // Attempt to reconnect
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
