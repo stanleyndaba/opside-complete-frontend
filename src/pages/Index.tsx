@@ -145,8 +145,8 @@ const faqs = [
 ];
 
 const eyebrowClass = 'text-[11px] font-medium tracking-tight text-white/42';
-const containerClass = 'mx-auto w-full max-w-[1160px] px-6 md:px-8';
-const mobileColumnClass = 'mx-auto max-w-[430px] md:mx-0 md:max-w-none';
+const containerClass = 'mx-auto w-full max-w-[1160px] px-5 sm:px-6 md:px-8';
+const mobileColumnClass = 'mx-auto max-w-[390px] md:mx-0 md:max-w-none';
 const mobileRevealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -192,6 +192,22 @@ function MobileIntegrationsCarousel() {
   );
 }
 
+function MobilePhaseShell({
+  children,
+  className = ''
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`rounded-[28px] border border-white/8 bg-white/[0.025] px-5 py-8 shadow-[0_18px_44px_rgba(0,0,0,0.18)] sm:px-6 md:rounded-none md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
@@ -233,7 +249,7 @@ export default function Index() {
         <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.02]" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#070707] to-[#050505]" />
 
-        <section className="relative pb-20 pt-32 md:pb-36 md:pt-40">
+        <section className="relative pb-16 pt-28 md:pb-36 md:pt-40">
           <div className="pointer-events-none absolute inset-x-0 top-12 overflow-hidden">
             <motion.div
               aria-hidden="true"
@@ -256,7 +272,7 @@ export default function Index() {
               transition={{ duration: 0.6 }}
               className={`max-w-[840px] ${mobileColumnClass}`}
             >
-              <div className="flex justify-center">
+              <div className="flex justify-start md:justify-center">
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: [0.78, 1, 0.78], y: [0, -2, 0] }}
@@ -267,11 +283,11 @@ export default function Index() {
                 </motion.div>
               </div>
 
-              <h1 className="mt-5 max-w-[680px] text-[42px] font-light leading-[0.96] tracking-tight text-white md:mt-6 md:max-w-[760px] md:text-7xl">
+              <h1 className="mt-4 max-w-[320px] text-[38px] font-light leading-[0.95] tracking-tight text-white sm:max-w-[360px] sm:text-[42px] md:mt-6 md:max-w-[760px] md:text-7xl">
                 Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
-              <p className="mt-6 max-w-[700px] text-base leading-7 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
+              <p className="mt-5 max-w-[340px] text-[15px] leading-6 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
                 <span className="md:hidden">
                   Margin reviews the case, files only when the evidence and policy conditions are met, and tracks Amazon until payout.
                 </span>
@@ -280,10 +296,10 @@ export default function Index() {
                 </span>
               </p>
 
-              <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:items-start">
+              <div className="mt-8 flex w-full max-w-[340px] flex-col items-stretch gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:items-start">
                 <Button
                   onClick={handleConnectAmazon}
-                  className="h-11 min-w-[168px] rounded-[5px] border border-white/10 bg-transparent px-5 text-sm font-medium text-white hover:bg-white/[0.04]"
+                  className="h-11 w-full min-w-0 justify-between rounded-[5px] border border-white/10 bg-transparent px-5 text-sm font-medium text-white hover:bg-white/[0.04] sm:min-w-[168px] sm:w-auto sm:justify-center"
                 >
                   Connect Amazon
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -291,68 +307,70 @@ export default function Index() {
                 <Button
                   variant="outline"
                   onClick={scrollToHowItWorks}
-                  className="h-11 min-w-[168px] rounded-[5px] border border-white bg-white px-5 text-sm font-medium text-black hover:bg-white/90 hover:text-black"
+                  className="h-11 w-full min-w-0 justify-between rounded-[5px] border border-white bg-white px-5 text-sm font-medium text-black hover:bg-white/90 hover:text-black sm:min-w-[168px] sm:w-auto sm:justify-center"
                 >
                   See how it works
                 </Button>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-8 border-t border-white/8 pt-6 md:mt-8 md:border-0 md:pt-0">
                 <MobileIntegrationsCarousel />
               </div>
             </motion.div>
           </div>
         </section>
 
-        <section className="relative border-b border-white/8 bg-white/[0.02] md:bg-transparent py-16 md:py-28">
+        <section className="relative border-b border-white/8 bg-white/[0.02] py-16 md:bg-transparent md:py-28">
           <div className={containerClass}>
-            <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
-              <div className={eyebrowClass}>The orchestration layer</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
-                <span className="md:hidden">Follow the recovery flow from signal to payout.</span>
-                <span className="hidden md:inline">See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.</span>
-              </h2>
-              <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/56 md:hidden">
-                On mobile, this section shows the operating sequence rather than the full system map.
-              </p>
-            </motion.div>
-          </div>
+            <MobilePhaseShell>
+              <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
+                <div className={eyebrowClass}>The orchestration layer</div>
+                <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
+                  <span className="md:hidden">Follow the recovery flow from signal to payout.</span>
+                  <span className="hidden md:inline">See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.</span>
+                </h2>
+                <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/56 md:hidden">
+                  On mobile, this section shows the operating sequence rather than the full system map.
+                </p>
+              </motion.div>
 
-          <div className="mx-auto mt-8 max-w-[430px] px-6 md:hidden">
-            <div className="relative border-y border-white/8 py-2">
-              <div className="absolute bottom-8 left-[9px] top-8 w-px bg-white/10" />
-              <div className="space-y-0">
-                {mobileOrchestrationSteps.map((step, index) => (
-                  <motion.div
-                    {...mobileRevealProps}
-                    key={step.title}
-                    className={`flex gap-4 py-5 ${index > 0 ? 'border-t border-white/8' : ''}`}
-                  >
-                    <div className="relative z-10 pt-0.5 text-[11px] font-medium tracking-tight text-white/30">
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full border border-white/10 bg-[#0a0a0a]">
-                        0{index + 1}
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-[22px] font-medium tracking-tight text-white">{step.title}</h3>
-                      <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58">
-                        {step.detail}
-                      </p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {step.signals.map((signal) => (
-                          <span
-                            key={signal}
-                            className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
-                          >
-                            {signal}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="mt-10 md:hidden">
+                <div className="relative rounded-[24px] border border-white/8 bg-[#090909]/88 px-4 py-3">
+                  <div className="absolute bottom-8 left-[17px] top-8 w-px bg-white/10" />
+                  <div className="space-y-0">
+                    {mobileOrchestrationSteps.map((step, index) => (
+                      <motion.div
+                        {...mobileRevealProps}
+                        key={step.title}
+                        className={`flex gap-4 py-6 ${index > 0 ? 'border-t border-white/8' : ''}`}
+                      >
+                        <div className="relative z-10 pt-0.5 text-[11px] font-medium tracking-tight text-white/30">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-[#0a0a0a]">
+                            0{index + 1}
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="text-[22px] font-medium tracking-tight text-white">{step.title}</h3>
+                          <p className="mt-2 max-w-[288px] text-[15px] leading-6 text-white/58">
+                            {step.detail}
+                          </p>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {step.signals.map((signal) => (
+                              <span
+                                key={signal}
+                                className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
+                              >
+                                {signal}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            </MobilePhaseShell>
           </div>
 
           <div className="relative left-1/2 mt-16 hidden w-screen max-w-[1320px] -translate-x-1/2 px-4 md:block md:px-8">
@@ -362,29 +380,31 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 bg-white/[0.015] py-20 md:hidden" id="how-margin-works-mobile">
           <div className={containerClass}>
-            <motion.div {...mobileRevealProps} className={mobileColumnClass}>
-              <div className={eyebrowClass}>What Margin does</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white">
-                Detect discrepancies, verify the case, and file only when the evidence is there.
-              </h2>
-              <p className="mt-4 max-w-[340px] text-[15px] leading-6 text-white/60">
-                The system should surface discrepancies, explain why a case is ready or blocked, and keep Amazon&apos;s response visible through payout.
-              </p>
-            </motion.div>
+            <MobilePhaseShell className={mobileColumnClass}>
+              <motion.div {...mobileRevealProps}>
+                <div className={eyebrowClass}>What Margin does</div>
+                <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white">
+                  Detect discrepancies, verify the case, and file only when the evidence is there.
+                </h2>
+                <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/60">
+                  The system should surface discrepancies, explain why a case is ready or blocked, and keep Amazon&apos;s response visible through payout.
+                </p>
+              </motion.div>
 
-            <div className={`mt-10 space-y-0 ${mobileColumnClass}`}>
-              {processSteps.map((item) => (
-                <motion.div
-                  {...mobileRevealProps}
-                  key={item.step}
-                  className="border-t border-white/8 py-5"
-                >
-                  <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
-                  <h3 className="mt-2 text-[24px] font-medium tracking-tight text-white">{item.title}</h3>
-                  <p className="mt-2 max-w-[340px] text-[15px] leading-6 text-white/58">{item.detail}</p>
-                </motion.div>
-              ))}
-            </div>
+              <div className="mt-10 space-y-0">
+                {processSteps.map((item) => (
+                  <motion.div
+                    {...mobileRevealProps}
+                    key={item.step}
+                    className="border-t border-white/8 py-6 first:pt-0"
+                  >
+                    <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
+                    <h3 className="mt-2 max-w-[280px] text-[24px] font-medium tracking-tight text-white">{item.title}</h3>
+                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58">{item.detail}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </MobilePhaseShell>
           </div>
         </section>
 
@@ -443,49 +463,53 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
+              <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
                 The system has to stay visible, controlled, and evidence-based.
               </h2>
             </motion.div>
 
-            <div className={`mt-10 max-w-[960px] space-y-8 md:hidden ${mobileColumnClass}`}>
-              {proofBlocks.map((item, index) => (
-                <motion.div
-                  {...mobileRevealProps}
-                  key={item.value}
-                  className={`${index > 0 ? 'border-t border-white/7 pt-8' : ''}`}
-                >
-                  <div className="text-sm font-medium tracking-tight text-white/28">0{index + 1}</div>
-                  <div className="mt-3 max-w-[360px]">
-                    <h3 className="text-[28px] font-medium leading-[1.02] tracking-tight text-white">
-                      {item.value}
-                    </h3>
-                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/60">
-                      {item.detail}
-                    </p>
-                  </div>
-
-                  <div className="mt-5 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03]">
-                    <div className="grid gap-px bg-white/8">
-                      <div className="bg-[#0a0a0a] px-4 py-3 text-[11px] font-medium tracking-tight text-white/42">
-                        Observed states
+            <div className="mt-10 md:hidden">
+              <MobilePhaseShell className={mobileColumnClass}>
+                <div className="space-y-10">
+                  {proofBlocks.map((item, index) => (
+                    <motion.div
+                      {...mobileRevealProps}
+                      key={item.value}
+                      className={`${index > 0 ? 'border-t border-white/7 pt-10' : ''}`}
+                    >
+                      <div className="text-sm font-medium tracking-tight text-white/28">0{index + 1}</div>
+                      <div className="mt-3 max-w-[320px]">
+                        <h3 className="text-[28px] font-medium leading-[1.02] tracking-tight text-white">
+                          {item.value}
+                        </h3>
+                        <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/60">
+                          {item.detail}
+                        </p>
                       </div>
-                      <div className="bg-[#0a0a0a] px-4 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          {mobileProofArtifacts[index].map((artifact) => (
-                            <span
-                              key={artifact}
-                              className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
-                            >
-                              {artifact}
-                            </span>
-                          ))}
+
+                      <div className="mt-6 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03]">
+                        <div className="grid gap-px bg-white/8">
+                          <div className="bg-[#0a0a0a] px-4 py-3 text-[11px] font-medium tracking-tight text-white/42">
+                            Observed states
+                          </div>
+                          <div className="bg-[#0a0a0a] px-4 py-4">
+                            <div className="flex flex-wrap gap-2">
+                              {mobileProofArtifacts[index].map((artifact) => (
+                                <span
+                                  key={artifact}
+                                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
+                                >
+                                  {artifact}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                    </motion.div>
+                  ))}
+                </div>
+              </MobilePhaseShell>
             </div>
 
             <div className={`mt-12 hidden max-w-[960px] space-y-10 md:mt-28 md:block md:space-y-20 ${mobileColumnClass}`}>
@@ -516,7 +540,7 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
+              <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
                 Not every discrepancy should be filed. Only supported cases move.
               </h2>
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/58 md:mt-6 md:max-w-[680px] md:text-lg md:leading-8">
@@ -524,58 +548,62 @@ export default function Index() {
               </p>
             </motion.div>
 
-            <div className={`mt-10 space-y-5 md:hidden ${mobileColumnClass}`}>
-              <motion.article
-                {...mobileRevealProps}
-                className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5"
-              >
-                <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
-                <h3 className="mt-3 text-[28px] font-medium tracking-tight text-white">
-                  Cases move only when the evidence and policy conditions are met.
-                </h3>
-                <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/68">
-                  Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
-                </p>
+            <div className="mt-10 md:hidden">
+              <MobilePhaseShell className={mobileColumnClass}>
+                <div className="space-y-5">
+                  <motion.article
+                    {...mobileRevealProps}
+                    className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5"
+                  >
+                    <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
+                    <h3 className="mt-3 max-w-[300px] text-[28px] font-medium tracking-tight text-white">
+                      Cases move only when the evidence and policy conditions are met.
+                    </h3>
+                    <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/68">
+                      Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
+                    </p>
 
-                <div className="mt-6 border-t border-white/10">
-                  {filingRules.map((item) => (
-                    <div key={item} className="grid gap-2 border-b border-white/8 py-4">
-                      <div className="text-sm font-medium tracking-tight text-white/30">IF</div>
-                      <div className="text-[15px] leading-6 text-white/84">{item}</div>
+                    <div className="mt-6 border-t border-white/10">
+                      {filingRules.map((item) => (
+                        <div key={item} className="grid gap-2 border-b border-white/8 py-4">
+                          <div className="text-sm font-medium tracking-tight text-white/30">IF</div>
+                          <div className="text-[15px] leading-6 text-white/84">{item}</div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
 
-                <div className="mt-5 text-sm font-medium tracking-tight text-white">
-                  → SYSTEM ACTION: FILE
-                </div>
-              </motion.article>
-
-              <motion.article
-                {...mobileRevealProps}
-                className="rounded-[24px] border border-white/8 bg-white/[0.02] p-5"
-              >
-                <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
-                <h3 className="mt-3 text-[26px] font-medium tracking-tight text-white/82">
-                  The system holds cases that are incomplete, unsupported, or already active.
-                </h3>
-                <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/50">
-                  Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
-                </p>
-
-                <div className="mt-6 border-t border-white/8">
-                  {holdRules.map((item) => (
-                    <div key={item} className="grid gap-2 border-b border-white/6 py-4">
-                      <div className="text-sm font-medium tracking-tight text-white/22">OR</div>
-                      <div className="text-[15px] leading-6 text-white/60">{item}</div>
+                    <div className="mt-5 text-sm font-medium tracking-tight text-white">
+                      → SYSTEM ACTION: FILE
                     </div>
-                  ))}
-                </div>
+                  </motion.article>
 
-                <div className="mt-5 text-sm font-medium tracking-tight text-white/56">
-                  → SYSTEM ACTION: HOLD
+                  <motion.article
+                    {...mobileRevealProps}
+                    className="rounded-[24px] border border-white/8 bg-white/[0.02] p-5"
+                  >
+                    <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
+                    <h3 className="mt-3 max-w-[300px] text-[26px] font-medium tracking-tight text-white/82">
+                      The system holds cases that are incomplete, unsupported, or already active.
+                    </h3>
+                    <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/50">
+                      Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
+                    </p>
+
+                    <div className="mt-6 border-t border-white/8">
+                      {holdRules.map((item) => (
+                        <div key={item} className="grid gap-2 border-b border-white/6 py-4">
+                          <div className="text-sm font-medium tracking-tight text-white/22">OR</div>
+                          <div className="text-[15px] leading-6 text-white/60">{item}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-5 text-sm font-medium tracking-tight text-white/56">
+                      → SYSTEM ACTION: HOLD
+                    </div>
+                  </motion.article>
                 </div>
-              </motion.article>
+              </MobilePhaseShell>
             </div>
 
             <div className={`relative mt-10 hidden max-w-[980px] md:mt-20 md:block ${mobileColumnClass}`}>
@@ -648,7 +676,7 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
               <div className={eyebrowClass}>Questions sellers ask before they buy</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
+              <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
                 Answer the questions a skeptical seller will ask.
               </h2>
               <p className="mt-4 max-w-[360px] text-[15px] leading-6 text-white/60 md:mx-auto md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
@@ -679,7 +707,7 @@ export default function Index() {
                   <Button
                     variant="outline"
                     onClick={() => setShowMoreFaqs(true)}
-                    className="rounded-full border border-white/10 bg-transparent px-6 text-sm text-white hover:bg-white/[0.04]"
+                    className="w-full max-w-[260px] rounded-full border border-white/10 bg-transparent px-6 text-sm text-white hover:bg-white/[0.04] md:w-auto md:max-w-none"
                   >
                     Show more questions
                   </Button>
@@ -691,79 +719,81 @@ export default function Index() {
 
         <section className="relative border-t border-white/8 bg-white/[0.02] md:bg-transparent py-20 md:py-40">
           <div className={containerClass}>
-            <motion.div {...mobileRevealProps} className={`max-w-[980px] ${mobileColumnClass}`}>
-              <div className={eyebrowClass}>Start with clarity</div>
-              <h2 className="mt-3 max-w-[720px] text-[38px] font-light tracking-tight text-white md:mt-4 md:max-w-[860px] md:text-7xl">
-                Start with a read-only review of missed FBA reimbursements.
-              </h2>
-              <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/60 md:mt-8 md:max-w-[700px] md:text-lg md:leading-8">
-                The first step is read-only. Margin reviews your reimbursement data before any case is considered for filing.
-              </p>
-
-              <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
-                <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
-                  <div className="text-sm font-medium tracking-tight text-white/34">01</div>
-                  <div>
-                    <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
-                      Connect your Amazon account
-                    </h3>
-                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                      Secure, read-only access gives Margin the data it needs to audit reimbursement opportunities.
-                    </p>
-                  </div>
-                </motion.div>
-
-                <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
-                  <div className="text-sm font-medium tracking-tight text-white/34">02</div>
-                  <div>
-                    <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
-                      Margin detects and prepares cases
-                    </h3>
-                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                      Supported discrepancies are surfaced, matched with evidence, and separated from weak or duplicate issues.
-                    </p>
-                  </div>
-                </motion.div>
-
-                <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
-                  <div className="text-sm font-medium tracking-tight text-white/34">03</div>
-                  <div>
-                    <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">
-                      You review or keep the workflow automated
-                    </h3>
-                    <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                      Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-
-              <motion.div {...mobileRevealProps} className="mt-10 flex flex-col items-center gap-3 sm:mt-14 sm:flex-row sm:items-start">
-                <Button
-                  onClick={handleConnectAmazon}
-                  className="h-11 min-w-[168px] rounded-[5px] border border-white/10 bg-transparent px-5 text-sm font-medium text-white hover:bg-white/[0.04]"
-                >
-                  Connect Amazon
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={scrollToHowItWorks}
-                  className="h-11 min-w-[168px] rounded-[5px] border border-white bg-white px-5 text-sm font-medium text-black hover:bg-white/90 hover:text-black"
-                >
-                  See how it works
-                </Button>
-              </motion.div>
-
-              <motion.div
-                {...mobileRevealProps}
-                className="mt-6 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 md:hidden"
-              >
-                <p className="max-w-[320px] text-[15px] leading-6 text-white/58">
-                  Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
+            <MobilePhaseShell className={mobileColumnClass}>
+              <motion.div {...mobileRevealProps} className="max-w-[980px]">
+                <div className={eyebrowClass}>Start with clarity</div>
+                <h2 className="mt-3 max-w-[320px] text-[38px] font-light tracking-tight text-white md:mt-4 md:max-w-[860px] md:text-7xl">
+                  Start with a read-only review of missed FBA reimbursements.
+                </h2>
+                <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/60 md:mt-8 md:max-w-[700px] md:text-lg md:leading-8">
+                  The first step is read-only. Margin reviews your reimbursement data before any case is considered for filing.
                 </p>
+
+                <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
+                  <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                    <div className="text-sm font-medium tracking-tight text-white/34">01</div>
+                    <div>
+                      <h3 className="max-w-[280px] text-[24px] font-medium tracking-tight text-white md:text-3xl">
+                        Connect your Amazon account
+                      </h3>
+                      <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
+                        Secure, read-only access gives Margin the data it needs to audit reimbursement opportunities.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                    <div className="text-sm font-medium tracking-tight text-white/34">02</div>
+                    <div>
+                      <h3 className="max-w-[280px] text-[24px] font-medium tracking-tight text-white md:text-3xl">
+                        Margin detects and prepares cases
+                      </h3>
+                      <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
+                        Supported discrepancies are surfaced, matched with evidence, and separated from weak or duplicate issues.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                    <div className="text-sm font-medium tracking-tight text-white/34">03</div>
+                    <div>
+                      <h3 className="max-w-[280px] text-[24px] font-medium tracking-tight text-white md:text-3xl">
+                        You review or keep the workflow automated
+                      </h3>
+                      <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
+                        Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+
+                <motion.div {...mobileRevealProps} className="mt-12 flex w-full max-w-[340px] flex-col items-stretch gap-3 sm:mt-14 sm:max-w-none sm:flex-row sm:items-start">
+                  <Button
+                    onClick={handleConnectAmazon}
+                    className="h-11 w-full min-w-0 justify-between rounded-[5px] border border-white/10 bg-transparent px-5 text-sm font-medium text-white hover:bg-white/[0.04] sm:min-w-[168px] sm:w-auto sm:justify-center"
+                  >
+                    Connect Amazon
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={scrollToHowItWorks}
+                    className="h-11 w-full min-w-0 justify-between rounded-[5px] border border-white bg-white px-5 text-sm font-medium text-black hover:bg-white/90 hover:text-black sm:min-w-[168px] sm:w-auto sm:justify-center"
+                  >
+                    See how it works
+                  </Button>
+                </motion.div>
+
+                <motion.div
+                  {...mobileRevealProps}
+                  className="mt-8 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 md:hidden"
+                >
+                  <p className="max-w-[320px] text-[15px] leading-6 text-white/58">
+                    Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
+                  </p>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </MobilePhaseShell>
           </div>
         </section>
       </main>
