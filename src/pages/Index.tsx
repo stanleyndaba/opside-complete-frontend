@@ -288,12 +288,7 @@ export default function Index() {
               </h1>
 
               <p className="mt-5 max-w-[340px] text-[15px] leading-6 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
-                <span className="md:hidden">
-                  Margin reviews the case, files only when the evidence and policy conditions are met, and tracks Amazon until payout.
-                </span>
-                <span className="hidden md:inline">
-                  Margin detects reimbursement discrepancies, verifies the identifiers and evidence, files only cases supported by evidence and policy, and tracks Amazon until payout.
-                </span>
+                Margin detects reimbursement discrepancies, verifies the identifiers and evidence, files only cases supported by evidence and policy, and tracks Amazon until payout.
               </p>
 
               <div className="mt-8 flex w-full max-w-[340px] flex-col items-stretch gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:items-start">
@@ -326,12 +321,8 @@ export default function Index() {
               <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
                 <div className={eyebrowClass}>The orchestration layer</div>
                 <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
-                  <span className="md:hidden">Follow the recovery flow from signal to payout.</span>
-                  <span className="hidden md:inline">See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.</span>
+                  See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.
                 </h2>
-                <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/56 md:hidden">
-                  On mobile, this section shows the operating sequence rather than the full system map.
-                </p>
               </motion.div>
 
               <div className="mt-10 md:hidden">
@@ -784,14 +775,6 @@ export default function Index() {
                   </Button>
                 </motion.div>
 
-                <motion.div
-                  {...mobileRevealProps}
-                  className="mt-8 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 md:hidden"
-                >
-                  <p className="max-w-[320px] text-[15px] leading-6 text-white/58">
-                    Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
-                  </p>
-                </motion.div>
               </motion.div>
             </MobilePhaseShell>
           </div>
