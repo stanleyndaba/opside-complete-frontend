@@ -399,10 +399,10 @@ export function Sidebar({
       <ScrollArea className="flex-1">
         <div
           className={cn(
-            "h-full flex",
-            isCollapsed ? "px-2.5" : "px-3"
+            "flex min-h-full",
+            isCollapsed ? "px-2.5 py-5" : "px-3 py-5"
           )}>
-          <nav className={cn("flex w-full flex-col pb-3.5", isCollapsed ? "items-center gap-[0.48rem] pt-2.5" : "gap-[0.58rem] pt-1.5")}>
+          <nav className={cn("flex w-full flex-1 flex-col justify-center", isCollapsed ? "items-center gap-[0.48rem]" : "gap-[0.58rem]")}>
             <div className="w-full">
               {!isCollapsed && (
                 <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
