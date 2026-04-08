@@ -1042,15 +1042,15 @@ export default function CaseDetail() {
     }
 
     return {
-      description: 'To make approval easier, this case should have matched documents, verified identifiers, and no open review blockers.',
-      helper: hasMatchedDocs
-        ? `${matchedDocsLabel} are already linked, so the remaining step is review clarity.`
-        : 'Start by linking supporting documents so the case is easier to review.',
-      chips: [
-        `Docs linked: ${matchedDocsLabel}`,
-        proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
-        payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
-      ].filter(Boolean) as string[],
+        description: 'This case still needs supporting documents and verified identifiers before it can move forward.',
+        helper: hasMatchedDocs
+        ? 'Once those are in place, it can be reviewed for filing.'
+        : 'Once those are in place, it can be reviewed for filing.',
+        chips: [
+          `Docs linked: ${matchedDocsLabel}`,
+          proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
+          payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
+        ].filter(Boolean) as string[],
     };
   }, [
     backendTruthCase?.eligibility_status,
@@ -1354,7 +1354,7 @@ export default function CaseDetail() {
                   </div>
                   <div className="mt-3 max-w-[620px]">
                     <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                      What's needed for approval
+                      What this case needs next
                     </p>
                     <p className="mt-1 text-[12px] font-sans leading-5 tracking-tight text-white/78">
                       {approvalGuidance.description}
