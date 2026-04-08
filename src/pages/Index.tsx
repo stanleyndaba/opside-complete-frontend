@@ -283,7 +283,7 @@ export default function Index() {
                 </motion.div>
               </div>
 
-              <h1 className="mt-4 max-w-[320px] text-[38px] font-light leading-[0.95] tracking-tight text-white sm:max-w-[360px] sm:text-[42px] md:mt-6 md:max-w-[760px] md:text-7xl">
+              <h1 className="mt-4 max-w-[320px] text-[34px] font-light leading-[0.97] tracking-tight text-white sm:max-w-[360px] sm:text-[38px] md:mt-6 md:max-w-[760px] md:text-7xl">
                 Recover the FBA reimbursements you&apos;re missing.
               </h1>
 
@@ -320,7 +320,7 @@ export default function Index() {
             <MobilePhaseShell>
               <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
                 <div className={eyebrowClass}>The orchestration layer</div>
-                <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
+                <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
                   See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.
                 </h2>
               </motion.div>
@@ -374,7 +374,7 @@ export default function Index() {
             <MobilePhaseShell className={mobileColumnClass}>
               <motion.div {...mobileRevealProps}>
                 <div className={eyebrowClass}>What Margin does</div>
-                <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white">
+                <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px]">
                   Detect discrepancies, verify the case, and file only when the evidence is there.
                 </h2>
                 <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/60">
@@ -390,7 +390,7 @@ export default function Index() {
                     className="border-t border-white/8 py-6 first:pt-0"
                   >
                     <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
-                    <h3 className="mt-2 max-w-[280px] text-[24px] font-medium tracking-tight text-white">{item.title}</h3>
+                    <h3 className="mt-2 max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px]">{item.title}</h3>
                     <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58">{item.detail}</p>
                   </motion.div>
                 ))}
@@ -403,7 +403,7 @@ export default function Index() {
           <div className={containerClass}>
             <div className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>What Margin does</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
+              <h2 className="mt-3 text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:text-6xl">
                 Detect discrepancies, verify the case, and file only when the evidence is there.
               </h2>
               <p className="mt-4 max-w-[620px] text-[15px] leading-6 text-white/60 md:mt-6 md:max-w-[700px] md:text-lg md:leading-8">
@@ -428,7 +428,7 @@ export default function Index() {
           <div className={containerClass}>
             <div className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>How Margin works</div>
-              <h2 className="mt-3 text-[34px] font-light tracking-tight text-white md:mt-4 md:text-6xl">
+              <h2 className="mt-3 text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:text-6xl">
                 Detect, verify, file, track, and follow through.
               </h2>
               <p className="mt-4 max-w-[620px] text-[15px] leading-6 text-white/60 md:mt-6 md:max-w-[720px] md:text-lg md:leading-8">
@@ -441,7 +441,7 @@ export default function Index() {
                 <div key={item.step} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[88px_minmax(0,1fr)] md:gap-4 md:pt-8">
                   <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
                   <div>
-                    <h3 className="text-[24px] font-medium tracking-tight text-white md:text-3xl">{item.title}</h3>
+                    <h3 className="text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">{item.title}</h3>
                     <p className="mt-2 max-w-[340px] text-[15px] leading-6 text-white/58 md:mt-4 md:max-w-[760px] md:text-lg md:leading-8">{item.detail}</p>
                   </div>
                 </div>
@@ -454,7 +454,7 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
-              <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
+              <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
                 The system has to stay visible, controlled, and evidence-based.
               </h2>
             </motion.div>
@@ -470,7 +470,7 @@ export default function Index() {
                     >
                       <div className="text-sm font-medium tracking-tight text-white/28">0{index + 1}</div>
                       <div className="mt-3 max-w-[320px]">
-                        <h3 className="text-[28px] font-medium leading-[1.02] tracking-tight text-white">
+                        <h3 className="text-[24px] font-medium leading-[1.04] tracking-tight text-white sm:text-[26px]">
                           {item.value}
                         </h3>
                         <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/60">
@@ -531,7 +531,7 @@ export default function Index() {
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
-              <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
+              <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
                 Not every discrepancy should be filed. Only supported cases move.
               </h2>
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/58 md:mt-6 md:max-w-[680px] md:text-lg md:leading-8">
@@ -547,7 +547,7 @@ export default function Index() {
                     className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5"
                   >
                     <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
-                    <h3 className="mt-3 max-w-[300px] text-[28px] font-medium tracking-tight text-white">
+                    <h3 className="mt-3 max-w-[300px] text-[24px] font-medium leading-[1.05] tracking-tight text-white sm:text-[25px]">
                       Cases move only when the evidence and policy conditions are met.
                     </h3>
                     <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/68">
@@ -573,7 +573,7 @@ export default function Index() {
                     className="rounded-[24px] border border-white/8 bg-white/[0.02] p-5"
                   >
                     <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
-                    <h3 className="mt-3 max-w-[300px] text-[26px] font-medium tracking-tight text-white/82">
+                    <h3 className="mt-3 max-w-[300px] text-[23px] font-medium leading-[1.06] tracking-tight text-white/82 sm:text-[24px]">
                       The system holds cases that are incomplete, unsupported, or already active.
                     </h3>
                     <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/50">
@@ -666,12 +666,12 @@ export default function Index() {
         <section className="relative border-t border-white/8 py-20 md:py-36">
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
-              <div className={eyebrowClass}>Questions sellers ask before they buy</div>
-              <h2 className="mt-3 max-w-[320px] text-[34px] font-light tracking-tight text-white md:mt-4 md:max-w-none md:text-6xl">
-                Answer the questions a skeptical seller will ask.
+              <div className={eyebrowClass}>Common questions</div>
+              <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
+                Questions sellers ask before connecting Amazon data.
               </h2>
               <p className="mt-4 max-w-[360px] text-[15px] leading-6 text-white/60 md:mx-auto md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
-                These are the questions sellers ask before they connect account data or let a system file reimbursement cases on their behalf.
+                These answers explain how Margin detects reimbursement cases, verifies evidence, and keeps case status visible through payout.
               </p>
             </motion.div>
 
@@ -713,7 +713,7 @@ export default function Index() {
             <MobilePhaseShell className={mobileColumnClass}>
               <motion.div {...mobileRevealProps} className="max-w-[980px]">
                 <div className={eyebrowClass}>Start with clarity</div>
-                <h2 className="mt-3 max-w-[320px] text-[38px] font-light tracking-tight text-white md:mt-4 md:max-w-[860px] md:text-7xl">
+                <h2 className="mt-3 max-w-[320px] text-[33px] font-light leading-[1.01] tracking-tight text-white sm:text-[35px] md:mt-4 md:max-w-[860px] md:text-7xl">
                   Start with a read-only review of missed FBA reimbursements.
                 </h2>
                 <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/60 md:mt-8 md:max-w-[700px] md:text-lg md:leading-8">
@@ -724,7 +724,7 @@ export default function Index() {
                   <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                     <div className="text-sm font-medium tracking-tight text-white/34">01</div>
                     <div>
-                      <h3 className="max-w-[280px] text-[24px] font-medium tracking-tight text-white md:text-3xl">
+                      <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
                         Connect your Amazon account
                       </h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
@@ -736,7 +736,7 @@ export default function Index() {
                   <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                     <div className="text-sm font-medium tracking-tight text-white/34">02</div>
                     <div>
-                      <h3 className="max-w-[280px] text-[24px] font-medium tracking-tight text-white md:text-3xl">
+                      <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
                         Margin detects and prepares cases
                       </h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
@@ -748,7 +748,7 @@ export default function Index() {
                   <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
                     <div className="text-sm font-medium tracking-tight text-white/34">03</div>
                     <div>
-                      <h3 className="max-w-[280px] text-[24px] font-medium tracking-tight text-white md:text-3xl">
+                      <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
                         You review or keep the workflow automated
                       </h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
