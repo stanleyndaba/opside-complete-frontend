@@ -107,35 +107,41 @@ export default function ApprovedReimbursements() {
   return (
     <PageLayout title="Approved Reimbursements" midnight>
       <div className="min-h-screen bg-[#070707] text-white">
-        <div className="container mx-auto px-8 pb-20 pt-10">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10">
-                  <CircleCheck className="h-5 w-5 text-emerald-400" />
+        <div className="container mx-auto px-6 pb-20 pt-6 lg:px-8 lg:pt-8">
+          <div className="rounded-[24px] border border-white/10 bg-white/[0.02] px-5 py-5 shadow-[0_18px_50px_rgba(0,0,0,0.28)] lg:px-6">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/12">
+                    <CircleCheck className="h-5 w-5 text-emerald-400" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/38">Approved reimbursements</div>
+                    <div className="text-[11px] font-sans font-medium tracking-tight text-white/50">
+                      {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
+                    </div>
+                  </div>
                 </div>
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved reimbursements</div>
+                <h1 className="max-w-3xl text-[29px] font-sans font-bold tracking-tight text-white lg:text-[32px]">
+                  Approved Reimbursements
+                </h1>
+                <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/62">
+                  Minimal approved recovery view for reimbursements Amazon has already approved.
+                </p>
               </div>
-              <h1 className="max-w-3xl text-3xl font-sans font-bold tracking-tight text-white">Approved Reimbursements</h1>
-              <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/56">
-                Minimal approved recovery view for reimbursements Amazon has already approved.
-              </p>
-              <p className="text-[11px] font-sans font-medium tracking-tight text-white/32">
-                {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
-              </p>
-            </div>
 
-            <Button
-              onClick={() => fetchApprovedReimbursements('refresh')}
-              disabled={refreshing}
-              className="h-10 shrink-0 rounded-lg border border-white/10 bg-white/[0.03] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/56 hover:bg-white/10 hover:text-white"
-            >
-              <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
+              <Button
+                onClick={() => fetchApprovedReimbursements('refresh')}
+                disabled={refreshing}
+                className="h-10 shrink-0 rounded-lg border border-white/12 bg-white/[0.04] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 hover:bg-white/10 hover:text-white"
+              >
+                <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
+          <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
