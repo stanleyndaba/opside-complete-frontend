@@ -169,9 +169,6 @@ export function Sidebar({
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
-    { title: 'Settings', icon: Settings2, href: tenantRoute(currentTenantSlug, '/settings') }
-  ];
-  const actionItems: NavItem[] = [
     { title: 'Retry Filing', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
   ];
   const NavItemComponent = React.memo(({
@@ -440,18 +437,6 @@ export function Sidebar({
               </div>
             </div>
 
-            <div className="w-full">
-              {!isCollapsed && (
-                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
-                  Actions
-                </div>
-              )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.3rem]")}>
-                {actionItems.map((item) => (
-                  <NavItemComponent key={item.title} item={item} />
-                ))}
-              </div>
-            </div>
           </nav>
         </div>
       </ScrollArea>
@@ -479,6 +464,7 @@ export function Sidebar({
           </div>
         )}
         {(() => {
+          const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
           const notesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/whats-new'));
           return (
@@ -496,6 +482,31 @@ export function Sidebar({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
+            <DropdownMenuItem
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
+              className={cn(
+                "group/more-item flex items-center gap-3 px-3 py-2.5 cursor-pointer rounded-lg font-sans transition-colors",
+                "text-[13px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
+                settingsActive && "bg-white text-black"
+              )}>
+              <Settings2
+                className={cn(
+                  "h-4 w-4 shrink-0 transition-colors",
+                  settingsActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                )}
+                strokeWidth={1.5}
+              />
+              <div className="min-w-0">
+                <div className="tracking-tight">Settings</div>
+                <div className={cn(
+                  "mt-0.5 text-[10px] font-sans tracking-tight normal-case",
+                  settingsActive ? "text-black/60" : "text-foreground/30 group-data-[highlighted]/more-item:text-black/60"
+                )}>
+                  Workspace preferences
+                </div>
+              </div>
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className={cn(
