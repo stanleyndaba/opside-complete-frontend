@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CircleCheck, RefreshCw } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -104,11 +104,22 @@ export default function ApprovedReimbursements() {
 
   const headingCount = useMemo(() => rows.length.toLocaleString('en-US'), [rows.length]);
 
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    const restoreTopFrame = window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+
+    return () => window.cancelAnimationFrame(restoreTopFrame);
+  }, [activeSlug]);
+
   return (
     <PageLayout title="Approved Reimbursements" midnight>
       <div className="min-h-screen bg-[#070707] text-white">
         <div className="container mx-auto px-6 pb-20 pt-6 lg:px-8 lg:pt-8">
-          <div className="rounded-[24px] border border-white/10 bg-white/[0.02] px-5 py-5 shadow-[0_18px_50px_rgba(0,0,0,0.28)] lg:px-6">
+          <div className="rounded-[24px] bg-gradient-to-b from-white/[0.03] to-white/[0.01] px-5 py-5 shadow-[0_18px_50px_rgba(0,0,0,0.18)] lg:px-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
