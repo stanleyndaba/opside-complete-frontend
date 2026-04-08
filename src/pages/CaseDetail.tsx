@@ -1336,11 +1336,11 @@ export default function CaseDetail() {
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
             {/* Header - Case Information */}
             <div className="mb-3 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-              <div className="flex items-center gap-6">
+              <div className="flex items-start gap-6">
                 <Link to={`/app/${activeSlug}/recoveries`} className="h-10 w-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-colors rounded-lg">
                   <ArrowLeft className="h-4 w-4 text-white/40" />
                 </Link>
-                <div>
+                <div className="max-w-[680px]">
                   <div className="flex items-center gap-3">
                     <h1 className="text-lg font-bold text-white tracking-tight font-sans">{effectiveCase.case_number || effectiveCase.claim_number || effectiveCase.evidence?.claim_number || effectiveCase.id?.slice(0, 12)}</h1>
                     <Badge variant="outline" className="border-white/10 bg-white/5 text-white/70 text-[9px] uppercase tracking-tight">
@@ -1350,6 +1350,31 @@ export default function CaseDetail() {
                       <Badge variant="outline" className="border-amber-500/20 bg-amber-500/10 text-amber-400 text-[9px] uppercase tracking-tight">
                         Live Updates Unavailable
                       </Badge>
+                    )}
+                  </div>
+                  <div className="mt-3 max-w-[620px]">
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                      What's needed for approval
+                    </p>
+                    <p className="mt-1 text-[12px] font-sans leading-5 tracking-tight text-white/78">
+                      {approvalGuidance.description}
+                    </p>
+                    <p className="mt-1.5 text-[11px] font-sans leading-5 tracking-tight text-white/48">
+                      {approvalGuidance.helper}
+                    </p>
+                    {approvalGuidance.chips.filter((chip) => !chip.toLowerCase().startsWith('docs linked:')).length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {approvalGuidance.chips
+                          .filter((chip) => !chip.toLowerCase().startsWith('docs linked:'))
+                          .map((chip) => (
+                            <span
+                              key={chip}
+                              className="inline-flex items-center rounded-full bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/62"
+                            >
+                              {chip}
+                            </span>
+                          ))}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1375,29 +1400,6 @@ export default function CaseDetail() {
                     <FileText className="h-3.5 w-3.5 mr-2" />
                     Case PDF Export
                   </Button>
-                </div>
-                <div className="max-w-[540px] xl:text-right">
-                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                    What's needed for approval
-                  </p>
-                  <p className="mt-1 text-[12px] font-sans leading-5 tracking-tight text-white/78">
-                    {approvalGuidance.description}
-                  </p>
-                  <p className="mt-1.5 text-[11px] font-sans leading-5 tracking-tight text-white/48">
-                    {approvalGuidance.helper}
-                  </p>
-                  {approvalGuidance.chips.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2 xl:justify-end">
-                      {approvalGuidance.chips.map((chip) => (
-                        <span
-                          key={chip}
-                          className="inline-flex items-center rounded-full bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/62"
-                        >
-                          {chip}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
