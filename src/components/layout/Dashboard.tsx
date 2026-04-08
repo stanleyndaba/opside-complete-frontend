@@ -163,9 +163,140 @@ const formatLaunchSourceLabel = (value: LaunchMonitorEvent['source_table']) =>
 const formatLaunchStatusLabel = (value?: string | null) =>
   value ? toTitleCase(value.replace(/_/g, ' ')) : null;
 
+const normalizeIssueTypeKey = (value?: string | null) =>
+  (value || '').toLowerCase().replace(/[:\-\s]+/g, '_').trim();
+
 const formatIssueTypeLabel = (value?: string | null) => {
   if (!value) return 'Unknown issue';
   return toTitleCase(value.replace(/_/g, ' ').trim());
+};
+
+const ISSUE_COPY: Record<string, { title: string; summary: string; eventLabel: string }> = {
+  reimbursement_duplicate_missed: {
+    title: 'Duplicate Reimbursement Missing',
+    summary: 'Amazon recorded duplicate reimbursement activity, but one expected reimbursement is missing from the settlement trail.',
+    eventLabel: 'Reimbursement discrepancy',
+  },
+  damaged_warehouse: {
+    title: 'Damaged in Warehouse',
+    summary: 'Amazon marked inventory as damaged in the warehouse, but the matching reimbursement is missing or incomplete.',
+    eventLabel: 'Warehouse damage discrepancy',
+  },
+  lost_warehouse: {
+    title: 'Lost in Warehouse',
+    summary: 'Amazon marked inventory as lost in the warehouse, but the matching reimbursement is missing or incomplete.',
+    eventLabel: 'Warehouse loss discrepancy',
+  },
+  lost_inbound: {
+    title: 'Lost at Inbound',
+    summary: 'Amazon logged an inbound loss, but the expected reimbursement does not fully reconcile with the shipment outcome.',
+    eventLabel: 'Inbound shipment discrepancy',
+  },
+  damaged_inbound: {
+    title: 'Damaged at Inbound',
+    summary: 'Amazon marked inbound inventory as damaged, but the related reimbursement does not fully reconcile.',
+    eventLabel: 'Inbound shipment discrepancy',
+  },
+  carrier_claim: {
+    title: 'Carrier Claim Mismatch',
+    summary: 'Amazon reflects a carrier-related loss, but the corresponding reimbursement or adjustment is missing from settlement.',
+    eventLabel: 'Carrier claim discrepancy',
+  },
+  carrierclaim: {
+    title: 'Carrier Claim Mismatch',
+    summary: 'Amazon reflects a carrier-related loss, but the corresponding reimbursement or adjustment is missing from settlement.',
+    eventLabel: 'Carrier claim discrepancy',
+  },
+  customer_return: {
+    title: 'Customer Return Mismatch',
+    summary: 'Amazon received a customer return event, but the inventory, reimbursement, or settlement outcome does not reconcile.',
+    eventLabel: 'Return discrepancy',
+  },
+  customerreturn: {
+    title: 'Customer Return Mismatch',
+    summary: 'Amazon received a customer return event, but the inventory, reimbursement, or settlement outcome does not reconcile.',
+    eventLabel: 'Return discrepancy',
+  },
+  reimbursement_reversal: {
+    title: 'Reimbursement Reversal Mismatch',
+    summary: 'Amazon reversed a reimbursement, but the reversal does not line up with the underlying loss and settlement trail.',
+    eventLabel: 'Reimbursement reversal discrepancy',
+  },
+  reimbursementreversal: {
+    title: 'Reimbursement Reversal Mismatch',
+    summary: 'Amazon reversed a reimbursement, but the reversal does not line up with the underlying loss and settlement trail.',
+    eventLabel: 'Reimbursement reversal discrepancy',
+  },
+  partial_reimbursement: {
+    title: 'Partial Reimbursement',
+    summary: 'Amazon recognized the loss, but only part of the expected reimbursement was credited back.',
+    eventLabel: 'Reimbursement discrepancy',
+  },
+  refund_no_return: {
+    title: 'Refund Without Return',
+    summary: 'Amazon refunded the order, but no matching return was received back into FBA.',
+    eventLabel: 'Refund event discrepancy',
+  },
+  refundevent: {
+    title: 'Refund Event Discrepancy',
+    summary: 'Amazon posted a refund event, but the related return, charge, or settlement offset does not reconcile.',
+    eventLabel: 'Refund event discrepancy',
+  },
+  refund_event: {
+    title: 'Refund Event Discrepancy',
+    summary: 'Amazon posted a refund event, but the related return, charge, or settlement offset does not reconcile.',
+    eventLabel: 'Refund event discrepancy',
+  },
+  return_discrepancy: {
+    title: 'Return Discrepancy',
+    summary: 'Amazon recorded a return outcome that does not reconcile with the refund, restock, or settlement trail.',
+    eventLabel: 'Return discrepancy',
+  },
+  return_not_restocked: {
+    title: 'Return Not Restocked',
+    summary: 'Amazon received the return, but the unit was not restocked or reimbursed correctly.',
+    eventLabel: 'Return discrepancy',
+  },
+  refund_commission_error: {
+    title: 'Refund Commission Error',
+    summary: 'Amazon refunded the order, but the related commission adjustment does not reconcile with the refund trail.',
+    eventLabel: 'Refund event discrepancy',
+  },
+  refund_exceeds_charge: {
+    title: 'Refund Exceeds Charge',
+    summary: 'Amazon refunded more than the original charge, or the settlement offset does not reconcile with the order total.',
+    eventLabel: 'Refund event discrepancy',
+  },
+  refundcommission: {
+    title: 'Refund Commission Mismatch',
+    summary: 'Amazon posted a refund commission adjustment, but the commission reversal does not reconcile with the refund event.',
+    eventLabel: 'Refund event discrepancy',
+  },
+  fba_inventory_reimbursement: {
+    title: 'Inventory Reimbursement Mismatch',
+    summary: 'Amazon posted an inventory reimbursement event that does not reconcile with the underlying unit loss or reimbursement amount.',
+    eventLabel: 'Reimbursement discrepancy',
+  },
+  fbainventoryreimbursement: {
+    title: 'Inventory Reimbursement Mismatch',
+    summary: 'Amazon posted an inventory reimbursement event that does not reconcile with the underlying unit loss or reimbursement amount.',
+    eventLabel: 'Reimbursement discrepancy',
+  },
+};
+
+const getIssueCopy = (value?: string | null) => {
+  const normalized = normalizeIssueTypeKey(value);
+  const fallbackTitle = formatIssueTypeLabel(value);
+
+  if (normalized && ISSUE_COPY[normalized]) {
+    return ISSUE_COPY[normalized];
+  }
+
+  return {
+    title: fallbackTitle,
+    summary: 'Amazon activity for this finding does not reconcile with the expected reimbursement, return, or settlement trail.',
+    eventLabel: 'Detected discrepancy',
+  };
 };
 
 const isProcessedFindingStatus = (status?: string | null) =>
@@ -1478,6 +1609,18 @@ export function Dashboard() {
       detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
     }
   ]), [filedClaimsCount, isSyncScopedDetections, needsReviewFindingsCount, readyToFileFindingsCount, visibleDetectionResults.length]);
+  const activeDiscrepancyCopy = useMemo(() => {
+    if (!activeDiscrepancy) return null;
+    const derivedCopy = getIssueCopy(
+      activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title
+    );
+
+    return {
+      title: activeDiscrepancy.issueTitle || derivedCopy.title,
+      summary: activeDiscrepancy.issueSummary || derivedCopy.summary,
+      eventLabel: activeDiscrepancy.issueEventLabel || derivedCopy.eventLabel,
+    };
+  }, [activeDiscrepancy]);
   const syncScopedEmptyState = useMemo(() => {
     if (!isSyncScopedDetections) return null;
 
@@ -2495,6 +2638,7 @@ export function Dashboard() {
                             const isProcessed = isProcessedFindingStatus(result.status);
                             const stateMeta = getFindingStateMeta(result.status);
                             const StateIcon = stateMeta.Icon;
+                            const issueCopy = getIssueCopy(result.anomaly_type);
                             const foundOnLabel = result.discovery_date
                               ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                               : 'Date unavailable';
@@ -2512,8 +2656,11 @@ export function Dashboard() {
                                 <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center">
                                   <div className="min-w-0">
                                     <div className="text-[14px] font-sans font-medium tracking-tight text-white">
-                                      {formatIssueTypeLabel(result.anomaly_type)}
+                                      {issueCopy.title}
                                     </div>
+                                    <p className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-[#d4d4d4]">
+                                      {issueCopy.summary}
+                                    </p>
                                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-[#b8b8b8]">
                                       <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
                                       <span>Found {foundOnLabel}</span>
@@ -2578,6 +2725,9 @@ export function Dashboard() {
                                               setActiveDiscrepancy({
                                                 id: result.id,
                                                 reason: result.anomaly_type,
+                                                issueTitle: issueCopy.title,
+                                                issueSummary: issueCopy.summary,
+                                                issueEventLabel: issueCopy.eventLabel,
                                                 estimatedRecovery: result.estimated_value,
                                                 currency: result.currency || 'USD',
                                                 occurrenceDate: result.discovery_date,
@@ -2804,10 +2954,10 @@ export function Dashboard() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1.5">
                     <DialogTitle className="text-[18px] font-sans font-semibold tracking-tight text-white">
-                      {formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
+                      {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
                     <DialogDescription className="text-[12px] font-sans leading-5 tracking-tight text-[#d6d6d6]">
-                      {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
+                      {activeDiscrepancyCopy?.summary || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
                   </div>
                   <button
@@ -2860,9 +3010,19 @@ export function Dashboard() {
                 </div>
 
                 <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
-                  <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">What this means</div>
+                  <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Amazon discrepancy</div>
                   <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
-                    {activeDiscrepancy.stateDetail || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
+                    {activeDiscrepancyCopy?.summary || 'Amazon activity for this finding does not reconcile with the expected reimbursement, return, or settlement trail.'}
+                  </p>
+                  <div className="mt-3 inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/75">
+                    {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
+                  </div>
+                </div>
+
+                <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
+                  <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Review status</div>
+                  <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
+                    {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                   </p>
                   <p className="mt-3 text-[12px] font-sans leading-5 tracking-tight text-[#bfbfbf]">
                     {activeDiscrepancy.isProcessed
