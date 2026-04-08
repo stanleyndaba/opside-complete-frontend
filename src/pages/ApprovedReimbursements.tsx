@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CircleCheck, RefreshCw } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -51,6 +51,7 @@ export default function ApprovedReimbursements() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { isReady } = useTenant();
   const activeSlug = (tenantSlug || '').trim();
+  const topAnchorRef = useRef<HTMLDivElement | null>(null);
   const [rows, setRows] = useState<ApprovedReimbursementRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -104,55 +105,88 @@ export default function ApprovedReimbursements() {
 
   const headingCount = useMemo(() => rows.length.toLocaleString('en-US'), [rows.length]);
 
-  useLayoutEffect(() => {
+  const forcePageTop = useCallback(() => {
     if (typeof window === 'undefined') return;
 
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    const restoreTopFrame = window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    topAnchorRef.current?.scrollIntoView({ block: 'start', behavior: 'auto' });
+  }, []);
 
-    return () => window.cancelAnimationFrame(restoreTopFrame);
-  }, [activeSlug]);
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const previousScrollRestoration = 'scrollRestoration' in window.history ? window.history.scrollRestoration : null;
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    forcePageTop();
+    const restoreTopFrame = window.requestAnimationFrame(() => {
+      forcePageTop();
+    });
+    const restoreTopTimeout = window.setTimeout(() => {
+      forcePageTop();
+    }, 180);
+
+    return () => {
+      window.cancelAnimationFrame(restoreTopFrame);
+      window.clearTimeout(restoreTopTimeout);
+      if (previousScrollRestoration) {
+        window.history.scrollRestoration = previousScrollRestoration;
+      }
+    };
+  }, [activeSlug, forcePageTop]);
+
+  useEffect(() => {
+    if (loading) return;
+    const settledTopTimeout = window.setTimeout(() => {
+      forcePageTop();
+    }, 40);
+
+    return () => window.clearTimeout(settledTopTimeout);
+  }, [forcePageTop, loading, rows.length]);
 
   return (
     <PageLayout title="Approved Reimbursements" midnight>
       <div className="min-h-screen bg-[#070707] text-white">
         <div className="container mx-auto px-6 pb-20 pt-6 lg:px-8 lg:pt-8">
-          <div className="rounded-[24px] bg-gradient-to-b from-white/[0.03] to-white/[0.01] px-5 py-5 shadow-[0_18px_50px_rgba(0,0,0,0.18)] lg:px-6">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/12">
-                    <CircleCheck className="h-5 w-5 text-emerald-400" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/38">Approved reimbursements</div>
-                    <div className="text-[11px] font-sans font-medium tracking-tight text-white/50">
-                      {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
+          <div ref={topAnchorRef} />
+          <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
+            <div className="border-b border-white/8 bg-white/[0.015] px-6 py-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/12">
+                      <CircleCheck className="h-5 w-5 text-emerald-400" />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/38">Approved reimbursements</div>
+                      <div className="text-[11px] font-sans font-medium tracking-tight text-white/50">
+                        {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
+                      </div>
                     </div>
                   </div>
+                  <h1 className="max-w-3xl text-[29px] font-sans font-bold tracking-tight text-white lg:text-[32px]">
+                    Approved Reimbursements
+                  </h1>
+                  <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/62">
+                    Minimal approved recovery view for reimbursements Amazon has already approved.
+                  </p>
                 </div>
-                <h1 className="max-w-3xl text-[29px] font-sans font-bold tracking-tight text-white lg:text-[32px]">
-                  Approved Reimbursements
-                </h1>
-                <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/62">
-                  Minimal approved recovery view for reimbursements Amazon has already approved.
-                </p>
+
+                <Button
+                  onClick={() => fetchApprovedReimbursements('refresh')}
+                  disabled={refreshing}
+                  className="h-10 shrink-0 rounded-lg border border-white/12 bg-white/[0.04] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 hover:bg-white/10 hover:text-white"
+                >
+                  <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
+                  Refresh
+                </Button>
               </div>
-
-              <Button
-                onClick={() => fetchApprovedReimbursements('refresh')}
-                disabled={refreshing}
-                className="h-10 shrink-0 rounded-lg border border-white/12 bg-white/[0.04] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 hover:bg-white/10 hover:text-white"
-              >
-                <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
             </div>
-          </div>
 
-          <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
