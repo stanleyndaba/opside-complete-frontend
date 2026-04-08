@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -393,10 +392,10 @@ export function Sidebar({
         </div>
       </div>
 
-      <ScrollArea className="flex-1">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <div
           className={cn(
-            "grid h-full min-h-full content-center",
+            "flex min-h-full flex-col justify-center",
             isCollapsed ? "px-2.5 py-5" : "px-3 py-5"
           )}>
           <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.48rem]" : "gap-[0.58rem]")}>
@@ -439,7 +438,7 @@ export function Sidebar({
 
           </nav>
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Footer Utilities */}
       <div className={cn(
