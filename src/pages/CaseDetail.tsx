@@ -930,6 +930,139 @@ export default function CaseDetail() {
   const quarantineReason = typeof backendTruthCase?.quarantine_reason === 'string' && backendTruthCase.quarantine_reason.trim()
     ? backendTruthCase.quarantine_reason
     : null;
+  const approvalGuidance = useMemo(() => {
+    const hasMatchedDocs = typeof matchedCount === 'number' && matchedCount > 0;
+    const matchedDocsLabel = matchedCount === null
+      ? NOT_AVAILABLE
+      : `${matchedCount} matched ${matchedCount === 1 ? 'doc' : 'docs'}`;
+    const formattedRequirements = missingRequirements?.length ? formatRequirementList(missingRequirements, 2) : null;
+    const formattedManualReviewReason = manualReviewReason ? formatDisputeReason(manualReviewReason) : null;
+    const normalizedProofStatus = String(proofStatus || '').toLowerCase();
+    const normalizedPayoutProofStatus = String(payoutProofStatus || '').toLowerCase();
+    const normalizedEligibilityStatus = String(effectiveCase?.eligibility_status || backendTruthCase?.eligibility_status || '').toLowerCase();
+
+    if (formattedRequirements) {
+      return {
+        description: `Still needed for approval: ${formattedRequirements}.`,
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} already linked to support review.`
+          : 'No matched documents are linked yet, so adding support docs will help this case move forward.',
+        chips: [
+          `Still needed: ${formattedRequirements}`,
+          `Docs linked: ${matchedDocsLabel}`,
+          proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    if (normalizedProofStatus === 'manual_review') {
+      return {
+        description: formattedManualReviewReason
+          ? `This case needs reviewer confirmation for ${formattedManualReviewReason.toLowerCase()} before it can move toward approval.`
+          : 'This case still needs manual review before it can move toward approval.',
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} are already linked for review.`
+          : 'Linking supporting documents will make the review step easier.',
+        chips: [
+          'Needs manual review',
+          `Docs linked: ${matchedDocsLabel}`,
+          formattedManualReviewReason ? `Review reason: ${formattedManualReviewReason}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    if (normalizedProofStatus === 'ineligible') {
+      return {
+        description: formattedManualReviewReason
+          ? `This case is currently blocked by ${formattedManualReviewReason.toLowerCase()}. That needs to be cleared before approval can happen.`
+          : 'This case is currently blocked and needs the filing blocker cleared before approval can happen.',
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} are linked, but the blocker still needs to be cleared.`
+          : 'Supporting documents can help later, but the blocker must be cleared first.',
+        chips: [
+          'Currently blocked',
+          `Docs linked: ${matchedDocsLabel}`,
+          formattedManualReviewReason ? `Blocker: ${formattedManualReviewReason}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    if (normalizedEligibilityStatus === 'insufficient_data') {
+      return {
+        description: 'This case still needs verified identifiers before it can move cleanly toward approval.',
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} are linked, so the main gap is identifier verification.`
+          : 'Linking supporting documents can help, but verified identifiers are still the main gap.',
+        chips: [
+          'Awaiting verified identifiers',
+          `Docs linked: ${matchedDocsLabel}`,
+          proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    if (normalizedEligibilityStatus === 'duplicate_blocked') {
+      return {
+        description: 'A prior reimbursement or duplicate claim signal needs to be cleared before this case can move toward approval.',
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} are linked, but the duplicate block still has to be resolved first.`
+          : 'This case is blocked by duplicate history rather than missing paperwork.',
+        chips: [
+          'Duplicate block detected',
+          `Docs linked: ${matchedDocsLabel}`,
+        ],
+      };
+    }
+
+    if (normalizedPayoutProofStatus === 'quarantined') {
+      return {
+        description: 'The case is far enough along that payout proof is now the main thing that needs attention.',
+        helper: quarantineReason
+          ? `Current hold: ${quarantineReason}.`
+          : 'Payout proof is quarantined and needs review before the case can close cleanly.',
+        chips: [
+          `Payout proof: ${formatPayoutProofStatus(payoutProofStatus)}`,
+          `Docs linked: ${matchedDocsLabel}`,
+        ],
+      };
+    }
+
+    if (effectiveCase?.safety_audit || normalizedProofStatus === 'filing_ready' || normalizedEligibilityStatus === 'ready') {
+      return {
+        description: 'This case already has the core evidence and identifiers in place. The main step left is Amazon review and approval.',
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} are already linked behind the case.`
+          : 'The case is passing core checks, even though no matched documents are currently surfaced here.',
+        chips: [
+          proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : 'Proof: Filing ready',
+          `Docs linked: ${matchedDocsLabel}`,
+          payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
+        ].filter(Boolean) as string[],
+      };
+    }
+
+    return {
+      description: 'To make approval easier, this case should have matched documents, verified identifiers, and no open review blockers.',
+      helper: hasMatchedDocs
+        ? `${matchedDocsLabel} are already linked, so the remaining step is review clarity.`
+        : 'Start by linking supporting documents so the case is easier to review.',
+      chips: [
+        `Docs linked: ${matchedDocsLabel}`,
+        proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
+        payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
+      ].filter(Boolean) as string[],
+    };
+  }, [
+    backendTruthCase?.eligibility_status,
+    effectiveCase?.eligibility_status,
+    effectiveCase?.safety_audit,
+    manualReviewReason,
+    matchedCount,
+    missingRequirements,
+    payoutProofStatus,
+    proofStatus,
+    quarantineReason,
+  ]);
   const evidenceEvents = useMemo(() => (Array.isArray(caseData?.events) ? caseData.events.filter(isEvidenceRelatedEvent) : []), [caseData?.events]);
   const rejectionPlaybookReason = useMemo<RejectionReason | null>(() => {
     if (effectiveCase?.truth_unavailable) return null;
@@ -1202,7 +1335,7 @@ export default function CaseDetail() {
         <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
           <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
             {/* Header - Case Information */}
-            <div className="mb-2 flex items-center justify-between">
+            <div className="mb-3 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="flex items-center gap-6">
                 <Link to={`/app/${activeSlug}/recoveries`} className="h-10 w-10 flex items-center justify-center border border-white/10 hover:bg-white/5 transition-colors rounded-lg">
                   <ArrowLeft className="h-4 w-4 text-white/40" />
@@ -1221,26 +1354,51 @@ export default function CaseDetail() {
                   </div>
                 </div>
               </div>
-              <div className="hidden md:flex items-center gap-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent disabled:cursor-not-allowed disabled:opacity-50"
-                  onClick={handleBriefPreview}
-                  disabled={!canPreviewBrief}
-                >
-                  <FileText className="h-3.5 w-3.5 mr-2" />
-                  {canPreviewBrief ? 'Brief PDF' : 'Brief PDF · Not Available'}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
-                  onClick={handleCasePdfPreview}
-                >
-                  <FileText className="h-3.5 w-3.5 mr-2" />
-                  Case PDF Export
-                </Button>
+              <div className="flex flex-col gap-3 xl:items-end">
+                <div className="flex flex-wrap items-center gap-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent disabled:cursor-not-allowed disabled:opacity-50"
+                    onClick={handleBriefPreview}
+                    disabled={!canPreviewBrief}
+                  >
+                    <FileText className="h-3.5 w-3.5 mr-2" />
+                    {canPreviewBrief ? 'Brief PDF' : 'Brief PDF · Not Available'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 border-white/10 text-xs font-bold text-white/40 hover:text-white hover:border-white/30 transition-colors bg-transparent"
+                    onClick={handleCasePdfPreview}
+                  >
+                    <FileText className="h-3.5 w-3.5 mr-2" />
+                    Case PDF Export
+                  </Button>
+                </div>
+                <div className="max-w-[540px] xl:text-right">
+                  <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                    What's needed for approval
+                  </p>
+                  <p className="mt-1 text-[12px] font-sans leading-5 tracking-tight text-white/78">
+                    {approvalGuidance.description}
+                  </p>
+                  <p className="mt-1.5 text-[11px] font-sans leading-5 tracking-tight text-white/48">
+                    {approvalGuidance.helper}
+                  </p>
+                  {approvalGuidance.chips.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2 xl:justify-end">
+                      {approvalGuidance.chips.map((chip) => (
+                        <span
+                          key={chip}
+                          className="inline-flex items-center rounded-full bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/62"
+                        >
+                          {chip}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
