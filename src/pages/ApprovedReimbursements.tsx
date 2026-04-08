@@ -154,41 +154,42 @@ export default function ApprovedReimbursements() {
         <div className="container mx-auto px-6 pb-20 pt-6 lg:px-8 lg:pt-8">
           <div ref={topAnchorRef} />
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c]">
-            <div className="border-b border-white/8 bg-white/[0.015] px-6 py-5">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/12">
-                      <CircleCheck className="h-5 w-5 text-emerald-400" />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/38">Approved reimbursements</div>
-                      <div className="text-[11px] font-sans font-medium tracking-tight text-white/50">
-                        {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
-                      </div>
-                    </div>
-                  </div>
-                  <h1 className="max-w-3xl text-[29px] font-sans font-bold tracking-tight text-white lg:text-[32px]">
-                    Approved Reimbursements
-                  </h1>
-                  <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/62">
-                    Minimal approved recovery view for reimbursements Amazon has already approved.
-                  </p>
-                </div>
-
-                <Button
-                  onClick={() => fetchApprovedReimbursements('refresh')}
-                  disabled={refreshing}
-                  className="h-10 shrink-0 rounded-lg border border-white/12 bg-white/[0.04] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 hover:bg-white/10 hover:text-white"
-                >
-                  <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
-                  Refresh
-                </Button>
-              </div>
-            </div>
-
             <Table>
               <TableHeader>
+                <TableRow className="border-white/8 hover:bg-transparent">
+                  <TableHead colSpan={4} className="px-6 py-5 align-top">
+                    <div className="relative z-10 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/12">
+                            <CircleCheck className="h-5 w-5 text-emerald-400" />
+                          </div>
+                          <div className="space-y-1">
+                            <div className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/38">Approved reimbursements</div>
+                            <div className="text-[11px] font-sans font-medium tracking-tight text-white/50">
+                              {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
+                            </div>
+                          </div>
+                        </div>
+                        <h1 className="max-w-3xl text-[29px] font-sans font-bold tracking-tight text-white lg:text-[32px]">
+                          Approved Reimbursements
+                        </h1>
+                        <p className="max-w-3xl text-[14px] font-sans leading-6 text-white/62">
+                          Minimal approved recovery view for reimbursements Amazon has already approved.
+                        </p>
+                      </div>
+
+                      <Button
+                        onClick={() => fetchApprovedReimbursements('refresh')}
+                        disabled={refreshing}
+                        className="h-10 shrink-0 rounded-lg border border-white/12 bg-white/[0.04] px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 hover:bg-white/10 hover:text-white"
+                      >
+                        <RefreshCw className={`mr-2 h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
+                        Refresh
+                      </Button>
+                    </div>
+                  </TableHead>
+                </TableRow>
                 <TableRow className="border-white/5 hover:bg-transparent">
                   <TableHead className="h-11 px-6 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case</TableHead>
                   <TableHead className="h-11 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved</TableHead>
