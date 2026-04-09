@@ -161,11 +161,11 @@ export default function ApprovedReimbursements() {
                     <div className="relative z-10 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-500/25 bg-emerald-500/12">
-                            <CircleCheck className="h-5 w-5 text-emerald-400" />
+                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]">
+                            <CircleCheck className="h-5 w-5 text-white/70" />
                           </div>
                           <div className="space-y-1">
-                            <div className="text-[10px] font-sans font-bold uppercase tracking-[0.22em] text-white/38">Approved reimbursements</div>
+                            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">Approved reimbursements</div>
                             <div className="text-[11px] font-sans font-medium tracking-tight text-white/50">
                               {headingCount} approved reimbursement{rows.length === 1 ? '' : 's'}
                             </div>

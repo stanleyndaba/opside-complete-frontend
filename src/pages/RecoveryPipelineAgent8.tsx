@@ -6,14 +6,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
 import { EvidencePackView } from '@/components/evidence/EvidencePackView';
 import { useToast } from '@/hooks/use-toast';
 import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
-import { RefreshCw, AlertTriangle, MoreHorizontal, Search } from 'lucide-react';
+import { RefreshCw, AlertTriangle, ArrowUpRight, MoreHorizontal, Search } from 'lucide-react';
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
 import { formatAutonomyLabel, summarizeMatchExplanation } from '@/lib/autonomyTruth';
@@ -764,6 +764,36 @@ function DetailSection({
   );
 }
 
+function payoutProofSummary(financialSummary: FinancialTruthSummary | null | undefined): string {
+  if (!financialSummary?.proof_of_payment) return 'No payout proof linked yet.';
+  if (financialSummary.proof_of_payment.settlement_id) {
+    return `Paid via settlement ${financialSummary.proof_of_payment.settlement_id}.`;
+  }
+  if (financialSummary.proof_of_payment.payout_batch_id) {
+    return `Paid via batch ${financialSummary.proof_of_payment.payout_batch_id}.`;
+  }
+  if (financialSummary.proof_of_payment.reference_id) {
+    return `Paid via reference ${financialSummary.proof_of_payment.reference_id}.`;
+  }
+  return 'Paid via a verified financial event.';
+}
+
+function rowNeedsNextStep(row: Pick<Row, 'investigation_required' | 'reconciliation_status' | 'payout_status'>): string {
+  if (row.investigation_required) {
+    return 'Needs investigation before Margin can treat this record as financially settled.';
+  }
+  if (row.reconciliation_status === 'partial_recovery' || row.payout_status === 'partially_paid') {
+    return 'Partial payout detected. Remaining value still needs confirmation.';
+  }
+  if (row.reconciliation_status === 'pending_payout' || row.payout_status === 'not_paid') {
+    return 'Approved value is still waiting for payout confirmation.';
+  }
+  if (row.reconciliation_status === 'reconciled' || row.payout_status === 'paid') {
+    return 'This record already has confirmed payout truth attached.';
+  }
+  return 'Open extra info to review the full recovery and billing trail.';
+}
+
 export default function RecoveryPipelineAgent8() {
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -1209,56 +1239,21 @@ export default function RecoveryPipelineAgent8() {
                               return (
                               <tr key={getLedgerRowKey(row)} className="border-b border-white/[0.06] align-top">
                                 <td className="py-5 pr-4">
-                                  <div className="space-y-2">
+                                  <div className="space-y-2.5">
                                     <div className="text-[11px] font-sans font-semibold tracking-tight text-white/92">{row.case_number}</div>
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
                                       {recordReferenceLabel(row)}
                                     </div>
-                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
-                                      {row.merchant_reference ? `Merchant ${row.merchant_reference}` : 'Merchant Reference Not Available'}
-                                    </div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                      {identityMetaLabel(row)}
-                                    </div>
                                     {row.provider_case_id ? (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
+                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/34">
                                         Amazon reference {row.provider_case_id}
                                       </div>
                                     ) : null}
-                                    {identityTruthDetail(row) !== NOT_AVAILABLE ? (
-                                      <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
-                                        {identityTruthDetail(row)}
-                                      </div>
-                                    ) : null}
-                                    <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
-                                      {formatLifecycleSection(
-                                        'Recovery Lifecycle',
-                                        formatBackendLifecycleSnapshot({
-                                          workStatus: row.recovery_work_status,
-                                          lifecycleState: row.recovery_lifecycle_state,
-                                          operationalState: row.recovery_operational_state,
-                                          deferReason: row.recovery_last_deferred_reason,
-                                          workError: row.recovery_work_error,
-                                          nextAttemptAt: row.recovery_next_attempt_at,
-                                          lastClaimedAt: row.recovery_last_claimed_at,
-                                          lastProcessedAt: row.recovery_last_processed_at,
-                                        })
-                                      )}
+                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">
+                                      {row.merchant_reference ? `Merchant ${row.merchant_reference}` : identityMetaLabel(row)}
                                     </div>
-                                    <div className="text-[10px] font-sans leading-5 tracking-tight text-white/38">
-                                      {formatLifecycleSection(
-                                        'Billing Lifecycle',
-                                        formatBackendLifecycleSnapshot({
-                                          workStatus: row.billing_work_status,
-                                          lifecycleState: row.billing_lifecycle_state,
-                                          operationalState: row.billing_operational_state,
-                                          deferReason: row.billing_last_deferred_reason,
-                                          workError: row.billing_work_error,
-                                          nextAttemptAt: row.billing_next_attempt_at,
-                                          lastClaimedAt: row.billing_last_claimed_at,
-                                          lastProcessedAt: row.billing_last_processed_at,
-                                        })
-                                      )}
+                                    <div className="text-[10px] font-sans leading-5 tracking-tight text-white/42">
+                                      {identityTruthDetail(row)}
                                     </div>
                                   </div>
                                 </td>
@@ -1267,102 +1262,95 @@ export default function RecoveryPipelineAgent8() {
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${identityBadgeTone(row)}`}>{identityTruthHeadline(row)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
-                                    <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
-                                      {reconciliationSourceLabel(row.reconciliation_source)}
-                                    </span>
-                                    {row.reconciliation_strategy ? (
-                                      <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
-                                        {formatAutonomyLabel(row.reconciliation_strategy)}
+                                    {row.investigation_required ? (
+                                      <span className="inline-flex w-fit rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-red-200">
+                                        Investigation Required
                                       </span>
                                     ) : null}
-                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
-                                      {identityTruthDetail(row)}
-                                    </div>
-                                    {summarizeMatchExplanation(row.match_explanation) ? (
-                                      <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
-                                        {summarizeMatchExplanation(row.match_explanation)}
-                                      </div>
-                                    ) : null}
-                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/36">
-                                      {reconciliationTruthDetail(row)}
+                                    <div className="pt-1 text-[9px] font-sans font-medium leading-5 tracking-tight text-white/38">
+                                      {rowNeedsNextStep(row)}
                                     </div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
-                                  <div className="space-y-2">
+                                  <div className="space-y-3">
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Approved with Amazon</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Expected source: {payoutSourceLabel(row.expected_payout_source)}</div>
                                     <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Paid back</div>
                                     <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(financialSummary?.verified_paid_amount, row.currency)}</div>
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Actual source: {payoutSourceLabel(row.actual_payout_source)}</div>
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${visiblePayoutStatusTone(row.payout_status)}`}>Payout: {visiblePayoutStatusLabel(row.payout_status)}</span>
-                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">Outstanding: {money(row.outstanding_amount, row.currency)}</div>
-                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/42">Variance: {money(row.variance_amount, row.currency)}</div>
+                                    <div className="pt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Outstanding</div>
+                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.outstanding_amount, row.currency)}</div>
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">
+                                      {row.expected_payout_source ? `Expected source: ${payoutSourceLabel(row.expected_payout_source)}` : `Variance: ${money(row.variance_amount, row.currency)}`}
+                                    </div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="space-y-2">
+                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${visiblePayoutStatusTone(row.payout_status)}`}>{visiblePayoutStatusLabel(row.payout_status)}</span>
+                                    <div className="text-[9px] font-sans font-medium leading-5 tracking-tight text-white/36">
+                                      {payoutProofSummary(financialSummary)}
+                                    </div>
                                     <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.billing_status)}`}>{label(row.billing_status)}</span>
-                                    {financialSummary?.proof_of_payment ? (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/36">
-                                        Paid via {financialSummary.proof_of_payment.settlement_id ? `Settlement ${financialSummary.proof_of_payment.settlement_id}` : financialSummary.proof_of_payment.payout_batch_id ? `Batch ${financialSummary.proof_of_payment.payout_batch_id}` : 'financial event'}
-                                      </div>
-                                    ) : (
-                                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">No payout proof yet</div>
-                                    )}
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Legacy fee history</div>
-                                    <div className="text-[12px] font-sans font-semibold tracking-tight text-white">{money(row.billed_revenue_amount, row.currency)}</div>
+                                    <div className="text-[9px] font-sans font-medium tracking-tight text-white/40">
+                                      Legacy fee: {money(row.billed_revenue_amount, row.currency)}
+                                    </div>
                                   </div>
                                 </td>
                                 <td className="px-4 py-5">
                                   <div className="space-y-2">
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last Updated</div>
                                     <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.last_updated_at)}</div>
-                                    {(row.recovery_last_processed_at || row.billing_last_processed_at) ? (
-                                      <>
-                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last account movement</div>
-                                        <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_last_processed_at || row.billing_last_processed_at)}</div>
-                                      </>
-                                    ) : null}
                                     {(row.recovery_next_attempt_at || row.billing_next_attempt_at) ? (
                                       <>
                                         <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Next retry</div>
                                         <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_next_attempt_at || row.billing_next_attempt_at)}</div>
                                       </>
+                                    ) : (row.recovery_last_processed_at || row.billing_last_processed_at) ? (
+                                      <>
+                                        <div className="pt-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/32">Last movement</div>
+                                        <div className="text-[10px] font-sans font-semibold tracking-tight text-white/78">{stamp(row.recovery_last_processed_at || row.billing_last_processed_at)}</div>
+                                      </>
                                     ) : null}
                                   </div>
                                 </td>
                                 <td className="py-5 pl-4 text-right">
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-white/26 hover:bg-white/5 hover:text-white">
-                                        <MoreHorizontal className="h-4 w-4" />
-                                      </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
-                                      <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record actions</div>
-                                      {detailRouteId ? (
-                                        <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                          <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`}>{detailLabel}</Link>
+                                  <div className="flex flex-col items-end gap-3">
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      className="h-8 rounded-full border-white/10 bg-white/[0.03] px-3 text-[9px] font-sans font-bold uppercase tracking-tight text-white/68 hover:bg-white/[0.07] hover:text-white"
+                                      onClick={() => openRecoveryDetails(row)}
+                                    >
+                                      Extra info
+                                      <ArrowUpRight className="ml-1.5 h-3 w-3" />
+                                    </Button>
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-white/26 hover:bg-white/5 hover:text-white">
+                                          <MoreHorizontal className="h-4 w-4" />
+                                        </Button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end" className="w-56 rounded-xl border border-white/10 bg-[#0c0c0c] p-1 shadow-2xl backdrop-blur-3xl">
+                                        <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record actions</div>
+                                        {detailRouteId ? (
+                                          <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
+                                            <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`}>{detailLabel}</Link>
+                                          </DropdownMenuItem>
+                                        ) : (
+                                          <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
+                                            {NOT_AVAILABLE}
+                                          </div>
+                                        )}
+                                        <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
+                                          View proof documents
                                         </DropdownMenuItem>
-                                      ) : (
-                                        <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
-                                          {NOT_AVAILABLE}
-                                        </div>
-                                      )}
-                                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openProofDocuments(row)}>
-                                        View proof documents
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openEvidencePacket(row)}>
-                                        Open evidence packet
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openRecoveryDetails(row)}>
-                                        Open ledger details
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
-                                  <div className="mt-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/28">{row.investigation_required ? 'Needs Investigation' : identityTruthHeadline(row)}</div>
+                                        <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white" onClick={() => openEvidencePacket(row)}>
+                                          Open evidence packet
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
                                 </td>
                               </tr>
                               );
@@ -1399,20 +1387,24 @@ export default function RecoveryPipelineAgent8() {
           tenantSlug={activeSlug}
         />
       ) : null}
-      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogContent className="max-w-4xl border border-white/10 bg-[#0c0c0c] text-white shadow-2xl">
-          <DialogHeader className="border-b border-white/5 pb-5">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Ledger Details</div>
-            <DialogTitle className="text-2xl font-sans font-bold tracking-tight text-white">
-              {detailsRow?.case_number || 'Ledger Record'}
-            </DialogTitle>
-          </DialogHeader>
+      <Sheet open={detailsOpen} onOpenChange={setDetailsOpen}>
+        <SheetContent side="right" className="w-full border-white/10 bg-[#0c0c0c] p-0 text-white shadow-2xl sm:max-w-none md:w-[700px] xl:w-[48vw]">
+          <div className="flex h-full flex-col">
+            <SheetHeader className="border-b border-white/5 px-6 pb-5 pt-6 pr-14">
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/26">Extra info</div>
+              <SheetTitle className="text-2xl font-sans font-bold tracking-tight text-white">
+                {detailsRow?.case_number || 'Ledger Record'}
+              </SheetTitle>
+              <SheetDescription className="max-w-2xl text-[12px] font-sans leading-6 text-white/42">
+                Transparency view for record identity, reconciliation truth, billing, payout proof, and timing.
+              </SheetDescription>
+            </SheetHeader>
           {detailsRow ? (() => {
             const financialSummary = detailsFinancialSummary || getFinancialSummaryForRow(detailsRow, financialSummaries);
             const hasRecoveryWork = hasRecoveryWorkEntity(detailsRow);
             const hasBillingWork = hasBillingWorkEntity(detailsRow);
             return (
-            <div className="max-h-[70vh] space-y-5 overflow-y-auto pr-2">
+            <div className="flex-1 space-y-5 overflow-y-auto px-6 py-6">
               <DetailSection
                 title="Record Identity"
                 rows={[
@@ -1557,8 +1549,9 @@ export default function RecoveryPipelineAgent8() {
             </div>
             );
           })() : null}
-        </DialogContent>
-      </Dialog>
+          </div>
+        </SheetContent>
+      </Sheet>
     </PageLayout>
   );
 }
