@@ -296,6 +296,70 @@ const getDetectionStatusFromRunRecord = (run: CsvRunRehydrationRecord): UploadDe
     return null;
 };
 
+const NOT_AVAILABLE = 'Not Available';
+
+const parseTimestampMs = (value?: string | null): number | null => {
+    if (!value) return null;
+    const parsed = Date.parse(value);
+    return Number.isNaN(parsed) ? null : parsed;
+};
+
+const formatDurationLabel = (durationMs?: number | null): string => {
+    if (typeof durationMs !== 'number' || !Number.isFinite(durationMs) || durationMs < 0) {
+        return NOT_AVAILABLE;
+    }
+
+    const totalSeconds = Math.max(1, Math.round(durationMs / 1000));
+    if (totalSeconds < 60) {
+        return `${totalSeconds}s`;
+    }
+
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    }
+
+    if (minutes >= 10 || seconds === 0) {
+        return `${minutes}m`;
+    }
+
+    return `${minutes}m ${seconds}s`;
+};
+
+const formatPipelineTimestamp = (value?: string | null): string => {
+    if (!value) return NOT_AVAILABLE;
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return NOT_AVAILABLE;
+    return parsed.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    });
+};
+
+const formatDetectionStateLabel = (status: UploadDetectionState['status']): string => {
+    switch (status) {
+        case 'pending':
+            return 'Queued';
+        case 'processing':
+            return 'Running';
+        case 'completed':
+            return 'Complete';
+        case 'failed':
+            return 'Failed';
+        default:
+            return NOT_AVAILABLE;
+    }
+};
+
+const pluralize = (value: number, singular: string, plural = `${singular}s`) =>
+    `${value.toLocaleString('en-US')} ${value === 1 ? singular : plural}`;
+
 export default function DataUpload() {
     const { tenantSlug: urlTenantSlug } = useParams<{ tenantSlug?: string }>();
     const navigate = useNavigate();
@@ -322,6 +386,9 @@ export default function DataUpload() {
     const [rehydrationNotice, setRehydrationNotice] = useState<string | null>(null);
     const [rehydratedRun, setRehydratedRun] = useState<CsvRunRehydrationRecord | null>(null);
     const [supportedCsvTypes, setSupportedCsvTypes] = useState<SupportedCsvType[]>([]);
+    const [uploadRequestStartedAt, setUploadRequestStartedAt] = useState<number | null>(null);
+    const [uploadAcceptedAt, setUploadAcceptedAt] = useState<number | null>(null);
+    const [elapsedNow, setElapsedNow] = useState(() => Date.now());
     const fileInputRef = useRef<HTMLInputElement>(null);
     const activeTenantId = tenant?.id || localStorage.getItem('active_tenant_id') || '';
     const latestCsvSyncStorageKey = `data_upload:last_csv_sync:${currentTenantSlug}:${activeTenantId || 'tenant'}`;
@@ -416,6 +483,18 @@ export default function DataUpload() {
             clearDashboardRedirect();
         };
     }, [clearDashboardRedirect, clearDetectionGateTimeout, invalidateDetectionPolling]);
+
+    useEffect(() => {
+        const shouldTick = isUploading || isDetectionInFlight(previewState.status);
+        if (!shouldTick) return;
+
+        setElapsedNow(Date.now());
+        const intervalId = window.setInterval(() => {
+            setElapsedNow(Date.now());
+        }, 1000);
+
+        return () => window.clearInterval(intervalId);
+    }, [isUploading, previewState.status]);
 
     const resolveSessionIdentity = useCallback(async () => {
         let resolvedUserId = localStorage.getItem('user_id') || '';
@@ -896,6 +975,281 @@ export default function DataUpload() {
         const fmtD = (t: number) => new Date(t).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
         return { from: fmtD(Math.min(...ds)), to: fmtD(Math.max(...ds)) };
     }, [previewResults]);
+    const findingsProofCount = useMemo(() => {
+        if (typeof previewResultsTotal === 'number') {
+            return previewResultsTotal;
+        }
+        if (previewResults.length > 0) {
+            return previewResults.length;
+        }
+        if (rehydratedRun?.detection?.resultsTotal !== undefined && rehydratedRun?.detection?.resultsTotal !== null) {
+            return rehydratedRun.detection.resultsTotal;
+        }
+        if (previewState.status === 'completed') {
+            return 0;
+        }
+        return null;
+    }, [previewResults.length, previewResultsTotal, previewState.status, rehydratedRun?.detection?.resultsTotal]);
+    const recoveryProofValue = useMemo(() => {
+        if (previewResults.length > 0) {
+            return previewTotalRecovery;
+        }
+        if (previewState.status === 'completed' && findingsProofCount === 0) {
+            return 0;
+        }
+        return null;
+    }, [findingsProofCount, previewResults.length, previewState.status, previewTotalRecovery]);
+    const runStartedMs = useMemo(
+        () => parseTimestampMs(rehydratedRun?.startedAt) ?? uploadRequestStartedAt,
+        [rehydratedRun?.startedAt, uploadRequestStartedAt]
+    );
+    const detectionProcessedMs = useMemo(
+        () => parseTimestampMs(previewState.processedAt) ?? parseTimestampMs(rehydratedRun?.completedAt),
+        [previewState.processedAt, rehydratedRun?.completedAt]
+    );
+    const uploadAcceptedDurationMs = useMemo(() => {
+        if (uploadRequestStartedAt === null || uploadAcceptedAt === null) {
+            return null;
+        }
+        return Math.max(0, uploadAcceptedAt - uploadRequestStartedAt);
+    }, [uploadAcceptedAt, uploadRequestStartedAt]);
+    const detectionCompletedDurationMs = useMemo(() => {
+        if (runStartedMs === null || detectionProcessedMs === null) {
+            return null;
+        }
+        return Math.max(0, detectionProcessedMs - runStartedMs);
+    }, [detectionProcessedMs, runStartedMs]);
+    const pipelineElapsedMs = useMemo(() => {
+        if (runStartedMs === null) {
+            return null;
+        }
+        const endpoint = isDetectionTerminal(previewState.status) && detectionProcessedMs !== null
+            ? detectionProcessedMs
+            : elapsedNow;
+        return Math.max(0, endpoint - runStartedMs);
+    }, [detectionProcessedMs, elapsedNow, previewState.status, runStartedMs]);
+    const detectionStateLabel = useMemo(
+        () => formatDetectionStateLabel(previewState.status),
+        [previewState.status]
+    );
+    const recoveryProofLabel = useMemo(() => {
+        if (recoveryProofValue === null) {
+            return NOT_AVAILABLE;
+        }
+        const formattedValue = fmt(recoveryProofValue);
+        return previewIsTruncated && recoveryProofValue > 0 ? `${formattedValue} (loaded subset)` : formattedValue;
+    }, [fmt, previewIsTruncated, recoveryProofValue]);
+    const isWaitingForDetectionGate = Boolean(redirectGateSyncId)
+        && previewState.syncId === redirectGateSyncId
+        && !isDetectionTerminal(previewState.status);
+    const pipelineStage = useMemo(() => {
+        if (isUploading) {
+            return {
+                eyebrow: 'Stage 1 · Uploading files',
+                title: 'Sending this CSV batch to your workspace',
+                description: 'Margin is pushing your files into the ingestion path now so the recovery pipeline can start.',
+                tone: 'neutral' as const,
+            };
+        }
+
+        if (previewState.status === 'failed') {
+            return {
+                eyebrow: 'Detection needs attention',
+                title: 'This upload hit a detection failure',
+                description: previewState.errorMessage || 'The upload finished ingestion, but detection did not complete cleanly for this batch.',
+                tone: 'failed' as const,
+            };
+        }
+
+        if (previewState.syncId && isDetectionInFlight(previewState.status)) {
+            if (typeof findingsProofCount === 'number' && findingsProofCount > 0) {
+                return {
+                    eyebrow: 'Stage 4 · Findings detected',
+                    title: `${pluralize(findingsProofCount, 'finding')} already surfaced for this upload`,
+                    description: recoveryProofValue !== null
+                        ? `Margin already sees ${recoveryProofLabel} while the rest of detection finishes.`
+                        : 'Margin is still finishing detection, but early findings are already available for review.',
+                    tone: 'success' as const,
+                };
+            }
+
+            return {
+                eyebrow: 'Stage 3 · Detection running',
+                title: 'Margin is analyzing the ingested records now',
+                description: 'The upload was accepted and the detection queue is actively moving toward recoverable findings.',
+                tone: 'neutral' as const,
+            };
+        }
+
+        if (previewState.status === 'completed') {
+            if (typeof findingsProofCount === 'number' && findingsProofCount > 0) {
+                return {
+                    eyebrow: 'Stage 5 · Ready to review',
+                    title: `${pluralize(findingsProofCount, 'finding')} ready to review`,
+                    description: recoveryProofValue !== null
+                        ? `Margin surfaced ${recoveryProofLabel} for this upload and the results are ready now.`
+                        : 'Detection finished and the findings for this upload are ready to review.',
+                    tone: 'success' as const,
+                };
+            }
+
+            return {
+                eyebrow: 'Stage 5 · Detection complete',
+                title: 'No findings were returned for this upload',
+                description: 'Margin completed detection for this upload and did not surface new recoveries.',
+                tone: 'neutral' as const,
+            };
+        }
+
+        if (currentUploadSyncId) {
+            return {
+                eyebrow: 'Stage 2 · Upload accepted',
+                title: 'Upload accepted and queued for detection',
+                description: 'Margin has accepted this batch and is preparing the next detection pass for this workspace.',
+                tone: 'neutral' as const,
+            };
+        }
+
+        if (rehydratedRun) {
+            return {
+                eyebrow: 'Restored upload truth',
+                title: 'Latest CSV run restored from persisted backend truth',
+                description: rehydrationNotice || 'Margin recovered the latest CSV upload state for this workspace.',
+                tone: 'neutral' as const,
+            };
+        }
+
+        return null;
+    }, [
+        currentUploadSyncId,
+        findingsProofCount,
+        isUploading,
+        previewState.errorMessage,
+        previewState.status,
+        previewState.syncId,
+        recoveryProofLabel,
+        recoveryProofValue,
+        rehydratedRun,
+        rehydrationNotice,
+    ]);
+    const pipelineToneClasses = useMemo(() => {
+        switch (pipelineStage?.tone) {
+            case 'success':
+                return {
+                    icon: 'text-emerald-300',
+                    eyebrow: 'text-emerald-200/80',
+                    title: 'text-white',
+                    chip: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-100',
+                };
+            case 'failed':
+                return {
+                    icon: 'text-red-300',
+                    eyebrow: 'text-red-200/80',
+                    title: 'text-white',
+                    chip: 'border-red-500/20 bg-red-500/[0.08] text-red-100',
+                };
+            default:
+                return {
+                    icon: 'text-white/70',
+                    eyebrow: 'text-white/45',
+                    title: 'text-white',
+                    chip: 'border-white/10 bg-white/[0.03] text-white/72',
+                };
+        }
+    }, [pipelineStage?.tone]);
+    const pipelineProofItems = useMemo(() => {
+        const items: Array<{ label: string; value: string }> = [];
+
+        if (currentUploadSyncId) {
+            items.push({ label: 'Sync ID', value: currentUploadSyncId });
+        }
+
+        if (previewState.status) {
+            items.push({ label: 'Detection state', value: detectionStateLabel });
+        }
+
+        if (typeof findingsProofCount === 'number') {
+            items.push({ label: 'Findings', value: pluralize(findingsProofCount, 'finding') });
+        }
+
+        if (recoveryProofValue !== null || previewState.status) {
+            items.push({ label: 'Estimated recovery', value: recoveryProofLabel });
+        }
+
+        if (uploadAcceptedDurationMs !== null) {
+            items.push({ label: 'Upload accepted in', value: formatDurationLabel(uploadAcceptedDurationMs) });
+        }
+
+        if (detectionCompletedDurationMs !== null) {
+            items.push({ label: 'Detection completed in', value: formatDurationLabel(detectionCompletedDurationMs) });
+        } else if (pipelineElapsedMs !== null && (isUploading || isDetectionInFlight(previewState.status))) {
+            items.push({ label: 'Elapsed', value: formatDurationLabel(pipelineElapsedMs) });
+        }
+
+        if (previewState.processedAt) {
+            items.push({ label: 'Processed', value: formatPipelineTimestamp(previewState.processedAt) });
+        }
+
+        if (rehydratedRun?.source && rehydratedRun.source !== 'persisted_run') {
+            items.push({ label: 'Source', value: formatCsvRecoverySource(rehydratedRun.source) });
+        }
+
+        if (previewState.isSandbox) {
+            items.push({ label: 'Environment', value: 'Sandbox' });
+        }
+
+        return items;
+    }, [
+        currentUploadSyncId,
+        detectionCompletedDurationMs,
+        detectionStateLabel,
+        findingsProofCount,
+        isUploading,
+        pipelineElapsedMs,
+        previewState.isSandbox,
+        previewState.processedAt,
+        previewState.status,
+        recoveryProofLabel,
+        recoveryProofValue,
+        rehydratedRun?.source,
+        uploadAcceptedDurationMs,
+    ]);
+    const drawerSummaryItems = useMemo(() => [
+        {
+            label: 'Current stage',
+            value: pipelineStage?.eyebrow.replace('Stage ', '').replace(' · ', ' · ') || NOT_AVAILABLE,
+        },
+        {
+            label: 'Detection state',
+            value: detectionStateLabel,
+        },
+        {
+            label: 'Findings',
+            value: typeof findingsProofCount === 'number' ? pluralize(findingsProofCount, 'finding') : NOT_AVAILABLE,
+        },
+        {
+            label: 'Estimated recovery',
+            value: recoveryProofLabel,
+        },
+        {
+            label: detectionCompletedDurationMs !== null ? 'Detection completed in' : 'Elapsed',
+            value: detectionCompletedDurationMs !== null
+                ? formatDurationLabel(detectionCompletedDurationMs)
+                : formatDurationLabel(pipelineElapsedMs),
+        },
+        {
+            label: 'Processed',
+            value: formatPipelineTimestamp(previewState.processedAt),
+        },
+    ], [
+        detectionCompletedDurationMs,
+        detectionStateLabel,
+        findingsProofCount,
+        pipelineElapsedMs,
+        pipelineStage?.eyebrow,
+        previewState.processedAt,
+        recoveryProofLabel,
+    ]);
 
     // Handle file selection
     const addFiles = useCallback((newFiles: FileList | File[]) => {
@@ -928,6 +1282,8 @@ export default function DataUpload() {
             errorMessage: null,
             isSandbox: false,
         });
+        setUploadRequestStartedAt(null);
+        setUploadAcceptedAt(null);
         setRehydratedRun(null);
         setRehydrationNotice(null);
     }, [toast]);
@@ -995,6 +1351,8 @@ export default function DataUpload() {
         }
 
         invalidateDetectionPolling();
+        setUploadRequestStartedAt(Date.now());
+        setUploadAcceptedAt(null);
         setIsUploading(true);
         setBatchResult(null);
         setIsPreviewOpen(false);
@@ -1042,6 +1400,7 @@ export default function DataUpload() {
                 throw new Error(reason);
             }
             setBatchResult(result);
+            setUploadAcceptedAt(Date.now());
             try {
                 if (result.syncId) {
                     localStorage.setItem(latestCsvSyncStorageKey, result.syncId);
@@ -1129,6 +1488,8 @@ export default function DataUpload() {
         clearDetectionGateTimeout();
         setRedirectGateSyncId(null);
         setDetectionRedirectTimedOut(false);
+        setUploadRequestStartedAt(null);
+        setUploadAcceptedAt(null);
 
         try {
             if (dismissedSyncId) {
@@ -1178,9 +1539,6 @@ export default function DataUpload() {
         || Boolean(previewState.syncId)
         || previewResults.length > 0
         || isPreviewOpen;
-    const isWaitingForDetectionGate = Boolean(redirectGateSyncId)
-        && previewState.syncId === redirectGateSyncId
-        && !isDetectionTerminal(previewState.status);
     const canGoToDashboard = !isUploading
         && Boolean(batchResult?.syncId || rehydratedRun?.syncId || previewState.syncId)
         && (!isWaitingForDetectionGate || detectionRedirectTimedOut);
@@ -1333,49 +1691,61 @@ export default function DataUpload() {
                         </div>
                     </motion.div>
 
-                    {/* Upload Progress */}
-                    {isUploading && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-6"
-                        >
-                            <div className="rounded-xl bg-white/[0.02] border border-white/10 px-4 py-3 flex items-center gap-3">
-                                <Loader2 className="h-4 w-4 text-white/60 animate-spin flex-shrink-0" />
-                                <div>
-                                    <p className="text-xs font-sans font-bold uppercase tracking-tight text-white/50">Upload In Progress</p>
-                                    <p className="text-[11px] text-white/35 font-sans">Sending CSV files to the backend for ingestion.</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-
-                    {isWaitingForDetectionGate && (
+                    {pipelineStage && (
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="mt-6 rounded-xl bg-white/[0.02] border border-white/10 p-4"
                         >
                             <div className="flex items-start gap-3">
-                                <Loader2 className="h-4 w-4 text-white/50 animate-spin mt-0.5 flex-shrink-0" />
+                                {pipelineStage.tone === 'success' ? (
+                                    <CheckCircle2 className={`h-4 w-4 mt-0.5 flex-shrink-0 ${pipelineToneClasses.icon}`} />
+                                ) : pipelineStage.tone === 'failed' ? (
+                                    <AlertCircle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${pipelineToneClasses.icon}`} />
+                                ) : (
+                                    <Loader2 className={`h-4 w-4 mt-0.5 flex-shrink-0 ${pipelineToneClasses.icon} ${isUploading || isDetectionInFlight(previewState.status) ? 'animate-spin' : ''}`} />
+                                )}
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/45">
-                                        Detection in progress
+                                    <p className={`text-[10px] font-sans font-bold uppercase tracking-tight ${pipelineToneClasses.eyebrow}`}>
+                                        {pipelineStage.eyebrow}
                                     </p>
-                                    <p className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
-                                        Analyzing your data...
+                                    <p className={`mt-2 text-[14px] font-sans font-medium tracking-tight ${pipelineToneClasses.title}`}>
+                                        {pipelineStage.title}
                                     </p>
                                     <p className="mt-2 text-[11px] font-sans leading-5 text-white/40">
-                                        Margin is waiting for detection to finish for this upload before sending you to the dashboard.
+                                        {pipelineStage.description}
                                     </p>
-                                    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
-                                        <div className="h-full w-1/3 rounded-full bg-white/70 animate-pulse" />
-                                    </div>
+
+                                    {pipelineProofItems.length > 0 && (
+                                        <div className="mt-4 flex flex-wrap gap-2">
+                                            {pipelineProofItems.map((item) => (
+                                                <div
+                                                    key={`${item.label}-${item.value}`}
+                                                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight ${pipelineToneClasses.chip}`}
+                                                >
+                                                    <span className="text-white/48">{item.label}</span>
+                                                    <span className="text-white">{item.value}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {rehydrationNotice && rehydratedRun && !isUploading && (
+                                        <p className="mt-3 text-[10px] font-sans leading-5 tracking-tight text-white/32">
+                                            {rehydrationNotice}
+                                        </p>
+                                    )}
+
+                                    {isWaitingForDetectionGate && (
+                                        <p className="mt-3 text-[11px] font-sans leading-5 text-white/42">
+                                            Margin is keeping this upload open until detection settles so you can move to review with real filing proof, not a blind redirect.
+                                        </p>
+                                    )}
 
                                     {detectionRedirectTimedOut && (
                                         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                             <p className="text-[11px] font-sans leading-5 text-white/45">
-                                                Detection is taking longer than expected. You can keep waiting here or continue to the dashboard manually.
+                                                Detection is still moving. You can keep waiting here or continue to the dashboard manually.
                                             </p>
                                             <div className="flex items-center gap-2">
                                                 <Button
@@ -1444,37 +1814,6 @@ export default function DataUpload() {
                         <p className="mt-3 text-[11px] text-white/35 font-sans tracking-tight">
                             Clears this upload workspace so you can start a fresh batch. Imported backend data is not removed here.
                         </p>
-                    )}
-
-                    {rehydratedRun && (!rehydratedRun.uploadSummaryAvailable || rehydrationNotice) && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-6 rounded-xl bg-white/[0.02] border border-white/10 p-4"
-                        >
-                            <div className="flex items-start gap-3">
-                                <Info className="h-4 w-4 text-white/30 mt-0.5 flex-shrink-0" />
-                                <div>
-                                    <p className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
-                                        Refreshed CSV Run
-                                    </p>
-                                    <p className="text-xs text-white/45 mt-1 leading-relaxed">
-                                        {rehydrationNotice || 'Latest CSV run restored from persisted backend truth.'}
-                                    </p>
-                                    <p className="text-[10px] text-white/30 mt-2 font-sans tracking-tight">
-                                        Sync ID: <span className="text-white/55">{rehydratedRun.syncId}</span>
-                                        {' · '}Source: <span className="text-white/55">{formatCsvRecoverySource(rehydratedRun.source)}</span>
-                                        {' · '}Run status: <span className="text-white/55">{rehydratedRun.status || 'unavailable'}</span>
-                                        {' · '}Files: <span className="text-white/55">{rehydratedRun.fileCount}</span>
-                                        {previewState.status ? (
-                                            <>
-                                                {' · '}Detection state: <span className="text-white/55">{previewState.status}</span>
-                                            </>
-                                        ) : null}
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
                     )}
 
                     {/* Results Summary */}
@@ -1639,34 +1978,44 @@ export default function DataUpload() {
                                 className="fixed inset-x-0 bottom-0 top-0 z-[101] bg-white rounded-none overflow-hidden flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.3)]"
                             >
                                 {/* Drawer Header */}
-                                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                                    <div>
-                                        <div className="flex items-center gap-2.5 mb-1">
-                                            <img src="/logoimagetwo.png" alt="Margin Finance" className="h-3.5 w-auto object-contain brightness-0" />
-                                            <span className="text-gray-200 font-light text-sm">|</span>
-                                            <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Upload Results</h2>
+                                <div className="border-b border-gray-100 px-6 py-4">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2.5 mb-2">
+                                                <img src="/logoimagetwo.png" alt="Margin Finance" className="h-3.5 w-auto object-contain brightness-0" />
+                                                <span className="text-gray-200 font-light text-sm">|</span>
+                                                <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Upload Results</h2>
+                                            </div>
+                                            <div className="px-0.5">
+                                                <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">
+                                                    {pipelineStage?.eyebrow || 'Current upload detection summary'}
+                                                </p>
+                                                <p className="mt-2 text-[14px] font-bold text-gray-900 tracking-tight">
+                                                    {pipelineStage?.title || 'Detection summary ready'}
+                                                </p>
+                                                <p className="mt-1 text-[11px] font-sans leading-5 text-gray-500">
+                                                    {pipelineStage?.description || previewEmptyState.description}
+                                                </p>
+                                                <div className="mt-3 flex flex-wrap gap-2">
+                                                    {isPreviewPartial && (
+                                                        <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-700">
+                                                            Partial findings live
+                                                        </span>
+                                                    )}
+                                                    {previewState.isSandbox && (
+                                                        <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-700">
+                                                            Sandbox mode
+                                                        </span>
+                                                    )}
+                                                    {isPreviewLoading && (
+                                                        <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                                                            <Loader2 className="h-3 w-3 animate-spin" />
+                                                            Refreshing detail
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col px-0.5">
-                                            <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">Current upload detection summary</p>
-                                            <p className="text-[11px] font-bold text-gray-900 mt-2 tracking-tight">{isPreviewLoading ? 'Loading...' : `${previewRecoveryLabel}: ${fmt(previewTotalRecovery)}`}</p>
-                                            {previewState.syncId && (
-                                                <p className="mt-1 text-[10px] font-sans text-gray-400 tracking-tight">
-                                                    Sync ID: <span className="font-semibold text-gray-600">{previewState.syncId}</span>
-                                                </p>
-                                            )}
-                                            {isPreviewPartial && (
-                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-600 tracking-tight">
-                                                    Partial findings. Detection is still processing for this upload.
-                                                </p>
-                                            )}
-                                            {previewState.isSandbox && (
-                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-600 tracking-tight">
-                                                    Simulated detection results (sandbox mode)
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center">
                                         <button onClick={() => setIsPreviewOpen(false)} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors">
                                             <X className="h-5 w-5" />
                                         </button>
@@ -1674,91 +2023,99 @@ export default function DataUpload() {
                                 </div>
 
                                 {/* Drawer Content */}
-                                <div className="flex-1 overflow-hidden bg-white">
-                                    {isPreviewLoading ? (
-                                        <div className="flex items-center justify-center h-full">
-                                            <div className="flex flex-col items-center gap-3">
-                                                <Loader2 className="h-8 w-8 text-violet-400 animate-spin" />
-                                                <p className="text-sm text-gray-400 font-sans">Loading results for this upload...</p>
+                                <div className="flex h-full w-full overflow-hidden bg-white">
+                                    <div className="w-[340px] shrink-0 border-r border-gray-100 flex flex-col bg-gray-50/35">
+                                        <div className="px-5 py-4 border-b border-gray-100">
+                                            <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">Summary first</h3>
+                                            <div className="grid grid-cols-1 gap-2.5">
+                                                {drawerSummaryItems.map((item) => (
+                                                    <div key={`${item.label}-${item.value}`} className="rounded-xl border border-gray-100 bg-white px-3 py-2.5">
+                                                        <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight">{item.label}</p>
+                                                        <p className="mt-1 text-[11px] font-semibold text-gray-900 tracking-tight">{item.value || NOT_AVAILABLE}</p>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
-                                    ) : previewResults.length === 0 ? (
-                                        <div className="flex items-center justify-center h-full">
-                                            <div className="flex flex-col items-center gap-3 text-center max-w-sm">
-                                                <div className="p-4 rounded-2xl bg-gray-50"><Target className="h-10 w-10 text-gray-300" /></div>
-                                                <h3 className="text-sm font-semibold text-gray-700 font-sans">{previewEmptyState.title}</h3>
-                                                <p className="text-xs text-gray-400 font-sans leading-relaxed">{previewEmptyState.description}</p>
-                                            </div>
+                                        <div className="px-5 py-4 border-b border-gray-100">
+                                            <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Upload truth</h3>
+                                            <ul className="space-y-2">
+                                                <li className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Account:</span>
+                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{tenant?.name || currentTenantSlug} (ID: ***{previewResults[0]?.seller_id?.slice(-4) || '----'})</span>
+                                                </li>
+                                                <li className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Sync ID:</span>
+                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{previewState.syncId || NOT_AVAILABLE}</span>
+                                                </li>
+                                                <li className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Loaded detections:</span>
+                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewLoadedCount} loaded{previewKnownTotal !== previewLoadedCount ? ` of ${previewKnownTotal} total` : ''}</span>
+                                                </li>
+                                                <li className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Recovery proof:</span>
+                                                    <span className="text-[11px] font-bold text-gray-900 font-sans tracking-tight">{fmt(previewTotalRecovery)}{previewIsTruncated ? ' (loaded subset)' : ''}</span>
+                                                </li>
+                                                <li className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
+                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewDates ? `${previewDates.from} to ${previewDates.to}` : 'All available data'}</span>
+                                                </li>
+                                            </ul>
                                         </div>
-                                    ) : (
-                                    <div className="flex h-full w-full">
-                                        <div className="w-1/3 border-r border-gray-100 flex flex-col">
-                                            <div className="px-5 py-3.5 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-1.5">Upload summary</h3>
-                                                <ul className="space-y-0">
-                                                    <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Account:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{tenant?.name || currentTenantSlug} (ID: ***{previewResults[0]?.seller_id?.slice(-4) || '----'})</span>
-                                                    </li>
-                                                    <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Sync ID:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{previewState.syncId || 'Unavailable'}</span>
-                                                    </li>
-                                                    <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detection state:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewState.status || 'Unavailable'}</span>
-                                                    </li>
-                                                    {isPreviewPartial && (
-                                                        <li className="flex items-baseline gap-2">
-                                                            <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Results:</span>
-                                                            <span className="text-[11px] font-semibold text-amber-700 font-sans tracking-tight">Partial until detection completes</span>
-                                                        </li>
-                                                    )}
-                                                    <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Detections:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewLoadedCount} loaded{previewKnownTotal !== previewLoadedCount ? ` of ${previewKnownTotal} total` : ''}</span>
-                                                    </li>
-                                                    <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Est. Recovery:</span>
-                                                        <span className="text-[11px] font-bold text-gray-900 font-sans tracking-tight">{fmt(previewTotalRecovery)}{previewIsTruncated ? ' (loaded subset)' : ''}</span>
-                                                    </li>
-                                                    <li className="flex items-baseline gap-2">
-                                                        <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
-                                                        <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewDates ? `${previewDates.from} to ${previewDates.to}` : 'All available data'}</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="px-5 py-4 border-b border-gray-100">
-                                                <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Detection breakdown</h3>
-                                                <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">{previewBreakdownLabel}</p>
-                                                <div className="space-y-2">
-                                                    {previewTopTypes.slice(0, 5).map(([type, data], idx) => (
-                                                        <div key={idx} className="flex items-start justify-between">
-                                                            <div className="flex-1 min-w-0 mr-4">
-                                                                <p className="text-[10px] font-bold text-gray-900 leading-none">{formatAnomalyType(type)}</p>
-                                                                <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{data.count} detection{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
+                                        <div className="px-5 py-4">
+                                            <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Detection breakdown</h3>
+                                            {previewTopTypes.length > 0 ? (
+                                                <>
+                                                    <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">{previewBreakdownLabel}</p>
+                                                    <div className="space-y-2">
+                                                        {previewTopTypes.slice(0, 5).map(([type, data], idx) => (
+                                                            <div key={idx} className="flex items-start justify-between">
+                                                                <div className="flex-1 min-w-0 mr-4">
+                                                                    <p className="text-[10px] font-bold text-gray-900 leading-none">{formatAnomalyType(type)}</p>
+                                                                    <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{data.count} detection{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                {previewTopTypes.length > 5 && (
-                                                <div className="mt-1 flex justify-end">
-                                                    <button className="text-[9px] font-sans font-bold text-violet-600 hover:text-violet-700 uppercase tracking-tight flex items-center gap-1 group">+{previewTopTypes.length - 5} More <span className="group-hover:translate-x-0.5 transition-transform">→</span></button>
-                                                </div>
-                                                )}
-                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <p className="text-[10px] font-sans leading-5 text-gray-400">
+                                                    Detection categories will populate here as soon as row-level findings are ready for this upload.
+                                                </p>
+                                            )}
                                         </div>
-                                        <div className="flex-1 flex flex-col">
-                                            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
-                                                <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Loaded Results</h3>
-                                                <p className="text-[10px] text-gray-400 font-sans">{previewResultsSummary}</p>
-                                                {previewIsTruncated && (
-                                                    <p className="mt-1 text-[10px] font-sans font-semibold text-amber-700 tracking-tight">
-                                                        Showing first {previewLoadedCount} of {previewKnownTotal} detections. Recovery totals and category summaries below are based on the loaded subset only.
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <div className="flex-1 overflow-auto p-6">
+                                    </div>
+                                    <div className="min-w-0 flex-1 flex flex-col">
+                                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
+                                            <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Loaded Results</h3>
+                                            <p className="text-[10px] text-gray-400 font-sans">{previewResultsSummary}</p>
+                                            {previewIsTruncated && (
+                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-700 tracking-tight">
+                                                    Showing first {previewLoadedCount} of {previewKnownTotal} detections. Recovery totals and category summaries below are based on the loaded subset only.
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 overflow-auto p-6">
+                                            {previewResults.length === 0 ? (
+                                                <div className="flex h-full items-center justify-center">
+                                                    <div className="flex max-w-sm flex-col items-center gap-3 text-center">
+                                                        <div className="p-4 rounded-2xl bg-gray-50">
+                                                            {isPreviewLoading ? (
+                                                                <Loader2 className="h-10 w-10 text-gray-300 animate-spin" />
+                                                            ) : (
+                                                                <Target className="h-10 w-10 text-gray-300" />
+                                                            )}
+                                                        </div>
+                                                        <h3 className="text-sm font-semibold text-gray-700 font-sans">
+                                                            {isPreviewLoading ? 'Row-level detections are still loading' : previewEmptyState.title}
+                                                        </h3>
+                                                        <p className="text-xs text-gray-400 font-sans leading-relaxed">
+                                                            {isPreviewLoading
+                                                                ? 'Margin has already surfaced the upload stage, timing, and current money proof above. Detailed detection rows will appear here as soon as this batch finishes loading.'
+                                                                : previewEmptyState.description}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ) : (
                                                 <div className="w-full">
                                                     <table className="w-full">
                                                         <thead>
@@ -1772,16 +2129,17 @@ export default function DataUpload() {
                                                                 const days = row.days_remaining ?? 0;
                                                                 const evDesc = row.evidence?.order_id ? `Order: ${row.evidence.order_id}` : row.evidence?.fnsku ? `FNSKU: ${row.evidence.fnsku}` : row.evidence?.shipment_id ? `Shipment: ${row.evidence.shipment_id}` : row.sync_id ? `Sync: ${row.sync_id.slice(0, 8)}...` : `Detection #${idx + 1}`;
                                                                 return (
-                                                                <tr key={row.id || idx} className="group">
-                                                                    <td className="py-0.5">
-                                                                        <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{formatAnomalyType(row.anomaly_type)}</p>
-                                                                        <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{evDesc} | {row.status}</p>
-                                                                    </td>
-                                                                    <td className="py-0.5 text-right align-top">
-                                                                        <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{fmt(row.estimated_value)}</span>
-                                                                        {days > 0 && <p className="text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight text-gray-400">{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
-                                                                    </td>
-                                                                </tr>);
+                                                                    <tr key={row.id || idx} className="group">
+                                                                        <td className="py-0.5">
+                                                                            <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{formatAnomalyType(row.anomaly_type)}</p>
+                                                                            <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{evDesc} | {row.status}</p>
+                                                                        </td>
+                                                                        <td className="py-0.5 text-right align-top">
+                                                                            <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{fmt(row.estimated_value)}</span>
+                                                                            {days > 0 && <p className="text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight text-gray-400">{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
+                                                                        </td>
+                                                                    </tr>
+                                                                );
                                                             })}
                                                         </tbody>
                                                         <tfoot>
@@ -1800,10 +2158,9 @@ export default function DataUpload() {
                                                         </tfoot>
                                                     </table>
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
                                     </div>
-                                    )}
                                 </div>
                             </motion.div>
                         </>
