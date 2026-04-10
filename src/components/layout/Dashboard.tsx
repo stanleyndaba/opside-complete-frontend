@@ -299,6 +299,77 @@ const getIssueCopy = (value?: string | null) => {
   };
 };
 
+const buildDashboardDetectionMeta = (
+  uploadSyncId: string | null,
+  resultsMeta?: {
+    syncId?: string;
+    status?: 'pending' | 'processing' | 'completed' | 'failed';
+    processedAt?: string | null;
+    errorMessage?: string | null;
+    isSandbox?: boolean;
+  } | null,
+  statusPayload?: {
+    sync_id: string;
+    status: 'pending' | 'processing' | 'completed' | 'failed';
+    processed_at?: string | null;
+    error_message?: string | null;
+    is_sandbox?: boolean;
+    results?: {
+      claimsFound?: number;
+      estimatedRecovery?: number;
+    };
+  } | null,
+  total?: number | null
+) => {
+  if (!uploadSyncId && !resultsMeta && !statusPayload) return null;
+
+  return {
+    syncId: statusPayload?.sync_id || resultsMeta?.syncId || uploadSyncId || '',
+    status: statusPayload?.status || resultsMeta?.status || 'pending',
+    processedAt: statusPayload?.processed_at ?? resultsMeta?.processedAt ?? null,
+    errorMessage: statusPayload?.error_message ?? resultsMeta?.errorMessage ?? null,
+    isSandbox: statusPayload?.is_sandbox ?? resultsMeta?.isSandbox ?? false,
+    claimsFound: typeof statusPayload?.results?.claimsFound === 'number'
+      ? statusPayload.results.claimsFound
+      : typeof total === 'number'
+        ? total
+        : null,
+    estimatedRecovery: typeof statusPayload?.results?.estimatedRecovery === 'number'
+      ? statusPayload.results.estimatedRecovery
+      : null,
+  };
+};
+
+const describeDashboardLiveSignal = (event: StatusEvent): string | null => {
+  if (event.type === 'detection') {
+    if (event.status === 'completed') return 'Findings refreshed';
+    if (event.status === 'started' || event.status === 'created') return 'Detection started';
+    return 'Detection updated';
+  }
+
+  if (event.type === 'case' || event.type === 'filing') {
+    return 'Filing readiness updated';
+  }
+
+  if (event.type === 'evidence') {
+    return 'Evidence status updated';
+  }
+
+  if (event.type === 'payout' || event.type === 'recovery' || event.type === 'billing') {
+    return 'Recovery status updated';
+  }
+
+  if (event.type === 'sync') {
+    return event.status === 'completed' ? 'Amazon sync completed' : 'Amazon sync updated';
+  }
+
+  if (event.type === 'notification') {
+    return 'Notification activity updated';
+  }
+
+  return null;
+};
+
 const isProcessedFindingStatus = (status?: string | null) =>
   ['filed', 'resolved', 'converted'].includes((status || '').toLowerCase());
 
@@ -693,6 +764,7 @@ export function Dashboard() {
   } | null>(null);
   const [detectionResults, setDetectionResults] = useState<any[]>([]);
   const [loadingDetections, setLoadingDetections] = useState<boolean>(false);
+  const [isRefreshingFindings, setIsRefreshingFindings] = useState<boolean>(false);
   const [detectionTotal, setDetectionTotal] = useState<number>(0);
   const [detectionResultsMeta, setDetectionResultsMeta] = useState<{
     syncId: string;
@@ -700,8 +772,12 @@ export function Dashboard() {
     processedAt?: string | null;
     errorMessage?: string | null;
     isSandbox?: boolean;
+    claimsFound?: number | null;
+    estimatedRecovery?: number | null;
   } | null>(null);
   const [showProcessed, setShowProcessed] = useState<boolean>(false);
+  const [latestDashboardSignal, setLatestDashboardSignal] = useState<{ label: string; timestamp: string; eventType: string } | null>(null);
+  const detectionRequestRef = useRef(0);
 
   // Case ID Linking State
   const [caseIdModalOpen, setCaseIdModalOpen] = useState(false);
@@ -828,6 +904,8 @@ export function Dashboard() {
     setDetectionResults([]);
     setDetectionTotal(0);
     setDetectionResultsMeta(null);
+    setIsRefreshingFindings(false);
+    setLatestDashboardSignal(null);
   }, [activeSlug, uploadSyncId]);
 
   const fetchDashboardSummary = useCallback(async () => {
@@ -936,47 +1014,95 @@ export function Dashboard() {
     })();
   }, [isReady, activeSlug]);
 
-  // Fetch detection results for anomaly ledger counter
-  useEffect(() => {
+  const fetchDetections = useCallback(async (
+    options: { background?: boolean; suppressErrorToast?: boolean } = {}
+  ) => {
     if (!isReady || !activeSlug) return;
 
-    let cancelled = false;
-    const fetchDetections = async () => {
+    const requestId = ++detectionRequestRef.current;
+    const useBackgroundRefresh = options.background === true;
+
+    if (useBackgroundRefresh) {
+      setIsRefreshingFindings(true);
+    } else {
       setLoadingDetections(true);
-      try {
-        const res = await detectionApi.getDetectionResults(
+    }
+
+    try {
+      const [resultsOutcome, statusOutcome] = await Promise.allSettled([
+        detectionApi.getDetectionResults(
           uploadSyncId
             ? { limit: SYNC_SCOPED_DETECTION_RESULTS_LIMIT, syncId: uploadSyncId }
             : { limit: 50 },
           activeSlug
-        );
-        if (!cancelled && res.ok && res.data?.results) {
-          setDetectionResults(res.data.results);
-          setDetectionTotal(res.data.total);
-          setDetectionResultsMeta(res.data.meta ?? null);
-        }
-      } catch (error) {
-        console.error('Failed to fetch detections:', error);
-        if (!cancelled) {
-          setDetectionResultsMeta(null);
-          toast({
+        ),
+        uploadSyncId
+          ? detectionApi.getDetectionStatus(uploadSyncId, activeSlug)
+          : Promise.resolve(null),
+      ]);
+
+      if (!mountedRef.current || requestId !== detectionRequestRef.current) return;
+
+      const resultsResponse = resultsOutcome.status === 'fulfilled' ? resultsOutcome.value : null;
+      const statusResponse = statusOutcome.status === 'fulfilled' ? statusOutcome.value : null;
+      const hasResults = Boolean(resultsResponse?.ok && resultsResponse.data?.results);
+      const hasStatusTruth = Boolean(statusResponse?.ok);
+
+      if (hasResults) {
+        setDetectionResults(resultsResponse!.data.results);
+        setDetectionTotal(resultsResponse!.data.total);
+      } else if (!useBackgroundRefresh) {
+        setDetectionResults([]);
+        setDetectionTotal(0);
+      }
+
+      const mergedMeta = buildDashboardDetectionMeta(
+        uploadSyncId,
+        resultsResponse?.ok ? resultsResponse.data?.meta : null,
+        statusResponse?.ok ? statusResponse.data : null,
+        resultsResponse?.ok ? resultsResponse.data?.total : null
+      );
+      setDetectionResultsMeta(mergedMeta);
+
+      if (!hasResults && !hasStatusTruth && !options.suppressErrorToast) {
+        toast({
           title: 'FETCH_PROTOCOL_ERROR',
           description: 'Failed to retrieve forensic discrepancy data.',
           variant: 'destructive'
         });
-        }
-      } finally {
-        if (!cancelled) {
-          setLoadingDetections(false);
-        }
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch detections:', error);
+      if (!mountedRef.current || requestId !== detectionRequestRef.current) return;
+      if (!useBackgroundRefresh) {
+        setDetectionResults([]);
+        setDetectionTotal(0);
+        setDetectionResultsMeta(null);
+      }
+      if (!options.suppressErrorToast) {
+        toast({
+          title: 'FETCH_PROTOCOL_ERROR',
+          description: 'Failed to retrieve forensic discrepancy data.',
+          variant: 'destructive'
+        });
+      }
+    } finally {
+      if (!mountedRef.current || requestId !== detectionRequestRef.current) return;
+      setLoadingDetections(false);
+      setIsRefreshingFindings(false);
+    }
+  }, [activeSlug, isReady, toast, uploadSyncId]);
+
+  // Fetch detection results for anomaly ledger counter
+  useEffect(() => {
+    if (!isReady || !activeSlug) return;
+
     setDetectionResults([]);
     setDetectionTotal(0);
     setDetectionResultsMeta(null);
-    fetchDetections();
-    return () => { cancelled = true; };
-  }, [activeSlug, isReady, toast, uploadSyncId]);
+    setIsRefreshingFindings(false);
+    void fetchDetections();
+  }, [activeSlug, fetchDetections, isReady, uploadSyncId]);
 
   const updateUpcomingMetrics = useCallback((payments: any[]) => {
     upcomingPaymentsLoadedRef.current = true;
@@ -1385,16 +1511,26 @@ export function Dashboard() {
     }
   }, [activeSlug, isReady]);
 
-  const refreshDashboardLive = useCallback(async () => {
-    await Promise.all([
+  const refreshDashboardPrimary = useCallback(async () => {
+    await Promise.allSettled([
       fetchDashboardSummary(),
-      fetchLaunchMonitor(),
-      fetchDisputeMetrics()
+      fetchDisputeMetrics(),
     ]);
-  }, [fetchDashboardSummary, fetchLaunchMonitor, fetchDisputeMetrics]);
+  }, [fetchDashboardSummary, fetchDisputeMetrics]);
+
+  const refreshDashboardLive = useCallback(async () => {
+    const primaryRefresh = refreshDashboardPrimary();
+    void fetchLaunchMonitor();
+    await primaryRefresh;
+  }, [fetchLaunchMonitor, refreshDashboardPrimary]);
 
   useStatusStream((event) => {
     if (!activeSlug) return;
+
+    const scopedSyncId = String(event.data?.sync_id || event.data?.syncId || '').trim();
+    if (uploadSyncId && scopedSyncId && scopedSyncId !== uploadSyncId) {
+      return;
+    }
 
     if (
       event.type === 'sync' ||
@@ -1406,6 +1542,24 @@ export function Dashboard() {
       event.type === 'recovery' ||
       event.type === 'notification'
     ) {
+      const liveSignalLabel = describeDashboardLiveSignal(event);
+      if (liveSignalLabel) {
+        setLatestDashboardSignal({
+          label: liveSignalLabel,
+          timestamp: event.timestamp,
+          eventType: event.eventType,
+        });
+      }
+      if (
+        event.type === 'detection' ||
+        event.type === 'evidence' ||
+        event.type === 'case' ||
+        event.type === 'filing' ||
+        event.type === 'payout' ||
+        event.type === 'recovery'
+      ) {
+        void fetchDetections({ background: true, suppressErrorToast: true });
+      }
       void refreshDashboardLive();
     }
   }, activeSlug);
@@ -1443,9 +1597,12 @@ export function Dashboard() {
 
   const syncScopedDetectionCount = useMemo(() => {
     if (!isSyncScopedDetections) return detectionTotal;
+    if (typeof detectionResultsMeta?.claimsFound === 'number' && detectionResultsMeta.claimsFound >= 0) {
+      return detectionResultsMeta.claimsFound;
+    }
     if (typeof detectionTotal === 'number' && detectionTotal > 0) return detectionTotal;
     return detectionResults.length;
-  }, [detectionResults.length, detectionTotal, isSyncScopedDetections]);
+  }, [detectionResults.length, detectionResultsMeta?.claimsFound, detectionTotal, isSyncScopedDetections]);
   const syncScopedResultCapDisclosure = useMemo(() => {
     if (!isSyncScopedDetections) return null;
     if (detectionResults.length < SYNC_SCOPED_DETECTION_RESULTS_LIMIT) return null;
@@ -1503,6 +1660,12 @@ export function Dashboard() {
     }
     return `Updated ${headerLastUpdated}`;
   }, [activeTab, headerLastUpdated, isSyncScopedDetections, syncScopedIssuesUpdatedLabel]);
+  const latestDashboardSignalLabel = useMemo(() => {
+    if (!latestDashboardSignal?.timestamp) return null;
+    const timestamp = new Date(latestDashboardSignal.timestamp);
+    if (Number.isNaN(timestamp.getTime())) return latestDashboardSignal.label;
+    return `${latestDashboardSignal.label} ${formatDistanceToNowStrict(timestamp, { addSuffix: true })}`;
+  }, [latestDashboardSignal]);
   const syncScopedDetectionStatus = (detectionResultsMeta?.status || '').toLowerCase();
   const syncScopedErrorMessage = detectionResultsMeta?.errorMessage?.trim() || null;
   const isSyncScopedSandbox = detectionResultsMeta?.isSandbox === true;
@@ -1535,6 +1698,24 @@ export function Dashboard() {
         };
     }
   }, [syncScopedDetectionStatus]);
+  const syncScopedEstimatedRecoveryLabel = useMemo(() => {
+    if (!isSyncScopedDetections) return 'Not Available';
+    const fallbackLoadedValue = detectionResults.reduce((sum, result) => sum + (Number(result?.estimated_value) || 0), 0);
+
+    if (typeof detectionResultsMeta?.estimatedRecovery === 'number') {
+      return formatCurrencyWithSelection(detectionResultsMeta.estimatedRecovery, detectionResults.find((result) => result?.currency)?.currency || 'USD');
+    }
+
+    if (fallbackLoadedValue > 0) {
+      return formatCurrencyWithSelection(fallbackLoadedValue, detectionResults.find((result) => result?.currency)?.currency || 'USD');
+    }
+
+    if (syncScopedDetectionStatus === 'completed') {
+      return formatCurrencyWithSelection(0, detectionResults.find((result) => result?.currency)?.currency || 'USD');
+    }
+
+    return 'Not Available';
+  }, [detectionResults, detectionResultsMeta?.estimatedRecovery, formatCurrencyWithSelection, isSyncScopedDetections, syncScopedDetectionStatus]);
   const syncScopedDetectionMetaRows = useMemo(() => {
     if (!isSyncScopedDetections || !uploadSyncId) return [];
     const rows = [
@@ -1560,6 +1741,10 @@ export function Dashboard() {
         label: 'Total findings in this upload',
         value: pluralize(syncScopedDetectionCount, 'finding'),
       },
+      {
+        label: 'Estimated recovery in this upload',
+        value: syncScopedEstimatedRecoveryLabel,
+      },
     ];
     if (syncScopedDetectionStatus === 'failed' && syncScopedErrorMessage) {
       rows.push({
@@ -1568,7 +1753,7 @@ export function Dashboard() {
       });
     }
     return rows;
-  }, [isSyncScopedDetections, isSyncScopedSandbox, syncScopedDetectionCount, syncScopedDetectionStatus, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedErrorMessage, syncScopedIssuesUpdatedLabel, uploadSyncId]);
+  }, [isSyncScopedDetections, isSyncScopedSandbox, syncScopedDetectionCount, syncScopedDetectionStatus, syncScopedDetectionStatusMeta.label, syncScopedDetectionStatusMeta.tone, syncScopedErrorMessage, syncScopedEstimatedRecoveryLabel, syncScopedIssuesUpdatedLabel, uploadSyncId]);
   const issuesFoundHeading = isSyncScopedDetections ? 'This upload\'s findings' : 'Recent findings';
   const issuesFoundDescription = isSyncScopedDetections
     ? 'Showing detections from your latest CSV upload. The upload total above reflects everything this sync found, while the table below reflects only the findings currently visible in this view.'
@@ -1577,6 +1762,41 @@ export function Dashboard() {
     () => detectionResults.filter(result => showProcessed ? true : !isProcessedFindingStatus(result.status)),
     [detectionResults, showProcessed]
   );
+  const findingsCurrency = detectionResults.find((result) => typeof result?.currency === 'string' && result.currency.trim())?.currency || 'USD';
+  const visibleFindingsValueTotal = useMemo(
+    () => visibleDetectionResults.reduce((sum, result) => sum + (Number(result.estimated_value) || 0), 0),
+    [visibleDetectionResults]
+  );
+  const syncScopedEstimatedRecovery = useMemo(() => {
+    if (!isSyncScopedDetections) return null;
+    if (typeof detectionResultsMeta?.estimatedRecovery === 'number') {
+      return detectionResultsMeta.estimatedRecovery;
+    }
+    if (visibleDetectionResults.length > 0) {
+      return visibleFindingsValueTotal;
+    }
+    if (syncScopedDetectionStatus === 'completed' && syncScopedDetectionCount === 0) {
+      return 0;
+    }
+    return null;
+  }, [
+    detectionResultsMeta?.estimatedRecovery,
+    isSyncScopedDetections,
+    syncScopedDetectionCount,
+    syncScopedDetectionStatus,
+    visibleDetectionResults.length,
+    visibleFindingsValueTotal,
+  ]);
+  const issuesFoundRecoveryValue = useMemo(() => {
+    if (isSyncScopedDetections) {
+      return syncScopedEstimatedRecovery;
+    }
+    return visibleFindingsValueTotal;
+  }, [isSyncScopedDetections, syncScopedEstimatedRecovery, visibleFindingsValueTotal]);
+  const issuesFoundRecoveryLabel = useMemo(() => {
+    if (issuesFoundRecoveryValue === null || issuesFoundRecoveryValue === undefined) return 'Not Available';
+    return formatCurrencyWithSelection(issuesFoundRecoveryValue, findingsCurrency);
+  }, [findingsCurrency, formatCurrencyWithSelection, issuesFoundRecoveryValue]);
   const readyToFileFindingsCount = useMemo(
     () => detectionResults.filter(result => (result.status || '').toLowerCase() === 'ready_to_file').length,
     [detectionResults]
@@ -1586,6 +1806,15 @@ export function Dashboard() {
     [detectionResults]
   );
   const issuesFoundSummaryRows = useMemo(() => ([
+    {
+      label: isSyncScopedDetections ? 'Estimated recovery in this upload' : 'Estimated recovery in view',
+      value: issuesFoundRecoveryLabel,
+      detail: isSyncScopedDetections
+        ? typeof detectionResultsMeta?.estimatedRecovery === 'number'
+          ? 'Upload-scoped detection value from the latest processing run'
+          : 'Based on the findings currently loaded for this upload view'
+        : 'Based on the findings currently shown in this queue'
+    },
     {
       label: isSyncScopedDetections ? 'Findings currently in view' : 'In view',
       value: pluralize(visibleDetectionResults.length, 'finding'),
@@ -1597,18 +1826,65 @@ export function Dashboard() {
       detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is filing-ready yet'
     },
     {
-      label: isSyncScopedDetections ? 'Filed cases' : 'Filed',
-      value: isSyncScopedDetections ? 'Not Available' : pluralize(filedClaimsCount, 'case'),
-      detail: isSyncScopedDetections
-        ? 'This upload view does not include account-wide case totals.'
-        : filedClaimsCount > 0 ? 'Already moved into case review' : 'No filed cases yet'
-    },
-    {
       label: 'Needs review',
       value: pluralize(needsReviewFindingsCount, 'finding'),
       detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
     }
-  ]), [filedClaimsCount, isSyncScopedDetections, needsReviewFindingsCount, readyToFileFindingsCount, visibleDetectionResults.length]);
+  ]), [
+    detectionResultsMeta?.estimatedRecovery,
+    isSyncScopedDetections,
+    issuesFoundRecoveryLabel,
+    needsReviewFindingsCount,
+    readyToFileFindingsCount,
+    visibleDetectionResults.length
+  ]);
+  const issuesFoundProofHeadline = useMemo(() => {
+    if (isSyncScopedDetections && syncScopedDetectionCount > 0) {
+      return `${pluralize(syncScopedDetectionCount, 'finding')} worth ${issuesFoundRecoveryLabel} are attached to this upload.`;
+    }
+    if (visibleDetectionResults.length > 0) {
+      return `${pluralize(visibleDetectionResults.length, 'finding')} worth ${issuesFoundRecoveryLabel} are currently in view.`;
+    }
+    if (loadingDetections && visibleDetectionResults.length === 0 && isSyncScopedDetections) {
+      return 'Margin is loading the filing-ready view for this upload.';
+    }
+    if (loadingDetections && visibleDetectionResults.length === 0) {
+      return 'Margin is loading the latest filing-ready findings.';
+    }
+    if (isSyncScopedDetections && syncScopedDetectionStatus === 'completed') {
+      return `This upload finished with ${pluralize(syncScopedDetectionCount, 'finding')} and ${issuesFoundRecoveryLabel} in detected value.`;
+    }
+    return 'Margin is holding the latest discrepancy truth for this workspace.';
+  }, [
+    isSyncScopedDetections,
+    issuesFoundRecoveryLabel,
+    loadingDetections,
+    syncScopedDetectionCount,
+    syncScopedDetectionStatus,
+    visibleDetectionResults.length,
+  ]);
+  const issuesFoundLoadingState = useMemo(() => {
+    if (isSyncScopedDetections) {
+      if (syncScopedDetectionStatus === 'processing' || syncScopedDetectionStatus === 'pending') {
+        return {
+          title: 'Detection is still moving for this upload',
+          detail: typeof detectionResultsMeta?.claimsFound === 'number' && detectionResultsMeta.claimsFound > 0
+            ? `${pluralize(detectionResultsMeta.claimsFound, 'finding')} already surfaced while Margin prepares the filing-ready view.`
+            : 'Margin is loading the findings, value, and filing readiness for this upload.',
+        };
+      }
+
+      return {
+        title: 'Loading findings for this upload',
+        detail: 'Margin is preparing the upload-scoped findings, value proof, and filing state now.',
+      };
+    }
+
+    return {
+      title: 'Preparing the filing-ready findings view',
+      detail: 'Margin is loading the latest discrepancies, value proof, and case readiness for this account.',
+    };
+  }, [detectionResultsMeta?.claimsFound, isSyncScopedDetections, syncScopedDetectionStatus]);
   const activeDiscrepancyCopy = useMemo(() => {
     if (!activeDiscrepancy) return null;
     const derivedCopy = getIssueCopy(
@@ -2506,13 +2782,22 @@ export function Dashboard() {
                         <div className="mt-0.5">
                           <span className="text-base font-sans font-semibold text-white tracking-tight">{issuesFoundHeading}</span>
                         </div>
+                        <p className="mt-3 text-[17px] font-sans font-semibold leading-7 tracking-tight text-white">
+                          {issuesFoundProofHeadline}
+                        </p>
                         <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-[#dcdcdc]">
                           {issuesFoundDescription}
                         </p>
+                        {latestDashboardSignalLabel ? (
+                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/62">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                            {latestDashboardSignalLabel}
+                          </div>
+                        ) : null}
                       </div>
 
                       {isSyncScopedDetections ? (
-                        <div className="grid gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="grid gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-2 xl:grid-cols-5">
                           {syncScopedDetectionMetaRows.map((item) => (
                             <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
                               <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
@@ -2541,6 +2826,9 @@ export function Dashboard() {
                             <div className="mt-1 text-[16px] font-sans font-medium leading-none tracking-tight text-white">
                               {item.value}
                             </div>
+                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/36">
+                              {item.detail}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -2549,7 +2837,14 @@ export function Dashboard() {
                     {loadingDetections ? (
                       <div className="py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-8 w-8 text-white/50 animate-spin" />
-                        <span className="text-[11px] font-sans font-medium text-white/35 tracking-tight animate-pulse">Loading findings...</span>
+                        <div className="text-center">
+                          <div className="text-[11px] font-sans font-medium text-white/45 tracking-tight animate-pulse">
+                            {issuesFoundLoadingState.title}
+                          </div>
+                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/30 tracking-tight">
+                            {issuesFoundLoadingState.detail}
+                          </div>
+                        </div>
                       </div>
                     ) : visibleDetectionResults.length === 0 ? (
                       <div className="py-24 flex flex-col items-center justify-center text-center">
@@ -2598,6 +2893,12 @@ export function Dashboard() {
                               : 'Open the findings below to review what is ready, what is filed, and what still needs attention.'}
                           </div>
                           <div className="flex items-center gap-4">
+                            {isRefreshingFindings ? (
+                              <div className="inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/52">
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                Refreshing findings
+                              </div>
+                            ) : null}
                             <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
                               <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">Show processed</span>
                               <button
