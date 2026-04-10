@@ -923,6 +923,58 @@ function readLiveTimestamp(timestamp: string | null | undefined) {
   return timestamp;
 }
 
+type QueueLiveSignal = {
+  label: string;
+  detail: string;
+  timestamp: string;
+};
+
+function describeQueueLiveSignal(event: { eventType: string; timestamp: string; data: Record<string, any> }): QueueLiveSignal | null {
+  const timestamp = readLiveTimestamp(event.timestamp) || new Date().toISOString();
+
+  switch (event.eventType) {
+    case 'case.created':
+      return {
+        label: 'New case reached the queue',
+        detail: 'A dispute case entered the filing queue and readiness truth is refreshing.',
+        timestamp
+      };
+    case 'case.status_updated':
+      return {
+        label: 'Filing readiness updated just now',
+        detail: 'Case posture changed and the queue refreshed its filing readiness truth.',
+        timestamp
+      };
+    case 'filing.submitted':
+      return {
+        label: 'Amazon filing state updated just now',
+        detail: 'A queued case moved forward and the filing queue refreshed around it.',
+        timestamp
+      };
+    case 'evidence.linked':
+      return {
+        label: 'Evidence linked just now',
+        detail: 'Supporting documents changed and filing posture refreshed for the affected record.',
+        timestamp
+      };
+    case 'payout.detected':
+      return {
+        label: 'Recovery status updated just now',
+        detail: 'A payout or recovery signal changed for a record already in this queue.',
+        timestamp
+      };
+    default:
+      return null;
+  }
+}
+
+function isRecentTimestamp(value: string | null | undefined, windowHours = 6) {
+  if (!value) return false;
+  const parsed = new Date(value).getTime();
+  if (Number.isNaN(parsed)) return false;
+  return Date.now() - parsed <= windowHours * 60 * 60 * 1000;
+}
+
 function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<string, any>; timestamp: string }) {
   const updatedAt = readLiveTimestamp(event.timestamp);
   const patch: Partial<QueueRow> = {};
@@ -1026,6 +1078,7 @@ export default function DisputeCases() {
   const [briefPreviewLoading, setBriefPreviewLoading] = useState(false);
   const [briefPreviewUrl, setBriefPreviewUrl] = useState<string | null>(null);
   const [briefPreviewRow, setBriefPreviewRow] = useState<QueueRow | null>(null);
+  const [latestQueueSignal, setLatestQueueSignal] = useState<QueueLiveSignal | null>(null);
   const liveRefreshTimerRef = useRef<number | null>(null);
   const pageSize = 25;
 
@@ -1167,6 +1220,150 @@ export default function DisputeCases() {
 
   const totalPages = Math.max(1, Math.ceil((summary.filtered_results ?? 0) / pageSize));
 
+  const hasActiveFilters = useMemo(() => (
+    Boolean(searchTerm)
+    || status !== 'all'
+    || gateState !== 'all'
+    || filingStatus !== 'all'
+    || recoveryStatus !== 'all'
+    || billingStatus !== 'all'
+    || evidenceState !== 'all'
+    || rejectionCategory !== 'all'
+  ), [searchTerm, status, gateState, filingStatus, recoveryStatus, billingStatus, evidenceState, rejectionCategory]);
+
+  const visibleQueuePosture = useMemo(() => {
+    return rows.reduce((acc, row) => {
+      const posture = deriveFilingPosture(row, getFinancialSummaryForRow(row, financialSummaries));
+      acc[posture.tone] += 1;
+      return acc;
+    }, {
+      ready: 0,
+      attention: 0,
+      blocked: 0,
+      in_flight: 0,
+      resolved: 0
+    } as Record<FilingPosture['tone'], number>);
+  }, [rows, financialSummaries]);
+
+  const visibleBlockerSignals = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    rows.forEach((row) => {
+      const posture = deriveFilingPosture(row, getFinancialSummaryForRow(row, financialSummaries));
+      if (posture.tone !== 'attention' && posture.tone !== 'blocked') return;
+
+      const gate = getQueueGateState(row);
+      const label = gate?.label || posture.headline;
+      counts.set(label, (counts.get(label) || 0) + 1);
+    });
+
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([label, count]) => ({ label, count }));
+  }, [rows, financialSummaries]);
+
+  const recentlyUpdatedCount = useMemo(() => (
+    rows.reduce((count, row) => count + (isRecentTimestamp(row.updated_at) ? 1 : 0), 0)
+  ), [rows]);
+
+  const queuePostureHeadline = useMemo(() => {
+    const readyCount = summary.ready_to_file_count;
+    const blockedCount = summary.blocked_count;
+
+    if (typeof readyCount === 'number' && readyCount > 0) {
+      return `${formatSummaryValue(readyCount)} ready to file now`;
+    }
+
+    if (typeof blockedCount === 'number' && blockedCount > 0) {
+      return 'No filing-ready rows in this filtered view right now';
+    }
+
+    if (typeof summary.filtered_results === 'number' && summary.filtered_results === 0) {
+      return 'No queue records match the current filters';
+    }
+
+    if (loading && rows.length > 0) {
+      return 'Refreshing live filing queue truth';
+    }
+
+    return 'Preparing live filing queue truth';
+  }, [summary.ready_to_file_count, summary.blocked_count, summary.filtered_results, loading, rows.length]);
+
+  const queuePostureDetail = useMemo(() => {
+    const detailBits: string[] = [];
+
+    if (typeof summary.blocked_count === 'number' && summary.blocked_count > 0) {
+      detailBits.push(`${formatSummaryValue(summary.blocked_count)} blocked in this filtered view`);
+    }
+
+    if (visibleQueuePosture.attention > 0) {
+      detailBits.push(`${visibleQueuePosture.attention} on this page still need seller review`);
+    }
+
+    if (typeof summary.approved_pending_payout_count === 'number' && summary.approved_pending_payout_count > 0) {
+      detailBits.push(`${formatSummaryValue(summary.approved_pending_payout_count)} waiting on payout`);
+    }
+
+    if (!detailBits.length) {
+      return 'This filtered view is showing filing-readiness truth first, then the dense row detail underneath it.';
+    }
+
+    return detailBits.join(' · ');
+  }, [summary.blocked_count, summary.approved_pending_payout_count, visibleQueuePosture.attention]);
+
+  const queueTopSummaryCards = useMemo(() => ([
+    {
+      label: 'Ready to file now',
+      value: summary.ready_to_file_count,
+      detail: 'Canonical ready count in this filtered view'
+    },
+    {
+      label: 'Blocked now',
+      value: summary.blocked_count,
+      detail: 'Canonical blocked count in this filtered view'
+    },
+    {
+      label: 'Needs review on this page',
+      value: visibleQueuePosture.attention,
+      detail: 'Visible rows still waiting on seller review'
+    },
+    {
+      label: 'Payout waiting',
+      value: summary.approved_pending_payout_count,
+      detail: 'Approved rows still awaiting payout confirmation'
+    },
+  ]), [summary.ready_to_file_count, summary.blocked_count, summary.approved_pending_payout_count, visibleQueuePosture.attention]);
+
+  const secondarySummaryCards = useMemo(() => ([
+    { label: 'Filed / submitted', value: summary.filed_count, detail: 'Already moving through Amazon filing flow' },
+    { label: 'Rejected', value: summary.rejected_count, detail: 'Need rejection cleanup before retrying' },
+    { label: 'Paid back', value: summary.verified_paid_count, detail: 'Financially confirmed recovery outcomes' },
+    { label: 'Billing pending', value: summary.billing_pending_count, detail: 'Legacy billing still not reconciled' },
+  ]), [summary]);
+
+  const queueScopeLine = useMemo(() => {
+    if ((summary.filtered_results == null || summary.total_cases == null) && loading && rows.length > 0) {
+      return 'Current filtered view: refreshing queue scope';
+    }
+
+    return `Current filtered view: ${formatSummaryValue(summary.filtered_results)} of ${formatSummaryValue(summary.total_cases)} total queue records`;
+  }, [summary.filtered_results, summary.total_cases, loading, rows.length]);
+
+  const queueLoadingState = useMemo(() => {
+    if (hasActiveFilters) {
+      return {
+        title: 'Preparing filing queue for the current filters',
+        detail: 'Margin is loading which rows are ready now, blocked now, or still need seller review in this view.'
+      };
+    }
+
+    return {
+      title: 'Loading filing-ready and blocked queue truth',
+      detail: 'Margin is preparing the latest readiness, blocker, and payout-waiting posture for this queue.'
+    };
+  }, [hasActiveFilters]);
+
   const handleUnlockCheckout = () => {
     const popup = window.open(YOCO_UNLOCK_URL, '_blank', 'noopener,noreferrer');
     if (!popup) {
@@ -1197,6 +1394,11 @@ export default function DisputeCases() {
 
       setUnlockResult(response.data);
       setPaymentConfirmationVisible(false);
+      setLatestQueueSignal({
+        label: response.data.queued_count > 0 ? 'Filing started just now' : 'Payment confirmed just now',
+        detail: response.data.message,
+        timestamp: new Date().toISOString()
+      });
       toast({
         title: response.data.queued_count > 0 ? 'Filing started' : 'Payment confirmed',
         description: response.data.message
@@ -1215,6 +1417,11 @@ export default function DisputeCases() {
 
   useStatusStream((event) => {
     if (!activeTenantSlug) return;
+
+    const liveSignal = describeQueueLiveSignal(event);
+    if (liveSignal) {
+      setLatestQueueSignal(liveSignal);
+    }
 
     if (event.eventType === 'case.created') {
       scheduleLiveRefresh();
@@ -1430,6 +1637,11 @@ export default function DisputeCases() {
         title: mode === 'approve' ? 'Approval queued' : mode === 'retry' ? 'Retry queued' : 'Case queued',
         description: response.data?.message || row.case_number || row.dispute_case_id
       });
+      setLatestQueueSignal({
+        label: mode === 'approve' ? 'Approval queued just now' : mode === 'retry' ? 'Retry queued just now' : 'Filing queued just now',
+        detail: response.data?.message || 'Queue readiness is refreshing for the selected record.',
+        timestamp: new Date().toISOString()
+      });
       refresh();
     } catch (err: any) {
       toast({ variant: 'destructive', title: 'Action failed', description: err.message || 'Please try again.' });
@@ -1441,20 +1653,6 @@ export default function DisputeCases() {
       });
     }
   };
-
-  const primarySummaryCards = useMemo(() => ([
-    { label: 'Filtered records', value: summary.filtered_results },
-    { label: 'Ready to file', value: summary.ready_to_file_count },
-    { label: 'Blocked', value: summary.blocked_count },
-    { label: 'Payout waiting', value: summary.approved_pending_payout_count },
-  ]), [summary]);
-
-  const secondarySummaryCards = useMemo(() => ([
-    { label: 'Filed / submitted', value: summary.filed_count },
-    { label: 'Rejected', value: summary.rejected_count },
-    { label: 'Paid back', value: summary.verified_paid_count },
-    { label: 'Billing pending', value: summary.billing_pending_count },
-  ]), [summary]);
 
   const unlockOffer = useMemo(() => {
     if (summary.supportable_claim_count == null || summary.supportable_ready_to_file_count == null) {
@@ -1533,9 +1731,17 @@ export default function DisputeCases() {
                 Track dispute cases, detection-only queue rows, approvals, and payout follow-up without assuming every record is already filed.
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col items-start gap-2 lg:items-end">
+              {latestQueueSignal ? (
+                <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
+                  {latestQueueSignal.label}
+                  <span className="ml-2 text-white/40">
+                    {formatDistanceToNow(new Date(latestQueueSignal.timestamp), { addSuffix: true })}
+                  </span>
+                </div>
+              ) : null}
               <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
-                {summary.last_updated_at ? `Updated ${formatDistanceToNow(new Date(summary.last_updated_at), { addSuffix: true })}` : 'Update time unavailable'}
+                {summary.last_updated_at ? `Queue refreshed ${formatDistanceToNow(new Date(summary.last_updated_at), { addSuffix: true })}` : 'Queue update time unavailable'}
               </div>
               <Button
                 onClick={refresh}
@@ -1556,7 +1762,9 @@ export default function DisputeCases() {
             >
               <div className="min-w-0">
                 <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Filtered queue snapshot</p>
-                <p className="mt-2 text-xs font-sans text-white">Tap to view counts for the current filtered queue view. Total queue records stay labeled separately.</p>
+                <p className="mt-2 text-sm font-sans font-bold tracking-tight text-white">{queuePostureHeadline}</p>
+                <p className="mt-1 text-xs font-sans text-white/60">{queuePostureDetail}</p>
+                <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{queueScopeLine}</p>
               </div>
 
               <div className="flex items-center gap-4 shrink-0">
@@ -1579,14 +1787,35 @@ export default function DisputeCases() {
                 <p className="mb-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
                   Snapshot scope: current filtered view
                 </p>
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {visibleBlockerSignals.map((signal) => (
+                    <span
+                      key={`queue-blocker-${signal.label}`}
+                      className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"
+                    >
+                      {signal.count} {signal.label}
+                    </span>
+                  ))}
+                  {recentlyUpdatedCount > 0 ? (
+                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                      {recentlyUpdatedCount} recently updated on this page
+                    </span>
+                  ) : null}
+                  {latestQueueSignal ? (
+                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                      {latestQueueSignal.label}
+                    </span>
+                  ) : null}
+                </div>
                 <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  {[...primarySummaryCards, ...secondarySummaryCards].map((card) => (
-                    <div key={card.label} className="flex items-center gap-3">
-                      <div className="min-w-[2.5rem] text-left text-sm font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
+                  {[...queueTopSummaryCards, ...secondarySummaryCards].map((card) => (
+                    <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{card.label}</div>
+                      <div className="mt-2 text-left text-lg font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
                         {formatSummaryValue(card.value)}
                       </div>
-                      <div className="text-xs font-sans font-medium tracking-tight text-white">
-                        {card.label}
+                      <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-white/62">
+                        {card.detail}
                       </div>
                     </div>
                   ))}
@@ -1896,17 +2125,28 @@ export default function DisputeCases() {
                   </Select>
                 </div>
 
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
-                  Current filtered view: {formatSummaryValue(summary.filtered_results)} of {formatSummaryValue(summary.total_cases)} total queue records
+                <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+                    {queueScopeLine}
+                  </div>
+                  {loading && rows.length > 0 ? (
+                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Refreshing queue readiness
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </CardHeader>
 
             <CardContent className="p-0">
               {loading && rows.length === 0 ? (
-                <div className="py-20 flex items-center justify-center gap-3 text-white/40">
+                <div className="py-20 flex flex-col items-center justify-center gap-3 text-center text-white/40">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm font-sans font-bold">Loading dispute queue records...</span>
+                  <div className="space-y-1">
+                    <span className="block text-sm font-sans font-bold text-white/70">{queueLoadingState.title}</span>
+                    <span className="block text-xs font-sans text-white/40">{queueLoadingState.detail}</span>
+                  </div>
                 </div>
               ) : error ? (
                 <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
@@ -2108,7 +2348,16 @@ export default function DisputeCases() {
 
                             <td className="px-6 py-5">
                               <div className="min-w-[160px] space-y-1 text-[11px] text-white/50 font-sans">
-                                <div>Updated: {row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
+                                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Last movement</div>
+                                <div className="text-sm font-sans font-bold tracking-tight text-white">
+                                  {row.updated_at ? formatDistanceToNow(new Date(row.updated_at), { addSuffix: true }) : 'Not Available'}
+                                </div>
+                                <div>{row.updated_at ? format(new Date(row.updated_at), 'yyyy/MM/dd HH:mm') : 'Not Available'}</div>
+                                {isRecentTimestamp(row.updated_at) ? (
+                                  <Badge variant="outline" className="w-fit border-white/10 bg-white/[0.03] text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                    Recently updated
+                                  </Badge>
+                                ) : null}
                               </div>
                             </td>
 
