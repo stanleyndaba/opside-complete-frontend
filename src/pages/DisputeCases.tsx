@@ -584,6 +584,26 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     };
   }
 
+  if (!hasRealDisputeCase && getQueueEntityKind(row) === 'detection') {
+    if (String(row.proof_status || '').trim().toLowerCase() === 'supportable_but_not_case_eligible') {
+      return {
+        tone: 'attention',
+        headline: 'Detection only',
+        detail: 'Supportable, but not yet a real case. Margin found value here, but filing stays unavailable until a dispute case is actually created.',
+        strengths: strengths.slice(0, 3),
+        risks: risks.slice(0, 2)
+      };
+    }
+
+    return {
+      tone: 'attention',
+      headline: 'Detection only',
+      detail: 'This record is still a detection signal, so it cannot file from this queue state yet.',
+      strengths: strengths.slice(0, 2),
+      risks: risks.slice(0, 2)
+    };
+  }
+
   if (['filed', 'submitting', 'recovering', 'payment_required'].includes(filingStatus) || ['submitted', 'under review', 'in review'].includes(status)) {
     if (!hasRealDisputeCase) {
       return {
@@ -643,7 +663,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
       return {
         tone: 'attention',
         headline: 'Detection only',
-        detail: 'This detection is supportable, but a real dispute case is not linked yet, so filing is not available from this queue row.',
+        detail: 'Supportable, but not yet a real case. Filing is not available from this queue row until a dispute case is created.',
         strengths: strengths.slice(0, 3),
         risks: risks.slice(0, 2)
       };

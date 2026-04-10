@@ -149,6 +149,7 @@ export function formatProofStatus(value: string | null | undefined): string {
     filing_ready: 'Filing ready',
     manual_review: 'Manual review',
     ineligible: 'Ineligible',
+    supportable_but_not_case_eligible: 'Supportable - case not created yet',
   };
   return labels[normalized] || humanize(value);
 }
@@ -158,6 +159,8 @@ export function proofStatusTone(value: string | null | undefined): string {
     case 'filing_ready':
       return 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300';
     case 'manual_review':
+      return 'border-amber-500/20 bg-amber-500/10 text-amber-300';
+    case 'supportable_but_not_case_eligible':
       return 'border-amber-500/20 bg-amber-500/10 text-amber-300';
     case 'ineligible':
       return 'border-red-500/20 bg-red-500/10 text-red-300';
