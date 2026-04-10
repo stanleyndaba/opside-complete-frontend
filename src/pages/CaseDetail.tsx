@@ -1014,6 +1014,32 @@ export default function CaseDetail() {
       };
     }
 
+    if (normalizedEligibilityStatus === 'thread_only') {
+      return {
+        description: 'Thread-only case — an Amazon support thread already exists and a new filing is not safe.',
+        helper: 'Next step: link verified identifiers or wait for a clean filing path before submitting another claim.',
+        chips: [
+          'Thread-only case',
+          `Docs linked: ${matchedDocsLabel}`,
+        ],
+      };
+    }
+
+    if (normalizedEligibilityStatus === 'safety_hold') {
+      return {
+        description: formattedManualReviewReason
+          ? `Safety hold — ${formattedManualReviewReason.toLowerCase()} must be cleared before filing.`
+          : 'Safety hold — verification is required before this case can move toward approval.',
+        helper: hasMatchedDocs
+          ? `${matchedDocsLabel} are linked, but verification is still required.`
+          : 'Add required evidence and complete verification to clear the hold.',
+        chips: [
+          'Safety hold',
+          `Docs linked: ${matchedDocsLabel}`,
+        ],
+      };
+    }
+
     if (normalizedPayoutProofStatus === 'quarantined') {
       return {
         description: 'The case is far enough along that payout proof is now the main thing that needs attention.',
@@ -1041,16 +1067,41 @@ export default function CaseDetail() {
       };
     }
 
-    return {
-        description: 'This case still needs supporting documents and verified identifiers before it can move forward.',
-        helper: hasMatchedDocs
-        ? 'Once those are in place, it can be reviewed for filing.'
-        : 'Once those are in place, it can be reviewed for filing.',
+    if (formattedManualReviewReason) {
+      return {
+        description: `Blocked by ${formattedManualReviewReason.toLowerCase()}.`,
+        helper: 'Next step: resolve the blocker shown above before filing can proceed.',
         chips: [
+          `Blocker: ${formattedManualReviewReason}`,
           `Docs linked: ${matchedDocsLabel}`,
           proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
-          payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
         ].filter(Boolean) as string[],
+      };
+    }
+
+    if (formattedRequirements) {
+      return {
+        description: `Missing: ${formattedRequirements}.`,
+        helper: `Next step: add ${formattedRequirements.toLowerCase()} to unlock filing review.`,
+        chips: [
+          `Missing: ${formattedRequirements}`,
+          `Docs linked: ${matchedDocsLabel}`,
+        ],
+      };
+    }
+
+    return {
+      description: proofStatus
+        ? `Proof state: ${formatProofStatus(proofStatus)}.`
+        : 'This case has an unknown blocker that must be resolved before filing.',
+      helper: proofStatus
+        ? 'Next step: resolve the proof state shown above.'
+        : 'Next step: review the case signals and clear the blocker before filing.',
+      chips: [
+        `Docs linked: ${matchedDocsLabel}`,
+        proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : null,
+        payoutProofStatus ? `Payout: ${formatPayoutProofStatus(payoutProofStatus)}` : null,
+      ].filter(Boolean) as string[],
     };
   }, [
     backendTruthCase?.eligibility_status,
