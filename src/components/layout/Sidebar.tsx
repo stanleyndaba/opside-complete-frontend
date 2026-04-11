@@ -26,6 +26,9 @@ const prefetchRoute = (path: string) => {
       case '/':
         import('@/components/layout/Dashboard');
         break;
+      case '/pricing-adjust':
+        import('@/pages/PricingAdjust');
+        break;
       case '/recoveries':
         import('@/pages/RecoveryPipelineAgent8');
         break;
@@ -159,6 +162,7 @@ export function Sidebar({
   }, [authToken, currentTenantSlug, isAuthReady, isReady, isSessionValid]);
 
   const overviewHref = tenantRoute(currentTenantSlug, '');
+  const pricingAdjustHref = tenantRoute(currentTenantSlug, '/pricing-adjust');
   const mainMenuItems: NavItem[] = [
     { title: 'Overview', icon: Gauge, href: overviewHref },
     { title: 'Messages', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }
@@ -371,6 +375,7 @@ export function Sidebar({
         <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-3")}>
           <Link
             to={overviewHref}
+            onMouseEnter={() => prefetchRoute(overviewHref)}
             className={cn(
               "w-full transition-colors",
               isCollapsed ? "flex items-center justify-center px-1 py-1.5" : "block px-1 py-1"
@@ -389,6 +394,42 @@ export function Sidebar({
               ) : null}
             </div>
           </Link>
+          {!isCollapsed ? (
+            <Link
+              to={pricingAdjustHref}
+              onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
+              className="group flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2.5 transition-colors hover:border-white/14 hover:bg-white/[0.05]"
+            >
+              <div className="min-w-0">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Plan</div>
+                <div className="mt-1 text-[13px] font-sans font-medium tracking-tight text-white/84 group-hover:text-white">
+                  Upgrade Plan
+                </div>
+              </div>
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white/54 transition-colors group-hover:text-white/88">
+                <CreditCard className="h-3.5 w-3.5" strokeWidth={1.7} />
+              </div>
+            </Link>
+          ) : (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to={pricingAdjustHref}
+                    onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
+                    className="mt-2 flex items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] px-1 py-2.5 text-white/54 transition-colors hover:border-white/14 hover:bg-white/[0.05] hover:text-white/88"
+                  >
+                    <CreditCard className="h-3.5 w-3.5" strokeWidth={1.7} />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="bg-popover border border-border px-3 py-2 backdrop-blur-xl">
+                  <div className="text-[10px] font-sans font-medium tracking-tight text-white/88">
+                    Upgrade Plan
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </div>
 
