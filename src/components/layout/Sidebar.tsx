@@ -398,17 +398,9 @@ export function Sidebar({
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-              className="group flex items-center justify-between rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2.5 transition-colors hover:border-white/14 hover:bg-white/[0.05]"
+              className="inline-flex items-center px-1 py-0.5 text-[13px] font-sans font-medium tracking-tight text-white/72 transition-colors hover:text-white"
             >
-              <div className="min-w-0">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Plan</div>
-                <div className="mt-1 text-[13px] font-sans font-medium tracking-tight text-white/84 group-hover:text-white">
-                  Upgrade Plan
-                </div>
-              </div>
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white/54 transition-colors group-hover:text-white/88">
-                <CreditCard className="h-3.5 w-3.5" strokeWidth={1.7} />
-              </div>
+              Upgrade Plan
             </Link>
           ) : (
             <TooltipProvider>

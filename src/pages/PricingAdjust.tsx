@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, X } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
@@ -14,6 +14,7 @@ import { useTenant } from '@/contexts/TenantContext';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { SITE_META } from '@/config/site';
 import { api } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 type PricingTier = {
   name: string;
@@ -71,6 +72,7 @@ export default function PricingAdjust() {
   const [processingSelectionKey, setProcessingSelectionKey] = useState<string | null>(null);
   const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
   const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
+  const isInAppOverlay = Boolean(tenantSlug);
 
   usePageMeta({
     title: 'Margin Pricing | Monthly Plans, No Commissions',
@@ -168,10 +170,43 @@ export default function PricingAdjust() {
     void startSubscribeIntent(plan, interval);
   }, [authToken, isAuthReady, isTenantReady, processingSelectionKey, restoredSelectionKey, searchParams]);
 
+  const closeOverlay = () => {
+    if (!isInAppOverlay) {
+      navigate('/');
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(`/app/${activeSlug}`);
+  };
+
   return (
     <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo midnight>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden font-sans">
-        <PublicNavbar />
+        {isInAppOverlay ? (
+          <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-5 md:px-8">
+            <Link
+              to="/"
+              className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/68 transition-colors hover:bg-white/[0.05] hover:text-white"
+            >
+              Landing Page
+            </Link>
+            <button
+              type="button"
+              onClick={closeOverlay}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/68 transition-colors hover:bg-white/[0.05] hover:text-white"
+              aria-label="Close pricing"
+            >
+              <X className="h-4 w-4" strokeWidth={1.8} />
+            </button>
+          </div>
+        ) : (
+          <PublicNavbar />
+        )}
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
           style={{
@@ -182,7 +217,10 @@ export default function PricingAdjust() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="relative z-10 w-full mx-auto px-6 lg:px-10 pt-32 md:pt-40 lg:pt-44 pb-24">
+        <div className={cn(
+          "relative z-10 w-full mx-auto px-6 lg:px-10 pb-24",
+          isInAppOverlay ? "pt-24 md:pt-28 lg:pt-32" : "pt-32 md:pt-40 lg:pt-44"
+        )}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -328,9 +366,11 @@ export default function PricingAdjust() {
           </div>
         </div>
 
-        <div className="relative z-10 mt-24 w-full">
-          <BrandFooter />
-        </div>
+        {!isInAppOverlay ? (
+          <div className="relative z-10 mt-24 w-full">
+            <BrandFooter />
+          </div>
+        ) : null}
       </div>
     </PageLayout>
   );
