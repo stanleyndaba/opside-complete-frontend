@@ -117,10 +117,15 @@ const assess = (row: QueueRow) => {
 
 const toneClass = (tone: AppealTone) =>
   tone === 'ready'
-    ? 'border-white/15 bg-white/[0.08] text-white'
+    ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-200'
     : tone === 'strengthen'
-      ? 'border-white/12 bg-white/[0.04] text-white/82'
-      : 'border-white/10 bg-white/[0.03] text-white/62';
+      ? 'border-amber-500/25 bg-amber-500/10 text-amber-100'
+      : 'border-rose-500/25 bg-rose-500/10 text-rose-200';
+
+const pushbackToneClass = (state: AppealCandidate['appealState']) =>
+  state === 'underpaid'
+    ? 'border-blue-500/25 bg-blue-500/10 text-blue-100'
+    : 'border-rose-500/25 bg-rose-500/10 text-rose-200';
 
 const truncate = (value: string, limit: number) =>
   value.length <= limit ? value : `${value.slice(0, limit).trimEnd()}...`;
@@ -478,14 +483,14 @@ export default function Appeals() {
                                 <div className="text-[15px] font-sans font-bold tracking-tight text-white">
                                   {row.case_number || row.claim_number || row.amazon_case_id || 'Appeal case'}
                                 </div>
-                                <div className="text-[11px] font-sans text-white/42">{row.store_name || 'Store unavailable'}</div>
-                                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/30">
+                                <div className="text-[11px] font-sans text-white/56">{row.store_name || 'Store unavailable'}</div>
+                                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/36">
                                   {[row.order_id, row.sku, row.asin].filter(Boolean).join(' / ') || 'Identifiers unavailable'}
                                 </div>
                                 <div className="space-y-1.5 border-t border-white/[0.06] pt-2">
-                                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Recoverable upside</div>
+                                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recoverable upside</div>
                                   <div className="text-[22px] font-sans font-bold tracking-tight text-white">{money(row.appealGap, row.currency)}</div>
-                                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/46">
                                     {[
                                       amount(row.requested_amount) != null ? `Claimed ${money(row.requested_amount, row.currency)}` : null,
                                       amount(row.approved_amount) != null ? `Approved ${money(row.approved_amount, row.currency)}` : null,
@@ -496,18 +501,18 @@ export default function Appeals() {
                             </td>
                             <td className="px-6 py-5">
                               <div className="min-w-[280px] space-y-3">
-                                <Badge className={cn('w-fit rounded-full border bg-white/[0.06] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', row.appealState === 'underpaid' ? 'border-white/12 text-white/78' : 'border-white/12 text-white/92')}>
+                                <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(row.appealState))}>
                                   {row.appealState === 'underpaid' ? 'Underpaid' : 'Denied'}
                                 </Badge>
-                                <div className="text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84" style={twoLineClampStyle}>
+                                <div className="text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/74" style={twoLineClampStyle}>
                                   {responsePreview(row)}
                                 </div>
                                 <div className="flex items-center gap-3">
-                                  {row.rejection_category ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">Reason bucket: {label(row.rejection_category)}</div> : null}
+                                  {row.rejection_category ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">Reason bucket: {label(row.rejection_category)}</div> : null}
                                   <button
                                     type="button"
                                     onClick={() => setSelectedCaseId(row.dispute_case_id)}
-                                    className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 transition-colors hover:text-white"
+                                    className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:text-white"
                                   >
                                     View full response
                                   </button>
@@ -519,30 +524,30 @@ export default function Appeals() {
                                 <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(row.strengthTone))}>
                                   {row.strengthLabel}
                                 </Badge>
-                                <div className="max-w-[210px] text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/82">{reopenStateSummary(row)}</div>
+                                <div className="max-w-[210px] text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/74">{reopenStateSummary(row)}</div>
                               </div>
                             </td>
                             <td className="px-6 py-5">
                               <div className="space-y-3">
-                                <div className="text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84">{missingProofSummary(row)}</div>
-                                <div className="max-w-[210px] text-[11px] font-sans leading-5 text-white/52">
+                                <div className="text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/78">{missingProofSummary(row)}</div>
+                                <div className="max-w-[210px] text-[11px] font-sans leading-6 text-white/58">
                                   {evidenceRebuildSummary(row)}
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-5">
                               <div className="space-y-3">
-                                <div className="max-w-[220px] text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/84" style={twoLineClampStyle}>
+                                <div className="max-w-[220px] text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/76" style={twoLineClampStyle}>
                                   {row.policyAngle}
                                 </div>
-                                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">
                                   {row.updated_at ? `Updated ${formatDistanceToNow(new Date(row.updated_at), { addSuffix: true })}` : 'Update time unavailable'}
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-5">
                               <div className="flex min-w-[190px] flex-col items-start gap-3">
-                                <div className="max-w-[220px] text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/82">{row.nextStep}</div>
+                                <div className="max-w-[220px] text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/78">{row.nextStep}</div>
                                 <button
                                   type="button"
                                   onClick={() => setSelectedCaseId(row.dispute_case_id)}
@@ -594,19 +599,19 @@ export default function Appeals() {
                     <SheetTitle className="mt-2 text-2xl font-sans font-bold tracking-tight text-white">
                       {selectedRow.case_number || selectedRow.claim_number || selectedRow.amazon_case_id || 'Appeal case'}
                     </SheetTitle>
-                    <SheetDescription className="text-[12px] font-sans leading-5 text-white/52">
+                    <SheetDescription className="text-[12px] font-sans leading-6 text-white/58">
                       {selectedRow.store_name || 'Store unavailable'}
                       {selectedRow.updated_at ? ` - Updated ${formatDistanceToNow(new Date(selectedRow.updated_at), { addSuffix: true })}` : ''}
                     </SheetDescription>
                   </SheetHeader>
 
                   <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
-                    <div className="overflow-hidden rounded-none border border-white/8 bg-white/[0.02]">
+                    <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/[0.015]">
                       <div className="grid gap-3 px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Recoverable upside</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recoverable upside</div>
                         <div>
                           <div className="text-[28px] font-sans font-bold tracking-tight text-white">{money(selectedRow.appealGap, selectedRow.currency)}</div>
-                          <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                          <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/46">
                             {amount(selectedRow.requested_amount) != null ? <div>Claimed {money(selectedRow.requested_amount, selectedRow.currency)}</div> : null}
                             {amount(selectedRow.approved_amount) != null ? <div>Approved {money(selectedRow.approved_amount, selectedRow.currency)}</div> : null}
                           </div>
@@ -614,74 +619,74 @@ export default function Appeals() {
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Retry state</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Retry state</div>
                         <div>
                           <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
                             {selectedRow.strengthLabel}
                           </Badge>
-                          <div className="mt-3 text-[12px] font-sans font-semibold leading-5 tracking-tight text-white/82">
+                          <div className="mt-3 text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/76">
                             {reopenStateSummary(selectedRow)}
                           </div>
                         </div>
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Missing proof</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Missing proof</div>
                         <div>
-                          <div className="text-[13px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+                          <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/78">
                             {missingProofSummary(selectedRow)}
                           </div>
-                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/52">
+                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/58">
                             {evidenceRebuildSummary(selectedRow)}
                           </div>
                         </div>
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">What happens next</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">What happens next</div>
                         <div>
-                          <div className="text-[13px] font-sans font-semibold leading-5 tracking-tight text-white/84">
+                          <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/78">
                             {selectedRow.nextStep}
                           </div>
-                          <div className="mt-2 text-[11px] font-sans leading-5 text-white/52">
+                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/58">
                             {selectedRow.policyAngle}
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="rounded-[5px] border border-white/8 bg-white/[0.02] p-4">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Amazon pushback</div>
+                    <div className="rounded-2xl border border-white/8 bg-white/[0.015] p-4">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amazon pushback</div>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <Badge className={cn('w-fit rounded-full border bg-white/[0.06] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', selectedRow.appealState === 'underpaid' ? 'border-white/12 text-white/78' : 'border-white/12 text-white/92')}>
+                        <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(selectedRow.appealState))}>
                           {selectedRow.appealState === 'underpaid' ? 'Underpaid' : 'Denied'}
                         </Badge>
                         {selectedRow.rejection_category ? (
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">
                             Reason bucket: {label(selectedRow.rejection_category)}
                           </div>
                         ) : null}
                       </div>
-                      <div className="mt-4 rounded-[5px] border border-white/[0.06] bg-black/30 p-4 text-[12px] font-sans leading-6 text-white/80">
+                      <div className="mt-4 rounded-xl border border-white/[0.06] bg-black/30 p-4 text-[12px] font-sans leading-7 text-white/78">
                         {cleanAmazonResponse(selectedRow.rejection_reason) || selectedRow.appealReasonText}
                       </div>
                     </div>
 
-                    <div className="rounded-[5px] border border-white/8 bg-white/[0.02] p-4">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Rebuild plan</div>
-                      <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
+                    <div className="rounded-2xl border border-white/8 bg-white/[0.015] p-4">
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Rebuild plan</div>
+                      <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/78">
                         {selectedRow.policyAngle}
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-[5px] border border-white/[0.06] bg-black/30 p-4">
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Source records</div>
-                          <div className="mt-2 text-[12px] font-sans leading-5 text-white/76">
+                        <div className="rounded-xl border border-white/[0.06] bg-black/30 p-4">
+                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Source records</div>
+                          <div className="mt-2 text-[12px] font-sans leading-6 text-white/74">
                             {Math.max(Number(selectedRow.matched_document_count || 0), 0)} linked document{Number(selectedRow.matched_document_count || 0) === 1 ? '' : 's'}
                           </div>
                         </div>
-                        <div className="rounded-[5px] border border-white/[0.06] bg-black/30 p-4">
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Missing requirements</div>
-                          <div className="mt-2 text-[12px] font-sans leading-5 text-white/76">
+                        <div className="rounded-xl border border-white/[0.06] bg-black/30 p-4">
+                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Missing requirements</div>
+                          <div className="mt-2 text-[12px] font-sans leading-6 text-white/74">
                             {missingProofItems(selectedRow).length > 0
                               ? missingProofItems(selectedRow).join(' / ')
                               : 'No explicit missing requirements were returned for this case.'}

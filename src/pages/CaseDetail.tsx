@@ -1082,7 +1082,7 @@ export default function CaseDetail() {
     if (formattedRequirements) {
       return {
         description: `Missing: ${formattedRequirements}.`,
-        helper: `Next step: add ${formattedRequirements.toLowerCase()} to unlock filing review.`,
+        helper: `Next step: add ${formattedRequirements.toLowerCase()} so filing review can continue.`,
         chips: [
           `Missing: ${formattedRequirements}`,
           `Docs linked: ${matchedDocsLabel}`,

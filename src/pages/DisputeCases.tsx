@@ -87,8 +87,6 @@ const STATUS_BADGE_STYLES: Record<string, string> = {
   default: 'bg-white/5 text-white/50 border-white/10'
 };
 
-const YOCO_UNLOCK_URL = 'https://pay.yoco.com/r/7rnpQ3';
-
 function formatLabel(value: string | null | undefined) {
   if (!value) return 'Not Available';
   return value.replace(/_/g, ' ');
@@ -96,14 +94,6 @@ function formatLabel(value: string | null | undefined) {
 
 function formatMoney(amount: number | null | undefined, currency = 'USD') {
   if (amount == null) return 'Not Available';
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
-}
-
-function formatSummaryMoney(amount: number | null | undefined, currency: string | null | undefined) {
-  if (typeof amount !== 'number' || !Number.isFinite(amount) || !currency) {
-    return 'Not Available';
-  }
-
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
@@ -1057,21 +1047,6 @@ export default function DisputeCases() {
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
-  const [paymentConfirmationVisible, setPaymentConfirmationVisible] = useState(false);
-  const [unlockSubmitting, setUnlockSubmitting] = useState(false);
-  const [unlockOfferExpanded, setUnlockOfferExpanded] = useState(false);
-  const [unlockResult, setUnlockResult] = useState<{
-    already_unlocked: boolean;
-    billing_status: 'unlocked';
-    billing_unlocked_at: string;
-    billing_source: string;
-    queued_count: number;
-    blocked_count: number;
-    scanned_count: number;
-    queued_case_ids: string[];
-    blocked_case_ids: string[];
-    message: string;
-  } | null>(null);
   const [summaryExpanded, setSummaryExpanded] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [summary, setSummary] = useState<QueueSummaryState>(() => createUnavailableSummary(1, 25));
@@ -1384,57 +1359,6 @@ export default function DisputeCases() {
     };
   }, [hasActiveFilters]);
 
-  const handleUnlockCheckout = () => {
-    const popup = window.open(YOCO_UNLOCK_URL, '_blank', 'noopener,noreferrer');
-    if (!popup) {
-      toast({
-        variant: 'destructive',
-        title: 'Unable to open checkout',
-        description: 'Please allow pop-ups and try again.'
-      });
-      return;
-    }
-
-    setPaymentConfirmationVisible(true);
-    toast({
-      title: 'Checkout opened',
-      description: 'Complete your payment in the new tab, then confirm here to start filing.'
-    });
-  };
-
-  const handleConfirmPaymentAndStartFiling = async () => {
-    if (!activeTenantSlug || unlockSubmitting) return;
-
-    setUnlockSubmitting(true);
-    try {
-      const response = await api.confirmDisputeUnlockAndFile(activeTenantSlug);
-      if (!response.ok || !response.data?.success) {
-        throw new Error(response.error || 'Unable to confirm payment unlock.');
-      }
-
-      setUnlockResult(response.data);
-      setPaymentConfirmationVisible(false);
-      setLatestQueueSignal({
-        label: response.data.queued_count > 0 ? 'Filing started just now' : 'Payment confirmed just now',
-        detail: response.data.message,
-        timestamp: new Date().toISOString()
-      });
-      toast({
-        title: response.data.queued_count > 0 ? 'Filing started' : 'Payment confirmed',
-        description: response.data.message
-      });
-      refresh();
-    } catch (err: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Confirmation failed',
-        description: err?.message || 'Unable to confirm payment right now.'
-      });
-    } finally {
-      setUnlockSubmitting(false);
-    }
-  };
-
   useStatusStream((event) => {
     if (!activeTenantSlug) return;
 
@@ -1674,44 +1598,6 @@ export default function DisputeCases() {
     }
   };
 
-  const unlockOffer = useMemo(() => {
-    if (summary.supportable_claim_count == null || summary.supportable_ready_to_file_count == null) {
-      return {
-        status: 'unavailable' as const,
-        currency: null,
-        totalSupportableValue: null,
-        supportableClaimCount: null,
-        readyToFileCount: null
-      };
-    }
-
-    if (summary.supportable_claim_count <= 0) {
-      return null;
-    }
-
-    return {
-      status: 'available' as const,
-      currency: summary.supportable_currency,
-      totalSupportableValue: summary.supportable_claim_value,
-      supportableClaimCount: summary.supportable_claim_count,
-      readyToFileCount: summary.supportable_ready_to_file_count
-    };
-  }, [summary]);
-
-  const unlockOfferUnavailable = unlockOffer?.status === 'unavailable';
-  const hasUnlockOfferValue = unlockOffer?.status === 'available'
-    && (unlockOffer.supportableClaimCount || 0) > 0;
-  const isUnlockComplete = Boolean(unlockResult);
-  const showUnlockOffer = hasUnlockOfferValue && !isUnlockComplete;
-  const showUnlockedState = hasUnlockOfferValue && isUnlockComplete;
-  const showUnlockSection = Boolean(unlockOfferUnavailable || hasUnlockOfferValue);
-
-  useEffect(() => {
-    if (paymentConfirmationVisible || showUnlockedState) {
-      setUnlockOfferExpanded(true);
-    }
-  }, [paymentConfirmationVisible, showUnlockedState]);
-
   if (isReady && !activeTenantSlug) {
     return (
       <PageLayout title="Dispute Queue" midnight>
@@ -1843,169 +1729,6 @@ export default function DisputeCases() {
               </div>
             )}
           </div>
-
-          {showUnlockSection && unlockOffer ? (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c0c0c] shadow-[0_0_22px_rgba(0,0,0,0.2)]">
-              <div className="flex flex-col gap-4 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
-                <button
-                  type="button"
-                  onClick={() => setUnlockOfferExpanded((current) => !current)}
-                  aria-expanded={unlockOfferExpanded}
-                  className="flex-1 text-left"
-                >
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
-                      Filing access
-                    </p>
-                    <h2 className="max-w-3xl text-2xl font-sans font-bold tracking-tight text-white md:text-[28px]">
-                      Unlock filing for {formatSummaryMoney(unlockOffer.totalSupportableValue, unlockOffer.currency)} across {formatSummaryValue(unlockOffer.supportableClaimCount)} supportable claims
-                    </h2>
-                    <p className="max-w-3xl text-[13px] font-sans leading-5 text-white/30">
-                      {unlockOfferUnavailable
-                        ? 'Backend queue-wide supportable claim summary is not available right now.'
-                        : `Margin already found ${formatSummaryValue(unlockOffer.supportableClaimCount)} supportable claims in the current queue. Pay once to move every backend-confirmed supportable case into filing for this account.`}
-                    </p>
-                    <p className="text-[12px] font-sans leading-5 text-white/30">
-                      Charged as R1,699 at checkout. You keep 100% of recovered funds.
-                    </p>
-                  </div>
-                </button>
-
-                <div className="flex items-center gap-3 lg:shrink-0">
-                  {showUnlockOffer ? (
-                    <Button
-                      type="button"
-                      onClick={handleUnlockCheckout}
-                      className="h-10 rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
-                    >
-                      Unlock filing for $99
-                    </Button>
-                  ) : unlockOfferUnavailable ? (
-                    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-white/78">
-                      Not Available
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-sans font-bold uppercase tracking-tight text-white/78">
-                      {unlockResult?.queued_count ? 'Filing in progress' : 'Payment confirmed'}
-                    </div>
-                  )}
-
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setUnlockOfferExpanded((current) => !current)}
-                    className="h-10 w-10 rounded-xl border border-white/10 bg-white/[0.02] p-0 text-white/55 hover:bg-white/[0.05] hover:text-white"
-                  >
-                    {unlockOfferExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-
-              {unlockOfferExpanded ? (
-                <div className="border-t border-white/10 px-5 py-4">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="space-y-3">
-                      <p className="text-[11px] font-sans leading-5 text-white/30">
-                        {unlockOfferUnavailable
-                          ? 'Backend queue-wide supportable claim summary is currently unavailable.'
-                          : 'Margin is showing backend-confirmed supportable claim summary for the current queue.'}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                          {formatSummaryValue(unlockOffer.supportableClaimCount)} supportable claims
-                        </span>
-                        {unlockOffer.readyToFileCount != null ? (
-                          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                            {formatSummaryValue(unlockOffer.readyToFileCount)} ready to file
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    <div className="w-full max-w-sm rounded-xl border border-white/10 bg-white/[0.02] p-4">
-                      {showUnlockOffer ? (
-                        <div className="space-y-3">
-                          <Button
-                            type="button"
-                            onClick={handleUnlockCheckout}
-                            className="h-11 w-full rounded-xl border border-white/10 bg-white px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
-                          >
-                            Unlock filing for $99
-                          </Button>
-                          <p className="text-[12px] font-sans leading-5 text-white/30">
-                            Charged as R1,699 at checkout. You keep 100% of recovered funds.
-                          </p>
-
-                          {paymentConfirmationVisible ? (
-                            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
-                              <p className="text-[12px] font-sans leading-5 text-white/74">
-                                Complete your payment in the opened tab, then confirm below to start filing.
-                              </p>
-                              <Button
-                                type="button"
-                                onClick={handleConfirmPaymentAndStartFiling}
-                                disabled={unlockSubmitting}
-                                className="mt-3 h-10 w-full rounded-xl border border-white/10 bg-white text-[11px] font-sans font-bold uppercase tracking-tight text-black hover:bg-white/90"
-                              >
-                                {unlockSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                I&apos;ve Completed Payment
-                              </Button>
-                            </div>
-                          ) : null}
-                        </div>
-                      ) : unlockOfferUnavailable ? (
-                        <div className="space-y-3">
-                          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72">
-                            Not Available
-                          </div>
-                          <p className="text-lg font-sans font-bold tracking-tight text-white">
-                            Queue-wide supportable summary unavailable
-                          </p>
-                          <p className="text-[13px] font-sans leading-5 text-white/68">
-                            This banner waits for backend queue summary truth before showing supportable claim totals.
-                          </p>
-                          <Button
-                            type="button"
-                            disabled
-                            className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 text-[11px] font-sans font-bold uppercase tracking-tight text-white/40"
-                          >
-                            Not Available
-                          </Button>
-                        </div>
-                      ) : null}
-
-                      {showUnlockedState ? (
-                        <div className="space-y-3">
-                          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/72">
-                            Payment confirmed
-                          </div>
-                          <p className="text-lg font-sans font-bold tracking-tight text-white">
-                            {unlockResult?.queued_count ? 'Filing in progress' : 'Filing access unlocked'}
-                          </p>
-                          <p className="text-[13px] font-sans leading-5 text-white/68">
-                            {unlockResult?.message || 'This account is unlocked. Eligible claims can move into filing immediately.'}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {unlockResult?.queued_count ? (
-                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                                {unlockResult.queued_count} queued now
-                              </span>
-                            ) : null}
-                            {unlockResult?.blocked_count ? (
-                              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/74">
-                                {unlockResult.blocked_count} still held back
-                              </span>
-                            ) : null}
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
