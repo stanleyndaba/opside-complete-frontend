@@ -18,12 +18,26 @@ export const detectionApi = {
     if (!tenantSlug) throw new Error("tenantSlug required for getStatus");
     const res = await api.getDetectionStatus(detectionId, tenantSlug);
     if (!res.ok) throw new Error(res.error || 'Failed to get detection status');
-    return res.data as {
+    return {
+      status: res.data.status === 'processing' || res.data.status === 'pending'
+        ? 'in_progress'
+        : res.data.status === 'completed'
+          ? 'complete'
+          : 'failed',
+      detection_id: res.data.sync_id,
+      total_detected: res.data.results?.claimsFound,
+      summary: res.data.results,
+    } as {
       status: 'in_progress' | 'complete' | 'failed';
       detection_id: string;
       total_detected?: number;
       summary?: any;
     };
+  },
+
+  getDetectionStatus: async (detectionId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionStatus");
+    return api.getDetectionStatus(detectionId, tenantSlug);
   },
 
   /**
@@ -95,4 +109,3 @@ export const detectionApi = {
     return res.data;
   },
 };
-

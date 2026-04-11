@@ -70,7 +70,7 @@ export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetr
 
         eventSource.addEventListener('metrics', (event) => {
             try {
-                const data = JSON.parse(event.data);
+                const data = JSON.parse((event as MessageEvent).data);
                 if (data.type === 'financial_metrics') {
                     setMetrics(data.data);
                 }
@@ -81,7 +81,7 @@ export function FinancialMetricsBanner({ userId, className = '' }: FinancialMetr
 
         eventSource.addEventListener('impact', (event) => {
             try {
-                const data = JSON.parse(event.data);
+                const data = JSON.parse((event as MessageEvent).data);
                 if (data.type === 'financial_impact') {
                     // Increment found on new detection
                     if (data.data.status === 'detected') {

@@ -9,11 +9,12 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { X, ChevronDown, ChevronRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { X, ChevronDown, ChevronRight, Loader2, AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { subscribeSyncProgress } from '@/lib/inventoryApi';
+import { cn } from '@/lib/utils';
 
 interface LogEntry {
     id: string;

@@ -38,7 +38,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DisputeCasesTable } from '@/components/disputes/DisputeCasesTable';
 import { EvidenceMatchingTable } from '@/components/evidence/EvidenceMatchingTable';
-import { useStatusStream } from '@/hooks/use-status-stream';
+import { useStatusStream, type StatusEvent } from '@/hooks/use-status-stream';
 
 // Icon imports for document sources
 

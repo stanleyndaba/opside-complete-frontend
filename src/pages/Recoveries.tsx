@@ -2294,6 +2294,10 @@ export default function Recoveries() {
     if (metrics && typeof (metrics as any).pendingCount === 'number') return (metrics as any).pendingCount;
     return tabCounts.claimsCount;
   }, [amazonClaimCount, metrics, tabCounts.claimsCount]);
+  const approvedRecoveriesCount = useMemo(
+    () => claims.filter(c => ['paid', 'approved', 'reconciled', 'paid_out'].includes((c.status || '').toLowerCase())).length,
+    [claims]
+  );
   const monthlyPlanBenchmark = 99;
   const primaryRecoveryValue = owedSummary.totalOwed > 0
     ? owedSummary.totalOwed
@@ -2306,7 +2310,7 @@ export default function Recoveries() {
   const recoveriesHeroSupportingLabel = owedSummary.totalOwed > 0
     ? `${owedSummary.openCount} ${owedSummary.openCount === 1 ? 'opportunity is' : 'opportunities are'} currently worth reviewing`
     : recoveredTotal != null && recoveredTotal > 0
-      ? `${approvedClaims.length} ${approvedClaims.length === 1 ? 'case is' : 'cases are'} already tied to recovered cash`
+      ? `${approvedRecoveriesCount} ${approvedRecoveriesCount === 1 ? 'case is' : 'cases are'} already tied to recovered cash`
       : pipelineActiveCount > 0
         ? `${pipelineActiveCount} ${pipelineActiveCount === 1 ? 'opportunity is' : 'opportunities are'} under watch`
         : 'No live recoveries are showing yet';

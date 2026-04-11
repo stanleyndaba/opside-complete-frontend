@@ -109,7 +109,7 @@ export function EvidenceIngestion({ onIngestionComplete, onLogEvent, gmailConnec
 
     eventSource.addEventListener('evidence_ingestion_completed', (event) => {
       try {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse((event as MessageEvent).data);
         setProgress(100);
         onLogEvent?.({
           type: 'success',

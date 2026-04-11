@@ -13,21 +13,11 @@ export default function StripeCallback() {
   useEffect(() => {
     let isCancelled = false;
     (async () => {
-      try {
-        const res = await api.postLoginStripe();
-        if (isCancelled) return;
-        if (res.ok) {
-          const url = (res.data as any)?.redirect_url || (res.data as any)?.onboarding_url || (res.data as any)?.manage_billing_url;
-          if (url) {
-            window.location.href = url as string;
-            return;
-          }
-        }
-      } catch (_) { }
+      await Promise.resolve();
       if (!isCancelled) navigate(tenantRoute(currentTenantSlug, '/billing'));
     })();
     return () => { isCancelled = true };
-  }, [navigate]);
+  }, [currentTenantSlug, navigate]);
 
   return (
     <PageLayout title="Stripe Login">

@@ -27,6 +27,7 @@ import { useTenant } from '@/contexts/TenantContext';
 // ... (existing constants)
 
 type ProviderKey = 'amazon' | 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive';
+type SecondaryProviderKey = Exclude<ProviderKey, 'amazon'>;
 
 type IntegrationProviderStatus = {
   provider: ProviderKey;
@@ -75,7 +76,7 @@ type IntegrationStatusDTO = {
   providers?: Record<string, IntegrationProviderStatus>;
 };
 
-const SECONDARY_PROVIDERS: ProviderKey[] = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
+const SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
@@ -280,7 +281,7 @@ export default function IntegrationsHub() {
     }
   };
 
-  const handleConnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive') => {
+  const handleConnectDocSource = async (provider: SecondaryProviderKey) => {
     const providerName = provider === 'gdrive' ? 'Google Drive'
       : provider === 'gmail' ? 'Gmail'
         : provider === 'dropbox' ? 'Dropbox'
@@ -317,7 +318,7 @@ export default function IntegrationsHub() {
     }
   };
 
-  const handleDisconnectDocSource = async (provider: 'gmail' | 'outlook' | 'gdrive' | 'dropbox' | 'slack' | 'adobe_sign' | 'onedrive') => {
+  const handleDisconnectDocSource = async (provider: SecondaryProviderKey) => {
     const providerName = provider === 'gdrive' ? 'Google Drive'
       : provider === 'gmail' ? 'Gmail'
         : provider === 'dropbox' ? 'Dropbox'

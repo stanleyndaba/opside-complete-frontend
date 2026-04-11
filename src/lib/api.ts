@@ -1863,8 +1863,8 @@ export const api = {
       message?: string;
     }>(`/api/v1/integrations/amazon/orders${query ? `?${query}` : ''}`);
   },
-  setEvidenceAutoCollect: (enabled: boolean) => requestJson<any>('/api/evidence/auto-collect', { method: 'POST', body: JSON.stringify({ enabled }) }),
-  setEvidenceSchedule: (schedule: string) => requestJson<any>('/api/evidence/schedule', { method: 'POST', body: JSON.stringify({ schedule }) }),
+  setEvidenceAutoCollect: (enabled: boolean, tenantSlug?: string) => requestJson<any>(`/api/evidence/auto-collect${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, { method: 'POST', body: JSON.stringify({ enabled }) }),
+  setEvidenceSchedule: (schedule: string, tenantSlug?: string) => requestJson<any>(`/api/evidence/schedule${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, { method: 'POST', body: JSON.stringify({ schedule }) }),
   setEvidenceFilters: (filters: { 
     senderPatterns?: string[];
     excludeSenders?: string[];
@@ -2876,6 +2876,11 @@ export const api = {
 
 // Phase 3: Detection/Claims API methods
 export const detectionApi = {
+  getDetectionStatus: (detectionId: string, tenantSlug?: string) => {
+    if (!tenantSlug) throw new Error("tenantSlug required for getDetectionStatus");
+    return api.getDetectionStatus(detectionId, tenantSlug);
+  },
+
   // Get all detection results
   getDetectionResults: async (params?: { status?: string; limit?: number; offset?: number; userId?: string; syncId?: string; sourceType?: 'sp_api' | 'csv_upload' | 'unknown' }, tenantSlug?: string) => {
     if (!tenantSlug) throw new Error("tenantSlug required for getDetectionResults");

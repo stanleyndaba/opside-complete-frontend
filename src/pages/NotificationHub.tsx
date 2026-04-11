@@ -237,7 +237,7 @@ export default function NotificationHub() {
         const response = await api.getNotifications({ limit: 100 }, activeSlug);
         if (!cancelled) {
           const notifData = response.ok
-            ? (response.data?.notifications || response.data?.data || response.data || [])
+            ? (response.data?.notifications || [])
             : [];
 
           if (response.ok && Array.isArray(notifData)) {
@@ -396,7 +396,7 @@ export default function NotificationHub() {
     setLoading(true);
     api.getNotifications({ limit: 100 }, activeSlug).then(response => {
       const notifData = response.ok
-        ? (response.data?.notifications || response.data?.data || response.data || [])
+        ? (response.data?.notifications || [])
         : [];
 
       if (response.ok && Array.isArray(notifData)) {
@@ -442,7 +442,7 @@ export default function NotificationHub() {
       setPreferencesError(null);
       const response = await api.getNotificationPreferences(activeSlug);
       if (response.ok && response.data) {
-        setPreferences(mergePreferencesWithDefaults(response.data));
+        setPreferences(mergePreferencesWithDefaults(response.data.data));
         setPreferencesLoaded(true);
         return true;
       }

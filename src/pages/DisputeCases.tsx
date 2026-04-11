@@ -985,6 +985,14 @@ function isRecentTimestamp(value: string | null | undefined, windowHours = 6) {
   return Date.now() - parsed <= windowHours * 60 * 60 * 1000;
 }
 
+function normalizeQueueFilingStrategy(value: unknown): QueueRow['filing_strategy'] {
+  const normalized = typeof value === 'string' ? value.trim().toUpperCase() : '';
+  if (normalized === 'AUTO' || normalized === 'SMART' || normalized === 'BLOCKED') {
+    return normalized;
+  }
+  return null;
+}
+
 function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<string, any>; timestamp: string }) {
   const updatedAt = readLiveTimestamp(event.timestamp);
   const patch: Partial<QueueRow> = {};
@@ -992,14 +1000,16 @@ function updateQueueRow(row: QueueRow, event: { eventType: string; data: Record<
   if (event.eventType === 'filing.submitted') {
     if (typeof event.data?.status === 'string' && event.data.status.trim()) patch.status = event.data.status;
     if (typeof event.data?.filing_status === 'string' && event.data.filing_status.trim()) patch.filing_status = event.data.filing_status;
-    if (typeof event.data?.filing_strategy === 'string' && event.data.filing_strategy.trim()) patch.filing_strategy = event.data.filing_strategy;
+    const submittedFilingStrategy = normalizeQueueFilingStrategy(event.data?.filing_strategy);
+    if (submittedFilingStrategy) patch.filing_strategy = submittedFilingStrategy;
     if (event.data?.explanation_payload && typeof event.data.explanation_payload === 'object') patch.explanation_payload = event.data.explanation_payload;
     if (typeof event.data?.amazon_case_id === 'string' && event.data.amazon_case_id.trim()) patch.amazon_case_id = event.data.amazon_case_id;
   }
 
   if (event.eventType === 'case.status_updated') {
     if (typeof event.data?.status === 'string' && event.data.status.trim()) patch.status = event.data.status;
-    if (typeof event.data?.filing_strategy === 'string' && event.data.filing_strategy.trim()) patch.filing_strategy = event.data.filing_strategy;
+    const updatedFilingStrategy = normalizeQueueFilingStrategy(event.data?.filing_strategy);
+    if (updatedFilingStrategy) patch.filing_strategy = updatedFilingStrategy;
     if (event.data?.explanation_payload && typeof event.data.explanation_payload === 'object') patch.explanation_payload = event.data.explanation_payload;
     if (typeof event.data?.amazon_case_id === 'string' && event.data.amazon_case_id.trim()) patch.amazon_case_id = event.data.amazon_case_id;
     if (typeof event.data?.amount_approved === 'number' && Number.isFinite(event.data.amount_approved)) patch.approved_amount = event.data.amount_approved;

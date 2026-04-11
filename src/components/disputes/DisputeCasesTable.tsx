@@ -72,6 +72,8 @@ function toPreviewRowFromLegacy(item: LegacyCase): QueueRow {
     asin: null,
     expected_payout_amount: null,
     expected_payout_date: item.expected_payout_date || item.expectedPayoutDate || null,
+    eligible_to_file: false,
+    block_reasons: [],
     can_file: false,
     can_retry: false,
     can_approve: false,

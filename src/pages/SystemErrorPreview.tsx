@@ -1,5 +1,8 @@
 import React from 'react';
 
-export default function SystemErrorPreview() {
+const SystemErrorPreview: React.FC = () => {
   throw new Error('System error preview route triggered intentionally.');
-}
+  return null;
+};
+
+export default SystemErrorPreview;

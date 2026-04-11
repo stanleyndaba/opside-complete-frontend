@@ -22,6 +22,24 @@ interface SyncHistoryItem {
   error?: string | null;
 }
 
+const normalizeSyncHistoryStatus = (status: string): SyncHistoryItem['status'] => {
+  switch (status) {
+    case 'complete':
+    case 'completed':
+      return 'completed';
+    case 'running':
+    case 'detecting':
+    case 'in_progress':
+      return 'running';
+    case 'failed':
+      return 'failed';
+    case 'cancelled':
+      return 'cancelled';
+    default:
+      return 'idle';
+  }
+};
+
 export function SyncHistory() {
   const [syncs, setSyncs] = useState<SyncHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,21 +54,16 @@ export function SyncHistory() {
         // Debug logging to see what we're getting
         console.log('[SyncHistory] API Response:', data);
         console.log('[SyncHistory] Has history array?', Array.isArray(data?.history));
-        console.log('[SyncHistory] Has syncs array?', Array.isArray(data?.syncs));
         console.log('[SyncHistory] History length:', data?.history?.length);
-        console.log('[SyncHistory] Syncs length:', data?.syncs?.length);
-        
-        // Handle documented response format: {success: true, history: [...], total: N}
-        // Also handle legacy format: {syncs: [...]}
+
         if (data?.history && Array.isArray(data.history)) {
           console.log('[SyncHistory] Using history array, count:', data.history.length);
-          setSyncs(data.history);
-        } else if (data?.syncs && Array.isArray(data.syncs)) {
-          // Legacy format support
-          console.log('[SyncHistory] Using syncs array (legacy), count:', data.syncs.length);
-          setSyncs(data.syncs);
+          setSyncs(data.history.map((item) => ({
+            ...item,
+            status: normalizeSyncHistoryStatus(item.status),
+          })));
         } else {
-          console.warn('[SyncHistory] No history or syncs array found in response:', data);
+          console.warn('[SyncHistory] No history array found in response:', data);
           setSyncs([]);
         }
         setError(null);

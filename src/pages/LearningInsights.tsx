@@ -90,9 +90,7 @@ export function LearningInsights() {
     }
 
     return (
-        <PageLayout
-            title="Learning Insights"
-            description="Your AI continuously learns from every claim to improve accuracy and recovery rates">
+        <PageLayout title="Learning Insights">
             <div className="space-y-6">
                 {/* Header with refresh button */}
                 <div className="flex items-center justify-between">

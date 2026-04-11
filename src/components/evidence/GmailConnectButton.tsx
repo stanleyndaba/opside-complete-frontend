@@ -18,7 +18,7 @@ const GmailConnectButton: React.FC<GmailConnectButtonProps> = ({
     try {
       const result = await gmailApi.connectGmail();
       // Redirect to Gmail OAuth
-      window.location.href = result.authUrl;
+      window.location.href = result.auth_url;
       if (onConnected) onConnected();
     } catch (error) {
       console.error('Failed to connect Gmail:', error);

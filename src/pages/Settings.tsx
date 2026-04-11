@@ -125,7 +125,7 @@ const Settings = () => {
       try {
         const response = await api.getAutoFilePreference(activeTenantSlug);
         if (response.ok && response.data) {
-          setAutoFileEnabled(response.data.enabled);
+          setAutoFileEnabled(response.data.data.enabled);
         } else {
           setAutoFileError(response.error || 'Failed to load auto-file setting');
         }

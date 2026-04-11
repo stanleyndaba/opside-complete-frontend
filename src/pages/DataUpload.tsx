@@ -126,6 +126,16 @@ interface CsvRunRehydrationRecord {
     detection: CsvRunDetectionSnapshot | null;
 }
 
+type DetectionTruthLike = {
+    status?: UploadDetectionState['status'];
+    processed_at?: string | null;
+    processedAt?: string | null;
+    error_message?: string | null;
+    errorMessage?: string | null;
+    is_sandbox?: boolean;
+    isSandbox?: boolean;
+};
+
 const ANOMALY_LABELS: Record<string, string> = {
     missing_unit: 'Missing Units', overcharge: 'Overcharge', damaged_stock: 'Damaged Stock',
     incorrect_fee: 'Incorrect Fee', duplicate_charge: 'Duplicate Charge',
@@ -193,6 +203,15 @@ const toUploadDetectionState = (syncId: string, data?: any, fallbackError?: stri
     errorMessage: data?.error_message ?? data?.errorMessage ?? fallbackError ?? null,
     isSandbox: Boolean(data?.is_sandbox ?? data?.isSandbox),
 });
+
+const readDetectionProcessedAt = (data?: DetectionTruthLike | null) =>
+    data?.processedAt ?? data?.processed_at ?? null;
+
+const readDetectionErrorMessage = (data?: DetectionTruthLike | null) =>
+    data?.errorMessage ?? data?.error_message ?? null;
+
+const readDetectionSandboxFlag = (data?: DetectionTruthLike | null) =>
+    Boolean(data?.isSandbox ?? data?.is_sandbox);
 
 const isDetectionTerminal = (status: UploadDetectionState['status'] | undefined | null): boolean => (
     status === 'completed' || status === 'failed'
@@ -751,7 +770,7 @@ export default function DataUpload() {
                     createdAt: null,
                     updatedAt: null,
                     startedAt: null,
-                    completedAt: statusTruth?.processed_at ?? statusTruth?.processedAt ?? null,
+                    completedAt: readDetectionProcessedAt(statusTruth),
                     status: statusTruth?.status === 'failed'
                         ? 'failed'
                         : statusTruth?.status === 'pending' || statusTruth?.status === 'processing'
@@ -763,15 +782,15 @@ export default function DataUpload() {
                     filesSummary: [],
                     detectionTriggered: Boolean(statusTruth?.status || resultsTotal > 0),
                     detectionJobId: undefined,
-                    error: statusTruth?.error_message ?? statusTruth?.errorMessage ?? null,
-                    isSandbox: Boolean(statusTruth?.is_sandbox ?? statusTruth?.isSandbox),
+                    error: readDetectionErrorMessage(statusTruth),
+                    isSandbox: readDetectionSandboxFlag(statusTruth),
                     batchResult: null,
                     detection: {
                         status: statusTruth?.status || null,
-                        processedAt: statusTruth?.processed_at ?? statusTruth?.processedAt ?? null,
-                        errorMessage: statusTruth?.error_message ?? statusTruth?.errorMessage ?? null,
+                        processedAt: readDetectionProcessedAt(statusTruth),
+                        errorMessage: readDetectionErrorMessage(statusTruth),
                         resultsTotal,
-                        isSandbox: Boolean(statusTruth?.is_sandbox ?? statusTruth?.isSandbox),
+                        isSandbox: readDetectionSandboxFlag(statusTruth),
                     },
                 });
                 setRehydrationNotice(fallbackNotice);
@@ -903,8 +922,7 @@ export default function DataUpload() {
                             setPreviewMessage(null);
                         } else {
                             const emptyStateMessage = combineBackendMessages(
-                                statusTruth?.error_message,
-                                statusTruth?.errorMessage,
+                                readDetectionErrorMessage(statusTruth),
                                 statusFailureMessage,
                                 extractApiFailureMessage(resultsRes),
                             );

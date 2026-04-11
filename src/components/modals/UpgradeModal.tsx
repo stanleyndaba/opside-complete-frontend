@@ -13,8 +13,9 @@ interface UpgradeModalProps {
 }
 
 export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
-  const { user } = useSession();
+  const { userEmail } = useSession();
   const [isProcessing, setIsProcessing] = useState(false);
+  const payerReference = (typeof window !== 'undefined' && localStorage.getItem('user_id')) || userEmail || 'anonymous';
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -72,7 +73,7 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
                 <p className="text-[10px] font-bold text-white/20 uppercase tracking-tight">Processing_Transaction...</p>
               </div>
             ) : (
-              <PayPalScriptProvider options={{ "client-id": "AXZQsrMy-lI1ifLUoZLaMr9ZmED8fQhu4VA21SyRsI-v33-At4YVVcQPX-lIKlVPs7a2ccE0gqJ5tFN8" }}>
+              <PayPalScriptProvider options={{ clientId: "AXZQsrMy-lI1ifLUoZLaMr9ZmED8fQhu4VA21SyRsI-v33-At4YVVcQPX-lIKlVPs7a2ccE0gqJ5tFN8" }}>
                 <PayPalButtons 
                   style={{ layout: 'vertical', color: 'black', shape: 'rect', label: 'pay' }}
                   createOrder={(data, actions) => {
@@ -83,7 +84,7 @@ export function UpgradeModal({ isOpen, onClose, caseId }: UpgradeModalProps) {
                           currency_code: "USD",
                           value: "99.00" 
                         },
-                        custom_id: user?.id || 'anonymous'
+                        custom_id: payerReference
                       }]
                     });
                   }}

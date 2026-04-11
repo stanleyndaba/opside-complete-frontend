@@ -73,7 +73,7 @@ export default function AmazonSandboxPage() {
             }
           }, 1500);
         } else {
-          const failureMessage = response.error || response.data?.message || 'Sandbox callback failed. Please try again.';
+          const failureMessage = response.error || 'Sandbox callback failed. Please try again.';
           console.error('[AmazonSandbox] Sandbox callback failed:', failureMessage, response);
           setStatus('error');
           setErrorMessage(failureMessage);

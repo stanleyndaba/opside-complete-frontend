@@ -17,6 +17,7 @@ import { RefreshCw, AlertTriangle, ArrowUpRight, MoreHorizontal, Search } from '
 import { useTenant } from '@/contexts/TenantContext';
 import { api } from '@/lib/api';
 import { formatAutonomyLabel, summarizeMatchExplanation } from '@/lib/autonomyTruth';
+import { cn } from '@/lib/utils';
 import {
   financialSourceLabel,
   financialStatusDetail,
@@ -301,6 +302,15 @@ function visiblePayoutStatusLabel(value: Row['payout_status'] | null | undefined
 
 function visiblePayoutStatusTone(value: Row['payout_status'] | null | undefined): string {
   return value ? financialStatusTone(value) : 'border-white/10 bg-white/[0.04] text-white/60';
+}
+
+function isUnavailableDisplay(value: string | null | undefined): boolean {
+  const normalized = String(value || '').trim().toLowerCase();
+  return !normalized || normalized === 'not available' || normalized === 'unavailable';
+}
+
+function hasNumericValue(value: number | null | undefined): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
 }
 
 function reconciliationTruthDetail(
@@ -615,7 +625,13 @@ function mergeFinalityEventRow(row: Row, event: StatusEvent): Row {
   const explicitExecutionProcessedAt = String(payload.execution_processed_at || '').trim() || null;
   const deferCountRaw = typeof payload.defer_count === 'number' ? payload.defer_count : Number(payload.defer_count);
   const explicitDeferCount = Number.isFinite(deferCountRaw) ? deferCountRaw : null;
-  const reconciliationStrategy = String(payload.reconciliation_strategy || '').trim() || null;
+  const reconciliationStrategyRaw = String(payload.reconciliation_strategy || '').trim().toUpperCase();
+  const reconciliationStrategy: Row['reconciliation_strategy'] =
+    reconciliationStrategyRaw === 'AUTO_MATCH'
+    || reconciliationStrategyRaw === 'SMART_MATCH'
+    || reconciliationStrategyRaw === 'QUARANTINED'
+      ? reconciliationStrategyRaw
+      : null;
   const matchExplanation = payload.match_explanation || null;
   const explicitReconciliationStatus = String(payload.reconciliation_status || '').trim() || null;
   const explicitReconciliationSource = String(payload.reconciliation_source || '').trim() || null;
@@ -1236,85 +1252,142 @@ export default function RecoveryPipelineAgent8() {
                               const financialSummary = getFinancialSummaryForRow(row, financialSummaries);
                               const detailRouteId = getDetailRouteId(row);
                               const detailLabel = detailLinkLabel(row);
+                              const identityHeadline = identityTruthHeadline(row);
+                              const operatorStateLabel = label(row.operator_state);
+                              const reconciliationLabel = label(row.reconciliation_status);
+                              const payoutStatusLabel = visiblePayoutStatusLabel(row.payout_status);
+                              const billingStatusLabel = label(row.billing_status);
+                              const showReconciliationBadge = !isUnavailableDisplay(reconciliationLabel);
+                              const showPayoutStatusBadge = !isUnavailableDisplay(payoutStatusLabel);
+                              const showBillingStatusBadge = !isUnavailableDisplay(billingStatusLabel);
+                              const showInvestigationBadge = row.investigation_required && operatorStateLabel.trim().toLowerCase() !== 'investigation required';
+                              const hasVisibleStateBadges = !isUnavailableDisplay(operatorStateLabel) || showReconciliationBadge || showInvestigationBadge;
+                              const approvedAmountAvailable = hasNumericValue(row.approved_amount);
+                              const paidBackAvailable = hasNumericValue(financialSummary?.verified_paid_amount);
+                              const outstandingAvailable = hasNumericValue(row.outstanding_amount);
+                              const legacyFeeAvailable = hasNumericValue(row.billed_revenue_amount);
+                              const primaryActionLabel = detailRouteId ? 'Review record' : 'Review info';
                               return (
                               <tr key={getLedgerRowKey(row)} className="border-b border-white/[0.06] align-top transition-colors hover:bg-white/[0.02]">
-                                <td className="py-5 pr-4">
-                                  <div className="space-y-2.5">
-                                    <div className="text-[15px] font-sans font-bold tracking-tight text-white">{row.case_number}</div>
-                                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">
-                                      {recordReferenceLabel(row)}
-                                    </div>
-                                    {row.provider_case_id ? (
-                                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">
-                                        Amazon reference {row.provider_case_id}
+                                <td className="py-4 pr-4">
+                                  <div className="min-w-[250px] space-y-3">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <div className="max-w-[220px] break-words text-[15px] font-sans font-bold leading-6 tracking-tight text-white">
+                                        {row.case_number}
                                       </div>
-                                    ) : null}
-                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/54">
-                                      {row.merchant_reference ? `Merchant ${row.merchant_reference}` : identityMetaLabel(row)}
+                                      <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${identityBadgeTone(row)}`}>{identityHeadline}</span>
                                     </div>
-                                    <div className="max-w-[260px] text-[11px] font-sans leading-6 tracking-tight text-white/68">
-                                      {identityTruthDetail(row)}
+                                    <div className="space-y-1.5">
+                                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#8a8a8a]">
+                                        {recordReferenceLabel(row)}
+                                      </div>
+                                      {row.provider_case_id ? (
+                                        <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-[#9a9a9a]">
+                                          Amazon reference {row.provider_case_id}
+                                        </div>
+                                      ) : null}
+                                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/54">
+                                        {row.merchant_reference ? `Merchant ${row.merchant_reference}` : identityMetaLabel(row)}
+                                      </div>
+                                      <div className="max-w-[265px] text-[11px] font-sans leading-6 tracking-tight text-white/70">
+                                        {identityTruthDetail(row)}
+                                      </div>
                                     </div>
                                   </div>
                                 </td>
-                                <td className="px-4 py-5">
-                                  <div className="flex min-w-[220px] flex-col gap-2">
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${identityBadgeTone(row)}`}>{identityTruthHeadline(row)}</span>
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{label(row.operator_state)}</span>
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{label(row.reconciliation_status)}</span>
-                                    {row.investigation_required ? (
-                                      <span className="inline-flex w-fit rounded-full border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-rose-200">
-                                        Investigation Required
-                                      </span>
-                                    ) : null}
-                                    <div className="max-w-[250px] pt-1 text-[11px] font-sans leading-6 tracking-tight text-white/66">
+                                <td className="px-4 py-4">
+                                  <div className="flex min-w-[230px] flex-col gap-3">
+                                    <div className="flex flex-wrap gap-2">
+                                      {!isUnavailableDisplay(operatorStateLabel) ? (
+                                        <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.operator_state)}`}>{operatorStateLabel}</span>
+                                      ) : null}
+                                      {showReconciliationBadge ? (
+                                        <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.reconciliation_status)}`}>{reconciliationLabel}</span>
+                                      ) : null}
+                                      {showInvestigationBadge ? (
+                                        <span className="inline-flex w-fit rounded-full border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-rose-200">
+                                          Investigation Required
+                                        </span>
+                                      ) : null}
+                                      {!hasVisibleStateBadges ? (
+                                        <span className="inline-flex w-fit rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight text-[#7b7b7b]">
+                                          No active state yet
+                                        </span>
+                                      ) : null}
+                                    </div>
+                                    <div className="max-w-[255px] text-[11px] font-sans font-semibold leading-6 tracking-tight text-white/78">
                                       {rowNeedsNextStep(row)}
                                     </div>
                                   </div>
                                 </td>
-                                <td className="px-4 py-5">
-                                  <div className="min-w-[180px] space-y-3">
-                                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved with Amazon</div>
-                                    <div className="text-[20px] font-sans font-bold tracking-tight text-white">{money(row.approved_amount, row.currency)}</div>
-                                    <div className="pt-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Paid back</div>
-                                    <div className="text-[15px] font-sans font-bold tracking-tight text-white/90">{money(financialSummary?.verified_paid_amount, row.currency)}</div>
-                                    <div className="pt-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Outstanding</div>
-                                    <div className="text-[15px] font-sans font-bold tracking-tight text-white/90">{money(row.outstanding_amount, row.currency)}</div>
+                                <td className="px-4 py-4">
+                                  <div className="min-w-[210px] space-y-3">
+                                    <div>
+                                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#8a8a8a]">Approved with Amazon</div>
+                                      <div className={cn('mt-1 text-[19px] font-sans font-bold tracking-tight', approvedAmountAvailable ? 'text-white' : 'text-[#777777]')}>
+                                        {money(row.approved_amount, row.currency)}
+                                      </div>
+                                    </div>
+                                    <div className="space-y-2 border-t border-white/[0.04] pt-3">
+                                      <div className="flex items-center justify-between gap-4">
+                                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#7f7f7f]">Paid back</span>
+                                        <span className={cn('text-[13px] font-sans font-semibold tracking-tight', paidBackAvailable ? 'text-white/88' : 'text-[#6f6f6f]')}>
+                                          {money(financialSummary?.verified_paid_amount, row.currency)}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center justify-between gap-4">
+                                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#7f7f7f]">Outstanding</span>
+                                        <span className={cn('text-[13px] font-sans font-semibold tracking-tight', outstandingAvailable ? 'text-white/88' : 'text-[#6f6f6f]')}>
+                                          {money(row.outstanding_amount, row.currency)}
+                                        </span>
+                                      </div>
+                                    </div>
                                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/46">
                                       {row.expected_payout_source ? `Expected source: ${payoutSourceLabel(row.expected_payout_source)}` : `Variance: ${money(row.variance_amount, row.currency)}`}
                                     </div>
                                   </div>
                                 </td>
-                                <td className="px-4 py-5">
-                                  <div className="min-w-[150px] space-y-2">
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${visiblePayoutStatusTone(row.payout_status)}`}>{visiblePayoutStatusLabel(row.payout_status)}</span>
-                                    <div className="max-w-[180px] text-[11px] font-sans leading-6 tracking-tight text-white/66">
+                                <td className="px-4 py-4">
+                                  <div className="min-w-[185px] space-y-3">
+                                    <div className="flex flex-wrap gap-2">
+                                      {showPayoutStatusBadge ? (
+                                        <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${visiblePayoutStatusTone(row.payout_status)}`}>{payoutStatusLabel}</span>
+                                      ) : (
+                                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#7b7b7b]">Payout status unavailable</span>
+                                      )}
+                                      {showBillingStatusBadge ? (
+                                        <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.billing_status)}`}>{billingStatusLabel}</span>
+                                      ) : null}
+                                    </div>
+                                    <div className="max-w-[185px] text-[11px] font-sans leading-6 tracking-tight text-white/70">
                                       {payoutProofSummary(financialSummary)}
                                     </div>
-                                    <span className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight ${badgeTone(row.billing_status)}`}>{label(row.billing_status)}</span>
-                                    <div className="text-[10px] font-sans tracking-tight text-white/44">
-                                      Legacy fee: {money(row.billed_revenue_amount, row.currency)}
+                                    <div className="space-y-1">
+                                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#7f7f7f]">Legacy fee</div>
+                                      <div className={cn('text-[11px] font-sans font-semibold tracking-tight', legacyFeeAvailable ? 'text-white/78' : 'text-[#6f6f6f]')}>
+                                        {money(row.billed_revenue_amount, row.currency)}
+                                      </div>
                                     </div>
                                   </div>
                                 </td>
-                                <td className="px-4 py-5">
-                                  <div className="min-w-[120px] space-y-2">
-                                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Last Updated</div>
+                                <td className="px-4 py-4">
+                                  <div className="min-w-[125px] space-y-2">
+                                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#8a8a8a]">Last Updated</div>
                                     <div className="text-[11px] font-sans font-semibold leading-5 tracking-tight text-white/82">{stamp(row.last_updated_at)}</div>
                                     {(row.recovery_next_attempt_at || row.billing_next_attempt_at) ? (
                                       <>
-                                        <div className="pt-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Next retry</div>
+                                        <div className="pt-1 text-[10px] font-sans font-bold uppercase tracking-tight text-[#8a8a8a]">Next retry</div>
                                         <div className="text-[11px] font-sans font-semibold leading-5 tracking-tight text-white/82">{stamp(row.recovery_next_attempt_at || row.billing_next_attempt_at)}</div>
                                       </>
                                     ) : (row.recovery_last_processed_at || row.billing_last_processed_at) ? (
                                       <>
-                                        <div className="pt-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Last movement</div>
+                                        <div className="pt-1 text-[10px] font-sans font-bold uppercase tracking-tight text-[#8a8a8a]">Last movement</div>
                                         <div className="text-[11px] font-sans font-semibold leading-5 tracking-tight text-white/82">{stamp(row.recovery_last_processed_at || row.billing_last_processed_at)}</div>
                                       </>
                                     ) : null}
                                   </div>
                                 </td>
-                                <td className="py-5 pl-4 text-right">
+                                <td className="py-4 pl-4 text-right">
                                   <div className="flex flex-col items-end gap-3">
                                     <Button
                                       type="button"
@@ -1322,7 +1395,7 @@ export default function RecoveryPipelineAgent8() {
                                       className="h-8 rounded-full border-white/10 bg-white/[0.03] px-3 text-[9px] font-sans font-bold uppercase tracking-tight text-white/78 hover:bg-white/[0.07] hover:text-white"
                                       onClick={() => openRecoveryDetails(row)}
                                     >
-                                      Extra info
+                                      {primaryActionLabel}
                                       <ArrowUpRight className="ml-1.5 h-3 w-3" />
                                     </Button>
                                     <DropdownMenu>
