@@ -480,6 +480,51 @@ function identityBadgeTone(row: Pick<Row, 'row_type' | 'entity_type' | 'has_real
   return 'border-white/10 bg-white/[0.03] text-white/72';
 }
 
+type LedgerProgressSnapshot = {
+  label: 'Detected' | 'Filed' | 'Approved' | 'Recovered' | 'Legacy billed';
+  toneClass: string;
+};
+
+function ledgerProgressTone(label: LedgerProgressSnapshot['label']): string {
+  switch (label) {
+    case 'Legacy billed':
+      return 'text-fuchsia-200';
+    case 'Recovered':
+      return 'text-emerald-200';
+    case 'Approved':
+      return 'text-blue-300';
+    case 'Filed':
+      return 'text-blue-100';
+    default:
+      return 'text-white/68';
+  }
+}
+
+function getLedgerProgressSnapshot(row: Row, financialSummary?: FinancialTruthSummary | null): LedgerProgressSnapshot {
+  const billingStatus = String(row.billing_status || '').trim().toLowerCase();
+  const payoutStatus = String(row.payout_status || '').trim().toLowerCase();
+  const reconciliationStatus = String(row.reconciliation_status || '').trim().toLowerCase();
+
+  if (['pending', 'completed', 'sent', 'charged', 'paid', 'credited'].includes(billingStatus)) {
+    return { label: 'Legacy billed', toneClass: ledgerProgressTone('Legacy billed') };
+  }
+  if (
+    hasNumericValue(financialSummary?.verified_paid_amount)
+    || hasNumericValue(row.actual_payout_amount)
+    || ['paid', 'partially_paid'].includes(payoutStatus)
+    || ['partial_recovery', 'reconciled'].includes(reconciliationStatus)
+  ) {
+    return { label: 'Recovered', toneClass: ledgerProgressTone('Recovered') };
+  }
+  if (hasNumericValue(row.approved_amount) || row.expected_payout_source === 'approved_pending') {
+    return { label: 'Approved', toneClass: ledgerProgressTone('Approved') };
+  }
+  if (row.has_real_dispute_case === true || Boolean(row.linked_dispute_case_id) || Boolean(row.provider_case_id) || Boolean(row.filing_status)) {
+    return { label: 'Filed', toneClass: ledgerProgressTone('Filed') };
+  }
+  return { label: 'Detected', toneClass: ledgerProgressTone('Detected') };
+}
+
 function detailLinkLabel(row: Pick<Row, 'entity_type' | 'linked_dispute_case_id' | 'dispute_case_id' | 'detection_result_id'>): string {
   if (!getDetailRouteId(row)) return NOT_AVAILABLE;
   if (row.entity_type === 'detection') return 'View detection detail';
@@ -1241,7 +1286,7 @@ export default function RecoveryPipelineAgent8() {
                             <tr className="border-b border-white/10">
                               <th className="py-3 pr-4 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Record</th>
                               <th className="px-4 py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Current state</th>
-                              <th className="px-4 py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Money</th>
+                              <th className="px-4 py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recovery amounts</th>
                               <th className="px-4 py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Payout and billing</th>
                               <th className="px-4 py-3 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Timing</th>
                               <th className="pl-4 py-3 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Actions</th>
@@ -1267,6 +1312,7 @@ export default function RecoveryPipelineAgent8() {
                               const outstandingAvailable = hasNumericValue(row.outstanding_amount);
                               const legacyFeeAvailable = hasNumericValue(row.billed_revenue_amount);
                               const primaryActionLabel = detailRouteId ? 'Review record' : 'Review info';
+                              const progressSnapshot = getLedgerProgressSnapshot(row, financialSummary);
                               return (
                               <tr key={getLedgerRowKey(row)} className="border-b border-white/[0.06] align-top transition-colors hover:bg-white/[0.02]">
                                 <td className="py-4 pr-4">
@@ -1291,6 +1337,10 @@ export default function RecoveryPipelineAgent8() {
                                       </div>
                                       <div className="max-w-[265px] text-[11px] font-sans leading-6 tracking-tight text-white/70">
                                         {identityTruthDetail(row)}
+                                      </div>
+                                      <div className="text-[10px] font-sans tracking-tight text-white/42">
+                                        <span className="uppercase text-[#6f6f6f]">Case progress:</span>{' '}
+                                        <span className={cn('font-semibold', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -1321,28 +1371,26 @@ export default function RecoveryPipelineAgent8() {
                                   </div>
                                 </td>
                                 <td className="px-4 py-4">
-                                  <div className="min-w-[210px] space-y-3">
-                                    <div>
-                                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#8a8a8a]">Approved with Amazon</div>
-                                      <div className={cn('mt-1 text-[19px] font-sans font-bold tracking-tight', approvedAmountAvailable ? 'text-white' : 'text-[#777777]')}>
+                                  <div className="min-w-[220px] space-y-1 text-[12px] font-sans text-white/70">
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-white/35">Approved with Amazon</span>
+                                      <span className={cn('font-semibold tracking-tight', approvedAmountAvailable ? 'text-white/88' : 'text-white/38')}>
                                         {money(row.approved_amount, row.currency)}
-                                      </div>
+                                      </span>
                                     </div>
-                                    <div className="space-y-2 border-t border-white/[0.04] pt-3">
-                                      <div className="flex items-center justify-between gap-4">
-                                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#7f7f7f]">Paid back</span>
-                                        <span className={cn('text-[13px] font-sans font-semibold tracking-tight', paidBackAvailable ? 'text-white/88' : 'text-[#6f6f6f]')}>
-                                          {money(financialSummary?.verified_paid_amount, row.currency)}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center justify-between gap-4">
-                                        <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-[#7f7f7f]">Outstanding</span>
-                                        <span className={cn('text-[13px] font-sans font-semibold tracking-tight', outstandingAvailable ? 'text-white/88' : 'text-[#6f6f6f]')}>
-                                          {money(row.outstanding_amount, row.currency)}
-                                        </span>
-                                      </div>
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-white/35">Paid back</span>
+                                      <span className={cn('font-semibold tracking-tight', paidBackAvailable ? 'text-white/88' : 'text-white/38')}>
+                                        {money(financialSummary?.verified_paid_amount, row.currency)}
+                                      </span>
                                     </div>
-                                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/46">
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-white/35">Outstanding</span>
+                                      <span className={cn('font-semibold tracking-tight', outstandingAvailable ? 'text-white/88' : 'text-white/38')}>
+                                        {money(row.outstanding_amount, row.currency)}
+                                      </span>
+                                    </div>
+                                    <div className="pt-1 text-[10px] font-sans text-white/40">
                                       {row.expected_payout_source ? `Expected source: ${payoutSourceLabel(row.expected_payout_source)}` : `Variance: ${money(row.variance_amount, row.currency)}`}
                                     </div>
                                   </div>

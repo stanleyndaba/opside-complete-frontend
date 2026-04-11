@@ -195,6 +195,54 @@ function getQueueRecordIdentifier(row: QueueRow) {
   return row.dispute_case_id || row.detection_result_id || 'Not Available';
 }
 
+type QueueProgressSnapshot = {
+  label: 'Detected' | 'Evidence' | 'Filed' | 'Approved' | 'Recovered' | 'Legacy billed';
+  toneClass: string;
+};
+
+function queueProgressTone(label: QueueProgressSnapshot['label']) {
+  switch (label) {
+    case 'Legacy billed':
+      return 'text-fuchsia-200';
+    case 'Recovered':
+      return 'text-emerald-200';
+    case 'Approved':
+      return 'text-blue-300';
+    case 'Filed':
+      return 'text-blue-100';
+    case 'Evidence':
+      return 'text-amber-200';
+    default:
+      return 'text-white/68';
+  }
+}
+
+function getQueueProgressSnapshot(row: QueueRow, financialSummary?: FinancialTruthSummary | null): QueueProgressSnapshot {
+  const billingStatus = String(row.billing_status || '').trim().toLowerCase();
+  const recoveryStatus = String(row.recovery_status || '').trim().toLowerCase();
+  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
+  const status = String(row.status || '').trim().toLowerCase();
+  const evidenceState = String(row.evidence_state || '').trim().toLowerCase();
+  const proofStatus = String(getProofStatus(row) || '').trim().toLowerCase();
+  const hasEvidence = Number(row.matched_document_count || 0) > 0
+    || ['filing_ready', 'manual_review', 'supportable_but_not_case_eligible'].includes(proofStatus)
+    || ['matched', 'ready', 'usable', 'linked strongly'].includes(evidenceState);
+  const hasFiled = Boolean(row.amazon_case_id || row.linked_dispute_case_id)
+    || ['submitted', 'pending', 'retrying', 'queued', 'approved', 'filed'].includes(filingStatus);
+  const hasApproved = ['approved', 'won'].includes(status) || row.approved_amount != null;
+  const hasRecovered = (financialSummary?.verified_paid_amount ?? null) != null
+    || row.actual_payout_amount != null
+    || ['reconciled', 'discrepancy'].includes(recoveryStatus);
+  const hasLegacyBilling = ['pending', 'completed', 'sent', 'charged', 'paid', 'credited'].includes(billingStatus);
+
+  if (hasLegacyBilling) return { label: 'Legacy billed', toneClass: queueProgressTone('Legacy billed') };
+  if (hasRecovered) return { label: 'Recovered', toneClass: queueProgressTone('Recovered') };
+  if (hasApproved) return { label: 'Approved', toneClass: queueProgressTone('Approved') };
+  if (hasFiled) return { label: 'Filed', toneClass: queueProgressTone('Filed') };
+  if (hasEvidence) return { label: 'Evidence', toneClass: queueProgressTone('Evidence') };
+  return { label: 'Detected', toneClass: queueProgressTone('Detected') };
+}
+
 function getOpenRecordLabel(row: Pick<QueueRow, 'entity_type' | 'row_type' | 'has_real_dispute_case'>) {
   const kind = getQueueEntityKind(row);
   if (kind === 'dispute_case') return 'Open Case';
@@ -1948,6 +1996,7 @@ export default function DisputeCases() {
                         const hasRealDisputeCase = row.has_real_dispute_case === true;
                         const gateState = getQueueGateState(row);
                         const missingRequirements = getMissingRequirements(row);
+                        const progressSnapshot = getQueueProgressSnapshot(row, financialSummary);
 
                       return (
                         <tr key={row.dispute_case_id} className="align-top hover:bg-white/[0.02] transition-colors">
@@ -1987,6 +2036,10 @@ export default function DisputeCases() {
                                   <div>Origin: {caseOriginLabel}</div>
                                   <div>Store: {row.store_name || 'Not Available'}</div>
                                   <div>Type: {recordType}</div>
+                                </div>
+                                <div className="border-t border-white/[0.06] pt-2 text-[10px] font-sans tracking-tight text-white/42">
+                                  <span className="uppercase text-white/26">Case progress:</span>{' '}
+                                  <span className={cn('font-semibold', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>
                                 </div>
                               </div>
                             </td>

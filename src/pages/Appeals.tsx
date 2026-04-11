@@ -30,6 +30,11 @@ type AppealCandidate = QueueRow & {
   nextStep: string;
 };
 
+type AppealProgressSnapshot = {
+  label: 'Detected' | 'Evidence' | 'Filed' | 'Approved';
+  toneClass: string;
+};
+
 const PAGE_SIZE = 10;
 
 const money = (value: number | null | undefined, currency = 'USD') =>
@@ -112,7 +117,7 @@ const assess = (row: QueueRow) => {
   if (docs > 0) {
     return { score, tone: 'strengthen' as AppealTone, label: 'Needs one stronger proof', nextStep: 'Pull a stronger invoice, shipment, or payout reference first.' };
   }
-  return { score, tone: 'blocked' as AppealTone, label: 'Evidence rebuild needed', nextStep: 'Reconnect the source records and rebuild the support packet.' };
+  return { score, tone: 'blocked' as AppealTone, label: 'Needs rebuild', nextStep: 'Reconnect the source records and rebuild the support packet.' };
 };
 
 const toneClass = (tone: AppealTone) =>
@@ -171,6 +176,32 @@ const responsePreview = (row: AppealCandidate) => {
   return truncate((sentences.slice(0, 2).join(' ') || source).trim(), 220);
 };
 
+const appealProgressTone = (label: AppealProgressSnapshot['label']) => {
+  switch (label) {
+    case 'Approved':
+      return 'text-blue-300';
+    case 'Filed':
+      return 'text-blue-100';
+    case 'Evidence':
+      return 'text-amber-200';
+    default:
+      return 'text-white/68';
+  }
+};
+
+const getAppealProgressSnapshot = (row: AppealCandidate): AppealProgressSnapshot => {
+  if (row.appealState === 'underpaid' || amount(row.approved_amount) != null) {
+    return { label: 'Approved', toneClass: appealProgressTone('Approved') };
+  }
+  if (isDenied(row.status) || row.rejection_reason || row.rejection_category) {
+    return { label: 'Filed', toneClass: appealProgressTone('Filed') };
+  }
+  if (Number(row.matched_document_count || 0) > 0) {
+    return { label: 'Evidence', toneClass: appealProgressTone('Evidence') };
+  }
+  return { label: 'Detected', toneClass: appealProgressTone('Detected') };
+};
+
 const reopenStateSummary = (row: AppealCandidate) =>
   row.strengthTone === 'ready'
     ? 'Enough support is linked to move this case back into the filing queue.'
@@ -210,6 +241,14 @@ const twoLineClampStyle = {
   WebkitBoxOrient: 'vertical' as const,
   overflow: 'hidden',
 };
+
+const tableHeaderClass = 'px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28';
+const tableMetaClass = 'text-[11px] font-sans leading-5 text-white/46';
+const tableSupportClass = 'text-[10px] font-sans font-medium uppercase tracking-tight text-white/36';
+const tablePrimaryValueClass = 'text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84';
+const tableSecondaryValueClass = 'text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/72';
+const detailCardClass = 'rounded-2xl border border-white/8 bg-[#101010]';
+const detailInsetCardClass = 'rounded-xl border border-white/[0.06] bg-black/30';
 
 export default function Appeals() {
   const { tenantSlug } = useParams<{ tenantSlug?: string }>();
@@ -467,52 +506,83 @@ export default function Appeals() {
               ) : (
                 <>
                   <div className="overflow-x-auto">
-                    <table className="w-full min-w-[1180px]">
+                    <table className="w-full min-w-[1420px]">
+                      <colgroup>
+                        <col style={{ width: '23%' }} />
+                        <col style={{ width: '19%' }} />
+                        <col style={{ width: '15%' }} />
+                        <col style={{ width: '14%' }} />
+                        <col style={{ width: '16%' }} />
+                        <col style={{ width: '13%' }} />
+                      </colgroup>
                       <thead className="border-b border-white/8 bg-white/[0.02]">
                         <tr className="text-left">
                           {['Case', 'Amazon pushback', 'Retry state', 'Missing proof', 'Appeal direction', 'Next move'].map((header) => (
-                            <th key={header} className="px-6 py-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">{header}</th>
+                            <th key={header} className={tableHeaderClass}>{header}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {paged.map((row) => (
+                        {paged.map((row) => {
+                          const progress = getAppealProgressSnapshot(row);
+                          return (
                           <tr key={row.dispute_case_id} className="border-b border-white/[0.06] align-top transition-colors hover:bg-white/[0.02]">
                             <td className="px-6 py-5">
-                              <div className="min-w-[190px] space-y-2.5">
-                                <div className="text-[15px] font-sans font-bold tracking-tight text-white">
-                                  {row.case_number || row.claim_number || row.amazon_case_id || 'Appeal case'}
+                              <div className="min-w-[250px] space-y-3">
+                                <div className="space-y-1.5">
+                                  <div className="text-[15px] font-sans font-bold tracking-tight text-white">
+                                    {row.case_number || row.claim_number || row.amazon_case_id || 'Appeal case'}
+                                  </div>
+                                  <div className={tableMetaClass}>{row.store_name || 'Store unavailable'}</div>
+                                  <div className={tableSupportClass}>
+                                    {[row.order_id, row.sku, row.asin].filter(Boolean).join(' / ') || 'Identifiers unavailable'}
+                                  </div>
+                                  <div className="text-[10px] font-sans tracking-tight text-white/42">
+                                    <span className="uppercase text-white/26">Case progress:</span>{' '}
+                                    <span className={cn('font-semibold', progress.toneClass)}>{progress.label}</span>
+                                  </div>
                                 </div>
-                                <div className="text-[11px] font-sans text-white/56">{row.store_name || 'Store unavailable'}</div>
-                                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/36">
-                                  {[row.order_id, row.sku, row.asin].filter(Boolean).join(' / ') || 'Identifiers unavailable'}
-                                </div>
-                                <div className="space-y-1.5 border-t border-white/[0.06] pt-2">
-                                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recoverable upside</div>
-                                  <div className="text-[22px] font-sans font-bold tracking-tight text-white">{money(row.appealGap, row.currency)}</div>
-                                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/46">
-                                    {[
-                                      amount(row.requested_amount) != null ? `Claimed ${money(row.requested_amount, row.currency)}` : null,
-                                      amount(row.approved_amount) != null ? `Approved ${money(row.approved_amount, row.currency)}` : null,
-                                    ].filter(Boolean).join(' / ') || 'Awaiting payout comparison'}
+
+                                <div className="space-y-2 border-t border-white/[0.06] pt-3">
+                                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Amount at stake</div>
+                                  <div className="min-w-0 space-y-1 text-[12px] font-sans text-white/72">
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-white/34">Requested</span>
+                                      <span className="text-right text-white/84">{money(row.requested_amount, row.currency)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-white/34">Approved</span>
+                                      <span className="text-right text-white/84">{money(row.approved_amount, row.currency)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-white/34">Appeal gap</span>
+                                      <span className={cn('text-right', row.appealGap > 0 ? 'text-white' : 'text-white/58')}>
+                                        {money(row.appealGap, row.currency)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="text-[10px] font-sans leading-5 text-white/40">
+                                    {amount(row.requested_amount) != null || amount(row.approved_amount) != null
+                                      ? 'Requested vs approved value shown for the current appeal posture.'
+                                      : 'Awaiting payout comparison from the current appeal record.'}
                                   </div>
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-5">
-                              <div className="min-w-[280px] space-y-3">
-                                <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(row.appealState))}>
+                              <div className="min-w-[270px] space-y-3">
+                                <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(row.appealState))}>
                                   {row.appealState === 'underpaid' ? 'Underpaid' : 'Denied'}
                                 </Badge>
-                                <div className="text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/74" style={twoLineClampStyle}>
+                                <div className={tablePrimaryValueClass} style={twoLineClampStyle}>
                                   {responsePreview(row)}
                                 </div>
-                                <div className="flex items-center gap-3">
-                                  {row.rejection_category ? <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">Reason bucket: {label(row.rejection_category)}</div> : null}
+                                <div className="flex flex-wrap items-center gap-3">
+                                  {row.rejection_category ? <div className={tableSupportClass}>Reason bucket: {label(row.rejection_category)}</div> : null}
                                   <button
                                     type="button"
                                     onClick={() => setSelectedCaseId(row.dispute_case_id)}
-                                    className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:text-white"
+                                    className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/72 transition-colors hover:text-white"
                                   >
                                     View full response
                                   </button>
@@ -520,38 +590,43 @@ export default function Appeals() {
                               </div>
                             </td>
                             <td className="px-6 py-5">
-                              <div className="space-y-3">
-                                <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(row.strengthTone))}>
+                              <div className="min-w-[210px] space-y-3">
+                                <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(row.strengthTone))}>
                                   {row.strengthLabel}
                                 </Badge>
-                                <div className="max-w-[210px] text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/74">{reopenStateSummary(row)}</div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-5">
-                              <div className="space-y-3">
-                                <div className="text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/78">{missingProofSummary(row)}</div>
-                                <div className="max-w-[210px] text-[11px] font-sans leading-6 text-white/58">
-                                  {evidenceRebuildSummary(row)}
+                                <div className={tableSecondaryValueClass}>{reopenStateSummary(row)}</div>
+                                <div className={tableMetaClass}>
+                                  {row.strengthTone === 'ready'
+                                    ? 'Support is strong enough to reopen without another evidence pass.'
+                                    : row.strengthTone === 'strengthen'
+                                      ? 'The support pack is close, but one stronger source should be added first.'
+                                      : 'This case should not be reopened until the support packet is rebuilt.'}
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-5">
-                              <div className="space-y-3">
-                                <div className="max-w-[220px] text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/76" style={twoLineClampStyle}>
+                              <div className="min-w-[200px] space-y-2.5">
+                                <div className={tablePrimaryValueClass}>{missingProofSummary(row)}</div>
+                                <div className={tableMetaClass}>{evidenceRebuildSummary(row)}</div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-5">
+                              <div className="min-w-[220px] space-y-2.5">
+                                <div className={tablePrimaryValueClass} style={twoLineClampStyle}>
                                   {row.policyAngle}
                                 </div>
-                                <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">
+                                <div className={tableSupportClass}>
                                   {row.updated_at ? `Updated ${formatDistanceToNow(new Date(row.updated_at), { addSuffix: true })}` : 'Update time unavailable'}
                                 </div>
                               </div>
                             </td>
                             <td className="px-6 py-5">
                               <div className="flex min-w-[190px] flex-col items-start gap-3">
-                                <div className="max-w-[220px] text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/78">{row.nextStep}</div>
+                                <div className={tablePrimaryValueClass}>{row.nextStep}</div>
                                 <button
                                   type="button"
                                   onClick={() => setSelectedCaseId(row.dispute_case_id)}
-                                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/76 transition-colors hover:bg-white/[0.08] hover:text-white"
+                                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/78 transition-colors hover:bg-white/[0.08] hover:text-white"
                                 >
                                   Review appeal
                                   <ArrowUpRight className="h-3 w-3" />
@@ -559,7 +634,8 @@ export default function Appeals() {
                               </div>
                             </td>
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -595,23 +671,30 @@ export default function Appeals() {
               {selectedRow ? (
                 <div className="flex h-full flex-col">
                   <SheetHeader className="border-b border-white/8 px-6 py-6 pr-14">
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Appeal detail</div>
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Appeal detail</div>
                     <SheetTitle className="mt-2 text-2xl font-sans font-bold tracking-tight text-white">
                       {selectedRow.case_number || selectedRow.claim_number || selectedRow.amazon_case_id || 'Appeal case'}
                     </SheetTitle>
-                    <SheetDescription className="text-[12px] font-sans leading-6 text-white/58">
+                    <SheetDescription className="text-[12px] font-sans leading-6 text-white/46">
                       {selectedRow.store_name || 'Store unavailable'}
                       {selectedRow.updated_at ? ` - Updated ${formatDistanceToNow(new Date(selectedRow.updated_at), { addSuffix: true })}` : ''}
                     </SheetDescription>
                   </SheetHeader>
 
                   <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
-                    <div className="overflow-hidden rounded-2xl border border-white/8 bg-white/[0.015]">
+                    <div className={cn('overflow-hidden', detailCardClass)}>
                       <div className="grid gap-3 px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Recoverable upside</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Recoverable upside</div>
                         <div>
-                          <div className="text-[28px] font-sans font-bold tracking-tight text-white">{money(selectedRow.appealGap, selectedRow.currency)}</div>
-                          <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/46">
+                          <div
+                            className={cn(
+                              'text-[28px] font-sans font-bold tracking-tight',
+                              selectedRow.appealGap > 0 ? 'text-white' : 'text-white/58'
+                            )}
+                          >
+                            {money(selectedRow.appealGap, selectedRow.currency)}
+                          </div>
+                          <div className="mt-2 space-y-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
                             {amount(selectedRow.requested_amount) != null ? <div>Claimed {money(selectedRow.requested_amount, selectedRow.currency)}</div> : null}
                             {amount(selectedRow.approved_amount) != null ? <div>Approved {money(selectedRow.approved_amount, selectedRow.currency)}</div> : null}
                           </div>
@@ -619,74 +702,81 @@ export default function Appeals() {
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Retry state</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Retry state</div>
                         <div>
-                          <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
+                          <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', toneClass(selectedRow.strengthTone))}>
                             {selectedRow.strengthLabel}
                           </Badge>
-                          <div className="mt-3 text-[12px] font-sans font-semibold leading-6 tracking-tight text-white/76">
+                          <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                             {reopenStateSummary(selectedRow)}
+                          </div>
+                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/46">
+                            {selectedRow.strengthTone === 'ready'
+                              ? 'This appeal can be reopened from a stronger proof position now.'
+                              : selectedRow.strengthTone === 'strengthen'
+                                ? 'This appeal is close, but one stronger proof source should be added first.'
+                                : 'This appeal still needs a rebuilt proof pack before it should move forward.'}
                           </div>
                         </div>
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Missing proof</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Missing proof</div>
                         <div>
-                          <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/78">
+                          <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                             {missingProofSummary(selectedRow)}
                           </div>
-                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/58">
+                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/46">
                             {evidenceRebuildSummary(selectedRow)}
                           </div>
                         </div>
                       </div>
 
                       <div className="grid gap-3 border-t border-white/[0.06] px-5 py-4 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">What happens next</div>
+                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">What happens next</div>
                         <div>
-                          <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/78">
+                          <div className="text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                             {selectedRow.nextStep}
                           </div>
-                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/58">
+                          <div className="mt-2 text-[11px] font-sans leading-6 text-white/46">
                             {selectedRow.policyAngle}
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/8 bg-white/[0.015] p-4">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amazon pushback</div>
+                    <div className={cn('p-4', detailCardClass)}>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Amazon pushback</div>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <Badge className={cn('w-fit rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(selectedRow.appealState))}>
+                        <Badge className={cn('w-fit whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-sans font-bold uppercase tracking-tight', pushbackToneClass(selectedRow.appealState))}>
                           {selectedRow.appealState === 'underpaid' ? 'Underpaid' : 'Denied'}
                         </Badge>
                         {selectedRow.rejection_category ? (
-                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/36">
                             Reason bucket: {label(selectedRow.rejection_category)}
                           </div>
                         ) : null}
                       </div>
-                      <div className="mt-4 rounded-xl border border-white/[0.06] bg-black/30 p-4 text-[12px] font-sans leading-7 text-white/78">
+                      <div className={cn('mt-4 p-4 text-[12px] font-sans leading-7 text-white/76', detailInsetCardClass)}>
                         {cleanAmazonResponse(selectedRow.rejection_reason) || selectedRow.appealReasonText}
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/8 bg-white/[0.015] p-4">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Rebuild plan</div>
-                      <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/78">
+                    <div className={cn('p-4', detailCardClass)}>
+                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Rebuild plan</div>
+                      <div className="mt-3 text-[13px] font-sans font-semibold leading-6 tracking-tight text-white/84">
                         {selectedRow.policyAngle}
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-xl border border-white/[0.06] bg-black/30 p-4">
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Source records</div>
-                          <div className="mt-2 text-[12px] font-sans leading-6 text-white/74">
+                        <div className={cn('p-4', detailInsetCardClass)}>
+                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Source records</div>
+                          <div className="mt-2 text-[12px] font-sans leading-6 text-white/72">
                             {Math.max(Number(selectedRow.matched_document_count || 0), 0)} linked document{Number(selectedRow.matched_document_count || 0) === 1 ? '' : 's'}
                           </div>
                         </div>
-                        <div className="rounded-xl border border-white/[0.06] bg-black/30 p-4">
-                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Missing requirements</div>
-                          <div className="mt-2 text-[12px] font-sans leading-6 text-white/74">
+                        <div className={cn('p-4', detailInsetCardClass)}>
+                          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/24">Missing requirements</div>
+                          <div className="mt-2 text-[12px] font-sans leading-6 text-white/72">
                             {missingProofItems(selectedRow).length > 0
                               ? missingProofItems(selectedRow).join(' / ')
                               : 'No explicit missing requirements were returned for this case.'}
