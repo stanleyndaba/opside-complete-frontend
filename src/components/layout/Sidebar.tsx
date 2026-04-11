@@ -167,8 +167,9 @@ export function Sidebar({
     { title: 'Overview', icon: Gauge, href: overviewHref },
     { title: 'Messages', icon: Mail, href: tenantRoute(currentTenantSlug, '/notifications'), count: unreadCount }
   ];
-  const coreItem: NavItem = { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') };
-  const operationItems: NavItem[] = [
+  const navItems: NavItem[] = [
+    ...mainMenuItems,
+    { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
@@ -429,46 +430,12 @@ export function Sidebar({
         <div
           className={cn(
             "flex min-h-full flex-col justify-center",
-            isCollapsed ? "px-2.5 py-5" : "px-3 py-5"
+            isCollapsed ? "px-2.5 py-5" : "px-3 py-4"
           )}>
-          <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.48rem]" : "gap-[0.58rem]")}>
-            <div className="w-full">
-              {!isCollapsed && (
-                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
-                  Main Menu
-                </div>
-              )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.26875rem]")}>
-                {mainMenuItems.map((item) => (
-                  <NavItemComponent key={item.title} item={item} />
-                ))}
-              </div>
-            </div>
-
-            <div className="w-full">
-              {!isCollapsed && (
-                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
-                  Engine
-                </div>
-              )}
-              <div className={cn("w-full", isCollapsed ? "flex justify-center" : "")}>
-                <NavItemComponent item={coreItem} variant="core" />
-              </div>
-            </div>
-
-            <div className="w-full">
-              {!isCollapsed && (
-                <div className="mb-[0.18rem] px-2.5 text-[10px] font-medium uppercase tracking-tight text-white/22">
-                  Operations
-                </div>
-              )}
-              <div className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.18rem]" : "gap-[0.3rem]")}>
-                {operationItems.map((item) => (
-                  <NavItemComponent key={item.title} item={item} />
-                ))}
-              </div>
-            </div>
-
+          <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.48rem]" : "gap-[0.32rem]")}>
+            {navItems.map((item) => (
+              <NavItemComponent key={item.title} item={item} />
+            ))}
           </nav>
         </div>
       </div>
