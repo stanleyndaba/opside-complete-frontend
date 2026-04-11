@@ -402,7 +402,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Ready to file',
         detail: 'Policy and identifier checks passed, so this can move into a recovery case.',
         actionLabel: 'View finding',
-        tone: 'border-sky-400/20 bg-sky-400/[0.08] text-sky-200',
+        tone: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-200',
         Icon: CheckCircle,
       };
     case 'filed':
@@ -410,7 +410,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Filed with Amazon',
         detail: 'This discrepancy is already in Amazon review through a filed case.',
         actionLabel: 'Open cases',
-        tone: 'border-white/10 bg-white/[0.04] text-white/78',
+        tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
         Icon: Send,
       };
     case 'converted':
@@ -418,7 +418,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Moved to case',
         detail: 'This finding has already been turned into a recovery case for follow-through.',
         actionLabel: 'Open cases',
-        tone: 'border-white/10 bg-white/[0.04] text-white/72',
+        tone: 'border-violet-500/20 bg-violet-500/[0.08] text-violet-100',
         Icon: ArrowRight,
       };
     case 'resolved':
@@ -442,7 +442,7 @@ const getFindingStateMeta = (status?: string | null) => {
         label: 'Issue found',
         detail: 'Margin found a discrepancy, but it still needs review before it becomes a case.',
         actionLabel: 'View finding',
-        tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+        tone: 'border-sky-500/20 bg-sky-500/[0.08] text-sky-100',
         Icon: Info,
       };
     default:
@@ -1809,6 +1809,7 @@ export function Dashboard() {
     {
       label: isSyncScopedDetections ? 'Estimated recovery in this upload' : 'Estimated recovery in view',
       value: issuesFoundRecoveryLabel,
+      valueTone: 'text-white',
       detail: isSyncScopedDetections
         ? typeof detectionResultsMeta?.estimatedRecovery === 'number'
           ? 'Upload-scoped detection value from the latest processing run'
@@ -1818,16 +1819,19 @@ export function Dashboard() {
     {
       label: isSyncScopedDetections ? 'Findings currently in view' : 'In view',
       value: pluralize(visibleDetectionResults.length, 'finding'),
+      valueTone: 'text-white',
       detail: isSyncScopedDetections ? 'Shown in this upload view' : 'Shown in this view'
     },
     {
       label: 'Ready to file',
       value: pluralize(readyToFileFindingsCount, 'finding'),
+      valueTone: readyToFileFindingsCount > 0 ? 'text-emerald-200' : 'text-white/64',
       detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is ready yet'
     },
     {
       label: 'Needs review',
       value: pluralize(needsReviewFindingsCount, 'finding'),
+      valueTone: needsReviewFindingsCount > 0 ? 'text-amber-200' : 'text-white/64',
       detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
     }
   ]), [
@@ -2778,18 +2782,18 @@ export function Dashboard() {
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
                     <div className="mb-6 space-y-5">
                       <div className="max-w-2xl">
-                        <h2 className="text-[12px] font-sans font-semibold text-white/45 tracking-tight uppercase">Issues Found</h2>
+                        <h2 className="text-[12px] font-sans font-semibold text-white/28 tracking-tight uppercase">Issues Found</h2>
                         <div className="mt-0.5">
-                          <span className="text-base font-sans font-semibold text-white tracking-tight">{issuesFoundHeading}</span>
+                          <span className="text-base font-sans font-semibold text-white/86 tracking-tight">{issuesFoundHeading}</span>
                         </div>
-                        <p className="mt-3 text-[17px] font-sans font-semibold leading-7 tracking-tight text-white">
+                        <p className="mt-3 text-[17px] font-sans font-semibold leading-7 tracking-tight text-white/92">
                           {issuesFoundProofHeadline}
                         </p>
-                        <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-[#dcdcdc]">
+                        <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-white/52">
                           {issuesFoundDescription}
                         </p>
                         {latestDashboardSignalLabel ? (
-                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white">
+                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/68">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                             {latestDashboardSignalLabel}
                           </div>
@@ -2820,13 +2824,13 @@ export function Dashboard() {
                       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-4">
                         {issuesFoundSummaryRows.map((item) => (
                           <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
-                            <div className="text-[11px] font-sans font-medium tracking-tight text-[#d8d8d8]">
+                            <div className="text-[11px] font-sans font-medium tracking-tight text-white/34">
                               {item.label}
                             </div>
-                            <div className="mt-1 text-[16px] font-sans font-medium leading-none tracking-tight text-white">
+                            <div className={cn("mt-1 text-[16px] font-sans font-medium leading-none tracking-tight", item.valueTone)}>
                               {item.value}
                             </div>
-                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white">
+                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/44">
                               {item.detail}
                             </div>
                           </div>
@@ -2887,7 +2891,7 @@ export function Dashboard() {
                     ) : (
                       <div>
                         <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                          <div className="text-[11px] font-sans tracking-tight text-[#d8d8d8]">
+                          <div className="text-[11px] font-sans tracking-tight text-white/48">
                             {isSyncScopedDetections
                               ? 'Review the findings currently shown for this upload. Processed rows and active filters can make the table count smaller than the upload total above.'
                               : 'Open the findings below to review what is ready, what is filed, and what still needs attention.'}
@@ -2900,7 +2904,7 @@ export function Dashboard() {
                               </div>
                             ) : null}
                             <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
-                              <span className="text-[11px] font-sans font-medium text-white/45 tracking-tight">Show processed</span>
+                              <span className="text-[11px] font-sans font-medium text-white/38 tracking-tight">Show processed</span>
                               <button
                                 onClick={() => setShowProcessed(!showProcessed)}
                                 className={cn(
@@ -2956,29 +2960,29 @@ export function Dashboard() {
                               >
                                 <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center">
                                   <div className="min-w-0">
-                                    <div className="text-[14px] font-sans font-medium tracking-tight text-white">
+                                    <div className="text-[14px] font-sans font-medium tracking-tight text-white/92">
                                       {issueCopy.title}
                                     </div>
-                                    <p className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-[#d4d4d4]">
+                                    <p className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-white/64">
                                       {issueCopy.summary}
                                     </p>
-                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-[#b8b8b8]">
+                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
                                       <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
                                       <span>Found {foundOnLabel}</span>
                                     </div>
                                   </div>
 
                                   <div className="xl:text-right">
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#d0d0d0]">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
                                       Estimated value
                                     </div>
-                                    <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white">
+                                    <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white/90">
                                       {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
                                     </div>
                                   </div>
 
                                   <div className="min-w-0">
-                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-[#d0d0d0]">
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
                                       Case state
                                     </div>
                                     <div className={cn(
@@ -2988,7 +2992,7 @@ export function Dashboard() {
                                       <StateIcon className="h-3.5 w-3.5" />
                                       <span>{stateMeta.label}</span>
                                     </div>
-                                    <p className="mt-2 max-w-md text-[11px] font-sans leading-5 text-[#cfcfcf]">
+                                    <p className="mt-2 max-w-md text-[11px] font-sans leading-5 text-white/60">
                                       {stateMeta.detail}
                                     </p>
                                   </div>
