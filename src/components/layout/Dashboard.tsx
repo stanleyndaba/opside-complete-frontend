@@ -1813,17 +1813,17 @@ export function Dashboard() {
         ? typeof detectionResultsMeta?.estimatedRecovery === 'number'
           ? 'Upload-scoped detection value from the latest processing run'
           : 'Based on the findings currently loaded for this upload view'
-        : 'Based on the findings currently shown in this queue'
+        : 'Based on findings in view'
     },
     {
       label: isSyncScopedDetections ? 'Findings currently in view' : 'In view',
       value: pluralize(visibleDetectionResults.length, 'finding'),
-      detail: isSyncScopedDetections ? 'Currently shown in the table for this upload view' : 'Currently shown in this queue'
+      detail: isSyncScopedDetections ? 'Shown in this upload view' : 'Shown in this view'
     },
     {
       label: 'Ready to file',
       value: pluralize(readyToFileFindingsCount, 'finding'),
-      detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is filing-ready yet'
+      detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is ready yet'
     },
     {
       label: 'Needs review',
@@ -2789,7 +2789,7 @@ export function Dashboard() {
                           {issuesFoundDescription}
                         </p>
                         {latestDashboardSignalLabel ? (
-                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/62">
+                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                             {latestDashboardSignalLabel}
                           </div>
@@ -2826,7 +2826,7 @@ export function Dashboard() {
                             <div className="mt-1 text-[16px] font-sans font-medium leading-none tracking-tight text-white">
                               {item.value}
                             </div>
-                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/36">
+                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white">
                               {item.detail}
                             </div>
                           </div>
