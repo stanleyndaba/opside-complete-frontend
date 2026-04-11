@@ -2782,18 +2782,18 @@ export function Dashboard() {
                   <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
                     <div className="mb-6 space-y-5">
                       <div className="max-w-2xl">
-                        <h2 className="text-[12px] font-sans font-semibold text-white/28 tracking-tight uppercase">Issues Found</h2>
+                        <h2 className="text-[12px] font-sans font-semibold text-white/[0.28] tracking-tight uppercase">Issues Found</h2>
                         <div className="mt-0.5">
-                          <span className="text-base font-sans font-semibold text-white/86 tracking-tight">{issuesFoundHeading}</span>
+                          <span className="text-base font-sans font-semibold text-white/[0.86] tracking-tight">{issuesFoundHeading}</span>
                         </div>
-                        <p className="mt-3 text-[17px] font-sans font-semibold leading-7 tracking-tight text-white/92">
+                        <p className="mt-3 text-[17px] font-sans font-semibold leading-7 tracking-tight text-white/[0.92]">
                           {issuesFoundProofHeadline}
                         </p>
-                        <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-white/52">
+                        <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-white/[0.52]">
                           {issuesFoundDescription}
                         </p>
                         {latestDashboardSignalLabel ? (
-                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/68">
+                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.68]">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                             {latestDashboardSignalLabel}
                           </div>
@@ -2801,10 +2801,10 @@ export function Dashboard() {
                       </div>
 
                       {isSyncScopedDetections ? (
-                        <div className="grid gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-2 xl:grid-cols-5">
+                        <div className="grid gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.05] sm:grid-cols-2 xl:grid-cols-5">
                           {syncScopedDetectionMetaRows.map((item) => (
                             <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
-                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">
+                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
                                 {item.label}
                               </div>
                               {item.tone ? (
@@ -2821,16 +2821,16 @@ export function Dashboard() {
                         </div>
                       ) : null}
 
-                      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/8 bg-white/[0.05] sm:grid-cols-4">
+                      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.05] sm:grid-cols-4">
                         {issuesFoundSummaryRows.map((item) => (
                           <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
-                            <div className="text-[11px] font-sans font-medium tracking-tight text-white/34">
+                            <div className="text-[11px] font-sans font-medium tracking-tight text-white/[0.34]">
                               {item.label}
                             </div>
                             <div className={cn("mt-1 text-[16px] font-sans font-medium leading-none tracking-tight", item.valueTone)}>
                               {item.value}
                             </div>
-                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/44">
+                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/[0.44]">
                               {item.detail}
                             </div>
                           </div>
@@ -2842,7 +2842,7 @@ export function Dashboard() {
                       <div className="py-20 flex flex-col items-center justify-center gap-4">
                         <Loader2 className="h-8 w-8 text-white/50 animate-spin" />
                         <div className="text-center">
-                          <div className="text-[11px] font-sans font-medium text-white/45 tracking-tight animate-pulse">
+                          <div className="text-[11px] font-sans font-medium text-white/[0.45] tracking-tight animate-pulse">
                             {issuesFoundLoadingState.title}
                           </div>
                           <div className="mt-2 text-[11px] font-sans leading-5 text-white/30 tracking-tight">
@@ -2858,7 +2858,7 @@ export function Dashboard() {
                         <h3 className="text-lg font-sans font-semibold text-white tracking-tight">
                           {isSyncScopedDetections ? syncScopedEmptyState?.title : 'No open issues right now'}
                         </h3>
-                        <p className="text-[13px] text-white/45 mt-3 font-sans max-w-sm mx-auto leading-relaxed">
+                        <p className="text-[13px] text-white/[0.45] mt-3 font-sans max-w-sm mx-auto leading-relaxed">
                           {isSyncScopedDetections
                             ? syncScopedEmptyState?.description
                             : 'Margin is not holding any unresolved findings in this view right now.'}
@@ -2874,7 +2874,7 @@ export function Dashboard() {
                             <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
                               View all detections
                             </span>
-                            <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
                           </button>
                         ) : !isSyncScopedDetections ? (
                           <button
@@ -2884,27 +2884,27 @@ export function Dashboard() {
                             <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
                               View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}
                             </span>
-                            <ArrowRight className="h-3 w-3 text-white/35 group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
                           </button>
                         ) : null}
                       </div>
                     ) : (
                       <div>
                         <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                          <div className="text-[11px] font-sans tracking-tight text-white/48">
+                          <div className="text-[11px] font-sans tracking-tight text-white/[0.48]">
                             {isSyncScopedDetections
                               ? 'Review the findings currently shown for this upload. Processed rows and active filters can make the table count smaller than the upload total above.'
                               : 'Open the findings below to review what is ready, what is filed, and what still needs attention.'}
                           </div>
                           <div className="flex items-center gap-4">
                             {isRefreshingFindings ? (
-                              <div className="inline-flex items-center gap-2 rounded-full border border-white/8 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/52">
+                              <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.52]">
                                 <Loader2 className="h-3 w-3 animate-spin" />
                                 Refreshing findings
                               </div>
                             ) : null}
                             <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
-                              <span className="text-[11px] font-sans font-medium text-white/38 tracking-tight">Show processed</span>
+                              <span className="text-[11px] font-sans font-medium text-white/[0.38] tracking-tight">Show processed</span>
                               <button
                                 onClick={() => setShowProcessed(!showProcessed)}
                                 className={cn(
@@ -2954,16 +2954,16 @@ export function Dashboard() {
                                 className={cn(
                                   "rounded-xl border px-5 py-4 transition-colors",
                                   isProcessed
-                                    ? "border-white/6 bg-[#090909]"
-                                    : "border-white/8 bg-black/20 hover:border-white/12"
+                                    ? "border-white/[0.06] bg-[#090909]"
+                                    : "border-white/[0.08] bg-black/20 hover:border-white/[0.12]"
                                 )}
                               >
                                 <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center">
                                   <div className="min-w-0">
-                                    <div className="text-[14px] font-sans font-medium tracking-tight text-white/92">
+                                    <div className="text-[14px] font-sans font-medium tracking-tight text-white/[0.92]">
                                       {issueCopy.title}
                                     </div>
-                                    <p className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-white/64">
+                                    <p className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.64]">
                                       {issueCopy.summary}
                                     </p>
                                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
@@ -3002,7 +3002,7 @@ export function Dashboard() {
                                       <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="h-8 px-3 text-[11px] font-sans font-medium text-white/55 hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all tracking-tight"
+                                        className="h-8 px-3 text-[11px] font-sans font-medium text-white/[0.55] hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all tracking-tight"
                                         onClick={() => {
                                           navigate(tenantRoute(activeSlug, '/recoveries'));
                                         }}
@@ -3044,7 +3044,7 @@ export function Dashboard() {
                                               });
                                               setShowDiscrepancyModal(true);
                                             }}
-                                            className="text-[11px] font-sans font-medium tracking-tight text-white/65 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                            className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                           >
                                             <Info className="h-3 w-3 mr-2" />
                                             {stateMeta.actionLabel}
@@ -3052,7 +3052,7 @@ export function Dashboard() {
                                         ) : null}
                                         <DropdownMenuItem
                                           onClick={() => handleRowExport(result.id)}
-                                          className="text-[11px] font-sans font-medium tracking-tight text-white/65 hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                          className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                         >
                                           <Download className="h-3 w-3 mr-2" />
                                           Download evidence
@@ -3071,23 +3071,23 @@ export function Dashboard() {
                           <div className="flex flex-wrap items-center gap-6">
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-white/40" />
-                              <span className="text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                                {isSyncScopedDetections ? 'Findings currently shown:' : 'Open issues loaded:'} <span className="text-white/55">{visibleDetectionResults.length}</span>
+                              <span className="text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+                                {isSyncScopedDetections ? 'Findings currently shown:' : 'Open issues loaded:'} <span className="text-white/[0.55]">{visibleDetectionResults.length}</span>
                               </span>
                             </div>
                             <span className="text-white/10">|</span>
-                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                              {isSyncScopedDetections ? 'Upload processed:' : 'Last updated:'} <span className="text-white/55">{isSyncScopedDetections ? syncScopedIssuesUpdatedLabel : formattedLastUpdated}</span>
+                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+                              {isSyncScopedDetections ? 'Upload processed:' : 'Last updated:'} <span className="text-white/[0.55]">{isSyncScopedDetections ? syncScopedIssuesUpdatedLabel : formattedLastUpdated}</span>
                             </div>
                             <span className="text-white/10">|</span>
-                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                              Scope: <span className="text-white/55">{isSyncScopedDetections ? 'This upload' : 'Account summary'}</span>
+                            <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+                              Scope: <span className="text-white/[0.55]">{isSyncScopedDetections ? 'This upload' : 'Account summary'}</span>
                             </div>
                             {isSyncScopedDetections ? (
                               <>
                                 <span className="text-white/10">|</span>
-                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/35 tracking-tight">
-                                  Sync: <span className="text-white/55">{uploadSyncId}</span>
+                                <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white/[0.35] tracking-tight">
+                                  Sync: <span className="text-white/[0.55]">{uploadSyncId}</span>
                                 </div>
                               </>
                             ) : null}

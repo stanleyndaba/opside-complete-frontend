@@ -373,7 +373,7 @@ export function Sidebar({
           "",
           isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
-        <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-3")}>
+        <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-2")}>
           <Link
             to={overviewHref}
             onMouseEnter={() => prefetchRoute(overviewHref)}
@@ -403,26 +403,7 @@ export function Sidebar({
             >
               Upgrade Plan
             </Link>
-          ) : (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    to={pricingAdjustHref}
-                    onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-                    className="mt-2 flex items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] px-1 py-2.5 text-white/54 transition-colors hover:border-white/14 hover:bg-white/[0.05] hover:text-white/88"
-                  >
-                    <CreditCard className="h-3.5 w-3.5" strokeWidth={1.7} />
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="bg-popover border border-border px-3 py-2 backdrop-blur-xl">
-                  <div className="text-[10px] font-sans font-medium tracking-tight text-white/88">
-                    Upgrade Plan
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
+          ) : null}
         </div>
       </div>
 
