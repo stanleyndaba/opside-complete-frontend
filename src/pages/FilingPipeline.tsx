@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'react-router-dom';
 
 type DisputeRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
@@ -243,7 +244,6 @@ function ErrorState({ message }: { message: string }) {
 }
 
 function PipelineSection({
-  eyebrow,
   title,
   detail,
   amount,
@@ -251,7 +251,6 @@ function PipelineSection({
   action,
   children,
 }: {
-  eyebrow: string;
   title: string;
   detail: string;
   amount: string;
@@ -260,10 +259,9 @@ function PipelineSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-4 border-b border-white/6 px-6 py-6 last:border-b-0">
+    <section className="space-y-4 px-6 py-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
-          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{eyebrow}</div>
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
             <h2 className="text-2xl font-sans font-bold tracking-tight text-white">{title}</h2>
             <div className="text-xl font-sans font-bold tracking-tight text-[#8b8b8b]">{amount}</div>
@@ -395,6 +393,7 @@ export default function FilingPipeline() {
   const [disputeError, setDisputeError] = useState<string | null>(null);
   const [ledgerError, setLedgerError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'ready' | 'filing' | 'filed' | 'payout' | 'completed'>('ready');
 
   const loadDisputes = useCallback(async () => {
     if (!activeSlug) {
@@ -477,7 +476,6 @@ export default function FilingPipeline() {
   );
 
   const disputeCasesHref = tenantRoute(activeSlug, '/dispute-cases');
-  const recoveriesHref = tenantRoute(activeSlug, '/recoveries');
   const lastUpdatedLabel = latestMovement ? formatDistanceToNow(new Date(latestMovement), { addSuffix: true }) : null;
   const totalVisibleRecords = readyRows.length + beingFiledRows.length + filedRows.length + approvedRows.length + completedRows.length;
   const snapshotPills = [
@@ -487,6 +485,170 @@ export default function FilingPipeline() {
     approvedRows.length ? `${approvedRows.length} awaiting payout` : null,
     completedRows.length ? `${completedRows.length} recovered` : null,
   ].filter(Boolean) as string[];
+
+  const pipelineTabs = [
+    {
+      value: 'ready' as const,
+      label: 'Ready to file',
+      title: 'Ready to File',
+      detail: 'What money can move into Amazon filing right now.',
+      amount: formatMoney(readyTotal),
+      countLabel: `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`,
+      action: readyRows.length ? (
+        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
+          <Link to={disputeCasesHref}>Start Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+        </Button>
+      ) : null,
+      content: disputeLoading ? (
+        <LoadingState label="Preparing filing-ready cases" />
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
+      ) : readyRows.length ? (
+        <div className="grid gap-4">
+          {readyRows.map((row) => (
+            <DisputeCard
+              key={row.dispute_case_id}
+              row={row}
+              tone="ready"
+              amountLabel="Estimated recovery"
+              statusLabel={readyReason(row)}
+              detail="Evidence and case truth are aligned, so this case can safely move into filing."
+              timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
+              action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No filing-ready cases yet — continue scanning or review blocked items below." />
+      ),
+    },
+    {
+      value: 'filing' as const,
+      label: 'Being filed',
+      title: 'Being Filed',
+      detail: 'Cases already moving through the filing handoff.',
+      amount: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))),
+      countLabel: `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission`,
+      action: null,
+      content: disputeLoading ? (
+        <LoadingState label="Checking active filing handoffs" />
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
+      ) : beingFiledRows.length ? (
+        <div className="grid gap-4">
+          {beingFiledRows.map((row) => (
+            <DisputeCard
+              key={row.dispute_case_id}
+              row={row}
+              tone="inFlight"
+              amountLabel="Amount in motion"
+              statusLabel={beingFiledReason(row)}
+              detail={String(row.filing_status || '').trim().toLowerCase() === 'retrying' ? 'Margin is retrying the filing path using the same backend action truth.' : 'Margin is handing this case off for Amazon submission now.'}
+              timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
+              action={<span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-200"><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No cases are being filed right now — new submissions will appear here as soon as Margin queues them." />
+      ),
+    },
+    {
+      value: 'filed' as const,
+      label: 'Filed',
+      title: 'Filed / In Progress',
+      detail: 'Cases already filed with Amazon and waiting on the next movement.',
+      amount: formatMoney(totalAmount(filedRows.map(disputeAmount))),
+      countLabel: `${filedRows.length} case${filedRows.length === 1 ? '' : 's'} already with Amazon`,
+      action: null,
+      content: disputeLoading ? (
+        <LoadingState label="Checking filed cases and Amazon response truth" />
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
+      ) : filedRows.length ? (
+        <div className="grid gap-4">
+          {filedRows.map((row) => (
+            <DisputeCard
+              key={row.dispute_case_id}
+              row={row}
+              tone="submitted"
+              amountLabel="Amount in review"
+              statusLabel={filedReason(row)}
+              detail="Margin has already submitted this case and is waiting on the next Amazon response."
+              timeLabel={row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
+              action={<span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-blue-200"><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No cases filed yet — once submitted, they will appear here." />
+      ),
+    },
+    {
+      value: 'payout' as const,
+      label: 'Awaiting payout',
+      title: 'Approved / Awaiting Payout',
+      detail: 'Approved value that still needs payout confirmation.',
+      amount: formatMoney(totalAmount(approvedRows.map(ledgerApprovedAmount))),
+      countLabel: `${approvedRows.length} recovery item${approvedRows.length === 1 ? '' : 's'} awaiting payout`,
+      action: null,
+      content: ledgerLoading ? (
+        <LoadingState label="Loading payout truth" />
+      ) : ledgerError ? (
+        <ErrorState message={ledgerError} />
+      ) : approvedRows.length ? (
+        <div className="grid gap-4">
+          {approvedRows.map((row) => (
+            <LedgerCard
+              key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
+              row={row}
+              tone="approved"
+              amountLabel="Approved value"
+              amount={ledgerApprovedAmount(row)}
+              statusLabel={pendingPayoutReason(row)}
+              detail="Amazon approval is already recorded. Margin is now waiting on payout truth to land."
+              timeLabel={row.last_updated_at ? `Awaiting payout · updated ${formatRelative(row.last_updated_at)}` : null}
+              detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No approved payouts waiting right now — once Amazon approves a case, it will appear here until payout lands." />
+      ),
+    },
+    {
+      value: 'completed' as const,
+      label: 'Completed',
+      title: 'Completed',
+      detail: 'Recovered value already confirmed back to the account.',
+      amount: formatMoney(recoveredTotal),
+      countLabel: `${completedRows.length} recovery item${completedRows.length === 1 ? '' : 's'} completed`,
+      action: null,
+      content: ledgerLoading ? (
+        <LoadingState label="Loading recovered payout confirmations" />
+      ) : ledgerError ? (
+        <ErrorState message={ledgerError} />
+      ) : completedRows.length ? (
+        <div className="grid gap-4">
+          {completedRows.map((row) => (
+            <LedgerCard
+              key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
+              row={row}
+              tone="completed"
+              amountLabel="Recovered value"
+              amount={ledgerRecoveredAmount(row)}
+              statusLabel={completedReason(row)}
+              detail="The payout has already been confirmed or reconciled in the recovery ledger."
+              timeLabel={row.last_updated_at ? `Confirmed ${formatRelative(row.last_updated_at)}` : null}
+              detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No completed recoveries yet — once payout is confirmed, completed items will appear here." />
+      ),
+    },
+  ];
 
   return (
     <PageLayout title="Filing Pipeline" midnight>
@@ -584,127 +746,40 @@ export default function FilingPipeline() {
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
               <div className="flex flex-col gap-3">
-                <div className="flex flex-col gap-2 xl:flex-row xl:items-end xl:justify-between">
-                  <div>
-                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Conversion surface</div>
-                    <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Money moving through filing</h2>
-                    <p className="mt-1 text-xs font-sans leading-5 text-white/60">
-                      Each section answers one question: what can file, what is filing, what is already with Amazon, what is approved, and what is already recovered.
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button asChild variant="outline" className="border-white/10 text-white/60 bg-white/5 hover:bg-white/10 hover:text-white">
-                      <Link to={disputeCasesHref}>Open dispute queue</Link>
-                    </Button>
-                    <Button asChild variant="outline" className="border-white/10 text-white/60 bg-white/5 hover:bg-white/10 hover:text-white">
-                      <Link to={recoveriesHref}>Open recoveries</Link>
-                    </Button>
-                  </div>
+                <div>
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Conversion surface</div>
+                  <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Money moving through filing</h2>
+                  <p className="mt-1 text-xs font-sans leading-5 text-white/60">
+                    Each tab answers one question: what can file, what is filing, what is already with Amazon, what is approved, and what is already recovered.
+                  </p>
                 </div>
               </div>
             </CardHeader>
 
             <CardContent className="p-0">
-        <PipelineSection eyebrow="SECTION 1" title="Ready to File" detail="What money can move into Amazon filing right now." amount={formatMoney(readyTotal)} countLabel={`${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`} action={readyRows.length ? (
-          <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
-            <Link to={disputeCasesHref}>Start Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
-          </Button>
-        ) : null}>
-          {disputeLoading ? <LoadingState label="Preparing filing-ready cases" /> : disputeError ? <ErrorState message={disputeError} /> : readyRows.length ? (
-            <div className="grid gap-4">
-              {readyRows.map((row) => (
-                <DisputeCard
-                  key={row.dispute_case_id}
-                  row={row}
-                  tone="ready"
-                  amountLabel="Estimated recovery"
-                  statusLabel={readyReason(row)}
-                  detail="Evidence and case truth are aligned, so this case can safely move into filing."
-                  timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-                  action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
-                />
-              ))}
-            </div>
-          ) : <EmptyState message="No filing-ready cases yet — continue scanning or review blocked items below." />}
-        </PipelineSection>
+              <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
+                <div className="overflow-x-auto border-b border-white/6">
+                  <TabsList className="h-auto w-full min-w-max justify-start gap-8 rounded-none bg-transparent px-6 py-0 text-left">
+                    {pipelineTabs.map((tab) => (
+                      <TabsTrigger
+                        key={tab.value}
+                        value={tab.value}
+                        className="rounded-none border-b-2 border-transparent px-0 py-4 text-[15px] font-sans font-semibold tracking-tight text-white/38 shadow-none ring-0 transition-colors hover:text-white/70 data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none"
+                      >
+                        {tab.label}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </div>
 
-        <PipelineSection eyebrow="SECTION 2" title="Being Filed" detail="Cases already moving through the filing handoff." amount={formatMoney(totalAmount(beingFiledRows.map(disputeAmount)))} countLabel={`${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission`}>
-          {disputeLoading ? <LoadingState label="Checking active filing handoffs" /> : disputeError ? <ErrorState message={disputeError} /> : beingFiledRows.length ? (
-            <div className="grid gap-4">
-              {beingFiledRows.map((row) => (
-                <DisputeCard
-                  key={row.dispute_case_id}
-                  row={row}
-                  tone="inFlight"
-                  amountLabel="Amount in motion"
-                  statusLabel={beingFiledReason(row)}
-                  detail={String(row.filing_status || '').trim().toLowerCase() === 'retrying' ? 'Margin is retrying the filing path using the same backend action truth.' : 'Margin is handing this case off for Amazon submission now.'}
-                  timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-                  action={<span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-200"><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
-                />
-              ))}
-            </div>
-          ) : <EmptyState message="No cases are being filed right now — new submissions will appear here as soon as Margin queues them." />}
-        </PipelineSection>
-
-        <PipelineSection eyebrow="SECTION 3" title="Filed / In Progress" detail="Cases already filed with Amazon and waiting on the next movement." amount={formatMoney(totalAmount(filedRows.map(disputeAmount)))} countLabel={`${filedRows.length} case${filedRows.length === 1 ? '' : 's'} already with Amazon`}>
-          {disputeLoading ? <LoadingState label="Checking filed cases and Amazon response truth" /> : disputeError ? <ErrorState message={disputeError} /> : filedRows.length ? (
-            <div className="grid gap-4">
-              {filedRows.map((row) => (
-                <DisputeCard
-                  key={row.dispute_case_id}
-                  row={row}
-                  tone="submitted"
-                  amountLabel="Amount in review"
-                  statusLabel={filedReason(row)}
-                  detail="Margin has already submitted this case and is waiting on the next Amazon response."
-                  timeLabel={row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
-                  action={<span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-blue-200"><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
-                />
-              ))}
-            </div>
-          ) : <EmptyState message="No cases filed yet — once submitted, they will appear here." />}
-        </PipelineSection>
-
-        <PipelineSection eyebrow="SECTION 4" title="Approved / Awaiting Payout" detail="Approved value that still needs payout confirmation." amount={formatMoney(totalAmount(approvedRows.map(ledgerApprovedAmount)))} countLabel={`${approvedRows.length} recovery item${approvedRows.length === 1 ? '' : 's'} awaiting payout`}>
-          {ledgerLoading ? <LoadingState label="Loading payout truth" /> : ledgerError ? <ErrorState message={ledgerError} /> : approvedRows.length ? (
-            <div className="grid gap-4">
-              {approvedRows.map((row) => (
-                <LedgerCard
-                  key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
-                  row={row}
-                  tone="approved"
-                  amountLabel="Approved value"
-                  amount={ledgerApprovedAmount(row)}
-                  statusLabel={pendingPayoutReason(row)}
-                  detail="Amazon approval is already recorded. Margin is now waiting on payout truth to land."
-                  timeLabel={row.last_updated_at ? `Awaiting payout · updated ${formatRelative(row.last_updated_at)}` : null}
-                  detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
-                />
-              ))}
-            </div>
-          ) : <EmptyState message="No approved payouts waiting right now — once Amazon approves a case, it will appear here until payout lands." />}
-        </PipelineSection>
-
-        <PipelineSection eyebrow="SECTION 5" title="Completed" detail="Recovered value already confirmed back to the account." amount={formatMoney(recoveredTotal)} countLabel={`${completedRows.length} recovery item${completedRows.length === 1 ? '' : 's'} completed`}>
-          {ledgerLoading ? <LoadingState label="Loading recovered payout confirmations" /> : ledgerError ? <ErrorState message={ledgerError} /> : completedRows.length ? (
-            <div className="grid gap-4">
-              {completedRows.map((row) => (
-                <LedgerCard
-                  key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
-                  row={row}
-                  tone="completed"
-                  amountLabel="Recovered value"
-                  amount={ledgerRecoveredAmount(row)}
-                  statusLabel={completedReason(row)}
-                  detail="The payout has already been confirmed or reconciled in the recovery ledger."
-                  timeLabel={row.last_updated_at ? `Confirmed ${formatRelative(row.last_updated_at)}` : null}
-                  detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
-                />
-              ))}
-            </div>
-          ) : <EmptyState message="No completed recoveries yet — once payout is confirmed, completed items will appear here." />}
-        </PipelineSection>
+                {pipelineTabs.map((tab) => (
+                  <TabsContent key={tab.value} value={tab.value} className="mt-0">
+                    <PipelineSection title={tab.title} detail={tab.detail} amount={tab.amount} countLabel={tab.countLabel} action={tab.action}>
+                      {tab.content}
+                    </PipelineSection>
+                  </TabsContent>
+                ))}
+              </Tabs>
             </CardContent>
           </Card>
         </div>
