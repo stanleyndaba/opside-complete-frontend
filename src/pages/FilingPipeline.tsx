@@ -212,7 +212,7 @@ function toneClasses(tone: RowTone) {
 
 function LoadingState({ label }: { label: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+    <div className="rounded-2xl border border-white/10 bg-[#111111]/90 p-4 shadow-2xl">
       <div className="flex items-center gap-3 text-[12px] font-medium text-white/64">
         <RefreshCw className="h-4 w-4 animate-spin text-white/42" />
         <span>{label}</span>
@@ -226,7 +226,11 @@ function LoadingState({ label }: { label: string }) {
 }
 
 function EmptyState({ message }: { message: string }) {
-  return <div className="rounded-2xl border border-dashed border-white/12 bg-white/[0.02] px-4 py-5 text-sm leading-6 text-white/58">{message}</div>;
+  return (
+    <div className="rounded-2xl border border-dashed border-white/14 bg-[#111111]/92 px-4 py-5 text-sm leading-6 text-white/66 shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+      {message}
+    </div>
+  );
 }
 
 function ErrorState({ message }: { message: string }) {
@@ -256,17 +260,17 @@ function PipelineSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-4 rounded-[28px] border border-white/8 bg-white/[0.02] p-5 lg:p-6">
+    <section className="space-y-4 rounded-[28px] border border-white/10 bg-[#0c0c0c] p-5 shadow-2xl backdrop-blur-xl lg:p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/30">{eyebrow}</div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">{eyebrow}</div>
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
             <h2 className="text-2xl font-semibold tracking-tight text-white">{title}</h2>
             <div className="text-xl font-semibold tracking-tight text-white/84">{amount}</div>
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-white/54">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-white/66">
             <span>{detail}</span>
-            <span className="text-white/30">{countLabel}</span>
+            <span className="text-white/42">{countLabel}</span>
           </div>
         </div>
         {action}
@@ -477,10 +481,10 @@ export default function FilingPipeline() {
   return (
     <PageLayout title="Filing Pipeline" midnight>
       <div className="space-y-6 py-6">
-        <div className="rounded-[28px] border border-white/8 bg-white/[0.02] p-5 lg:p-6">
+        <div className="rounded-[28px] border border-white/10 bg-[#0c0c0c] p-5 shadow-2xl backdrop-blur-xl lg:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/30">FILING PIPELINE</div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">FILING PIPELINE</div>
               <div className="space-y-2">
                 <h1 className="text-3xl font-semibold tracking-tight text-white lg:text-[2.35rem]">What Margin is actively doing with your money right now.</h1>
                 <p className="max-w-3xl text-sm leading-6 text-white/60 lg:text-[15px]">
@@ -500,17 +504,17 @@ export default function FilingPipeline() {
           </div>
 
           <div className="mt-5 grid gap-3 lg:grid-cols-3">
-            <div className="rounded-2xl border border-emerald-500/16 bg-emerald-500/[0.06] px-4 py-4">
+            <div className="rounded-2xl border border-emerald-500/18 bg-emerald-500/[0.08] px-4 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
               <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-100/70">Ready to file</div>
               <div className="mt-2 text-2xl font-semibold tracking-tight text-white">{formatMoney(readyTotal)}</div>
               <div className="mt-1 text-sm text-white/56">{readyRows.length} value-backed case{readyRows.length === 1 ? '' : 's'} can move now</div>
             </div>
-            <div className="rounded-2xl border border-blue-500/16 bg-blue-500/[0.06] px-4 py-4">
+            <div className="rounded-2xl border border-blue-500/18 bg-blue-500/[0.08] px-4 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
               <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-blue-100/70">In progress</div>
               <div className="mt-2 text-2xl font-semibold tracking-tight text-white">{formatMoney(inMotionTotal)}</div>
               <div className="mt-1 text-sm text-white/56">{beingFiledRows.length + filedRows.length + approvedRows.length} active item{beingFiledRows.length + filedRows.length + approvedRows.length === 1 ? '' : 's'} already moving</div>
             </div>
-            <div className="rounded-2xl border border-violet-500/16 bg-violet-500/[0.06] px-4 py-4">
+            <div className="rounded-2xl border border-violet-500/18 bg-violet-500/[0.08] px-4 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
               <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-violet-100/70">Recovered</div>
               <div className="mt-2 text-2xl font-semibold tracking-tight text-white">{formatMoney(recoveredTotal)}</div>
               <div className="mt-1 text-sm text-white/56">{completedRows.length} payout-confirmed item{completedRows.length === 1 ? '' : 's'}</div>
