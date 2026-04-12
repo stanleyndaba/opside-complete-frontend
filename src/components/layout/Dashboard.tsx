@@ -2259,7 +2259,6 @@ export function Dashboard() {
     syncTriggered
   ]);
   const overviewCurrentStatus = overviewStatusRows[0];
-  const overviewLastMovement = overviewStatusRows[1];
   const overviewNeedsFromYou = overviewStatusRows[2];
   const readyToFileCount = launchMetrics?.agent7_ready_count ?? 0;
   const needsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
@@ -2368,90 +2367,6 @@ export function Dashboard() {
     recoveredCashTotal,
     recoveredClaimsCount,
     recoveredCurrency,
-  ]);
-  const overviewPrimaryAction = useMemo(() => {
-    if (needsEvidenceCount > 0) {
-      return {
-        eyebrow: 'Needs from you',
-        title: `Amazon needs more proof on ${pluralize(needsEvidenceCount, 'case')}.`,
-        detail: 'Open the filing queue to link the requested evidence and keep those cases moving.',
-        ctaLabel: 'Review evidence blockers',
-        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
-      };
-    }
-
-    if (safetyVerificationCount + insufficientDataCount > 0) {
-      return {
-        eyebrow: 'Needs from you',
-        title: `Verified identifiers are still missing on ${pluralize(safetyVerificationCount + insufficientDataCount, 'case')}.`,
-        detail: 'Open the filing queue to clear the remaining identifier blockers before those cases can move safely.',
-        ctaLabel: 'Review case blockers',
-        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
-      };
-    }
-
-    if (readyToFileCount > 0) {
-      return {
-        eyebrow: 'Ready now',
-        title: `${pluralize(readyToFileCount, 'case')} ${readyToFileCount === 1 ? 'is' : 'are'} ready to file.`,
-        detail: 'Margin already passed the truth gate on these cases. Open the filing queue to move them forward.',
-        ctaLabel: 'Open filing queue',
-        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
-      };
-    }
-
-    if (inMotionClaimsCount > 0) {
-      return {
-        eyebrow: 'In motion',
-        title: 'Your filed claims are already moving with Amazon.',
-        detail: approvedClaimsCount > 0
-          ? `${pluralize(approvedClaimsCount, 'case')} are already approved and waiting for payout confirmation.`
-          : `${pluralize(filedClaimsCount, 'case')} are currently in Amazon review.`,
-        ctaLabel: 'Open recoveries',
-        onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
-      };
-    }
-
-    if (detectedOpportunitiesCount > 0) {
-      return {
-        eyebrow: 'Next step',
-        title: `${pluralize(detectedOpportunitiesCount, 'issue')} still need review before they can become cases.`,
-        detail: 'Open the findings view to review what is supportable, blocked, or already moving.',
-        ctaLabel: 'Review findings',
-        onClick: () => handleTabChange('discrepancies')
-      };
-    }
-
-    if (!hasLiveRecoveryValue) {
-      return {
-        eyebrow: 'Get started',
-        title: 'Load account data to start the recovery pipeline.',
-        detail: 'Bring in your latest Amazon records so Margin can surface missed reimbursement opportunities.',
-        ctaLabel: 'Open data upload',
-        onClick: () => navigate(tenantRoute(activeSlug, '/data-upload'))
-      };
-    }
-
-    return {
-      eyebrow: 'All clear',
-      title: 'All visible claims are already moving or resolved.',
-      detail: 'Margin will keep scanning for the next issue while you stay on top of recoveries already in flight.',
-      ctaLabel: 'Open recoveries',
-      onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
-    };
-  }, [
-    activeSlug,
-    approvedClaimsCount,
-    detectedOpportunitiesCount,
-    filedClaimsCount,
-    handleTabChange,
-    hasLiveRecoveryValue,
-    inMotionClaimsCount,
-    insufficientDataCount,
-    navigate,
-    needsEvidenceCount,
-    readyToFileCount,
-    safetyVerificationCount
   ]);
   const isOverviewLoading = !dashboardSummary && !launchMonitor;
   if (!activeSlug) {
@@ -2686,64 +2601,6 @@ export function Dashboard() {
                         </div>
                       </div>
 
-                      <div className="border-t border-white/[0.05] px-6 py-6 lg:px-8">
-                        <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
-                          <div>
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
-                              {overviewPrimaryAction.eyebrow}
-                            </div>
-                            <h3 className="mt-2 max-w-3xl text-[28px] font-sans font-medium leading-tight tracking-tight text-white">
-                              {overviewPrimaryAction.title}
-                            </h3>
-                            <p className="mt-3 max-w-2xl text-[13px] font-sans leading-6 text-white/[0.5]">
-                              {overviewPrimaryAction.detail}
-                            </p>
-                            <button
-                              onClick={overviewPrimaryAction.onClick}
-                              className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.82] transition-colors hover:bg-white/[0.06] hover:text-white"
-                            >
-                              {overviewPrimaryAction.ctaLabel}
-                              <ArrowRight className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-
-                          <div className="rounded-2xl border border-white/[0.08] bg-black/20 px-5 py-5">
-                            <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
-                                {overviewCurrentStatus.label}
-                              </div>
-                              <div className="mt-2 text-[16px] font-sans font-medium tracking-tight text-white">
-                                {overviewCurrentStatus.value}
-                              </div>
-                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.42]">
-                                {overviewCurrentStatus.detail}
-                              </p>
-                            </div>
-                            <div className="mt-4 border-t border-white/[0.06] pt-4">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
-                                {overviewLastMovement.label}
-                              </div>
-                              <div className="mt-2 text-[16px] font-sans font-medium tracking-tight text-white">
-                                {overviewLastMovement.value}
-                              </div>
-                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.42]">
-                                {overviewLastMovement.detail}
-                              </p>
-                            </div>
-                            <div className="mt-4 border-t border-white/[0.06] pt-4">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
-                                {overviewNeedsFromYou.label}
-                              </div>
-                              <div className="mt-2 text-[16px] font-sans font-medium tracking-tight text-white">
-                                {overviewNeedsFromYou.value}
-                              </div>
-                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.42]">
-                                {overviewNeedsFromYou.detail}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="space-y-4">
