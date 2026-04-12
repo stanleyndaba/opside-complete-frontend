@@ -268,8 +268,8 @@ function PipelineSection({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-            <h2 className="text-2xl font-sans font-bold tracking-tight text-white">{title}</h2>
-            <div className="text-xl font-sans font-bold tracking-tight text-[#8b8b8b]">{amount}</div>
+            <h2 className="text-[22px] font-sans font-bold tracking-tight text-white">{title}</h2>
+            <div className="text-lg font-sans font-bold tracking-tight text-[#8b8b8b]">{amount}</div>
           </div>
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-sans text-white/60">
             <span>{detail}</span>
@@ -299,7 +299,7 @@ function InlineMetricStack({
             <span
               className={cn(
                 'text-right font-semibold tracking-tight',
-                index === 0 ? 'text-[18px] tabular-nums text-white' : 'text-[13px] text-[#c4c4c4]'
+                index === 0 ? 'text-[16px] tabular-nums text-white' : 'text-[13px] text-[#c4c4c4]'
               )}
             >
               {row.value}

@@ -7,8 +7,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { ChevronRight, Search, X } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
+import { useNotifications } from '@/components/providers/NotificationsProvider';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow, isAfter, subDays, subHours } from 'date-fns';
+import { normalizeTenantSlug } from '@/lib/routes';
+import { useLocation, useParams } from 'react-router-dom';
 
 interface Notification {
   id: string;
@@ -206,7 +209,6 @@ const renderNotificationMessage = (message: string) => {
 
 export default function NotificationHub() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<NotificationPreference[]>(DEFAULT_PREFERENCES);
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
@@ -215,7 +217,16 @@ export default function NotificationHub() {
   const { toast } = useToast();
 
   const { tenant } = useTenant();
-  const activeSlug = tenant?.slug || '';
+  const { notifications: providerNotifications, isLoading, markAsRead, markAllAsRead, refreshNotifications } = useNotifications();
+  const { tenantSlug } = useParams<{ tenantSlug?: string }>();
+  const location = useLocation();
+  const routeSlugMatch = location.pathname.match(/^\/app\/([^/]+)/);
+  const activeSlug =
+    normalizeTenantSlug(tenant?.slug) ||
+    normalizeTenantSlug(tenantSlug) ||
+    normalizeTenantSlug(routeSlugMatch?.[1]) ||
+    '';
+  const loading = isLoading;
 
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -223,67 +234,35 @@ export default function NotificationHub() {
   const [dateFilter, setDateFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Load notifications from API
+  // Mirror provider notifications so the page and navbar use the same source of truth
   useEffect(() => {
-    if (!activeSlug) {
-      setLoading(false);
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await api.getNotifications({ limit: 100 }, activeSlug);
-        if (!cancelled) {
-          const notifData = response.ok
-            ? (response.data?.notifications || [])
-            : [];
-
-          if (response.ok && Array.isArray(notifData)) {
-            const mappedNotifications: Notification[] = notifData.map((notif: any) => {
-              const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
-              const channel = notif.channel || 'in_app';
-              const channels: string[] = [];
-              if (channel === 'in_app' || channel === 'both') {
-                channels.push('In-App');
-              }
-              if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email) {
-                channels.push('Email');
-              }
-              return {
-                id: notif.id,
-                type: notif.type || 'general',
-                message: notif.message || notif.title || 'New notification',
-                timestamp,
-                created_at: new Date(notif.created_at || new Date().toISOString()),
-                channels,
-                read: notif.read || notif.is_read || notif.status === 'read' || false
-              };
-            });
-            setNotifications(mappedNotifications);
-            setError(null);
-          } else {
-            setNotifications([]);
-            if (!response.ok) {
-              setError(response.error || 'Failed to load notifications');
-            }
-          }
-        }
-      } catch (err: any) {
-        if (!cancelled) {
-          console.error('Failed to load notifications:', err);
-          setNotifications([]);
-          setError(err.message || 'Failed to load notifications');
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+    const mappedNotifications: Notification[] = providerNotifications.map((notif: any) => {
+      const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
+      const channel = notif.channel || notif.payload?.channel || 'in_app';
+      const channels: string[] = [];
+      if (channel === 'in_app' || channel === 'both') {
+        channels.push('In-App');
       }
-    })();
-    return () => { cancelled = true; };
-  }, [activeSlug]);
+      if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email || notif.payload?.email_sent) {
+        channels.push('Email');
+      }
+      if (channels.length === 0) {
+        channels.push('In-App');
+      }
+      return {
+        id: notif.id,
+        type: notif.type || 'general',
+        message: notif.message || notif.title || 'New notification',
+        timestamp,
+        created_at: new Date(notif.created_at || new Date().toISOString()),
+        channels,
+        read: notif.status === 'read' || notif.read || notif.is_read || false
+      };
+    });
+
+    setNotifications(mappedNotifications);
+    setError(null);
+  }, [providerNotifications]);
 
   // Filter notifications based on search and filters
   const filteredNotifications = useMemo(() => {
@@ -347,18 +326,10 @@ export default function NotificationHub() {
   // Mark notification as read
   const handleMarkAsRead = async (notificationId: string) => {
     try {
-      const response = await api.markNotificationRead(notificationId, activeSlug);
-      if (response.ok) {
-        setNotifications(prev => prev.map(n =>
-          n.id === notificationId ? { ...n, read: true } : n
-        ));
-      } else {
-        toast({
-          title: 'Failed to mark as read',
-          description: response.error || 'Could not update notification',
-          variant: 'destructive'
-        });
-      }
+      await markAsRead(notificationId);
+      setNotifications(prev => prev.map(n =>
+        n.id === notificationId ? { ...n, read: true } : n
+      ));
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -371,17 +342,9 @@ export default function NotificationHub() {
   // Mark all notifications as read
   const handleMarkAllRead = async () => {
     try {
-      const response = await api.markAllNotificationsRead(activeSlug);
-      if (response.ok) {
-        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-        toast({ title: 'Success', description: 'All notifications marked as read' });
-      } else {
-        toast({
-          title: 'Failed',
-          description: response.error || 'Could not mark all as read',
-          variant: 'destructive'
-        });
-      }
+      await markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      toast({ title: 'Success', description: 'All notifications marked as read' });
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -392,45 +355,14 @@ export default function NotificationHub() {
   };
 
   // Refresh notifications
-  const handleRefresh = () => {
-    setLoading(true);
-    api.getNotifications({ limit: 100 }, activeSlug).then(response => {
-      const notifData = response.ok
-        ? (response.data?.notifications || [])
-        : [];
-
-      if (response.ok && Array.isArray(notifData)) {
-        const mappedNotifications: Notification[] = notifData.map((notif: any) => {
-          const timestamp = formatTimestamp(notif.created_at || new Date().toISOString());
-          const channel = notif.channel || 'in_app';
-          const channels: string[] = [];
-          if (channel === 'in_app' || channel === 'both') {
-            channels.push('In-App');
-          }
-          if (channel === 'email' || channel === 'both' || notif.email_sent || notif.sent_via_email) {
-            channels.push('Email');
-          }
-          return {
-            id: notif.id,
-            type: notif.type || 'general',
-            message: notif.message || notif.title || 'New notification',
-            timestamp,
-            created_at: new Date(notif.created_at || new Date().toISOString()),
-            channels,
-            read: notif.read || notif.is_read || notif.status === 'read' || false
-          };
-        });
-        setNotifications(mappedNotifications);
-        setError(null);
-        toast({ title: 'Refreshed', description: 'Notifications updated' });
-      } else if (!response.ok) {
-        setError(response.error || 'Failed to refresh notifications');
-      }
-      setLoading(false);
-    }).catch(err => {
+  const handleRefresh = async () => {
+    try {
+      setError(null);
+      await refreshNotifications();
+      toast({ title: 'Refreshed', description: 'Notifications updated' });
+    } catch (err: any) {
       setError(err.message || 'Failed to refresh notifications');
-      setLoading(false);
-    });
+    }
   };
 
   const loadPreferences = async () => {

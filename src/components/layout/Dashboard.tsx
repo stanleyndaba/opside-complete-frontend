@@ -1809,7 +1809,7 @@ export function Dashboard() {
     {
       label: isSyncScopedDetections ? 'Estimated recovery in this upload' : 'Estimated recovery in view',
       value: issuesFoundRecoveryLabel,
-      valueTone: 'text-white',
+      valueTone: 'default' as const,
       detail: isSyncScopedDetections
         ? typeof detectionResultsMeta?.estimatedRecovery === 'number'
           ? 'Upload-scoped detection value from the latest processing run'
@@ -1819,19 +1819,19 @@ export function Dashboard() {
     {
       label: isSyncScopedDetections ? 'Findings currently in view' : 'In view',
       value: pluralize(visibleDetectionResults.length, 'finding'),
-      valueTone: 'text-white',
+      valueTone: 'default' as const,
       detail: isSyncScopedDetections ? 'Shown in this upload view' : 'Shown in this view'
     },
     {
       label: 'Ready to file',
       value: pluralize(readyToFileFindingsCount, 'finding'),
-      valueTone: readyToFileFindingsCount > 0 ? 'text-emerald-200' : 'text-white/64',
+      valueTone: readyToFileFindingsCount > 0 ? 'ready' as const : 'muted' as const,
       detail: readyToFileFindingsCount > 0 ? 'Support checks passed' : 'Nothing is ready yet'
     },
     {
       label: 'Needs review',
       value: pluralize(needsReviewFindingsCount, 'finding'),
-      valueTone: needsReviewFindingsCount > 0 ? 'text-amber-200' : 'text-white/64',
+      valueTone: needsReviewFindingsCount > 0 ? 'review' as const : 'muted' as const,
       detail: needsReviewFindingsCount > 0 ? 'Still waiting on review or evidence' : 'No review backlog right now'
     }
   ]), [
@@ -2926,10 +2926,21 @@ export function Dashboard() {
                             <div className="text-[11px] font-sans font-medium tracking-tight text-white/[0.34]">
                               {item.label}
                             </div>
-                            <div className={cn("mt-1 text-[16px] font-sans font-medium leading-none tracking-tight", item.valueTone)}>
+                            <div
+                              className={cn(
+                                "mt-1 text-[16px] font-sans font-medium leading-none tracking-tight",
+                                item.valueTone === 'ready'
+                                  ? 'text-emerald-200'
+                                  : item.valueTone === 'review'
+                                    ? 'text-amber-200'
+                                    : item.valueTone === 'muted'
+                                      ? 'text-white/[0.72]'
+                                      : 'text-white/[0.96]'
+                              )}
+                            >
                               {item.value}
                             </div>
-                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/[0.44]">
+                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/[0.52]">
                               {item.detail}
                             </div>
                           </div>
