@@ -2605,18 +2605,18 @@ export function Dashboard() {
                         <div className="border-b border-white/5 px-5 py-4">
                           <div className="flex items-start justify-between gap-4">
                             <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.78]">
                                 Recent operator feed
                               </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/42">
+                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/[0.82]">
                                 Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
                               </p>
                             </div>
                             <div className="text-right">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.72]">
                                 Reading mode
                               </div>
-                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/40">
+                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/[0.84]">
                                 Most recent first
                               </div>
                             </div>
@@ -2657,16 +2657,16 @@ export function Dashboard() {
                                             <span className={cn('rounded-full border px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
                                               {formatLaunchEventTypeLabel(event.event_type)}
                                             </span>
-                                            <span className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/34">
+                                            <span className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.82]">
                                               {formatLaunchSourceLabel(event.source_table)}
                                             </span>
                                           </div>
 
-                                          <div className="mt-3 text-[14px] font-sans font-medium leading-snug tracking-tight text-white">
+                                          <div className="mt-3 text-[14px] font-sans font-medium leading-snug tracking-tight text-white/[0.58]">
                                             {event.title}
                                           </div>
                                           <p
-                                            className="mt-2 max-w-4xl text-[11px] font-sans leading-5 text-white/44 whitespace-normal"
+                                            className="mt-2 max-w-4xl text-[11px] font-sans leading-5 text-white/[0.9] whitespace-normal"
                                             style={{
                                               display: '-webkit-box',
                                               WebkitBoxOrient: 'vertical',
@@ -2677,7 +2677,7 @@ export function Dashboard() {
                                             {event.detail}
                                           </p>
 
-                                          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-white/30">
+                                          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-white/[0.78]">
                                             {metaItems.map((item) => (
                                               <span key={item}>{item}</span>
                                             ))}
@@ -2686,10 +2686,10 @@ export function Dashboard() {
 
                                         <div className="shrink-0 lg:min-w-[140px]">
                                           <div className="text-right">
-                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/20">
+                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.72]">
                                               Recorded
                                             </div>
-                                            <div className="mt-1 text-[10px] font-sans text-white/44">
+                                            <div className="mt-1 text-[10px] font-sans text-white/[0.88]">
                                               {eventTimeLabel}
                                             </div>
                                           </div>
@@ -2699,13 +2699,13 @@ export function Dashboard() {
                                               <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/60 hover:bg-white/[0.07] hover:text-white"
+                                                className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.84] hover:bg-white/[0.07] hover:text-white"
                                                 onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`))}
                                               >
                                                 Open Case
                                               </Button>
                                             ) : (
-                                              <div className="text-[10px] font-sans text-white/25">
+                                              <div className="text-[10px] font-sans text-white/[0.76]">
                                                 Logged only
                                               </div>
                                             )}
