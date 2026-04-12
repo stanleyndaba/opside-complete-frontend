@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Zap, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCw } from 'lucide-react';
+import { Gauge, Workflow, Settings2, NotebookPen, ChevronLeft, ChevronRight, LogOut, FileText, LifeBuoy, User, Plug, Box, Menu, Send, Headset, Gift, Copy, Check, X, CreditCard, Mail, Upload, Inbox, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -173,10 +173,9 @@ export function Sidebar({
   const navItems: NavItem[] = [
     ...mainMenuItems,
     { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
-    { title: 'Filing Pipeline', icon: Zap, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
+    { title: 'Filing Pipeline', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
     { title: 'Retry Filing', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
   ];
   const NavItemComponent = React.memo(({
@@ -449,6 +448,7 @@ export function Sidebar({
         )}
         {(() => {
           const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
+          const billingActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/billing'));
           const helpActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/help'));
           const notesActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/whats-new'));
           return (
@@ -481,15 +481,24 @@ export function Sidebar({
                 )}
                 strokeWidth={1.5}
               />
-              <div className="min-w-0">
-                <div className="tracking-tight">Settings</div>
-                <div className={cn(
-                  "mt-0.5 text-[10px] font-sans tracking-tight normal-case",
-                  settingsActive ? "text-black/60" : "text-foreground/30 group-data-[highlighted]/more-item:text-black/60"
-                )}>
-                  Workspace preferences
-                </div>
-              </div>
+              <span className="tracking-tight">Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
+              className={cn(
+                "group/more-item flex items-center gap-3 px-3 py-2 cursor-pointer rounded-lg font-sans transition-colors",
+                "text-[13px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
+                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
+                billingActive && "bg-white text-black"
+              )}>
+              <CreditCard
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  billingActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                )}
+                strokeWidth={1.5}
+              />
+              <span className="tracking-tight">Billing</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}

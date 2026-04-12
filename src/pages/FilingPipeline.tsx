@@ -185,28 +185,33 @@ function toneClasses(tone: RowTone) {
   switch (tone) {
     case 'ready':
       return {
-        card: 'border-emerald-500/18 bg-emerald-500/[0.06]',
+        card: 'border-white/8 bg-[#111111]/96',
         badge: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200',
+        chip: 'border-emerald-500/18 bg-emerald-500/[0.08] text-emerald-200',
       };
     case 'inFlight':
       return {
-        card: 'border-amber-500/18 bg-amber-500/[0.06]',
+        card: 'border-white/8 bg-[#111111]/96',
         badge: 'border-amber-500/20 bg-amber-500/10 text-amber-200',
+        chip: 'border-amber-500/18 bg-amber-500/[0.08] text-amber-200',
       };
     case 'submitted':
       return {
-        card: 'border-blue-500/18 bg-blue-500/[0.06]',
+        card: 'border-white/8 bg-[#111111]/96',
         badge: 'border-blue-500/20 bg-blue-500/10 text-blue-200',
+        chip: 'border-blue-500/18 bg-blue-500/[0.08] text-blue-200',
       };
     case 'approved':
       return {
-        card: 'border-violet-500/18 bg-violet-500/[0.06]',
+        card: 'border-white/8 bg-[#111111]/96',
         badge: 'border-violet-500/20 bg-violet-500/10 text-violet-200',
+        chip: 'border-violet-500/18 bg-violet-500/[0.08] text-violet-200',
       };
     case 'completed':
       return {
-        card: 'border-emerald-500/18 bg-emerald-500/[0.08]',
+        card: 'border-white/8 bg-[#111111]/96',
         badge: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200',
+        chip: 'border-emerald-500/18 bg-emerald-500/[0.08] text-emerald-200',
       };
   }
 }
@@ -298,23 +303,23 @@ function DisputeCard({
   const classes = toneClasses(tone);
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-5 p-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(220px,0.55fr)_auto] lg:items-start">
+      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.52fr)_auto] lg:items-start lg:p-5">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
           </div>
           <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">{disputeTitle(row)}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-white/60">{detail}</p>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9a9a9a]">{detail}</p>
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium tracking-tight text-white/38">
             <span>{disputeMeta(row)}</span>
             {timeLabel ? <span>{timeLabel}</span> : null}
           </div>
         </div>
-        <div className="space-y-2 lg:pt-1">
-          <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">{amountLabel}</div>
-          <div className="text-2xl font-semibold tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</div>
-          <div className="text-sm leading-6 text-white/56">{statusLabel}</div>
+        <div className="rounded-xl border border-white/7 bg-white/[0.02] px-4 py-3 lg:pt-3">
+          <div className="text-[10px] font-semibold uppercase tracking-tight text-white/28">{amountLabel}</div>
+          <div className="mt-2 text-xl font-semibold tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</div>
+          <div className="mt-2 text-sm leading-6 text-[#b7b7b7]">{statusLabel}</div>
         </div>
         <div className="flex flex-col items-start gap-3 lg:items-end">{action}</div>
       </CardContent>
@@ -344,23 +349,23 @@ function LedgerCard({
   const classes = toneClasses(tone);
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-5 p-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(220px,0.55fr)_auto] lg:items-start">
+      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.52fr)_auto] lg:items-start lg:p-5">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{ledgerTypeLabel(row)}</span>
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
           </div>
           <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">{ledgerReference(row)}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-white/60">{detail}</p>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9a9a9a]">{detail}</p>
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium tracking-tight text-white/38">
             <span>{ledgerMeta(row)}</span>
             {timeLabel ? <span>{timeLabel}</span> : null}
           </div>
         </div>
-        <div className="space-y-2 lg:pt-1">
-          <div className="text-[10px] font-semibold uppercase tracking-tight text-white/34">{amountLabel}</div>
-          <div className="text-2xl font-semibold tracking-tight text-white">{formatMoney(amount, row.currency)}</div>
-          <div className="text-sm leading-6 text-white/56">{statusLabel}</div>
+        <div className="rounded-xl border border-white/7 bg-white/[0.02] px-4 py-3 lg:pt-3">
+          <div className="text-[10px] font-semibold uppercase tracking-tight text-white/28">{amountLabel}</div>
+          <div className="mt-2 text-xl font-semibold tracking-tight text-white">{formatMoney(amount, row.currency)}</div>
+          <div className="mt-2 text-sm leading-6 text-[#b7b7b7]">{statusLabel}</div>
         </div>
         <div className="flex flex-col items-start gap-3 lg:items-end">
           {detailHref ? (
@@ -545,7 +550,7 @@ export default function FilingPipeline() {
               statusLabel={beingFiledReason(row)}
               detail={String(row.filing_status || '').trim().toLowerCase() === 'retrying' ? 'Margin is retrying the filing path using the same backend action truth.' : 'Margin is handing this case off for Amazon submission now.'}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-              action={<span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-200"><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('inFlight').chip)}><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
             />
           ))}
         </div>
@@ -576,7 +581,7 @@ export default function FilingPipeline() {
               statusLabel={filedReason(row)}
               detail="Margin has already submitted this case and is waiting on the next Amazon response."
               timeLabel={row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
-              action={<span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-blue-200"><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('submitted').chip)}><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
             />
           ))}
         </div>
