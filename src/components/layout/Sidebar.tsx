@@ -32,6 +32,9 @@ const prefetchRoute = (path: string) => {
       case '/recoveries':
         import('@/pages/RecoveryPipelineAgent8');
         break;
+      case '/filing-pipeline':
+        import('@/pages/FilingPipeline');
+        break;
       case '/appeals':
         import('@/pages/Appeals');
         break;
@@ -170,6 +173,7 @@ export function Sidebar({
   const navItems: NavItem[] = [
     ...mainMenuItems,
     { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
+    { title: 'Filing Pipeline', icon: Zap, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Billing', icon: CreditCard, href: tenantRoute(currentTenantSlug, '/billing') },
