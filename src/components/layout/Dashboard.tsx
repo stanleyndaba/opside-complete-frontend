@@ -2490,6 +2490,55 @@ export function Dashboard() {
                   {/* Main Content - 3 columns */}
                   <div className="lg:col-span-4 space-y-6">
                     <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
+                      <div className="border-b border-white/[0.05] px-6 py-6 lg:px-8">
+                        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                          <div>
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                              One-click pipeline
+                            </div>
+                            <p className="mt-2 text-[12px] font-sans leading-5 text-white/[0.44]">
+                              Click any stage to jump straight to the work behind it.
+                            </p>
+                          </div>
+                          <div className="text-[10px] font-sans font-medium tracking-tight text-white/[0.55]">
+                            {overviewNeedsFromYou.value}
+                          </div>
+                        </div>
+                        <div className="mt-5 overflow-x-auto pb-1">
+                          <div className="min-w-max overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#0d0d0d] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+                            <div className="flex items-stretch divide-x divide-white/[0.08]">
+                              {overviewPipelineStages.map((stage) => (
+                                <button
+                                  key={stage.label}
+                                  onClick={stage.onClick}
+                                  className={cn(
+                                    "min-w-[188px] px-5 py-4 text-left transition-colors hover:bg-white/[0.035]",
+                                    stage.tone
+                                  )}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
+                                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
+                                      {stage.label}
+                                    </div>
+                                  </div>
+                                  <div className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">
+                                    {isOverviewLoading ? (
+                                      <Skeleton className="h-5 w-20 bg-white/10" />
+                                    ) : (
+                                      stage.value
+                                    )}
+                                  </div>
+                                  <div className="mt-2 text-[11px] font-sans leading-5 text-white/[0.44]">
+                                    {stage.detail}
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="grid gap-px bg-white/[0.06] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
                         <div className="bg-[#0d0d0d] px-6 py-6 lg:px-8">
                           <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
@@ -2549,58 +2598,6 @@ export function Dashboard() {
                           </div>
                         ))}
                       </div>
-
-                      <div className="border-t border-white/[0.05] px-6 py-6 lg:px-8">
-                        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-                          <div>
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
-                              One-click pipeline
-                            </div>
-                            <p className="mt-2 text-[12px] font-sans leading-5 text-white/[0.44]">
-                              Click any stage to jump straight to the work behind it.
-                            </p>
-                          </div>
-                          <div className="text-[10px] font-sans font-medium tracking-tight text-white/[0.55]">
-                            {overviewNeedsFromYou.value}
-                          </div>
-                        </div>
-                        <div className="mt-5 flex items-stretch gap-3 overflow-x-auto pb-1">
-                          {overviewPipelineStages.map((stage, index) => (
-                            <React.Fragment key={stage.label}>
-                              <button
-                                onClick={stage.onClick}
-                                className={cn(
-                                  "min-w-[172px] rounded-2xl border px-4 py-4 text-left transition-all hover:-translate-y-[1px] hover:border-white/[0.16]",
-                                  stage.tone
-                                )}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
-                                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
-                                    {stage.label}
-                                  </div>
-                                </div>
-                                <div className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">
-                                  {isOverviewLoading ? (
-                                    <Skeleton className="h-5 w-20 bg-white/10" />
-                                  ) : (
-                                    stage.value
-                                  )}
-                                </div>
-                                <div className="mt-2 text-[11px] font-sans leading-5 text-white/[0.44]">
-                                  {stage.detail}
-                                </div>
-                              </button>
-                              {index < overviewPipelineStages.length - 1 ? (
-                                <div className="hidden items-center text-white/[0.18] md:flex">
-                                  <ArrowRight className="h-4 w-4" />
-                                </div>
-                              ) : null}
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      </div>
-
                     </div>
 
                     <div className="space-y-4">
