@@ -10,7 +10,7 @@ import { formatEligibilityStatus, formatProofStatus, getProofStatus } from '@/li
 import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'react-router-dom';
 
@@ -260,17 +260,17 @@ function PipelineSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-4 rounded-[28px] border border-white/10 bg-[#0c0c0c] p-5 shadow-2xl backdrop-blur-xl lg:p-6">
+    <section className="space-y-4 border-b border-white/6 px-6 py-6 last:border-b-0">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">{eyebrow}</div>
+          <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{eyebrow}</div>
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-            <h2 className="text-2xl font-semibold tracking-tight text-white">{title}</h2>
-            <div className="text-xl font-semibold tracking-tight text-white/84">{amount}</div>
+            <h2 className="text-2xl font-sans font-bold tracking-tight text-white">{title}</h2>
+            <div className="text-xl font-sans font-bold tracking-tight text-[#8b8b8b]">{amount}</div>
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-white/66">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-sans text-white/60">
             <span>{detail}</span>
-            <span className="text-white/42">{countLabel}</span>
+            <span className="text-white/32">{countLabel}</span>
           </div>
         </div>
         {action}
@@ -477,53 +477,136 @@ export default function FilingPipeline() {
   );
 
   const disputeCasesHref = tenantRoute(activeSlug, '/dispute-cases');
+  const recoveriesHref = tenantRoute(activeSlug, '/recoveries');
+  const lastUpdatedLabel = latestMovement ? formatDistanceToNow(new Date(latestMovement), { addSuffix: true }) : null;
+  const totalVisibleRecords = readyRows.length + beingFiledRows.length + filedRows.length + approvedRows.length + completedRows.length;
+  const snapshotPills = [
+    readyRows.length ? `${readyRows.length} ready to file` : null,
+    beingFiledRows.length ? `${beingFiledRows.length} submitting now` : null,
+    filedRows.length ? `${filedRows.length} already with Amazon` : null,
+    approvedRows.length ? `${approvedRows.length} awaiting payout` : null,
+    completedRows.length ? `${completedRows.length} recovered` : null,
+  ].filter(Boolean) as string[];
 
   return (
     <PageLayout title="Filing Pipeline" midnight>
-      <div className="space-y-6 py-6">
-        <div className="rounded-[28px] border border-white/10 bg-[#0c0c0c] p-5 shadow-2xl backdrop-blur-xl lg:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="space-y-3">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">FILING PIPELINE</div>
-              <div className="space-y-2">
-                <h1 className="text-3xl font-semibold tracking-tight text-white lg:text-[2.35rem]">What Margin is actively doing with your money right now.</h1>
-                <p className="max-w-3xl text-sm leading-6 text-white/60 lg:text-[15px]">
-                  Ready to file, already filed, approved, awaiting payout, and recovered, using only dispute queue and recovery ledger truth.
-                </p>
-              </div>
+      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          style={{
+            backgroundImage:
+              `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+          }}
+        />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+
+        <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Filing Pipeline</h1>
+              <p className="text-sm text-white/50 font-sans max-w-3xl">
+                Show exactly what is ready to file, already being submitted, already with Amazon, waiting for payout, and fully recovered without asking sellers to interpret queue logic.
+              </p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="text-right text-[11px] font-medium text-white/38">
-                {latestMovement ? `Pipeline updated ${formatRelative(latestMovement)}` : 'Pipeline update time unavailable'}
+            <div className="flex flex-col items-start gap-2 lg:items-end">
+              {lastUpdatedLabel ? (
+                <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
+                  Filing pipeline live
+                  <span className="ml-2 text-white/40">{lastUpdatedLabel}</span>
+                </div>
+              ) : null}
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white">
+                {latestMovement ? `Pipeline refreshed ${lastUpdatedLabel}` : 'Pipeline update time unavailable'}
               </div>
-              <Button type="button" variant="outline" size="sm" onClick={() => void refreshAll()} disabled={refreshing} className="border-white/12 bg-transparent text-white/72 hover:bg-white/[0.05] hover:text-white">
-                <RefreshCw className={cn('mr-2 h-4 w-4', refreshing ? 'animate-spin' : '')} />
+              <Button
+                onClick={() => void refreshAll()}
+                className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"
+              >
+                <RefreshCw className={cn('w-3 h-3 mr-2', refreshing ? 'animate-spin' : '')} />
                 Refresh
               </Button>
             </div>
           </div>
 
-          <div className="mt-5 grid gap-3 lg:grid-cols-3">
-            <div className="rounded-2xl border border-emerald-500/18 bg-emerald-500/[0.08] px-4 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-emerald-100/70">Ready to file</div>
-              <div className="mt-2 text-2xl font-semibold tracking-tight text-white">{formatMoney(readyTotal)}</div>
-              <div className="mt-1 text-sm text-white/56">{readyRows.length} value-backed case{readyRows.length === 1 ? '' : 's'} can move now</div>
+          <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#0c0c0c] text-white">
+            <div className="px-5 py-4">
+              <div className="min-w-0">
+                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Current filing snapshot</p>
+                <p className="mt-2 text-sm font-sans font-bold tracking-tight text-white">
+                  {readyRows.length > 0
+                    ? `${formatMoney(readyTotal)} is ready to file now while ${formatMoney(inMotionTotal)} is already moving through Amazon or payout follow-up.`
+                    : `${formatMoney(inMotionTotal)} is already moving while Margin keeps checking for the next filing-ready case.`}
+                </p>
+                <p className="mt-1 text-xs font-sans text-white/60">
+                  {completedRows.length > 0
+                    ? `${formatMoney(recoveredTotal)} is already confirmed back to the account.`
+                    : 'Recovered payouts will appear here as soon as financial confirmation lands.'}
+                </p>
+                <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
+                  Scope: ready, filing, filed, payout, and recovered truth from the current account
+                </p>
+              </div>
             </div>
-            <div className="rounded-2xl border border-blue-500/18 bg-blue-500/[0.08] px-4 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-blue-100/70">In progress</div>
-              <div className="mt-2 text-2xl font-semibold tracking-tight text-white">{formatMoney(inMotionTotal)}</div>
-              <div className="mt-1 text-sm text-white/56">{beingFiledRows.length + filedRows.length + approvedRows.length} active item{beingFiledRows.length + filedRows.length + approvedRows.length === 1 ? '' : 's'} already moving</div>
-            </div>
-            <div className="rounded-2xl border border-violet-500/18 bg-violet-500/[0.08] px-4 py-4 shadow-[0_18px_45px_rgba(0,0,0,0.25)]">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.24em] text-violet-100/70">Recovered</div>
-              <div className="mt-2 text-2xl font-semibold tracking-tight text-white">{formatMoney(recoveredTotal)}</div>
-              <div className="mt-1 text-sm text-white/56">{completedRows.length} payout-confirmed item{completedRows.length === 1 ? '' : 's'}</div>
+            <div className="border-t border-white/8 px-5 py-4">
+              <div className="mb-4 flex flex-wrap gap-2">
+                {snapshotPills.map((pill) => (
+                  <span
+                    key={pill}
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"
+                  >
+                    {pill}
+                  </span>
+                ))}
+                {totalVisibleRecords > 0 ? (
+                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                    {totalVisibleRecords} records in pipeline view
+                  </span>
+                ) : null}
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                  { label: 'Ready to file', value: formatMoney(readyTotal), detail: readyRows.length ? `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} can move right now` : 'Nothing is filing-ready yet' },
+                  { label: 'Being filed', value: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))), detail: beingFiledRows.length ? `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission` : 'No filing handoffs running right now' },
+                  { label: 'With Amazon', value: formatMoney(totalAmount([...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)])), detail: filedRows.length + approvedRows.length ? `${filedRows.length + approvedRows.length} case${filedRows.length + approvedRows.length === 1 ? '' : 's'} waiting on Amazon or payout` : 'No filed or approved cases yet' },
+                  { label: 'Recovered', value: formatMoney(recoveredTotal), detail: completedRows.length ? `${completedRows.length} payout-confirmed item${completedRows.length === 1 ? '' : 's'}` : 'No recovered payouts confirmed yet' },
+                ].map((card) => (
+                  <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{card.label}</div>
+                    <div className="mt-2 text-left text-lg font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">{card.value}</div>
+                    <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-white/62">{card.detail}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
+          <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
+            <CardHeader className="border-b border-white/5 bg-white/[0.01] px-6 py-5">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2 xl:flex-row xl:items-end xl:justify-between">
+                  <div>
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Conversion surface</div>
+                    <h2 className="mt-2 text-xl font-sans font-bold tracking-tight text-white">Money moving through filing</h2>
+                    <p className="mt-1 text-xs font-sans leading-5 text-white/60">
+                      Each section answers one question: what can file, what is filing, what is already with Amazon, what is approved, and what is already recovered.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button asChild variant="outline" className="border-white/10 text-white/60 bg-white/5 hover:bg-white/10 hover:text-white">
+                      <Link to={disputeCasesHref}>Open dispute queue</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="border-white/10 text-white/60 bg-white/5 hover:bg-white/10 hover:text-white">
+                      <Link to={recoveriesHref}>Open recoveries</Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-0">
         <PipelineSection eyebrow="SECTION 1" title="Ready to File" detail="What money can move into Amazon filing right now." amount={formatMoney(readyTotal)} countLabel={`${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`} action={readyRows.length ? (
-          <Button asChild size="sm" className="bg-white text-black hover:bg-white/90">
+          <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
             <Link to={disputeCasesHref}>Start Filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
           </Button>
         ) : null}>
@@ -538,7 +621,7 @@ export default function FilingPipeline() {
                   statusLabel={readyReason(row)}
                   detail="Evidence and case truth are aligned, so this case can safely move into filing."
                   timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-                  action={<Button asChild size="sm" variant="outline" className="border-white/12 bg-transparent text-white/72 hover:bg-white/[0.05] hover:text-white"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
+                  action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
                 />
               ))}
             </div>
@@ -557,7 +640,7 @@ export default function FilingPipeline() {
                   statusLabel={beingFiledReason(row)}
                   detail={String(row.filing_status || '').trim().toLowerCase() === 'retrying' ? 'Margin is retrying the filing path using the same backend action truth.' : 'Margin is handing this case off for Amazon submission now.'}
                   timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-                  action={<span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-amber-200"><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
+                  action={<span className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-200"><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
                 />
               ))}
             </div>
@@ -576,7 +659,7 @@ export default function FilingPipeline() {
                   statusLabel={filedReason(row)}
                   detail="Margin has already submitted this case and is waiting on the next Amazon response."
                   timeLabel={row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
-                  action={<span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-tight text-blue-200"><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
+                  action={<span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight text-blue-200"><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
                 />
               ))}
             </div>
@@ -587,8 +670,8 @@ export default function FilingPipeline() {
           {ledgerLoading ? <LoadingState label="Loading payout truth" /> : ledgerError ? <ErrorState message={ledgerError} /> : approvedRows.length ? (
             <div className="grid gap-4">
               {approvedRows.map((row) => (
-                <React.Fragment key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}>
                 <LedgerCard
+                  key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
                   row={row}
                   tone="approved"
                   amountLabel="Approved value"
@@ -598,7 +681,6 @@ export default function FilingPipeline() {
                   timeLabel={row.last_updated_at ? `Awaiting payout · updated ${formatRelative(row.last_updated_at)}` : null}
                   detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
                 />
-                </React.Fragment>
               ))}
             </div>
           ) : <EmptyState message="No approved payouts waiting right now — once Amazon approves a case, it will appear here until payout lands." />}
@@ -608,8 +690,8 @@ export default function FilingPipeline() {
           {ledgerLoading ? <LoadingState label="Loading recovered payout confirmations" /> : ledgerError ? <ErrorState message={ledgerError} /> : completedRows.length ? (
             <div className="grid gap-4">
               {completedRows.map((row) => (
-                <React.Fragment key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}>
                 <LedgerCard
+                  key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
                   row={row}
                   tone="completed"
                   amountLabel="Recovered value"
@@ -619,11 +701,13 @@ export default function FilingPipeline() {
                   timeLabel={row.last_updated_at ? `Confirmed ${formatRelative(row.last_updated_at)}` : null}
                   detailHref={row.linked_dispute_case_id || row.dispute_case_id ? tenantRoute(activeSlug, `/recoveries/${encodeURIComponent(row.linked_dispute_case_id || row.dispute_case_id || '')}`) : null}
                 />
-                </React.Fragment>
               ))}
             </div>
           ) : <EmptyState message="No completed recoveries yet — once payout is confirmed, completed items will appear here." />}
         </PipelineSection>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </PageLayout>
   );
