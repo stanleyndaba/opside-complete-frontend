@@ -283,6 +283,34 @@ function PipelineSection({
   );
 }
 
+function InlineMetricStack({
+  rows,
+}: {
+  rows: Array<{ label: string; value: string | null | undefined }>;
+}) {
+  const visibleRows = rows.filter((row) => row.value && row.value !== NOT_AVAILABLE);
+
+  return (
+    <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-6">
+      <div className="space-y-2.5">
+        {visibleRows.map((row, index) => (
+          <div key={`${row.label}-${index}`} className="flex items-center justify-between gap-6">
+            <span className="text-[11px] font-medium tracking-tight text-white/34">{row.label}</span>
+            <span
+              className={cn(
+                'text-right font-semibold tracking-tight',
+                index === 0 ? 'text-[18px] tabular-nums text-white' : 'text-[13px] text-[#c4c4c4]'
+              )}
+            >
+              {row.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function DisputeCard({
   row,
   tone,
@@ -303,7 +331,7 @@ function DisputeCard({
   const classes = toneClasses(tone);
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.52fr)_auto] lg:items-start lg:p-5">
+      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-5">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
@@ -311,16 +339,15 @@ function DisputeCard({
           </div>
           <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">{disputeTitle(row)}</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9a9a9a]">{detail}</p>
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium tracking-tight text-white/38">
-            <span>{disputeMeta(row)}</span>
-            {timeLabel ? <span>{timeLabel}</span> : null}
-          </div>
+          <div className="mt-3 text-[11px] font-medium tracking-tight text-white/38">{disputeMeta(row)}</div>
         </div>
-        <div className="rounded-xl border border-white/7 bg-white/[0.02] px-4 py-3 lg:pt-3">
-          <div className="text-[10px] font-semibold uppercase tracking-tight text-white/28">{amountLabel}</div>
-          <div className="mt-2 text-xl font-semibold tracking-tight text-white">{formatMoney(disputeAmount(row), row.currency)}</div>
-          <div className="mt-2 text-sm leading-6 text-[#b7b7b7]">{statusLabel}</div>
-        </div>
+        <InlineMetricStack
+          rows={[
+            { label: amountLabel, value: formatMoney(disputeAmount(row), row.currency) },
+            { label: 'Pipeline status', value: statusLabel },
+            { label: 'Last movement', value: timeLabel || null },
+          ]}
+        />
         <div className="flex flex-col items-start gap-3 lg:items-end">{action}</div>
       </CardContent>
     </Card>
@@ -349,7 +376,7 @@ function LedgerCard({
   const classes = toneClasses(tone);
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(220px,0.52fr)_auto] lg:items-start lg:p-5">
+      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-5">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{ledgerTypeLabel(row)}</span>
@@ -357,16 +384,15 @@ function LedgerCard({
           </div>
           <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">{ledgerReference(row)}</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9a9a9a]">{detail}</p>
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium tracking-tight text-white/38">
-            <span>{ledgerMeta(row)}</span>
-            {timeLabel ? <span>{timeLabel}</span> : null}
-          </div>
+          <div className="mt-3 text-[11px] font-medium tracking-tight text-white/38">{ledgerMeta(row)}</div>
         </div>
-        <div className="rounded-xl border border-white/7 bg-white/[0.02] px-4 py-3 lg:pt-3">
-          <div className="text-[10px] font-semibold uppercase tracking-tight text-white/28">{amountLabel}</div>
-          <div className="mt-2 text-xl font-semibold tracking-tight text-white">{formatMoney(amount, row.currency)}</div>
-          <div className="mt-2 text-sm leading-6 text-[#b7b7b7]">{statusLabel}</div>
-        </div>
+        <InlineMetricStack
+          rows={[
+            { label: amountLabel, value: formatMoney(amount, row.currency) },
+            { label: 'Payout status', value: statusLabel },
+            { label: 'Last movement', value: timeLabel || null },
+          ]}
+        />
         <div className="flex flex-col items-start gap-3 lg:items-end">
           {detailHref ? (
             <Button asChild size="sm" variant="outline" className="border-white/12 bg-transparent text-white/72 hover:bg-white/[0.05] hover:text-white">
