@@ -2258,51 +2258,202 @@ export function Dashboard() {
     syncMessage,
     syncTriggered
   ]);
-  const overviewMetricRows = useMemo(() => ([
+  const overviewCurrentStatus = overviewStatusRows[0];
+  const overviewLastMovement = overviewStatusRows[1];
+  const overviewNeedsFromYou = overviewStatusRows[2];
+  const readyToFileCount = launchMetrics?.agent7_ready_count ?? 0;
+  const needsEvidenceCount = launchMetrics?.agent7_needs_evidence_count ?? 0;
+  const safetyVerificationCount = launchMetrics?.agent7_pending_safety_verification_count ?? 0;
+  const insufficientDataCount = launchMetrics?.agent7_insufficient_data_count ?? 0;
+  const inMotionClaimsCount = filedClaimsCount + approvedClaimsCount;
+  const inMotionValueTotal = filedValueTotal + approvedValueTotal;
+  const blockedPipelineCount = needsEvidenceCount + safetyVerificationCount + insufficientDataCount;
+  const overviewFoundValueLabel = useMemo(
+    () => formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency),
+    [estimatedValueTotal, formatCurrencyWithSelection, recoveredCurrency]
+  );
+  const overviewInMotionValueLabel = useMemo(
+    () => formatCurrencyWithSelection(inMotionValueTotal, recoveredCurrency),
+    [formatCurrencyWithSelection, inMotionValueTotal, recoveredCurrency]
+  );
+  const overviewPaidBackValueLabel = useMemo(
+    () => formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
+    [formatCurrencyWithSelection, recoveredCashTotal, recoveredCurrency]
+  );
+  const overviewHeroMetrics = useMemo(() => ([
     {
-      label: 'Needs review',
-      value: pluralize(detectedOpportunitiesCount, 'issue'),
-      detail: detectedOpportunitiesCount > 0
-        ? `${formatCurrencyWithSelection(estimatedValueTotal, recoveredCurrency)} at risk`
-        : 'Nothing waiting'
-    },
-    {
-      label: 'In Amazon review',
-      value: pluralize(filedClaimsCount, 'case'),
-      detail: filedClaimsCount > 0
-        ? (filedValueTotal > 0
-          ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review`
-          : 'Filed already')
-        : 'Nothing filed'
-    },
-    {
-      label: 'Waiting for payout',
-      value: pluralize(approvedClaimsCount, 'case'),
-      detail: approvedClaimsCount > 0
-        ? (approvedValueTotal > 0
-          ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} approved`
-          : 'Awaiting payout')
-        : 'No approvals yet'
+      label: 'In motion',
+      value: overviewInMotionValueLabel,
+      detail: inMotionClaimsCount > 0
+        ? `${pluralize(inMotionClaimsCount, 'case')} already with Amazon or waiting for payout`
+        : 'Nothing is moving with Amazon yet'
     },
     {
       label: 'Paid back',
-      value: formatCurrencyWithSelection(recoveredCashTotal, recoveredCurrency),
+      value: overviewPaidBackValueLabel,
       detail: recoveredCashTotal > 0
-        ? `${pluralize(recoveredClaimsCount, 'case')} confirmed`
-        : 'Nothing confirmed'
+        ? `${pluralize(recoveredClaimsCount, 'case')} already confirmed back to this account`
+        : 'No payout has been confirmed yet'
     }
   ]), [
+    inMotionClaimsCount,
+    overviewInMotionValueLabel,
+    overviewPaidBackValueLabel,
+    recoveredCashTotal,
+    recoveredClaimsCount
+  ]);
+  const overviewPipelineStages = useMemo(() => {
+    const blockedDetail = needsEvidenceCount > 0
+      ? `${pluralize(needsEvidenceCount, 'case')} waiting on Amazon-requested proof`
+      : blockedPipelineCount > 0
+        ? `${pluralize(blockedPipelineCount, 'case')} still need verified identifiers`
+        : 'No blockers are holding cases back right now';
+
+    return [
+      {
+        label: 'Found',
+        value: pluralize(detectedOpportunitiesCount, 'issue'),
+        detail: detectedOpportunitiesCount > 0 ? `${overviewFoundValueLabel} detected in view` : 'No issues in view',
+        tone: detectedOpportunitiesCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
+        dotTone: detectedOpportunitiesCount > 0 ? 'bg-sky-300' : 'bg-white/18',
+        onClick: () => handleTabChange('discrepancies')
+      },
+      {
+        label: 'Needs proof',
+        value: pluralize(blockedPipelineCount, 'case'),
+        detail: blockedDetail,
+        tone: blockedPipelineCount > 0 ? 'border-amber-500/20 bg-amber-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
+        dotTone: blockedPipelineCount > 0 ? 'bg-amber-300' : 'bg-white/18',
+        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
+      },
+      {
+        label: 'In Amazon review',
+        value: pluralize(filedClaimsCount, 'case'),
+        detail: filedClaimsCount > 0 ? `${formatCurrencyWithSelection(filedValueTotal, recoveredCurrency)} in review` : 'No filed cases in review',
+        tone: filedClaimsCount > 0 ? 'border-sky-500/20 bg-sky-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
+        dotTone: filedClaimsCount > 0 ? 'bg-sky-300' : 'bg-white/18',
+        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
+      },
+      {
+        label: 'Waiting for payout',
+        value: pluralize(approvedClaimsCount, 'case'),
+        detail: approvedClaimsCount > 0 ? `${formatCurrencyWithSelection(approvedValueTotal, recoveredCurrency)} approved` : 'No approved cases awaiting payout',
+        tone: approvedClaimsCount > 0 ? 'border-violet-500/20 bg-violet-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
+        dotTone: approvedClaimsCount > 0 ? 'bg-violet-300' : 'bg-white/18',
+        onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
+      },
+      {
+        label: 'Paid back',
+        value: overviewPaidBackValueLabel,
+        detail: recoveredCashTotal > 0 ? `${pluralize(recoveredClaimsCount, 'case')} confirmed` : 'Nothing confirmed yet',
+        tone: recoveredCashTotal > 0 ? 'border-emerald-500/20 bg-emerald-500/[0.08]' : 'border-white/8 bg-white/[0.02]',
+        dotTone: recoveredCashTotal > 0 ? 'bg-emerald-300' : 'bg-white/18',
+        onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
+      }
+    ];
+  }, [
+    activeSlug,
     approvedClaimsCount,
     approvedValueTotal,
+    blockedPipelineCount,
     detectedOpportunitiesCount,
-    estimatedValueTotal,
     filedClaimsCount,
     filedValueTotal,
     formatCurrencyWithSelection,
-    recoveredClaimsCount,
+    handleTabChange,
+    navigate,
+    needsEvidenceCount,
+    overviewFoundValueLabel,
+    overviewPaidBackValueLabel,
     recoveredCashTotal,
-    recoveredCurrency
+    recoveredClaimsCount,
+    recoveredCurrency,
   ]);
+  const overviewPrimaryAction = useMemo(() => {
+    if (needsEvidenceCount > 0) {
+      return {
+        eyebrow: 'Needs from you',
+        title: `Amazon needs more proof on ${pluralize(needsEvidenceCount, 'case')}.`,
+        detail: 'Open the filing queue to link the requested evidence and keep those cases moving.',
+        ctaLabel: 'Review evidence blockers',
+        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
+      };
+    }
+
+    if (safetyVerificationCount + insufficientDataCount > 0) {
+      return {
+        eyebrow: 'Needs from you',
+        title: `Verified identifiers are still missing on ${pluralize(safetyVerificationCount + insufficientDataCount, 'case')}.`,
+        detail: 'Open the filing queue to clear the remaining identifier blockers before those cases can move safely.',
+        ctaLabel: 'Review case blockers',
+        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
+      };
+    }
+
+    if (readyToFileCount > 0) {
+      return {
+        eyebrow: 'Ready now',
+        title: `${pluralize(readyToFileCount, 'case')} ${readyToFileCount === 1 ? 'is' : 'are'} ready to file.`,
+        detail: 'Margin already passed the truth gate on these cases. Open the filing queue to move them forward.',
+        ctaLabel: 'Open filing queue',
+        onClick: () => navigate(tenantRoute(activeSlug, '/dispute-cases'))
+      };
+    }
+
+    if (inMotionClaimsCount > 0) {
+      return {
+        eyebrow: 'In motion',
+        title: 'Your filed claims are already moving with Amazon.',
+        detail: approvedClaimsCount > 0
+          ? `${pluralize(approvedClaimsCount, 'case')} are already approved and waiting for payout confirmation.`
+          : `${pluralize(filedClaimsCount, 'case')} are currently in Amazon review.`,
+        ctaLabel: 'Open recoveries',
+        onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
+      };
+    }
+
+    if (detectedOpportunitiesCount > 0) {
+      return {
+        eyebrow: 'Next step',
+        title: `${pluralize(detectedOpportunitiesCount, 'issue')} still need review before they can become cases.`,
+        detail: 'Open the findings view to review what is supportable, blocked, or already moving.',
+        ctaLabel: 'Review findings',
+        onClick: () => handleTabChange('discrepancies')
+      };
+    }
+
+    if (!hasLiveRecoveryValue) {
+      return {
+        eyebrow: 'Get started',
+        title: 'Load account data to start the recovery pipeline.',
+        detail: 'Bring in your latest Amazon records so Margin can surface missed reimbursement opportunities.',
+        ctaLabel: 'Open data upload',
+        onClick: () => navigate(tenantRoute(activeSlug, '/data-upload'))
+      };
+    }
+
+    return {
+      eyebrow: 'All clear',
+      title: 'All visible claims are already moving or resolved.',
+      detail: 'Margin will keep scanning for the next issue while you stay on top of recoveries already in flight.',
+      ctaLabel: 'Open recoveries',
+      onClick: () => navigate(tenantRoute(activeSlug, '/recoveries'))
+    };
+  }, [
+    activeSlug,
+    approvedClaimsCount,
+    detectedOpportunitiesCount,
+    filedClaimsCount,
+    handleTabChange,
+    hasLiveRecoveryValue,
+    inMotionClaimsCount,
+    insufficientDataCount,
+    navigate,
+    needsEvidenceCount,
+    readyToFileCount,
+    safetyVerificationCount
+  ]);
+  const isOverviewLoading = !dashboardSummary && !launchMonitor;
   if (!activeSlug) {
     return (
       <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
@@ -2424,78 +2575,172 @@ export function Dashboard() {
                   {/* Main Content - 3 columns */}
                   <div className="lg:col-span-4 space-y-6">
                     <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                      <div className="border-b border-white/5 bg-[#0d0d0d]">
-                        <div className="grid grid-cols-1 gap-px bg-white/6 md:grid-cols-2 xl:grid-cols-4">
-                          {overviewMetricRows.map((item) => (
-                            <div key={item.label} className="bg-[#0d0d0d] px-6 py-4">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/24">
-                                {item.label}
+                      <div className="grid gap-px bg-white/[0.06] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
+                        <div className="bg-[#0d0d0d] px-6 py-6 lg:px-8">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                            Recovery pipeline
+                          </div>
+                          <div className="mt-4 flex flex-wrap items-end gap-3">
+                            {isOverviewLoading ? (
+                              <Skeleton className="h-12 w-48 bg-white/10" />
+                            ) : (
+                              <>
+                                <div className="text-[40px] font-sans font-semibold leading-none tracking-tight text-emerald-200 xl:text-[46px]">
+                                  {overviewFoundValueLabel}
+                                </div>
+                                <div className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
+                                  {pluralize(detectedOpportunitiesCount, 'issue')} found
+                                </div>
+                              </>
+                            )}
+                          </div>
+                          <h2 className="mt-4 max-w-4xl text-[34px] font-sans font-medium leading-[1.02] tracking-tight text-white xl:text-[44px]">
+                            {overviewHeadline}
+                          </h2>
+                          <p className="mt-4 max-w-3xl text-[13px] font-sans leading-6 text-white/[0.52]">
+                            {overviewNarrative}
+                          </p>
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            {readyToFileCount > 0 ? (
+                              <div className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
+                                {pluralize(readyToFileCount, 'case')} ready to file
                               </div>
-                              <div className="mt-2.5 text-[18px] font-sans font-medium tracking-tight text-white">
-                                {!dashboardSummary ? (
-                                  <Skeleton className="h-6 w-24 bg-white/10" />
-                                ) : (
-                                  item.value
-                                )}
-                              </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/34">
-                                {item.detail}
-                              </p>
+                            ) : null}
+                            <div className="inline-flex items-center rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.68]">
+                              {overviewCurrentStatus.value}
                             </div>
+                            {latestDashboardSignalLabel ? (
+                              <div className="inline-flex items-center rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
+                                {latestDashboardSignalLabel}
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                        {overviewHeroMetrics.map((item) => (
+                          <div key={item.label} className="bg-[#0d0d0d] px-6 py-6">
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                              {item.label}
+                            </div>
+                            <div className="mt-3 text-[28px] font-sans font-medium tracking-tight text-white">
+                              {isOverviewLoading ? (
+                                <Skeleton className="h-8 w-28 bg-white/10" />
+                              ) : (
+                                item.value
+                              )}
+                            </div>
+                            <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.4]">
+                              {item.detail}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="border-t border-white/[0.05] px-6 py-6 lg:px-8">
+                        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                          <div>
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                              One-click pipeline
+                            </div>
+                            <p className="mt-2 text-[12px] font-sans leading-5 text-white/[0.44]">
+                              Click any stage to jump straight to the work behind it.
+                            </p>
+                          </div>
+                          <div className="text-[10px] font-sans font-medium tracking-tight text-white/[0.55]">
+                            {overviewNeedsFromYou.value}
+                          </div>
+                        </div>
+                        <div className="mt-5 flex items-stretch gap-3 overflow-x-auto pb-1">
+                          {overviewPipelineStages.map((stage, index) => (
+                            <React.Fragment key={stage.label}>
+                              <button
+                                onClick={stage.onClick}
+                                className={cn(
+                                  "min-w-[172px] rounded-2xl border px-4 py-4 text-left transition-all hover:-translate-y-[1px] hover:border-white/[0.16]",
+                                  stage.tone
+                                )}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
+                                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
+                                    {stage.label}
+                                  </div>
+                                </div>
+                                <div className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">
+                                  {isOverviewLoading ? (
+                                    <Skeleton className="h-5 w-20 bg-white/10" />
+                                  ) : (
+                                    stage.value
+                                  )}
+                                </div>
+                                <div className="mt-2 text-[11px] font-sans leading-5 text-white/[0.44]">
+                                  {stage.detail}
+                                </div>
+                              </button>
+                              {index < overviewPipelineStages.length - 1 ? (
+                                <div className="hidden items-center text-white/[0.18] md:flex">
+                                  <ArrowRight className="h-4 w-4" />
+                                </div>
+                              ) : null}
+                            </React.Fragment>
                           ))}
                         </div>
                       </div>
 
-                      <div className="px-8 py-8">
-                        <div className="grid gap-10 xl:grid-cols-[1.45fr_0.95fr]">
+                      <div className="border-t border-white/[0.05] px-6 py-6 lg:px-8">
+                        <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
                           <div>
-                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
-                              Recovery value in view
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                              {overviewPrimaryAction.eyebrow}
                             </div>
-                            <h2 className="mt-4 max-w-4xl text-4xl font-sans font-medium tracking-tight text-white xl:text-5xl">
-                              {overviewHeadline}
-                            </h2>
-                            <p className="mt-5 max-w-3xl text-sm font-sans leading-relaxed text-white/52">
-                              {overviewNarrative}
+                            <h3 className="mt-2 max-w-3xl text-[28px] font-sans font-medium leading-tight tracking-tight text-white">
+                              {overviewPrimaryAction.title}
+                            </h3>
+                            <p className="mt-3 max-w-2xl text-[13px] font-sans leading-6 text-white/[0.5]">
+                              {overviewPrimaryAction.detail}
                             </p>
-                            <div className="mt-8 flex flex-wrap gap-3">
-                              <button
-                                onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                                className="rounded-full border border-white/12 bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/78 transition-colors hover:bg-white/[0.06] hover:text-white"
-                              >
-                                Open Recoveries
-                              </button>
-                              <button
-                                onClick={() => navigate(tenantRoute(activeSlug, '/dispute-cases'))}
-                                className="rounded-full border border-white/12 bg-transparent px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/50 transition-colors hover:border-white/20 hover:text-white/78"
-                              >
-                                Review cases in motion
-                              </button>
-                              {!hasLiveRecoveryValue ? (
-                                <button
-                                  onClick={() => navigate(tenantRoute(activeSlug, '/data-upload'))}
-                                  className="rounded-full border border-white/12 bg-transparent px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/50 transition-colors hover:border-white/20 hover:text-white/78"
-                                >
-                                  Load demo data
-                                </button>
-                              ) : null}
-                            </div>
+                            <button
+                              onClick={overviewPrimaryAction.onClick}
+                              className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.03] px-4 py-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.82] transition-colors hover:bg-white/[0.06] hover:text-white"
+                            >
+                              {overviewPrimaryAction.ctaLabel}
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </button>
                           </div>
 
-                          <div className="grid gap-3">
-                            {overviewStatusRows.map((item) => (
-                              <div key={item.label} className="rounded-2xl border border-white/8 bg-black/20 px-5 py-4">
-                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/26">
-                                  {item.label}
-                                </div>
-                                <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
-                                  {item.value}
-                                </div>
-                                <p className="mt-2 text-[11px] font-sans leading-relaxed text-white/38">
-                                  {item.detail}
-                                </p>
+                          <div className="rounded-2xl border border-white/[0.08] bg-black/20 px-5 py-5">
+                            <div>
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                                {overviewCurrentStatus.label}
                               </div>
-                            ))}
+                              <div className="mt-2 text-[16px] font-sans font-medium tracking-tight text-white">
+                                {overviewCurrentStatus.value}
+                              </div>
+                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.42]">
+                                {overviewCurrentStatus.detail}
+                              </p>
+                            </div>
+                            <div className="mt-4 border-t border-white/[0.06] pt-4">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                                {overviewLastMovement.label}
+                              </div>
+                              <div className="mt-2 text-[16px] font-sans font-medium tracking-tight text-white">
+                                {overviewLastMovement.value}
+                              </div>
+                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.42]">
+                                {overviewLastMovement.detail}
+                              </p>
+                            </div>
+                            <div className="mt-4 border-t border-white/[0.06] pt-4">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                                {overviewNeedsFromYou.label}
+                              </div>
+                              <div className="mt-2 text-[16px] font-sans font-medium tracking-tight text-white">
+                                {overviewNeedsFromYou.value}
+                              </div>
+                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.42]">
+                                {overviewNeedsFromYou.detail}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
