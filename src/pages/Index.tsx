@@ -196,7 +196,7 @@ const faqs = [
   }
 ];
 
-const eyebrowClass = 'text-[11px] font-medium tracking-tight text-white/42';
+const eyebrowClass = 'text-[11px] font-medium tracking-tight text-[#9fb6d9]/72 md:text-white/42';
 const containerClass = 'mx-auto w-full max-w-[1160px] px-5 sm:px-6 md:px-8';
 const mobileColumnClass = 'mx-auto max-w-[390px] md:mx-0 md:max-w-none';
 const mobileRevealProps = {
@@ -246,16 +246,44 @@ function MobileIntegrationsCarousel() {
 
 function MobilePhaseShell({
   children,
-  className = ''
+  className = '',
+  tone = 'neutral'
 }: {
   children: React.ReactNode;
   className?: string;
+  tone?: 'neutral' | 'slate' | 'blue' | 'graphite' | 'contrast';
 }) {
+  const toneClasses = {
+    neutral:
+      'border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.02)_18%,rgba(10,10,10,0.96)_100%)]',
+    slate:
+      'border-[#1d2530] bg-[linear-gradient(180deg,rgba(18,25,35,0.92)_0%,rgba(12,14,18,0.98)_58%,rgba(8,8,9,1)_100%)]',
+    blue:
+      'border-[#243347] bg-[linear-gradient(180deg,rgba(14,21,31,0.96)_0%,rgba(10,12,16,0.98)_48%,rgba(7,7,8,1)_100%)]',
+    graphite:
+      'border-[#1a1a1d] bg-[linear-gradient(180deg,rgba(18,18,19,0.96)_0%,rgba(11,11,12,0.98)_46%,rgba(7,7,7,1)_100%)]',
+    contrast:
+      'border-[#212733] bg-[linear-gradient(180deg,rgba(15,18,24,0.96)_0%,rgba(11,12,14,0.98)_42%,rgba(7,7,8,1)_100%)]'
+  } as const;
+
+  const glowClasses = {
+    neutral: 'bg-white/[0.08]',
+    slate: 'bg-[#8fb7ff]/[0.12]',
+    blue: 'bg-[#73a6ff]/[0.14]',
+    graphite: 'bg-white/[0.05]',
+    contrast: 'bg-[#6f9be5]/[0.10]'
+  } as const;
+
   return (
     <div
-      className={`rounded-[28px] border border-white/8 bg-white/[0.025] px-5 py-8 shadow-[0_18px_44px_rgba(0,0,0,0.18)] sm:px-6 md:rounded-none md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none ${className}`}
+      className={`relative overflow-hidden rounded-[28px] px-5 py-8 shadow-[0_18px_44px_rgba(0,0,0,0.28)] sm:px-6 md:rounded-none md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none ${toneClasses[tone]} ${className}`}
     >
-      {children}
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/45 to-transparent md:hidden" />
+      <div
+        className={`pointer-events-none absolute -right-12 top-8 h-28 w-28 rounded-full blur-3xl md:hidden ${glowClasses[tone]}`}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0)_36%)] md:hidden" />
+      <div className="relative">{children}</div>
     </div>
   );
 }
@@ -385,9 +413,9 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-b border-white/8 bg-white/[0.02] py-16 md:bg-transparent md:py-28">
+        <section className="relative border-b border-white/8 bg-[linear-gradient(180deg,#0a0e14_0%,#070707_100%)] py-16 md:bg-transparent md:py-28">
           <div className={containerClass}>
-            <MobilePhaseShell>
+            <MobilePhaseShell tone="blue">
               <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
                 <div className={eyebrowClass}>The orchestration layer</div>
                 <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
@@ -398,8 +426,8 @@ export default function Index() {
               </motion.div>
 
               <div className="mt-10 md:hidden">
-                <div className="relative rounded-[24px] border border-white/8 bg-[#090909]/88 px-4 py-3">
-                  <div className="absolute bottom-8 left-[17px] top-8 w-px bg-white/10" />
+                <div className="relative rounded-[24px] border border-[#233247] bg-[linear-gradient(180deg,rgba(12,16,22,0.92)_0%,rgba(9,10,12,0.98)_100%)] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                  <div className="absolute bottom-8 left-[17px] top-8 w-px bg-[#6f9be5]/20" />
                   <div className="space-y-0">
                     {mobileOrchestrationSteps.map((step, index) => (
                       <motion.div
@@ -408,7 +436,7 @@ export default function Index() {
                         className={`flex gap-4 py-6 ${index > 0 ? 'border-t border-white/8' : ''}`}
                       >
                         <div className="relative z-10 pt-0.5 text-[11px] font-medium tracking-tight text-white/30">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-[#0a0a0a]">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-[#4b6b97]/45 bg-[#0f141d] text-[#c8d8f4]">
                             0{index + 1}
                           </div>
                         </div>
@@ -421,7 +449,7 @@ export default function Index() {
                             {step.signals.map((signal) => (
                               <span
                                 key={signal}
-                                className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
+                                className="rounded-full border border-[#324860] bg-[#10161f] px-3 py-1.5 text-[11px] font-medium tracking-tight text-[#d8e5fb]/74"
                               >
                                 {signal}
                               </span>
@@ -441,9 +469,9 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-white/[0.015] py-20 md:hidden" id="how-margin-works-mobile">
+        <section className="relative border-t border-white/8 bg-[linear-gradient(180deg,#090909_0%,#060708_100%)] py-20 md:hidden" id="how-margin-works-mobile">
           <div className={containerClass}>
-            <MobilePhaseShell className={mobileColumnClass}>
+            <MobilePhaseShell className={mobileColumnClass} tone="graphite">
               <motion.div {...mobileRevealProps}>
                 <div className={eyebrowClass}>What Margin does</div>
                 <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px]">
@@ -454,14 +482,14 @@ export default function Index() {
                 </p>
               </motion.div>
 
-              <div className="mt-10 space-y-0">
+              <div className="mt-10 space-y-3">
                 {mobileWhatMarginScenarios.map((item) => (
                   <motion.div
                     {...mobileRevealProps}
                     key={item.step}
-                    className="border-t border-white/8 py-6 first:pt-0"
+                    className="rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.035)_0%,rgba(255,255,255,0.018)_100%)] px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
                   >
-                    <div className="text-sm font-medium tracking-tight text-white/34">{item.step}</div>
+                    <div className="text-sm font-medium tracking-tight text-[#9fb6d9]/52">{item.step}</div>
                     <h3 className="mt-2 max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px]">{item.title}</h3>
                     <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58">{item.detail}</p>
                   </motion.div>
@@ -522,7 +550,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-white/[0.015] md:bg-transparent py-20 md:py-36">
+        <section className="relative border-t border-white/8 bg-[linear-gradient(180deg,#081019_0%,#060607_100%)] md:bg-transparent py-20 md:py-36">
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
@@ -534,7 +562,7 @@ export default function Index() {
             </motion.div>
 
             <div className="mt-10 md:hidden">
-              <MobilePhaseShell className={mobileColumnClass}>
+              <MobilePhaseShell className={mobileColumnClass} tone="slate">
                 <div className="space-y-10">
                   {mobileProofBlocks.map((item, index) => (
                     <motion.div
@@ -552,17 +580,17 @@ export default function Index() {
                         </p>
                       </div>
 
-                      <div className="mt-6 overflow-hidden rounded-[22px] border border-white/10 bg-white/[0.03]">
-                        <div className="grid gap-px bg-white/8">
-                          <div className="bg-[#0a0a0a] px-4 py-3 text-[11px] font-medium tracking-tight text-white/42">
+                      <div className="mt-6 overflow-hidden rounded-[22px] border border-[#28374c] bg-[#0c1118]">
+                        <div className="grid gap-px bg-[#243347]/50">
+                          <div className="bg-[#0b0f15] px-4 py-3 text-[11px] font-medium tracking-tight text-[#a7bee0]/62">
                             Observed states
                           </div>
-                          <div className="bg-[#0a0a0a] px-4 py-4">
+                          <div className="bg-[#0b0f15] px-4 py-4">
                             <div className="flex flex-wrap gap-2">
                               {mobileProofArtifacts[index].map((artifact) => (
                                 <span
                                   key={artifact}
-                                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/62"
+                                  className="rounded-full border border-[#324860] bg-[#10161f] px-3 py-1.5 text-[11px] font-medium tracking-tight text-[#d6e4fb]/72"
                                 >
                                   {artifact}
                                 </span>
@@ -601,7 +629,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 py-20 md:py-36">
+        <section className="relative border-t border-white/8 bg-[linear-gradient(180deg,#070809_0%,#060606_100%)] py-20 md:bg-transparent md:py-36">
           <div className={containerClass}>
             <motion.div {...mobileRevealProps} className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
@@ -618,11 +646,11 @@ export default function Index() {
             </motion.div>
 
             <div className="mt-10 md:hidden">
-              <MobilePhaseShell className={mobileColumnClass}>
+              <MobilePhaseShell className={mobileColumnClass} tone="contrast">
                 <div className="space-y-5">
                   <motion.article
                     {...mobileRevealProps}
-                    className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5"
+                    className="rounded-[24px] border border-[#30445c] bg-[linear-gradient(180deg,rgba(17,23,31,0.9)_0%,rgba(11,14,18,0.98)_100%)] p-5"
                   >
                     <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
                     <h3 className="mt-3 max-w-[300px] text-[24px] font-medium leading-[1.05] tracking-tight text-white sm:text-[25px]">
@@ -648,7 +676,7 @@ export default function Index() {
 
                   <motion.article
                     {...mobileRevealProps}
-                    className="rounded-[24px] border border-white/8 bg-white/[0.02] p-5"
+                    className="rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.025)_0%,rgba(255,255,255,0.012)_100%)] p-5"
                   >
                     <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
                     <h3 className="mt-3 max-w-[300px] text-[23px] font-medium leading-[1.06] tracking-tight text-white/82 sm:text-[24px]">
@@ -786,9 +814,9 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-white/[0.02] md:bg-transparent py-20 md:py-40">
+        <section className="relative border-t border-white/8 bg-[linear-gradient(180deg,#09111b_0%,#060708_100%)] py-20 md:bg-transparent md:py-40">
           <div className={containerClass}>
-            <MobilePhaseShell className={mobileColumnClass}>
+            <MobilePhaseShell className={mobileColumnClass} tone="blue">
               <motion.div {...mobileRevealProps} className="max-w-[980px]">
                 <div className={eyebrowClass}>Start with clarity</div>
                 <h2 className="mt-3 max-w-[320px] text-[33px] font-light leading-[1.01] tracking-tight text-white sm:text-[35px] md:mt-4 md:max-w-[860px] md:text-7xl">
@@ -803,7 +831,7 @@ export default function Index() {
                 </p>
 
                 <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
-                  <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                  <motion.div {...mobileRevealProps} className="grid gap-2 rounded-[22px] border border-white/8 bg-white/[0.03] px-4 py-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:rounded-none md:border-0 md:border-t md:border-white/8 md:bg-transparent md:px-0 md:py-0 md:pt-8">
                     <div className="text-sm font-medium tracking-tight text-white/34">01</div>
                     <div>
                       <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
@@ -817,7 +845,7 @@ export default function Index() {
                     </div>
                   </motion.div>
 
-                  <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                  <motion.div {...mobileRevealProps} className="grid gap-2 rounded-[22px] border border-white/8 bg-white/[0.028] px-4 py-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:rounded-none md:border-0 md:border-t md:border-white/8 md:bg-transparent md:px-0 md:py-0 md:pt-8">
                     <div className="text-sm font-medium tracking-tight text-white/34">02</div>
                     <div>
                       <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
@@ -831,7 +859,7 @@ export default function Index() {
                     </div>
                   </motion.div>
 
-                  <motion.div {...mobileRevealProps} className="grid gap-2 border-t border-white/8 pt-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:pt-8">
+                  <motion.div {...mobileRevealProps} className="grid gap-2 rounded-[22px] border border-white/8 bg-white/[0.03] px-4 py-5 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:rounded-none md:border-0 md:border-t md:border-white/8 md:bg-transparent md:px-0 md:py-0 md:pt-8">
                     <div className="text-sm font-medium tracking-tight text-white/34">03</div>
                     <div>
                       <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
