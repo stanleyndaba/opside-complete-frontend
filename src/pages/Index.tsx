@@ -12,54 +12,77 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 
 const whatWeDoPoints = [
-  'Detect reimbursement discrepancies across inventory, shipments, returns, fees, and reimbursements.',
-  'Verify identifiers, quantities, and evidence before a case is considered ready.',
-  'File only cases supported by evidence and policy, track Amazon replies, and stay with the case through payout.'
+  'A customer got a refund, the unit never came back, and no reimbursement was created.',
+  'You sent 24 units, Amazon received 21, and the missing 3 units never became seller credits.',
+  'Amazon approved the case, but the money still did not show up in settlements or payout truth.'
 ];
 
 const processSteps = [
   {
     step: '01',
-    title: 'Detect reimbursable discrepancies',
-    detail: 'Margin audits reimbursement data and separates supported cases from unsupported or duplicate issues.'
+    title: 'You think the account reconciled',
+    detail: 'The shipment closes, the return clears, or the reimbursement looks done. In reality, quantity gaps, unpaid approvals, and refund-without-return cases can still be sitting in the account.'
   },
   {
     step: '02',
-    title: 'Verify identifiers and evidence',
-    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, policy timing, and supporting documents are checked before any filing is prepared.'
+    title: 'Margin reveals what actually broke',
+    detail: 'Shipment IDs, ASINs, FNSKUs, quantities, fee math, and supporting documents are matched into one record so the real discrepancy stops hiding in raw Amazon activity.'
   },
   {
     step: '03',
-    title: 'File or hold with a reason',
-    detail: 'Supported cases move forward. Cases that are weak, duplicate, or thread-only are held with an explicit reason.'
+    title: 'The case becomes ready or gets held',
+    detail: 'If the issue is duplicate, thread-only, weak, or already outside policy, it stays blocked with an explicit reason. If it survives, it is prepared for filing.'
   },
   {
     step: '04',
-    title: 'Track Amazon to final outcome',
-    detail: 'Case status, Amazon thread changes, approvals, evidence requests, and payout confirmation stay visible in one place.'
+    title: 'Amazon moves. Margin keeps the trail visible',
+    detail: 'Filing, replies, evidence requests, approvals, and payout confirmation stay explicit until the reimbursement actually lands.'
   }
 ];
 
 const mobileOrchestrationSteps = [
   {
     title: 'Detection',
-    detail: 'Amazon inventory, shipment, return, fee, and reimbursement signals enter Margin and are screened for discrepancies that can be supported by evidence and policy.',
+    detail: 'A shipment arrives short, or Amazon refunds $41.90 and the unit never comes back. Margin catches the discrepancy before it stays buried.',
     signals: ['FBA Inventory', 'Shipments', 'Returns / Refunds']
   },
   {
     title: 'Evidence',
-    detail: 'Identifiers, quantities, policy timing, and supporting documents are matched before a case is considered ready.',
+    detail: 'Seller Central shows movement, but not the full story. Margin matches shipment IDs, ASINs, FNSKUs, invoices, and email proof into one supportable record.',
     signals: ['Gmail', 'Outlook', 'Dropbox']
   },
   {
     title: 'Filing',
-    detail: 'Only cases supported by evidence and policy move forward. Weak, duplicate, or thread-only issues are held.',
+    detail: 'What looks claimable can still fail. Margin separates supportable cases from duplicates, thread-only issues, and cases already outside policy.',
     signals: ['Ready to file', 'Filed']
   },
   {
     title: 'Payout',
-    detail: 'Amazon replies, approvals, evidence requests, and payout confirmation remain visible until the case is closed.',
+    detail: 'Amazon can approve a case and still delay the money. Margin keeps approvals, evidence requests, and payout confirmation visible until cash lands.',
     signals: ['Approved', 'Recovered $']
+  }
+];
+
+const mobileWhatMarginScenarios = [
+  {
+    step: '01',
+    title: 'A customer got a refund. The unit never came back.',
+    detail: 'Margin flags the refund-without-return and pulls it into a case path instead of letting it disappear inside return noise.'
+  },
+  {
+    step: '02',
+    title: 'You sent 24 units. Amazon only received 21.',
+    detail: 'Margin spots the 3-unit gap, checks the shipment identifiers, and separates it from weak or unsupported quantity mismatches.'
+  },
+  {
+    step: '03',
+    title: 'Amazon approved the case. The payout never landed.',
+    detail: 'Margin keeps the approval visible until reimbursement truth actually shows up in payout and settlement records.'
+  },
+  {
+    step: '04',
+    title: 'A fee or weight charge looks wrong, but the proof is messy.',
+    detail: 'Margin matches the identifiers and supporting records before anything is treated as ready to file.'
   }
 ];
 
@@ -76,37 +99,66 @@ const mobileIntegrationLogos = [
 
 const proofBlocks = [
   {
-    value: 'Missed reimbursement cases are surfaced',
-    detail: 'Cases that can be supported are identified for review instead of staying buried in operational data.'
+    value: '$179.20 approved can still mean $0.00 paid.',
+    detail: 'Margin separates Amazon approval from confirmed payout so approved money does not get mistaken for recovered money.'
   },
   {
-    value: 'Unsupported filings are blocked',
-    detail: 'Duplicate, weak, and thread-only filings are stopped before they reach Amazon.'
+    value: 'A 3-unit shipment gap is not automatically a fileable claim.',
+    detail: 'Margin keeps quantity gaps, duplicate issues, and weak cases separated instead of flattening them into one reimbursement number.'
   },
   {
-    value: 'Case status stays explicit',
-    detail: 'Waiting, evidence requests, approvals, rejections, and payouts remain visible.'
+    value: 'A live Amazon thread can make a new filing the wrong move.',
+    detail: 'Margin shows when Amazon is already handling the issue so you do not stack duplicate claims on top of the real case.'
+  }
+];
+
+const mobileProofBlocks = [
+  {
+    value: '$63.75 can look recoverable until the identifiers fail.',
+    detail: 'Margin shows when a number is truly supportable and when it only looks promising on the surface.'
+  },
+  {
+    value: 'A duplicate filing can cost the real case.',
+    detail: 'If Amazon already has the issue in a live case or thread, Margin holds it instead of sending noise back into the account.'
+  },
+  {
+    value: 'An approval is not the same as money received.',
+    detail: 'Margin keeps waiting states, approvals, rejections, and payout confirmation visible until the reimbursement actually lands.'
   }
 ];
 
 const mobileProofArtifacts = [
-  ['Detected', 'Evidence Ready', 'Filed'],
-  ['Weak', 'Duplicate', 'Thread-only'],
-  ['Waiting', 'Evidence', 'Approvals', 'Payouts']
+  ['Shipment ID', 'ASIN / FNSKU', 'Qty match'],
+  ['Duplicate', 'Thread-only', 'Held'],
+  ['Waiting', 'Approved', 'Paid out']
 ];
 
 const filingRules = [
-  'Verified identifiers are present',
-  'Evidence is matched or the case can otherwise be supported by policy and records',
-  'The issue is not already active or duplicated',
-  'The case is still inside Amazon’s policy window'
+  'Shipment, ASIN, FNSKU, and quantity all point to the same missing or damaged inventory event',
+  'Invoice, delivery proof, or related support is already matched',
+  'Amazon is not already handling the same issue in a live case or thread',
+  'The claim is still inside Amazon’s reimbursement window'
 ];
 
 const holdRules = [
-  'Shipment, product, or quantity truth is missing',
-  'The same issue already has a live case or thread',
-  'Amazon email exists but should stay thread-only',
-  'The evidence is not strong enough to support a filing yet'
+  'The shipment, product, or quantity trail still breaks under review',
+  'The same issue already has a live Amazon case or thread',
+  'Amazon email exists, but the correct move is to stay inside the thread',
+  'The support is still too weak to survive filing'
+];
+
+const mobileFilingRules = [
+  'The shipment, ASIN, and quantity all match the loss',
+  'The invoice, delivery, or related support is present',
+  'Amazon is not already handling the same issue in a live thread',
+  'The reimbursement window is still open'
+];
+
+const mobileHoldRules = [
+  'You cannot prove which shipment or quantity actually failed',
+  'Amazon is already handling the issue in a live case or email thread',
+  'The unit moved, but the support is still too weak to file',
+  'The policy window already closed'
 ];
 
 const faqs = [
@@ -284,11 +336,29 @@ export default function Index() {
               </div>
 
               <h1 className="mt-4 max-w-[320px] text-[34px] font-light leading-[0.97] tracking-tight text-white sm:max-w-[360px] sm:text-[38px] md:mt-6 md:max-w-[760px] md:text-7xl">
-                Recover the FBA reimbursements you&apos;re missing.
+                {isMobileLayout ? (
+                  <>
+                    A customer got a $42 refund.
+                    <br />
+                    The unit never came back.
+                    <br />
+                    No alert. No reimbursement.
+                  </>
+                ) : (
+                  <>
+                    Amazon received 24 units.
+                    <br />
+                    3 disappeared.
+                    <br />
+                    No alert. No reimbursement.
+                  </>
+                )}
               </h1>
 
               <p className="mt-5 max-w-[340px] text-[15px] leading-6 text-white/62 md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
-                Margin detects reimbursement discrepancies, verifies the identifiers and evidence, files only cases supported by evidence and policy, and tracks Amazon until payout.
+                {isMobileLayout
+                  ? 'Margin finds it, proves it, and prepares the claim.'
+                  : 'Margin finds the discrepancy, proves the quantity and payout truth, prepares the claim, and follows Amazon until the money lands.'}
               </p>
 
               <div className="mt-8 flex w-full max-w-[340px] flex-col items-stretch gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:items-start">
@@ -321,7 +391,9 @@ export default function Index() {
               <motion.div {...mobileRevealProps} className={`max-w-[720px] ${mobileColumnClass}`}>
                 <div className={eyebrowClass}>The orchestration layer</div>
                 <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
-                  See how the system routes Amazon signals into evidence-backed cases and confirmed payouts.
+                  {isMobileLayout
+                    ? 'You think the account is reconciled. A missing shipment, a refund-without-return, or an unpaid approval says otherwise.'
+                    : 'See how short-received shipments, refund-without-return cases, unpaid approvals, and bad fee math turn into evidence-backed cases and confirmed payouts.'}
                 </h2>
               </motion.div>
 
@@ -375,15 +447,15 @@ export default function Index() {
               <motion.div {...mobileRevealProps}>
                 <div className={eyebrowClass}>What Margin does</div>
                 <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px]">
-                  Detect discrepancies, verify the case, and file only when the evidence is there.
+                  Customer refunds, lost units, unpaid approvals, and bad fees should not stay hidden in the account.
                 </h2>
                 <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/60">
-                  The system should surface discrepancies, explain why a case is ready or blocked, and keep Amazon&apos;s response visible through payout.
+                  Margin handles those situations only after the discrepancy is made explicit and the support is strong enough to move.
                 </p>
               </motion.div>
 
               <div className="mt-10 space-y-0">
-                {processSteps.map((item) => (
+                {mobileWhatMarginScenarios.map((item) => (
                   <motion.div
                     {...mobileRevealProps}
                     key={item.step}
@@ -404,10 +476,10 @@ export default function Index() {
             <div className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>What Margin does</div>
               <h2 className="mt-3 text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:text-6xl">
-                Detect discrepancies, verify the case, and file only when the evidence is there.
+                These are the cases that keep leaking money out of FBA.
               </h2>
               <p className="mt-4 max-w-[620px] text-[15px] leading-6 text-white/60 md:mt-6 md:max-w-[700px] md:text-lg md:leading-8">
-                The system should surface discrepancies, explain why a case is ready or blocked, and keep Amazon&apos;s response visible through payout.
+                Margin handles those situations by matching identifiers, evidence, and policy before anything is treated as ready to file.
               </p>
             </div>
 
@@ -429,10 +501,10 @@ export default function Index() {
             <div className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>How Margin works</div>
               <h2 className="mt-3 text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:text-6xl">
-                Detect, verify, file, track, and follow through.
+                You think everything reconciled. It usually didn&apos;t.
               </h2>
               <p className="mt-4 max-w-[620px] text-[15px] leading-6 text-white/60 md:mt-6 md:max-w-[720px] md:text-lg md:leading-8">
-                The promise has to stay operationally true. Margin should know when to move, when to wait, and how to make that visible.
+                Margin exposes what actually broke, prepares what is supportable, and keeps the payout trail visible until reimbursement truth is final.
               </p>
             </div>
 
@@ -455,14 +527,16 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className={`max-w-[760px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Proof</div>
               <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
-                The system has to stay visible, controlled, and evidence-based.
+                {isMobileLayout
+                  ? 'You should be able to tell which $63.75 case is real, which claim is duplicate, and which approval still has no payout.'
+                  : 'You should be able to tell which $179.20 case is real, which claim is duplicate, and which approval still has no payout.'}
               </h2>
             </motion.div>
 
             <div className="mt-10 md:hidden">
               <MobilePhaseShell className={mobileColumnClass}>
                 <div className="space-y-10">
-                  {proofBlocks.map((item, index) => (
+                  {mobileProofBlocks.map((item, index) => (
                     <motion.div
                       {...mobileRevealProps}
                       key={item.value}
@@ -532,10 +606,14 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className={`max-w-[780px] ${mobileColumnClass}`}>
               <div className={eyebrowClass}>Decision system</div>
               <h2 className="mt-3 max-w-[320px] text-[30px] font-light leading-[1.04] tracking-tight text-white sm:text-[32px] md:mt-4 md:max-w-none md:text-6xl">
-                Not every discrepancy should be filed. Only supported cases move.
+                {isMobileLayout
+                  ? 'Some cases look obvious. One missing identifier or one live Amazon thread can still get them denied.'
+                  : 'Some cases look obvious until one missing identifier gets them denied.'}
               </h2>
               <p className="mt-4 max-w-[560px] text-[15px] leading-6 text-white/58 md:mt-6 md:max-w-[680px] md:text-lg md:leading-8">
-                The system evaluates readiness before any case is filed.
+                {isMobileLayout
+                  ? 'Margin files the ones that survive evidence, timing, and duplicate checks.'
+                  : 'The job is not to file everything. It is to move only the cases that survive evidence, timing, and duplicate checks.'}
               </p>
             </motion.div>
 
@@ -548,14 +626,14 @@ export default function Index() {
                   >
                     <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
                     <h3 className="mt-3 max-w-[300px] text-[24px] font-medium leading-[1.05] tracking-tight text-white sm:text-[25px]">
-                      Cases move only when the evidence and policy conditions are met.
+                      A 3-unit shipment gap moves only when the IDs, quantity truth, and policy window all line up.
                     </h3>
                     <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/68">
-                      Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
+                      If the support is complete and the case is still inside policy, Margin prepares it for filing.
                     </p>
 
                     <div className="mt-6 border-t border-white/10">
-                      {filingRules.map((item) => (
+                      {mobileFilingRules.map((item) => (
                         <div key={item} className="grid gap-2 border-b border-white/8 py-4">
                           <div className="text-sm font-medium tracking-tight text-white/30">IF</div>
                           <div className="text-[15px] leading-6 text-white/84">{item}</div>
@@ -574,14 +652,14 @@ export default function Index() {
                   >
                     <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
                     <h3 className="mt-3 max-w-[300px] text-[23px] font-medium leading-[1.06] tracking-tight text-white/82 sm:text-[24px]">
-                      The system holds cases that are incomplete, unsupported, or already active.
+                      A duplicate thread, missing invoice, or broken quantity trail stops the case.
                     </h3>
                     <p className="mt-3 max-w-[320px] text-[15px] leading-6 text-white/50">
-                      Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
+                      That is not friction. That is how weak filings stay out of Amazon.
                     </p>
 
                     <div className="mt-6 border-t border-white/8">
-                      {holdRules.map((item) => (
+                      {mobileHoldRules.map((item) => (
                         <div key={item} className="grid gap-2 border-b border-white/6 py-4">
                           <div className="text-sm font-medium tracking-tight text-white/22">OR</div>
                           <div className="text-[15px] leading-6 text-white/60">{item}</div>
@@ -609,10 +687,10 @@ export default function Index() {
                   <div className="max-w-[760px]">
                     <div className="text-[11px] font-medium tracking-tight text-white/42">READY TO FILE</div>
                     <h3 className="mt-3 text-[28px] font-medium tracking-tight text-white md:mt-4 md:text-5xl">
-                      Cases move only when the evidence and policy conditions are met.
+                      A short-received shipment moves only when the IDs, quantity trail, and policy window all line up.
                     </h3>
                     <p className="mt-3 max-w-[620px] text-[15px] leading-6 text-white/68 md:mt-5 md:max-w-[700px] md:text-lg md:leading-8">
-                      Margin prefers action only after the case is verified, supported, and clear of duplicate risk.
+                      If the shipment, support, and timing hold up, Margin prepares the case instead of making you guess.
                     </p>
                   </div>
 
@@ -638,10 +716,10 @@ export default function Index() {
                   <div className="max-w-[700px]">
                     <div className="text-[11px] font-medium tracking-tight text-white/30">OTHERWISE</div>
                     <h3 className="mt-3 text-[26px] font-medium tracking-tight text-white/82 md:mt-4 md:text-4xl">
-                      The system holds cases that are incomplete, unsupported, or already active.
+                      A duplicate thread, broken quantity trail, or expired window stops the case.
                     </h3>
                     <p className="mt-3 max-w-[600px] text-[15px] leading-6 text-white/50 md:mt-5 md:max-w-[660px] md:text-lg md:leading-8">
-                      Saying “not yet” is part of the product. If truth is missing, the correct move is to wait instead of filing noise.
+                      That is not hesitation. That is how weak claims stay out of Amazon and real cases stay clean.
                     </p>
                   </div>
 
@@ -714,10 +792,14 @@ export default function Index() {
               <motion.div {...mobileRevealProps} className="max-w-[980px]">
                 <div className={eyebrowClass}>Start with clarity</div>
                 <h2 className="mt-3 max-w-[320px] text-[33px] font-light leading-[1.01] tracking-tight text-white sm:text-[35px] md:mt-4 md:max-w-[860px] md:text-7xl">
-                  Start with a read-only review of missed FBA reimbursements.
+                  {isMobileLayout
+                    ? 'You do not know how much Amazon owes you yet. The first missing case is usually already there.'
+                    : 'You probably do not know how much Amazon owes you yet.'}
                 </h2>
                 <p className="mt-4 max-w-[320px] text-[15px] leading-6 text-white/60 md:mt-8 md:max-w-[700px] md:text-lg md:leading-8">
-                  The first step is read-only. Margin reviews your reimbursement data before any case is considered for filing.
+                  {isMobileLayout
+                    ? 'Margin starts with a read-only review, finds what broke across shipments, refunds, returns, and reimbursements, and shows what is supportable before anything is filed.'
+                    : 'The first step is read-only. Margin reviews the inventory, shipment, return, fee, and reimbursement trail before anything is filed.'}
                 </p>
 
                 <div className="mt-10 max-w-[430px] space-y-6 md:mt-16 md:max-w-[880px] md:space-y-12">
@@ -725,10 +807,12 @@ export default function Index() {
                     <div className="text-sm font-medium tracking-tight text-white/34">01</div>
                     <div>
                       <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
-                        Connect your Amazon account
+                        {isMobileLayout ? 'Connect the account you already reconcile' : 'Connect the account you already reconcile'}
                       </h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                        Secure, read-only access gives Margin the data it needs to audit reimbursement opportunities.
+                        {isMobileLayout
+                          ? 'Margin reads the inventory, shipment, return, fee, and reimbursement trail without changing anything.'
+                          : 'Read-only access gives Margin the shipment, return, fee, and reimbursement trail it needs to see what actually broke.'}
                       </p>
                     </div>
                   </motion.div>
@@ -737,10 +821,12 @@ export default function Index() {
                     <div className="text-sm font-medium tracking-tight text-white/34">02</div>
                     <div>
                       <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
-                        Margin detects and prepares cases
+                        {isMobileLayout ? 'See the cases Amazon never surfaced clearly' : 'See the cases Amazon never surfaced clearly'}
                       </h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                        Supported discrepancies are surfaced, matched with evidence, and separated from weak or duplicate issues.
+                        {isMobileLayout
+                          ? 'Missing units, refund-without-return, unpaid approvals, and damaged inventory are separated into supported, blocked, and duplicate lanes.'
+                          : 'Missing units, refund-without-return, unpaid approvals, damaged inventory, and fee mismatches are separated into supportable, blocked, and duplicate lanes.'}
                       </p>
                     </div>
                   </motion.div>
@@ -749,10 +835,12 @@ export default function Index() {
                     <div className="text-sm font-medium tracking-tight text-white/34">03</div>
                     <div>
                       <h3 className="max-w-[280px] text-[21px] font-medium leading-[1.08] tracking-tight text-white sm:text-[22px] md:text-3xl">
-                        You review or keep the workflow automated
+                        {isMobileLayout ? 'Start with what is already ready' : 'Move what is ready. Hold what is weak.'}
                       </h3>
                       <p className="mt-2 max-w-[320px] text-[15px] leading-6 text-white/58 md:mt-3 md:max-w-[620px] md:text-lg md:leading-8">
-                        Only cases supported by evidence and policy move forward, while blocked cases remain explicit.
+                        {isMobileLayout
+                          ? 'Review the cases Margin prepared, or keep the workflow automated once the support is strong enough.'
+                          : 'Review the cases Margin prepared, or keep the workflow automated once the support is strong enough.'}
                       </p>
                     </div>
                   </motion.div>
