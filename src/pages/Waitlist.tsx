@@ -12,7 +12,6 @@ import { api } from '@/lib/api';
 import {
     CheckCircle2,
     Sparkles,
-    Send,
     ArrowRight,
     ShieldCheck,
     Mail,
@@ -22,9 +21,50 @@ import {
     Target,
     Zap,
     MessageSquare,
-    ChevronRight,
     ChevronLeft
 } from 'lucide-react';
+
+const profileOptions = [
+    { id: 'brand', label: 'Brand owner', detail: 'Single brand or private-label operator', icon: Building2 },
+    { id: 'agency', label: 'Agency / aggregator', detail: 'Managing multiple seller accounts or portfolio brands', icon: Briefcase },
+    { id: 'other', label: 'Strategic partner', detail: 'Finance, operations, or reimbursement specialist', icon: Target }
+];
+
+const goalOptions = [
+    { id: 'recover', label: 'Find missed reimbursements', detail: 'Start with the money Amazon missed.', accent: '$' },
+    { id: 'audit', label: 'Run a historical audit', detail: 'Review the backlog before launch or migration.', accent: '18M' },
+    { id: 'automate', label: 'Automate filing operations', detail: 'Move from detection into evidence and filing.', accent: 'AUTO' }
+];
+
+const waitlistHighlights = [
+    {
+        icon: Sparkles,
+        title: 'Priority rollout',
+        detail: 'Access is opened in controlled waves so onboarding stays fast and hands-on.'
+    },
+    {
+        icon: BarChart3,
+        title: 'Built for operator clarity',
+        detail: 'The same product shows what is detected, blocked, filed, approved, and paid.'
+    },
+    {
+        icon: ShieldCheck,
+        title: 'Truth-gated filing',
+        detail: 'Weak, duplicate, or thread-only cases stay held instead of being pushed through.'
+    }
+];
+
+const waitlistSignals = [
+    { label: 'Access mode', value: 'Guided launch queue' },
+    { label: 'Priority users', value: 'Brands, operators, aggregators' },
+    { label: 'First outcome', value: 'Read-only review + onboarding' }
+];
+
+const stepMeta = [
+    { id: 1, label: 'Profile' },
+    { id: 2, label: 'Contact' },
+    { id: 3, label: 'Intent' }
+];
 
 const Waitlist = () => {
     const { toast } = useToast();
@@ -104,53 +144,91 @@ const Waitlist = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white selection:bg-white/20 selection:text-white relative overflow-hidden">
-            {/* Technical Background Overlay */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.05),transparent_70%)]" />
-                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(148,163,184,0.04),transparent_70%)]" />
+        <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white selection:bg-white/15 selection:text-white">
+            <div
+                className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]"
+                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
+            />
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <div className="absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(circle_at_18%_8%,rgba(133,170,255,0.1),transparent_40%),radial-gradient(circle_at_84%_0%,rgba(255,255,255,0.05),transparent_42%)]" />
+                <div className="absolute inset-x-0 bottom-0 h-[760px] bg-[radial-gradient(circle_at_20%_100%,rgba(125,149,181,0.08),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.04),transparent_48%)]" />
             </div>
 
             <PublicNavbar />
 
-            <main className="relative z-10 pt-28 pb-24 px-6">
-                <div className="container mx-auto max-w-5xl">
+            <main className="relative z-10 px-4 pb-24 pt-28 md:px-6 md:pb-28 md:pt-32">
+                <div className="mx-auto max-w-[1180px]">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-start"
+                        className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.95fr)] lg:items-start"
                     >
-                        {/* Header Section */}
-                        <div className="space-y-8">
-                            <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-none">
-                                <span className="text-[10px] font-bold text-white/70 font-sans tracking-tight uppercase">Node Authorization</span>
-                                <div className="h-3 w-[1px] bg-white/10" />
-                                <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">Waitlist Protocol</span>
+                        <section className="space-y-7 lg:sticky lg:top-28">
+                            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                                <span>Priority access</span>
+                                <span className="h-1 w-1 rounded-full bg-[#8fb7ff]/80" />
+                                <span className="text-white/46">Seller rollout queue</span>
                             </div>
 
-                            <h1 className="text-4xl md:text-6xl font-sans font-light leading-tight tracking-tight">
-                                Request <br />
-                                Early Access
-                            </h1>
+                            <div className="space-y-4">
+                                <h1 className="max-w-[620px] text-[38px] font-light leading-[0.95] tracking-tight text-white md:text-[60px]">
+                                    Join the next Margin onboarding wave.
+                                </h1>
+                                <p className="max-w-[560px] text-[16px] leading-7 text-white/58 md:text-lg md:leading-8">
+                                    Early access is being opened in controlled waves for Amazon sellers, operators, and aggregators who want reimbursement visibility before broad rollout.
+                                </p>
+                            </div>
 
-                            <p className="max-w-md text-base md:text-lg text-white/50 font-sans tracking-tight leading-relaxed border-l-2 border-white/10 pl-6">
-                                Currently operating at maximum institutional bandwidth. Join the priority node release queue.
-                            </p>
+                            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                                {waitlistSignals.map((signal) => (
+                                    <div
+                                        key={signal.label}
+                                        className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.015)_100%)] px-4 py-4"
+                                    >
+                                        <div className="text-[11px] font-medium tracking-tight text-white/38">{signal.label}</div>
+                                        <div className="mt-2 text-[15px] font-medium leading-6 text-white/88">{signal.value}</div>
+                                    </div>
+                                ))}
+                            </div>
 
-                            {/* Progress Strip */}
-                            {!isSuccess && (
-                                <div className="flex items-center gap-1 h-1 w-full max-w-sm bg-white/5">
-                                    {[1, 2, 3].map((s) => (
-                                        <div
-                                            key={s}
-                                            className={`h-full flex-1 transition-all duration-700 ${step >= s ? 'bg-white/40 shadow-[0_0_12px_rgba(255,255,255,0.12)]' : 'bg-transparent'}`}
-                                        />
+                            <div className="grid gap-3">
+                                {waitlistHighlights.map((item) => (
+                                    <div
+                                        key={item.title}
+                                        className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(17,20,26,0.9)_0%,rgba(11,12,15,0.95)_100%)] px-5 py-5 shadow-[0_18px_44px_rgba(0,0,0,0.22)]"
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#324860] bg-[#10161f] text-[#d7e5fc]">
+                                                <item.icon className="h-4.5 w-4.5" />
+                                            </div>
+                                            <div>
+                                                <h2 className="text-[18px] font-medium tracking-tight text-white">{item.title}</h2>
+                                                <p className="mt-2 max-w-[480px] text-[14px] leading-6 text-white/55">{item.detail}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="rounded-[28px] border border-[#243347] bg-[linear-gradient(180deg,rgba(14,19,27,0.92)_0%,rgba(10,12,15,0.98)_100%)] px-5 py-5">
+                                <div className="text-[11px] font-medium tracking-tight text-[#a9c0e2]/72">What happens next</div>
+                                <div className="mt-4 space-y-4">
+                                    {[
+                                        'We review your profile and operating context.',
+                                        'Priority access opens in batches based on onboarding bandwidth.',
+                                        'If selected, you get the first guided Margin setup path.'
+                                    ].map((item, index) => (
+                                        <div key={item} className="flex gap-3">
+                                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#446288]/50 bg-[#0f141d] text-[11px] font-medium text-[#d1def4]">
+                                                0{index + 1}
+                                            </div>
+                                            <p className="text-[14px] leading-6 text-white/62">{item}</p>
+                                        </div>
                                     ))}
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        </section>
 
                         <AnimatePresence mode="wait">
                             {!isSuccess ? (
@@ -160,220 +238,274 @@ const Waitlist = () => {
                                     initial="initial"
                                     animate="animate"
                                     exit="exit"
-                                    transition={{ duration: 0.4 }}
-                                    className="bg-white/[0.015] border border-white/10 p-8 md:p-10 shadow-2xl relative"
+                                    transition={{ duration: 0.35 }}
+                                    className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.018)_16%,rgba(8,8,9,0.98)_100%)] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.36)] md:p-7"
                                 >
-                                    <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-l border-t border-white/15" />
-                                    <div className="absolute -bottom-[1px] -right-[1px] w-4 h-4 border-r border-b border-white/15" />
+                                    <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/40 to-transparent" />
+                                    <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#7aa6ff]/10 blur-3xl" />
 
-                                    {step === 1 && (
-                                        <div className="space-y-12">
-                                            <div className="space-y-6">
-                                                <Label className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Profile Identifier</Label>
-                                                <div className="grid grid-cols-1 gap-3">
-                                                    {[
-                                                        { id: 'brand', label: 'Brand Owner', icon: Building2 },
-                                                        { id: 'agency', label: 'Agency / Aggregator', icon: Briefcase },
-                                                        { id: 'other', label: 'Strategic Partner', icon: Target }
-                                                    ].map((item) => (
-                                                        <button
-                                                            key={item.id}
-                                                            onClick={() => handleSelection('user_type', item.id)}
-                                                            className={`flex items-center gap-6 p-6 transition-all duration-300 rounded-none border group relative ${formData.user_type === item.id
-                                                                ? 'bg-white/[0.04] border-white/20 text-white'
-                                                                : 'bg-white/[0.01] border-white/10 text-white/40 hover:bg-white/[0.03] hover:border-white/20'
-                                                                }`}
-                                                        >
-                                                            <item.icon className="w-4 h-4 opacity-50" />
-                                                            <span className="text-[11px] font-bold uppercase tracking-tight font-sans">{item.label}</span>
-                                                            {formData.user_type === item.id && (
-                                                                <div className="absolute right-6 h-[1px] w-8 bg-white/50 shadow-[0_0_10px_rgba(255,255,255,0.16)]" />
-                                                            )}
-                                                        </button>
-                                                    ))}
+                                    <div className="relative">
+                                        <div className="flex flex-wrap items-start justify-between gap-4">
+                                            <div className="space-y-2">
+                                                <div className="text-[11px] font-medium tracking-tight text-white/40">
+                                                    {step === 1 ? 'Step 1 · Profile' : step === 2 ? 'Step 2 · Contact' : 'Step 3 · Intent'}
                                                 </div>
-                                            </div>
-
-                                            <div className="space-y-6">
-                                                <Label className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Volume Band (Annual)</Label>
-                                                <Select
-                                                    onValueChange={(v) => handleSelection('annual_revenue', v)}
-                                                    value={formData.annual_revenue}
-                                                >
-                                                    <SelectTrigger className="h-16 bg-white/[0.02] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase focus:border-white/20">
-                                                        <SelectValue placeholder="SELECT MAGNITUDE" />
-                                                    </SelectTrigger>
-                                                    <SelectContent className="bg-[#0a0a0a] border-white/10 text-white rounded-none font-sans text-[10px] tracking-tight uppercase">
-                                                        <SelectItem value="starter">Starter (&lt;$200k)</SelectItem>
-                                                        <SelectItem value="growing">Growing ($200k - $1M)</SelectItem>
-                                                        <SelectItem value="scaling">Scaling ($1M - $10M)</SelectItem>
-                                                        <SelectItem value="enterprise">Enterprise ($10M+)</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-
-                                            <div className="pt-8">
-                                                <Button
-                                                    onClick={nextStep}
-                                                    className="w-full h-14 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
-                                                >
-                                                    Transmit Signal
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {step === 2 && (
-                                        <div className="space-y-12">
-                                            <div className="space-y-8">
-                                                <div className="space-y-6">
-                                                    <Label htmlFor="email" className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Communication Gateway</Label>
-                                                    <div className="relative">
-                                                        <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                                                        <Input
-                                                            id="email"
-                                                            name="email"
-                                                            type="email"
-                                                            placeholder="AUTHORITY@DOMAIN.COM"
-                                                            className="h-14 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
-                                                            value={formData.email}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <Label htmlFor="contact_handle" className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Priority Node Channel</Label>
-                                                    <div className="relative">
-                                                        <MessageSquare className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
-                                                        <Input
-                                                            id="contact_handle"
-                                                            name="contact_handle"
-                                                            placeholder="WHATSAPP / TELEGRAM ID"
-                                                            className="h-14 pl-16 bg-white/[0.02] border-white/10 focus:border-white/20 rounded-none font-sans text-xs tracking-tight placeholder:text-white/10"
-                                                            value={formData.contact_handle}
-                                                            onChange={handleInputChange}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-4 pt-8">
-                                                <Button
-                                                    variant="outline"
-                                                    onClick={prevStep}
-                                                    className="h-14 px-8 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
-                                                >
-                                                    <ChevronLeft className="w-5 h-5 text-white/40" />
-                                                </Button>
-                                                <Button
-                                                    onClick={nextStep}
-                                                    className="flex-1 h-14 bg-white text-black hover:bg-white/90 hover:text-black transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light"
-                                                >
-                                                    Verify Node
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {step === 3 && (
-                                        <div className="space-y-12">
-                                            <div className="space-y-6">
-                                                <Label className="text-[10px] font-bold text-white/30 tracking-tight uppercase font-sans">Strategic Directive</Label>
-                                                <div className="grid grid-cols-1 gap-3">
-                                                    {[
-                                                        { id: 'recover', label: 'Profit Flow Recovery', desc: 'SKU-level forensic drift analysis.' },
-                                                        { id: 'audit', label: 'Institutional Audit', desc: '18-Month historical reconciliation.' },
-                                                        { id: 'automate', label: "Autonomous Engine", desc: 'Full agentic dispute management.' }
-                                                    ].map((item) => (
-                                                        <button
-                                                            key={item.id}
-                                                            onClick={() => handleSelection('primary_goal', item.id)}
-                                                            className={`flex items-start gap-6 p-6 border transition-all duration-300 rounded-none ${formData.primary_goal === item.id
-                                                                ? 'bg-white/[0.04] border-white/20'
-                                                                : 'bg-white/[0.01] border-white/10 hover:bg-white/[0.03] hover:border-white/20'
-                                                                }`}
-                                                        >
-                                                            <div className={`mt-1.5 w-3 h-3 rounded-none border transition-all ${formData.primary_goal === item.id ? 'border-white/60 bg-white/60 shadow-[0_0_10px_rgba(255,255,255,0.16)]' : 'border-white/20'}`} />
-                                                            <div className="space-y-2 text-left">
-                                                                <div className={`text-xs font-bold uppercase tracking-tight font-sans ${formData.primary_goal === item.id ? 'text-white' : 'text-white/40'}`}>{item.label}</div>
-                                                                <div className="text-[10px] uppercase tracking-tight text-white/20 font-sans font-bold">{item.desc}</div>
-                                                            </div>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-4 pt-8">
-                                                <Button
-                                                    variant="outline"
-                                                    onClick={prevStep}
-                                                    disabled={isSubmitting}
-                                                    className="h-14 px-8 border border-white/10 rounded-none hover:bg-white/5 bg-transparent"
-                                                >
-                                                    <ChevronLeft className="w-5 h-5 text-white/40" />
-                                                </Button>
-                                                <Button
-                                                    onClick={handleSubmit}
-                                                    disabled={isSubmitting}
-                                                    className={`flex-1 h-14 transition-all duration-500 rounded-none font-bold text-xs uppercase tracking-tight font-sans font-light ${isSubmitting ? 'bg-white/5 text-white/20' : 'bg-white text-black hover:bg-white/90 active:scale-[0.98]'
-                                                        }`}
-                                                >
-                                                    {isSubmitting ? (
-                                                        <div className="flex items-center gap-4">
-                                                            <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                                            INDEXING...
-                                                        </div>
-                                                    ) : (
-                                                        "Initialize Protocol"
-                                                    )}
-                                                </Button>
-                                            </div>
-
-                                            <div className="text-center pt-4">
-                                                <p className="text-[9px] text-white/20 uppercase tracking-tight flex items-center justify-center gap-4 font-sans font-bold">
-                                                    <ShieldCheck className="w-3.5 h-3.5 opacity-20" />
-                                                    Military Grade Encryption Standard
+                                                <h2 className="text-[28px] font-light leading-[1.02] tracking-tight text-white md:text-[34px]">
+                                                    {step === 1 ? 'Tell us who you are' : step === 2 ? 'Where should we reach you?' : 'What should Margin solve first?'}
+                                                </h2>
+                                                <p className="max-w-[480px] text-[14px] leading-6 text-white/56 md:text-[15px]">
+                                                    {step === 1
+                                                        ? 'We prioritize access based on seller context and operating complexity.'
+                                                        : step === 2
+                                                            ? 'Use the work email or channel we should use when your access opens.'
+                                                            : 'This tells us which onboarding path should come first when you are invited in.'}
                                                 </p>
                                             </div>
+
+                                            <div className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                                                {step} of 3
+                                            </div>
                                         </div>
-                                    )}
+
+                                        <div className="mt-6 grid grid-cols-3 gap-2">
+                                            {stepMeta.map((item) => (
+                                                <div
+                                                    key={item.id}
+                                                    className={`rounded-full border px-3 py-2 text-center text-[11px] font-medium tracking-tight transition-colors ${step === item.id
+                                                        ? 'border-[#3c5a81] bg-[#10161f] text-[#dbe7fb]'
+                                                        : step > item.id
+                                                            ? 'border-white/12 bg-white/[0.04] text-white/70'
+                                                            : 'border-white/8 bg-transparent text-white/32'
+                                                        }`}
+                                                >
+                                                    {item.label}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {step === 1 && (
+                                            <div className="mt-8 space-y-8">
+                                                <div className="space-y-3">
+                                                    <Label className="text-[11px] font-medium tracking-tight text-white/42">Profile</Label>
+                                                    <div className="grid gap-3">
+                                                        {profileOptions.map((item) => (
+                                                            <button
+                                                                key={item.id}
+                                                                onClick={() => handleSelection('user_type', item.id)}
+                                                                className={`rounded-[22px] border px-4 py-4 text-left transition-all ${formData.user_type === item.id
+                                                                    ? 'border-[#3c5a81] bg-[#10161f] shadow-[0_0_0_1px_rgba(143,183,255,0.1)]'
+                                                                    : 'border-white/10 bg-white/[0.02] hover:border-white/18 hover:bg-white/[0.04]'
+                                                                    }`}
+                                                            >
+                                                                <div className="flex items-start gap-4">
+                                                                    <div className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${formData.user_type === item.id ? 'border-[#446288] bg-[#111925] text-[#d9e5fb]' : 'border-white/10 bg-[#0b0b0c] text-white/46'}`}>
+                                                                        <item.icon className="h-4 w-4" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <div className={`text-[15px] font-medium tracking-tight ${formData.user_type === item.id ? 'text-white' : 'text-white/78'}`}>{item.label}</div>
+                                                                        <div className="mt-1 text-[13px] leading-5 text-white/45">{item.detail}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <Label className="text-[11px] font-medium tracking-tight text-white/42">Annual revenue</Label>
+                                                    <Select
+                                                        onValueChange={(v) => handleSelection('annual_revenue', v)}
+                                                        value={formData.annual_revenue}
+                                                    >
+                                                        <SelectTrigger className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-[13px] tracking-tight text-white focus:border-white/18">
+                                                            <SelectValue placeholder="Select revenue band" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="rounded-[20px] border-white/10 bg-[#090909] text-white">
+                                                            <SelectItem value="starter">Starter (&lt;$200k)</SelectItem>
+                                                            <SelectItem value="growing">Growing ($200k - $1M)</SelectItem>
+                                                            <SelectItem value="scaling">Scaling ($1M - $10M)</SelectItem>
+                                                            <SelectItem value="enterprise">Enterprise ($10M+)</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+
+                                                <Button
+                                                    onClick={nextStep}
+                                                    className="h-12 w-full justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[13px] font-medium tracking-tight text-black transition hover:bg-white/92 hover:text-black"
+                                                >
+                                                    Continue
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        )}
+
+                                        {step === 2 && (
+                                            <div className="mt-8 space-y-8">
+                                                <div className="space-y-4">
+                                                    <div className="space-y-3">
+                                                        <Label htmlFor="email" className="text-[11px] font-medium tracking-tight text-white/42">Work email</Label>
+                                                        <div className="relative">
+                                                            <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/24" />
+                                                            <Input
+                                                                id="email"
+                                                                name="email"
+                                                                type="email"
+                                                                placeholder="you@company.com"
+                                                                className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 text-[14px] tracking-tight placeholder:text-white/18 focus:border-white/18"
+                                                                value={formData.email}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-3">
+                                                        <Label htmlFor="contact_handle" className="text-[11px] font-medium tracking-tight text-white/42">Priority contact channel</Label>
+                                                        <div className="relative">
+                                                            <MessageSquare className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/24" />
+                                                            <Input
+                                                                id="contact_handle"
+                                                                name="contact_handle"
+                                                                placeholder="WhatsApp, Telegram, or best direct line"
+                                                                className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 text-[14px] tracking-tight placeholder:text-white/18 focus:border-white/18"
+                                                                value={formData.contact_handle}
+                                                                onChange={handleInputChange}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-3">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={prevStep}
+                                                        className="h-12 rounded-[18px] border-white/10 bg-transparent px-4 text-white/68 hover:bg-white/[0.04] hover:text-white"
+                                                    >
+                                                        <ChevronLeft className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        onClick={nextStep}
+                                                        className="h-12 flex-1 justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[13px] font-medium tracking-tight text-black transition hover:bg-white/92 hover:text-black"
+                                                    >
+                                                        Continue
+                                                        <ArrowRight className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {step === 3 && (
+                                            <div className="mt-8 space-y-8">
+                                                <div className="space-y-3">
+                                                    <Label className="text-[11px] font-medium tracking-tight text-white/42">Primary goal</Label>
+                                                    <div className="grid gap-3">
+                                                        {goalOptions.map((item) => (
+                                                            <button
+                                                                key={item.id}
+                                                                onClick={() => handleSelection('primary_goal', item.id)}
+                                                                className={`rounded-[22px] border px-4 py-4 text-left transition-all ${formData.primary_goal === item.id
+                                                                    ? 'border-[#3c5a81] bg-[#10161f] shadow-[0_0_0_1px_rgba(143,183,255,0.1)]'
+                                                                    : 'border-white/10 bg-white/[0.02] hover:border-white/18 hover:bg-white/[0.04]'
+                                                                    }`}
+                                                            >
+                                                                <div className="flex items-start gap-4">
+                                                                    <div className={`flex h-10 min-w-10 items-center justify-center rounded-2xl border text-[10px] font-medium tracking-tight ${formData.primary_goal === item.id ? 'border-[#446288] bg-[#111925] text-[#d9e5fb]' : 'border-white/10 bg-[#0b0b0c] text-white/42'}`}>
+                                                                        {item.accent}
+                                                                    </div>
+                                                                    <div>
+                                                                        <div className={`text-[15px] font-medium tracking-tight ${formData.primary_goal === item.id ? 'text-white' : 'text-white/78'}`}>{item.label}</div>
+                                                                        <div className="mt-1 text-[13px] leading-5 text-white/45">{item.detail}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                <div className="rounded-[20px] border border-[#2c4058] bg-[#0f141d] px-4 py-3">
+                                                    <div className="flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#d5e3fb]/78">
+                                                        <ShieldCheck className="h-3.5 w-3.5" />
+                                                        Priority access stays private and enrollment data is encrypted.
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-3">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={prevStep}
+                                                        disabled={isSubmitting}
+                                                        className="h-12 rounded-[18px] border-white/10 bg-transparent px-4 text-white/68 hover:bg-white/[0.04] hover:text-white"
+                                                    >
+                                                        <ChevronLeft className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        onClick={handleSubmit}
+                                                        disabled={isSubmitting}
+                                                        className={`h-12 flex-1 justify-between rounded-[18px] border border-white/10 px-5 text-[13px] font-medium tracking-tight transition ${isSubmitting ? 'bg-white/[0.06] text-white/32' : 'bg-white text-black hover:bg-white/92 hover:text-black'}`}
+                                                    >
+                                                        {isSubmitting ? (
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/15 border-t-black/70" />
+                                                                Sending request
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                Request access
+                                                                <Zap className="h-4 w-4" />
+                                                            </>
+                                                        )}
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </motion.div>
                             ) : (
                                 <motion.div
                                     key="success"
                                     initial={{ opacity: 0, scale: 0.98 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="bg-white/[0.02] border border-white/10 p-12 md:p-16 shadow-3xl text-center space-y-10 relative overflow-hidden"
+                                    className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(17,23,31,0.95)_0%,rgba(8,8,9,0.98)_100%)] p-8 text-center shadow-[0_28px_80px_rgba(0,0,0,0.36)] md:p-12"
                                 >
-                                    <div className="absolute top-0 left-0 w-8 h-8 border-l border-t border-white/20" />
-                                    <div className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-white/20" />
-
-                                    <div className="relative mx-auto w-32 h-32 flex items-center justify-center">
-                                        <div className="absolute inset-0 bg-white/10 rounded-full blur-[40px] animate-pulse" />
-                                        <div className="w-24 h-24 border border-white/20 rounded-none flex items-center justify-center text-white/80">
-                                            <CheckCircle2 className="w-12 h-12" />
+                                    <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/40 to-transparent" />
+                                    <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
+                                        <div className="absolute inset-0 rounded-full bg-[#8fb7ff]/12 blur-3xl" />
+                                        <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[#3c5a81] bg-[#10161f] text-[#d9e6fc]">
+                                            <CheckCircle2 className="h-10 w-10" />
                                         </div>
                                     </div>
 
-                                    <div className="space-y-8">
-                                        <h3 className="text-3xl md:text-4xl font-sans font-light tracking-tight">Protocol Live</h3>
-                                        <p className="text-white/40 font-sans text-[10px] max-w-sm mx-auto leading-loose uppercase tracking-tight font-bold">
-                                            Your node identifier has been <br />
-                                            encrypted and added to the <br />
-                                            priority institutional queue.
+                                    <div className="mt-8 space-y-4">
+                                        <div className="inline-flex items-center gap-2 rounded-full border border-[#30445c] bg-[#10161f] px-3 py-1.5 text-[11px] font-medium tracking-tight text-[#d8e5fb]/76">
+                                            <Sparkles className="h-3.5 w-3.5" />
+                                            Priority queue confirmed
+                                        </div>
+                                        <h3 className="text-[30px] font-light leading-tight tracking-tight text-white md:text-[40px]">
+                                            You&apos;re in the next access review queue.
+                                        </h3>
+                                        <p className="mx-auto max-w-[420px] text-[15px] leading-7 text-white/56">
+                                            Your details are secured and added to the priority rollout list. When your access window opens, we&apos;ll reach out through the contact path you provided.
                                         </p>
                                     </div>
 
-                                    <div className="pt-8">
+                                    <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
+                                        {waitlistSignals.map((signal) => (
+                                            <div
+                                                key={signal.label}
+                                                className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4"
+                                            >
+                                                <div className="text-[11px] font-medium tracking-tight text-white/38">{signal.label}</div>
+                                                <div className="mt-2 text-[14px] leading-6 text-white/84">{signal.value}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-8">
                                         <Button
                                             variant="outline"
                                             asChild
-                                            className="h-14 px-10 border border-white/10 bg-transparent text-white/50 hover:text-white rounded-none font-sans font-light text-[10px] uppercase tracking-tight transition-all"
+                                            className="h-12 rounded-[18px] border-white/10 bg-transparent px-6 text-[13px] font-medium tracking-tight text-white/74 hover:bg-white/[0.04] hover:text-white"
                                         >
-                                            <Link to="/">
-                                                Back to Portal Interface
-                                            </Link>
+                                            <Link to="/">Back to homepage</Link>
                                         </Button>
                                     </div>
                                 </motion.div>
