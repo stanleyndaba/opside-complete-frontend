@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Clock, Eye, Download, Trash2, MoreHorizontal, RefreshCw, Hexagon, AlertCircle, ArrowRight, Terminal, Database, Link2, FileWarning, CheckCircle2, CircleDashed, Cloud, Upload, Mail } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
+import { getFrontendAuthContext } from '@/lib/authSession';
 import { useStatusStream } from '@/hooks/use-status-stream';
 import { Checkbox } from '@/components/ui/checkbox';
 import { GmailConnectionStatus } from '@/components/evidence/GmailConnectionStatus';
@@ -362,15 +363,29 @@ export default function EvidenceLocker() {
       for (const file of files) {
         form.append('file', file);
       }
+      const { token, userId, tenantId } = await getFrontendAuthContext();
 
       const response = await fetch(api.buildApiUrl(`/api/documents/upload?tenantSlug=${activeSlug}`), {
         method: 'POST',
         credentials: 'include',
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(userId ? { 'x-user-id': userId } : {}),
+          ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+        },
         body: form
       });
 
       if (!response.ok) {
-        throw new Error(await response.text());
+        const rawText = await response.text();
+        let failureMessage = rawText || 'Document upload failed.';
+        try {
+          const parsed = JSON.parse(rawText);
+          failureMessage = parsed?.error || parsed?.message || failureMessage;
+        } catch {
+          // Keep the raw response text when the backend did not return JSON.
+        }
+        throw new Error(failureMessage);
       }
 
       await refreshInventory();
