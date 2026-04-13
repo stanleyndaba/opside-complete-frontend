@@ -219,7 +219,9 @@ export default function Sales() {
 
                         {/* Inquiry Form */}
                         <div className="lg:col-start-3 lg:col-span-8">
-                            <div className="p-6 sm:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm rounded-2xl">
+                            <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.018)_20%,rgba(8,8,9,0.98)_100%)] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.36)] sm:p-10">
+                                <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                                <div className="pointer-events-none absolute -right-12 top-10 h-28 w-28 rounded-full bg-white/5 blur-3xl" />
                                 {isSubmitted ? (
                                     <div className="text-center py-20">
                                         <div className="w-20 h-20 rounded-full bg-sky-400/10 flex items-center justify-center mx-auto mb-8">
@@ -231,17 +233,17 @@ export default function Sales() {
                                         <p className="text-white/40 font-sans mb-10 max-w-xs mx-auto text-sm leading-relaxed tracking-tight">
                                             Your enterprise profile has been formatted for priority review. Finalize transmission via your secure email client.
                                         </p>
-                                        <Button
-                                            onClick={() => setIsSubmitted(false)}
-                                            variant="outline"
-                                            className="font-bold text-xs uppercase tracking-tight border-white/10 bg-transparent text-white rounded-none h-12 hover:bg-white hover:text-black">
-                                            New Transmission
-                                        </Button>
+                                            <Button
+                                                onClick={() => setIsSubmitted(false)}
+                                                variant="outline"
+                                                className="h-12 rounded-[18px] border-white/10 bg-transparent px-6 text-[12px] font-medium tracking-tight text-white/80 hover:bg-white/[0.04] hover:text-white">
+                                                New Transmission
+                                            </Button>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-[10px] font-bold text-sky-400 font-sans tracking-tight uppercase">
+                                            <h3 className="text-[10px] font-medium text-sky-400 font-sans tracking-tight uppercase">
                                                 Institutional Briefing Request // V.02
                                             </h3>
                                             <p className="text-xs text-white/40 font-sans tracking-tight">Priority Node Allocation: 3/Week</p>
@@ -249,7 +251,7 @@ export default function Sales() {
 
                                         <div className="grid md:grid-cols-2 gap-10">
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-tight uppercase block">
+                                                <label className="text-[11px] font-medium text-white/42 font-mono tracking-tight uppercase block">
                                                     Lead Strategist
                                                 </label>
                                                 <Input
@@ -257,12 +259,12 @@ export default function Sales() {
                                                     value={form.name}
                                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                                     placeholder="FULL NAME"
-                                                    className="h-14 border-0 border-b border-white/10 text-sm font-sans tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-[14px] tracking-tight text-white placeholder:text-white/18 focus:border-white/18"
                                                     required
                                                 />
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-tight uppercase block">
+                                                <label className="text-[11px] font-medium text-white/42 font-mono tracking-tight uppercase block">
                                                     Corporate Email
                                                 </label>
                                                 <Input
@@ -270,14 +272,14 @@ export default function Sales() {
                                                     value={form.email}
                                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                                     placeholder="PARTNER@DOMAIN.COM"
-                                                    className="h-14 border-0 border-b border-white/10 text-sm font-sans tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-[14px] tracking-tight text-white placeholder:text-white/18 focus:border-white/18"
                                                     required
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-bold text-white/30 font-mono tracking-tight uppercase block">
+                                            <label className="text-[11px] font-medium text-white/42 font-mono tracking-tight uppercase block">
                                                 Institutional Entity
                                             </label>
                                             <Input
@@ -285,21 +287,21 @@ export default function Sales() {
                                                 value={form.company}
                                                 onChange={(e) => setForm({ ...form, company: e.target.value })}
                                                 placeholder="LEGAL ENTITY NAME"
-                                                className="h-14 border-0 border-b border-white/10 text-sm font-sans tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-[14px] tracking-tight text-white placeholder:text-white/18 focus:border-white/18"
                                                 required
                                             />
                                         </div>
 
                                         <div className="grid md:grid-cols-2 gap-10">
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-tight uppercase block">
+                                                <label className="text-[11px] font-medium text-white/42 font-mono tracking-tight uppercase block">
                                                     Annual Portfolio GMV
                                                 </label>
                                                 <Select value={form.revenue} onValueChange={(value) => setForm({ ...form, revenue: value })}>
-                                                    <SelectTrigger className="h-14 border-0 border-b border-white/10 text-sm font-sans tracking-tight bg-transparent rounded-none px-0 focus:ring-0 text-white">
+                                                    <SelectTrigger className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-[13px] tracking-tight text-white focus:border-white/18">
                                                         <SelectValue placeholder="SELECT RANGE" />
                                                     </SelectTrigger>
-                                                    <SelectContent className="font-sans text-xs bg-[#050505] border-white/10 text-white">
+                                                    <SelectContent className="rounded-[16px] border-white/10 bg-[#050505] text-white text-xs font-sans">
                                                         <SelectItem value="$1M - $5M">$1M - $5M</SelectItem>
                                                         <SelectItem value="$5M - $10M">$5M - $10M</SelectItem>
                                                         <SelectItem value="$10M - $25M">$10M - $25M</SelectItem>
@@ -309,7 +311,7 @@ export default function Sales() {
                                                 </Select>
                                             </div>
                                             <div className="space-y-4">
-                                                <label className="text-[10px] font-bold text-white/30 font-mono tracking-tight uppercase block">
+                                                <label className="text-[11px] font-medium text-white/42 font-mono tracking-tight uppercase block">
                                                     Seller Hash Identifier
                                                 </label>
                                                 <Input
@@ -317,27 +319,27 @@ export default function Sales() {
                                                     value={form.sellerId}
                                                     onChange={(e) => setForm({ ...form, sellerId: e.target.value })}
                                                     placeholder="AMAZON SELLER ID (OPTIONAL)"
-                                                    className="h-14 border-0 border-b border-white/10 text-sm font-sans tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none px-0 text-white placeholder:text-white/10"
+                                                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-[14px] tracking-tight text-white placeholder:text-white/18 focus:border-white/18"
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-bold text-white/30 font-mono tracking-tight uppercase block">
+                                            <label className="text-[11px] font-medium text-white/42 font-mono tracking-tight uppercase block">
                                                 Technical Requirements
                                             </label>
                                             <Textarea
                                                 value={form.message}
                                                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                                                 placeholder="DESCRIBE DATA ARCHITECTURE AND SPECIFIC DRIFT CHALLENGES..."
-                                                className="min-h-[120px] border-0 border-b border-white/10 text-sm font-sans tracking-tight bg-transparent focus:ring-0 focus:border-white transition-all rounded-none resize-none px-0 py-4 text-white placeholder:text-white/10"
+                                                className="min-h-[120px] rounded-[22px] border-white/10 bg-white/[0.02] px-4 py-4 text-[14px] tracking-tight text-white placeholder:text-white/18 focus:border-white/18 resize-none"
                                             />
                                         </div>
 
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="w-full h-16 bg-white hover:bg-white/90 text-black text-xs font-bold font-sans tracking-tight uppercase rounded-xl transition-all">
+                                            className="w-full h-12 rounded-[18px] border border-white/10 bg-white text-black text-[13px] font-medium font-sans tracking-tight uppercase transition-all hover:bg-white/92 hover:text-black">
                                             {isSubmitting ? (
                                                 <>Processing Application...</>
                                             ) : (

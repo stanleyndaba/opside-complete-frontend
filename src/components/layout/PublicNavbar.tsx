@@ -88,6 +88,12 @@ export const PublicNavbar = () => {
                         >
                             Pricing
                         </Link>
+                        <Link
+                            to="/sales"
+                            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-sans font-bold text-white uppercase tracking-tight outline-none"
+                        >
+                            Enterprise
+                        </Link>
 
                     </div>
 
@@ -97,12 +103,6 @@ export const PublicNavbar = () => {
                             className="h-9 px-5 text-[10px] font-light text-white bg-white/5 border border-white/10 hover:bg-white/10 transition-all inline-flex items-center uppercase tracking-tight font-sans"
                             style={{ borderRadius: '0px' }}>
                             Login
-                        </Link>
-                        <Link
-                            to="/sales"
-                            className="h-9 px-5 text-[10px] font-light text-black bg-white hover:bg-emerald-500 hover:text-white transition-all inline-flex items-center uppercase tracking-tight font-sans"
-                            style={{ borderRadius: '0px' }}>
-                            Enterprise
                         </Link>
                         <Link
                             to="/waitlist"
