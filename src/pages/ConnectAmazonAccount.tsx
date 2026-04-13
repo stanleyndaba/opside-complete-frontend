@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Loader2, Lock } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { useTenant } from '@/contexts/TenantContext';
@@ -148,80 +148,122 @@ export default function ConnectAmazonAccount() {
 
   return (
     <PageLayout title="Connect Amazon Account" hideNavbar hideSidebar midnight>
-      <div className="flex min-h-screen items-center justify-center px-6 py-12">
-        <div className="w-full max-w-2xl border border-white/10 bg-white/[0.02] p-8 text-white shadow-[0_25px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl md:p-10">
-          <div className="mb-8 space-y-4">
-            <div className="inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-white/55">
-              <Lock className="h-3.5 w-3.5" />
-              Account Ready
+      <div className="relative min-h-screen overflow-hidden px-4 py-12 text-white md:px-6">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(133,170,255,0.1),transparent_40%),radial-gradient(circle_at_84%_0%,rgba(255,255,255,0.05),transparent_42%)]" />
+
+        <div className="relative mx-auto max-w-[860px] space-y-8 pt-20">
+          <section className="space-y-5">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+              <span>Amazon authorization</span>
+              <span className="h-1 w-1 rounded-full bg-[#8fb7ff]/80" />
+              <span className="text-white/46">Workspace step 2</span>
             </div>
-            <div className="space-y-3">
-              <h1 className="font-heading text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Connect Amazon Account
+
+            <div className="space-y-4">
+              <h1 className="max-w-[620px] text-[38px] font-light leading-[0.95] tracking-tight text-white md:text-[60px]">
+                Connect your Amazon seller account.
               </h1>
-              <p className="max-w-xl text-sm leading-6 text-white/50 md:text-base">
-                Your platform login is complete. The next step is connecting your Amazon seller account so Amazon can handle authorization and hand the account back to Margin.
+              <p className="max-w-[560px] text-[16px] leading-7 text-white/58 md:text-lg md:leading-8">
+                Your Margin login is already complete. This step sends you to Amazon so Seller Central can authorize the account and return you back into Margin.
               </p>
             </div>
-          </div>
+          </section>
 
-          <div className="space-y-6 border border-white/10 bg-black/20 p-6">
-            <p className="text-sm leading-6 text-white/45">
-              Select the marketplace you want to authorize, then continue to Amazon. Once Amazon finishes the OAuth flow, Margin will resume from there.
-            </p>
+          <section className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.018)_16%,rgba(8,8,9,0.98)_100%)] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.36)] md:p-7">
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/40 to-transparent" />
+            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#7aa6ff]/10 blur-3xl" />
 
-            {preparing ? (
-              <div className="flex h-12 w-full items-center justify-center border border-white/10 bg-white/[0.03] text-sm text-white/60">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Preparing workspace...
-              </div>
-            ) : (
-              <div className="space-y-4">
+            <div className="relative">
+              <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
                 <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-tight text-white/45">
-                    Select Marketplace
+                  <div className="text-[11px] font-medium tracking-tight text-white/40">
+                    Seller Central handoff
+                  </div>
+                  <h2 className="text-[28px] font-light leading-[1.02] tracking-tight text-white md:text-[34px]">
+                    Choose the marketplace and continue.
+                  </h2>
+                  <p className="max-w-[520px] text-[14px] leading-6 text-white/56 md:text-[15px]">
+                    Margin prepares the workspace here. Amazon still handles the authorization itself. When the OAuth flow finishes, we resume from there.
                   </p>
-                  <Select
-                    value={selectedMarketplace}
-                    onValueChange={setSelectedMarketplace}
-                    disabled={connecting}
-                  >
-                    <SelectTrigger className="h-12 rounded-none border-white/10 bg-white/[0.03] text-left text-sm text-white focus:border-white/20 focus:ring-0">
-                      <SelectValue placeholder="Choose the Amazon marketplace you want to connect" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-none border-white/10 bg-[#0a0a0a] text-white">
-                      {AMAZON_MARKETPLACES.map((marketplace) => (
-                        <SelectItem
-                          key={marketplace.id}
-                          value={marketplace.id}
-                          className="text-sm text-white focus:bg-white/10 focus:text-white"
-                        >
-                          {marketplace.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
 
-                <Button
-                  type="button"
-                  onClick={handleConnectAmazon}
-                  disabled={connecting || !selectedMarketplace}
-                  className="h-12 w-full rounded-none bg-white text-black hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/25 disabled:text-white/50"
-                >
-                  {connecting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Connecting...
-                    </>
-                  ) : (
-                    'Connect Amazon Account'
-                  )}
-                </Button>
+                <div className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                  OAuth step
+                </div>
               </div>
-            )}
 
-          </div>
+              {preparing ? (
+                <div className="flex h-14 w-full items-center justify-center rounded-[20px] border border-white/10 bg-white/[0.03] text-sm text-white/60">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Preparing workspace...
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-medium tracking-tight text-white/42">
+                      Marketplace
+                    </p>
+                    <Select
+                      value={selectedMarketplace}
+                      onValueChange={setSelectedMarketplace}
+                      disabled={connecting}
+                    >
+                      <SelectTrigger className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] px-4 text-left text-[14px] tracking-tight text-white focus:border-white/18 focus:ring-0">
+                        <SelectValue placeholder="Choose the Amazon marketplace you want to connect" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-[20px] border-white/10 bg-[#090909] text-white">
+                        {AMAZON_MARKETPLACES.map((marketplace) => (
+                          <SelectItem
+                            key={marketplace.id}
+                            value={marketplace.id}
+                            className="text-sm text-white focus:bg-white/10 focus:text-white"
+                          >
+                            {marketplace.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4">
+                    <div className="text-[11px] font-medium tracking-tight text-white/38">What happens next</div>
+                    <div className="mt-3 space-y-3">
+                      <div className="flex gap-3">
+                        <div className="mt-0.5 text-[11px] font-medium tracking-tight text-white/34">01</div>
+                        <p className="text-[14px] leading-6 text-white/62">You continue to Amazon and sign in there.</p>
+                      </div>
+                      <div className="flex gap-3">
+                        <div className="mt-0.5 text-[11px] font-medium tracking-tight text-white/34">02</div>
+                        <p className="text-[14px] leading-6 text-white/62">Amazon confirms the authorization and hands the account back to Margin.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="button"
+                    onClick={handleConnectAmazon}
+                    disabled={connecting || !selectedMarketplace}
+                    className="h-12 w-full justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[13px] font-medium tracking-tight text-black hover:bg-white/92 disabled:cursor-not-allowed disabled:bg-white/25 disabled:text-white/50"
+                  >
+                    {connecting ? (
+                      <>
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Connecting...
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        Connect Amazon account
+                        <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </div>
+          </section>
         </div>
       </div>
     </PageLayout>

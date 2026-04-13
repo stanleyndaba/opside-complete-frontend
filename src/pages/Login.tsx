@@ -322,31 +322,68 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
+      <div
+        className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]"
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
+      />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_18%_8%,rgba(133,170,255,0.1),transparent_40%),radial-gradient(circle_at_84%_0%,rgba(255,255,255,0.05),transparent_42%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[720px] bg-[radial-gradient(circle_at_18%_100%,rgba(125,149,181,0.08),transparent_44%),radial-gradient(circle_at_76%_88%,rgba(255,255,255,0.04),transparent_48%)]" />
+      </div>
+
       <PublicNavbar />
-      <main className="px-6 pb-20 pt-32">
-        <div className="mx-auto max-w-xl">
-          <section className="border border-white/10 bg-white/[0.02] p-8 shadow-[0_25px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl md:p-10">
-            <div className="mb-8 space-y-4">
-              <div className="inline-flex items-center gap-2 border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-tight text-white/55">
-                <Lock className="h-3.5 w-3.5" />
-                Account Access
-              </div>
-              <div className="space-y-3">
-                <h1 className="font-heading text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                  {heading}
-                </h1>
-                {intent === 'upload-csv' && mode === 'login' ? (
-                  <p className="max-w-xl text-sm leading-6 text-white/45 md:text-base">
-                    Sign in to upload files into your workspace. Data import happens after account access, not before.
-                  </p>
-                ) : null}
-              </div>
+
+      <main className="relative z-10 px-4 pb-24 pt-28 md:px-6 md:pb-28 md:pt-32">
+        <div className="mx-auto max-w-[860px] space-y-8">
+          <section className="space-y-5">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+              <span>Workspace access</span>
+              <span className="h-1 w-1 rounded-full bg-[#8fb7ff]/80" />
+              <span className="text-white/46">
+                {mode === 'signup' ? 'Create account' : mode === 'recovery' ? 'Reset password' : 'Sign in'}
+              </span>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-4">
+              <h1 className="max-w-[620px] text-[38px] font-light leading-[0.95] tracking-tight text-white md:text-[60px]">
+                {heading}
+              </h1>
+              <p className="max-w-[560px] text-[16px] leading-7 text-white/58 md:text-lg md:leading-8">
+                {intent === 'upload-csv' && mode === 'login'
+                  ? 'Sign in to upload files into your workspace. Data import starts after account access, not before.'
+                  : 'Your Margin account gets you into the workspace first. Amazon, Gmail, and other providers are connected after that from inside the product.'}
+              </p>
+            </div>
+          </section>
+
+          <section className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(255,255,255,0.018)_16%,rgba(8,8,9,0.98)_100%)] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.36)] md:p-7">
+            <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#8fb7ff]/40 to-transparent" />
+            <div className="pointer-events-none absolute -right-16 top-10 h-32 w-32 rounded-full bg-[#7aa6ff]/10 blur-3xl" />
+
+            <div className="relative">
+              <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="text-[11px] font-medium tracking-tight text-white/40">
+                    {mode === 'signup' ? 'New account' : mode === 'recovery' ? 'Password recovery' : 'Existing account'}
+                  </div>
+                  <h2 className="text-[28px] font-light leading-[1.02] tracking-tight text-white md:text-[34px]">
+                    {mode === 'signup'
+                      ? 'Create your workspace access'
+                      : mode === 'recovery'
+                        ? 'Set your new password'
+                        : 'Enter your details'}
+                  </h2>
+                </div>
+
+                <div className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
+                  Account step
+                </div>
+              </div>
+
+              <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[11px] uppercase tracking-tight text-white/65">
+                <Label htmlFor="email" className="text-[11px] font-medium tracking-tight text-white/42">
                   Email
                 </Label>
                 <div className="relative">
@@ -362,13 +399,13 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder="you@company.com"
-                    className="h-12 border-white/10 bg-black/40 pl-11 text-white placeholder:text-white/20 disabled:opacity-50"
+                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 text-[14px] tracking-tight text-white placeholder:text-white/18 disabled:opacity-50"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[11px] uppercase tracking-tight text-white/65">
+                <Label htmlFor="password" className="text-[11px] font-medium tracking-tight text-white/42">
                   {mode === 'recovery' ? 'New Password' : 'Password'}
                 </Label>
                 <div className="relative">
@@ -383,7 +420,7 @@ const Login = () => {
                       resetLocalAuthError();
                     }}
                     placeholder={mode === 'recovery' ? 'Enter your new password' : 'Enter your password'}
-                    className="h-12 border-white/10 bg-black/40 pl-11 pr-11 text-white placeholder:text-white/20"
+                    className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 pr-11 text-[14px] tracking-tight text-white placeholder:text-white/18"
                   />
                   <button
                     type="button"
@@ -398,7 +435,7 @@ const Login = () => {
 
               {mode === 'recovery' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-[11px] uppercase tracking-tight text-white/65">
+                  <Label htmlFor="confirmPassword" className="text-[11px] font-medium tracking-tight text-white/42">
                     Confirm Password
                   </Label>
                   <div className="relative">
@@ -413,7 +450,7 @@ const Login = () => {
                         resetLocalAuthError();
                       }}
                       placeholder="Confirm your new password"
-                      className="h-12 border-white/10 bg-black/40 pl-11 pr-11 text-white placeholder:text-white/20"
+                      className="h-14 rounded-[20px] border-white/10 bg-white/[0.02] pl-11 pr-11 text-[14px] tracking-tight text-white placeholder:text-white/18"
                     />
                     <button
                       type="button"
@@ -428,7 +465,7 @@ const Login = () => {
               ) : null}
 
               {error ? (
-                <div className="border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                <div className="rounded-[18px] border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                   {error}
                 </div>
               ) : null}
@@ -437,7 +474,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-12 flex-1 rounded-none bg-white text-black hover:bg-white/90"
+                  className="h-12 flex-1 justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[13px] font-medium tracking-tight text-black hover:bg-white/92 hover:text-black"
                 >
                   {loading ? (
                     mode === 'signup'
@@ -454,7 +491,7 @@ const Login = () => {
                   )}
                   {!loading ? <ArrowRight className="h-4 w-4" /> : null}
                 </Button>
-                <Button asChild variant="outline" className="h-12 rounded-none border-white/10 bg-transparent text-white hover:bg-white/5 hover:text-white">
+                <Button asChild variant="outline" className="h-12 rounded-[18px] border-white/10 bg-transparent px-5 text-[13px] font-medium tracking-tight text-white/74 hover:bg-white/[0.04] hover:text-white">
                   <Link to="/">
                     Back Home
                   </Link>
@@ -501,10 +538,12 @@ const Login = () => {
                   </button>
                 )}
               </div>
-            </form>
-            <div className="mt-6 space-y-3 border-t border-white/10 pt-5 text-sm leading-6 text-white/45">
-              <p>{subtitle}</p>
-              <p>{supportingNote}</p>
+
+              <div className="mt-6 border-t border-white/10 pt-5 text-[14px] leading-6 text-white/45">
+                <p>{subtitle}</p>
+                <p className="mt-3">{supportingNote}</p>
+              </div>
+              </form>
             </div>
           </section>
         </div>
