@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
-import { AlertCircle, ChevronDown, ChevronUp, Download, FileText, Loader2, MoreHorizontal, RefreshCw, Search, X } from 'lucide-react';
+import { AlertCircle, Download, FileText, Loader2, MoreHorizontal, RefreshCw, Search, X } from 'lucide-react';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -1105,7 +1105,6 @@ export default function DisputeCases() {
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [filingInProgress, setFilingInProgress] = useState<Set<string>>(new Set());
-  const [summaryExpanded, setSummaryExpanded] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [summary, setSummary] = useState<QueueSummaryState>(() => createUnavailableSummary(1, 25));
 
@@ -1718,12 +1717,7 @@ export default function DisputeCases() {
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#0c0c0c] text-white">
-            <button
-              type="button"
-              aria-expanded={summaryExpanded}
-              onClick={() => setSummaryExpanded((current) => !current)}
-              className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-white/[0.02]"
-            >
+            <div className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left">
               <div className="min-w-0">
                 <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Filtered queue snapshot</p>
                 <p className="mt-2 text-sm font-sans font-bold tracking-tight text-white">{queuePostureHeadline}</p>
@@ -1738,54 +1732,47 @@ export default function DisputeCases() {
                     {formatSummaryValue(summary.total_cases)}
                   </p>
                 </div>
-                {summaryExpanded ? (
-                  <ChevronUp className="h-4 w-4 text-white/55" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-white/55" />
-                )}
               </div>
-            </button>
+            </div>
 
-            {summaryExpanded && (
-              <div className="border-t border-white/8 px-5 py-4">
-                <p className="mb-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
-                  Snapshot scope: current filtered view
-                </p>
-                <div className="mb-4 flex flex-wrap gap-2">
-                  {visibleBlockerSignals.map((signal) => (
-                    <span
-                      key={`queue-blocker-${signal.label}`}
-                      className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"
-                    >
-                      {signal.count} {signal.label}
-                    </span>
-                  ))}
-                  {recentlyUpdatedCount > 0 ? (
-                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
-                      {recentlyUpdatedCount} recently updated on this page
-                    </span>
-                  ) : null}
-                  {latestQueueSignal ? (
-                    <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
-                      {latestQueueSignal.label}
-                    </span>
-                  ) : null}
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  {[...queueTopSummaryCards, ...secondarySummaryCards].map((card) => (
-                    <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{card.label}</div>
-                      <div className="mt-2 text-left text-lg font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
-                        {formatSummaryValue(card.value)}
-                      </div>
-                      <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-white/62">
-                        {card.detail}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            <div className="border-t border-white/8 px-5 py-4">
+              <p className="mb-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
+                Snapshot scope: current filtered view
+              </p>
+              <div className="mb-4 flex flex-wrap gap-2">
+                {visibleBlockerSignals.map((signal) => (
+                  <span
+                    key={`queue-blocker-${signal.label}`}
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70"
+                  >
+                    {signal.count} {signal.label}
+                  </span>
+                ))}
+                {recentlyUpdatedCount > 0 ? (
+                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                    {recentlyUpdatedCount} recently updated on this page
+                  </span>
+                ) : null}
+                {latestQueueSignal ? (
+                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                    {latestQueueSignal.label}
+                  </span>
+                ) : null}
               </div>
-            )}
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[...queueTopSummaryCards, ...secondarySummaryCards].map((card) => (
+                  <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
+                    <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">{card.label}</div>
+                    <div className="mt-2 text-left text-lg font-sans font-bold tracking-tight text-[#8b8b8b] tabular-nums">
+                      {formatSummaryValue(card.value)}
+                    </div>
+                    <div className="mt-1 text-[11px] font-sans leading-5 tracking-tight text-white/62">
+                      {card.detail}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <Card className="bg-[#0c0c0c] border-white/5 text-white rounded-2xl overflow-hidden">
