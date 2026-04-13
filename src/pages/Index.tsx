@@ -10,6 +10,7 @@ import { CookieConsent } from '@/components/landing/CookieConsent';
 import { RecoveryEngineVisualization } from '@/components/landing/RecoveryEngineVisualization';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 const whatWeDoPoints = [
   'A customer got a refund, the unit never came back, and no reimbursement was created.',
@@ -292,6 +293,7 @@ export default function Index() {
   const navigate = useNavigate();
   const [showMoreFaqs, setShowMoreFaqs] = useState(false);
   const [isMobileLayout, setIsMobileLayout] = useState(false);
+  const { isFull, capacity } = useOnboardingCapacity();
   usePageMeta(SITE_META);
 
   useEffect(() => {
@@ -391,10 +393,10 @@ export default function Index() {
 
               <div className="mt-7 flex w-full max-w-[332px] flex-col items-stretch gap-2.5 sm:mt-10 sm:max-w-none sm:flex-row sm:items-start">
                 <Button
-                  onClick={handleConnectAmazon}
+                  onClick={isFull ? () => navigate('/waitlist?reason=capacity') : handleConnectAmazon}
                   className="h-10 w-full min-w-0 justify-between rounded-[5px] border border-white/10 bg-transparent px-4 text-[13px] font-medium text-white hover:bg-white/[0.04] sm:min-w-[168px] sm:w-auto sm:justify-center sm:px-5 sm:text-sm"
                 >
-                  Connect Amazon
+                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
                 <Button
@@ -405,6 +407,13 @@ export default function Index() {
                   See how it works
                 </Button>
               </div>
+
+              {isFull ? (
+                <div className="mt-4 max-w-[320px] text-[13px] leading-6 text-white/58">
+                  <div>We’re onboarding a small batch of sellers right now.</div>
+                  <div>Next batch opens in {capacity?.nextBatchHours ?? 24} hours.</div>
+                </div>
+              ) : null}
 
               <div className="mt-8 border-t border-white/8 pt-6 md:mt-8 md:border-0 md:pt-0">
                 <MobileIntegrationsCarousel />

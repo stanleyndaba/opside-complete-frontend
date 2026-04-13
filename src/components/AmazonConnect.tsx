@@ -9,6 +9,7 @@ import { tenantRoute } from '@/lib/routes';
 import { useTenant } from '@/contexts/TenantContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AMAZON_MARKETPLACES } from '@/lib/amazonMarketplaces';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 interface AmazonConnectProps {
   onConnectionStart?: () => void;
@@ -23,6 +24,7 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const { tenant } = useTenant();
   const navigate = useNavigate();
   const currentTenantSlug = tenantSlug || tenant?.slug || 'beta';
+  const { isFull, capacity } = useOnboardingCapacity();
 
   const [connecting, setConnecting] = useState(false);
   const [usingExisting, setUsingExisting] = useState(false);
@@ -249,6 +251,31 @@ export function AmazonConnect({ onConnectionStart, onConnectionComplete, classNa
   const buttonClassName = className?.split(' ')
     .filter(c => !c.startsWith('h-') && !c.startsWith('w-') && !c.startsWith('min-w-') && !c.startsWith('px-') && !c.startsWith('py-') && !c.startsWith('rounded-'))
     .join(' ');
+
+  if (isFull) {
+    return (
+      <div className={cn(
+        "w-full",
+        isFullWidth ? "max-w-[310px] sm:max-w-none" : "max-w-[310px] sm:w-auto sm:min-w-[280px]",
+        className
+      )}>
+        <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-left text-white shadow-[0_10px_30px_rgba(0,0,0,0.1)]">
+          <div className="text-[11px] font-semibold tracking-tight text-white">
+            We’re onboarding a small batch of sellers right now.
+          </div>
+          <div className="mt-1 text-[10px] text-white/60">
+            Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
+          </div>
+          <Button
+            onClick={() => navigate('/waitlist?reason=capacity')}
+            className="mt-3 h-9 w-full rounded-full border border-white/10 bg-white text-[10px] font-semibold uppercase tracking-tight text-black hover:bg-white/90"
+          >
+            Join Waitlist
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn(

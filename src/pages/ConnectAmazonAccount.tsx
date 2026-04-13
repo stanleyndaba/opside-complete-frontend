@@ -9,12 +9,14 @@ import { useToast } from '@/components/ui/use-toast';
 import { normalizeTenantSlug } from '@/lib/routes';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AMAZON_MARKETPLACES } from '@/lib/amazonMarketplaces';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 export default function ConnectAmazonAccount() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams<{ tenantSlug: string }>();
   const { tenant } = useTenant();
   const { toast } = useToast();
+  const { isFull, capacity } = useOnboardingCapacity();
   const activeTenantSlug = tenantSlug || tenant?.slug || '';
   const [resolvedTenantSlug, setResolvedTenantSlug] = useState(activeTenantSlug);
   const [preparing, setPreparing] = useState(true);
@@ -85,6 +87,11 @@ export default function ConnectAmazonAccount() {
   }, [navigate, tenant?.slug, tenantSlug, toast]);
 
   const handleConnectAmazon = async () => {
+    if (isFull) {
+      navigate('/waitlist?reason=capacity');
+      return;
+    }
+
     if (!resolvedTenantSlug) {
       toast({
         title: 'Workspace unavailable',
@@ -197,6 +204,25 @@ export default function ConnectAmazonAccount() {
                 <div className="flex h-14 w-full items-center justify-center rounded-[20px] border border-white/10 bg-white/[0.03] text-sm text-white/60">
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Preparing workspace...
+                </div>
+              ) : isFull ? (
+                <div className="space-y-5 rounded-[20px] border border-white/10 bg-white/[0.03] p-5 text-white">
+                  <div className="space-y-2">
+                    <p className="text-[12px] font-semibold tracking-tight text-white">
+                      We’re onboarding a small batch of sellers right now.
+                    </p>
+                    <p className="text-[12px] text-white/60">
+                      Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => navigate('/waitlist?reason=capacity')}
+                    className="h-11 w-full justify-between rounded-[18px] border border-white/10 bg-white px-5 text-[12px] font-medium tracking-tight text-black hover:bg-white/92"
+                  >
+                    Join Waitlist
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-5">

@@ -76,9 +76,9 @@ const Login = () => {
           const targetPath = nextPath !== '/app'
             ? bindPathToTenant(nextPath, resolvedTenantSlug)
             : `/app/${resolvedTenantSlug}/connect-amazon`;
-          navigate(targetPath, { replace: true });
+          await routeWithCapacityGate(targetPath);
         } catch {
-          navigate(nextPath, { replace: true });
+          await routeWithCapacityGate(nextPath);
         }
       }
     };
@@ -139,6 +139,27 @@ const Login = () => {
   const clearStoredTenantContext = () => {
     localStorage.removeItem('active_tenant_id');
     localStorage.removeItem('active_tenant_slug');
+  };
+
+  const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
+
+  const routeWithCapacityGate = async (targetPath: string) => {
+    if (!shouldGateOnboarding(targetPath)) {
+      navigate(targetPath, { replace: true });
+      return;
+    }
+
+    try {
+      const capacity = await api.getOnboardingCapacity();
+      if (capacity.ok && capacity.data && !capacity.data.allowed) {
+        navigate('/waitlist?reason=capacity', { replace: true });
+        return;
+      }
+    } catch {
+      // If capacity check fails, continue with normal onboarding navigation.
+    }
+
+    navigate(targetPath, { replace: true });
   };
 
   const bindPathToTenant = (path: string, tenantSlug: string) => {
@@ -229,7 +250,7 @@ const Login = () => {
 
         if (data.session) {
           const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
-          navigate(`/app/${resolvedTenantSlug}/connect-amazon`, { replace: true });
+          await routeWithCapacityGate(`/app/${resolvedTenantSlug}/connect-amazon`);
         } else {
           setMode('login');
         }
@@ -255,7 +276,7 @@ const Login = () => {
 
         setConfirmPassword('');
         const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim() || localStorage.getItem('user_email') || '');
-        navigate(`/app/${resolvedTenantSlug}/connect-amazon`, { replace: true });
+        await routeWithCapacityGate(`/app/${resolvedTenantSlug}/connect-amazon`);
         setLoading(false);
         return;
       }
@@ -282,7 +303,7 @@ const Login = () => {
       const targetPath = nextPath !== '/app'
         ? bindPathToTenant(nextPath, resolvedTenantSlug)
         : `/app/${resolvedTenantSlug}/connect-amazon`;
-      navigate(targetPath, { replace: true });
+      await routeWithCapacityGate(targetPath);
     } catch (loginError: any) {
       setError(loginError?.message || 'Login failed. Please try again.');
     } finally {

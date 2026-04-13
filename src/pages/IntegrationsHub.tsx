@@ -23,6 +23,7 @@ import { api } from '@/lib/api';
 import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 import { tenantRoute } from '@/lib/routes';
 import { useTenant } from '@/contexts/TenantContext';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
 // ... (existing constants)
 
@@ -85,6 +86,7 @@ export default function IntegrationsHub() {
   const { isReady, tenant } = useTenant();
   const activeSlug = tenantSlug || tenant?.slug || null;
   const { toast } = useToast();
+  const { isFull, capacity } = useOnboardingCapacity();
   const [status, setStatus] = useState<IntegrationStatusDTO | null>(null);
   const [stores, setStores] = useState<any[]>([]);
   const [loadingStores, setLoadingStores] = useState(true);
@@ -930,30 +932,47 @@ export default function IntegrationsHub() {
                       </DialogContent>
                     </Dialog>
 
-                    <Button
-                      onClick={async () => {
-                        toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon Seller Central Authorization...' });
-                        try {
-                          if (!activeSlug) {
-                            toast({ title: 'Workspace Required', description: 'Select a workspace before connecting Amazon.', variant: 'destructive' });
-                            return;
+                    {isFull ? (
+                      <div className="flex flex-col items-start gap-3">
+                        <div className="text-[11px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                          We’re onboarding a small batch of sellers right now.
+                        </div>
+                        <div className="text-[11px] text-gray-400">
+                          Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
+                        </div>
+                        <Button
+                          onClick={() => navigate('/waitlist?reason=capacity')}
+                          className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
+                        >
+                          Join Waitlist
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={async () => {
+                          toast({ title: 'Establishing Terminal', description: 'Redirecting to Amazon Seller Central Authorization...' });
+                          try {
+                            if (!activeSlug) {
+                              toast({ title: 'Workspace Required', description: 'Select a workspace before connecting Amazon.', variant: 'destructive' });
+                              return;
+                            }
+                            const res = await api.connectAmazon(undefined, false, activeSlug);
+                            const url = res.data?.auth_url || res.data?.authUrl;
+                            if (res.ok && url) {
+                              window.location.assign(url);
+                            } else {
+                              toast({ title: 'Connection Error', description: 'Could not retrieve Amazon authorization URL. Please try again.', variant: 'destructive' });
+                            }
+                          } catch (err) {
+                            console.error('connectAmazon error:', err);
+                            toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                           }
-                          const res = await api.connectAmazon(undefined, false, activeSlug);
-                          const url = res.data?.auth_url || res.data?.authUrl;
-                          if (res.ok && url) {
-                            window.location.assign(url);
-                          } else {
-                            toast({ title: 'Connection Error', description: 'Could not retrieve Amazon authorization URL. Please try again.', variant: 'destructive' });
-                          }
-                        } catch (err) {
-                          console.error('connectAmazon error:', err);
-                          toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
-                        }
-                      }}
-                      className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
-                    >
-                      Connect Amazon
-                    </Button>
+                        }}
+                        className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
+                      >
+                        Connect Amazon
+                      </Button>
+                    )}
                   </div>
                 </div>
 

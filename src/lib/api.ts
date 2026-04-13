@@ -466,6 +466,12 @@ export const api = {
   getWaitlist: (limit = 100, offset = 0) =>
     requestJson<{ success: boolean; entries: any[]; total: number }>(`/api/waitlist?limit=${limit}&offset=${offset}`),
 
+  // Onboarding capacity (global hard cap)
+  getOnboardingCapacity: () =>
+    requestJson<{ success: boolean; max: number; active: number; allowed: boolean; nextBatchHours: number }>(
+      '/api/onboarding/capacity'
+    ),
+
 
   // Export buildApiUrl for use in other modules
   buildApiUrl,
