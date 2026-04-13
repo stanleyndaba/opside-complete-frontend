@@ -13,9 +13,7 @@ import {
     CheckCircle2,
     Sparkles,
     ArrowRight,
-    ShieldCheck,
     Mail,
-    Zap,
     MessageSquare,
     ChevronLeft
 } from 'lucide-react';
@@ -27,9 +25,9 @@ const profileOptions = [
 ];
 
 const goalOptions = [
-    { id: 'recover', label: 'Find missed reimbursements', detail: 'Start with the money Amazon missed.', accent: '$' },
-    { id: 'audit', label: 'Run a historical audit', detail: 'Review the backlog before launch or migration.', accent: '18M' },
-    { id: 'automate', label: 'Automate filing operations', detail: 'Move from detection into evidence and filing.', accent: 'AUTO' }
+    { id: 'recover', label: 'Find missed reimbursements', detail: 'Start with the money Amazon missed.' },
+    { id: 'audit', label: 'Run a historical audit', detail: 'Review the backlog before launch or migration.' },
+    { id: 'automate', label: 'Automate filing operations', detail: 'Move from detection into evidence and filing.' }
 ];
 
 const waitlistHighlights = [
@@ -333,19 +331,19 @@ const Waitlist = () => {
                                             <div className="mt-8 space-y-8">
                                                 <div className="space-y-3">
                                                     <Label className="text-[11px] font-medium tracking-tight text-white/42">Primary goal</Label>
-                                                    <div className="grid gap-3">
+                                                    <div className="space-y-1 overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.02]">
                                                         {goalOptions.map((item) => (
                                                             <button
                                                                 key={item.id}
                                                                 onClick={() => handleSelection('primary_goal', item.id)}
-                                                                className={`rounded-[22px] border px-4 py-4 text-left transition-all ${formData.primary_goal === item.id
-                                                                    ? 'border-[#3c5a81] bg-[#10161f] shadow-[0_0_0_1px_rgba(143,183,255,0.1)]'
-                                                                    : 'border-white/10 bg-white/[0.02] hover:border-white/18 hover:bg-white/[0.04]'
+                                                                className={`w-full border-b border-white/8 px-4 py-4 text-left transition-all last:border-b-0 ${formData.primary_goal === item.id
+                                                                    ? 'bg-[#10161f]'
+                                                                    : 'hover:bg-white/[0.03]'
                                                                     }`}
                                                             >
-                                                                <div className="flex items-start gap-4">
-                                                                    <div className={`flex h-10 min-w-10 items-center justify-center rounded-2xl border text-[10px] font-medium tracking-tight ${formData.primary_goal === item.id ? 'border-[#446288] bg-[#111925] text-[#d9e5fb]' : 'border-white/10 bg-[#0b0b0c] text-white/42'}`}>
-                                                                        {item.accent}
+                                                                <div className="flex items-start gap-3">
+                                                                    <div className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${formData.primary_goal === item.id ? 'border-[#5f84ba] bg-[#5f84ba]' : 'border-white/20'}`}>
+                                                                        <div className={`h-1.5 w-1.5 rounded-full ${formData.primary_goal === item.id ? 'bg-[#050505]' : 'bg-transparent'}`} />
                                                                     </div>
                                                                     <div>
                                                                         <div className={`text-[15px] font-medium tracking-tight ${formData.primary_goal === item.id ? 'text-white' : 'text-white/78'}`}>{item.label}</div>
@@ -357,11 +355,8 @@ const Waitlist = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="rounded-[20px] border border-[#2c4058] bg-[#0f141d] px-4 py-3">
-                                                    <div className="flex items-center gap-2 text-[11px] font-medium tracking-tight text-[#d5e3fb]/78">
-                                                        <ShieldCheck className="h-3.5 w-3.5" />
-                                                        Priority access stays private and enrollment data is encrypted.
-                                                    </div>
+                                                <div className="text-center text-[11px] font-medium tracking-tight text-white/48">
+                                                    Priority access stays private and enrollment data is encrypted.
                                                 </div>
 
                                                 <div className="flex gap-3">
@@ -376,7 +371,7 @@ const Waitlist = () => {
                                                     <Button
                                                         onClick={handleSubmit}
                                                         disabled={isSubmitting}
-                                                        className={`h-12 flex-1 justify-between rounded-[18px] border border-white/10 px-5 text-[13px] font-medium tracking-tight transition ${isSubmitting ? 'bg-white/[0.06] text-white/32' : 'bg-white text-black hover:bg-white/92 hover:text-black'}`}
+                                                        className={`h-12 flex-1 rounded-[18px] border border-white/10 px-5 text-[13px] font-medium tracking-tight transition ${isSubmitting ? 'bg-white/[0.06] text-white/32' : 'bg-white text-black hover:bg-white/92 hover:text-black'}`}
                                                     >
                                                         {isSubmitting ? (
                                                             <div className="flex items-center gap-3">
@@ -384,10 +379,7 @@ const Waitlist = () => {
                                                                 Sending request
                                                             </div>
                                                         ) : (
-                                                            <>
-                                                                Request access
-                                                                <Zap className="h-4 w-4" />
-                                                            </>
+                                                            'Request access'
                                                         )}
                                                     </Button>
                                                 </div>
