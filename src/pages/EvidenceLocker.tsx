@@ -376,23 +376,35 @@ export default function EvidenceLocker() {
         body: form
       });
 
+      const rawText = await response.text();
+      let payload: any = null;
+      try {
+        payload = rawText ? JSON.parse(rawText) : {};
+      } catch {
+        payload = { message: rawText };
+      }
+
       if (!response.ok) {
-        const rawText = await response.text();
-        let failureMessage = rawText || 'Document upload failed.';
-        try {
-          const parsed = JSON.parse(rawText);
-          failureMessage = parsed?.error || parsed?.message || failureMessage;
-        } catch {
-          // Keep the raw response text when the backend did not return JSON.
-        }
+        const failureMessage = payload?.error || payload?.message || rawText || 'Document upload failed.';
         throw new Error(failureMessage);
+      }
+
+      const savedCount = Number(payload?.file_count ?? payload?.documents?.length ?? 0);
+      const requestedCount = Number(payload?.requested_file_count ?? files.length);
+      const failedFiles = Array.isArray(payload?.failed_files) ? payload.failed_files : [];
+      const partialUpload = Boolean(payload?.partial) || failedFiles.length > 0 || savedCount < requestedCount;
+
+      if (savedCount <= 0) {
+        throw new Error('Upload completed without saving any documents.');
       }
 
       await refreshInventory();
 
       toast({
-        title: 'Upload successful',
-        description: `${files.length} document(s) uploaded and queued for evidence parsing.`
+        title: partialUpload ? 'Upload partially completed' : 'Upload successful',
+        description: partialUpload
+          ? `${savedCount} of ${requestedCount} document(s) were saved.${failedFiles[0]?.reason ? ` ${failedFiles[0].reason}` : ''}`
+          : `${savedCount} document(s) uploaded and queued for evidence parsing.`
       });
     } catch (err: any) {
       toast({

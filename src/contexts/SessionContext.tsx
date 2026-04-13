@@ -1,13 +1,12 @@
 /**
  * Session Context
  * Manages global session state including soft timeout handling.
- * Provides session timeout modal without losing user's page state.
+ * Redirects protected-session failures back to login while preserving the current route.
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { SessionTimeoutModal } from '@/components/modals/SessionTimeoutModal';
-import { SESSION_RECOVERY_EVENT, clearSessionRecoveryPending, clearSessionRecoverySuppression, suppressSessionRecovery } from '@/lib/sessionRecovery';
+import { SESSION_RECOVERY_EVENT, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -22,16 +21,25 @@ interface SessionContextType {
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-    const [sessionTimeoutOpen, setSessionTimeoutOpen] = useState(false);
-    const [sessionRecoveryDismissed, setSessionRecoveryDismissed] = useState(() => {
-        if (typeof window === 'undefined') return false;
-        return window.sessionStorage.getItem('margin:session-recovery-suppressed') === '1';
-    });
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
     const [isAuthReady, setIsAuthReady] = useState(false);
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [isPaidUser, setIsPaidUser] = useState(false);
+
+    const redirectToLogin = useCallback(() => {
+        if (typeof window === 'undefined') return;
+
+        const { pathname, search, hash } = window.location;
+        const publicRoutes = ['/login', '/waitlist', '/connect-amazon'];
+        if (publicRoutes.some((route) => pathname.startsWith(route))) {
+            return;
+        }
+
+        const next = `${pathname}${search}${hash}`;
+        const loginPath = `/login?next=${encodeURIComponent(next)}`;
+        window.location.assign(loginPath);
+    }, []);
 
     // Get user email and ID on mount
     useEffect(() => {
@@ -84,8 +92,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 setIsAuthReady(true);
             } else if (event === 'SIGNED_IN') {
                 setIsSessionValid(true);
-                setSessionTimeoutOpen(false);
-                setSessionRecoveryDismissed(false);
                 clearSessionRecoveryPending();
                 clearSessionRecoverySuppression();
                 if (session.access_token) {
@@ -112,7 +118,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 setIsAuthReady(true);
             } else if (event === 'TOKEN_REFRESHED') {
                 setIsSessionValid(true);
-                setSessionTimeoutOpen(false);
                 clearSessionRecoveryPending();
                 if (session?.access_token) {
                     localStorage.setItem('session_token', session.access_token);
@@ -161,39 +166,24 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         if (typeof window === 'undefined') return;
 
         const handleRecoveryRequired = () => {
-            if (sessionRecoveryDismissed) return;
             setIsSessionValid(false);
-            setSessionTimeoutOpen(true);
+            redirectToLogin();
         };
 
         window.addEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         return () => {
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
-    }, [sessionRecoveryDismissed]);
+    }, [redirectToLogin]);
 
     const showSessionTimeout = useCallback(() => {
         setIsSessionValid(false);
         clearSessionRecoverySuppression();
-        setSessionRecoveryDismissed(false);
-        setSessionTimeoutOpen(true);
-    }, []);
+        redirectToLogin();
+    }, [redirectToLogin]);
 
     const hideSessionTimeout = useCallback(() => {
-        suppressSessionRecovery();
-        setSessionRecoveryDismissed(true);
-        setSessionTimeoutOpen(false);
-    }, []);
-
-    const handleSessionRestored = useCallback(() => {
-        setIsSessionValid(true);
-        setSessionTimeoutOpen(false);
-        setSessionRecoveryDismissed(false);
         clearSessionRecoveryPending();
-        clearSessionRecoverySuppression();
-        if (typeof window !== 'undefined') {
-            window.location.reload();
-        }
     }, []);
 
     return (
@@ -207,12 +197,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             hideSessionTimeout
         }}>
             {children}
-            <SessionTimeoutModal
-                isOpen={sessionTimeoutOpen}
-                onClose={hideSessionTimeout}
-                onSuccess={handleSessionRestored}
-                userEmail={userEmail || undefined}
-            />
         </SessionContext.Provider>
     );
 }
@@ -226,8 +210,7 @@ export function useSession() {
 }
 
 /**
- * Hook for handling 401 errors with session timeout modal
- * Use this instead of redirecting to login page
+ * Hook for handling 401 errors with a login redirect
  */
 export function useSessionErrorHandler() {
     const { showSessionTimeout } = useSession();
