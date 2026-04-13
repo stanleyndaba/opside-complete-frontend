@@ -17,7 +17,6 @@ import {
     Mail,
     Briefcase,
     Building2,
-    BarChart3,
     Target,
     Zap,
     MessageSquare,
@@ -38,26 +37,17 @@ const goalOptions = [
 
 const waitlistHighlights = [
     {
-        icon: Sparkles,
         title: 'Priority rollout',
         detail: 'Access is opened in controlled waves so onboarding stays fast and hands-on.'
     },
     {
-        icon: BarChart3,
         title: 'Built for operator clarity',
         detail: 'The same product shows what is detected, blocked, filed, approved, and paid.'
     },
     {
-        icon: ShieldCheck,
         title: 'Truth-gated filing',
         detail: 'Weak, duplicate, or thread-only cases stay held instead of being pushed through.'
     }
-];
-
-const waitlistSignals = [
-    { label: 'Access mode', value: 'Guided launch queue' },
-    { label: 'Priority users', value: 'Brands, operators, aggregators' },
-    { label: 'First outcome', value: 'Read-only review + onboarding' }
 ];
 
 const stepMeta = [
@@ -162,9 +152,9 @@ const Waitlist = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.95fr)] lg:items-start"
+                        className="mx-auto max-w-[860px] space-y-8"
                     >
-                        <section className="space-y-7 lg:sticky lg:top-28">
+                        <section className="space-y-5">
                             <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72">
                                 <span>Priority access</span>
                                 <span className="h-1 w-1 rounded-full bg-[#8fb7ff]/80" />
@@ -178,55 +168,6 @@ const Waitlist = () => {
                                 <p className="max-w-[560px] text-[16px] leading-7 text-white/58 md:text-lg md:leading-8">
                                     Early access is being opened in controlled waves for Amazon sellers, operators, and aggregators who want reimbursement visibility before broad rollout.
                                 </p>
-                            </div>
-
-                            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                                {waitlistSignals.map((signal) => (
-                                    <div
-                                        key={signal.label}
-                                        className="rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.015)_100%)] px-4 py-4"
-                                    >
-                                        <div className="text-[11px] font-medium tracking-tight text-white/38">{signal.label}</div>
-                                        <div className="mt-2 text-[15px] font-medium leading-6 text-white/88">{signal.value}</div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="grid gap-3">
-                                {waitlistHighlights.map((item) => (
-                                    <div
-                                        key={item.title}
-                                        className="rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(17,20,26,0.9)_0%,rgba(11,12,15,0.95)_100%)] px-5 py-5 shadow-[0_18px_44px_rgba(0,0,0,0.22)]"
-                                    >
-                                        <div className="flex items-start gap-4">
-                                            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#324860] bg-[#10161f] text-[#d7e5fc]">
-                                                <item.icon className="h-4.5 w-4.5" />
-                                            </div>
-                                            <div>
-                                                <h2 className="text-[18px] font-medium tracking-tight text-white">{item.title}</h2>
-                                                <p className="mt-2 max-w-[480px] text-[14px] leading-6 text-white/55">{item.detail}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="rounded-[28px] border border-[#243347] bg-[linear-gradient(180deg,rgba(14,19,27,0.92)_0%,rgba(10,12,15,0.98)_100%)] px-5 py-5">
-                                <div className="text-[11px] font-medium tracking-tight text-[#a9c0e2]/72">What happens next</div>
-                                <div className="mt-4 space-y-4">
-                                    {[
-                                        'We review your profile and operating context.',
-                                        'Priority access opens in batches based on onboarding bandwidth.',
-                                        'If selected, you get the first guided Margin setup path.'
-                                    ].map((item, index) => (
-                                        <div key={item} className="flex gap-3">
-                                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#446288]/50 bg-[#0f141d] text-[11px] font-medium text-[#d1def4]">
-                                                0{index + 1}
-                                            </div>
-                                            <p className="text-[14px] leading-6 text-white/62">{item}</p>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                         </section>
 
@@ -487,16 +428,21 @@ const Waitlist = () => {
                                         </p>
                                     </div>
 
-                                    <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
-                                        {waitlistSignals.map((signal) => (
-                                            <div
-                                                key={signal.label}
-                                                className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4"
-                                            >
-                                                <div className="text-[11px] font-medium tracking-tight text-white/38">{signal.label}</div>
-                                                <div className="mt-2 text-[14px] leading-6 text-white/84">{signal.value}</div>
-                                            </div>
-                                        ))}
+                                    <div className="mt-8 rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5 text-left">
+                                        <div className="text-[11px] font-medium tracking-tight text-white/38">What happens next</div>
+                                        <div className="mt-4 space-y-3">
+                                            {[
+                                                'We review your profile and operating context.',
+                                                'If your access window opens, we reach out through the contact path you provided.'
+                                            ].map((item, index) => (
+                                                <div key={item} className="flex gap-3">
+                                                    <div className="mt-0.5 text-[11px] font-medium tracking-tight text-white/34">
+                                                        0{index + 1}
+                                                    </div>
+                                                    <p className="text-[14px] leading-6 text-white/66">{item}</p>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
 
                                     <div className="mt-8">
@@ -511,6 +457,43 @@ const Waitlist = () => {
                                 </motion.div>
                             )}
                         </AnimatePresence>
+
+                        <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,18,22,0.94)_0%,rgba(9,10,12,0.99)_100%)] shadow-[0_22px_60px_rgba(0,0,0,0.22)]">
+                            <div className="grid gap-px bg-white/8 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+                                <div className="bg-[#0b0c10] px-5 py-6 md:px-6">
+                                    <div className="text-[11px] font-medium tracking-tight text-white/38">Why access opens carefully</div>
+                                    <div className="mt-5 space-y-5">
+                                        {waitlistHighlights.map((item, index) => (
+                                            <div
+                                                key={item.title}
+                                                className={index > 0 ? 'border-t border-white/8 pt-5' : ''}
+                                            >
+                                                <h2 className="text-[17px] font-medium tracking-tight text-white">{item.title}</h2>
+                                                <p className="mt-2 max-w-[480px] text-[14px] leading-6 text-white/55">{item.detail}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="bg-[linear-gradient(180deg,rgba(15,19,27,0.96)_0%,rgba(10,11,14,1)_100%)] px-5 py-6 md:px-6">
+                                    <div className="text-[11px] font-medium tracking-tight text-[#a9c0e2]/72">What happens next</div>
+                                    <div className="mt-5 space-y-5">
+                                        {[
+                                            'We review your profile and operating context.',
+                                            'Priority access opens in batches based on onboarding bandwidth.',
+                                            'If selected, you get the first guided Margin setup path.'
+                                        ].map((item, index) => (
+                                            <div key={item} className={index > 0 ? 'border-t border-white/8 pt-5' : ''}>
+                                                <div className="text-[11px] font-medium tracking-tight text-[#d1def4]/76">
+                                                    0{index + 1}
+                                                </div>
+                                                <p className="mt-2 text-[14px] leading-6 text-white/62">{item}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </motion.div>
                 </div>
             </main>
