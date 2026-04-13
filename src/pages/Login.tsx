@@ -55,6 +55,8 @@ const Login = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('user_email') : '';
@@ -66,29 +68,29 @@ const Login = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const redirectIfAuthenticated = async () => {
+    const loadActiveSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (isMounted && session?.access_token) {
-        try {
-          const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(
-            session.user?.email || localStorage.getItem('user_email') || ''
-          );
-          const targetPath = nextPath !== '/app'
-            ? bindPathToTenant(nextPath, resolvedTenantSlug)
-            : `/app/${resolvedTenantSlug}/connect-amazon`;
-          await routeWithCapacityGate(targetPath);
-        } catch {
-          await routeWithCapacityGate(nextPath);
-        }
+      if (!isMounted) {
+        return;
       }
+
+      const recoveryMode = searchParams.get('type') === 'recovery' || searchParams.get('mode') === 'recovery';
+      if (!recoveryMode && session?.access_token) {
+        const nextEmail = session.user?.email || localStorage.getItem('user_email') || null;
+        setActiveSessionEmail(nextEmail);
+      } else {
+        setActiveSessionEmail(null);
+      }
+
+      setSessionChecked(true);
     };
 
-    redirectIfAuthenticated();
+    loadActiveSession();
 
     return () => {
       isMounted = false;
     };
-  }, [navigate, nextPath]);
+  }, [searchParams]);
 
   useEffect(() => {
     const urlType = searchParams.get('type');
@@ -138,6 +140,13 @@ const Login = () => {
   const clearStoredTenantContext = () => {
     localStorage.removeItem('active_tenant_id');
     localStorage.removeItem('active_tenant_slug');
+  };
+
+  const clearStoredAuthContext = () => {
+    localStorage.removeItem('session_token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_email');
+    clearStoredTenantContext();
   };
 
   const shouldGateOnboarding = (path: string) => path.includes('/connect-amazon');
@@ -200,6 +209,33 @@ const Login = () => {
     }
 
     throw new Error('Unable to resolve a workspace for this account.');
+  };
+
+  const routeExistingSession = async () => {
+    const sessionEmail = activeSessionEmail || localStorage.getItem('user_email') || '';
+    const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
+    const targetPath = nextPath !== '/app'
+      ? bindPathToTenant(nextPath, resolvedTenantSlug)
+      : `/app/${resolvedTenantSlug}/connect-amazon`;
+    await routeWithCapacityGate(targetPath);
+  };
+
+  const handleUseDifferentAccount = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {
+      // Even if sign-out reports an issue, clear local auth state so the form is usable.
+    } finally {
+      clearStoredAuthContext();
+      setActiveSessionEmail(null);
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setLoading(false);
+    }
   };
 
   const handleLogin = async (event: React.FormEvent) => {
@@ -400,6 +436,37 @@ const Login = () => {
                   Account step
                 </div>
               </div>
+
+              {sessionChecked && activeSessionEmail && mode === 'login' ? (
+                <div className="mb-5 rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4">
+                  <p className="text-[11px] font-medium uppercase tracking-tight text-white/38">
+                    Active session found
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-white/72">
+                    You are already signed in as <span className="font-semibold text-white">{activeSessionEmail}</span>.
+                  </p>
+                  <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                    <Button
+                      type="button"
+                      onClick={() => void routeExistingSession()}
+                      disabled={loading}
+                      className="h-11 justify-between rounded-[16px] border border-white/10 bg-white px-4 text-[12px] font-medium tracking-tight text-black hover:bg-white/92"
+                    >
+                      Continue with this account
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => void handleUseDifferentAccount()}
+                      disabled={loading}
+                      className="h-11 rounded-[16px] border-white/10 bg-transparent px-4 text-[12px] font-medium tracking-tight text-white/74 hover:bg-white/[0.04] hover:text-white"
+                    >
+                      Use different account
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
 
               <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2">
