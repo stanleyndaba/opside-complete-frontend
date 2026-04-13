@@ -34,19 +34,19 @@ const amazonNode: SceneNode = {
   id: 'amazon',
   label: 'Amazon',
   x: 0.035,
-  y: 0.08,
+  y: 0.065,
   kind: 'input',
   iconSrc: '/AMZN.png',
   iconAlt: 'Amazon'
 };
 
 const inputNodes: SceneNode[] = [
-  { id: 'inventory', label: 'FBA Inventory', x: 0.14, y: 0.18, kind: 'input' },
-  { id: 'shipments', label: 'Shipments', x: 0.14, y: 0.3, kind: 'input' },
-  { id: 'returns', label: 'Returns / Refunds', x: 0.14, y: 0.42, kind: 'input' },
-  { id: 'fees', label: 'Fee Events', x: 0.14, y: 0.54, kind: 'input' },
-  { id: 'settlements', label: 'Settlement / Ledger', x: 0.14, y: 0.66, kind: 'input' },
-  { id: 'reimbursements', label: 'Reimbursements', x: 0.14, y: 0.78, kind: 'input' }
+  { id: 'inventory', label: 'FBA Inventory', x: 0.14, y: 0.22, kind: 'input' },
+  { id: 'shipments', label: 'Shipments', x: 0.14, y: 0.34, kind: 'input' },
+  { id: 'returns', label: 'Returns / Refunds', x: 0.14, y: 0.46, kind: 'input' },
+  { id: 'fees', label: 'Fee Events', x: 0.14, y: 0.58, kind: 'input' },
+  { id: 'settlements', label: 'Settlement / Ledger', x: 0.14, y: 0.7, kind: 'input' },
+  { id: 'reimbursements', label: 'Reimbursements', x: 0.14, y: 0.82, kind: 'input' }
 ];
 
 const stageNodes: SceneNode[] = [
@@ -387,7 +387,7 @@ export function RecoveryEngineVisualization() {
       for (let y = 0.08; y <= 0.92; y += 0.04) {
         const clip = toClipSpace(x, y);
         gridPoints.push(clip.x, clip.y);
-        gridColors.push(1, 1, 1, 0.04);
+        gridColors.push(1, 1, 1, 0.06);
       }
     }
 
@@ -497,12 +497,12 @@ export function RecoveryEngineVisualization() {
       routes.forEach((route) => {
         const isActive = route.stage === stageIndex;
         const routeColor = route.role === 'trunk'
-          ? isActive ? [0.98, 0.98, 1, 0.9] : [0.72, 0.74, 0.78, 0.32]
+          ? isActive ? [0.98, 0.98, 1, 0.82] : [0.72, 0.74, 0.78, 0.38]
           : route.role === 'output'
-            ? isActive ? [0.96, 0.84, 0.44, 0.85] : [0.62, 0.62, 0.66, 0.18]
+            ? isActive ? [0.96, 0.84, 0.44, 0.78] : [0.62, 0.62, 0.66, 0.22]
             : isActive
-              ? [0.9, 0.92, 0.98, 0.8]
-              : [0.58, 0.58, 0.64, 0.14];
+              ? [0.9, 0.92, 0.98, 0.72]
+              : [0.58, 0.58, 0.64, 0.2];
 
         for (let index = 1; index < route.points.length; index += 1) {
           const from = toClipSpace(route.points[index - 1].x, route.points[index - 1].y);
@@ -530,10 +530,10 @@ export function RecoveryEngineVisualization() {
           0.96,
           1,
           node.id === 'evidence'
-            ? 0.14 + Math.sin(time * 2.1) * 0.05
+            ? 0.1 + Math.sin(time * 2.1) * 0.04
             : isActive
-              ? 0.12 + Math.sin(time * 2.6) * 0.05
-              : 0.03
+              ? 0.09 + Math.sin(time * 2.6) * 0.04
+              : 0.02
         );
       });
 
@@ -623,17 +623,17 @@ export function RecoveryEngineVisualization() {
 
   return (
     <div className="relative mt-16 overflow-hidden rounded-[28px] border border-white/10 bg-[#090909]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.035),transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_55%)]" />
       <div className="relative h-[700px] w-full md:h-[780px] xl:h-[820px]">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
-        <div className="pointer-events-none absolute left-6 top-6 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-medium tracking-tight text-white/58 backdrop-blur-sm">
+        <div className="pointer-events-none absolute left-6 top-6 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-tight text-white/68 backdrop-blur-sm">
           Amazon signals
         </div>
-        <div className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-medium tracking-tight text-white/58 backdrop-blur-sm">
+        <div className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-tight text-white/68 backdrop-blur-sm">
           Margin orchestration layer
         </div>
-        <div className="pointer-events-none absolute right-6 top-6 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] font-medium tracking-tight text-white/58 backdrop-blur-sm">
+        <div className="pointer-events-none absolute right-6 top-6 rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-tight text-white/68 backdrop-blur-sm">
           Resolved outcomes
         </div>
 
@@ -643,7 +643,7 @@ export function RecoveryEngineVisualization() {
             className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
             style={{ left: `${(node.x + 0.032) * 100}%`, top: `${node.y * 100}%` }}
           >
-            <div className="text-[11px] font-medium tracking-tight text-white/62">{node.label}</div>
+            <div className="text-[11px] font-medium tracking-tight text-white/68">{node.label}</div>
           </div>
         ))}
 
@@ -653,7 +653,7 @@ export function RecoveryEngineVisualization() {
             className="pointer-events-none absolute hidden -translate-x-full -translate-y-1/2 md:block"
             style={{ left: `${(node.x - 0.015) * 100}%`, top: `${node.y * 100}%` }}
           >
-            <div className="rounded-full border border-white/8 bg-black/40 px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/72 backdrop-blur-sm">
+            <div className="rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[10.5px] font-medium tracking-tight text-white/78 backdrop-blur-sm">
               {node.label}
             </div>
           </div>
@@ -665,7 +665,7 @@ export function RecoveryEngineVisualization() {
             className="pointer-events-none absolute hidden -translate-x-1/2 md:block"
             style={{ left: `${node.x * 100}%`, top: `${(node.y + 0.055) * 100}%` }}
           >
-            <div className="text-[11px] font-medium tracking-tight text-white/58">{node.label}</div>
+            <div className="text-[11px] font-medium tracking-tight text-white/72">{node.label}</div>
           </div>
         ))}
 
@@ -676,7 +676,7 @@ export function RecoveryEngineVisualization() {
             style={{ left: `${node.x * 100}%`, top: `${node.y * 100}%` }}
           >
             <div className="flex flex-col items-center gap-2">
-              <div className={`flex items-center justify-center rounded-xl border border-white/10 bg-black/45 backdrop-blur-sm ${node.tileClassName || 'h-10 w-10'}`}>
+              <div className={`flex items-center justify-center rounded-xl border border-white/12 bg-black/55 backdrop-blur-sm ring-1 ring-white/5 ${node.tileClassName || 'h-10 w-10'}`}>
                 {node.iconSrc ? (
                   <img
                     src={node.iconSrc}
@@ -685,7 +685,7 @@ export function RecoveryEngineVisualization() {
                   />
                 ) : null}
               </div>
-              <div className="text-[10px] font-medium tracking-tight text-white/45">{node.shortLabel}</div>
+              <div className="text-[10px] font-medium tracking-tight text-white/52">{node.shortLabel}</div>
             </div>
           </div>
         ))}
@@ -694,7 +694,7 @@ export function RecoveryEngineVisualization() {
           className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
           style={{ left: `${(amazonNode.x + 0.018) * 100}%`, top: `${amazonNode.y * 100}%` }}
         >
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/45 px-3 py-1.5 text-[11px] font-medium tracking-tight text-white/74 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-white/12 bg-black/55 px-3 py-1 text-[10.5px] font-medium tracking-tight text-white/78 backdrop-blur-sm">
             {amazonNode.iconSrc ? (
               <img
                 src={amazonNode.iconSrc}
@@ -708,14 +708,14 @@ export function RecoveryEngineVisualization() {
 
         <div className="pointer-events-none absolute bottom-6 left-6 right-6">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {stageLabels.map((label, index) => (
                 <div
                   key={label}
                   className={`rounded-full border px-3 py-1.5 text-[11px] font-medium tracking-tight transition-colors ${
                     activeStage === index
-                      ? 'border-white/14 bg-white/[0.09] text-white'
-                      : 'border-white/8 bg-white/[0.02] text-white/45'
+                      ? 'border-white/18 bg-white/[0.12] text-white'
+                      : 'border-white/8 bg-white/[0.015] text-white/42'
                   }`}
                 >
                   {label}
@@ -723,7 +723,7 @@ export function RecoveryEngineVisualization() {
               ))}
             </div>
 
-            <div className="max-w-[320px] text-sm leading-6 text-white/52 md:text-right">
+            <div className="max-w-[320px] text-[13px] leading-6 text-white/45 md:text-right">
               Amazon inputs enter on the left. Margin routes detection into evidence, filing, and payout until recovered dollars exit on the right.
             </div>
           </div>
