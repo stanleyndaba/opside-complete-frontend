@@ -15,18 +15,15 @@ import {
     ArrowRight,
     ShieldCheck,
     Mail,
-    Briefcase,
-    Building2,
-    Target,
     Zap,
     MessageSquare,
     ChevronLeft
 } from 'lucide-react';
 
 const profileOptions = [
-    { id: 'brand', label: 'Brand owner', detail: 'Single brand or private-label operator', icon: Building2 },
-    { id: 'agency', label: 'Agency / aggregator', detail: 'Managing multiple seller accounts or portfolio brands', icon: Briefcase },
-    { id: 'other', label: 'Strategic partner', detail: 'Finance, operations, or reimbursement specialist', icon: Target }
+    { id: 'brand', label: 'Brand owner', detail: 'Single brand or private-label operator' },
+    { id: 'agency', label: 'Agency / aggregator', detail: 'Managing multiple seller accounts or portfolio brands' },
+    { id: 'other', label: 'Strategic partner', detail: 'Finance, operations, or reimbursement specialist' }
 ];
 
 const goalOptions = [
@@ -228,24 +225,22 @@ const Waitlist = () => {
                                             <div className="mt-8 space-y-8">
                                                 <div className="space-y-3">
                                                     <Label className="text-[11px] font-medium tracking-tight text-white/42">Profile</Label>
-                                                    <div className="grid gap-3">
+                                                    <div className="overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.02]">
                                                         {profileOptions.map((item) => (
                                                             <button
                                                                 key={item.id}
                                                                 onClick={() => handleSelection('user_type', item.id)}
-                                                                className={`rounded-[22px] border px-4 py-4 text-left transition-all ${formData.user_type === item.id
-                                                                    ? 'border-[#3c5a81] bg-[#10161f] shadow-[0_0_0_1px_rgba(143,183,255,0.1)]'
-                                                                    : 'border-white/10 bg-white/[0.02] hover:border-white/18 hover:bg-white/[0.04]'
+                                                                className={`flex w-full items-start gap-3 border-b border-white/8 px-4 py-4 text-left transition-all last:border-b-0 ${formData.user_type === item.id
+                                                                    ? 'bg-[#10161f]'
+                                                                    : 'hover:bg-white/[0.03]'
                                                                     }`}
                                                             >
-                                                                <div className="flex items-start gap-4">
-                                                                    <div className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border ${formData.user_type === item.id ? 'border-[#446288] bg-[#111925] text-[#d9e5fb]' : 'border-white/10 bg-[#0b0b0c] text-white/46'}`}>
-                                                                        <item.icon className="h-4 w-4" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <div className={`text-[15px] font-medium tracking-tight ${formData.user_type === item.id ? 'text-white' : 'text-white/78'}`}>{item.label}</div>
-                                                                        <div className="mt-1 text-[13px] leading-5 text-white/45">{item.detail}</div>
-                                                                    </div>
+                                                                <div className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${formData.user_type === item.id ? 'border-[#5f84ba] bg-[#5f84ba]' : 'border-white/20'}`}>
+                                                                    <div className={`h-1.5 w-1.5 rounded-full ${formData.user_type === item.id ? 'bg-[#050505]' : 'bg-transparent'}`} />
+                                                                </div>
+                                                                <div>
+                                                                    <div className={`text-[15px] font-medium tracking-tight ${formData.user_type === item.id ? 'text-white' : 'text-white/78'}`}>{item.label}</div>
+                                                                    <div className="mt-1 text-[13px] leading-5 text-white/45">{item.detail}</div>
                                                                 </div>
                                                             </button>
                                                         ))}
@@ -458,42 +453,6 @@ const Waitlist = () => {
                             )}
                         </AnimatePresence>
 
-                        <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(16,18,22,0.94)_0%,rgba(9,10,12,0.99)_100%)] shadow-[0_22px_60px_rgba(0,0,0,0.22)]">
-                            <div className="grid gap-px bg-white/8 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-                                <div className="bg-[#0b0c10] px-5 py-6 md:px-6">
-                                    <div className="text-[11px] font-medium tracking-tight text-white/38">Why access opens carefully</div>
-                                    <div className="mt-5 space-y-5">
-                                        {waitlistHighlights.map((item, index) => (
-                                            <div
-                                                key={item.title}
-                                                className={index > 0 ? 'border-t border-white/8 pt-5' : ''}
-                                            >
-                                                <h2 className="text-[17px] font-medium tracking-tight text-white">{item.title}</h2>
-                                                <p className="mt-2 max-w-[480px] text-[14px] leading-6 text-white/55">{item.detail}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="bg-[linear-gradient(180deg,rgba(15,19,27,0.96)_0%,rgba(10,11,14,1)_100%)] px-5 py-6 md:px-6">
-                                    <div className="text-[11px] font-medium tracking-tight text-[#a9c0e2]/72">What happens next</div>
-                                    <div className="mt-5 space-y-5">
-                                        {[
-                                            'We review your profile and operating context.',
-                                            'Priority access opens in batches based on onboarding bandwidth.',
-                                            'If selected, you get the first guided Margin setup path.'
-                                        ].map((item, index) => (
-                                            <div key={item} className={index > 0 ? 'border-t border-white/8 pt-5' : ''}>
-                                                <div className="text-[11px] font-medium tracking-tight text-[#d1def4]/76">
-                                                    0{index + 1}
-                                                </div>
-                                                <p className="mt-2 text-[14px] leading-6 text-white/62">{item}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
                     </motion.div>
                 </div>
             </main>
