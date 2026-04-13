@@ -67,7 +67,6 @@ const AdminRevenue = lazy(() => import("./pages/AdminRevenue"));
 const QueueDashboard = lazy(() => import("./pages/QueueDashboard"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Sales = lazy(() => import("./pages/Sales"));
-const UltraBeta = lazy(() => import("./pages/UltraBeta"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Waitlist = lazy(() => import("./pages/Waitlist"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
@@ -142,7 +141,6 @@ const App = () => (
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/sales" element={<Sales />} />
-                        <Route path="/ultra-beta" element={<UltraBeta />} />
                         <Route path="/pricing" element={<PricingAdjust />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />

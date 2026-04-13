@@ -226,20 +226,6 @@ export default function ConnectAmazonAccount() {
                     </Select>
                   </div>
 
-                  <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4">
-                    <div className="text-[11px] font-medium tracking-tight text-white/38">What happens next</div>
-                    <div className="mt-3 space-y-3">
-                      <div className="flex gap-3">
-                        <div className="mt-0.5 text-[11px] font-medium tracking-tight text-white/34">01</div>
-                        <p className="text-[14px] leading-6 text-white/62">You continue to Amazon and sign in there.</p>
-                      </div>
-                      <div className="flex gap-3">
-                        <div className="mt-0.5 text-[11px] font-medium tracking-tight text-white/34">02</div>
-                        <p className="text-[14px] leading-6 text-white/62">Amazon confirms the authorization and hands the account back to Margin.</p>
-                      </div>
-                    </div>
-                  </div>
-
                   <Button
                     type="button"
                     onClick={handleConnectAmazon}

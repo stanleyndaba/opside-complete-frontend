@@ -77,12 +77,6 @@ export const PublicNavbar = () => {
                             <span className="font-merriweather font-bold text-white text-lg tracking-tight">Margin</span>
                         </Link>
                         <span className="hidden md:inline text-gray-300">|</span>
-                        <Link
-                            to="/ultra-beta"
-                            className="hidden md:flex items-center gap-2 group px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10">
-                            <span className="text-[10px] font-sans font-bold text-white uppercase tracking-tight">Private Beta</span>
-                            <span className="px-1.5 py-0.5 bg-emerald-500 text-[8px] font-bold text-white rounded-none leading-none">NEW</span>
-                        </Link>
 
                         <div className="hidden lg:block">
                             <ProductsMegaMenu />
@@ -138,15 +132,6 @@ export const PublicNavbar = () => {
                             exit={{ opacity: 0, y: -20 }}
                             className="mt-4 md:hidden relative z-50">
                             <div className="flex flex-col gap-1 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
-                                <Link
-                                    to="/ultra-beta"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white uppercase tracking-tight bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <span>Private Beta</span>
-                                        <span className="px-1.5 py-0.5 bg-emerald-500 text-[9px] font-bold text-white rounded-full leading-none">NEW</span>
-                                    </div>
-                                </Link>
                                 <Accordion type="single" collapsible className="w-full">
                                     <Link
                                         to="/pricing"

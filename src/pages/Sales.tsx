@@ -68,14 +68,14 @@ export default function Sales() {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white selection:bg-emerald-500/30 selection:text-white font-sans">
+        <div className="min-h-screen bg-[#050505] text-white selection:bg-sky-400/30 selection:text-white font-sans">
             {/* Technical Background Overlay */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
 
             {/* Background Gradients */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.05),transparent_70%)]" />
-                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(59,130,246,0.03),transparent_70%)]" />
+                <div className="absolute top-0 right-0 w-full h-[800px] bg-[radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.06),transparent_70%)]" />
+                <div className="absolute bottom-0 left-0 w-full h-[800px] bg-[radial-gradient(circle_at_20%_100%,rgba(99,102,241,0.05),transparent_70%)]" />
             </div>
 
             {/* Persistent Technical Navbar */}
@@ -105,7 +105,7 @@ export default function Sales() {
                         className="space-y-8"
                     >
                         <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-                            <span className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">Institutional Access</span>
+                            <span className="text-[10px] font-bold text-sky-400 font-sans tracking-tight uppercase">Institutional Access</span>
                             <div className="h-3 w-[1px] bg-white/10" />
                             <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">High Volume Gateway</span>
                         </div>
@@ -189,7 +189,7 @@ export default function Sales() {
                             }
                         ].map((feature, i) => (
                             <div key={i} className="space-y-6">
-                                <div className="h-[1px] w-12 bg-emerald-500/50" />
+                                <div className="h-[1px] w-12 bg-sky-400/60" />
                                 <div className="space-y-2">
                                     <div className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">{feature.label}</div>
                                     <h4 className="text-xl font-bold tracking-tight text-white font-sans">{feature.title}</h4>
@@ -222,8 +222,8 @@ export default function Sales() {
                             <div className="p-6 sm:p-12 bg-white/[0.02] border border-white/5 shadow-2xl relative backdrop-blur-sm rounded-2xl">
                                 {isSubmitted ? (
                                     <div className="text-center py-20">
-                                        <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-8">
-                                            <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                                        <div className="w-20 h-20 rounded-full bg-sky-400/10 flex items-center justify-center mx-auto mb-8">
+                                            <CheckCircle2 className="h-10 w-10 text-sky-400" />
                                         </div>
                                         <h2 className="text-2xl font-bold text-white font-sans tracking-tight mb-3">
                                             Application Prepared
@@ -241,7 +241,7 @@ export default function Sales() {
                                 ) : (
                                     <form onSubmit={handleSubmit} className="space-y-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-[10px] font-bold text-emerald-500 font-sans tracking-tight uppercase">
+                                            <h3 className="text-[10px] font-bold text-sky-400 font-sans tracking-tight uppercase">
                                                 Institutional Briefing Request // V.02
                                             </h3>
                                             <p className="text-xs text-white/40 font-sans tracking-tight">Priority Node Allocation: 3/Week</p>
