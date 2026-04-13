@@ -264,7 +264,7 @@ function PipelineSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-4 px-6 py-6">
+    <section className="space-y-3 px-6 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
@@ -291,15 +291,15 @@ function InlineMetricStack({
   const visibleRows = rows.filter((row) => row.value && row.value !== NOT_AVAILABLE);
 
   return (
-    <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-6">
-      <div className="space-y-2.5">
+    <div className="min-w-0 lg:border-l lg:border-white/7 lg:pl-5">
+      <div className="space-y-1.5">
         {visibleRows.map((row, index) => (
-          <div key={`${row.label}-${index}`} className="flex items-center justify-between gap-6">
+          <div key={`${row.label}-${index}`} className="flex items-center justify-between gap-4">
             <span className="text-[11px] font-medium tracking-tight text-white/34">{row.label}</span>
             <span
               className={cn(
                 'text-right font-semibold tracking-tight',
-                index === 0 ? 'text-[14px] tabular-nums text-white' : 'text-[13px] text-[#c4c4c4]'
+                index === 0 ? 'text-[13px] tabular-nums text-white' : 'text-[12px] text-[#c4c4c4]'
               )}
             >
               {row.value}
@@ -331,15 +331,15 @@ function DisputeCard({
   const classes = toneClasses(tone);
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-5">
+      <CardContent className="grid gap-3 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
           </div>
-          <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">{disputeTitle(row)}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9a9a9a]">{detail}</p>
-          <div className="mt-3 text-[11px] font-medium tracking-tight text-white/38">{disputeMeta(row)}</div>
+          <h3 className="mt-2 text-[17px] font-semibold tracking-tight text-white">{disputeTitle(row)}</h3>
+          <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#9a9a9a]">{detail}</p>
+          <div className="mt-2 text-[11px] font-medium tracking-tight text-white/38">{disputeMeta(row)}</div>
         </div>
         <InlineMetricStack
           rows={[
@@ -348,7 +348,7 @@ function DisputeCard({
             { label: 'Last movement', value: timeLabel || null },
           ]}
         />
-        <div className="flex flex-col items-start gap-3 lg:items-end">{action}</div>
+        <div className="flex flex-col items-start gap-2 lg:items-end">{action}</div>
       </CardContent>
     </Card>
   );
@@ -376,15 +376,15 @@ function LedgerCard({
   const classes = toneClasses(tone);
   return (
     <Card className={cn('border shadow-none', classes.card)}>
-      <CardContent className="grid gap-5 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-5">
+      <CardContent className="grid gap-3 p-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(240px,0.7fr)_auto] lg:items-start lg:p-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{ledgerTypeLabel(row)}</span>
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
           </div>
-          <h3 className="mt-3 text-lg font-semibold tracking-tight text-white">{ledgerReference(row)}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#9a9a9a]">{detail}</p>
-          <div className="mt-3 text-[11px] font-medium tracking-tight text-white/38">{ledgerMeta(row)}</div>
+          <h3 className="mt-2 text-[17px] font-semibold tracking-tight text-white">{ledgerReference(row)}</h3>
+          <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#9a9a9a]">{detail}</p>
+          <div className="mt-2 text-[11px] font-medium tracking-tight text-white/38">{ledgerMeta(row)}</div>
         </div>
         <InlineMetricStack
           rows={[
@@ -393,7 +393,7 @@ function LedgerCard({
             { label: 'Last movement', value: timeLabel || null },
           ]}
         />
-        <div className="flex flex-col items-start gap-3 lg:items-end">
+        <div className="flex flex-col items-start gap-2 lg:items-end">
           {detailHref ? (
             <Button asChild size="sm" variant="outline" className="border-white/12 bg-transparent text-white/72 hover:bg-white/[0.05] hover:text-white">
               <Link to={detailHref}>
@@ -535,7 +535,7 @@ export default function FilingPipeline() {
       ) : disputeError ? (
         <ErrorState message={disputeError} />
       ) : readyRows.length ? (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {readyRows.map((row) => (
             <DisputeCard
               key={row.dispute_case_id}
@@ -566,7 +566,7 @@ export default function FilingPipeline() {
       ) : disputeError ? (
         <ErrorState message={disputeError} />
       ) : beingFiledRows.length ? (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {beingFiledRows.map((row) => (
             <DisputeCard
               key={row.dispute_case_id}
@@ -597,7 +597,7 @@ export default function FilingPipeline() {
       ) : disputeError ? (
         <ErrorState message={disputeError} />
       ) : filedRows.length ? (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {filedRows.map((row) => (
             <DisputeCard
               key={row.dispute_case_id}
@@ -628,7 +628,7 @@ export default function FilingPipeline() {
       ) : ledgerError ? (
         <ErrorState message={ledgerError} />
       ) : approvedRows.length ? (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {approvedRows.map((row) => (
             <LedgerCard
               key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}
@@ -660,7 +660,7 @@ export default function FilingPipeline() {
       ) : ledgerError ? (
         <ErrorState message={ledgerError} />
       ) : completedRows.length ? (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {completedRows.map((row) => (
             <LedgerCard
               key={row.recovery_record_id || row.linked_dispute_case_id || row.dispute_case_id || row.case_number}

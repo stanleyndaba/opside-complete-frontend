@@ -112,7 +112,6 @@ const Login = () => {
   }, []);
 
   const subtitle = 'User access and marketplace OAuth are separate flows. Your account login gets you into the workspace. Amazon, Gmail, and the other providers are connected after that from Integrations Hub.';
-  const supportingNote = 'That separation is important now that the platform is running in real authenticated mode instead of the old demo fallback.';
 
   const heading = mode === 'signup'
     ? 'Create your workspace account'
@@ -560,13 +559,13 @@ const Login = () => {
                 )}
               </div>
 
-              <div className="mt-6 border-t border-white/10 pt-5 text-[14px] leading-6 text-white/45">
-                <p>{subtitle}</p>
-                <p className="mt-3">{supportingNote}</p>
-              </div>
               </form>
             </div>
           </section>
+
+          <p className="mx-auto max-w-[720px] text-center text-[14px] leading-6 text-white/45 md:text-[15px]">
+            {subtitle}
+          </p>
         </div>
       </main>
       <BrandFooter />
