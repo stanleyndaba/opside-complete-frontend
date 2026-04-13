@@ -2700,7 +2700,7 @@ export function Dashboard() {
                                                 variant="ghost"
                                                 size="sm"
                                                 className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.84] hover:bg-white/[0.07] hover:text-white"
-                                                onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`))}
+                                                onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } })}
                                               >
                                                 Open Case
                                               </Button>

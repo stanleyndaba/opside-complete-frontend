@@ -1456,7 +1456,7 @@ export default function RecoveryPipelineAgent8() {
                                         <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record actions</div>
                                         {detailRouteId ? (
                                           <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                            <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`}>{detailLabel}</Link>
+                                            <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`} state={{ claim: row }}>{detailLabel}</Link>
                                           </DropdownMenuItem>
                                         ) : (
                                           <div className="px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">

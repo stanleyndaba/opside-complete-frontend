@@ -1993,7 +1993,7 @@ export default function DisputeCases() {
                                   {recordIdentifierLabel}
                                 </div>
                                 {canOpenCaseDetail ? (
-                                  <Link to={`/recoveries/${row.dispute_case_id}`} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
+                                  <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }} className="inline-flex items-center gap-2 text-sm font-sans font-bold text-white hover:text-emerald-300">
                                     {recordIdentifier}
                                   </Link>
                                 ) : (
@@ -2170,7 +2170,7 @@ export default function DisputeCases() {
                                     <div className="mb-1 border-b border-white/5 px-3 py-2 text-[9px] font-sans font-bold uppercase tracking-tight text-white/20">Record Actions</div>
                                     {canOpenCaseDetail ? (
                                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 hover:text-white">
-                                        <Link to={`/recoveries/${row.dispute_case_id}`}>{openRecordLabel}</Link>
+                                        <Link to={`/recoveries/${row.dispute_case_id}`} state={{ claim: row }}>{openRecordLabel}</Link>
                                       </DropdownMenuItem>
                                     ) : (
                                       <DropdownMenuItem

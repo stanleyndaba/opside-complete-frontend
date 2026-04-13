@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   ArrowLeft, Clock, DollarSign, Package, MapPin, FileText, CheckCircle, AlertCircle,
   Calendar, RefreshCw, ExternalLink, Receipt, ChevronDown, ShieldCheck, Activity,
@@ -37,7 +38,6 @@ import {
   formatProofStatus,
   formatRequirementList,
 } from '@/lib/disputeProof';
-import { ClaimPdfService } from '@/services/ClaimPdfService';
 import { parseDefaultSSEMessage, registerNamedSSEListeners } from '@/lib/sse';
 import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 
@@ -637,6 +637,9 @@ export default function CaseDetail() {
   const [replyBody, setReplyBody] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
   const [selectedReplyAttachmentIds, setSelectedReplyAttachmentIds] = useState<string[]>([]);
+  const [caseEvents, setCaseEvents] = useState<any[]>([]);
+  const [eventsResolvedForCaseId, setEventsResolvedForCaseId] = useState<string | null>(null);
+  const [eventsLoading, setEventsLoading] = useState(false);
 
   const formatDateOrDash = (value?: string | null) => {
     if (!value) return NOT_AVAILABLE;
@@ -663,7 +666,7 @@ export default function CaseDetail() {
     if (!currentCaseId || !activeSlug || !isAuthReady || !isSessionValid) return;
     if (showLoading) setLoading(true);
     try {
-      const res = await api.getRecoveryDetail(currentCaseId, activeSlug);
+      const res = await api.getRecoveryDetail(currentCaseId, activeSlug, { includeEvents: false });
       if (res.ok && res.data) {
         const apiData = res.data as any;
         const normalized = normalizeCaseDetailData(apiData, currentCaseId);
@@ -691,6 +694,26 @@ export default function CaseDetail() {
       if (showLoading) setLoading(false);
     }
   }, [activeSlug, isAuthReady, isSessionValid]);
+
+  const loadCaseEvents = useCallback(async (currentCaseId: string, { force = false }: { force?: boolean } = {}) => {
+    if (!currentCaseId || !activeSlug || !isAuthReady || !isSessionValid) return;
+    if (!force && eventsResolvedForCaseId === currentCaseId) return;
+
+    setEventsLoading(true);
+    try {
+      const response = await api.getRecoveryEvents(currentCaseId, activeSlug);
+      if (response.ok && Array.isArray(response.data)) {
+        setCaseEvents(response.data);
+        setEventsResolvedForCaseId(currentCaseId);
+      } else {
+        setCaseEvents([]);
+      }
+    } catch {
+      setCaseEvents([]);
+    } finally {
+      setEventsLoading(false);
+    }
+  }, [activeSlug, eventsResolvedForCaseId, isAuthReady, isSessionValid]);
 
   const effectiveCase = hasResolvedBackend ? caseData : seedCaseData;
 
@@ -731,6 +754,8 @@ export default function CaseDetail() {
     setHasResolvedBackend(false);
     setCaseData(null);
     setMatchedDocs([]);
+    setCaseEvents([]);
+    setEventsResolvedForCaseId(null);
     setError(null);
     (async () => {
       if (!caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
@@ -750,6 +775,9 @@ export default function CaseDetail() {
           return;
         }
         refreshCaseDetail(caseId);
+        if (activeTab === 'PROTOCOL' || eventsResolvedForCaseId === caseId) {
+          loadCaseEvents(caseId, { force: true });
+        }
       };
 
       const removeNamedListeners = registerNamedSSEListeners(
@@ -775,7 +803,7 @@ export default function CaseDetail() {
       // Keep the existing page state when the live status stream cannot initialize.
     }
     return () => { cancelled = true; if (es) es.close(); };
-  }, [activeSlug, caseId, isAuthReady, isSessionValid, matchesRealtimeEvent, refreshCaseDetail]);
+  }, [activeSlug, activeTab, caseId, eventsResolvedForCaseId, isAuthReady, isSessionValid, loadCaseEvents, matchesRealtimeEvent, refreshCaseDetail]);
 
   useEffect(() => {
     if (!statusFeedUnavailable || !caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
@@ -784,6 +812,11 @@ export default function CaseDetail() {
     }, 15000);
     return () => clearInterval(intervalId);
   }, [activeSlug, caseId, isAuthReady, isSessionValid, refreshCaseDetail, statusFeedUnavailable]);
+
+  useEffect(() => {
+    if (activeTab !== 'PROTOCOL' || !caseId || !activeSlug || !isAuthReady || !isSessionValid) return;
+    void loadCaseEvents(caseId);
+  }, [activeSlug, activeTab, caseId, isAuthReady, isSessionValid, loadCaseEvents]);
 
   // Attempt to fetch matched documents for this case
   useEffect(() => {
@@ -1114,7 +1147,10 @@ export default function CaseDetail() {
     proofStatus,
     quarantineReason,
   ]);
-  const evidenceEvents = useMemo(() => (Array.isArray(caseData?.events) ? caseData.events.filter(isEvidenceRelatedEvent) : []), [caseData?.events]);
+  const evidenceEvents = useMemo(
+    () => (Array.isArray(caseEvents) ? caseEvents.filter(isEvidenceRelatedEvent) : []),
+    [caseEvents]
+  );
   const rejectionPlaybookReason = useMemo<RejectionReason | null>(() => {
     if (effectiveCase?.truth_unavailable) return null;
     const category = effectiveCase?.rejection_category;
@@ -1215,6 +1251,7 @@ export default function CaseDetail() {
     openPdfPreview(effectiveCase.case_number || effectiveCase.claim_number || 'Case PDF Export', 'Browser-Generated PDF Preview');
 
     try {
+      const { ClaimPdfService } = await import('@/services/ClaimPdfService');
       const pdfBlob = await ClaimPdfService.generate(effectiveCase, { mode: 'blob' });
       if (!pdfBlob) {
         throw new Error('Unable to generate the case PDF preview.');
@@ -1349,11 +1386,68 @@ export default function CaseDetail() {
   // Guard: show loading or error if no data
   if (!effectiveCase && (loading || !hasResolvedBackend)) {
     return (
-      <PageLayout title="Loading..." midnight>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-emerald-500/50" />
-            <p className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Loading case details...</p>
+      <PageLayout title="Opening Case..." midnight>
+        <div className="relative -m-4 lg:-m-6">
+          <div className="relative w-full bg-background min-h-[calc(100vh+96px)] -mt-24 pt-24 text-[13px]">
+            <div className="relative container mx-auto px-8 pt-8 pb-10 text-white/80">
+              <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                <div className="flex items-start gap-6">
+                  <div className="h-10 w-10 rounded-lg border border-white/10 bg-white/[0.03]" />
+                  <div className="max-w-[680px] space-y-4">
+                    <Skeleton className="h-6 w-[280px] bg-white/[0.08]" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-3 w-28 bg-white/[0.06]" />
+                      <Skeleton className="h-4 w-[420px] max-w-full bg-white/[0.08]" />
+                      <Skeleton className="h-4 w-[360px] max-w-full bg-white/[0.06]" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <Skeleton className="h-8 w-32 rounded-md bg-white/[0.06]" />
+                  <Skeleton className="h-8 w-36 rounded-md bg-white/[0.06]" />
+                </div>
+              </div>
+
+              <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                <div className="flex items-center gap-3 text-white/55">
+                  <RefreshCw className="h-4 w-4 animate-spin text-emerald-500/60" />
+                  <div>
+                    <p className="text-[11px] font-sans font-bold uppercase tracking-tight text-white/48">Opening case record</p>
+                    <p className="mt-1 text-sm text-white/62">Loading evidence, filing history, and payout activity in the background.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4 flex border-b border-white/10">
+                <div className="px-8 py-4 text-[12px] font-bold uppercase text-white">Claim record</div>
+                <div className="px-8 py-4 text-[12px] font-bold uppercase text-white/35">Resolution steps</div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-0 overflow-hidden rounded-2xl border border-white/10 divide-y divide-white/10">
+                <div className="bg-white/[0.02] p-8 space-y-5">
+                  <Skeleton className="h-5 w-48 bg-white/[0.08]" />
+                  <Skeleton className="h-4 w-full bg-white/[0.05]" />
+                  <Skeleton className="h-4 w-[92%] bg-white/[0.05]" />
+                  <Skeleton className="h-4 w-[76%] bg-white/[0.05]" />
+                </div>
+                <div className="bg-[#0a0a0a] p-8">
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                    <div className="space-y-4">
+                      <Skeleton className="h-4 w-28 bg-white/[0.06]" />
+                      <Skeleton className="h-3 w-full bg-white/[0.05]" />
+                      <Skeleton className="h-3 w-[88%] bg-white/[0.05]" />
+                      <Skeleton className="h-3 w-[80%] bg-white/[0.05]" />
+                    </div>
+                    <div className="space-y-4">
+                      <Skeleton className="h-4 w-28 bg-white/[0.06]" />
+                      <Skeleton className="h-3 w-full bg-white/[0.05]" />
+                      <Skeleton className="h-3 w-[86%] bg-white/[0.05]" />
+                      <Skeleton className="h-3 w-[72%] bg-white/[0.05]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </PageLayout>
@@ -2356,6 +2450,13 @@ export default function CaseDetail() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/5">
+                            {eventsLoading && evidenceEvents.length === 0 && (
+                              <tr>
+                                <td colSpan={4} className="px-4 py-6 text-center text-[10px] font-sans font-bold text-white/32">
+                                  Loading evidence history...
+                                </td>
+                              </tr>
+                            )}
                             {evidenceEvents.map((event: any, idx: number) => {
                               const statusLabel = toStatusLabel(event.status || event.eventType || event.type);
                               const eventSourceLabel = toEventSourceLabel(event.source);
@@ -2384,7 +2485,7 @@ export default function CaseDetail() {
                                 </tr>
                               );
                             })}
-                            {evidenceEvents.length === 0 && (
+                            {!eventsLoading && evidenceEvents.length === 0 && (
                               <tr>
                                 <td colSpan={4} className="px-4 py-12 text-center text-[10px] font-sans font-bold text-white/20">
                                   -

@@ -1039,7 +1039,27 @@ export const api = {
 
   // Refund Engine endpoints
   getRecoveryStatus: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}/status${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
-  getRecoveryDetail: (id: string, tenantSlug?: string) => requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}${tenantSlug ? `?tenantSlug=${tenantSlug}` : ''}`),
+  getRecoveryDetail: (
+    id: string,
+    tenantSlug?: string,
+    options?: {
+      includeEvents?: boolean;
+    }
+  ) => {
+    const query = new URLSearchParams();
+    if (tenantSlug) query.set('tenantSlug', tenantSlug);
+    if (typeof options?.includeEvents === 'boolean') {
+      query.set('includeEvents', String(options.includeEvents));
+    }
+    const queryString = query.toString();
+    return requestJson<any>(`/api/recoveries/${encodeURIComponent(id)}${queryString ? `?${queryString}` : ''}`);
+  },
+  getRecoveryEvents: (id: string, tenantSlug?: string) => {
+    const query = new URLSearchParams();
+    if (tenantSlug) query.set('tenantSlug', tenantSlug);
+    const queryString = query.toString();
+    return requestJson<any[]>(`/api/recoveries/${encodeURIComponent(id)}/events${queryString ? `?${queryString}` : ''}`);
+  },
   getRecoveriesLedger: (
     params?: {
       search?: string;

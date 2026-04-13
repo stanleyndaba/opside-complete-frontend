@@ -155,7 +155,9 @@ export default function ResolveCase() {
       } else {
         toast({ title: 'Parked', description: 'Case parked until more data is available.' });
       }
-      navigate(tenantRoute(activeTenantSlug, `/recoveries/${encodeURIComponent(caseId)}`));
+      navigate(tenantRoute(activeTenantSlug, `/recoveries/${encodeURIComponent(caseId)}`), {
+        state: { claim: effectiveCase }
+      });
     } catch (e: any) {
       toast({ title: 'Action failed', description: e?.message || 'Please try again.' });
     } finally {
@@ -282,7 +284,7 @@ export default function ResolveCase() {
                         {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />} Resolve Case
                       </Button>
                       <Button variant="ghost" asChild className="text-gray-900 hover:bg-gray-100">
-                        <Link to={tenantRoute(activeTenantSlug, `/recoveries/${encodeURIComponent(effectiveCase?.id)}`)}>View case details</Link>
+                        <Link to={tenantRoute(activeTenantSlug, `/recoveries/${encodeURIComponent(effectiveCase?.id)}`)} state={{ claim: effectiveCase }}>View case details</Link>
                       </Button>
                     </div>
                     <div role="status" aria-live="polite" className="sr-only">{statusText}</div>
