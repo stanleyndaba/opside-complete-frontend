@@ -77,6 +77,47 @@ type IntegrationStatusDTO = {
   providers?: Record<string, IntegrationProviderStatus>;
 };
 
+type SkippedProvider = {
+  provider: string;
+  reason: string;
+};
+
+type EvidenceStatusDTO = {
+  hasConnectedSource: boolean;
+  hasIngestableSource: boolean;
+  lastIngestion?: string;
+  documentsCount: number;
+  processingCount: number;
+  parsedCount: number;
+  matchReadyCount: number;
+  sourcesResolved: number;
+  skippedProviders: SkippedProvider[];
+};
+
+type EvidenceSourceDTO = {
+  id: string;
+  provider: SecondaryProviderKey;
+  account_email: string;
+  status: 'connected' | 'disconnected' | 'error';
+  connected: boolean;
+  ingestable: boolean;
+  ingestable_reason: string | null;
+  last_ingested_at: string | null;
+  created_at: string | null;
+  documents_count: number;
+  parsed_count: number;
+  match_ready_count: number;
+  metadata: Record<string, any>;
+};
+
+type EvidenceSourcesDTO = {
+  sources: EvidenceSourceDTO[];
+  count: number;
+  connectedCount: number;
+  ingestableCount: number;
+  skippedProviders: SkippedProvider[];
+};
+
 const SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
 
 export default function IntegrationsHub() {
@@ -187,13 +228,26 @@ export default function IntegrationsHub() {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistIntegration, setWaitlistIntegration] = useState<string | null>(null);
   const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [evidenceStatus, setEvidenceStatus] = useState<EvidenceStatusDTO | null>(null);
+  const [evidenceSourcesState, setEvidenceSourcesState] = useState<EvidenceSourcesDTO>({
+    sources: [],
+    count: 0,
+    connectedCount: 0,
+    ingestableCount: 0,
+    skippedProviders: []
+  });
   const [ingestionResult, setIngestionResult] = useState<{
     success: boolean;
+    scope?: 'all' | 'gmail';
+    providerLabel?: string;
     totalDocumentsIngested?: number;
     totalItemsProcessed?: number;
     documentsIngested?: number;
     emailsProcessed?: number;
     filesProcessed?: number;
+    sourcesResolved?: number;
+    providersAttempted?: string[];
+    skippedProviders?: SkippedProvider[];
     errors: string[];
     results?: {
       gmail?: { success: boolean; documentsIngested: number; emailsProcessed?: number; filesProcessed?: number; errors: string[] };
@@ -260,12 +314,19 @@ export default function IntegrationsHub() {
     }).format(amount);
   };
 
+  const humanizeSkippedReason = (reason?: string | null) => {
+    if (!reason) return 'Reason not available';
+    return reason.replace(/_/g, ' ');
+  };
+
   const refreshIntegrationTruth = async () => {
     if (!activeSlug) return;
 
-    const [statusRes, storesRes] = await Promise.all([
+    const [statusRes, storesRes, evidenceStatusRes, evidenceSourcesRes] = await Promise.all([
       api.getIntegrationsStatus(activeSlug),
-      api.getStores(activeSlug)
+      api.getStores(activeSlug),
+      api.getEvidenceStatus(activeSlug),
+      api.getEvidenceSources(activeSlug)
     ]);
 
     if (statusRes.ok && statusRes.data) {
@@ -280,6 +341,21 @@ export default function IntegrationsHub() {
 
     if (storesRes.ok && storesRes.data?.stores) {
       setStores(storesRes.data.stores);
+    }
+
+    if (evidenceStatusRes.ok && evidenceStatusRes.data) {
+      setEvidenceStatus(evidenceStatusRes.data as EvidenceStatusDTO);
+    }
+
+    if (evidenceSourcesRes.ok && evidenceSourcesRes.data) {
+      const nextSourceTruth = evidenceSourcesRes.data as EvidenceSourcesDTO;
+      setEvidenceSourcesState({
+        sources: nextSourceTruth.sources || [],
+        count: nextSourceTruth.count || 0,
+        connectedCount: nextSourceTruth.connectedCount || 0,
+        ingestableCount: nextSourceTruth.ingestableCount || 0,
+        skippedProviders: nextSourceTruth.skippedProviders || []
+      });
     }
   };
 
@@ -374,6 +450,43 @@ export default function IntegrationsHub() {
         api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
         { autoReconnect: true, reconnectDelayMs: 3000 }
       );
+      const handleEvidenceStarted = (event: Event) => {
+        try {
+          const evt = JSON.parse((event as MessageEvent).data);
+          toast({
+            title: 'Ingestion Update',
+            description: evt?.provider === 'all'
+              ? 'Checking connected repositories and ingestion eligibility.'
+              : `Checking ${evt?.provider || 'repository'} for evidence documents.`
+          });
+        } catch { }
+      };
+      const handleEvidenceCompleted = (event: Event) => {
+        try {
+          const evt = JSON.parse((event as MessageEvent).data);
+          toast({
+            title: 'Ingestion Complete',
+            description: typeof evt?.totalDocumentsIngested === 'number'
+              ? `${evt.totalDocumentsIngested} documents were stored from this ingestion run.`
+              : 'Evidence ingestion has completed.'
+          });
+          refreshIntegrationTruth().catch(() => undefined);
+        } catch { }
+      };
+      const handleEvidenceFailed = (event: Event) => {
+        try {
+          const evt = JSON.parse((event as MessageEvent).data);
+          toast({
+            title: 'Ingestion Failed',
+            description: evt?.error || 'Evidence ingestion failed for this run.',
+            variant: 'destructive'
+          });
+          refreshIntegrationTruth().catch(() => undefined);
+        } catch { }
+      };
+      es.addEventListener('evidence_ingestion_started', handleEvidenceStarted as EventListener);
+      es.addEventListener('evidence_ingestion_completed', handleEvidenceCompleted as EventListener);
+      es.addEventListener('evidence_ingestion_failed', handleEvidenceFailed as EventListener);
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);
@@ -398,6 +511,12 @@ export default function IntegrationsHub() {
             });
           }
         } catch { }
+      };
+      return () => {
+        es.removeEventListener('evidence_ingestion_started', handleEvidenceStarted as EventListener);
+        es.removeEventListener('evidence_ingestion_completed', handleEvidenceCompleted as EventListener);
+        es.removeEventListener('evidence_ingestion_failed', handleEvidenceFailed as EventListener);
+        es.close();
       };
     } catch { }
     return () => { if (es) es.close(); };
@@ -596,6 +715,10 @@ export default function IntegrationsHub() {
     };
   };
 
+  const getEvidenceSourceTruth = (provider: SecondaryProviderKey): EvidenceSourceDTO | null => {
+    return evidenceSourcesState.sources.find((source) => source.provider === provider) || null;
+  };
+
   const formatDateTime = (value?: string | null) => {
     if (!value) return 'Not available';
     const parsed = new Date(value);
@@ -624,6 +747,13 @@ export default function IntegrationsHub() {
   };
 
   const connectedSecondaryProviders = SECONDARY_PROVIDERS.filter(provider => getProviderState(provider).connected);
+  const gmailProviderState = getProviderState('gmail');
+  const gmailEvidenceSource = getEvidenceSourceTruth('gmail');
+  const activeSkippedProviders = ingestionResult?.skippedProviders?.length
+    ? ingestionResult.skippedProviders
+    : evidenceStatus?.skippedProviders?.length
+      ? evidenceStatus.skippedProviders
+      : evidenceSourcesState.skippedProviders;
   const blockingProviders = SECONDARY_PROVIDERS.filter(provider => {
     const providerState = getProviderState(provider);
     return providerState.needs_reconnect || providerState.ingestion_state === 'failed' || providerState.ingestion_state === 'stale';
@@ -639,6 +769,65 @@ export default function IntegrationsHub() {
   const connectedSellerId = status?.amazon_account?.seller_id || null;
   const connectedAmazonName = status?.amazon_account?.display_name || null;
   const connectedAmazonMarketplaces = Array.isArray(status?.amazon_account?.marketplaces) ? status?.amazon_account?.marketplaces : [];
+
+  const handleIngestGmailOnly = async () => {
+    setIngestingGmail(true);
+    try {
+      const r = await api.ingestGmailEvidence();
+      const documentsIngested = r.data?.documentsIngested ?? 0;
+      const emailsProcessed = r.data?.emailsProcessed ?? 0;
+
+      setIngestionResult({
+        success: !!(r.ok && r.data?.success),
+        scope: 'gmail',
+        providerLabel: 'Gmail',
+        totalDocumentsIngested: documentsIngested,
+        totalItemsProcessed: emailsProcessed,
+        documentsIngested,
+        emailsProcessed,
+        providersAttempted: ['gmail'],
+        skippedProviders: [],
+        errors: r.data?.errors || (r.error ? [r.error] : []),
+        results: r.data ? {
+          gmail: {
+            success: !!r.data?.success,
+            documentsIngested,
+            emailsProcessed,
+            errors: r.data?.errors || []
+          }
+        } : undefined,
+        message: r.ok
+          ? documentsIngested > 0
+            ? `Gmail stored ${documentsIngested} documents from ${emailsProcessed} emails in this run.`
+            : 'Gmail returned zero documents for the current saved query and filters.'
+          : r.error || r.data?.message || 'Failed to ingest evidence from Gmail.'
+      });
+
+      if (r.ok) {
+        if (documentsIngested > 0) {
+          toast({
+            title: 'Gmail Ingestion Complete',
+            description: `${documentsIngested} documents were stored from ${emailsProcessed} Gmail messages.`
+          });
+        } else {
+          toast({
+            title: 'Gmail Returned Zero Documents',
+            description: 'No Gmail documents matched the current saved query and filters for this run.'
+          });
+        }
+      } else {
+        toast({
+          title: 'Gmail Ingestion Failed',
+          description: r.error || 'Failed to ingest evidence from Gmail.',
+          variant: 'destructive'
+        });
+      }
+
+      await refreshIntegrationTruth();
+    } finally {
+      setIngestingGmail(false);
+    }
+  };
 
   if (isReady && !activeSlug) {
     return (
@@ -1150,6 +1339,7 @@ export default function IntegrationsHub() {
                 } as const;
 
                 const providerState = getProviderState(p);
+                const evidenceSource = getEvidenceSourceTruth(p);
                 const connected = providerState.connected;
                 const meta = providerMeta[p];
 
@@ -1180,6 +1370,20 @@ export default function IntegrationsHub() {
                               <span className="text-[10px] text-gray-500 block mt-1 font-sans tracking-tight">
                                 Last ingest: {formatDateTime(providerState.last_ingest_at)}
                               </span>
+                              {evidenceSource ? (
+                                <>
+                                  <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
+                                    {evidenceSource.ingestable ? 'Ingestable source confirmed.' : `Connected, not ingestable: ${humanizeSkippedReason(evidenceSource.ingestable_reason)}`}
+                                  </span>
+                                  <span className="text-[10px] text-gray-500 block mt-1 font-sans tracking-tight">
+                                    Stored {evidenceSource.documents_count} • Parsed {evidenceSource.parsed_count} • Match-ready {evidenceSource.match_ready_count}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
+                                  Ingestion truth unavailable for this provider.
+                                </span>
+                              )}
                             </div>
                             <Button
                               variant="ghost"
@@ -1211,6 +1415,109 @@ export default function IntegrationsHub() {
                 );
               })}
             </div>
+
+            <motion.div variants={itemVariants} className="lg:col-span-12 mt-8">
+              <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                  <div>
+                    <h3 className="text-lg font-sans font-bold text-white tracking-tight">Ingestion Truth</h3>
+                    <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">
+                      Connection truth stays separate from stored, parsed, and match-ready document truth.
+                    </p>
+                  </div>
+                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                    Last ingestion truth refresh: {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+                  {[
+                    { label: 'Ingestable Sources', value: evidenceSourcesState.ingestableCount, note: `${evidenceSourcesState.connectedCount} connected` },
+                    { label: 'Sources Resolved', value: ingestionResult?.sourcesResolved ?? evidenceStatus?.sourcesResolved ?? 0, note: 'Resolved for ingest' },
+                    { label: 'Docs Stored', value: evidenceStatus?.documentsCount ?? 0, note: 'Durable document rows' },
+                    { label: 'Parsing', value: evidenceStatus?.processingCount ?? 0, note: 'Still processing' },
+                    { label: 'Parsed', value: evidenceStatus?.parsedCount ?? 0, note: 'Parser completed' },
+                    { label: 'Match-Ready', value: evidenceStatus?.matchReadyCount ?? 0, note: 'Parsed, not filing-ready' }
+                  ].map((item) => (
+                    <div key={item.label} className="bg-black/40 rounded-xl p-4 border border-white/5">
+                      <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">{item.label}</span>
+                      <span className="text-2xl font-sans font-bold text-white tracking-tight">{item.value}</span>
+                      <span className="block mt-2 text-[10px] text-gray-500 font-sans font-bold uppercase tracking-tight">{item.note}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
+                  <div className="bg-black/40 rounded-xl p-5 border border-white/5">
+                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-3 tracking-tight">Skipped Providers</span>
+                    {activeSkippedProviders.length > 0 ? (
+                      <div className="space-y-2">
+                        {activeSkippedProviders.map((item, index) => (
+                          <div key={`${item.provider}-${item.reason}-${index}`} className="flex items-start justify-between gap-4 text-xs font-sans tracking-tight">
+                            <span className="text-white font-bold uppercase">{item.provider}</span>
+                            <span className="text-gray-400 text-right">{humanizeSkippedReason(item.reason)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-400 font-sans tracking-tight">
+                        No provider skip reasons are currently active for this workspace.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="bg-black/40 rounded-xl p-5 border border-white/5">
+                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-3 tracking-tight">Last Ingest Outcome</span>
+                    {ingestionResult ? (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="text-sm font-sans font-bold text-white tracking-tight">
+                            {ingestionResult.scope === 'gmail'
+                              ? ingestionResult.success
+                                ? (ingestionResult.totalDocumentsIngested ?? ingestionResult.documentsIngested ?? 0) > 0
+                                  ? 'Gmail-only run stored documents'
+                                  : 'Gmail returned zero documents'
+                                : 'Gmail-only run failed'
+                              : ingestionResult.success
+                                ? 'Completed with stored documents'
+                                : 'Completed without stored documents'}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            {ingestionResult.providerLabel && (
+                              <Badge variant="outline" className="border-white/10 bg-white/5 text-white/70 text-[10px] font-sans font-bold uppercase tracking-tight">
+                                {ingestionResult.providerLabel}
+                              </Badge>
+                            )}
+                            <Badge variant="outline" className="border-white/10 bg-white/5 text-white/70 text-[10px] font-sans font-bold uppercase tracking-tight">
+                              {ingestionResult.totalDocumentsIngested ?? ingestionResult.documentsIngested ?? 0} stored
+                            </Badge>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-400 font-sans tracking-tight">
+                          {ingestionResult.message || 'The latest ingestion result is now visible instead of being discarded.'}
+                        </p>
+                        {!!ingestionResult.providersAttempted?.length && (
+                          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                            Attempted: {ingestionResult.providersAttempted.join(', ')}
+                          </p>
+                        )}
+                        {!!ingestionResult.errors?.length && (
+                          <div className="space-y-1">
+                            {ingestionResult.errors.slice(0, 3).map((error, index) => (
+                              <p key={`${error}-${index}`} className="text-xs text-gray-400 font-sans tracking-tight">{error}</p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-400 font-sans tracking-tight">
+                        No all-sources ingestion run has been recorded in this page state yet.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
 
             {/* Logic Overrides Section */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12 mb-4">
@@ -1379,33 +1686,79 @@ export default function IntegrationsHub() {
 
             {/* Ingestion Trigger */}
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-12">
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-white/15 to-white/5 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
-                <button
-                  onClick={async () => {
-                    setIngestingAll(true);
-                    const r = activeSlug ? await api.ingestAllEvidence(undefined, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
-                    if (r.ok) {
-                      toast({ title: "Harvesting Initiated", description: "Processing all connected repositories for this workspace." });
-                    } else {
-                      toast({ title: "Ingestion Failed", description: r.error || 'Failed to start ingestion.', variant: 'destructive' });
-                    }
-                    setIngestingAll(false);
-                  }}
-                  disabled={ingestingAll}
-                  className="relative w-full h-32 bg-black rounded-2xl border border-white/10 flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-white/20"
-                >
-                  {ingestingAll ? (
-                    <RefreshCw className="w-10 h-10 text-white/70 animate-spin" />
-                  ) : (
-                    <>
-                      <div className="text-left">
-                        <span className="block text-3xl font-sans font-bold text-white tracking-tight">Retrieve from all Sources</span>
-                        <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">Sync data from all connected accounts</span>
-                      </div>
-                    </>
-                  )}
-                </button>
+              <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_320px] gap-4">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-white/15 to-white/5 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
+                  <button
+                    onClick={async () => {
+                      setIngestingAll(true);
+                      const r = activeSlug ? await api.ingestAllEvidence(undefined, activeSlug) : { ok: false, error: 'Tenant context is required' } as any;
+                      setIngestionResult({
+                        success: !!(r.ok && r.data?.success),
+                        scope: 'all',
+                        providerLabel: 'All Sources',
+                        totalDocumentsIngested: r.data?.totalDocumentsIngested,
+                        totalItemsProcessed: r.data?.totalItemsProcessed,
+                        documentsIngested: r.data?.documentsIngested,
+                        emailsProcessed: r.data?.emailsProcessed,
+                        filesProcessed: r.data?.filesProcessed,
+                        sourcesResolved: r.data?.sourcesResolved,
+                        providersAttempted: r.data?.providersAttempted,
+                        skippedProviders: r.data?.skippedProviders || [],
+                        errors: r.data?.errors || (r.error ? [r.error] : []),
+                        results: r.data?.results,
+                        message: r.data?.message || r.error
+                      });
+                      if (r.ok) {
+                        toast({ title: "Harvesting Initiated", description: "Processing all connected repositories for this workspace." });
+                      } else {
+                        toast({ title: "Ingestion Failed", description: r.error || 'Failed to start ingestion.', variant: 'destructive' });
+                      }
+                      await refreshIntegrationTruth();
+                      setIngestingAll(false);
+                    }}
+                    disabled={ingestingAll}
+                    className="relative w-full h-32 bg-black rounded-2xl border border-white/10 flex items-center justify-center gap-6 transition-all duration-500 group-hover:border-white/20"
+                  >
+                    {ingestingAll ? (
+                      <RefreshCw className="w-10 h-10 text-white/70 animate-spin" />
+                    ) : (
+                      <>
+                        <div className="text-left">
+                          <span className="block text-3xl font-sans font-bold text-white tracking-tight">Retrieve from all Sources</span>
+                          <span className="block text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">Sync data from all connected accounts</span>
+                        </div>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="bg-white/[0.02] rounded-2xl border border-white/10 p-5 flex flex-col justify-between gap-4">
+                  <div>
+                    <span className="block text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-2">Provider-Specific Control</span>
+                    <h4 className="text-base font-sans font-bold text-white tracking-tight">Ingest Gmail Only</h4>
+                    <p className="text-xs text-gray-400 font-sans tracking-tight mt-2">
+                      Run the real Gmail ingestion route by itself so zero-result runs and provider-specific errors are isolated clearly.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                      {gmailProviderState.connected
+                        ? gmailEvidenceSource?.ingestable === false
+                          ? `Connected, not ingestable: ${humanizeSkippedReason(gmailEvidenceSource.ingestable_reason)}`
+                          : 'Connected and ready for Gmail-only ingest'
+                        : 'Connect Gmail before running provider-specific ingestion'}
+                    </p>
+                    <Button
+                      onClick={handleIngestGmailOnly}
+                      disabled={ingestingGmail || !gmailProviderState.connected}
+                      className="w-full h-11 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] font-sans font-bold uppercase tracking-tight"
+                    >
+                      {ingestingGmail ? <RefreshCw className="h-4 w-4 animate-spin" /> : 'Ingest Gmail Only'}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -1424,11 +1777,21 @@ export default function IntegrationsHub() {
               </div>
               <div className="flex flex-col">
                 <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Repositories</span>
-                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{connectedSecondaryProviders.length} Connected Node{connectedSecondaryProviders.length !== 1 ? 's' : ''}</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">
+                  {evidenceSourcesState.ingestableCount} ingestable / {connectedSecondaryProviders.length} connected
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Documents</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">
+                  {evidenceStatus?.documentsCount ?? 0} stored / {evidenceStatus?.processingCount ?? 0} processing
+                </span>
               </div>
               <div className="flex flex-col">
                 <span className="text-[9px] font-sans font-bold text-gray-600 uppercase tracking-tight mb-1">Last Ingest</span>
-                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">{formatDateTime(status?.lastIngest)}</span>
+                <span className="text-xs text-gray-400 font-sans font-bold tracking-tight">
+                  {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
+                </span>
               </div>
             </div>
 

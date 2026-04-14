@@ -1308,7 +1308,7 @@ export const api = {
     }>('/api/evidence/ingest/gmail', {
       method: 'POST',
       body: JSON.stringify({
-        query: options?.query || 'from:amazon.com OR from:amazon.co.uk OR subject:(invoice OR receipt OR "FBA" OR "reimbursement" OR "refund") has:attachment',
+        query: options?.query,
         maxResults: options?.maxResults || 50,
         autoParse: options?.autoParse !== false,
       }),
