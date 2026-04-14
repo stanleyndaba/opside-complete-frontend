@@ -342,7 +342,7 @@ export function EvidenceMatchingTable() {
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 backdrop-blur-xl">
       <div className="hidden border-b border-white/5 px-6 py-4 lg:grid lg:grid-cols-[1.15fr_0.8fr_1fr_0.55fr_0.7fr] lg:gap-6">
         {['Match', 'Claim', 'Document', 'Confidence', 'Action'].map((label) => (
-          <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/22">
+          <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
             {label}
           </div>
         ))}
@@ -366,25 +366,25 @@ export function EvidenceMatchingTable() {
               </div>
 
               <div>
-                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/18 lg:hidden">
+                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Claim
                 </div>
-                <Link to={`/recoveries/${match.claim_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-white/72 transition-colors hover:text-white">
+                <Link to={`/recoveries/${match.claim_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-200 transition-colors hover:text-white">
                   {match.claim_id.substring(0, 12).toUpperCase()}
                 </Link>
               </div>
 
               <div>
-                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/18 lg:hidden">
+                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Document
                 </div>
-                <Link to={`/documents/${match.document_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-white/72 transition-colors hover:text-white">
+                <Link to={`/documents/${match.document_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-200 transition-colors hover:text-white">
                   {match.document_details?.filename?.substring(0, 28) || match.document_id.substring(0, 12).toUpperCase()}
                 </Link>
               </div>
 
               <div>
-                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/18 lg:hidden">
+                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Confidence
                 </div>
                 <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white">
@@ -393,7 +393,7 @@ export function EvidenceMatchingTable() {
               </div>
 
               <div className="lg:text-right">
-                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/18 lg:hidden">
+                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Action
                 </div>
                 <Link
@@ -426,8 +426,8 @@ export function EvidenceMatchingTable() {
       <div className="bg-[#111111]/90 border border-red-500/20 p-8 text-center rounded-2xl backdrop-blur-xl">
         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-red-400/80">Evidence queue</div>
         <p className="mt-4 text-lg font-sans font-medium tracking-tight text-white">Evidence review could not be loaded.</p>
-        <p className="mx-auto mt-3 max-w-md text-[11px] font-sans leading-relaxed text-white/40">{error}</p>
-        <Button onClick={fetchMatchingResults} className="mt-8 h-10 px-6 text-[10px] font-sans font-medium uppercase tracking-tight bg-white/5 hover:bg-white/10 text-white/70 border border-white/10 rounded-xl">
+        <p className="mx-auto mt-3 max-w-md text-[11px] font-sans leading-relaxed text-zinc-400">{error}</p>
+        <Button onClick={fetchMatchingResults} className="mt-8 h-10 px-6 text-[10px] font-sans font-medium uppercase tracking-tight bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/10 rounded-xl">
           Retry
         </Button>
       </div>
@@ -591,7 +591,7 @@ export function EvidenceMatchingTable() {
               'Refresh matching after more evidence arrives to rebuild the queue.',
               <Button
                 onClick={handleRunMatching}
-                className="h-10 px-6 font-sans text-[9px] font-medium text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-colors uppercase tracking-tight"
+                className="h-10 px-6 font-sans text-[9px] font-medium text-zinc-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-colors uppercase tracking-tight"
               >
                 Refresh matching
               </Button>
