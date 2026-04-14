@@ -68,10 +68,7 @@ type IntegrationStatusDTO = {
       excludeSubjects: string[];
       fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean };
       fileNamePatterns: string[];
-      folders: string[];
       dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'last_18_months' | 'since_last_sync' | 'all';
-      skipDuplicates: boolean;
-      skipExisting: boolean;
     };
   };
   providers?: Record<string, IntegrationProviderStatus>;
@@ -154,10 +151,7 @@ export default function IntegrationsHub() {
     excludeSubjects: string[];
     fileTypes: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean };
     fileNamePatterns: string[];
-    folders: string[];
     dateRange: 'last_30' | 'last_90' | 'last_12_months' | 'last_18_months' | 'since_last_sync' | 'all';
-    skipDuplicates: boolean;
-    skipExisting: boolean;
   }>({
     // === SENDER PATTERNS (Carriers + Marketplaces + Freight) ===
     senderPatterns: [
@@ -203,12 +197,8 @@ export default function IntegrationsHub() {
       // Amazon / FBA
       'FBA', 'reimburse', 'removal', 'liquidation', 'order'
     ],
-    // === FOLDER STRUCTURE ===
-    folders: ['/Invoices', '/Shipping', '/Returns', '/Credits', '/Amazon', '/Finance', '/Inventory'],
     // 18-month window for Amazon claimable period
-    dateRange: 'last_18_months',
-    skipDuplicates: true,
-    skipExisting: true
+    dateRange: 'last_18_months'
   });
   const [loading, setLoading] = useState(false);
   const [disconnecting, setDisconnecting] = useState<string | null>(null);
@@ -1629,6 +1619,12 @@ export default function IntegrationsHub() {
                     <h4 className="text-lg font-sans font-bold text-white tracking-tight">Harvesting Parameters</h4>
                     <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-0.5">Global Filter Configuration</p>
                   </div>
+                </div>
+
+                <div className="mb-8 rounded-xl border border-white/5 bg-black/30 p-4">
+                  <p className="text-xs text-gray-400 font-sans tracking-tight leading-relaxed">
+                    This panel actively controls sender, subject, exclusion, date, and file-type filtering. Duplicate suppression stays enforced automatically in the ingestion services, and provider folder scope is only honored when a provider route explicitly supports it.
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

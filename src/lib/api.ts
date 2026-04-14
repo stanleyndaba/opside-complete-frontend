@@ -1898,10 +1898,7 @@ export const api = {
     excludeSubjects?: string[];
     fileTypes?: { pdf: boolean; images: boolean; spreadsheets: boolean; docs: boolean; shipping: boolean }; 
     fileNamePatterns?: string[];
-    folders?: string[];
     dateRange?: string;
-    skipDuplicates?: boolean;
-    skipExisting?: boolean;
   }, tenantSlug?: string) => requestJson<any>(`/api/evidence/filters${tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : ''}`, { method: 'POST', body: JSON.stringify(filters) }),
   // Legacy endpoint - now uses unified orchestrator
   startEvidenceIngest: () => requestJson<any>('/api/evidence/ingest/all', { method: 'POST', body: JSON.stringify({ maxResults: 50, autoParse: true }) }),
