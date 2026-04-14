@@ -385,7 +385,11 @@ export default function EvidenceLocker() {
       }
 
       if (!response.ok) {
-        const failureMessage = payload?.error || payload?.message || rawText || 'Document upload failed.';
+        const firstFailureReason =
+          Array.isArray(payload?.failed_files) && payload.failed_files[0]?.reason
+            ? String(payload.failed_files[0].reason)
+            : '';
+        const failureMessage = firstFailureReason || payload?.error || payload?.message || rawText || 'Document upload failed.';
         throw new Error(failureMessage);
       }
 
