@@ -1,5 +1,5 @@
 import { getFrontendAuthToken } from './authSession';
-import { dispatchSessionRecovery } from './sessionRecovery';
+import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
 
 export interface EventStreamLike {
   readonly readyState: number;
@@ -94,6 +94,12 @@ class AuthenticatedEventStream implements EventStreamLike {
       if (!response.ok || !response.body) {
         if (response.status === 401) {
           const message = await response.text().catch(() => '');
+          const refreshed = await attemptSilentSessionRefresh();
+          if (refreshed && !this.closedManually) {
+            this.handleError();
+            return;
+          }
+
           dispatchSessionRecovery({
             status: response.status,
             source: this.url,

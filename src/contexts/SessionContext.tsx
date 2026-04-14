@@ -6,7 +6,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { SESSION_RECOVERY_EVENT, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
+import { SESSION_RECOVERY_EVENT, attemptSilentSessionRefresh, clearSessionRecoveryPending, clearSessionRecoverySuppression } from '@/lib/sessionRecovery';
 
 interface SessionContextType {
     isSessionValid: boolean;
@@ -165,13 +165,37 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
-        const handleRecoveryRequired = () => {
+        let mounted = true;
+
+        const handleRecoveryRequired = async () => {
+            const refreshed = await attemptSilentSessionRefresh();
+            if (refreshed && mounted) {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.access_token) {
+                    setIsSessionValid(true);
+                    setAuthToken(session.access_token);
+                    localStorage.setItem('session_token', session.access_token);
+                    if (session.user?.id) {
+                        localStorage.setItem('user_id', session.user.id);
+                    }
+                    if (session.user?.email) {
+                        setUserEmail(session.user.email);
+                        localStorage.setItem('user_email', session.user.email);
+                    }
+                    clearSessionRecoveryPending();
+                    clearSessionRecoverySuppression();
+                    return;
+                }
+            }
+
+            if (!mounted) return;
             setIsSessionValid(false);
             redirectToLogin();
         };
 
         window.addEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         return () => {
+            mounted = false;
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
     }, [redirectToLogin]);
