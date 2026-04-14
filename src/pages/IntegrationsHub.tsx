@@ -238,6 +238,7 @@ export default function IntegrationsHub() {
   });
   const [ingestionResult, setIngestionResult] = useState<{
     success: boolean;
+    phase?: 'started' | 'completed' | 'failed';
     scope?: 'all' | 'gmail';
     providerLabel?: string;
     totalDocumentsIngested?: number;
@@ -450,9 +451,53 @@ export default function IntegrationsHub() {
         api.buildApiUrl(`/api/sse/status?tenantSlug=${activeSlug}`),
         { autoReconnect: true, reconnectDelayMs: 3000 }
       );
+      const resolveLiveIngestContext = (evt: any, previous: typeof ingestionResult) => {
+        const explicitProvider = typeof evt?.provider === 'string' ? evt.provider : null;
+        if (explicitProvider === 'all') {
+          return {
+            scope: 'all' as const,
+            providerLabel: 'All Sources',
+            providersAttempted: Array.isArray(evt?.providers) && evt.providers.length ? evt.providers : previous?.providersAttempted
+          };
+        }
+        if (explicitProvider === 'gmail' || previous?.scope === 'gmail' || previous?.providerLabel === 'Gmail') {
+          return {
+            scope: 'gmail' as const,
+            providerLabel: 'Gmail',
+            providersAttempted: ['gmail']
+          };
+        }
+        if (explicitProvider) {
+          return {
+            scope: previous?.scope,
+            providerLabel: explicitProvider,
+            providersAttempted: [explicitProvider]
+          };
+        }
+        return {
+          scope: previous?.scope,
+          providerLabel: previous?.providerLabel || 'Connected Repository',
+          providersAttempted: previous?.providersAttempted
+        };
+      };
       const handleEvidenceStarted = (event: Event) => {
         try {
           const evt = JSON.parse((event as MessageEvent).data);
+          setIngestionResult((previous) => {
+            const resolved = resolveLiveIngestContext(evt, previous);
+            return {
+              success: false,
+              phase: 'started',
+              scope: resolved.scope,
+              providerLabel: resolved.providerLabel,
+              providersAttempted: resolved.providersAttempted,
+              skippedProviders: previous?.skippedProviders || [],
+              errors: [],
+              message: resolved.scope === 'all'
+                ? 'Checking connected repositories and ingestion eligibility.'
+                : `Checking ${resolved.providerLabel || 'repository'} for evidence documents.`
+            };
+          });
           toast({
             title: 'Ingestion Update',
             description: evt?.provider === 'all'
@@ -464,10 +509,48 @@ export default function IntegrationsHub() {
       const handleEvidenceCompleted = (event: Event) => {
         try {
           const evt = JSON.parse((event as MessageEvent).data);
+          setIngestionResult((previous) => {
+            const resolved = resolveLiveIngestContext(evt, previous);
+            const storedCount = typeof evt?.totalDocumentsIngested === 'number'
+              ? evt.totalDocumentsIngested
+              : typeof evt?.documentsIngested === 'number'
+                ? evt.documentsIngested
+                : undefined;
+            const processedCount = typeof evt?.totalItemsProcessed === 'number'
+              ? evt.totalItemsProcessed
+              : typeof evt?.emailsProcessed === 'number'
+                ? evt.emailsProcessed
+                : previous?.totalItemsProcessed;
+            return {
+              success: true,
+              phase: 'completed',
+              scope: resolved.scope,
+              providerLabel: resolved.providerLabel,
+              totalDocumentsIngested: storedCount,
+              totalItemsProcessed: processedCount,
+              documentsIngested: typeof evt?.documentsIngested === 'number' ? evt.documentsIngested : previous?.documentsIngested,
+              emailsProcessed: typeof evt?.emailsProcessed === 'number' ? evt.emailsProcessed : previous?.emailsProcessed,
+              filesProcessed: typeof evt?.filesProcessed === 'number' ? evt.filesProcessed : previous?.filesProcessed,
+              sourcesResolved: typeof evt?.sourcesResolved === 'number' ? evt.sourcesResolved : previous?.sourcesResolved,
+              providersAttempted: resolved.providersAttempted,
+              skippedProviders: previous?.skippedProviders || [],
+              errors: [],
+              results: previous?.results,
+              message: resolved.scope === 'gmail'
+                ? (storedCount ?? 0) > 0
+                  ? `${storedCount} Gmail documents were stored from this live ingestion run.`
+                  : 'Gmail returned zero documents for this live ingestion run.'
+                : typeof storedCount === 'number'
+                  ? `${storedCount} documents were stored from this ingestion run.`
+                  : 'Evidence ingestion has completed.'
+            };
+          });
           toast({
             title: 'Ingestion Complete',
             description: typeof evt?.totalDocumentsIngested === 'number'
               ? `${evt.totalDocumentsIngested} documents were stored from this ingestion run.`
+              : typeof evt?.documentsIngested === 'number'
+                ? `${evt.documentsIngested} documents were stored from this repository run.`
               : 'Evidence ingestion has completed.'
           });
           refreshIntegrationTruth().catch(() => undefined);
@@ -476,6 +559,26 @@ export default function IntegrationsHub() {
       const handleEvidenceFailed = (event: Event) => {
         try {
           const evt = JSON.parse((event as MessageEvent).data);
+          setIngestionResult((previous) => {
+            const resolved = resolveLiveIngestContext(evt, previous);
+            return {
+              success: false,
+              phase: 'failed',
+              scope: resolved.scope,
+              providerLabel: resolved.providerLabel,
+              totalDocumentsIngested: previous?.totalDocumentsIngested,
+              totalItemsProcessed: previous?.totalItemsProcessed,
+              documentsIngested: previous?.documentsIngested,
+              emailsProcessed: previous?.emailsProcessed,
+              filesProcessed: previous?.filesProcessed,
+              sourcesResolved: previous?.sourcesResolved,
+              providersAttempted: resolved.providersAttempted,
+              skippedProviders: previous?.skippedProviders || [],
+              errors: evt?.error ? [evt.error] : previous?.errors || [],
+              results: previous?.results,
+              message: evt?.error || 'Evidence ingestion failed for this run.'
+            };
+          });
           toast({
             title: 'Ingestion Failed',
             description: evt?.error || 'Evidence ingestion failed for this run.',
@@ -490,20 +593,6 @@ export default function IntegrationsHub() {
       es.onmessage = (e) => {
         try {
           const evt = JSON.parse(e.data);
-          if (evt?.type === 'evidence' && evt?.status) {
-            if (evt.status === 'completed') {
-              toast({
-                title: 'Ingestion Complete',
-                description: evt.message || 'Evidence ingestion has completed. Documents are available in Evidence Locker.'
-              });
-              refreshIntegrationTruth().catch(() => undefined);
-            } else {
-              toast({
-                title: 'Ingestion Update',
-                description: evt.message || 'Evidence ingestion is in progress...'
-              });
-            }
-          }
           if (evt?.type === 'claim' && evt?.status === 'completed' && evt?.matchedCount) {
             toast({
               title: 'New Matches Found',
@@ -1472,15 +1561,21 @@ export default function IntegrationsHub() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-4">
                           <span className="text-sm font-sans font-bold text-white tracking-tight">
-                            {ingestionResult.scope === 'gmail'
-                              ? ingestionResult.success
-                                ? (ingestionResult.totalDocumentsIngested ?? ingestionResult.documentsIngested ?? 0) > 0
-                                  ? 'Gmail-only run stored documents'
-                                  : 'Gmail returned zero documents'
-                                : 'Gmail-only run failed'
-                              : ingestionResult.success
-                                ? 'Completed with stored documents'
-                                : 'Completed without stored documents'}
+                            {ingestionResult.phase === 'started'
+                              ? ingestionResult.scope === 'gmail'
+                                ? 'Gmail-only run started'
+                                : 'Ingestion run started'
+                              : ingestionResult.phase === 'failed'
+                                ? ingestionResult.scope === 'gmail'
+                                  ? 'Gmail-only run failed'
+                                  : 'Ingestion run failed'
+                                : ingestionResult.scope === 'gmail'
+                                  ? (ingestionResult.totalDocumentsIngested ?? ingestionResult.documentsIngested ?? 0) > 0
+                                    ? 'Gmail-only run stored documents'
+                                    : 'Gmail returned zero documents'
+                                  : ingestionResult.success
+                                    ? 'Completed with stored documents'
+                                    : 'Completed without stored documents'}
                           </span>
                           <div className="flex items-center gap-2">
                             {ingestionResult.providerLabel && (
