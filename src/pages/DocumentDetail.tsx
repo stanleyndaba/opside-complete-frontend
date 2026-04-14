@@ -218,7 +218,7 @@ export default function DocumentDetail() {
         reason: parsingOperationalSummary || 'Parsing is still in progress',
         nextStep: parsingTruth.operationalExplanation?.next_action
           ? formatAutonomyLabel(parsingTruth.operationalExplanation.next_action)
-          : 'Wait for parsing to complete before using this document as evidence.'
+          : 'Wait for parsing to complete before this document can support a case.'
       };
     }
     if (status === 'failed') {
@@ -242,16 +242,16 @@ export default function DocumentDetail() {
         usable: false,
         label: 'LIMITED',
         reason: parsingTruth.explanation?.reason || 'The parser preserved some usable truth, but this document is only partially parsed.',
-        nextStep: 'Review the preserved fields before using this document in a filing decision.'
+        nextStep: 'Review the preserved fields before using this document in case review.'
       };
     }
     if (parserConfidence == null) {
-      return { usable: false, label: 'NO', reason: 'Extraction confidence is unknown', nextStep: 'Review extracted fields manually before relying on this as evidence.' };
+      return { usable: false, label: 'NO', reason: 'Extraction confidence is unknown', nextStep: 'Review extracted fields manually before relying on this document in case review.' };
     }
     if (parserConfidence < 0.5) {
-      return { usable: false, label: 'NO', reason: 'Extraction confidence is low', nextStep: 'Manual review is required before this document supports filing.' };
+      return { usable: false, label: 'NO', reason: 'Extraction confidence is low', nextStep: 'Manual review is required before this document supports case review.' };
     }
-    return { usable: true, label: 'YES', reason: 'Structured extraction completed and linked to a case', nextStep: 'Document can support case review and filing readiness checks.' };
+    return { usable: true, label: 'YES', reason: 'Structured extraction completed and linked to a case', nextStep: 'Document can support case review. Filing-usable evidence is confirmed later through case links.' };
   })();
 
   if (loading || error) {
@@ -500,7 +500,7 @@ export default function DocumentDetail() {
                           <div className="h-8 w-[1px] bg-white/5" />
 
                           <div className="flex flex-col gap-1">
-                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">USABLE_AS_EVIDENCE</span>
+                            <span className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight">CASE_SUPPORT</span>
                             <span className={cn("text-lg font-sans font-bold tracking-tight", evidenceDecision.usable ? "text-white" : "text-rose-400")}>
                               {evidenceDecision.label}
                             </span>

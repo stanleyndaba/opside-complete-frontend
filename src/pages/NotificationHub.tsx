@@ -100,8 +100,8 @@ const DEFAULT_PREFERENCES: NotificationPreference[] = [
   },
   {
     id: 'evidence_found',
-    title: 'Evidence Ready',
-    description: 'When useful evidence enters the recovery lane.',
+    title: 'Evidence Linked',
+    description: 'When a document is linked into case review. This does not imply filing-ready proof on its own.',
     category: 'Evidence & Sync',
     email: false,
     inApp: true,

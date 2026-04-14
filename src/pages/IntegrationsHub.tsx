@@ -1451,14 +1451,17 @@ export default function IntegrationsHub() {
                               </span>
                               {evidenceSource ? (
                                 <>
-                                  <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
-                                    {evidenceSource.ingestable ? 'Ingestable source confirmed.' : `Connected, not ingestable: ${humanizeSkippedReason(evidenceSource.ingestable_reason)}`}
-                                  </span>
-                                  <span className="text-[10px] text-gray-500 block mt-1 font-sans tracking-tight">
-                                    Stored {evidenceSource.documents_count} • Parsed {evidenceSource.parsed_count} • Match-ready {evidenceSource.match_ready_count}
-                                  </span>
-                                </>
-                              ) : (
+                              <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
+                                {evidenceSource.ingestable ? 'Ingestable source confirmed.' : `Connected, not ingestable: ${humanizeSkippedReason(evidenceSource.ingestable_reason)}`}
+                              </span>
+                              <span className="text-[10px] text-gray-500 block mt-1 font-sans tracking-tight">
+                                    Stored {evidenceSource.documents_count} • Parsed {evidenceSource.parsed_count} • Ready to match {evidenceSource.match_ready_count}
+                              </span>
+                              <span className="text-[10px] text-gray-600 block mt-1 font-sans tracking-tight">
+                                    Case-linked and filing-usable evidence is confirmed later in dispute workflows.
+                              </span>
+                            </>
+                          ) : (
                                 <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
                                   Ingestion truth unavailable for this provider.
                                 </span>
@@ -1501,7 +1504,7 @@ export default function IntegrationsHub() {
                   <div>
                     <h3 className="text-lg font-sans font-bold text-white tracking-tight">Ingestion Truth</h3>
                     <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">
-                      Connection truth stays separate from stored, parsed, and match-ready document truth.
+                      Connection truth stays separate from stored, parsed, ready-to-match, and case-linked evidence truth.
                     </p>
                   </div>
                   <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
@@ -1513,10 +1516,10 @@ export default function IntegrationsHub() {
                   {[
                     { label: 'Ingestable Sources', value: evidenceSourcesState.ingestableCount, note: `${evidenceSourcesState.connectedCount} connected` },
                     { label: 'Sources Resolved', value: ingestionResult?.sourcesResolved ?? evidenceStatus?.sourcesResolved ?? 0, note: 'Resolved for ingest' },
-                    { label: 'Docs Stored', value: evidenceStatus?.documentsCount ?? 0, note: 'Durable document rows' },
-                    { label: 'Parsing', value: evidenceStatus?.processingCount ?? 0, note: 'Still processing' },
-                    { label: 'Parsed', value: evidenceStatus?.parsedCount ?? 0, note: 'Parser completed' },
-                    { label: 'Match-Ready', value: evidenceStatus?.matchReadyCount ?? 0, note: 'Parsed, not filing-ready' }
+                    { label: 'Docs Stored', value: evidenceStatus?.documentsCount ?? 0, note: 'Stored with file bytes available' },
+                    { label: 'Parsing', value: evidenceStatus?.processingCount ?? 0, note: 'Parser still running' },
+                    { label: 'Parsed', value: evidenceStatus?.parsedCount ?? 0, note: 'Parser completed successfully' },
+                    { label: 'Ready to Match', value: evidenceStatus?.matchReadyCount ?? 0, note: 'Parsed, not case-linked' }
                   ].map((item) => (
                     <div key={item.label} className="bg-black/40 rounded-xl p-4 border border-white/5">
                       <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">{item.label}</span>
@@ -1525,6 +1528,10 @@ export default function IntegrationsHub() {
                     </div>
                   ))}
                 </div>
+
+                <p className="mt-4 text-[10px] font-sans font-bold uppercase tracking-tight text-gray-600">
+                  Filing-usable evidence is not inferred here. It is confirmed later when dispute evidence links exist in case workflows.
+                </p>
 
                 <div className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
                   <div className="bg-black/40 rounded-xl p-5 border border-white/5">

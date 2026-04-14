@@ -124,6 +124,25 @@ const getEvidenceStateIcon = (state: string) => {
   }
 };
 
+const getEvidenceStateLabel = (doc: LockerDocumentRow) => {
+  switch (doc.evidence_state) {
+    case 'Usable':
+      return 'Support confirmed';
+    case 'Linked Strongly':
+      return 'Linked, review';
+    case 'Linked Weakly':
+      return 'Linked weakly';
+    case 'Unmatched':
+      return 'Parsed, unlinked';
+    case 'Not Parsed':
+      return 'Stored';
+    case 'Parsing Partial':
+      return 'Parsed partial';
+    default:
+      return doc.evidence_state;
+  }
+};
+
 const getEvidenceStateBadgeClass = (doc: LockerDocumentRow) => {
   if (doc.usable_as_evidence) {
     return 'bg-white/10 text-white/80 border-white/15';
@@ -714,7 +733,7 @@ export default function EvidenceLocker() {
                 <div className="space-y-2">
                   <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Claim Documents</h1>
                   <p className="text-sm text-white/50 font-sans max-w-3xl">
-                    Review the files Margin can use to support recoveries, filings, and payout follow-up.
+                    Review stored files, parsing progress, and case links that can support recoveries, filings, and payout follow-up.
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -976,7 +995,7 @@ export default function EvidenceLocker() {
                                   </span>
                                   <Badge className={cn("text-[9px] font-sans font-bold uppercase tracking-tight flex items-center gap-1.5", getEvidenceStateBadgeClass(doc))}>
                                     {getEvidenceStateIcon(doc.evidence_state)}
-                                    {doc.evidence_state}
+                                    {getEvidenceStateLabel(doc)}
                                   </Badge>
                                   {doc.linked_case_count > 0 && (
                                     <div className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/75 uppercase tracking-tight flex items-center gap-1.5">
