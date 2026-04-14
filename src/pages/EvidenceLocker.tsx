@@ -990,7 +990,7 @@ export default function EvidenceLocker() {
 
                               <div className="flex flex-col gap-2 flex-1 min-w-0">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-sm font-bold text-white tracking-tight truncate uppercase group-hover:text-white/80 transition-colors">
+                                  <span className="text-sm font-medium text-white tracking-tight truncate normal-case group-hover:text-white/90 transition-colors">
                                     {doc.name}
                                   </span>
                                   <Badge className={cn("text-[9px] font-sans font-bold uppercase tracking-tight flex items-center gap-1.5", getEvidenceStateBadgeClass(doc))}>
