@@ -115,7 +115,10 @@ type EvidenceSourcesDTO = {
   skippedProviders: SkippedProvider[];
 };
 
-const SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'outlook', 'gdrive', 'dropbox', 'slack', 'adobe_sign', 'onedrive'];
+const ACTIVE_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['gmail', 'slack', 'dropbox', 'gdrive'];
+const PARKED_SECONDARY_PROVIDERS: SecondaryProviderKey[] = ['outlook', 'adobe_sign', 'onedrive'];
+const SECONDARY_PROVIDERS: SecondaryProviderKey[] = [...ACTIVE_SECONDARY_PROVIDERS, ...PARKED_SECONDARY_PROVIDERS];
+const PARKED_PROVIDER_AVAILABLE_DATE = 'May 20th, 2026';
 
 export default function IntegrationsHub() {
   const navigate = useNavigate();
@@ -857,7 +860,7 @@ export default function IntegrationsHub() {
     return 'Seller bound';
   };
 
-  const connectedSecondaryProviders = SECONDARY_PROVIDERS.filter(provider => getProviderDisplayState(provider).connected);
+  const connectedSecondaryProviders = ACTIVE_SECONDARY_PROVIDERS.filter(provider => getProviderDisplayState(provider).connected);
   const gmailProviderState = getProviderDisplayState('gmail');
   const gmailEvidenceSource = getEvidenceSourceTruth('gmail');
   const activeSkippedProviders = ingestionResult?.skippedProviders?.length
@@ -865,7 +868,7 @@ export default function IntegrationsHub() {
     : evidenceStatus?.skippedProviders?.length
       ? evidenceStatus.skippedProviders
       : evidenceSourcesState.skippedProviders;
-  const blockingProviders = SECONDARY_PROVIDERS.filter(provider => {
+  const blockingProviders = ACTIVE_SECONDARY_PROVIDERS.filter(provider => {
     const providerState = getProviderDisplayState(provider);
     return providerState.needs_reconnect || providerState.ingestion_state === 'failed' || providerState.ingestion_state === 'stale';
   });
@@ -1451,14 +1454,15 @@ export default function IntegrationsHub() {
 
                 const providerState = getProviderDisplayState(p);
                 const evidenceSource = getEvidenceSourceTruth(p);
-                const connected = providerState.connected || evidenceSource?.connected === true;
+                const isParked = PARKED_SECONDARY_PROVIDERS.includes(p);
+                const connected = !isParked && (providerState.connected || evidenceSource?.connected === true);
                 const meta = providerMeta[p];
 
                 return (
                   <motion.div key={p} variants={itemVariants} className="flex-shrink-0 w-[300px]">
-                    <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-white/15' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 hover:bg-white/[0.04]`}>
+                    <div className={`h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border ${connected ? 'border-white/15' : 'border-white/5'} p-6 flex flex-col relative group transition-all duration-300 ${isParked ? 'grayscale opacity-55' : 'hover:bg-white/[0.04]'}`}>
                       <div className="flex items-start justify-between mb-6">
-                        <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                        <div className={`h-12 w-12 rounded-xl ${meta.color} flex items-center justify-center border ${meta.border} shadow-sm ${isParked ? '' : 'group-hover:scale-110'} transition-transform duration-500`}>
                           <img src={meta.icon} alt={meta.name} className="h-6 w-6 object-contain" />
                         </div>
                         <div className={`h-2 w-2 rounded-full ${connected ? 'bg-white/70 animate-pulse' : 'bg-gray-700'}`} />
@@ -1468,7 +1472,25 @@ export default function IntegrationsHub() {
                       <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mb-6">Evidence Repository</p>
 
                       <div className="flex-1">
-                        {connected ? (
+                        {isParked ? (
+                          <div className="space-y-4">
+                            <div className="bg-black/40 rounded-lg p-3 border border-white/5">
+                              <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-1 tracking-tight">Availability</span>
+                              <span className="text-xs text-gray-300 block font-sans font-bold tracking-tight">
+                                Available {PARKED_PROVIDER_AVAILABLE_DATE}
+                              </span>
+                              <span className="text-[10px] text-gray-500 block mt-2 font-sans tracking-tight">
+                                This repository is parked for launch and will be enabled once provider access is production-ready.
+                              </span>
+                            </div>
+                            <Button
+                              className="w-full h-10 bg-white/5 border border-white/10 text-white/45 text-[10px] font-sans font-bold uppercase tracking-tight gap-2 cursor-not-allowed"
+                              disabled
+                            >
+                              Available {PARKED_PROVIDER_AVAILABLE_DATE}
+                            </Button>
+                          </div>
+                        ) : connected ? (
                           <div className="space-y-4">
                             <div className="bg-black/40 rounded-lg p-3 border border-white/5">
                               <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-1 tracking-tight">Operational State</span>
