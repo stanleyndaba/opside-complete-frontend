@@ -3319,21 +3319,24 @@ export function Dashboard() {
 
       {/* Contact Support Modal */}
       <Dialog open={quickNoticeOpen} onOpenChange={setQuickNoticeOpen}>
-        <DialogContent className="w-[min(94vw,920px)] max-w-4xl bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-2xl">
-          <DialogHeader className="px-5 pt-5 pb-3 border-b border-white/5 bg-white/[0.01]">
-            <DialogTitle className="text-base font-serif text-white tracking-tight">
+        <DialogContent className="w-[min(94vw,920px)] max-w-4xl overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
+          <DialogHeader className="border-b border-white/10 px-5 pb-4 pt-5">
+            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+              Support channel
+            </div>
+            <DialogTitle className="mt-2 text-[18px] font-sans font-medium tracking-tight text-white">
               Contact Us
             </DialogTitle>
-            <DialogDescription className="text-[10px] text-white/35 font-mono mt-0.5 uppercase tracking-tight">
+            <DialogDescription className="mt-1 text-[11px] font-sans leading-5 text-white/[0.48]">
               5 minute response time
             </DialogDescription>
           </DialogHeader>
-          <div className="px-5 py-4 space-y-4">
-            <p className="text-[12px] text-white/46 leading-relaxed font-serif">
+          <div className="space-y-5 px-5 py-5">
+            <p className="max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.56]">
               Send a message directly to support@margin-finance.com. Include anything we should know about your workspace, filing, evidence, or billing question.
             </p>
-            <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
-              <label htmlFor="contact-email" className="pt-2 text-[12px] font-mono font-bold uppercase tracking-tight text-white">
+            <div className="grid gap-3 border-t border-white/10 pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
+              <label htmlFor="contact-email" className="pt-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
                 Your email address
               </label>
               <Input
@@ -3342,11 +3345,11 @@ export function Dashboard() {
                 value={contactEmail}
                 onChange={(event) => setContactEmail(event.target.value)}
                 placeholder="you@company.com"
-                className="h-10 bg-white/[0.03] border-white/10 text-[12px] font-serif text-white placeholder:text-white/16 focus:border-white/24 rounded-lg"
+                className="h-11 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
               />
             </div>
-            <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
-              <label htmlFor="contact-subject" className="pt-2 text-[12px] font-mono font-bold uppercase tracking-tight text-white">
+            <div className="grid gap-3 border-t border-white/[0.08] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
+              <label htmlFor="contact-subject" className="pt-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
                 Subject
               </label>
               <Input
@@ -3354,15 +3357,15 @@ export function Dashboard() {
                 value={contactSubject}
                 onChange={(event) => setContactSubject(event.target.value)}
                 placeholder="What should we help with?"
-                className="h-10 bg-white/[0.03] border-white/10 text-[12px] font-serif text-white placeholder:text-white/16 focus:border-white/24 rounded-lg"
+                className="h-11 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
               />
             </div>
-            <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="grid gap-3 border-t border-white/[0.08] pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
               <div>
-                <label htmlFor="contact-query" className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
+                <label htmlFor="contact-query" className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
                   Your query
                 </label>
-                <p className="mt-1 text-[10px] font-mono uppercase tracking-tight text-white/35">
+                <p className="mt-1.5 text-[10px] font-sans leading-4 tracking-tight text-white/[0.42]">
                   5 minute response time
                 </p>
               </div>
@@ -3371,15 +3374,18 @@ export function Dashboard() {
                 value={contactQuery}
                 onChange={(event) => setContactQuery(event.target.value)}
                 placeholder="Tell us what is happening..."
-                className="min-h-[118px] bg-white/[0.03] border-white/10 text-[12px] font-serif text-white placeholder:text-white/16 focus:border-white/24 rounded-lg"
+                className="min-h-[118px] resize-none rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans leading-5 text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
               />
             </div>
           </div>
-          <div className="px-5 py-3 border-t border-white/5 bg-white/[0.02] flex justify-end">
+          <div className="flex items-center justify-between gap-4 border-t border-white/10 px-5 py-4">
+            <div className="hidden text-[10px] font-sans leading-4 text-white/[0.36] sm:block">
+              Routed to support@margin-finance.com.
+            </div>
             <button
               onClick={handleContactSupportSubmit}
               disabled={contactSubmitting}
-              className="px-4 py-1.5 text-[10px] font-mono font-bold text-black bg-white hover:bg-white/90 transition-all uppercase tracking-tight rounded-lg disabled:opacity-50"
+              className="h-9 min-w-[154px] border border-white/10 bg-white px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-black transition-colors hover:bg-white/90 disabled:opacity-50"
             >
               {contactSubmitting ? 'Sending...' : 'Send Query Now'}
             </button>
