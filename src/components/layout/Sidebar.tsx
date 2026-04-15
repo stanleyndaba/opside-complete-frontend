@@ -176,7 +176,7 @@ export function Sidebar({
     { title: 'Filing Pipeline', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
-    { title: 'Retry Filing', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
+    { title: 'Resubmissions', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }
   ];
   const NavItemComponent = React.memo(({
     item,
