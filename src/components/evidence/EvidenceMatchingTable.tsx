@@ -8,8 +8,6 @@ import { TenantLink as Link } from '@/components/navigation/TenantLink';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { SmartPromptCard } from './SmartPromptCard';
-import { ParkedClaimCard } from './ParkedClaimCard';
 
 interface MatchingResult {
   id: string;
@@ -321,46 +319,130 @@ export function EvidenceMatchingTable() {
     description: string,
     action?: React.ReactNode
   ) => (
-    <div className="rounded-2xl border border-white/10 bg-[#111111]/90 px-8 py-16 text-center backdrop-blur-xl">
-      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-400">
+    <div className="border-y border-white/8 bg-white/[0.01] px-6 py-12 text-center">
+      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
         {eyebrow}
       </div>
-      <h3 className="mt-4 text-lg font-sans font-medium tracking-tight text-white">
+      <h3 className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">
         {title}
       </h3>
-      <p className="mx-auto mt-3 max-w-md text-[11px] font-sans leading-relaxed text-zinc-300">
+      <p className="mx-auto mt-2 max-w-md text-[11px] font-sans leading-relaxed text-zinc-400">
         {description}
       </p>
-      {action ? <div className="mt-8 flex justify-center">{action}</div> : null}
+      {action ? <div className="mt-6 flex justify-center">{action}</div> : null}
     </div>
   );
+
+  const actionButtonClass =
+    "h-7 rounded-none border border-white/10 bg-transparent px-2.5 font-sans text-[9px] font-medium uppercase tracking-tight text-zinc-300 shadow-none transition-colors hover:border-white/25 hover:bg-white/[0.03] hover:text-white disabled:cursor-not-allowed disabled:opacity-40";
+
+  const quietActionButtonClass =
+    "h-7 rounded-none px-1.5 font-sans text-[9px] font-medium uppercase tracking-tight text-zinc-500 shadow-none transition-colors hover:bg-transparent hover:text-white disabled:cursor-not-allowed disabled:opacity-40";
+
+  const renderRowActions = (match: MatchingResult, fallbackLabel: string) => {
+    const isProcessing = processingIds.has(match.id);
+
+    if (match.action_taken === 'smart_prompt') {
+      return (
+        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+          <Button
+            onClick={() => handleApproveSmartPrompt(match.id)}
+            disabled={isProcessing}
+            className={actionButtonClass}
+          >
+            Confirm
+          </Button>
+          <Button
+            onClick={() => handleRequestMoreEvidence(match.id)}
+            disabled={isProcessing}
+            variant="ghost"
+            className={quietActionButtonClass}
+          >
+            More proof
+          </Button>
+          <Button
+            onClick={() => handleRejectSmartPrompt(match.id)}
+            disabled={isProcessing}
+            variant="ghost"
+            className={cn(quietActionButtonClass, "hover:text-red-300")}
+          >
+            Reject
+          </Button>
+        </div>
+      );
+    }
+
+    if (match.action_taken === 'no_action' || match.action_taken === 'rejected') {
+      return (
+        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+          <Button
+            onClick={() => handleRequestMoreEvidence(match.id)}
+            disabled={isProcessing}
+            className={actionButtonClass}
+          >
+            More proof
+          </Button>
+          <Button
+            onClick={() => handleForceApproveParked(match.id)}
+            disabled={isProcessing}
+            variant="ghost"
+            className={quietActionButtonClass}
+          >
+            Approve
+          </Button>
+          <Button
+            onClick={() => handleDismissParked(match.id)}
+            disabled={isProcessing}
+            variant="ghost"
+            className={cn(quietActionButtonClass, "hover:text-red-300")}
+          >
+            Dismiss
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <Link
+        to={`/recoveries/${match.claim_id}`}
+        className="inline-flex h-7 items-center border border-white/10 px-2.5 text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-300 transition-colors hover:border-white/25 hover:bg-white/[0.03] hover:text-white lg:justify-self-end"
+      >
+        {fallbackLabel}
+      </Link>
+    );
+  };
 
   const renderMatchRows = (
     matches: MatchingResult[],
     actionLabel: string
   ) => (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 backdrop-blur-xl">
-      <div className="hidden border-b border-white/5 px-6 py-4 lg:grid lg:grid-cols-[1.15fr_0.8fr_1fr_0.55fr_0.7fr] lg:gap-6">
-        {['Match', 'Claim', 'Document', 'Confidence', 'Action'].map((label) => (
+    <div className="border-y border-white/10 bg-transparent">
+      <div className="hidden border-b border-white/8 px-5 py-3 lg:grid lg:grid-cols-[1.2fr_0.85fr_1.05fr_0.5fr_0.95fr] lg:gap-5">
+        {['Match', 'Claim', 'Document', 'Score', 'Action'].map((label) => (
           <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
             {label}
           </div>
         ))}
       </div>
-      <div className="divide-y divide-white/5">
+      <div className="divide-y divide-white/8">
         {matches.map((match) => (
-          <div key={match.id} className="px-6 py-5">
-            <div className="grid gap-4 lg:grid-cols-[1.15fr_0.8fr_1fr_0.55fr_0.7fr] lg:gap-6 lg:items-start">
+          <div key={match.id} className="px-5 py-3.5 transition-colors hover:bg-white/[0.025]">
+            <div className="grid gap-3 lg:grid-cols-[1.2fr_0.85fr_1.05fr_0.5fr_0.95fr] lg:gap-5 lg:items-start">
               <div>
                 <div className="text-[12px] font-sans font-medium tracking-tight text-white">
                   {getMatchTypeLabel(match.match_type)}
                 </div>
-                <div className="mt-2 text-[10px] font-sans uppercase tracking-tight text-zinc-400">
+                <div className="mt-1 text-[10px] font-sans uppercase tracking-tight text-zinc-500">
                   {getActionLabel(match.action_taken)}
                 </div>
                 {match.created_at ? (
-                  <div className="mt-2 text-[10px] font-sans text-zinc-500">
+                  <div className="mt-1 text-[10px] font-sans text-zinc-600">
                     Reviewed {format(new Date(match.created_at), 'MMM dd, yyyy • HH:mm')}
+                  </div>
+                ) : null}
+                {match.reasoning ? (
+                  <div className="mt-2 max-w-xl text-[10px] font-sans leading-relaxed text-zinc-500 lg:hidden">
+                    {match.reasoning}
                   </div>
                 ) : null}
               </div>
@@ -369,7 +451,7 @@ export function EvidenceMatchingTable() {
                 <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Claim
                 </div>
-                <Link to={`/recoveries/${match.claim_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-200 transition-colors hover:text-white">
+                <Link to={`/recoveries/${match.claim_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-300 transition-colors hover:text-white">
                   {match.claim_id.substring(0, 12).toUpperCase()}
                 </Link>
               </div>
@@ -378,7 +460,7 @@ export function EvidenceMatchingTable() {
                 <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Document
                 </div>
-                <Link to={`/documents/${match.document_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-200 transition-colors hover:text-white">
+                <Link to={`/documents/${match.document_id}`} className="mt-1 inline-flex text-[11px] font-sans font-medium tracking-tight text-zinc-300 transition-colors hover:text-white">
                   {match.document_details?.filename?.substring(0, 28) || match.document_id.substring(0, 12).toUpperCase()}
                 </Link>
               </div>
@@ -387,21 +469,16 @@ export function EvidenceMatchingTable() {
                 <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Confidence
                 </div>
-                <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white">
+                <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white lg:text-right">
                   {Math.round(match.confidence_score * 100)}%
                 </div>
               </div>
 
-              <div className="lg:text-right">
+              <div>
                 <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
                   Action
                 </div>
-                <Link
-                  to={`/recoveries/${match.claim_id}`}
-                  className="mt-1 inline-flex text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 transition-colors hover:text-white"
-                >
-                  {actionLabel}
-                </Link>
+                <div className="mt-1 lg:mt-0">{renderRowActions(match, actionLabel)}</div>
               </div>
             </div>
           </div>
@@ -413,21 +490,21 @@ export function EvidenceMatchingTable() {
 
   if (loading && matchingResults.length === 0) {
     return (
-      <div className="bg-[#111111]/90 border border-white/10 p-12 text-center rounded-2xl backdrop-blur-xl">
+      <div className="border-y border-white/10 px-6 py-12 text-center">
         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-400">Evidence queue</div>
-        <p className="mt-4 text-lg font-sans font-medium tracking-tight text-white">Loading current evidence matches.</p>
-        <p className="mt-3 text-[11px] font-sans leading-relaxed text-zinc-300">Please wait while Margin refreshes the current review queue.</p>
+        <p className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">Loading current evidence matches.</p>
+        <p className="mt-2 text-[11px] font-sans leading-relaxed text-zinc-400">Please wait while Margin refreshes the current review queue.</p>
       </div>
     );
   }
 
   if (error && matchingResults.length === 0) {
     return (
-      <div className="bg-[#111111]/90 border border-red-500/20 p-8 text-center rounded-2xl backdrop-blur-xl">
+      <div className="border-y border-red-500/20 px-6 py-10 text-center">
         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-red-400/80">Evidence queue</div>
-        <p className="mt-4 text-lg font-sans font-medium tracking-tight text-white">Evidence review could not be loaded.</p>
-        <p className="mx-auto mt-3 max-w-md text-[11px] font-sans leading-relaxed text-zinc-400">{error}</p>
-        <Button onClick={fetchMatchingResults} className="mt-8 h-10 px-6 text-[10px] font-sans font-medium uppercase tracking-tight bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/10 rounded-xl">
+        <p className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">Evidence review could not be loaded.</p>
+        <p className="mx-auto mt-2 max-w-md text-[11px] font-sans leading-relaxed text-zinc-400">{error}</p>
+        <Button onClick={fetchMatchingResults} className="mt-6 h-8 rounded-none px-4 text-[10px] font-sans font-medium uppercase tracking-tight bg-transparent hover:bg-white/[0.04] text-zinc-200 border border-white/10">
           Retry
         </Button>
       </div>
@@ -436,19 +513,19 @@ export function EvidenceMatchingTable() {
 
 
   return (
-    <div className="space-y-6">
-      <div className="overflow-hidden rounded-2xl bg-[#111111]/90 backdrop-blur-xl">
-        <div className="flex flex-col gap-6 border-b border-white/5 px-6 py-6 lg:flex-row lg:items-end lg:justify-between">
+    <div className="space-y-4">
+      <div className="border-b border-white/10 pb-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-400">Evidence queue</div>
-            <h2 className="mt-3 text-2xl font-sans font-medium tracking-tight text-white">
-              Review the document matches that will support filing.
+            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence queue</div>
+            <h2 className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+              Review document matches for filing.
             </h2>
-            <p className="mt-3 text-[11px] font-sans leading-relaxed text-zinc-300">
+            <p className="mt-2 text-[11px] font-sans leading-relaxed text-zinc-400">
               {refreshing
                 ? 'Refreshing the current evidence queue.'
                 : matchingResults.length > 0
-                  ? `${pluralize(matchingResults.length, 'match')} are currently available across review, submitted, and held states.`
+                  ? `${pluralize(matchingResults.length, 'match')} available · ${smartPrompts.length} pending · ${autoSubmitted.length} submitted · ${heldForReview.length} held`
                   : 'No evidence matches are currently waiting in the queue.'}
             </p>
           </div>
@@ -456,38 +533,23 @@ export function EvidenceMatchingTable() {
             onClick={handleRunMatching}
             disabled={refreshing}
             className={cn(
-              "h-11 px-5 font-sans text-[10px] font-medium uppercase tracking-tight transition-colors rounded-xl border border-white/10",
+              "h-8 rounded-none px-4 font-sans text-[10px] font-medium uppercase tracking-tight transition-colors border border-white/10",
               refreshing
-                ? "bg-white/5 text-zinc-300"
-                : "bg-white/[0.03] text-zinc-200 hover:bg-white/[0.06] hover:border-white/20"
+                ? "bg-white/[0.03] text-zinc-400"
+                : "bg-transparent text-zinc-300 hover:bg-white/[0.04] hover:border-white/25 hover:text-white"
             )}
           >
             {refreshing ? 'Refreshing...' : 'Refresh matching'}
           </Button>
         </div>
-
-        <div className="grid grid-cols-2 gap-px bg-white/6 lg:grid-cols-4">
-          {[
-            { label: 'Pending review', value: smartPrompts.length, detail: 'Needs a filing decision' },
-            { label: 'Submitted', value: autoSubmitted.length, detail: 'Already moved forward' },
-            { label: 'Held', value: heldForReview.length, detail: 'Waiting for evidence or review' },
-            { label: 'All matches', value: matchingResults.length, detail: 'Current queue total' }
-          ].map((item) => (
-            <div key={item.label} className="bg-[#0d0d0d] px-6 py-5">
-              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-400">{item.label}</div>
-              <div className="mt-3 text-[22px] font-sans font-medium tracking-tight text-white">{item.value}</div>
-              <div className="mt-2 text-[10px] font-sans leading-relaxed text-zinc-300">{item.detail}</div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Tabs for different match categories */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="mb-6 grid h-auto grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-2 backdrop-blur-xl lg:grid-cols-4">
+        <TabsList className="mb-0 grid h-auto w-full grid-cols-2 justify-start gap-0 rounded-none border-b border-white/10 bg-transparent p-0 text-zinc-500 lg:grid-cols-4">
           <TabsTrigger
             value="smart-prompts"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 shadow-none transition-colors hover:text-white data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="justify-start rounded-none border-b border-transparent bg-transparent px-0 py-3 pr-5 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500 shadow-none transition-colors hover:text-white data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>Pending review</span>
@@ -496,7 +558,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="auto-submitted"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 shadow-none transition-colors hover:text-white data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="justify-start rounded-none border-b border-transparent bg-transparent px-0 py-3 pr-5 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500 shadow-none transition-colors hover:text-white data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>Submitted</span>
@@ -505,7 +567,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="held"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 shadow-none transition-colors hover:text-white data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="justify-start rounded-none border-b border-transparent bg-transparent px-0 py-3 pr-5 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500 shadow-none transition-colors hover:text-white data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>Held</span>
@@ -514,7 +576,7 @@ export function EvidenceMatchingTable() {
           </TabsTrigger>
           <TabsTrigger
             value="all"
-            className="rounded-xl border border-transparent bg-transparent px-4 py-3 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 shadow-none transition-colors hover:text-white data-[state=active]:border-white/10 data-[state=active]:bg-white/[0.06] data-[state=active]:text-white"
+            className="justify-start rounded-none border-b border-transparent bg-transparent px-0 py-3 pr-5 text-left text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500 shadow-none transition-colors hover:text-white data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=active]:shadow-none"
           >
             <div className="flex w-full items-center justify-between gap-3">
               <span>All matches</span>
@@ -531,22 +593,12 @@ export function EvidenceMatchingTable() {
               'When Margin finds supportable claim-to-document matches that still need human confirmation, they will appear here.'
             )
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 backdrop-blur-xl divide-y divide-white/5">
-              {smartPrompts.map(match => (
-                <SmartPromptCard
-                  key={match.id}
-                  match={match}
-                  onApprove={handleApproveSmartPrompt}
-                  onReject={handleRejectSmartPrompt}
-                  onRequestMoreEvidence={handleRequestMoreEvidence}
-                />
-              ))}
-            </div>
+            renderMatchRows(smartPrompts, 'Review')
           )}
         </TabsContent>
 
         {/* Auto-Submitted Tab */}
-        <TabsContent value="auto-submitted" className="mt-0 border-t border-white/5">
+        <TabsContent value="auto-submitted" className="mt-0">
           {autoSubmitted.length === 0 ? (
             renderEmptyState(
               'Submitted',
@@ -560,7 +612,7 @@ export function EvidenceMatchingTable() {
 
 
         {/* Held / Rejected Tab */}
-        <TabsContent value="held" className="mt-0 border-t border-white/5">
+        <TabsContent value="held" className="mt-0">
           {heldForReview.length === 0 ? (
             renderEmptyState(
               'Held',
@@ -568,17 +620,7 @@ export function EvidenceMatchingTable() {
               'Items that need more evidence, seller review, or a manual follow-up will appear here.'
             )
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 backdrop-blur-xl divide-y divide-white/5">
-              {heldForReview.map(claim => (
-                <ParkedClaimCard
-                  key={claim.id}
-                  claim={claim}
-                  onRequestEvidence={handleRequestMoreEvidence}
-                  onForceApprove={handleForceApproveParked}
-                  onDismiss={handleDismissParked}
-                />
-              ))}
-            </div>
+            renderMatchRows(heldForReview, 'Review')
           )}
         </TabsContent>
 
@@ -591,7 +633,7 @@ export function EvidenceMatchingTable() {
               'Refresh matching after more evidence arrives to rebuild the queue.',
               <Button
                 onClick={handleRunMatching}
-                className="h-10 px-6 font-sans text-[9px] font-medium text-zinc-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-colors uppercase tracking-tight"
+                className="h-8 rounded-none px-4 font-sans text-[9px] font-medium text-zinc-200 hover:text-white bg-transparent hover:bg-white/[0.04] border border-white/10 transition-colors uppercase tracking-tight"
               >
                 Refresh matching
               </Button>
