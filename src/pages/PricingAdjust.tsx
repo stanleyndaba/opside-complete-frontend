@@ -77,7 +77,7 @@ export default function PricingAdjust() {
   usePageMeta({
     title: 'Margin Pricing | Monthly Plans, No Commissions',
     description:
-      'Pay once a month. For the first 60 days you keep 100% of everything Margin recovers. After that you stay on the same monthly price with no commissions and no surprises.',
+      'Pay once for the first 30 days and keep 100% of everything Margin recovers. After 30 days it continues automatically at the normal monthly price. Cancel anytime. No commissions ever.',
     url: `${SITE_META.url}/pricing`,
   });
 
@@ -238,7 +238,7 @@ export default function PricingAdjust() {
                 Flat subscription pricing. No commissions. No surprises.
               </h2>
               <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
-                Choose the plan that fits your seller stage. Margin charges one flat subscription price monthly or annually, and for the first 60 days you still keep 100% of every recovery.
+                Pay once for the first 30 days and keep 100% of everything we recover. After 30 days it continues automatically at the normal monthly price. Cancel anytime. No commissions ever.
               </p>
             </div>
           </motion.div>
@@ -300,16 +300,16 @@ export default function PricingAdjust() {
 
                     <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                        {activeBillingView === 'monthly' ? 'Monthly' : 'Annual'}
+                        {activeBillingView === 'monthly' ? 'First 30 Days' : 'Annual Price After 30 Days'}
                       </div>
                       <div className="mt-3 text-4xl font-light tracking-tight text-white">
                         {activeBillingView === 'monthly' ? tier.monthlyPrice : tier.annualPrice}
                       </div>
                       <div className="mt-2 text-[11px] text-white/45">
-                        {activeBillingView === 'monthly' ? 'Pay monthly' : 'Equivalent monthly rate when billed annually'}
+                        {activeBillingView === 'monthly' ? 'One-time first 30 days, then same monthly price' : 'Equivalent monthly rate when billed annually'}
                       </div>
                       <div className="mt-1 text-[11px] text-white/32">
-                        {activeBillingView === 'monthly' ? 'Flexible recurring monthly billing' : `${tier.annualCheckout} · Save 20%`}
+                        {activeBillingView === 'monthly' ? 'Continues automatically after 30 days · Cancel anytime' : `${tier.annualCheckout} · Save 20%`}
                       </div>
                     </div>
 
@@ -356,7 +356,7 @@ export default function PricingAdjust() {
                       )}
 
                       <p className="text-[11px] leading-5 text-white/38">
-                        Keep 100% of every recovery. We charge a simple monthly subscription - no commissions, ever.
+                        Keep 100% of every recovery for the first 30 days. Then continue at the normal monthly price - no commissions ever.
                       </p>
                     </div>
                   </div>

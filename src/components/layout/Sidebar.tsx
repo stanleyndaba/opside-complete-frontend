@@ -429,23 +429,6 @@ export function Sidebar({
         "mt-auto border-t border-border py-3",
         isCollapsed ? "px-2.5" : "px-3"
       )}>
-        {!isCollapsed ? (
-          <Link
-            to={tenantRoute(currentTenantSlug, '/whats-new')}
-            className="mb-2 flex items-center px-3 text-[10px] font-medium tracking-tight text-white/22 transition-colors hover:text-white/38"
-          >
-            <span>v1.0.0 Gold</span>
-          </Link>
-        ) : (
-          <div className="mb-2 flex justify-center">
-            <Link
-              to={tenantRoute(currentTenantSlug, '/whats-new')}
-              className="text-[10px] font-medium tracking-tight text-white/22 transition-colors hover:text-white/38"
-            >
-              v1
-            </Link>
-          </div>
-        )}
         {(() => {
           const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
           const billingActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/billing'));
