@@ -2476,24 +2476,15 @@ export function Dashboard() {
               </div>
 
               {activeTab === 'overview' ? (
-                <div className="relative overflow-hidden rounded-[28px] bg-[#070707] text-white">
-                  <div
-                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
-                    style={{
-                      backgroundImage:
-                        `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                    }}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]" />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6">
+                <div className="relative space-y-5 text-white">
+                <div className="relative z-10 space-y-5">
                   {/* Main Content - 3 columns */}
-                  <div className="lg:col-span-4 space-y-6">
-                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                      <div className="border-b border-white/[0.05] px-6 py-6 lg:px-8">
+                  <div className="space-y-5">
+                    <div className="relative space-y-4">
+                      <div className="border-b border-white/10 pb-4">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                           <div>
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                               One-click pipeline
                             </div>
                             <p className="mt-2 text-[12px] font-sans leading-5 text-white/[0.44]">
@@ -2505,16 +2496,13 @@ export function Dashboard() {
                           </div>
                         </div>
                         <div className="mt-5 overflow-x-auto pb-1">
-                          <div className="min-w-max overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#0d0d0d] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+                          <div className="min-w-max border-y border-white/10 bg-transparent">
                             <div className="flex items-stretch divide-x divide-white/[0.08]">
                               {overviewPipelineStages.map((stage) => (
                                 <button
                                   key={stage.label}
                                   onClick={stage.onClick}
-                                  className={cn(
-                                    "min-w-[188px] px-5 py-4 text-left transition-colors hover:bg-white/[0.035]",
-                                    stage.tone
-                                  )}
+                                  className="group min-w-[188px] px-5 py-3.5 text-left transition-colors hover:bg-white/[0.025]"
                                 >
                                   <div className="flex items-center gap-2">
                                     <span className={cn("h-2 w-2 rounded-full", stage.dotTone)} />
@@ -2522,14 +2510,14 @@ export function Dashboard() {
                                       {stage.label}
                                     </div>
                                   </div>
-                                  <div className="mt-3 text-[15px] font-sans font-medium tracking-tight text-white">
+                                  <div className="mt-2 text-[14px] font-sans font-medium tracking-tight text-white">
                                     {isOverviewLoading ? (
                                       <Skeleton className="h-5 w-20 bg-white/10" />
                                     ) : (
                                       stage.value
                                     )}
                                   </div>
-                                  <div className="mt-2 text-[11px] font-sans leading-5 text-white/[0.44]">
+                                  <div className="mt-1.5 text-[10px] font-sans leading-5 text-white/[0.44]">
                                     {stage.detail}
                                   </div>
                                 </button>
@@ -2539,53 +2527,56 @@ export function Dashboard() {
                         </div>
                       </div>
 
-                      <div className="grid gap-px bg-white/[0.06] xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
-                        <div className="bg-[#0d0d0d] px-6 py-6 lg:px-8">
-                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                      <div className="grid border-b border-white/10 xl:grid-cols-[1.55fr_repeat(2,minmax(0,0.85fr))]">
+                        <div className="py-5 pr-6 lg:pr-8">
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                             Recovery pipeline
                           </div>
-                          <div className="mt-4 flex flex-wrap items-end gap-3">
+                          <div className="mt-3 flex flex-wrap items-end gap-3">
                             {isOverviewLoading ? (
                               <Skeleton className="h-12 w-48 bg-white/10" />
                             ) : (
                               <>
-                                <div className="text-[40px] font-sans font-semibold leading-none tracking-tight text-emerald-200 xl:text-[46px]">
+                                <div className="text-[32px] font-sans font-medium leading-none tracking-tight text-emerald-200 xl:text-[38px]">
                                   {overviewFoundValueLabel}
                                 </div>
-                                <div className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
+                                <div className="inline-flex items-center border-l border-emerald-300/40 pl-3 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
                                   {pluralize(detectedOpportunitiesCount, 'issue')} found
                                 </div>
                               </>
                             )}
                           </div>
-                          <h2 className="mt-4 max-w-4xl text-[34px] font-sans font-medium leading-[1.02] tracking-tight text-white xl:text-[44px]">
+                          <h2 className="mt-4 max-w-4xl text-[24px] font-sans font-medium leading-tight tracking-tight text-white xl:text-[30px]">
                             {overviewHeadline}
                           </h2>
-                          <p className="mt-4 max-w-3xl text-[13px] font-sans leading-6 text-white/[0.52]">
+                          <p className="mt-3 max-w-3xl text-[12px] font-sans leading-5 text-white/[0.52]">
                             {overviewNarrative}
                           </p>
-                          <div className="mt-5 flex flex-wrap gap-2">
+                          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                             {readyToFileCount > 0 ? (
-                              <div className="inline-flex items-center rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
+                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-emerald-100">
+                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                                 {pluralize(readyToFileCount, 'case')} ready to file
                               </div>
                             ) : null}
-                            <div className="inline-flex items-center rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.68]">
+                            <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.68]">
+                              <span className="h-1.5 w-1.5 rounded-full bg-white/[0.32]" />
                               {overviewCurrentStatus.value}
                             </div>
                             {latestDashboardSignalLabel ? (
-                              <div className="inline-flex items-center rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
+                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
+                                <span className="h-1.5 w-1.5 rounded-full bg-white/[0.24]" />
                                 {latestDashboardSignalLabel}
                               </div>
                             ) : null}
                           </div>
                         </div>
                         {overviewHeroMetrics.map((item) => (
-                          <div key={item.label} className="bg-[#0d0d0d] px-6 py-6">
-                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.26]">
+                          <div key={item.label} className="border-t border-white/10 py-5 xl:border-l xl:border-t-0 xl:px-6">
+                            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                               {item.label}
                             </div>
-                            <div className="mt-3 text-[28px] font-sans font-medium tracking-tight text-white">
+                            <div className="mt-2 text-[22px] font-sans font-medium tracking-tight text-white">
                               {isOverviewLoading ? (
                                 <Skeleton className="h-8 w-28 bg-white/10" />
                               ) : (
@@ -2600,40 +2591,46 @@ export function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111111]/90 shadow-2xl backdrop-blur-3xl">
-                        <div className="border-b border-white/5 px-5 py-4">
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <div className="border-b border-white/10 pb-3">
                           <div className="flex items-start justify-between gap-4">
                             <div>
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.78]">
+                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                                 Recent operator feed
                               </div>
-                              <p className="mt-2 text-[10px] font-sans leading-5 text-white/[0.82]">
+                              <p className="mt-2 text-[11px] font-sans leading-5 text-white/[0.52]">
                                 Latest blocked cases, filings, Amazon thread changes, unmatched emails, and notification delivery issues.
                               </p>
                             </div>
                             <div className="text-right">
-                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.72]">
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
                                 Reading mode
                               </div>
-                              <div className="mt-2 text-[10px] font-sans leading-5 text-white/[0.84]">
+                              <div className="mt-1 text-[10px] font-sans leading-5 text-white/[0.62]">
                                 Most recent first
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div className="px-5 py-5">
+                        <div className="py-0">
                           {launchMonitor?.recent_events === null ? (
-                            <div className="py-6 text-[11px] font-sans text-white/45">
+                            <div className="border-b border-white/10 py-6 text-[11px] font-sans text-white/45">
                               Not Available
                             </div>
                           ) : (launchMonitor?.recent_events || []).length === 0 ? (
-                            <div className="py-6 text-[11px] font-sans text-white/45">
+                            <div className="border-b border-white/10 py-6 text-[11px] font-sans text-white/45">
                               No recent operational events recorded for this tenant.
                             </div>
                           ) : (
                             <ScrollArea className="h-[560px] w-full">
-                              <div className="space-y-4 pr-4">
+                              <div className="border-b border-white/10 pr-4">
+                                <div className="hidden grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(120px,0.55fr)_minmax(96px,0.45fr)] gap-4 border-b border-white/10 px-4 py-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28] lg:grid">
+                                  <div>Signal</div>
+                                  <div>Detail</div>
+                                  <div>Recorded</div>
+                                  <div className="text-right">Action</div>
+                                </div>
                                 {launchMonitor?.recent_events?.map((event) => {
                                   const eventTimestamp = new Date(event.timestamp);
                                   const eventTimeLabel = Number.isNaN(eventTimestamp.getTime())
@@ -2649,68 +2646,61 @@ export function Dashboard() {
                                   return (
                                     <div
                                       key={event.id}
-                                      className="w-full rounded-xl border border-white/8 bg-black/20 px-4 py-3"
+                                      className="grid w-full grid-cols-1 gap-3 border-b border-white/[0.06] px-4 py-3.5 transition-colors last:border-b-0 hover:bg-white/[0.025] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(120px,0.55fr)_minmax(96px,0.45fr)] lg:gap-4"
                                     >
-                                      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                                        <div className="min-w-0 flex-1">
-                                          <div className="flex flex-wrap items-center gap-2">
-                                            <span className={cn('rounded-full border px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
+                                      <div className="min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className={cn('border px-2 py-0.5 text-[9px] font-sans font-medium uppercase tracking-tight', launchEventTone(event.severity))}>
                                               {formatLaunchEventTypeLabel(event.event_type)}
                                             </span>
-                                            <span className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.82]">
+                                            <span className="border border-white/[0.08] bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.62]">
                                               {formatLaunchSourceLabel(event.source_table)}
                                             </span>
-                                          </div>
-
-                                          <div className="mt-3 text-[14px] font-sans font-medium leading-snug tracking-tight text-white/[0.58]">
-                                            {event.title}
-                                          </div>
-                                          <p
-                                            className="mt-2 max-w-4xl text-[11px] font-sans leading-5 text-white/[0.9] whitespace-normal"
-                                            style={{
-                                              display: '-webkit-box',
-                                              WebkitBoxOrient: 'vertical',
-                                              WebkitLineClamp: 2,
-                                              overflow: 'hidden'
-                                            }}
-                                          >
-                                            {event.detail}
-                                          </p>
-
-                                          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-white/[0.78]">
-                                            {metaItems.map((item) => (
-                                              <span key={item}>{item}</span>
-                                            ))}
-                                          </div>
                                         </div>
+                                        <div className="mt-2 text-[12px] font-sans font-medium leading-snug tracking-tight text-white/[0.78]">
+                                          {event.title}
+                                        </div>
+                                      </div>
 
-                                        <div className="shrink-0 lg:min-w-[140px]">
-                                          <div className="text-right">
-                                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.72]">
-                                              Recorded
-                                            </div>
-                                            <div className="mt-1 text-[10px] font-sans text-white/[0.88]">
-                                              {eventTimeLabel}
-                                            </div>
-                                          </div>
+                                      <div className="min-w-0">
+                                        <p
+                                          className="max-w-4xl text-[11px] font-sans leading-5 text-white/[0.68] whitespace-normal"
+                                          style={{
+                                            display: '-webkit-box',
+                                            WebkitBoxOrient: 'vertical',
+                                            WebkitLineClamp: 2,
+                                            overflow: 'hidden'
+                                          }}
+                                        >
+                                          {event.detail}
+                                        </p>
 
-                                          <div className="mt-3 flex justify-end">
+                                        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans text-white/[0.42]">
+                                          {metaItems.map((item) => (
+                                            <span key={item}>{item}</span>
+                                          ))}
+                                        </div>
+                                      </div>
+
+                                      <div className="text-[10px] font-sans text-white/[0.62] lg:pt-1">
+                                        {eventTimeLabel}
+                                      </div>
+
+                                      <div className="flex justify-start lg:justify-end">
                                             {event.dispute_case_id ? (
                                               <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                className="h-8 rounded-full border border-white/10 bg-white/[0.03] px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.84] hover:bg-white/[0.07] hover:text-white"
+                                                className="h-8 rounded-none border border-white/10 bg-transparent px-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.72] hover:bg-white/[0.05] hover:text-white"
                                                 onClick={() => navigate(tenantRoute(activeSlug, `/recoveries/${event.dispute_case_id}`), { state: { claim: event } })}
                                               >
                                                 Open Case
                                               </Button>
                                             ) : (
-                                              <div className="text-[10px] font-sans text-white/[0.76]">
+                                              <div className="pt-2 text-[10px] font-sans text-white/[0.42]">
                                                 Logged only
                                               </div>
                                             )}
-                                          </div>
-                                        </div>
                                       </div>
                                     </div>
                                   );
