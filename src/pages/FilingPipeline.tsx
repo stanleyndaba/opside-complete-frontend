@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useParams } from 'react-router-dom';
 
 type DisputeRow = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>['rows'][number];
+type DisputeQueueData = NonNullable<Awaited<ReturnType<typeof api.getDisputeCaseQueue>>['data']>;
 
 type LedgerRow = {
   row_type: 'dispute_case_projection' | 'detection_projection' | null;
@@ -29,6 +30,7 @@ type LedgerRow = {
   case_number: string;
   provider_case_id: string | null;
   merchant_reference: string | null;
+  status?: string | null;
   filing_status?: string | null;
   approved_amount: number | null;
   actual_payout_amount: number | null;
@@ -36,6 +38,8 @@ type LedgerRow = {
   reconciliation_status: string | null;
   reconciliation_source?: string | null;
   payout_status: string | null;
+  operator_state?: string | null;
+  outstanding_amount?: number | null;
   currency: string;
   last_updated_at: string | null;
 };
@@ -44,13 +48,25 @@ type LedgerResponse = {
   success: boolean;
   summary?: { last_updated_at: string | null } | null;
   rows: LedgerRow[];
+  pagination?: {
+    page: number;
+    page_size: number;
+    total_filtered: number;
+    total_pages: number;
+    total_rows: number;
+  };
 };
 
 type RowTone = 'ready' | 'inFlight' | 'submitted' | 'approved' | 'completed';
 
 const NOT_AVAILABLE = 'Not Available';
-const DISPUTE_PAGE_SIZE = 250;
-const LEDGER_PAGE_SIZE = 250;
+const DISPUTE_PAGE_SIZE = 100;
+const LEDGER_PAGE_SIZE = 100;
+const ACTIVE_FILING_STATUSES = new Set(['pending', 'retrying', 'filing', 'submitting']);
+const FILED_FILING_STATUSES = new Set(['filed', 'submitted', 'resubmitted']);
+const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'under_review', 'in review', 'in_review', 'in_progress', 'processing']);
+const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
+const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
 
 function amountOrNull(value: number | null | undefined) {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
@@ -73,8 +89,73 @@ function humanize(value: string | null | undefined) {
   return value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function normalizeStatus(value: unknown) {
+  return String(value || '').trim().toLowerCase();
+}
+
 function totalAmount(values: Array<number | null | undefined>) {
   return values.reduce((sum, value) => sum + (typeof value === 'number' && Number.isFinite(value) ? value : 0), 0);
+}
+
+function isRecoveredDisputeRow(row: DisputeRow) {
+  return COMPLETED_RECOVERY_STATUSES.has(normalizeStatus(row.recovery_status))
+    || amountOrNull(row.actual_payout_amount) !== null
+    || normalizeStatus(row.payout_proof_status) === 'verified';
+}
+
+function isApprovedPendingDisputeRow(row: DisputeRow) {
+  return row.has_real_dispute_case === true
+    && APPROVED_CASE_STATUSES.has(normalizeStatus(row.status))
+    && !isRecoveredDisputeRow(row);
+}
+
+function isBeingFiledDisputeRow(row: DisputeRow) {
+  return row.has_real_dispute_case === true
+    && ACTIVE_FILING_STATUSES.has(normalizeStatus(row.filing_status))
+    && !isApprovedPendingDisputeRow(row)
+    && !isRecoveredDisputeRow(row);
+}
+
+function isFiledDisputeRow(row: DisputeRow) {
+  return row.has_real_dispute_case === true
+    && !isBeingFiledDisputeRow(row)
+    && !isApprovedPendingDisputeRow(row)
+    && !isRecoveredDisputeRow(row)
+    && (
+      FILED_FILING_STATUSES.has(normalizeStatus(row.filing_status))
+      || ACTIVE_AMAZON_REVIEW_STATUSES.has(normalizeStatus(row.status))
+    );
+}
+
+function isReadyDisputeRow(row: DisputeRow) {
+  return row.has_real_dispute_case === true
+    && row.can_file === true
+    && !isBeingFiledDisputeRow(row)
+    && !isFiledDisputeRow(row)
+    && !isApprovedPendingDisputeRow(row)
+    && !isRecoveredDisputeRow(row);
+}
+
+function isCompletedLedgerRow(row: LedgerRow) {
+  return ['reconciled', 'paid'].includes(normalizeStatus(row.reconciliation_status))
+    || normalizeStatus(row.payout_status) === 'paid'
+    || amountOrNull(row.actual_payout_amount) !== null;
+}
+
+function isAwaitingPayoutLedgerRow(row: LedgerRow) {
+  if (isCompletedLedgerRow(row)) return false;
+  const reconciliationStatus = normalizeStatus(row.reconciliation_status);
+  const operatorState = normalizeStatus(row.operator_state);
+  const payoutStatus = normalizeStatus(row.payout_status);
+  const caseStatus = normalizeStatus(row.status);
+  const hasApprovedValue = amountOrNull(row.approved_amount) !== null
+    || amountOrNull(row.expected_payout_amount) !== null
+    || amountOrNull(row.outstanding_amount) !== null;
+
+  return reconciliationStatus === 'pending_payout'
+    || operatorState === 'waiting_for_payout'
+    || (payoutStatus === 'not_paid' && hasApprovedValue)
+    || (APPROVED_CASE_STATUSES.has(caseStatus) && hasApprovedValue);
 }
 
 function latestTimestamp(...values: Array<string | null | undefined>) {
@@ -437,8 +518,27 @@ export default function FilingPipeline() {
     try {
       const response = await api.getDisputeCaseQueue({ page: 1, page_size: DISPUTE_PAGE_SIZE, sort_by: 'updated_at', sort_order: 'desc' }, activeSlug);
       if (!response.ok || !response.data) throw new Error(response.error || 'Unable to load filing-ready truth.');
-      setDisputeRows(response.data.rows || []);
-      setDisputeUpdatedAt(response.data.last_updated_at || null);
+
+      const firstPage = response.data as DisputeQueueData;
+      const allRows = [...(firstPage.rows || [])];
+      const totalRows = Number(firstPage.filtered_results || allRows.length);
+      const pageSize = Math.max(1, Number(firstPage.page_size || DISPUTE_PAGE_SIZE));
+
+      for (let page = 2; allRows.length < totalRows; page += 1) {
+        const pageResponse = await api.getDisputeCaseQueue({ page, page_size: DISPUTE_PAGE_SIZE, sort_by: 'updated_at', sort_order: 'desc' }, activeSlug);
+        if (!pageResponse.ok || !pageResponse.data) {
+          throw new Error(pageResponse.error || 'Unable to load complete filing queue truth.');
+        }
+
+        const pageRows = pageResponse.data.rows || [];
+        if (pageRows.length === 0) break;
+
+        allRows.push(...pageRows);
+        if (pageRows.length < pageSize) break;
+      }
+
+      setDisputeRows(allRows);
+      setDisputeUpdatedAt(firstPage.last_updated_at || null);
     } catch (error: any) {
       setDisputeRows([]);
       setDisputeUpdatedAt(null);
@@ -459,9 +559,24 @@ export default function FilingPipeline() {
     try {
       const response = await api.getRecoveriesLedger({ page: 1, page_size: LEDGER_PAGE_SIZE, sort_by: 'last_updated_at', sort_dir: 'desc' }, activeSlug);
       if (!response.ok || !response.data?.success) throw new Error(response.error || 'Unable to load payout truth.');
-      const data = response.data as LedgerResponse;
-      setLedgerRows(Array.isArray(data.rows) ? data.rows : []);
-      setLedgerUpdatedAt(data.summary?.last_updated_at || null);
+      const firstPage = response.data as LedgerResponse;
+      const allRows = Array.isArray(firstPage.rows) ? [...firstPage.rows] : [];
+      const totalPages = Math.max(1, Number(firstPage.pagination?.total_pages || 1));
+
+      for (let page = 2; page <= totalPages; page += 1) {
+        const pageResponse = await api.getRecoveriesLedger({ page, page_size: LEDGER_PAGE_SIZE, sort_by: 'last_updated_at', sort_dir: 'desc' }, activeSlug);
+        if (!pageResponse.ok || !pageResponse.data?.success) {
+          throw new Error(pageResponse.error || 'Unable to load complete payout truth.');
+        }
+
+        const pageData = pageResponse.data as LedgerResponse;
+        const pageRows = Array.isArray(pageData.rows) ? pageData.rows : [];
+        if (pageRows.length === 0) break;
+        allRows.push(...pageRows);
+      }
+
+      setLedgerRows(allRows);
+      setLedgerUpdatedAt(firstPage.summary?.last_updated_at || null);
     } catch (error: any) {
       setLedgerRows([]);
       setLedgerUpdatedAt(null);
@@ -486,11 +601,11 @@ export default function FilingPipeline() {
     }
   }, [loadDisputes, loadLedger]);
 
-  const readyRows = useMemo(() => (disputeRows || []).filter((row) => row.has_real_dispute_case === true && row.can_file === true), [disputeRows]);
-  const beingFiledRows = useMemo(() => (disputeRows || []).filter((row) => row.has_real_dispute_case === true && ['pending', 'retrying'].includes(String(row.filing_status || '').trim().toLowerCase())), [disputeRows]);
-  const filedRows = useMemo(() => (disputeRows || []).filter((row) => row.has_real_dispute_case === true && ['filed', 'submitted'].includes(String(row.filing_status || '').trim().toLowerCase())), [disputeRows]);
-  const approvedRows = useMemo(() => (ledgerRows || []).filter((row) => String(row.reconciliation_status || '').trim().toLowerCase() === 'pending_payout' && String(row.reconciliation_source || '').trim().toLowerCase() === 'canonical_financial_truth'), [ledgerRows]);
-  const completedRows = useMemo(() => (ledgerRows || []).filter((row) => ['reconciled', 'paid'].includes(String(row.reconciliation_status || '').trim().toLowerCase())), [ledgerRows]);
+  const readyRows = useMemo(() => (disputeRows || []).filter(isReadyDisputeRow), [disputeRows]);
+  const beingFiledRows = useMemo(() => (disputeRows || []).filter(isBeingFiledDisputeRow), [disputeRows]);
+  const filedRows = useMemo(() => (disputeRows || []).filter(isFiledDisputeRow), [disputeRows]);
+  const approvedRows = useMemo(() => (ledgerRows || []).filter(isAwaitingPayoutLedgerRow), [ledgerRows]);
+  const completedRows = useMemo(() => (ledgerRows || []).filter(isCompletedLedgerRow), [ledgerRows]);
 
   const readyTotal = useMemo(() => totalAmount(readyRows.map(disputeAmount)), [readyRows]);
   const inMotionTotal = useMemo(() => totalAmount([...beingFiledRows.map(disputeAmount), ...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)]), [approvedRows, beingFiledRows, filedRows]);
