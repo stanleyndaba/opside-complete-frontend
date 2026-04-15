@@ -173,7 +173,7 @@ export function Sidebar({
   const navItems: NavItem[] = [
     ...mainMenuItems,
     { title: 'Recoveries', icon: Workflow, href: tenantRoute(currentTenantSlug, '/recoveries') },
-    { title: 'Filing Pipeline', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
+    { title: 'Submission Flow', icon: Send, href: tenantRoute(currentTenantSlug, '/filing-pipeline') },
     { title: 'Dispute Cases', icon: Inbox, href: tenantRoute(currentTenantSlug, '/dispute-cases') },
     { title: 'Documents', icon: FileText, href: tenantRoute(currentTenantSlug, '/evidence-locker') },
     { title: 'Resubmissions', icon: RefreshCw, href: tenantRoute(currentTenantSlug, '/appeals') }

@@ -797,7 +797,7 @@ export default function FilingPipeline() {
   ];
 
   return (
-    <PageLayout title="Filing Pipeline" midnight>
+    <PageLayout title="Submission Flow" midnight>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden">
         <div
           className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -812,7 +812,7 @@ export default function FilingPipeline() {
         <div className="relative z-10 container mx-auto px-8 pt-10 pb-20 space-y-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
-              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Filing Pipeline</h1>
+              <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Submission Flow</h1>
               <p className="text-sm text-white/50 font-sans max-w-3xl">
                 Show exactly what is ready to file, already being submitted, already with Amazon, waiting for payout, and fully recovered without asking sellers to interpret queue logic.
               </p>
@@ -820,7 +820,7 @@ export default function FilingPipeline() {
             <div className="flex flex-col items-start gap-2 lg:items-end">
               {lastUpdatedLabel ? (
                 <div className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/75">
-                  Filing pipeline live
+                  Submission flow live
                   <span className="ml-2 text-white/40">{lastUpdatedLabel}</span>
                 </div>
               ) : null}
