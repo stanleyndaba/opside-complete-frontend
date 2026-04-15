@@ -251,22 +251,22 @@ const Settings = () => {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-        <div className="relative z-10 container mx-auto px-8 pt-10 pb-20">
-          <div className="border-b border-white/10 pb-10">
+        <div className="relative z-10 container mx-auto px-8 pt-8 pb-14">
+          <div className="border-b border-white/10 pb-6">
             <div className="text-[10px] text-white/20 font-sans font-bold uppercase tracking-tight">
               SYSTEM_CONFIG // READ_ONLY
             </div>
-            <h1 className="mt-3 text-4xl font-sans font-light text-white tracking-tight">Settings</h1>
-            <p className="mt-4 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
+            <h1 className="mt-2 text-4xl font-sans font-light text-white tracking-tight">Settings</h1>
+            <p className="mt-3 max-w-3xl text-sm text-white/45 font-sans leading-relaxed">
               This page shows live account details and only the controls that are backed by real persistence.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 pt-10">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 pt-6">
             <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-8 border-t border-white/10 pt-8">
+              <div className="lg:sticky lg:top-24 space-y-5">
                 <nav className="space-y-1">
-                  <div className="group relative w-full flex items-center gap-4 px-0 py-3 text-white/80 border-b border-white/10">
+                  <div className="group relative w-full flex items-center gap-4 px-0 py-2.5 text-white/80 border-b border-white/10">
                     <Building2 className="h-4.5 w-4.5 text-white/50" />
                     <span className="text-[11px] font-sans font-bold uppercase tracking-tight">
                       Account Identity
@@ -281,23 +281,23 @@ const Settings = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-10"
+                className="space-y-7"
               >
                 <div>
                   <h2 className="text-xl font-sans font-bold text-white tracking-tight">Account Identity</h2>
-                  <p className="text-sm text-white/50 font-sans mt-3 max-w-2xl">
+                  <p className="text-sm text-white/50 font-sans mt-2 max-w-2xl">
                     This section shows authenticated user and workspace identity only.
                   </p>
                 </div>
 
-                <div className="relative overflow-hidden border-t border-white/10 pt-10 group transition-all duration-500">
-                  <div className="absolute top-0 right-0 p-8 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
+                <div className="relative overflow-hidden border-t border-white/10 pt-6 group transition-all duration-500">
+                  <div className="absolute top-0 right-0 p-6 opacity-[0.05] pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-700">
                     <Building2 className="h-48 w-48 text-white rotate-12" />
                   </div>
 
                   <div className="relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                      <div className="space-y-6">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                      <div className="space-y-4">
                         <div>
                           <h3 className="text-2xl font-sans font-bold text-white tracking-tight">
                             {identityName}
@@ -317,7 +317,7 @@ const Settings = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
                           {identityFields.map((field) => (
                             <div key={field.label} className="space-y-2">
                               <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">{field.label}</p>
@@ -340,12 +340,12 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 border-t border-white/10 pt-10">
-                  <section className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/10 pt-7">
+                  <section className="space-y-4">
                     <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Platform Connectivity</div>
 
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between py-2.5 border-b border-white/10">
                         <div className="flex items-center gap-3">
                           <Store className="h-4 w-4 text-white/40" />
                           <span className="text-xs font-sans font-bold text-white/80 tracking-tight">Amazon SP-API</span>
@@ -363,7 +363,7 @@ const Settings = () => {
                         </Badge>
                       </div>
 
-                      <div className="flex items-center justify-between py-3 border-b border-white/10">
+                      <div className="flex items-center justify-between py-2.5 border-b border-white/10">
                         <div className="flex items-center gap-3">
                           <CreditCard className="h-4 w-4 text-white/40" />
                           <span className="text-xs font-sans font-bold text-white/80 tracking-tight">PayPal Billing</span>
@@ -381,7 +381,7 @@ const Settings = () => {
                         </Badge>
                       </div>
 
-                      <div className="space-y-2 pt-4">
+                      <div className="space-y-2 pt-2">
                         <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Last Ingest</p>
                         <p className="text-sm font-sans font-bold text-white/80 tracking-tight">
                           {sellerProfile.last_sync_completed_at ? formatDate(sellerProfile.last_sync_completed_at) : 'Not available'}
@@ -408,11 +408,11 @@ const Settings = () => {
                     </div>
                   </section>
 
-                  <section className="space-y-6 border-t border-white/10 pt-8 md:border-t-0 md:border-l md:pl-10">
+                  <section className="space-y-4 border-t border-white/10 pt-6 md:border-t-0 md:border-l md:pl-8">
                     <div className="text-[10px] font-sans font-bold text-white/30 uppercase tracking-tight">Filing Controls</div>
 
-                    <div className="space-y-6">
-                      <div className="flex items-start justify-between gap-6 py-3 border-b border-white/10">
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between gap-5 py-2.5 border-b border-white/10">
                         <div className="space-y-2 max-w-md">
                           <p className="text-sm font-sans font-bold text-white tracking-tight">Auto-File</p>
                           <p className="text-xs text-white/45 font-sans leading-relaxed">
