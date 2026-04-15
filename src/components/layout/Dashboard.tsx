@@ -2876,81 +2876,69 @@ export function Dashboard() {
                 </div>
                 </div>
               ) : activeTab === 'discrepancies' ? (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Issues Found View */}
-                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative p-8">
-                    <div className="mb-6 space-y-5">
-                      <div className="max-w-2xl">
-                        <h2 className="text-[12px] font-sans font-semibold text-white/[0.28] tracking-tight uppercase">Issues Found</h2>
-                        <div className="mt-0.5">
-                          <span className="text-base font-sans font-semibold text-white/[0.86] tracking-tight">{issuesFoundHeading}</span>
+                  <div className="relative space-y-4">
+                    <div className="border-b border-white/10 pb-4">
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                        <div className="max-w-3xl">
+                          <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Issues found</div>
+                          <h2 className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                            {issuesFoundHeading}
+                          </h2>
+                          <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.72]">
+                            {issuesFoundProofHeadline}
+                          </p>
+                          <p className="mt-2 max-w-3xl text-[11px] font-sans leading-5 text-white/[0.44]">
+                            {issuesFoundDescription}
+                          </p>
                         </div>
-                        <p className="mt-3 text-[17px] font-sans font-semibold leading-7 tracking-tight text-white/[0.92]">
-                          {issuesFoundProofHeadline}
-                        </p>
-                        <p className="mt-3 max-w-xl text-[12px] font-sans leading-6 text-white/[0.52]">
-                          {issuesFoundDescription}
-                        </p>
                         {latestDashboardSignalLabel ? (
-                          <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.68]">
+                          <div className="flex shrink-0 items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.58]">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
                             {latestDashboardSignalLabel}
                           </div>
                         ) : null}
                       </div>
 
-                      {isSyncScopedDetections ? (
-                        <div className="grid gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.05] sm:grid-cols-2 xl:grid-cols-5">
-                          {syncScopedDetectionMetaRows.map((item) => (
-                            <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
-                              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.34]">
-                                {item.label}
-                              </div>
-                              {item.tone ? (
-                                <div className={cn("mt-2 inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight", item.tone)}>
-                                  {item.value}
-                                </div>
-                              ) : (
-                                <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white">
-                                  {item.value}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : null}
-
-                      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.05] sm:grid-cols-4">
+                      <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 border-t border-white/8 pt-3">
                         {issuesFoundSummaryRows.map((item) => (
-                          <div key={item.label} className="bg-[#0b0b0b] px-4 py-3">
-                            <div className="text-[11px] font-sans font-medium tracking-tight text-white/[0.34]">
+                          <div key={item.label} className="min-w-[140px]">
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
                               {item.label}
                             </div>
                             <div
                               className={cn(
-                                "mt-1 text-[16px] font-sans font-medium leading-none tracking-tight",
+                                "mt-1 text-[13px] font-sans font-medium leading-none tracking-tight",
                                 item.valueTone === 'ready'
                                   ? 'text-emerald-200'
                                   : item.valueTone === 'review'
                                     ? 'text-amber-200'
                                     : item.valueTone === 'muted'
-                                      ? 'text-white/[0.72]'
-                                      : 'text-white/[0.96]'
+                                      ? 'text-white/[0.55]'
+                                      : 'text-white/[0.9]'
                               )}
                             >
                               {item.value}
                             </div>
-                            <div className="mt-2 text-[10px] font-sans leading-5 tracking-tight text-white/[0.52]">
-                              {item.detail}
-                            </div>
                           </div>
                         ))}
                       </div>
+
+                      {isSyncScopedDetections ? (
+                        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-sans tracking-tight text-white/[0.42]">
+                          {syncScopedDetectionMetaRows.map((item) => (
+                            <span key={item.label}>
+                              {item.label}: <span className="text-white/[0.68]">{item.value}</span>
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
 
                     {loadingDetections ? (
-                      <div className="py-20 flex flex-col items-center justify-center gap-4">
-                        <Loader2 className="h-8 w-8 text-white/50 animate-spin" />
+                      <div className="border-y border-white/10 py-12 flex flex-col items-center justify-center gap-4">
+                        <Loader2 className="h-6 w-6 text-white/45 animate-spin" />
                         <div className="text-center">
                           <div className="text-[11px] font-sans font-medium text-white/[0.45] tracking-tight animate-pulse">
                             {issuesFoundLoadingState.title}
@@ -2961,14 +2949,12 @@ export function Dashboard() {
                         </div>
                       </div>
                     ) : visibleDetectionResults.length === 0 ? (
-                      <div className="py-24 flex flex-col items-center justify-center text-center">
-                        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
-                          <Files className="h-6 w-6 text-white/40" />
-                        </div>
-                        <h3 className="text-lg font-sans font-semibold text-white tracking-tight">
+                      <div className="border-y border-white/10 py-12 flex flex-col items-center justify-center text-center">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">No rows</div>
+                        <h3 className="mt-3 text-[15px] font-sans font-medium text-white tracking-tight">
                           {isSyncScopedDetections ? syncScopedEmptyState?.title : 'No open issues right now'}
                         </h3>
-                        <p className="text-[13px] text-white/[0.45] mt-3 font-sans max-w-sm mx-auto leading-relaxed">
+                        <p className="text-[11px] text-white/[0.45] mt-2 font-sans max-w-sm mx-auto leading-5">
                           {isSyncScopedDetections
                             ? syncScopedEmptyState?.description
                             : 'Margin is not holding any unresolved findings in this view right now.'}
@@ -2979,28 +2965,24 @@ export function Dashboard() {
                               pathname: tenantRoute(activeSlug, '/dashboard'),
                               search: '?tab=discrepancies',
                             })}
-                            className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
+                            className="mt-6 flex h-8 items-center gap-3 border border-white/10 px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/80 transition-colors hover:bg-white/[0.04] group"
                           >
-                            <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
-                              View all detections
-                            </span>
+                            <span>View all detections</span>
                             <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
                           </button>
                         ) : !isSyncScopedDetections ? (
                           <button
                             onClick={() => navigate(tenantRoute(activeSlug, '/recoveries'))}
-                            className="mt-8 flex items-center gap-3 px-5 py-2.5 bg-white/[0.03] border border-white/10 hover:bg-white/[0.05] transition-all rounded-lg group"
+                            className="mt-6 flex h-8 items-center gap-3 border border-white/10 px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/80 transition-colors hover:bg-white/[0.04] group"
                           >
-                            <span className="text-[11px] font-sans font-medium text-white/80 tracking-tight">
-                              View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}
-                            </span>
+                            <span>View {filedClaimsCount} filed {filedClaimsCount === 1 ? 'case' : 'cases'}</span>
                             <ArrowRight className="h-3 w-3 text-white/[0.35] group-hover:translate-x-1 transition-transform" />
                           </button>
                         ) : null}
                       </div>
                     ) : (
                       <div>
-                        <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="border-b border-white/10 py-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                           <div className="text-[11px] font-sans tracking-tight text-white/[0.48]">
                             {isSyncScopedDetections
                               ? 'Review the findings currently shown for this upload. Processed rows and active filters can make the table count smaller than the upload total above.'
@@ -3008,12 +2990,12 @@ export function Dashboard() {
                           </div>
                           <div className="flex items-center gap-4">
                             {isRefreshingFindings ? (
-                              <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.52]">
+                              <div className="inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.52]">
                                 <Loader2 className="h-3 w-3 animate-spin" />
                                 Refreshing findings
                               </div>
                             ) : null}
-                            <div className="flex items-center gap-3 px-3 py-1.5 bg-white/[0.02] border border-white/5 rounded-lg">
+                            <div className="flex items-center gap-3">
                               <span className="text-[11px] font-sans font-medium text-white/[0.38] tracking-tight">Show processed</span>
                               <button
                                 onClick={() => setShowProcessed(!showProcessed)}
@@ -3031,7 +3013,7 @@ export function Dashboard() {
                           <Button
                             onClick={handleBatchExport}
                             disabled={isExporting}
-                            className={`h-9 px-4 bg-white/[0.03] hover:bg-white/[0.06] text-white/70 hover:text-white border border-white/10 text-[11px] font-sans font-medium tracking-tight transition-all rounded-md ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`h-8 rounded-none px-4 bg-transparent hover:bg-white/[0.04] text-white/70 hover:text-white border border-white/10 text-[10px] font-sans font-medium uppercase tracking-tight transition-all ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             {isExporting ? (
                               <Loader2 className="h-3 w-3 mr-2 animate-spin" />
@@ -3043,37 +3025,43 @@ export function Dashboard() {
                           </div>
                         </div>
                         {isSyncScopedDetections && syncScopedResultCapDisclosure ? (
-                          <div className="mb-5 rounded-lg border border-amber-500/20 bg-amber-500/[0.08] px-4 py-3 text-[11px] font-sans leading-5 tracking-tight text-amber-100">
+                          <div className="border-b border-amber-500/20 px-4 py-3 text-[11px] font-sans leading-5 tracking-tight text-amber-100">
                             {syncScopedResultCapDisclosure}
                           </div>
                         ) : null}
 
-                        <div className="space-y-3">
-                          {visibleDetectionResults.map((result) => {
-                            const isProcessed = isProcessedFindingStatus(result.status);
-                            const stateMeta = getFindingStateMeta(result.status);
-                            const StateIcon = stateMeta.Icon;
-                            const issueCopy = getIssueCopy(result.anomaly_type);
-                            const foundOnLabel = result.discovery_date
-                              ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                              : 'Date unavailable';
+                        <div className="border-y border-white/10 bg-transparent">
+                          <div className="hidden border-b border-white/8 px-5 py-3 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:gap-5">
+                            {['Issue', 'Value', 'State', 'Action'].map((label) => (
+                              <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+                                {label}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="divide-y divide-white/8">
+                            {visibleDetectionResults.map((result) => {
+                              const isProcessed = isProcessedFindingStatus(result.status);
+                              const stateMeta = getFindingStateMeta(result.status);
+                              const StateIcon = stateMeta.Icon;
+                              const issueCopy = getIssueCopy(result.anomaly_type);
+                              const foundOnLabel = result.discovery_date
+                                ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                : 'Date unavailable';
 
-                            return (
-                              <div
-                                key={result.id}
-                                className={cn(
-                                  "rounded-xl border px-5 py-4 transition-colors",
-                                  isProcessed
-                                    ? "border-white/[0.06] bg-[#090909]"
-                                    : "border-white/[0.08] bg-black/20 hover:border-white/[0.12]"
-                                )}
-                              >
-                                <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center">
+                              return (
+                                <div
+                                  key={result.id}
+                                  className={cn(
+                                    "px-5 py-3.5 transition-colors hover:bg-white/[0.025]",
+                                    isProcessed ? "opacity-70" : ""
+                                  )}
+                                >
+                                  <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:items-center xl:gap-5">
                                   <div className="min-w-0">
-                                    <div className="text-[14px] font-sans font-medium tracking-tight text-white/[0.92]">
+                                    <div className="text-[12px] font-sans font-medium tracking-tight text-white/[0.92]">
                                       {issueCopy.title}
                                     </div>
-                                    <p className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.64]">
+                                    <p className="mt-1.5 max-w-2xl text-[11px] font-sans leading-5 tracking-tight text-white/[0.54]">
                                       {issueCopy.summary}
                                     </p>
                                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
@@ -3096,13 +3084,12 @@ export function Dashboard() {
                                       Case state
                                     </div>
                                     <div className={cn(
-                                      "mt-1.5 inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight",
-                                      stateMeta.tone
+                                      "mt-1.5 inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.76]"
                                     )}>
                                       <StateIcon className="h-3.5 w-3.5" />
                                       <span>{stateMeta.label}</span>
                                     </div>
-                                    <p className="mt-2 max-w-md text-[11px] font-sans leading-5 text-white/60">
+                                    <p className="mt-1.5 max-w-md text-[10px] font-sans leading-5 text-white/[0.48]">
                                       {stateMeta.detail}
                                     </p>
                                   </div>
@@ -3112,7 +3099,7 @@ export function Dashboard() {
                                       <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="h-8 px-3 text-[11px] font-sans font-medium text-white/[0.55] hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all tracking-tight"
+                                        className="h-7 rounded-none px-2.5 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.55] hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/10 transition-all"
                                         onClick={() => {
                                           navigate(tenantRoute(activeSlug, '/recoveries'));
                                         }}
@@ -3125,7 +3112,7 @@ export function Dashboard() {
                                         <Button
                                           variant="ghost"
                                           size="icon"
-                                          className="h-8 w-8 text-white/25 hover:text-white hover:bg-white/[0.04] transition-all rounded-md border border-transparent hover:border-white/10"
+                                          className="h-7 w-7 rounded-none text-white/25 hover:text-white hover:bg-white/[0.04] transition-all border border-transparent hover:border-white/10"
                                         >
                                           <MoreVertical className="h-3.5 w-3.5" />
                                         </Button>
@@ -3171,13 +3158,14 @@ export function Dashboard() {
                                     </DropdownMenu>
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
 
                         {/* Heartbeat / Audit Log Footer */}
-                        <div className="mt-8 flex flex-col gap-3 border-t border-white/5 pt-6 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="mt-4 flex flex-col gap-3 border-t border-white/5 pt-4 lg:flex-row lg:items-center lg:justify-between">
                           <div className="flex flex-wrap items-center gap-6">
                             <div className="flex items-center gap-2">
                               <div className="h-1 w-1 rounded-full bg-white/40" />
