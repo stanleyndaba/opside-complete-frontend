@@ -220,10 +220,10 @@ export function Sidebar({
     }, [item.href, queryClient]);
     if (isCollapsed) {
       const collapsedBaseClasses = variant === 'core'
-        ? "h-11 w-11 rounded-xl"
+        ? "h-10 w-10"
         : variant === 'utility'
-          ? "h-9.5 w-9.5 rounded-lg"
-          : "h-10 w-10 rounded-xl";
+          ? "h-9 w-9"
+          : "h-10 w-10";
 
       return (
         <TooltipProvider>
@@ -233,19 +233,19 @@ export function Sidebar({
                 to={item.href}
                 onMouseEnter={handlePrefetch}
                 className={cn(
-                  "group relative flex items-center justify-center transition-all duration-200",
+                  "group relative flex items-center justify-center border-l transition-all duration-200",
                   collapsedBaseClasses,
                   isActive
-                    ? "bg-white/[0.06] text-white"
+                    ? "border-white/70 bg-white/[0.035] text-white"
                     : variant === 'core'
-                      ? "text-white/72 hover:bg-white/[0.04] hover:text-white"
-                      : "text-white/42 hover:bg-white/[0.03] hover:text-white/82"
+                      ? "border-transparent text-white/72 hover:border-white/28 hover:bg-white/[0.025] hover:text-white"
+                      : "border-transparent text-white/42 hover:border-white/20 hover:bg-white/[0.02] hover:text-white/82"
                 )}
                 style={{ willChange: 'background-color' }}>
                 {isActive && (
                   <motion.span
                     layoutId="active-indicator-collapsed"
-                    className="absolute left-0 top-2.5 bottom-2.5 w-[2px] rounded-r-full bg-white/80"
+                    className="absolute left-0 top-2 bottom-2 w-[2px] bg-white/80"
                   />
                 )}
                 <item.icon
@@ -276,31 +276,31 @@ export function Sidebar({
         to={item.href}
         onMouseEnter={handlePrefetch}
         className={cn(
-          "group relative flex w-full items-center transition-all duration-200",
+          "group relative flex w-full items-center border-l transition-all duration-200",
           variant === 'core'
-            ? "gap-2.5 rounded-xl px-3.5 py-2.5"
+            ? "gap-2.5 px-3 py-2.5"
             : variant === 'utility'
-              ? "gap-2 rounded-lg px-2.5 py-1.5"
-              : "gap-2.5 rounded-lg px-3 py-2",
+              ? "gap-2 px-2.5 py-1.5"
+              : "gap-2.5 px-3 py-2",
           isActive
             ? variant === 'core'
-              ? "bg-white/[0.05] text-white"
+              ? "border-white/70 bg-white/[0.03] text-white"
               : variant === 'utility'
-                ? "bg-transparent text-white"
-                : "bg-white/[0.04] text-white"
+                ? "border-white/45 bg-transparent text-white"
+                : "border-white/55 bg-white/[0.025] text-white"
             : variant === 'core'
-              ? "text-white/82 hover:bg-white/[0.03] hover:text-white"
+              ? "border-transparent text-white/82 hover:border-white/24 hover:bg-white/[0.02] hover:text-white"
               : variant === 'utility'
-                ? "text-white/42 hover:text-white/72"
-                : "text-white/62 hover:bg-white/[0.025] hover:text-white/88"
+                ? "border-transparent text-white/42 hover:border-white/18 hover:text-white/72"
+                : "border-transparent text-white/62 hover:border-white/20 hover:bg-white/[0.018] hover:text-white/88"
         )}
         style={{ willChange: 'background-color, transform' }}>
         {isActive && (
           <motion.span
             layoutId="active-indicator"
             className={cn(
-              "absolute left-0 w-[2px] rounded-r-full bg-white/80",
-              variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2.5 bottom-2.5"
+              "absolute left-0 w-[2px] bg-white/80",
+              variant === 'utility' ? "top-1.5 bottom-1.5" : "top-2 bottom-2"
             )}
           />
         )}
@@ -346,10 +346,10 @@ export function Sidebar({
         ) : null}
         {item.count != null && !isCollapsed && (
           <span className={cn(
-            "ml-auto text-[10px] font-sans font-medium tabular-nums px-1.5 py-0.5 rounded-[5px] border tracking-tight",
+            "ml-auto border-l px-1.5 text-[10px] font-sans font-medium tabular-nums tracking-tight",
             isActive
-              ? "text-sky-100 bg-sky-400/10 border-sky-300/20"
-              : "text-white/62 bg-white/[0.04] border-white/10"
+              ? "border-sky-300/24 text-sky-100"
+              : "border-white/10 text-white/62"
           )}>
             {item.count}
           </span>
@@ -361,9 +361,8 @@ export function Sidebar({
     <aside
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col font-sans transition-all duration-500 ease-in-out gpu-accelerated",
-        isCollapsed ? "w-[78px]" : "w-[256px]",
-        "text-foreground/60 border-r border-border",
-        "bg-sidebar-background dark:shadow-[10px_0_50px_rgba(0,0,0,0.8)]",
+        isCollapsed ? "w-16" : "w-60",
+        "border-r border-white/10 bg-[#070707]/95 text-white/60 backdrop-blur-xl",
         className
       )}
       style={{
@@ -373,7 +372,7 @@ export function Sidebar({
       {/* Branding Header */}
       <div
         className={cn(
-          "",
+          "border-b border-white/10",
           isCollapsed ? "px-2 py-3.5" : "px-4 py-4"
         )}>
         <div className={cn("w-full", isCollapsed ? "space-y-0" : "space-y-2")}>
@@ -392,7 +391,7 @@ export function Sidebar({
                 className="h-3.5 w-auto object-contain dark:invert dark:brightness-0"
               />
               {!isCollapsed && subscriptionTierLabel ? (
-                <span className="inline-flex h-6 items-center rounded-[5px] border border-sky-300/35 bg-sky-400/12 px-2.5 text-[11px] font-medium tracking-tight text-sky-200">
+                <span className="border-l border-white/12 pl-2 text-[10px] font-medium uppercase tracking-tight text-white/36">
                   {subscriptionTierLabel}
                 </span>
               ) : null}
@@ -402,7 +401,7 @@ export function Sidebar({
             <Link
               to={pricingAdjustHref}
               onMouseEnter={() => prefetchRoute(pricingAdjustHref)}
-              className="inline-flex items-center px-1 py-0.5 text-[13px] font-sans font-medium tracking-tight text-white/72 transition-colors hover:text-white"
+              className="inline-flex items-center border-l border-white/12 px-2 py-0.5 text-[12px] font-sans font-medium tracking-tight text-white/54 transition-colors hover:border-white/28 hover:text-white"
             >
               Upgrade Plan
             </Link>
@@ -413,10 +412,10 @@ export function Sidebar({
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div
           className={cn(
-            "flex min-h-full flex-col justify-center",
-            isCollapsed ? "px-2.5 py-5" : "px-3 py-4"
+            "flex min-h-full flex-col justify-start",
+            isCollapsed ? "px-2 py-4" : "px-3 py-4"
           )}>
-          <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-[0.48rem]" : "gap-[0.32rem]")}>
+          <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-1")}>
             {navItems.map((item) => (
               <NavItemComponent key={item.title} item={item} />
             ))}
@@ -426,8 +425,8 @@ export function Sidebar({
 
       {/* Footer Utilities */}
       <div className={cn(
-        "mt-auto border-t border-border py-3",
-        isCollapsed ? "px-2.5" : "px-3"
+        "mt-auto border-t border-white/10 py-3",
+        isCollapsed ? "px-2" : "px-3"
       )}>
         {(() => {
           const settingsActive = location.pathname.startsWith(tenantRoute(currentTenantSlug, '/settings'));
@@ -439,28 +438,28 @@ export function Sidebar({
           <DropdownMenuTrigger asChild>
             <button
               className={cn(
-                "group flex w-full items-center transition-all outline-none",
+                "group flex w-full items-center border-l border-transparent transition-all outline-none",
                 isCollapsed
-                  ? "justify-center rounded-lg p-2.5 hover:bg-white/[0.03]"
-                  : "gap-3 rounded-lg px-3 py-2.5 text-left text-white/34 hover:bg-white/[0.02] hover:text-white/62"
+                  ? "justify-center p-2.5 hover:border-white/20 hover:bg-white/[0.02]"
+                  : "gap-3 px-3 py-2.5 text-left text-white/34 hover:border-white/20 hover:bg-white/[0.018] hover:text-white/62"
               )}>
               <Menu className={cn("h-4 w-4 transition-colors text-white/24", isCollapsed ? "" : "shrink-0")} strokeWidth={1.5} />
               {!isCollapsed && <span className="font-sans text-[12px] font-medium tracking-tight text-white/34">More</span>}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="w-64 p-1.5 bg-popover border border-border text-popover-foreground shadow-2xl backdrop-blur-xl mb-2 ml-2 rounded-xl">
+          <DropdownMenuContent side={isCollapsed ? "right" : "top"} align={isCollapsed ? "start" : "center"} className="mb-2 ml-2 w-64 rounded-none border border-white/10 bg-[#080808] p-1.5 text-white shadow-2xl backdrop-blur-xl">
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/settings'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2.5 cursor-pointer rounded-lg font-sans transition-colors",
-                "text-[13px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                settingsActive && "bg-white text-black"
+                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
+                "text-[13px] text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
+                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
+                settingsActive && "border-white/45 bg-white/[0.04] text-white"
               )}>
               <Settings2
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  settingsActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                  settingsActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
                 )}
                 strokeWidth={1.5}
               />
@@ -469,15 +468,15 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/billing'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 cursor-pointer rounded-lg font-sans transition-colors",
-                "text-[13px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                billingActive && "bg-white text-black"
+                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 font-sans transition-colors",
+                "text-[13px] text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
+                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
+                billingActive && "border-white/45 bg-white/[0.04] text-white"
               )}>
               <CreditCard
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  billingActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                  billingActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
                 )}
                 strokeWidth={1.5}
               />
@@ -486,15 +485,15 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/help'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2.5 cursor-pointer rounded-lg font-sans transition-colors",
-                "text-[13px] text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                helpActive && "bg-white text-black"
+                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2.5 font-sans transition-colors",
+                "text-[13px] text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
+                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
+                helpActive && "border-white/45 bg-white/[0.04] text-white"
               )}>
               <LifeBuoy
                 className={cn(
                   "h-4 w-4 shrink-0 transition-colors",
-                  helpActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                  helpActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
                 )}
                 strokeWidth={1.5}
               />
@@ -502,7 +501,7 @@ export function Sidebar({
                 <div className="tracking-tight">Report a problem</div>
                 <div className={cn(
                   "mt-0.5 text-[10px] font-sans tracking-tight normal-case",
-                  helpActive ? "text-black/60" : "text-foreground/30 group-data-[highlighted]/more-item:text-black/60"
+                  helpActive ? "text-white/58" : "text-white/30 group-data-[highlighted]/more-item:text-white/58"
                 )}>
                   5 minute response
                 </div>
@@ -511,15 +510,15 @@ export function Sidebar({
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}
               className={cn(
-                "group/more-item flex items-center gap-3 px-3 py-2 text-[13px] cursor-pointer rounded-lg font-sans font-light tracking-tight transition-colors",
-                "text-foreground/50 hover:bg-foreground/5 hover:text-foreground",
-                "data-[highlighted]:bg-white data-[highlighted]:text-black data-[highlighted]:outline-none",
-                notesActive && "bg-white text-black"
+                "group/more-item flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight transition-colors",
+                "text-white/52 hover:border-white/22 hover:bg-white/[0.03] hover:text-white",
+                "data-[highlighted]:border-white/30 data-[highlighted]:bg-white/[0.04] data-[highlighted]:text-white data-[highlighted]:outline-none",
+                notesActive && "border-white/45 bg-white/[0.04] text-white"
               )}>
               <NotebookPen
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  notesActive ? "text-black" : "text-foreground/20 group-data-[highlighted]/more-item:text-black"
+                  notesActive ? "text-white" : "text-white/28 group-data-[highlighted]/more-item:text-white"
                 )}
                 strokeWidth={1.5}
               />
@@ -564,10 +563,10 @@ export function Sidebar({
                 </HoverCardContent>
               </HoverCard>
             </DropdownMenuItem> */}
-            <DropdownMenuSeparator className="bg-border my-1" />
+            <DropdownMenuSeparator className="my-1 bg-white/10" />
             <DropdownMenuItem
               onClick={() => setSignOutOpen(true)}
-              className="flex items-center gap-3 px-3 py-2 text-[13px] text-rose-500/70 hover:bg-rose-500/10 hover:text-rose-400 cursor-pointer rounded-lg font-sans font-light tracking-tight">
+              className="flex cursor-pointer items-center gap-3 border-l border-transparent px-3 py-2 text-[13px] font-sans font-light tracking-tight text-rose-400/72 hover:border-rose-300/28 hover:bg-rose-500/[0.06] hover:text-rose-300">
               <LogOut className="h-4 w-4" strokeWidth={1.5} />
               <span className="font-medium">Sign Out</span>
             </DropdownMenuItem>
@@ -724,7 +723,7 @@ export function Sidebar({
         title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         onClick={onToggle}
         className={cn(
-          'absolute top-14 -right-3 z-50 h-6 w-6 rounded-full border border-border bg-popover/80 backdrop-blur-md flex items-center justify-center text-foreground/40 hover:text-foreground hover:border-emerald-500/50 shadow-2xl transition-all duration-300',
+          'absolute top-14 -right-2.5 z-50 flex h-8 w-5 items-center justify-center border border-white/10 bg-[#070707]/95 text-white/34 shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-white/28 hover:text-white',
         )}>
         {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
       </button>
