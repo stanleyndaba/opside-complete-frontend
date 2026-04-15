@@ -14,6 +14,7 @@ import { api } from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTenant } from '@/contexts/TenantContext';
 import { useSession } from '@/contexts/SessionContext';
+import { selectApprovedReimbursementRows, type ApprovedReimbursementViewRow } from '@/lib/approvedReimbursementTruth';
 interface NavbarProps {
   className?: string;
   sidebarCollapsed?: boolean;
@@ -41,22 +42,7 @@ const toTitleCase = (value?: string | null) => {
     .join(' ');
 };
 
-const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const NOT_AVAILABLE = 'Not Available';
-
-type ApprovedReimbursementRow = {
-  routeId: string;
-  caseReference: string;
-  approvedAmount: number | null;
-  payoutStatus: string | null;
-  lastUpdatedAt: string | null;
-  currency: string;
-};
-
-const isApprovedReimbursementRow = (row: any) => {
-  const status = String(row?.status || '').trim().toLowerCase();
-  return APPROVED_CASE_STATUSES.has(status) || (typeof row?.approved_amount === 'number' && !Number.isNaN(row.approved_amount));
-};
 
 const formatMoney = (value: number | null | undefined, currency = 'USD') =>
   typeof value === 'number' && !Number.isNaN(value)
@@ -243,7 +229,7 @@ export function Navbar({
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
-  const [approvedReimbursements, setApprovedReimbursements] = useState<ApprovedReimbursementRow[]>([]);
+  const [approvedReimbursements, setApprovedReimbursements] = useState<ApprovedReimbursementViewRow[]>([]);
   const [approvedReimbursementsLoading, setApprovedReimbursementsLoading] = useState(false);
   const [approvedReimbursementsError, setApprovedReimbursementsError] = useState<string | null>(null);
 
@@ -335,17 +321,7 @@ export function Navbar({
         }
 
         const rows = Array.isArray(response.data?.rows) ? response.data.rows : [];
-        const nextRows = rows
-          .filter(isApprovedReimbursementRow)
-          .slice(0, 8)
-          .map((row: any) => ({
-            routeId: String(row?.recovery_record_id || row?.dispute_case_id || row?.detection_result_id || row?.case_number || ''),
-            caseReference: String(row?.case_number || row?.provider_case_id || row?.merchant_reference || NOT_AVAILABLE),
-            approvedAmount: typeof row?.approved_amount === 'number' ? row.approved_amount : null,
-            payoutStatus: typeof row?.payout_status === 'string' ? row.payout_status : null,
-            lastUpdatedAt: typeof row?.last_updated_at === 'string' ? row.last_updated_at : null,
-            currency: typeof row?.currency === 'string' && row.currency.trim() ? row.currency : 'USD',
-          }));
+        const nextRows = selectApprovedReimbursementRows(rows).slice(0, 8);
 
         setApprovedReimbursements(nextRows);
       } catch (error: any) {
@@ -648,8 +624,8 @@ export function Navbar({
                         <TableHeader>
                           <TableRow className="border-white/5 hover:bg-transparent">
                             <TableHead className="h-10 px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Approved</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Payout</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amount</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Truth</TableHead>
                             <TableHead className="h-10 pr-5 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Updated</TableHead>
                           </TableRow>
                         </TableHeader>
@@ -669,7 +645,7 @@ export function Navbar({
                           ) : approvedReimbursements.length === 0 ? (
                             <TableRow className="border-white/5">
                               <TableCell colSpan={4} className="px-5 py-6 text-center text-[11px] font-sans font-bold text-white/45">
-                                No approved reimbursements yet.
+                                No production-verified approved reimbursement records yet.
                               </TableCell>
                             </TableRow>
                           ) : approvedReimbursements.map((row) => (
@@ -681,11 +657,12 @@ export function Navbar({
                               <TableCell className="px-5 py-3 text-[11px] font-sans font-bold tracking-tight text-white/78">
                                 {row.caseReference}
                               </TableCell>
-                              <TableCell className="py-3 text-[11px] font-sans font-bold text-white/70">
-                                {formatMoney(row.approvedAmount, row.currency)}
+                              <TableCell className="py-3">
+                                <div className="text-[11px] font-sans font-bold text-white/70">{formatMoney(row.amount, row.currency)}</div>
+                                <div className="mt-1 text-[9px] font-sans font-bold uppercase tracking-tight text-white/28">{row.amountNote}</div>
                               </TableCell>
                               <TableCell className="py-3 text-[11px] font-sans font-bold text-white/50">
-                                {toTitleCase(row.payoutStatus) || NOT_AVAILABLE}
+                                {row.payoutTruth}
                               </TableCell>
                               <TableCell className="py-3 pr-5 text-right text-[11px] font-sans font-bold text-white/40">
                                 {formatStamp(row.lastUpdatedAt)}

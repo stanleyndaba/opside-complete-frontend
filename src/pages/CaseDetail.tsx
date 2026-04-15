@@ -2753,17 +2753,17 @@ export default function CaseDetail() {
           <div className="relative h-full w-full">
             <div className="pointer-events-none absolute left-6 top-5 z-10 max-w-[60vw] space-y-2">
               <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">{pdfPreviewLabel}</div>
+              {isReviewPdfPreview && (
+                <p className="max-w-2xl text-[11px] font-sans font-medium leading-snug tracking-tight text-white/60">
+                  For seller review only. This preview lets you review the case materials; Margin does not submit this browser-generated PDF to Amazon.
+                </p>
+              )}
               <div className={cn(
                 "truncate font-sans font-light tracking-tight text-white",
                 isReviewPdfPreview ? "text-lg" : "text-2xl"
               )}>
                 {pdfPreviewTitle}
               </div>
-              {isReviewPdfPreview && (
-                <p className="text-[10px] font-sans font-medium tracking-tight text-white/55">
-                  Browser-generated current-view export for seller review only. It is not the canonical backend dispute brief and is not submitted to Amazon.
-                </p>
-              )}
             </div>
 
             <div className="absolute right-6 top-5 z-10 flex items-center gap-2">
