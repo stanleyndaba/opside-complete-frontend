@@ -3212,7 +3212,7 @@ export function Dashboard() {
                 </div>
               ) : activeTab === 'evidence' ? (
                 <div className="space-y-6">
-                  <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+                  <div className="relative">
                     <EvidenceMatchingTable />
                   </div>
                 </div>
