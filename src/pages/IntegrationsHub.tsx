@@ -399,9 +399,11 @@ export default function IntegrationsHub() {
     try {
       setDisconnectingProvider(provider);
       const providerState = status?.providers?.[provider];
+      const evidenceSource = evidenceSourcesState.sources.find((source) => source.provider === provider);
+      const sourceId = providerState?.source_id || evidenceSource?.id;
       const supportsDirectProviderDisconnect = provider === 'gmail' || provider === 'outlook' || provider === 'gdrive' || provider === 'dropbox';
-      const res = providerState?.source_id
-        ? await api.disconnectEvidenceSource(providerState.source_id)
+      const res = sourceId
+        ? await api.disconnectEvidenceSource(sourceId)
         : supportsDirectProviderDisconnect
           ? await api.disconnectDocsProvider(provider)
           : { ok: false, error: 'No tenant-scoped connection record found for this provider' };
@@ -798,6 +800,36 @@ export default function IntegrationsHub() {
     return evidenceSourcesState.sources.find((source) => source.provider === provider) || null;
   };
 
+  const getProviderDisplayState = (provider: ProviderKey): IntegrationProviderStatus => {
+    const providerStatus = getProviderState(provider);
+    if (provider === 'amazon' || providerStatus.connected) {
+      return providerStatus;
+    }
+
+    const evidenceSource = getEvidenceSourceTruth(provider as SecondaryProviderKey);
+    if (!evidenceSource?.connected) {
+      return providerStatus;
+    }
+
+    const hasData = (evidenceSource.documents_count || 0) > 0;
+    return {
+      ...providerStatus,
+      source_id: evidenceSource.id,
+      connected: true,
+      auth_valid: evidenceSource.ingestable,
+      needs_reconnect: false,
+      ingestion_state: evidenceSource.ingestable
+        ? hasData
+          ? 'current'
+          : 'no_data'
+        : 'unverified',
+      has_data: hasData,
+      last_ingest_at: evidenceSource.last_ingested_at || undefined,
+      account_email: evidenceSource.account_email || undefined,
+      error_message: evidenceSource.ingestable ? undefined : evidenceSource.ingestable_reason || providerStatus.error_message
+    };
+  };
+
   const formatDateTime = (value?: string | null) => {
     if (!value) return 'Not available';
     const parsed = new Date(value);
@@ -825,8 +857,8 @@ export default function IntegrationsHub() {
     return 'Seller bound';
   };
 
-  const connectedSecondaryProviders = SECONDARY_PROVIDERS.filter(provider => getProviderState(provider).connected);
-  const gmailProviderState = getProviderState('gmail');
+  const connectedSecondaryProviders = SECONDARY_PROVIDERS.filter(provider => getProviderDisplayState(provider).connected);
+  const gmailProviderState = getProviderDisplayState('gmail');
   const gmailEvidenceSource = getEvidenceSourceTruth('gmail');
   const activeSkippedProviders = ingestionResult?.skippedProviders?.length
     ? ingestionResult.skippedProviders
@@ -834,7 +866,7 @@ export default function IntegrationsHub() {
       ? evidenceStatus.skippedProviders
       : evidenceSourcesState.skippedProviders;
   const blockingProviders = SECONDARY_PROVIDERS.filter(provider => {
-    const providerState = getProviderState(provider);
+    const providerState = getProviderDisplayState(provider);
     return providerState.needs_reconnect || providerState.ingestion_state === 'failed' || providerState.ingestion_state === 'stale';
   });
   const pageOperationalState = !getProviderState('amazon').connected
@@ -1417,9 +1449,9 @@ export default function IntegrationsHub() {
                   onedrive: { name: 'OneDrive', icon: '/onedriive.png', color: 'bg-sky-500/10', border: 'border-sky-500/20' },
                 } as const;
 
-                const providerState = getProviderState(p);
+                const providerState = getProviderDisplayState(p);
                 const evidenceSource = getEvidenceSourceTruth(p);
-                const connected = providerState.connected;
+                const connected = providerState.connected || evidenceSource?.connected === true;
                 const meta = providerMeta[p];
 
                 return (
