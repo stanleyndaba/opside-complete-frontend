@@ -412,7 +412,7 @@ export function Sidebar({
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div
           className={cn(
-            "flex min-h-full flex-col justify-start",
+            "flex min-h-full flex-col justify-center",
             isCollapsed ? "px-2 py-4" : "px-3 py-4"
           )}>
           <nav className={cn("flex w-full flex-col", isCollapsed ? "items-center gap-1" : "gap-1")}>

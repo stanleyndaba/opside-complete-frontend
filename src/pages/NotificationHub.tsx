@@ -452,30 +452,27 @@ export default function NotificationHub() {
 
   return (
     <PageLayout title="Notifications" midnight>
-      <div className="relative min-h-screen overflow-hidden bg-[#050505]">
-        <div className="absolute inset-x-0 inset-y-[-100px] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
-
+      <div className="relative min-h-screen bg-[#050505] text-white">
         <Sheet open={preferencesOpen} onOpenChange={setPreferencesOpen}>
-        <div className="relative max-w-[1600px] mx-auto px-8 py-12">
+        <div className="relative mx-auto max-w-[1500px] px-8 py-8">
           {/* Analysis Header */}
-          <div className="flex flex-col gap-1 mb-8 border-b border-white/5 pb-8">
-            <div className="text-[10px] font-sans font-bold text-white/30 tracking-tight uppercase">Communication Registry</div>
-            <h1 className="text-4xl font-light text-white tracking-tight font-sans mt-2">Notifications</h1>
-            <p className="text-sm text-gray-400 mt-2 max-w-xl leading-relaxed">
+          <div className="mb-5 border-b border-white/10 pb-5">
+            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Communication registry</div>
+            <h1 className="mt-2 text-[26px] font-sans font-medium tracking-tight text-white">Notifications</h1>
+            <p className="mt-2 max-w-xl text-[12px] font-sans leading-5 text-white/[0.52]">
               Review updates clearly, then open preferences only when you need them.
             </p>
           </div>
 
-          <div className="mb-4 rounded-2xl border border-white/8 bg-white/[0.02] shadow-2xl backdrop-blur-xl">
+          <div className="mb-5 border-b border-white/10 pb-4">
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-6 px-5 py-4 text-left transition-colors hover:bg-white/[0.03]"
+                className="flex w-full items-center justify-between gap-6 border-y border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/[0.025]"
               >
                 <div className="min-w-0">
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">Preferences</div>
-                  <div className="mt-1.5 text-[13px] font-sans font-semibold tracking-tight text-white">
+                  <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">Preferences</div>
+                  <div className="mt-1.5 text-[13px] font-sans font-medium tracking-tight text-white">
                     Notification preferences
                   </div>
                   <p className="mt-1 text-[11px] font-sans leading-5 text-white/44">
@@ -483,7 +480,7 @@ export default function NotificationHub() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <div className="rounded-full border border-white/8 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/45">
+                  <div className="border-l border-white/12 pl-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/45">
                     {unreadCount} unread
                   </div>
                   <ChevronRight className="h-4 w-4 text-white/38" />
@@ -493,35 +490,35 @@ export default function NotificationHub() {
           </div>
 
           {/* Notification Log */}
-          <div className="bg-[#0c0c0c] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl flex min-h-[72vh] lg:min-h-[calc(100vh-220px)] flex-col mb-12">
+          <div className="mb-10 flex min-h-[72vh] flex-col lg:min-h-[calc(100vh-220px)]">
             {/* Fixed Header */}
-            <div className="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between flex-shrink-0">
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 py-4">
               <div>
-                <h2 className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">
+                <h2 className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                   History
                 </h2>
-                <p className="text-[9px] font-sans font-bold text-white/20 uppercase tracking-tight mt-0.5">
-                  Your update log
+                <p className="mt-1 text-[11px] font-sans leading-5 text-white/[0.48]">
+                  {filteredNotifications.length} visible updates • {unreadCount} unread
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleMarkAllRead}
                   disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
-                  className="px-3 py-1.5 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all disabled:opacity-20 uppercase tracking-tight">
+                  className="border border-white/10 bg-transparent px-3 py-1.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/46 transition-colors hover:bg-white/[0.04] hover:text-white disabled:opacity-20">
                   Mark read
                 </button>
                 <button
                   onClick={handleRefresh}
                   disabled={loading}
-                  className="p-1.5 bg-white/[0.02] border border-white/5 rounded-lg hover:border-white/20 transition-all text-white/40 hover:text-white disabled:opacity-20">
-                  <span className="px-2 text-[10px] font-sans font-bold uppercase tracking-tight">{loading ? 'Loading' : 'Refresh'}</span>
+                  className="border border-white/10 bg-transparent px-3 py-1.5 text-white/46 transition-colors hover:bg-white/[0.04] hover:text-white disabled:opacity-20">
+                  <span className="text-[10px] font-sans font-medium uppercase tracking-tight">{loading ? 'Loading' : 'Refresh'}</span>
                 </button>
               </div>
             </div>
 
             {/* Fixed Search and Filters Row */}
-            <div className="px-6 py-4 border-b border-white/5 bg-white/[0.01] flex-shrink-0">
+            <div className="shrink-0 border-b border-white/10 py-4">
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Search Bar */}
                 <div className="relative flex-1 group/search">
@@ -530,7 +527,7 @@ export default function NotificationHub() {
                     placeholder="Search updates..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-10 h-10 text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white placeholder:text-white/10 focus:border-white/20 rounded-lg"
+                    className="h-10 rounded-none border-white/10 bg-transparent pl-10 pr-10 text-[11px] font-sans font-medium text-white placeholder:text-white/16 focus:border-white/24"
                   />
                   {searchQuery && (
                     <button
@@ -542,10 +539,10 @@ export default function NotificationHub() {
                 </div>
 
                 {/* Filter Dropdowns */}
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {/* Type Filter */}
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="h-10 w-[130px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-white/20 rounded-lg uppercase tracking-tight">
+                    <SelectTrigger className="h-10 w-[130px] rounded-none border-white/10 bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-white focus:border-white/24">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
@@ -558,7 +555,7 @@ export default function NotificationHub() {
 
                   {/* Date Filter */}
                   <Select value={dateFilter} onValueChange={setDateFilter}>
-                    <SelectTrigger className="h-10 w-[120px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-white/20 rounded-lg uppercase tracking-tight">
+                    <SelectTrigger className="h-10 w-[120px] rounded-none border-white/10 bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-white focus:border-white/24">
                       <SelectValue placeholder="Date" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
@@ -571,7 +568,7 @@ export default function NotificationHub() {
 
                   {/* Status Filter */}
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-10 w-[110px] text-[11px] font-sans font-bold bg-white/[0.03] border-white/10 text-white focus:border-white/20 rounded-lg uppercase tracking-tight">
+                    <SelectTrigger className="h-10 w-[110px] rounded-none border-white/10 bg-transparent text-[11px] font-sans font-medium uppercase tracking-tight text-white focus:border-white/24">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent className="bg-black/90 border-white/10 backdrop-blur-xl">
@@ -585,7 +582,7 @@ export default function NotificationHub() {
                   {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
                     <button
                       onClick={clearFilters}
-                      className="px-4 h-10 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-tight">
+                      className="h-10 border border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/46 transition-colors hover:bg-white/[0.04] hover:text-white">
                       Clear
                     </button>
                   )}
@@ -593,75 +590,91 @@ export default function NotificationHub() {
               </div>
 
               {/* Filter Summary */}
-              {(searchQuery || typeFilter !== 'all' || statusFilter !== 'all') && (
-                <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight mt-4">
+              {(searchQuery || typeFilter !== 'all' || dateFilter !== 'all' || statusFilter !== 'all') && (
+                <p className="mt-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">
                   Showing {filteredNotifications.length} of {notifications.length} matches
                 </p>
               )}
             </div>
 
             {/* Scrollable Content Area */}
-            <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+            <div className="custom-scrollbar flex-1 overflow-y-auto">
               {loading && (
-                <div className="text-center py-20">
-                  <p className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading updates...</p>
+                <div className="border-b border-white/10 py-20 text-center">
+                  <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/28">Loading updates...</p>
                 </div>
               )}
 
               {error && !loading && (
-                <div className="text-center py-20">
-                  <p className="text-[11px] font-sans font-bold text-rose-500 mb-6 uppercase tracking-tight">{error}</p>
+                <div className="border-b border-white/10 py-20 text-center">
+                  <p className="mb-6 text-[11px] font-sans font-medium uppercase tracking-tight text-rose-300">{error}</p>
                   <button
                     onClick={handleRefresh}
-                    className="px-6 py-2.5 text-[10px] font-sans font-bold text-white/40 border border-white/5 bg-white/[0.02] hover:bg-white/5 hover:text-white rounded-lg transition-all uppercase tracking-tight">
+                    className="border border-white/10 bg-transparent px-6 py-2.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/46 transition-colors hover:bg-white/[0.04] hover:text-white">
                     Retry
                   </button>
                 </div>
               )}
 
               {!loading && !error && filteredNotifications.length === 0 && notifications.length > 0 && (
-                <div className="text-center py-20">
-                  <p className="text-[11px] font-sans font-bold text-white/20 mb-4 uppercase tracking-tight">No matching results found.</p>
-                  <button onClick={clearFilters} className="text-[10px] font-sans font-bold text-white/60 hover:text-white uppercase tracking-tight">
+                <div className="border-b border-white/10 py-20 text-center">
+                  <p className="mb-4 text-[11px] font-sans font-medium uppercase tracking-tight text-white/28">No matching results found.</p>
+                  <button onClick={clearFilters} className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/60 hover:text-white">
                     Reset filters
                   </button>
                 </div>
               )}
 
               {!loading && !error && notifications.length === 0 && (
-                <div className="text-center py-20">
-                  <p className="text-[11px] font-sans font-bold text-white/20 mb-2 uppercase tracking-tight">Update log empty.</p>
-                  <p className="text-[9px] font-sans font-bold text-white/10 uppercase tracking-tight">Notifications will appear here as events occur.</p>
+                <div className="border-b border-white/10 py-20 text-center">
+                  <p className="mb-2 text-[11px] font-sans font-medium uppercase tracking-tight text-white/28">Update log empty.</p>
+                  <p className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/16">Notifications will appear here as events occur.</p>
                 </div>
               )}
 
-              <div className="space-y-3">
+              <div className="border-b border-white/10">
+                {!loading && !error && filteredNotifications.length > 0 ? (
+                  <div className="hidden grid-cols-[minmax(0,1.7fr)_minmax(120px,0.4fr)_minmax(120px,0.42fr)_minmax(80px,0.3fr)] gap-4 border-b border-white/10 px-4 py-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28] lg:grid">
+                    <div>Message</div>
+                    <div>Channels</div>
+                    <div>Recorded</div>
+                    <div className="text-right">State</div>
+                  </div>
+                ) : null}
                 {filteredNotifications.map((notification) => {
                   return (
                     <div
                       key={notification.id}
-                      className={`flex items-start gap-4 p-4 border rounded-2xl transition-all cursor-pointer group/item ${!notification.read
-                        ? 'bg-white/[0.04] border-white/15'
-                        : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/5 hover:border-white/10'
+                      className={`grid cursor-pointer grid-cols-1 gap-3 border-b border-white/[0.06] px-4 py-3.5 transition-colors last:border-b-0 lg:grid-cols-[minmax(0,1.7fr)_minmax(120px,0.4fr)_minmax(120px,0.42fr)_minmax(80px,0.3fr)] lg:gap-4 ${!notification.read
+                        ? 'bg-white/[0.025]'
+                        : 'hover:bg-white/[0.02]'
                         }`}
                       onClick={() => !notification.read && handleMarkAsRead(notification.id)}>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white mb-1.5 leading-relaxed tracking-tight">
+                      <div className="min-w-0">
+                        <div className="mb-1.5 flex items-center gap-2">
+                          <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+                            {notification.type.replace(/_/g, ' ')}
+                          </span>
+                          {!notification.read ? <span className="h-1.5 w-1.5 rounded-full bg-white/70" /> : null}
+                        </div>
+                        <p className="text-[13px] font-medium leading-5 tracking-tight text-white/[0.86]">
                           {renderNotificationMessage(notification.message)}
                         </p>
-                        <div className="flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/20">
-                          <span>{notification.timestamp}</span>
-                          <div className="flex gap-2">
-                            {notification.channels.map((channel) => (
-                              <span key={channel} className="px-2 py-0.5 border border-white/5 text-white/40 bg-white/[0.03] rounded-sm">{channel}</span>
-                            ))}
-                          </div>
-                        </div>
                       </div>
 
-                      {!notification.read && (
-                        <div className="w-2 h-2 bg-white/70 rounded-full flex-shrink-0 mt-2.5"></div>
-                      )}
+                      <div className="flex flex-wrap gap-2 lg:pt-1">
+                        {notification.channels.map((channel) => (
+                          <span key={channel} className="border border-white/10 px-2 py-0.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/42">{channel}</span>
+                        ))}
+                      </div>
+
+                      <div className="text-[10px] font-sans text-white/[0.56] lg:pt-1">
+                        {notification.timestamp}
+                      </div>
+
+                      <div className="text-left text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.42] lg:pt-1 lg:text-right">
+                        {notification.read ? 'Read' : 'Unread'}
+                      </div>
                     </div>
                   );
                 })}
@@ -670,8 +683,8 @@ export default function NotificationHub() {
           </div>
 
           {/* Analysis Footer */}
-          <div className="mt-12 text-center border-t border-white/5 pt-8 mb-12">
-            <p className="text-[10px] text-gray-600 font-sans font-bold uppercase tracking-tight">
+          <div className="mb-12 mt-10 border-t border-white/10 pt-6 text-center">
+            <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/24">
               Communication Registry • Status: Active
             </p>
           </div>
@@ -679,11 +692,11 @@ export default function NotificationHub() {
 
         <SheetContent
           side="right"
-          className="w-full border-l border-white/10 bg-[#0c0c0c] p-0 text-white shadow-[0_0_40px_rgba(0,0,0,0.5)] sm:max-w-[46vw]"
+          className="w-full border-l border-white/10 bg-[#070707] p-0 text-white shadow-[0_0_40px_rgba(0,0,0,0.5)] sm:max-w-[46vw]"
         >
-          <SheetHeader className="border-b border-white/5 bg-white/[0.02] px-8 py-6 text-left">
-            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/34">Settings</div>
-            <SheetTitle className="mt-2 text-2xl font-light tracking-tight text-white">
+          <SheetHeader className="border-b border-white/10 px-8 py-6 text-left">
+            <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Settings</div>
+            <SheetTitle className="mt-2 text-[24px] font-medium tracking-tight text-white">
               Notification preferences
             </SheetTitle>
             <p className="max-w-md text-[12px] font-sans leading-5 text-white/48">
@@ -692,9 +705,9 @@ export default function NotificationHub() {
           </SheetHeader>
 
           <div className="h-full overflow-y-auto px-8 py-8">
-            <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
-              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/34">Configuration active</div>
-              <div className="mt-2 text-sm font-sans font-semibold tracking-tight text-white">
+            <div className="mb-6 border-y border-white/10 px-4 py-4">
+              <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/34">Configuration active</div>
+              <div className="mt-2 text-sm font-sans font-medium tracking-tight text-white">
                 {activePreferenceCount} of {preferences.length} notification lanes enabled
               </div>
               <p className="mt-1 text-[11px] font-sans leading-5 text-white/46">
@@ -703,8 +716,8 @@ export default function NotificationHub() {
             </div>
 
             {preferencesError && (
-              <div className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 px-5 py-4">
-                <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-rose-300">
+              <div className="mb-6 border-y border-rose-500/20 bg-rose-500/5 px-4 py-4">
+                <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-rose-300">
                   Saved preferences are unavailable right now. Toggles are locked until the page reloads from backend truth.
                 </p>
               </div>
@@ -717,7 +730,7 @@ export default function NotificationHub() {
                 return (
                   <div key={category} className="space-y-4">
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-[10px] font-sans font-bold text-white/38 uppercase tracking-tight">
+                      <h3 className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/38">
                         {category}
                       </h3>
                       <p className="text-[11px] font-sans leading-5 text-white/42">
@@ -725,20 +738,20 @@ export default function NotificationHub() {
                       </p>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="border-y border-white/10">
                       {categoryPrefs.map((pref) => {
                         return (
-                          <div key={pref.id} className="rounded-2xl border border-white/6 bg-white/[0.02] px-5 py-4 transition-colors hover:bg-white/[0.035]">
+                          <div key={pref.id} className="border-b border-white/[0.06] px-4 py-4 transition-colors last:border-b-0 hover:bg-white/[0.025]">
                             <div className="flex items-start justify-between gap-5">
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-[13px] font-sans font-semibold tracking-tight text-white">
+                                <h4 className="text-[13px] font-sans font-medium tracking-tight text-white">
                                   {pref.title}
                                 </h4>
                                 <p className="mt-1 text-[11px] font-sans leading-5 text-white/42">
                                   {pref.description}
                                 </p>
                                 {!pref.supported && (
-                                  <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-300/80">
+                                  <p className="mt-2 text-[10px] font-sans font-medium uppercase tracking-tight text-amber-300/80">
                                     {pref.supportNote}
                                   </p>
                                 )}
@@ -755,7 +768,7 @@ export default function NotificationHub() {
                                   }
                                   className="scale-90 data-[state=checked]:bg-white"
                                 />
-                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Email</span>
+                                <span className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/40">Email</span>
                               </div>
 
                               <div className="flex items-center gap-3">
@@ -767,7 +780,7 @@ export default function NotificationHub() {
                                   }
                                   className="scale-90 data-[state=checked]:bg-white"
                                 />
-                                <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">In-App</span>
+                                <span className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/40">In-App</span>
                               </div>
                             </div>
                           </div>

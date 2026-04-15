@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
@@ -739,6 +740,10 @@ export function Dashboard() {
   const upcomingPaymentsLoadedRef = useRef(false);
   const [quickActionsEditOpen, setQuickActionsEditOpen] = useState<boolean>(false);
   const [quickNoticeOpen, setQuickNoticeOpen] = useState<boolean>(false);
+  const [contactEmail, setContactEmail] = useState<string>('');
+  const [contactSubject, setContactSubject] = useState<string>('');
+  const [contactQuery, setContactQuery] = useState<string>('');
+  const [contactSubmitting, setContactSubmitting] = useState<boolean>(false);
   // Evidence stats
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
@@ -751,6 +756,68 @@ export function Dashboard() {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
   }, []);
+
+  const handleContactSupportSubmit = useCallback(async () => {
+    const email = contactEmail.trim();
+    const subject = contactSubject.trim();
+    const query = contactQuery.trim();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({
+        title: 'Email required',
+        description: 'Add a valid email address so support can reply.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!subject || !query) {
+      toast({
+        title: 'Query incomplete',
+        description: 'Subject and your query are required before sending.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setContactSubmitting(true);
+    try {
+      const response = await api.createSupportRequest({
+        category: 'general',
+        subject,
+        message: query,
+        severity: 'normal',
+        source_page: 'dashboard_contact_us_modal',
+        metadata: {
+          contact_email: email,
+          support_recipient: 'support@margin-finance.com',
+          tenant_slug: activeSlug || null,
+        },
+      });
+
+      if (!response.ok || !response.data?.success) {
+        throw new Error(response.error || 'Failed to send support query');
+      }
+
+      toast({
+        title: 'Query sent',
+        description: 'Support received your message. Response time target: 5 minutes.',
+      });
+      setQuickNoticeOpen(false);
+      setContactEmail('');
+      setContactSubject('');
+      setContactQuery('');
+    } catch (err: any) {
+      toast({
+        title: 'Could not send query',
+        description: err?.message || 'Please email support@margin-finance.com directly.',
+        variant: 'destructive',
+      });
+    } finally {
+      setContactSubmitting(false);
+    }
+  }, [activeSlug, contactEmail, contactQuery, contactSubject, toast]);
+
   const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
   const [activeDiscrepancy, setActiveDiscrepancy] = useState<any>(null);
 
@@ -2467,7 +2534,7 @@ export function Dashboard() {
                     onClick={() => setQuickNoticeOpen(true)}
                     className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
                   >
-                    Quick Notice
+                    Contact Us
                   </button>
                   <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-white">
                     {discrepancyHeaderLastUpdatedLabel}
@@ -3250,57 +3317,71 @@ export function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Quick Notice Modal */}
+      {/* Contact Support Modal */}
       <Dialog open={quickNoticeOpen} onOpenChange={setQuickNoticeOpen}>
         <DialogContent className="w-[min(94vw,920px)] max-w-4xl bg-[#0c0c0c] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-3xl rounded-2xl">
           <DialogHeader className="px-5 pt-5 pb-3 border-b border-white/5 bg-white/[0.01]">
             <DialogTitle className="text-base font-serif text-white tracking-tight">
-              Quick Notices
+              Contact Us
             </DialogTitle>
             <DialogDescription className="text-[10px] text-white/35 font-mono mt-0.5 uppercase tracking-tight">
-              Platform Updates
+              5 minute response time
             </DialogDescription>
           </DialogHeader>
-          <div className="px-5 py-4">
+          <div className="px-5 py-4 space-y-4">
             <p className="text-[12px] text-white/46 leading-relaxed font-serif">
-              Here is what is live now and what is coming next across the platform.
+              Send a message directly to support@margin-finance.com. Include anything we should know about your workspace, filing, evidence, or billing question.
             </p>
-            <div className="mt-3 divide-y divide-white/6">
-              <div className="grid grid-cols-1 gap-1 py-3 md:grid-cols-[180px_minmax(0,1fr)] md:gap-4">
-                <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
-                  Auto-Filing
-                </h3>
-                <p className="text-[12px] text-white/58 leading-relaxed font-serif">
-                  Auto-filing is live. Filing-ready claims are being submitted through Amazon Seller Central. Some cases may take a little longer while Amazon moves through each support step, but submissions are active.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 gap-1 py-3 md:grid-cols-[180px_minmax(0,1fr)] md:gap-4">
-                <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
-                  Recoveries
-                </h3>
-                <p className="text-[12px] text-white/58 leading-relaxed font-serif">
-                  Recovery tracking is active on submitted cases. Payout verification is running, and accuracy is improving as more live recoveries move through the system.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 gap-1 py-3 md:grid-cols-[180px_minmax(0,1fr)] md:gap-4">
-                <h3 className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
-                  Reopen Cases (Appeals)
-                </h3>
-                <p className="text-[12px] text-white/58 leading-relaxed font-serif">
-                  Appeals will turn on automatically once enough case outcomes are collected. This lets Margin reopen cases with stronger evidence and more confidence.
-                </p>
-              </div>
+            <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+              <label htmlFor="contact-email" className="pt-2 text-[12px] font-mono font-bold uppercase tracking-tight text-white">
+                Your email address
+              </label>
+              <Input
+                id="contact-email"
+                type="email"
+                value={contactEmail}
+                onChange={(event) => setContactEmail(event.target.value)}
+                placeholder="you@company.com"
+                className="h-10 bg-white/[0.03] border-white/10 text-[12px] font-serif text-white placeholder:text-white/16 focus:border-white/24 rounded-lg"
+              />
             </div>
-            <p className="mt-3 text-[11px] text-white/40 leading-relaxed font-serif">
-              You do not need to do anything. We will keep improving filing speed, recovery tracking, and appeal quality as more live cases are processed.
-            </p>
+            <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+              <label htmlFor="contact-subject" className="pt-2 text-[12px] font-mono font-bold uppercase tracking-tight text-white">
+                Subject
+              </label>
+              <Input
+                id="contact-subject"
+                value={contactSubject}
+                onChange={(event) => setContactSubject(event.target.value)}
+                placeholder="What should we help with?"
+                className="h-10 bg-white/[0.03] border-white/10 text-[12px] font-serif text-white placeholder:text-white/16 focus:border-white/24 rounded-lg"
+              />
+            </div>
+            <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+              <div>
+                <label htmlFor="contact-query" className="text-[12px] font-mono font-bold uppercase tracking-tight text-white">
+                  Your query
+                </label>
+                <p className="mt-1 text-[10px] font-mono uppercase tracking-tight text-white/35">
+                  5 minute response time
+                </p>
+              </div>
+              <Textarea
+                id="contact-query"
+                value={contactQuery}
+                onChange={(event) => setContactQuery(event.target.value)}
+                placeholder="Tell us what is happening..."
+                className="min-h-[118px] bg-white/[0.03] border-white/10 text-[12px] font-serif text-white placeholder:text-white/16 focus:border-white/24 rounded-lg"
+              />
+            </div>
           </div>
           <div className="px-5 py-3 border-t border-white/5 bg-white/[0.02] flex justify-end">
             <button
-              onClick={() => setQuickNoticeOpen(false)}
-              className="px-4 py-1.5 text-[10px] font-mono font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all uppercase tracking-tight rounded-lg shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+              onClick={handleContactSupportSubmit}
+              disabled={contactSubmitting}
+              className="px-4 py-1.5 text-[10px] font-mono font-bold text-black bg-white hover:bg-white/90 transition-all uppercase tracking-tight rounded-lg disabled:opacity-50"
             >
-              Got It
+              {contactSubmitting ? 'Sending...' : 'Send Query Now'}
             </button>
           </div>
         </DialogContent>
