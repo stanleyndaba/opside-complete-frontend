@@ -653,8 +653,8 @@ export default function Billing() {
                   a: 'New billing records come from subscription billing truth only: plan tier, billing interval, invoice state, and YOCO checkout-link execution truth. Recoveries do not create new Margin charges.',
                 },
                 {
-                  q: 'What does the 60-day promo mean?',
-                  a: 'For the first 60 days you keep 100% of recoveries. The pricing model remains flat subscription billing, and there is no commission model after the promo ends.',
+                  q: 'What does the 30-day promo mean?',
+                  a: 'For the first 30 days you keep 100% of recoveries. The pricing model remains flat subscription billing, and there is no commission model after the promo ends.',
                 },
                 {
                   q: 'What are legacy recovery-fee rows?',

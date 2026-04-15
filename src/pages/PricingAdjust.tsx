@@ -23,6 +23,7 @@ type PricingTier = {
   annualCheckout: string;
   bestFor: string;
   features: string[];
+  coverageLine: string;
   featured?: boolean;
 };
 
@@ -35,16 +36,30 @@ const pricingTiers: PricingTier[] = [
     monthlyPrice: '$49',
     annualPrice: '$39 / month',
     annualCheckout: '$468 billed yearly',
-    bestFor: 'New & small sellers',
-    features: ['Auto-detection', 'Basic dashboard', '5 claims/mo'],
+    bestFor: 'New and smaller sellers who want ongoing monitoring with a lighter claim volume.',
+    features: [
+      'Continuous discrepancy monitoring',
+      'Ongoing evidence collection from connected sources',
+      'Filing-ready cases as they appear',
+      '5 claims per month',
+      'Recovery and payout tracking',
+    ],
+    coverageLine: 'Ongoing coverage starts with your first 30-day recovery cycle, then continues monthly. Cancel anytime.',
   },
   {
     name: 'Pro',
     monthlyPrice: '$99',
     annualPrice: '$79 / month',
     annualCheckout: '$948 billed yearly',
-    bestFor: 'Growing mid-size sellers',
-    features: ['Unlimited auto-filing', 'Gmail/Drive matching', 'Real-time alerts', 'Priority support'],
+    bestFor: 'Serious sellers who want continuous recovery coverage, stronger automation, and ongoing evidence collection.',
+    features: [
+      'Continuous recovery coverage',
+      'Unlimited auto-filing',
+      'Ongoing evidence matching from connected repositories',
+      'Real-time alerts for new filing opportunities',
+      'Priority support',
+    ],
+    coverageLine: 'Built for month-after-month monitoring, evidence collection, filing, and payout tracking. Cancel anytime.',
     featured: true,
   },
   {
@@ -52,8 +67,15 @@ const pricingTiers: PricingTier[] = [
     monthlyPrice: '$199',
     annualPrice: '$159 / month',
     annualCheckout: '$1,908 billed yearly',
-    bestFor: 'Large sellers & agencies',
-    features: ['Everything in Pro', 'API', 'Custom rules', '<1hr support', 'Multi-marketplace'],
+    bestFor: 'Larger operators who need uninterrupted monitoring, custom rules, multi-marketplace support, and high-priority operational coverage.',
+    features: [
+      'Everything in Pro',
+      'Uninterrupted multi-marketplace monitoring',
+      'Custom recovery rules',
+      'API access',
+      'High-priority operational coverage',
+    ],
+    coverageLine: 'Annual operators keep monitoring active without restart gaps, with high-priority support for recovery operations.',
   },
 ];
 
@@ -77,7 +99,7 @@ export default function PricingAdjust() {
   usePageMeta({
     title: 'Margin Pricing | Monthly Plans, No Commissions',
     description:
-      'Pay once for the first 30 days and keep 100% of everything Margin recovers. After 30 days it continues automatically at the normal monthly price. Cancel anytime. No commissions ever.',
+      'Start with your first 30-day recovery cycle, then continue with ongoing account monitoring. Margin keeps finding new discrepancies, collecting evidence, and tracking claims and payouts over time. No commissions ever.',
     url: `${SITE_META.url}/pricing`,
   });
 
@@ -238,7 +260,7 @@ export default function PricingAdjust() {
                 Flat subscription pricing. No commissions. No surprises.
               </h2>
               <p className="max-w-3xl text-sm md:text-base leading-7 text-white/40 tracking-tight mx-auto">
-                Pay once for the first 30 days and keep 100% of everything we recover. After 30 days it continues automatically at the normal monthly price. Cancel anytime. No commissions ever.
+                Start with your first 30-day recovery cycle, then continue with ongoing account monitoring. Margin keeps watching for new discrepancies, collecting evidence, surfacing filing-ready cases, and tracking recoveries and payouts over time. Cancel anytime.
               </p>
             </div>
           </motion.div>
@@ -300,16 +322,16 @@ export default function PricingAdjust() {
 
                     <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                        {activeBillingView === 'monthly' ? 'First 30 Days' : 'Annual Price After 30 Days'}
+                        {activeBillingView === 'monthly' ? 'First Recovery Cycle' : 'Annual Recovery Coverage'}
                       </div>
                       <div className="mt-3 text-4xl font-light tracking-tight text-white">
                         {activeBillingView === 'monthly' ? tier.monthlyPrice : tier.annualPrice}
                       </div>
                       <div className="mt-2 text-[11px] text-white/45">
-                        {activeBillingView === 'monthly' ? 'One-time first 30 days, then same monthly price' : 'Equivalent monthly rate when billed annually'}
+                        {activeBillingView === 'monthly' ? 'Starts your first 30-day recovery cycle' : 'Locked-in monthly rate for uninterrupted annual monitoring'}
                       </div>
                       <div className="mt-1 text-[11px] text-white/32">
-                        {activeBillingView === 'monthly' ? 'Continues automatically after 30 days · Cancel anytime' : `${tier.annualCheckout} · Save 20%`}
+                        {activeBillingView === 'monthly' ? 'Then continues as ongoing recovery monitoring · Cancel anytime' : `${tier.annualCheckout} · no restart gaps in coverage`}
                       </div>
                     </div>
 
@@ -338,7 +360,7 @@ export default function PricingAdjust() {
                           className="h-12 rounded-xl border-white/15 bg-transparent text-white hover:bg-white/[0.04] hover:text-white font-sans font-medium"
                         >
                           <a href="mailto:support@margin-finance.com?subject=Enterprise Pricing Inquiry">
-                            Talk to Sales
+                            Plan Enterprise Coverage
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </a>
                         </Button>
@@ -350,13 +372,13 @@ export default function PricingAdjust() {
                         >
                           {processingSelectionKey === `${tier.name === 'Starter' ? 'starter' : 'pro'}:${activeBillingView}`
                             ? 'Preparing Billing'
-                            : `Choose ${tier.name}`}
+                            : `Start ${tier.name} Coverage`}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       )}
 
                       <p className="text-[11px] leading-5 text-white/38">
-                        Keep 100% of every recovery for the first 30 days. Then continue at the normal monthly price - no commissions ever.
+                        {tier.coverageLine}
                       </p>
                     </div>
                   </div>

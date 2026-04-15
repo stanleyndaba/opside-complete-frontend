@@ -98,7 +98,7 @@ const Terms = () => {
                   <span className="text-gray-900">Subscription Pricing</span> — Margin uses flat subscription pricing with Starter, Pro, and Enterprise plan tiers. Pricing may be billed monthly or annually depending on the plan interval you choose.
                 </p>
                 <p>
-                  <span className="text-gray-900">Billing Cycle</span> — Subscription invoices are issued on the selected monthly or annual billing interval. The first 60 days are a promotional period where you keep 100% of recoveries, but the billing model remains flat subscription pricing throughout.
+                  <span className="text-gray-900">Billing Cycle</span> — Subscription invoices are issued on the selected monthly or annual billing interval. The first 30 days are a promotional period where you keep 100% of recoveries, but the billing model remains flat subscription pricing throughout.
                 </p>
                 <p>
                   <span className="text-gray-900">Direct Seller Payouts</span> — Amazon pays reimbursements directly to your Amazon Seller account. Margin does not receive, hold, or route reimbursement funds on your behalf.
@@ -119,7 +119,7 @@ const Terms = () => {
                   <span className="text-gray-900">Subscription Billing</span> — Margin no longer uses outcome-linked or commission billing. Refund requests apply to subscription charges only.
                 </p>
                 <p>
-                  <span className="text-gray-900">Promo Window</span> — During the first 60 days you keep 100% of recoveries. After that, the same flat subscription pricing continues with no transition into success-fee billing.
+                  <span className="text-gray-900">Promo Window</span> — During the first 30 days you keep 100% of recoveries. After that, the same flat subscription pricing continues with no transition into success-fee billing.
                 </p>
                 <p>
                   <span className="text-gray-900">Disputes</span> — If you believe a subscription charge was billed in error, contact us within 30 days.

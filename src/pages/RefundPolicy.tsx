@@ -47,7 +47,7 @@ const RefundPolicy = () => {
                                     Margin now uses flat subscription pricing. Starter, Pro, and Enterprise plans are billed monthly or annually depending on your selected interval.
                                 </p>
                                 <p>
-                                    For the first 60 days you keep 100% of recoveries. After that, the same flat subscription continues with no commissions, no success fees, and no recovery-based charges. Amazon still pays reimbursements directly to your Seller Central account.
+                                    For the first 30 days you keep 100% of recoveries. After that, the same flat subscription continues with no commissions, no success fees, and no recovery-based charges. Amazon still pays reimbursements directly to your Seller Central account.
                                 </p>
                             </div>
                         </section>
@@ -65,7 +65,7 @@ const RefundPolicy = () => {
                                     <span className="text-gray-900">Billing Errors</span> — If a subscription charge was created in error, contact us within 30 days. We will review the billing record and issue a correction or refund when confirmed.
                                 </p>
                                 <p>
-                                    <span className="text-gray-900">Promo Window</span> — Recoveries during the first 60 days do not create extra billing obligations. The promo never converts into a commission model later.
+                                    <span className="text-gray-900">Promo Window</span> — Recoveries during the first 30 days do not create extra billing obligations. The promo never converts into a commission model later.
                                 </p>
                             </div>
                         </section>

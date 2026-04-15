@@ -90,9 +90,9 @@ export default function StandardAgreement() {
                     <div className="flex items-start gap-4">
                       <Check className="mt-1 h-3.5 w-3.5 text-white/40 shrink-0" />
                       <div className="space-y-1">
-                        <p className="text-sm font-bold text-white tracking-tight">60-Day Keep-100% Promo</p>
+                        <p className="text-sm font-bold text-white tracking-tight">30-Day Keep-100% Promo</p>
                         <p className="text-[11px] text-white/30 uppercase tracking-wider font-light">
-                          You keep 100% of recoveries for the first 60 days and remain on the same subscription after that
+                          You keep 100% of recoveries for the first 30 days and remain on the same subscription after that
                         </p>
                       </div>
                     </div>
