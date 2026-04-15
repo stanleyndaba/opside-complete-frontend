@@ -349,8 +349,8 @@ function PipelineSection({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-            <h2 className="text-[19px] font-sans font-bold tracking-tight text-white">{title}</h2>
-            <div className="text-[16px] font-sans font-bold tracking-tight text-[#8b8b8b]">{amount}</div>
+            <h2 className="text-[15px] font-sans font-semibold tracking-tight text-white/88">{title}</h2>
+            <div className="text-[13px] font-sans font-semibold tracking-tight text-[#8b8b8b]">{amount}</div>
           </div>
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-sans text-white/60">
             <span>{detail}</span>
@@ -418,7 +418,7 @@ function DisputeCard({
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{disputeTypeLabel(row)}</span>
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {disputeReference(row)}</span>
           </div>
-          <h3 className="mt-2 text-[17px] font-semibold tracking-tight text-white">{disputeTitle(row)}</h3>
+          <h3 className="mt-2 text-[14px] font-medium tracking-tight text-white/90">{disputeTitle(row)}</h3>
           <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#9a9a9a]">{detail}</p>
           <div className="mt-2 text-[11px] font-medium tracking-tight text-white/38">{disputeMeta(row)}</div>
         </div>
@@ -463,7 +463,7 @@ function LedgerCard({
             <span className={cn('inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-tight', classes.badge)}>{ledgerTypeLabel(row)}</span>
             <span className="text-[11px] font-semibold uppercase tracking-tight text-white/36">Ref {ledgerReference(row)}</span>
           </div>
-          <h3 className="mt-2 text-[17px] font-semibold tracking-tight text-white">{ledgerReference(row)}</h3>
+          <h3 className="mt-2 text-[14px] font-medium tracking-tight text-white/90">{ledgerReference(row)}</h3>
           <p className="mt-1.5 max-w-3xl text-sm leading-5 text-[#9a9a9a]">{detail}</p>
           <div className="mt-2 text-[11px] font-medium tracking-tight text-white/38">{ledgerMeta(row)}</div>
         </div>
