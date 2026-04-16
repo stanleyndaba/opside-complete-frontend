@@ -1148,29 +1148,29 @@ export default function IntegrationsHub() {
           >
             {/* Amazon Command Node */}
             <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-12">
-              <div className="h-full bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/10 p-8 flex flex-col relative group transition-all duration-500 hover:border-white/20">
-                <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 transition-opacity">
+              <div className="h-full border-y border-white/10 bg-transparent px-5 py-5 flex flex-col relative group transition-colors duration-300 hover:border-white/20">
+                <div className="absolute top-0 right-0 p-6 opacity-15 group-hover:opacity-50 transition-opacity">
                   <Database className="w-12 h-12 text-white/10 group-hover:text-white/20 transition-colors" />
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+                <div className="flex flex-col gap-5 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-6">
                     <div className="h-16 w-16 rounded-2xl bg-sky-900/20 flex items-center justify-center border border-sky-700/30 shadow-[0_0_20px_rgba(14,116,144,0.22)] group-hover:shadow-[0_0_32px_rgba(30,64,175,0.34)] transition-all duration-500 overflow-hidden relative">
                       <div className="absolute inset-0 bg-gradient-to-tr from-sky-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <img src="/Amazon-logo.png" alt="Amazon" className="h-10 w-10 object-contain brightness-0 invert relative z-10" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-sans font-bold text-white tracking-tight mb-1">Amazon Connection</h3>
-                      <p className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">Tenant-scoped auth and store records</p>
+                      <h3 className="text-[22px] font-sans font-medium text-white tracking-tight">Amazon Connection</h3>
+                      <p className="mt-1 text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Tenant-scoped auth and store records</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row">
                     <Dialog open={showAddStore} onOpenChange={setShowAddStore}>
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
-                          className="h-12 border border-white/10 hover:border-white/20 hover:bg-white/5 text-gray-300 text-xs font-sans font-bold uppercase tracking-tight gap-2"
+                          className="h-9 rounded-none border border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-300 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white gap-2"
                         >
                           <Plus className="w-4 h-4" /> Add Store Record
                         </Button>
@@ -1242,10 +1242,10 @@ export default function IntegrationsHub() {
                         </div>
                         <div className="text-[11px] text-gray-400">
                           Next batch opens in {capacity?.nextBatchHours ?? 24} hours.
-                        </div>
+                          </div>
                         <Button
                           onClick={() => navigate('/waitlist?reason=capacity')}
-                          className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
+                          className="h-9 rounded-none bg-white px-6 text-black font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-white/90 hover:text-black"
                         >
                           Join Waitlist
                         </Button>
@@ -1271,7 +1271,7 @@ export default function IntegrationsHub() {
                             toast({ title: 'Connection Error', description: 'Failed to connect to Amazon SP-API. Please try again.', variant: 'destructive' });
                           }
                         }}
-                        className="h-12 bg-white text-black font-sans font-bold uppercase tracking-tight text-[10px] hover:bg-white/90 hover:text-black transition-all duration-300 px-8"
+                        className="h-9 rounded-none bg-white px-6 text-black font-sans font-medium uppercase tracking-tight text-[10px] transition-colors hover:bg-white/90 hover:text-black"
                       >
                         Connect Amazon
                       </Button>
@@ -1279,57 +1279,57 @@ export default function IntegrationsHub() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
-                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Auth Status</span>
-                    <span className="text-sm text-white font-sans font-bold tracking-tight">{describeProviderState(amazonProviderState)}</span>
+                <div className="grid grid-cols-1 border-b border-white/10 md:grid-cols-2 xl:grid-cols-4">
+                  <div className="border-b border-white/8 px-0 py-4 md:border-r xl:border-b-0 xl:pr-5">
+                    <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-2 tracking-tight">Auth Status</span>
+                    <span className="text-[13px] text-white font-sans font-medium tracking-tight">{describeProviderState(amazonProviderState)}</span>
                   </div>
-                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
-                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Seller ID</span>
-                    <span className="text-sm text-white font-sans font-bold tracking-tight break-all">{connectedSellerId || 'Not resolved'}</span>
+                  <div className="border-b border-white/8 px-0 py-4 md:border-b-0 xl:border-r xl:px-5">
+                    <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-2 tracking-tight">Seller ID</span>
+                    <span className="text-[13px] text-white font-sans font-medium tracking-tight break-all">{connectedSellerId || 'Not resolved'}</span>
                   </div>
-                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
-                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Amazon Account</span>
-                    <span className="text-sm text-white font-sans font-bold tracking-tight">{connectedAmazonName || 'Not available'}</span>
+                  <div className="border-b border-white/8 px-0 py-4 md:border-r md:pr-5 xl:border-b-0 xl:px-5">
+                    <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-2 tracking-tight">Amazon Account</span>
+                    <span className="text-[13px] text-white font-sans font-medium tracking-tight">{connectedAmazonName || 'Not available'}</span>
                   </div>
-                  <div className="bg-black/40 rounded-xl p-4 border border-white/5">
-                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">Marketplaces</span>
-                    <span className="text-sm text-white font-sans font-bold tracking-tight">
+                  <div className="px-0 py-4 md:pl-5">
+                    <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-2 tracking-tight">Marketplaces</span>
+                    <span className="text-[13px] text-white font-sans font-medium tracking-tight">
                       {connectedAmazonMarketplaces.length > 0 ? connectedAmazonMarketplaces.join(', ') : 'Not available'}
                     </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {loadingStores ? (
                     <div className="col-span-full flex justify-center py-12">
                       <RefreshCw className="w-8 h-8 text-white/25 animate-spin" />
                     </div>
                   ) : stores.length > 0 ? (
                     stores.map(store => (
-                      <div key={store.id} className="bg-black/40 border border-white/5 rounded-xl p-5 backdrop-blur-sm relative group/card transition-all duration-300 hover:border-white/15 hover:bg-white/[0.03]">
+                      <div key={store.id} className="border-y border-white/10 px-0 py-4 relative group/card transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.025]">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex flex-col">
-                            <span className="text-white font-bold text-base mb-1 truncate max-w-[150px] tracking-tight">{store.name}</span>
-                            <span className="text-[10px] font-sans font-bold text-white/35 uppercase tracking-tight">{store.marketplace}</span>
+                            <span className="text-white font-sans font-medium text-[13px] mb-1 truncate max-w-[150px] tracking-tight">{store.name}</span>
+                            <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">{store.marketplace}</span>
                           </div>
                           <div className="h-2 w-2 rounded-full bg-white/70" />
                         </div>
 
-                        <div className="space-y-3 pt-4 border-t border-white/5">
+                        <div className="space-y-3 pt-4 border-t border-white/8">
                           <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Seller ID</span>
-                            <span className="text-[10px] text-gray-300 font-bold tracking-tight break-all">{store.seller_id || 'Not bound'}</span>
+                            <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Seller ID</span>
+                            <span className="text-[10px] text-zinc-300 font-medium tracking-tight break-all">{store.seller_id || 'Not bound'}</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="flex flex-col">
-                            <span className="text-[9px] font-sans font-bold text-gray-500 uppercase tracking-tight">Status</span>
-                            <span className="text-[10px] text-gray-300 font-bold tracking-tight">{getStoreOperationalState(store)}</span>
+                            <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Status</span>
+                            <span className="text-[10px] text-zinc-300 font-medium tracking-tight">{getStoreOperationalState(store)}</span>
                             </div>
                             <button
                               onClick={() => handleDeleteStore(store.id)}
                               disabled={deletingStore === store.id}
-                              className="opacity-0 group-hover/card:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded-lg text-gray-500 hover:text-red-400"
+                              className="opacity-0 group-hover/card:opacity-100 transition-opacity p-2 hover:bg-red-500/10 text-zinc-500 hover:text-red-400"
                             >
                               {deletingStore === store.id ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                             </button>
@@ -1338,18 +1338,18 @@ export default function IntegrationsHub() {
                       </div>
                     ))
                   ) : (
-                    <div className="col-span-full text-center py-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/5 font-sans font-light tracking-tight">
-                      <p className="text-gray-500 opacity-50">No tenant store records are bound yet. Connect Amazon to resolve seller identity, or add a store record for workspace mapping.</p>
+                    <div className="col-span-full border border-dashed border-white/10 px-5 py-10 text-center font-sans font-light tracking-tight">
+                      <p className="text-zinc-500">No tenant store records are bound yet. Connect Amazon to resolve seller identity, or add a store record for workspace mapping.</p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                <div className="mt-5 pt-4 border-t border-white/10 flex flex-col gap-3 text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-6">
                     <span className="flex items-center gap-2"><Globe className="w-3 h-3" /> US-EAST-1</span>
                     <span className="flex items-center gap-2"><Shield className="w-3 h-3 text-white/35" /> Encrypted</span>
                   </div>
-                  <span className="text-gray-400">Last Amazon ingest: {formatDateTime(status?.lastIngest)}</span>
+                  <span className="text-zinc-400">Last Amazon ingest: {formatDateTime(status?.lastIngest)}</span>
                 </div>
               </div>
             </motion.div>
@@ -1553,20 +1553,20 @@ export default function IntegrationsHub() {
             </div>
 
             <motion.div variants={itemVariants} className="lg:col-span-12 mt-8">
-              <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-8">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+              <div className="border-y border-white/10 bg-transparent px-5 py-5">
+                <div className="flex flex-col gap-4 border-b border-white/10 pb-5 md:flex-row md:items-end md:justify-between">
                   <div>
-                    <h3 className="text-lg font-sans font-bold text-white tracking-tight">Ingestion Truth</h3>
-                    <p className="text-[10px] font-sans font-bold text-gray-500 uppercase tracking-tight mt-1">
+                    <h3 className="text-[20px] font-sans font-medium text-white tracking-tight">Evidence Intake Status</h3>
+                    <p className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight mt-1">
                       Connection truth stays separate from stored, parsed, ready-to-match, and case-linked evidence truth.
                     </p>
                   </div>
-                  <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
-                    Last ingestion truth refresh: {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                    Last intake refresh: {formatDateTime(evidenceStatus?.lastIngestion || status?.lastIngest)}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 border-b border-white/10 md:grid-cols-3 xl:grid-cols-6">
                   {[
                     { label: 'Ingestable Sources', value: evidenceSourcesState.ingestableCount, note: `${evidenceSourcesState.connectedCount} connected` },
                     { label: 'Sources Resolved', value: ingestionResult?.sourcesResolved ?? evidenceStatus?.sourcesResolved ?? 0, note: 'Resolved for ingest' },
@@ -1574,44 +1574,54 @@ export default function IntegrationsHub() {
                     { label: 'Parsing', value: evidenceStatus?.processingCount ?? 0, note: 'Parser still running' },
                     { label: 'Parsed', value: evidenceStatus?.parsedCount ?? 0, note: 'Parser completed successfully' },
                     { label: 'Ready to Match', value: evidenceStatus?.matchReadyCount ?? 0, note: 'Parsed, not case-linked' }
-                  ].map((item) => (
-                    <div key={item.label} className="bg-black/40 rounded-xl p-4 border border-white/5">
-                      <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-2 tracking-tight">{item.label}</span>
-                      <span className="text-2xl font-sans font-bold text-white tracking-tight">{item.value}</span>
-                      <span className="block mt-2 text-[10px] text-gray-500 font-sans font-bold uppercase tracking-tight">{item.note}</span>
+                  ].map((item, index) => (
+                    <div
+                      key={item.label}
+                      className={cn(
+                        "px-0 py-4 md:px-4 xl:px-4",
+                        index % 2 === 0 ? "border-r border-white/8 pr-4" : "pl-4",
+                        index < 4 ? "border-b border-white/8 md:border-b-0" : "",
+                        index < 3 ? "md:border-r md:border-white/8" : "",
+                        index === 2 ? "md:border-r-0 xl:border-r" : "",
+                        index < 5 ? "xl:border-r xl:border-white/8" : ""
+                      )}
+                    >
+                      <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-2 tracking-tight">{item.label}</span>
+                      <span className="text-[22px] font-sans font-medium text-white tracking-tight">{item.value}</span>
+                      <span className="block mt-2 text-[10px] text-zinc-500 font-sans font-medium uppercase tracking-tight">{item.note}</span>
                     </div>
                   ))}
                 </div>
 
-                <p className="mt-4 text-[10px] font-sans font-bold uppercase tracking-tight text-gray-600">
+                <p className="mt-4 text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-600">
                   Filing-usable evidence is not inferred here. It is confirmed later when dispute evidence links exist in case workflows.
                 </p>
 
-                <div className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-6">
-                  <div className="bg-black/40 rounded-xl p-5 border border-white/5">
-                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-3 tracking-tight">Skipped Providers</span>
+                <div className="mt-5 grid grid-cols-1 gap-6 xl:grid-cols-2">
+                  <div className="border-y border-white/10 py-4">
+                    <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-3 tracking-tight">Skipped Providers</span>
                     {activeSkippedProviders.length > 0 ? (
-                      <div className="space-y-2">
+                      <div className="divide-y divide-white/8">
                         {activeSkippedProviders.map((item, index) => (
-                          <div key={`${item.provider}-${item.reason}-${index}`} className="flex items-start justify-between gap-4 text-xs font-sans tracking-tight">
-                            <span className="text-white font-bold uppercase">{item.provider}</span>
-                            <span className="text-gray-400 text-right">{humanizeSkippedReason(item.reason)}</span>
+                          <div key={`${item.provider}-${item.reason}-${index}`} className="flex items-start justify-between gap-4 py-2 text-xs font-sans tracking-tight">
+                            <span className="text-white font-medium uppercase">{item.provider}</span>
+                            <span className="text-zinc-400 text-right">{humanizeSkippedReason(item.reason)}</span>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-gray-400 font-sans tracking-tight">
+                      <p className="text-xs text-zinc-400 font-sans tracking-tight">
                         No provider skip reasons are currently active for this workspace.
                       </p>
                     )}
                   </div>
 
-                  <div className="bg-black/40 rounded-xl p-5 border border-white/5">
-                    <span className="text-[9px] font-sans font-bold text-gray-500 uppercase block mb-3 tracking-tight">Last Ingest Outcome</span>
+                  <div className="border-y border-white/10 py-4">
+                    <span className="text-[9px] font-sans font-medium text-zinc-500 uppercase block mb-3 tracking-tight">Last Ingest Outcome</span>
                     {ingestionResult ? (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-4">
-                          <span className="text-sm font-sans font-bold text-white tracking-tight">
+                          <span className="text-[13px] font-sans font-medium text-white tracking-tight">
                             {ingestionResult.phase === 'started'
                               ? ingestionResult.scope === 'gmail'
                                 ? 'Gmail-only run started'
@@ -1639,24 +1649,24 @@ export default function IntegrationsHub() {
                             </Badge>
                           </div>
                         </div>
-                        <p className="text-xs text-gray-400 font-sans tracking-tight">
+                        <p className="text-xs text-zinc-400 font-sans tracking-tight">
                           {ingestionResult.message || 'The latest ingestion result is now visible instead of being discarded.'}
                         </p>
                         {!!ingestionResult.providersAttempted?.length && (
-                          <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                          <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                             Attempted: {ingestionResult.providersAttempted.join(', ')}
                           </p>
                         )}
                         {!!ingestionResult.errors?.length && (
                           <div className="space-y-1">
                             {ingestionResult.errors.slice(0, 3).map((error, index) => (
-                              <p key={`${error}-${index}`} className="text-xs text-gray-400 font-sans tracking-tight">{error}</p>
+                              <p key={`${error}-${index}`} className="text-xs text-zinc-400 font-sans tracking-tight">{error}</p>
                             ))}
                           </div>
                         )}
                       </div>
                     ) : (
-                      <p className="text-xs text-gray-400 font-sans tracking-tight">
+                      <p className="text-xs text-zinc-400 font-sans tracking-tight">
                         No all-sources ingestion run has been recorded in this page state yet.
                       </p>
                     )}

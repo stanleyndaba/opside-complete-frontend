@@ -848,8 +848,11 @@ export default function EvidenceLocker() {
 
                   <Cloud className={cn("h-10 w-10 mx-auto mb-6 transition-all duration-300", dragActive ? "scale-110 text-white/80" : "text-white/10 group-hover:text-white/20")} />
                   <h3 className="text-sm font-sans font-bold text-white mb-2 uppercase tracking-tight">Document Ingestion</h3>
-                  <p className="text-[10px] text-white/20 font-sans font-bold mb-8 uppercase tracking-tight">
+                  <p className="text-[10px] text-white/20 font-sans font-bold mb-3 uppercase tracking-tight">
                     Supported types: PDF, JPG, PNG
+                  </p>
+                  <p className="mx-auto mb-8 max-w-xl text-[11px] font-sans font-medium leading-relaxed text-white/35">
+                    Margin checks connected repositories first. Use upload only when a supporting document is not available from your ingested sources; uploaded files still enter the same parsing, matching, and evidence workflow.
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
