@@ -22,6 +22,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
 import { createAuthenticatedEventStream } from '@/lib/authenticatedSSE';
 import { tenantRoute } from '@/lib/routes';
+import { cn } from '@/lib/utils';
 import { useTenant } from '@/contexts/TenantContext';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
