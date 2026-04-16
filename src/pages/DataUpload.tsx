@@ -1268,6 +1268,25 @@ export default function DataUpload() {
         previewState.processedAt,
         recoveryProofLabel,
     ]);
+    const amazonFilingCaseCountLabel = useMemo(
+        () => (typeof findingsProofCount === 'number' ? pluralize(findingsProofCount, 'case') : NOT_AVAILABLE),
+        [findingsProofCount]
+    );
+    const amazonFilingCaseCopy = useMemo(() => {
+        if (typeof findingsProofCount !== 'number') {
+            return 'Margin will show the Amazon filing count as soon as detection returns finding totals for this upload.';
+        }
+
+        if (findingsProofCount === 0) {
+            return 'No Amazon filing cases are being prepared from this upload yet. If detection surfaces discrepancies, they will appear here first.';
+        }
+
+        if (isDetectionInFlight(previewState.status)) {
+            return `Margin has already identified ${pluralize(findingsProofCount, 'case')} moving toward Amazon filing. Final evidence and duplicate checks continue before anything is submitted.`;
+        }
+
+        return `Margin is preparing ${pluralize(findingsProofCount, 'case')} from these preview findings for the Amazon filing workflow. Submission still follows evidence, review, and Auto-File controls.`;
+    }, [findingsProofCount, previewState.status]);
 
     // Handle file selection
     const addFiles = useCallback((newFiles: FileList | File[]) => {
@@ -1993,40 +2012,45 @@ export default function DataUpload() {
                                 animate={{ y: '15%' }} // Occupies most of the page but not all
                                 exit={{ y: '100%' }}
                                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                                className="fixed inset-x-0 bottom-0 top-0 z-[101] bg-white rounded-none overflow-hidden flex flex-col shadow-[0_-20px_50px_rgba(0,0,0,0.3)]"
+                                className="fixed inset-x-0 bottom-0 top-0 z-[101] overflow-hidden border-t border-white/10 bg-[#050505] text-white shadow-[0_-24px_80px_rgba(0,0,0,0.65)] flex flex-col"
                             >
                                 {/* Drawer Header */}
-                                <div className="border-b border-gray-100 px-6 py-4">
+                                <div className="border-b border-white/10 bg-[#050505]/95 px-6 py-4">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center gap-2.5 mb-2">
-                                                <img src="/logoimagetwo.png" alt="Margin Finance" className="h-3.5 w-auto object-contain brightness-0" />
-                                                <span className="text-gray-200 font-light text-sm">|</span>
-                                                <h2 className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">Upload Results</h2>
+                                                <img src="/logoimagetwo.png" alt="Margin Finance" className="h-3.5 w-auto object-contain invert brightness-0" />
+                                                <span className="text-white/18 font-light text-sm">|</span>
+                                                <h2 className="text-[10px] font-sans font-bold text-white/42 uppercase tracking-tight">Preview Findings</h2>
                                             </div>
                                             <div className="px-0.5">
-                                                <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight leading-none">
+                                                <p className="text-[8px] font-sans font-bold text-white/32 uppercase tracking-tight leading-none">
                                                     {pipelineStage?.eyebrow || 'Current upload detection summary'}
                                                 </p>
-                                                <p className="mt-2 text-[14px] font-bold text-gray-900 tracking-tight">
+                                                <p className="mt-2 text-[14px] font-bold text-white tracking-tight">
                                                     {pipelineStage?.title || 'Detection summary ready'}
                                                 </p>
-                                                <p className="mt-1 text-[11px] font-sans leading-5 text-gray-500">
-                                                    {pipelineStage?.description || previewEmptyState.description}
+                                                <p className="mt-1 max-w-3xl text-[11px] font-sans leading-5 text-white/48">
+                                                    {previewState.status === 'failed'
+                                                        ? pipelineStage?.description || previewEmptyState.description
+                                                        : 'These are preview findings from this upload. Margin is turning supported discrepancies into Amazon filing cases and keeping final submission behind evidence, review, and Auto-File controls.'}
                                                 </p>
                                                 <div className="mt-3 flex flex-wrap gap-2">
+                                                    <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70">
+                                                        {typeof findingsProofCount === 'number' ? `${amazonFilingCaseCountLabel} moving toward filing` : 'Filing count pending'}
+                                                    </span>
                                                     {isPreviewPartial && (
-                                                        <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-700">
+                                                        <span className="inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-300">
                                                             Partial findings live
                                                         </span>
                                                     )}
                                                     {previewState.isSandbox && (
-                                                        <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-700">
+                                                        <span className="inline-flex items-center rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-amber-300">
                                                             Sandbox mode
                                                         </span>
                                                     )}
                                                     {isPreviewLoading && (
-                                                        <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-gray-500">
+                                                        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-sans font-bold uppercase tracking-tight text-white/48">
                                                             <Loader2 className="h-3 w-3 animate-spin" />
                                                             Refreshing detail
                                                         </span>
@@ -2034,80 +2058,88 @@ export default function DataUpload() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button onClick={() => setIsPreviewOpen(false)} className="p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-colors">
+                                        <button onClick={() => setIsPreviewOpen(false)} className="p-1.5 rounded-full text-white/35 transition-colors hover:bg-white/[0.06] hover:text-white">
                                             <X className="h-5 w-5" />
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Drawer Content */}
-                                <div className="flex h-full w-full overflow-hidden bg-white">
-                                    <div className="w-[340px] shrink-0 border-r border-gray-100 flex flex-col bg-gray-50/35">
-                                        <div className="px-5 py-4 border-b border-gray-100">
-                                            <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">Summary first</h3>
+                                <div className="flex h-full w-full overflow-hidden bg-[#050505]">
+                                    <div className="w-[340px] shrink-0 border-r border-white/10 flex flex-col bg-[#080808]">
+                                        <div className="px-5 py-4 border-b border-white/10">
+                                            <h3 className="text-[8px] font-sans font-bold text-white/35 uppercase tracking-tight mb-3">Summary first</h3>
                                             <div className="grid grid-cols-1 gap-2.5">
                                                 {drawerSummaryItems.map((item) => (
-                                                    <div key={`${item.label}-${item.value}`} className="rounded-xl border border-gray-100 bg-white px-3 py-2.5">
-                                                        <p className="text-[8px] font-sans font-bold text-gray-300 uppercase tracking-tight">{item.label}</p>
-                                                        <p className="mt-1 text-[11px] font-semibold text-gray-900 tracking-tight">{item.value || NOT_AVAILABLE}</p>
+                                                    <div key={`${item.label}-${item.value}`} className="border border-white/10 bg-white/[0.025] px-3 py-2.5">
+                                                        <p className="text-[8px] font-sans font-bold text-white/28 uppercase tracking-tight">{item.label}</p>
+                                                        <p className="mt-1 text-[11px] font-semibold text-white/82 tracking-tight">{item.value || NOT_AVAILABLE}</p>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="px-5 py-4 border-b border-gray-100">
-                                            <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Upload truth</h3>
+                                        <div className="px-5 py-4 border-b border-white/10">
+                                            <h3 className="text-[8px] font-sans font-bold text-white/35 uppercase tracking-tight mb-2">Filing assurance</h3>
+                                            <div className="border border-white/10 bg-white/[0.025] px-3 py-3">
+                                                <p className="text-[8px] font-sans font-bold uppercase tracking-tight text-white/28">Amazon cases moving toward filing</p>
+                                                <p className="mt-2 text-lg font-bold tracking-tight text-white">{amazonFilingCaseCountLabel}</p>
+                                                <p className="mt-2 text-[10px] font-sans leading-5 text-white/48">{amazonFilingCaseCopy}</p>
+                                            </div>
+                                        </div>
+                                        <div className="px-5 py-4 border-b border-white/10">
+                                            <h3 className="text-[8px] font-sans font-bold text-white/35 uppercase tracking-tight mb-2">Upload truth</h3>
                                             <ul className="space-y-2">
                                                 <li className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Account:</span>
-                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{tenant?.name || currentTenantSlug} (ID: ***{previewResults[0]?.seller_id?.slice(-4) || '----'})</span>
+                                                    <span className="text-[9px] font-sans font-bold text-white/28 uppercase shrink-0">Account:</span>
+                                                    <span className="text-[11px] font-semibold text-white/78 font-sans tracking-tight truncate">{tenant?.name || currentTenantSlug} (ID: ***{previewResults[0]?.seller_id?.slice(-4) || '----'})</span>
                                                 </li>
                                                 <li className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Sync ID:</span>
-                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight truncate">{previewState.syncId || NOT_AVAILABLE}</span>
+                                                    <span className="text-[9px] font-sans font-bold text-white/28 uppercase shrink-0">Sync ID:</span>
+                                                    <span className="text-[11px] font-semibold text-white/78 font-sans tracking-tight truncate">{previewState.syncId || NOT_AVAILABLE}</span>
                                                 </li>
                                                 <li className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Loaded detections:</span>
-                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewLoadedCount} loaded{previewKnownTotal !== previewLoadedCount ? ` of ${previewKnownTotal} total` : ''}</span>
+                                                    <span className="text-[9px] font-sans font-bold text-white/28 uppercase shrink-0">Loaded detections:</span>
+                                                    <span className="text-[11px] font-semibold text-white/78 font-sans tracking-tight">{previewLoadedCount} loaded{previewKnownTotal !== previewLoadedCount ? ` of ${previewKnownTotal} total` : ''}</span>
                                                 </li>
                                                 <li className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Recovery proof:</span>
-                                                    <span className="text-[11px] font-bold text-gray-900 font-sans tracking-tight">{fmt(previewTotalRecovery)}{previewIsTruncated ? ' (loaded subset)' : ''}</span>
+                                                    <span className="text-[9px] font-sans font-bold text-white/28 uppercase shrink-0">Recovery proof:</span>
+                                                    <span className="text-[11px] font-bold text-white font-sans tracking-tight">{fmt(previewTotalRecovery)}{previewIsTruncated ? ' (loaded subset)' : ''}</span>
                                                 </li>
                                                 <li className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] font-sans font-bold text-gray-300 uppercase shrink-0">Period analysed:</span>
-                                                    <span className="text-[11px] font-semibold text-gray-900 font-sans tracking-tight">{previewDates ? `${previewDates.from} to ${previewDates.to}` : 'All available data'}</span>
+                                                    <span className="text-[9px] font-sans font-bold text-white/28 uppercase shrink-0">Period analysed:</span>
+                                                    <span className="text-[11px] font-semibold text-white/78 font-sans tracking-tight">{previewDates ? `${previewDates.from} to ${previewDates.to}` : 'All available data'}</span>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div className="px-5 py-4">
-                                            <h3 className="text-[8px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-2">Detection breakdown</h3>
+                                            <h3 className="text-[8px] font-sans font-bold text-white/35 uppercase tracking-tight mb-2">Detection breakdown</h3>
                                             {previewTopTypes.length > 0 ? (
                                                 <>
-                                                    <p className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-3">{previewBreakdownLabel}</p>
+                                                    <p className="text-[9px] font-sans font-bold text-white/32 uppercase tracking-tight mb-3">{previewBreakdownLabel}</p>
                                                     <div className="space-y-2">
                                                         {previewTopTypes.slice(0, 5).map(([type, data], idx) => (
                                                             <div key={idx} className="flex items-start justify-between">
                                                                 <div className="flex-1 min-w-0 mr-4">
-                                                                    <p className="text-[10px] font-bold text-gray-900 leading-none">{formatAnomalyType(type)}</p>
-                                                                    <p className="text-[9px] text-gray-400 mt-0.5 truncate leading-tight font-medium">{data.count} detection{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
+                                                                    <p className="text-[10px] font-bold text-white/82 leading-none">{formatAnomalyType(type)}</p>
+                                                                    <p className="text-[9px] text-white/35 mt-0.5 truncate leading-tight font-medium">{data.count} detection{data.count > 1 ? 's' : ''} · {fmt(data.value)}</p>
                                                                 </div>
                                                             </div>
                                                         ))}
                                                     </div>
                                                 </>
                                             ) : (
-                                                <p className="text-[10px] font-sans leading-5 text-gray-400">
+                                                <p className="text-[10px] font-sans leading-5 text-white/40">
                                                     Detection categories will populate here as soon as row-level findings are ready for this upload.
                                                 </p>
                                             )}
                                         </div>
                                     </div>
                                     <div className="min-w-0 flex-1 flex flex-col">
-                                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/10">
-                                            <h3 className="text-[9px] font-sans font-bold text-gray-400 uppercase tracking-tight mb-0.5">Loaded Results</h3>
-                                            <p className="text-[10px] text-gray-400 font-sans">{previewResultsSummary}</p>
+                                        <div className="border-b border-white/10 bg-white/[0.015] px-6 py-4">
+                                            <h3 className="text-[9px] font-sans font-bold text-white/38 uppercase tracking-tight mb-0.5">Loaded preview findings</h3>
+                                            <p className="text-[10px] text-white/42 font-sans">{previewResultsSummary}</p>
                                             {previewIsTruncated && (
-                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-700 tracking-tight">
+                                                <p className="mt-1 text-[10px] font-sans font-semibold text-amber-300 tracking-tight">
                                                     Showing first {previewLoadedCount} of {previewKnownTotal} detections. Recovery totals and category summaries below are based on the loaded subset only.
                                                 </p>
                                             )}
@@ -2116,17 +2148,17 @@ export default function DataUpload() {
                                             {previewResults.length === 0 ? (
                                                 <div className="flex h-full items-center justify-center">
                                                     <div className="flex max-w-sm flex-col items-center gap-3 text-center">
-                                                        <div className="p-4 rounded-2xl bg-gray-50">
+                                                        <div className="border border-white/10 bg-white/[0.025] p-4">
                                                             {isPreviewLoading ? (
-                                                                <Loader2 className="h-10 w-10 text-gray-300 animate-spin" />
+                                                                <Loader2 className="h-10 w-10 text-white/30 animate-spin" />
                                                             ) : (
-                                                                <Target className="h-10 w-10 text-gray-300" />
+                                                                <Target className="h-10 w-10 text-white/30" />
                                                             )}
                                                         </div>
-                                                        <h3 className="text-sm font-semibold text-gray-700 font-sans">
+                                                        <h3 className="text-sm font-semibold text-white/78 font-sans">
                                                             {isPreviewLoading ? 'Row-level detections are still loading' : previewEmptyState.title}
                                                         </h3>
-                                                        <p className="text-xs text-gray-400 font-sans leading-relaxed">
+                                                        <p className="text-xs text-white/42 font-sans leading-relaxed">
                                                             {isPreviewLoading
                                                                 ? 'Margin has already surfaced the upload stage, timing, and current money proof above. Detailed detection rows will appear here as soon as this batch finishes loading.'
                                                                 : previewEmptyState.description}
@@ -2137,40 +2169,34 @@ export default function DataUpload() {
                                                 <div className="w-full">
                                                     <table className="w-full">
                                                         <thead>
-                                                            <tr className="border-b border-gray-50">
-                                                                <th className="text-left py-2 text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight">Description</th>
-                                                                <th className="text-right py-2 text-[9px] font-sans font-bold text-gray-300 uppercase tracking-tight">Amount</th>
+                                                            <tr className="border-b border-white/10">
+                                                                <th className="text-left py-2 text-[9px] font-sans font-bold text-white/30 uppercase tracking-tight">Description</th>
+                                                                <th className="text-right py-2 text-[9px] font-sans font-bold text-white/30 uppercase tracking-tight">Amount</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody className="divide-y divide-gray-50">
+                                                        <tbody className="divide-y divide-white/8">
                                                             {previewResults.map((row, idx) => {
                                                                 const days = row.days_remaining ?? 0;
                                                                 const evDesc = row.evidence?.order_id ? `Order: ${row.evidence.order_id}` : row.evidence?.fnsku ? `FNSKU: ${row.evidence.fnsku}` : row.evidence?.shipment_id ? `Shipment: ${row.evidence.shipment_id}` : row.sync_id ? `Sync: ${row.sync_id.slice(0, 8)}...` : `Detection #${idx + 1}`;
                                                                 return (
                                                                     <tr key={row.id || idx} className="group">
                                                                         <td className="py-0.5">
-                                                                            <p className="text-xs font-semibold text-gray-800 font-sans tracking-tight">{formatAnomalyType(row.anomaly_type)}</p>
-                                                                            <p className="text-[9px] font-sans font-bold text-gray-300 uppercase mt-0.5 tracking-tight">{evDesc} | {row.status}</p>
+                                                                            <p className="text-xs font-semibold text-white/82 font-sans tracking-tight">{formatAnomalyType(row.anomaly_type)}</p>
+                                                                            <p className="text-[9px] font-sans font-bold text-white/28 uppercase mt-0.5 tracking-tight">{evDesc} | {row.status}</p>
                                                                         </td>
                                                                         <td className="py-0.5 text-right align-top">
-                                                                            <span className="text-xs font-bold text-gray-900 font-sans tracking-tight">{fmt(row.estimated_value)}</span>
-                                                                            {days > 0 && <p className="text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight text-gray-400">{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
+                                                                            <span className="text-xs font-bold text-white font-sans tracking-tight">{fmt(row.estimated_value)}</span>
+                                                                            {days > 0 && <p className="text-[8px] font-sans font-bold mt-0.5 uppercase tracking-tight text-white/35">{days < 20 ? 'deadline: ' : 'expires in: '}{days} days</p>}
                                                                         </td>
                                                                     </tr>
                                                                 );
                                                             })}
                                                         </tbody>
                                                         <tfoot>
-                                                            <tr className="border-t border-gray-100">
-                                                                <td className="py-6"><span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-tight">{previewRecoverySummaryLabel}</span></td>
+                                                            <tr className="border-t border-white/10">
+                                                                <td className="py-6"><span className="text-[10px] font-sans font-bold text-white/38 uppercase tracking-tight">{previewRecoverySummaryLabel}</span></td>
                                                                 <td className="py-6 text-right">
-                                                                    <div className="flex items-center justify-end gap-12">
-                                                                        <span className="text-base font-bold font-sans text-gray-900 tracking-tight">{fmt(previewTotalRecovery)}</span>
-                                                                        <button type="button" onClick={(e) => { e.stopPropagation(); e.preventDefault(); window.location.assign(`/app/${currentTenantSlug}/pricing-adjust?priority=1`); }} className="relative z-[9999] flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm active:scale-95 whitespace-nowrap cursor-pointer pointer-events-auto">
-                                                                            <Upload size={14} className="stroke-[3]" />
-                                                                            UNLOCK $99 PRIORITY PASS
-                                                                        </button>
-                                                                    </div>
+                                                                    <span className="text-base font-bold font-sans text-white tracking-tight">{fmt(previewTotalRecovery)}</span>
                                                                 </td>
                                                             </tr>
                                                         </tfoot>
