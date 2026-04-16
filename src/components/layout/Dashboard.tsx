@@ -3470,16 +3470,16 @@ export function Dashboard() {
         <DialogContent className="w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="border-b border-white/10 px-5 pb-4 pt-5">
+              <DialogHeader className="border-b border-white/10 px-5 pb-3 pt-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                       Finding detail
                     </div>
-                    <DialogTitle className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                    <DialogTitle className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
                       {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
-                    <DialogDescription className="mt-2 max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.56]">
+                    <DialogDescription className="mt-1.5 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
                       {activeDiscrepancyCopy?.summary || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
                   </div>
@@ -3493,27 +3493,27 @@ export function Dashboard() {
               </DialogHeader>
 
               <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
-                <div className="border-b border-white/10 px-5 py-5 lg:border-b-0 lg:border-r">
+                <div className="border-b border-white/10 px-5 py-4 lg:border-b-0 lg:border-r">
                   <div className="grid border-y border-white/10 md:grid-cols-3 md:divide-x md:divide-white/[0.08]">
-                    <div className="py-4 md:pr-5">
+                    <div className="py-3 md:pr-5">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Estimated value</div>
-                      <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                      <div className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
                         {typeof activeDiscrepancy.estimatedRecovery === 'number'
                           ? formatCurrency(activeDiscrepancy.estimatedRecovery, activeDiscrepancy.currency || 'USD')
                           : 'Not available'}
                       </div>
                     </div>
-                    <div className="border-t border-white/10 py-4 md:border-t-0 md:px-5">
+                    <div className="border-t border-white/10 py-3 md:border-t-0 md:px-5">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Found on</div>
-                      <div className="mt-2 text-[13px] font-sans font-medium tracking-tight text-white/[0.8]">
+                      <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.8]">
                         {formatFindingDateLabel(activeDiscrepancy.occurrenceDate)}
                       </div>
                     </div>
-                    <div className="border-t border-white/10 py-4 md:border-t-0 md:pl-5">
+                    <div className="border-t border-white/10 py-3 md:border-t-0 md:pl-5">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Case state</div>
                       <span
                         className={cn(
-                          "mt-2 inline-flex items-center gap-2 border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight",
+                          "mt-1.5 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
                           activeDiscrepancy.stateTone || getFindingStateMeta(activeDiscrepancy.status).tone
                         )}
                       >
@@ -3523,23 +3523,23 @@ export function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
+                  <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
                     <div>
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Amazon discrepancy</div>
-                      <p className="mt-3 text-[14px] font-sans leading-6 tracking-tight text-white/[0.76]">
+                      <p className="mt-2 text-[13px] font-sans leading-5 tracking-tight text-white/[0.76]">
                         {activeDiscrepancyCopy?.summary || 'Amazon activity for this finding does not reconcile with the expected reimbursement, return, or settlement trail.'}
                       </p>
-                      <div className="mt-4 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
+                      <div className="mt-3 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
                         {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
                       </div>
                     </div>
 
-                    <div className="border-t border-white/10 pt-4 xl:border-l xl:border-t-0 xl:pl-5 xl:pt-0">
+                    <div className="border-t border-white/10 pt-3 xl:border-l xl:border-t-0 xl:pl-4 xl:pt-0">
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Review status</div>
-                      <p className="mt-3 text-[12px] font-sans leading-5 tracking-tight text-white/[0.68]">
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.68]">
                         {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                       </p>
-                      <p className="mt-3 text-[11px] font-sans leading-5 tracking-tight text-white/[0.44]">
+                      <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
                         {activeDiscrepancy.isProcessed
                           ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
                           : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}
@@ -3548,30 +3548,30 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                <div className="px-5 py-5">
+                <div className="px-5 py-4">
                   <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Backend detection record</div>
-                  <div className="mt-3 grid grid-cols-2 border-y border-white/10">
+                  <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                     {activeDiscrepancyMetaRows.map((item) => (
-                      <div key={item.label} className="border-b border-white/[0.08] py-3 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                      <div key={item.label} className="border-b border-white/[0.08] py-2.5 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
                         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
-                        <div className="mt-1.5 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                        <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-5">
+                  <div className="mt-4">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence fields</div>
                     {activeDiscrepancyEvidenceItems.length > 0 ? (
-                      <div className="mt-3 grid grid-cols-2 border-y border-white/10">
+                      <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                         {activeDiscrepancyEvidenceItems.map((item) => (
-                          <div key={`${item.label}-${item.value}`} className="border-b border-white/[0.08] py-3 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                          <div key={`${item.label}-${item.value}`} className="border-b border-white/[0.08] py-2.5 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
                             <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
-                            <div className="mt-1.5 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                            <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="mt-3 border-y border-white/10 py-4 text-[11px] font-sans leading-5 text-white/[0.44]">
+                      <div className="mt-2 border-y border-white/10 py-3 text-[11px] font-sans leading-5 text-white/[0.44]">
                         No structured evidence fields were returned with this backend detection row.
                       </div>
                     )}
@@ -3579,8 +3579,8 @@ export function Dashboard() {
                 </div>
               </div>
 
-              <DialogFooter className="flex flex-col gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-[11px] font-sans leading-5 tracking-tight text-white/[0.44]">
+              <DialogFooter className="flex flex-col gap-3 border-t border-white/10 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
                   Populated from the persisted backend detection result. Margin files only what can be supported by evidence and policy.
                 </div>
                 <div className="flex items-center gap-3">
