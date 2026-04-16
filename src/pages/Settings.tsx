@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Building2, CreditCard, Store } from 'lucide-react';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { api } from '@/lib/api';
+import { api, type AutoFileGateStatus } from '@/lib/api';
 import { useTenant } from '@/contexts/TenantContext';
 import { tenantRoute } from '@/lib/routes';
 
@@ -48,6 +48,7 @@ const Settings = () => {
   const [sellerProfile, setSellerProfile] = useState<SellerProfile>({});
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [autoFileEnabled, setAutoFileEnabled] = useState(true);
+  const [autoFileGateStatus, setAutoFileGateStatus] = useState<AutoFileGateStatus | null>(null);
   const [loadingAutoFile, setLoadingAutoFile] = useState(true);
   const [savingAutoFile, setSavingAutoFile] = useState(false);
   const [autoFileError, setAutoFileError] = useState<string | null>(null);
@@ -112,49 +113,74 @@ const Settings = () => {
     void loadSellerProfile();
   }, [activeTenantSlug]);
 
-  useEffect(() => {
+  const loadAutoFilePreference = useCallback(async (options?: { silent?: boolean }): Promise<boolean> => {
     if (!activeTenantSlug) {
       setLoadingAutoFile(false);
+      setAutoFileGateStatus(null);
+      return false;
+    }
+
+    if (!options?.silent) {
+      setLoadingAutoFile(true);
+    }
+    setAutoFileError(null);
+
+    try {
+      const response = await api.getAutoFilePreference(activeTenantSlug);
+      if (response.ok && response.data?.data) {
+        setAutoFileEnabled(response.data.data.enabled);
+        setAutoFileGateStatus(response.data.data.gateStatus ?? null);
+        return true;
+      }
+
+      setAutoFileError(response.error || 'Failed to load auto-file setting');
+      return false;
+    } catch (error) {
+      console.error('Failed to load auto-file preference:', error);
+      setAutoFileError('Failed to load auto-file setting');
+      return false;
+    } finally {
+      if (!options?.silent) {
+        setLoadingAutoFile(false);
+      }
+    }
+  }, [activeTenantSlug]);
+
+  useEffect(() => {
+    void loadAutoFilePreference();
+  }, [loadAutoFilePreference]);
+
+  const handleAutoFileChange = async (enabled: boolean) => {
+    if (!activeTenantSlug) {
+      setAutoFileError('Workspace context is required before Auto-File can be changed.');
       return;
     }
 
-    const loadAutoFilePreference = async () => {
-      setLoadingAutoFile(true);
-      setAutoFileError(null);
-
-      try {
-        const response = await api.getAutoFilePreference(activeTenantSlug);
-        if (response.ok && response.data) {
-          setAutoFileEnabled(response.data.data.enabled);
-        } else {
-          setAutoFileError(response.error || 'Failed to load auto-file setting');
-        }
-      } catch (error) {
-        console.error('Failed to load auto-file preference:', error);
-        setAutoFileError('Failed to load auto-file setting');
-      } finally {
-        setLoadingAutoFile(false);
-      }
-    };
-
-    void loadAutoFilePreference();
-  }, [activeTenantSlug]);
-
-  const handleAutoFileChange = async (enabled: boolean) => {
     const previousValue = autoFileEnabled;
-    setAutoFileEnabled(enabled);
+    const previousGateStatus = autoFileGateStatus;
     setSavingAutoFile(true);
     setAutoFileError(null);
 
     try {
       const response = await api.saveAutoFilePreference(enabled, activeTenantSlug);
-      if (!response.ok) {
+      if (!response.ok || !response.data?.data) {
         setAutoFileEnabled(previousValue);
+        setAutoFileGateStatus(previousGateStatus);
         setAutoFileError(response.error || 'Failed to save auto-file setting');
+        return;
+      }
+
+      setAutoFileEnabled(response.data.data.enabled);
+      setAutoFileGateStatus(response.data.data.gateStatus ?? null);
+
+      const refreshed = await loadAutoFilePreference({ silent: true });
+      if (!refreshed) {
+        setAutoFileError('Auto-File was saved, but Margin could not refresh the latest filing status.');
       }
     } catch (error) {
       console.error('Failed to save auto-file preference:', error);
       setAutoFileEnabled(previousValue);
+      setAutoFileGateStatus(previousGateStatus);
       setAutoFileError('Failed to save auto-file setting');
     } finally {
       setSavingAutoFile(false);
@@ -175,6 +201,32 @@ const Settings = () => {
   }, [isAmazonConnected, linkedMarketplaces.length]);
 
   const lastActivity = sellerProfile.last_sync_completed_at || sellerProfile.last_login;
+  const autoFileIntentCopy = autoFileEnabled
+    ? 'Eligible cases can be submitted automatically when all filing requirements are met.'
+    : 'Cases will wait for your review before filing.';
+  const autoFileGateCopy = loadingAutoFile
+    ? 'Checking saved seller intent and filing gates.'
+    : savingAutoFile
+      ? 'Saving seller intent and confirming backend truth.'
+      : autoFileEnabled
+        ? autoFileGateStatus?.message || 'Auto-File is on. System filing gates will still be checked before any submission.'
+        : 'Auto-File is off. Global filing gates, payment checks, and evidence requirements remain unchanged.';
+  const autoFileGateMeta = autoFileGateStatus && autoFileEnabled
+    ? [
+        autoFileGateStatus.globalFilingEnabled === null
+          ? 'Global gate unknown'
+          : autoFileGateStatus.globalFilingEnabled === false
+            ? 'Global paused'
+            : 'Global gate active',
+        autoFileGateStatus.queueAvailable === null
+          ? 'Dispatch gate unknown'
+          : autoFileGateStatus.queueAvailable === false
+            ? 'Dispatch paused'
+            : 'Dispatch available',
+        autoFileGateStatus.paymentRequired ? 'Payment required' : 'Payment gate clear',
+        autoFileGateStatus.evidenceBlockedCount > 0 ? `${autoFileGateStatus.evidenceBlockedCount} need evidence` : 'Evidence gate clear'
+      ].join(' · ')
+    : null;
 
   const formatDate = (dateString?: string): string => {
     if (!dateString) return 'Not available';
@@ -416,17 +468,30 @@ const Settings = () => {
                         <div className="space-y-2 max-w-md">
                           <p className="text-sm font-sans font-bold text-white tracking-tight">Auto-File</p>
                           <p className="text-xs text-white/45 font-sans leading-relaxed">
-                            Auto-file cases. Turn this off if you want your cases reviewed before filing.
+                            {autoFileIntentCopy}
                           </p>
                           <p className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/25">
                             {loadingAutoFile
-                              ? 'Loading filing preference'
+                              ? 'Loading saved seller intent'
                               : savingAutoFile
-                                ? 'Saving filing preference'
+                                ? 'Saving and confirming'
                                 : autoFileEnabled
-                                  ? 'Eligible cases can file automatically'
-                                  : 'Cases will wait for review before filing'}
+                                  ? 'Seller intent: automatic submission allowed'
+                                  : 'Seller intent: review before filing'}
                           </p>
+                          <div className="border border-white/10 bg-white/[0.03] px-3 py-2">
+                            <p className="text-[9px] font-sans font-bold uppercase tracking-tight text-white/25">
+                              Submission Gate Status
+                            </p>
+                            <p className="mt-1 text-xs text-white/50 font-sans leading-relaxed">
+                              {autoFileGateCopy}
+                            </p>
+                            {autoFileGateMeta && (
+                              <p className="mt-1.5 text-[9px] font-sans font-bold uppercase tracking-tight text-white/25">
+                                {autoFileGateMeta}
+                              </p>
+                            )}
+                          </div>
                           {autoFileError && (
                             <p className="text-xs text-[#d0b673] font-sans leading-relaxed">
                               {autoFileError}
@@ -441,10 +506,11 @@ const Settings = () => {
                               void handleAutoFileChange(checked);
                             }}
                             disabled={loadingAutoFile || savingAutoFile}
+                            aria-label="Auto-File seller-controlled filing switch"
                             className="data-[state=checked]:bg-white data-[state=unchecked]:bg-white/20"
                           />
                           <span className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                            {autoFileEnabled ? 'On' : 'Off'}
+                            {savingAutoFile ? 'Saving' : autoFileEnabled ? 'On' : 'Off'}
                           </span>
                         </div>
                       </div>

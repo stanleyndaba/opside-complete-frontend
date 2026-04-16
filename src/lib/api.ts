@@ -12,6 +12,19 @@ export interface BlobApiResponse {
   error?: string;
 }
 
+export interface AutoFileGateStatus {
+  sellerIntentEnabled: boolean;
+  globalFilingEnabled: boolean | null;
+  queueAvailable: boolean | null;
+  queueReason: string | null;
+  paymentRequired: boolean;
+  filingReadyCount: number;
+  evidenceBlockedCount: number;
+  primaryBlocker: string | null;
+  message: string;
+  checkedAt: string;
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
 
@@ -2641,6 +2654,7 @@ export const api = {
       success: boolean;
       data: {
         enabled: boolean;
+        gateStatus?: AutoFileGateStatus;
       };
     }>(`/api/notifications/preferences/filing?tenantSlug=${encodeURIComponent(tenantSlug)}`);
   },
@@ -2651,6 +2665,7 @@ export const api = {
       message: string;
       data: {
         enabled: boolean;
+        gateStatus?: AutoFileGateStatus;
       };
     }>(`/api/notifications/preferences/filing?tenantSlug=${encodeURIComponent(tenantSlug)}`, {
       method: 'PUT',
