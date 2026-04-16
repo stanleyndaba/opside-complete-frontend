@@ -20,6 +20,7 @@ interface NavbarProps {
   sidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
   forceTransparent?: boolean;
+  onContactSupport?: () => void;
 }
 
 // Quick search result type
@@ -60,7 +61,8 @@ export function Navbar({
   className,
   sidebarCollapsed = false,
   onToggleSidebar,
-  forceTransparent
+  forceTransparent,
+  onContactSupport
 }: NavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -226,6 +228,14 @@ export function Navbar({
     userProfile?.created_at
       ? new Date(userProfile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
       : (isProfileLoading ? 'Loading...' : '—');
+  const handleContactSupport = useCallback(() => {
+    if (onContactSupport) {
+      onContactSupport();
+      return;
+    }
+
+    navigate('/contact');
+  }, [navigate, onContactSupport]);
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
@@ -755,6 +765,23 @@ export function Navbar({
                         : 'No sources connected yet'}
                     </div>
                   </div>
+                </div>
+
+                <div className="px-6 pt-4">
+                  <DropdownMenuItem
+                    onSelect={handleContactSupport}
+                    className="flex cursor-pointer items-center gap-3 rounded-[5px] border border-white/6 bg-white/[0.02] px-4 py-3 text-white/70 outline-none transition-colors hover:bg-white/[0.045] hover:text-white focus:bg-white/[0.045] focus:text-white"
+                  >
+                    <Mail className="h-4 w-4 text-white/35" />
+                    <div className="min-w-0">
+                      <div className="text-[11px] font-sans font-semibold uppercase tracking-tight text-white/80">
+                        Contact Us
+                      </div>
+                      <div className="mt-0.5 text-[10px] font-sans tracking-tight text-white/42">
+                        Send a support query from this workspace.
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
                 </div>
 
                 <div className="px-6 py-5">

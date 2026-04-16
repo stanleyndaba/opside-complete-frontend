@@ -2629,7 +2629,11 @@ export function Dashboard() {
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
 
-      <Navbar sidebarCollapsed={isSidebarCollapsed} forceTransparent />
+      <Navbar
+        sidebarCollapsed={isSidebarCollapsed}
+        forceTransparent
+        onContactSupport={() => setQuickNoticeOpen(true)}
+      />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
         <main className={cn('flex-1 transition-all duration-300 overflow-y-auto font-montserrat', mainClass)}>
@@ -2695,8 +2699,8 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2">
-                  <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-start">
-                    <div className="min-w-[260px] max-w-[360px] border border-white/10 bg-white/[0.035] px-3 py-2 shadow-[0_0_18px_rgba(255,255,255,0.04)]">
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="w-[360px] max-w-[calc(100vw-4rem)] border border-white/10 bg-white/[0.035] px-3 py-2 shadow-[0_0_18px_rgba(255,255,255,0.04)]">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           <span className={cn(
@@ -2727,19 +2731,12 @@ export function Dashboard() {
                         </div>
                       </div>
                       <p className={cn(
-                        "mt-1.5 line-clamp-2 text-right text-[10px] font-sans leading-4 tracking-tight",
+                        "mt-1.5 line-clamp-2 text-left text-[10px] font-sans leading-4 tracking-tight",
                         dashboardAutoFileStatusTone
                       )}>
                         {dashboardAutoFileStatusCopy}
                       </p>
                     </div>
-
-                    <button
-                      onClick={() => setQuickNoticeOpen(true)}
-                      className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
-                    >
-                      Contact Us
-                    </button>
                   </div>
                   <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-white">
                     {discrepancyHeaderLastUpdatedLabel}
