@@ -72,6 +72,7 @@ const Waitlist = lazy(() => import("./pages/Waitlist"));
 const PricingAdjust = lazy(() => import("./pages/PricingAdjust"));
 const StandardAgreement = lazy(() => import("./pages/StandardAgreement"));
 const EmailActionRedirect = lazy(() => import("./pages/EmailActionRedirect"));
+const AboutMargin = lazy(() => import("./pages/AboutMargin"));
 
 
 // New Evidence Pages
@@ -141,6 +142,8 @@ const App = () => (
                         <Route path="/refund-policy" element={<RefundPolicy />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/sales" element={<Sales />} />
+                        <Route path="/about" element={<AboutMargin />} />
+                        <Route path="/about-margin" element={<AboutMargin />} />
                         <Route path="/pricing" element={<PricingAdjust />} />
                         <Route path="/waitlist" element={<Waitlist />} />
                         <Route path="/pricing/standard-agreement" element={<StandardAgreement />} />
