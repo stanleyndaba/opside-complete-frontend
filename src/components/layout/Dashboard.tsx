@@ -458,11 +458,87 @@ const getFindingStateMeta = (status?: string | null) => {
   }
 };
 
+const getFindingMovementMeta = (
+  movement?: {
+    state?: string;
+    label?: string;
+    detail?: string;
+    next_action_label?: string;
+  } | null,
+  fallbackStatus?: string | null
+) => {
+  const state = (movement?.state || '').toLowerCase();
+  const fallback = getFindingStateMeta(fallbackStatus);
+
+  const movementMeta: Record<string, { tone: string; Icon: typeof Info }> = {
+    preview_finding: {
+      tone: 'border-sky-500/20 bg-sky-500/[0.08] text-sky-100',
+      Icon: Info,
+    },
+    preparing_case: {
+      tone: 'border-violet-500/20 bg-violet-500/[0.08] text-violet-100',
+      Icon: ArrowRight,
+    },
+    evidence_needed: {
+      tone: 'border-amber-500/20 bg-amber-500/[0.08] text-amber-200',
+      Icon: Clock,
+    },
+    ready_to_file: {
+      tone: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-200',
+      Icon: CheckCircle,
+    },
+    queued_for_filing: {
+      tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+      Icon: Send,
+    },
+    filed: {
+      tone: 'border-blue-500/20 bg-blue-500/[0.08] text-blue-100',
+      Icon: Send,
+    },
+    awaiting_payout: {
+      tone: 'border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-100',
+      Icon: CircleDollarSign,
+    },
+    completed: {
+      tone: 'border-emerald-500/20 bg-emerald-500/[0.1] text-emerald-100',
+      Icon: CheckCircle,
+    },
+    blocked: {
+      tone: 'border-red-500/20 bg-red-500/[0.08] text-red-100',
+      Icon: X,
+    },
+  };
+
+  const resolved = movementMeta[state];
+  if (!movement?.label && !movement?.detail && !resolved) return fallback;
+
+  return {
+    label: movement?.label || fallback.label,
+    detail: movement?.detail || fallback.detail,
+    actionLabel: movement?.next_action_label || fallback.actionLabel,
+    tone: resolved?.tone || fallback.tone,
+    Icon: resolved?.Icon || fallback.Icon,
+  };
+};
+
 const formatFindingDateLabel = (value?: string | null) => {
   if (!value) return 'Not available';
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return 'Not available';
   return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
+
+const formatFindingDateTimeLabel = (value?: string | null) => {
+  if (!value) return 'Not available';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return 'Not available';
+  return parsed.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 };
 
 const formatConfidenceLabel = (value?: number | null) => {
@@ -2083,6 +2159,8 @@ export function Dashboard() {
       title: activeDiscrepancy.issueTitle || derivedCopy.title,
       summary: activeDiscrepancy.issueSummary || derivedCopy.summary,
       eventLabel: activeDiscrepancy.issueEventLabel || derivedCopy.eventLabel,
+      recoverabilityReason: activeDiscrepancy.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.',
+      evidenceSummary: activeDiscrepancy.evidenceSummary || 'Structured evidence is available on the backend detection record.',
     };
   }, [activeDiscrepancy]);
   const activeDiscrepancyEvidenceItems = useMemo(
@@ -2115,6 +2193,44 @@ export function Dashboard() {
       {
         label: 'Deadline',
         value: formatFindingDateLabel(activeDiscrepancy.deadlineDate),
+      },
+      {
+        label: 'Movement',
+        value: activeDiscrepancy.movementLabel || activeDiscrepancy.stateLabel || 'Not available',
+      },
+      {
+        label: 'Case link',
+        value: activeDiscrepancy.caseNumber || activeDiscrepancy.amazonCaseId || activeDiscrepancy.linkedCaseId || 'Not linked yet',
+      },
+    ];
+  }, [activeDiscrepancy]);
+  const activeDiscrepancyPolicyRows = useMemo(() => {
+    const policy = activeDiscrepancy?.policyBasis || activeDiscrepancy?.policy_basis;
+    if (!policy) {
+      return [
+        { label: 'Policy basis', value: 'Policy basis pending verification' },
+        { label: 'Source', value: 'Amazon Seller Central Help' },
+      ];
+    }
+
+    return [
+      {
+        label: 'Policy basis',
+        value: policy.title || 'Policy basis pending verification',
+      },
+      {
+        label: 'Status',
+        value: policy.verification_status === 'official_reference_configured'
+          ? 'Official reference configured'
+          : 'Pending verification',
+      },
+      {
+        label: 'Source',
+        value: policy.source_name || 'Amazon Seller Central Help',
+      },
+      {
+        label: 'Verified',
+        value: policy.last_verified_at ? formatFindingDateLabel(policy.last_verified_at) : 'Pending verification',
       },
     ];
   }, [activeDiscrepancy]);
@@ -3291,7 +3407,7 @@ export function Dashboard() {
 
                         <div className="border-y border-white/10 bg-transparent">
                           <div className="hidden border-b border-white/8 px-5 py-3 xl:grid xl:grid-cols-[minmax(0,1.35fr)_150px_minmax(0,1fr)_auto] xl:gap-5">
-                            {['Issue', 'Value', 'State', 'Action'].map((label) => (
+                            {['Issue', 'Value', 'Movement', 'Action'].map((label) => (
                               <div key={label} className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
                                 {label}
                               </div>
@@ -3300,12 +3416,18 @@ export function Dashboard() {
                           <div className="divide-y divide-white/8">
                             {visibleDetectionResults.map((result) => {
                               const isProcessed = isProcessedFindingStatus(result.status);
-                              const stateMeta = getFindingStateMeta(result.status);
+                              const stateMeta = getFindingMovementMeta(result.filing_movement, result.status);
                               const StateIcon = stateMeta.Icon;
-                              const issueCopy = getIssueCopy(result.anomaly_type);
-                              const foundOnLabel = result.discovery_date
-                                ? new Date(result.discovery_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                                : 'Date unavailable';
+                              const fallbackIssueCopy = getIssueCopy(result.anomaly_type);
+                              const issueCopy = {
+                                title: result.seller_summary?.title || fallbackIssueCopy.title,
+                                summary: result.seller_summary?.summary || fallbackIssueCopy.summary,
+                                eventLabel: result.seller_summary?.event_label || fallbackIssueCopy.eventLabel,
+                                recoverabilityReason: result.seller_summary?.recoverability_reason,
+                                evidenceSummary: result.seller_summary?.evidence_summary,
+                              };
+                              const detectedAt = result.detected_at || result.discovery_date || result.created_at;
+                              const foundOnLabel = formatFindingDateTimeLabel(detectedAt);
 
                               return (
                                 <div
@@ -3340,7 +3462,7 @@ export function Dashboard() {
 
                                   <div className="min-w-0">
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                      Case state
+                                      Filing movement
                                     </div>
                                     <div className={cn(
                                       "mt-1.5 inline-flex items-center gap-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.76]"
@@ -3388,13 +3510,25 @@ export function Dashboard() {
                                               issueTitle: issueCopy.title,
                                               issueSummary: issueCopy.summary,
                                               issueEventLabel: issueCopy.eventLabel,
+                                              recoverabilityReason: issueCopy.recoverabilityReason,
+                                              evidenceSummary: issueCopy.evidenceSummary,
                                               estimatedRecovery: result.estimated_value,
                                               currency: result.currency || 'USD',
-                                              occurrenceDate: result.discovery_date,
+                                              occurrenceDate: detectedAt,
                                               status: result.status,
                                               stateLabel: stateMeta.label,
                                               stateDetail: stateMeta.detail,
                                               stateTone: stateMeta.tone,
+                                              movementLabel: result.filing_movement?.label,
+                                              movementDetail: result.filing_movement?.detail,
+                                              movementState: result.filing_movement?.state,
+                                              nextActionLabel: result.next_action_label || result.filing_movement?.next_action_label,
+                                              linkedCaseId: result.filing_movement?.dispute_case_id,
+                                              caseNumber: result.filing_movement?.case_number,
+                                              amazonCaseId: result.filing_movement?.amazon_case_id,
+                                              blockReasons: result.filing_movement?.block_reasons || [],
+                                              filingMovement: result.filing_movement,
+                                              policyBasis: result.policy_basis,
                                               isProcessed,
                                               sourceType: result.source_type,
                                               syncId: result.sync_id,
@@ -3448,7 +3582,7 @@ export function Dashboard() {
                             ) : null}
                           </div>
                           <div className="flex items-center gap-2 text-[10px] font-sans font-medium text-white tracking-tight">
-                            Showing findings with current case state and next action
+                            Showing findings with backend filing movement and next action
                           </div>
                         </div>
                       </div>
@@ -3666,11 +3800,11 @@ export function Dashboard() {
                     <div className="border-t border-white/10 py-3 md:border-t-0 md:px-5">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Found on</div>
                       <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.8]">
-                        {formatFindingDateLabel(activeDiscrepancy.occurrenceDate)}
+                        {formatFindingDateTimeLabel(activeDiscrepancy.occurrenceDate)}
                       </div>
                     </div>
                     <div className="border-t border-white/10 py-3 md:border-t-0 md:pl-5">
-                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Case state</div>
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Filing movement</div>
                       <span
                         className={cn(
                           "mt-1.5 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
@@ -3685,26 +3819,50 @@ export function Dashboard() {
 
                   <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
                     <div>
-                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Amazon discrepancy</div>
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">What Margin found</div>
                       <p className="mt-2 text-[13px] font-sans leading-5 tracking-tight text-white/[0.76]">
-                        {activeDiscrepancyCopy?.summary || 'Amazon activity for this finding does not reconcile with the expected reimbursement, return, or settlement trail.'}
+                        {activeDiscrepancyCopy?.summary || 'Amazon records do not reconcile with the expected seller outcome for this finding.'}
                       </p>
                       <div className="mt-3 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
                         {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
                       </div>
+                      <div className="mt-4 border-t border-white/10 pt-3">
+                        <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence used</div>
+                        <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.62]">
+                          {activeDiscrepancyCopy?.evidenceSummary || 'Structured evidence is available on the backend detection record.'}
+                        </p>
+                      </div>
                     </div>
 
                     <div className="border-t border-white/10 pt-3 xl:border-l xl:border-t-0 xl:pl-4 xl:pt-0">
-                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Review status</div>
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Current filing movement</div>
                       <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.68]">
-                        {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
+                        {activeDiscrepancy.movementDetail || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                       </p>
                       <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
                         {activeDiscrepancy.isProcessed
                           ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
-                          : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}
+                          : activeDiscrepancy.nextActionLabel
+                            ? `Next action: ${activeDiscrepancy.nextActionLabel}.`
+                            : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}
                       </p>
+                      {Array.isArray(activeDiscrepancy.blockReasons) && activeDiscrepancy.blockReasons.length > 0 ? (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {activeDiscrepancy.blockReasons.slice(0, 3).map((reason: string) => (
+                            <span key={reason} className="border border-red-500/15 bg-red-500/[0.06] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-red-100/75">
+                              {String(reason).replace(/_/g, ' ')}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
+                  </div>
+
+                  <div className="mt-4 border-y border-white/10 py-3">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Why this may be recoverable</div>
+                    <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.64]">
+                      {activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
+                    </p>
                   </div>
                 </div>
 
@@ -3717,6 +3875,33 @@ export function Dashboard() {
                         <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
                       </div>
                     ))}
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Policy basis</div>
+                    <div className="mt-2 grid grid-cols-2 border-y border-white/10">
+                      {activeDiscrepancyPolicyRows.map((item) => (
+                        <div key={item.label} className="border-b border-white/[0.08] py-2.5 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                          <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
+                          <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {activeDiscrepancy.policyBasis?.summary ? (
+                      <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.45]">
+                        {activeDiscrepancy.policyBasis.summary}
+                      </p>
+                    ) : null}
+                    {activeDiscrepancy.policyBasis?.source_url ? (
+                      <a
+                        href={activeDiscrepancy.policyBasis.source_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-flex text-[10px] font-sans font-medium tracking-tight text-white/[0.62] underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                      >
+                        Open policy reference
+                      </a>
+                    ) : null}
                   </div>
 
                   <div className="mt-4">

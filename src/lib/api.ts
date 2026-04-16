@@ -2945,6 +2945,39 @@ export const detectionApi = {
         confidence_score: number;
         evidence: any;
         status: string;
+        detected_at?: string | null;
+        detector_key?: string | null;
+        seller_summary?: {
+          title?: string;
+          summary?: string;
+          event_label?: string;
+          recoverability_reason?: string;
+          evidence_summary?: string;
+        };
+        policy_basis?: {
+          key?: string;
+          title?: string;
+          verification_status?: string;
+          source_name?: string;
+          source_url?: string;
+          last_verified_at?: string | null;
+          summary?: string;
+          required_evidence?: string[];
+        };
+        filing_movement?: {
+          state?: string;
+          label?: string;
+          detail?: string;
+          next_action_label?: string;
+          dispute_case_id?: string | null;
+          case_number?: string | null;
+          amazon_case_id?: string | null;
+          filing_status?: string | null;
+          case_state?: string | null;
+          eligibility_status?: string | null;
+          block_reasons?: string[];
+        };
+        next_action_label?: string;
         discovery_date: string;
         deadline_date: string;
         days_remaining: number;
