@@ -497,15 +497,7 @@ export function Sidebar({
                 )}
                 strokeWidth={1.5}
               />
-              <div className="min-w-0">
-                <div className="tracking-tight">Report a problem</div>
-                <div className={cn(
-                  "mt-0.5 text-[10px] font-sans tracking-tight normal-case",
-                  helpActive ? "text-white/58" : "text-white/30 group-data-[highlighted]/more-item:text-white/58"
-                )}>
-                  5 minute response
-                </div>
-              </div>
+              <span className="tracking-tight">Report a problem</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate(tenantRoute(currentTenantSlug, '/whats-new'))}

@@ -625,7 +625,7 @@ export function Navbar({
                           <TableRow className="border-white/5 hover:bg-transparent">
                             <TableHead className="h-10 px-5 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Case</TableHead>
                             <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Amount</TableHead>
-                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Truth</TableHead>
+                            <TableHead className="h-10 text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Verification</TableHead>
                             <TableHead className="h-10 pr-5 text-right text-[10px] font-sans font-bold uppercase tracking-tight text-white/30">Updated</TableHead>
                           </TableRow>
                         </TableHeader>

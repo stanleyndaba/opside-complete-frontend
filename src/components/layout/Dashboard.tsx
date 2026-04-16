@@ -457,6 +457,66 @@ const getFindingStateMeta = (status?: string | null) => {
   }
 };
 
+const formatFindingDateLabel = (value?: string | null) => {
+  if (!value) return 'Not available';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return 'Not available';
+  return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+};
+
+const formatConfidenceLabel = (value?: number | null) => {
+  if (typeof value !== 'number' || Number.isNaN(value)) return 'Not available';
+  const normalized = value > 1 ? value : value * 100;
+  return `${Math.round(normalized)}%`;
+};
+
+const formatSourceTypeLabel = (value?: string | null) => {
+  const normalized = (value || '').replace(/_/g, ' ').trim();
+  return normalized ? toTitleCase(normalized) : 'Not available';
+};
+
+const EVIDENCE_PREVIEW_KEYS: Array<[string, string]> = [
+  ['order_id', 'Order ID'],
+  ['amazon_order_id', 'Amazon order'],
+  ['sku', 'SKU'],
+  ['fnsku', 'FNSKU'],
+  ['asin', 'ASIN'],
+  ['shipment_id', 'Shipment'],
+  ['transfer_id', 'Transfer'],
+  ['settlement_id', 'Settlement'],
+  ['quantity', 'Quantity'],
+  ['units', 'Units'],
+  ['amount', 'Amount'],
+];
+
+const formatEvidenceValue = (value: unknown) => {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value);
+  return null;
+};
+
+const getEvidencePreviewItems = (evidence: unknown) => {
+  if (!evidence || typeof evidence !== 'object' || Array.isArray(evidence)) return [];
+  const evidenceRecord = evidence as Record<string, unknown>;
+  const seen = new Set<string>();
+  const prioritized = EVIDENCE_PREVIEW_KEYS.flatMap(([key, label]) => {
+    const value = formatEvidenceValue(evidenceRecord[key]);
+    if (!value) return [];
+    seen.add(key);
+    return [{ label, value }];
+  });
+
+  const fallback = Object.entries(evidenceRecord)
+    .filter(([key]) => !seen.has(key))
+    .flatMap(([key, value]) => {
+      const formatted = formatEvidenceValue(value);
+      if (!formatted) return [];
+      return [{ label: toTitleCase(key.replace(/_/g, ' ')), value: formatted }];
+    });
+
+  return [...prioritized, ...fallback].slice(0, 6);
+};
+
 const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
   if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
   if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
@@ -598,57 +658,6 @@ export function Dashboard() {
       });
     } finally {
       setIsExporting(false);
-    }
-  };
-
-  const handleRowExport = async (id: string) => {
-    toast({
-      title: "DOCUMENT_EXPORT",
-      description: `Exporting evidence for claim ID: ${id.substring(0, 8)}...`,
-    });
-
-    try {
-      const response = await api.getRecoveryDetail(id, activeSlug);
-      if (!response.ok || !response.data) {
-        throw new Error(response.error || 'Claim not found');
-      }
-      const claim = response.data as any;
-
-      // Build a single-row CSV
-      const evidence = claim.evidence || {};
-      const headers = 'Amazon Order ID,FNSKU,Discrepancy Type,Estimated Owed (USD),Date of Event,Status,Confidence Score';
-      const row = [
-        evidence.order_id || claim.order_id || claim.sync_id || '',
-        evidence.fnsku || claim.fnsku || claim.sku || '',
-        (claim.anomaly_type || claim.type || '').replace(/_/g, ' ').toUpperCase(),
-        typeof (claim.estimated_value ?? claim.guaranteedAmount) === 'number' ? Number(claim.estimated_value ?? claim.guaranteedAmount).toFixed(2) : '',
-        (claim.discovery_date || claim.createdDate) ? new Date(claim.discovery_date || claim.createdDate).toISOString().split('T')[0] : '',
-        (claim.status || '').toUpperCase(),
-        claim.confidence_score ? (claim.confidence_score * 100).toFixed(0) + '%' : ''
-      ].join(',');
-
-      const csvContent = headers + '\n' + row;
-      const blob = new Blob([csvContent], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Margin_Claim_${id.substring(0, 8)}_${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      toast({
-        title: "EXPORT_COMPLETE",
-        description: `Evidence for claim ${id.substring(0, 8)} downloaded.`,
-      });
-    } catch (err: any) {
-      console.error('[Row Export Error]', err);
-      toast({
-        title: "EXPORT_FAILED",
-        description: err.message || 'Failed to export claim evidence.',
-        variant: "destructive"
-      });
     }
   };
 
@@ -1968,6 +1977,39 @@ export function Dashboard() {
       eventLabel: activeDiscrepancy.issueEventLabel || derivedCopy.eventLabel,
     };
   }, [activeDiscrepancy]);
+  const activeDiscrepancyEvidenceItems = useMemo(
+    () => getEvidencePreviewItems(activeDiscrepancy?.evidence),
+    [activeDiscrepancy?.evidence]
+  );
+  const activeDiscrepancyMetaRows = useMemo(() => {
+    if (!activeDiscrepancy) return [];
+    return [
+      {
+        label: 'Backend record',
+        value: activeDiscrepancy.id?.substring(0, 12) || 'Not available',
+      },
+      {
+        label: 'Source',
+        value: formatSourceTypeLabel(activeDiscrepancy.sourceType),
+      },
+      {
+        label: 'Sync',
+        value: activeDiscrepancy.syncId || 'Not available',
+      },
+      {
+        label: 'Confidence',
+        value: formatConfidenceLabel(activeDiscrepancy.confidenceScore),
+      },
+      {
+        label: 'Severity',
+        value: activeDiscrepancy.severity ? toTitleCase(String(activeDiscrepancy.severity).replace(/_/g, ' ')) : 'Not available',
+      },
+      {
+        label: 'Deadline',
+        value: formatFindingDateLabel(activeDiscrepancy.deadlineDate),
+      },
+    ];
+  }, [activeDiscrepancy]);
   const syncScopedEmptyState = useMemo(() => {
     if (!isSyncScopedDetections) return null;
 
@@ -3178,38 +3220,36 @@ export function Dashboard() {
                                         align="end"
                                         className="bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-3xl p-1 min-w-[180px]"
                                       >
-                                        {!isProcessed ? (
-                                          <DropdownMenuItem
-                                            onClick={() => {
-                                              setActiveDiscrepancy({
-                                                id: result.id,
-                                                reason: result.anomaly_type,
-                                                issueTitle: issueCopy.title,
-                                                issueSummary: issueCopy.summary,
-                                                issueEventLabel: issueCopy.eventLabel,
-                                                estimatedRecovery: result.estimated_value,
-                                                currency: result.currency || 'USD',
-                                                occurrenceDate: result.discovery_date,
-                                                status: result.status,
-                                                stateLabel: stateMeta.label,
-                                                stateDetail: stateMeta.detail,
-                                                stateTone: stateMeta.tone,
-                                                isProcessed
-                                              });
-                                              setShowDiscrepancyModal(true);
-                                            }}
-                                            className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
-                                          >
-                                            <Info className="h-3 w-3 mr-2" />
-                                            {stateMeta.actionLabel}
-                                          </DropdownMenuItem>
-                                        ) : null}
                                         <DropdownMenuItem
-                                          onClick={() => handleRowExport(result.id)}
+                                          onClick={() => {
+                                            setActiveDiscrepancy({
+                                              id: result.id,
+                                              reason: result.anomaly_type,
+                                              issueTitle: issueCopy.title,
+                                              issueSummary: issueCopy.summary,
+                                              issueEventLabel: issueCopy.eventLabel,
+                                              estimatedRecovery: result.estimated_value,
+                                              currency: result.currency || 'USD',
+                                              occurrenceDate: result.discovery_date,
+                                              status: result.status,
+                                              stateLabel: stateMeta.label,
+                                              stateDetail: stateMeta.detail,
+                                              stateTone: stateMeta.tone,
+                                              isProcessed,
+                                              sourceType: result.source_type,
+                                              syncId: result.sync_id,
+                                              severity: result.severity,
+                                              confidenceScore: result.confidence_score,
+                                              evidence: result.evidence,
+                                              deadlineDate: result.deadline_date,
+                                              daysRemaining: result.days_remaining,
+                                            });
+                                            setShowDiscrepancyModal(true);
+                                          }}
                                           className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                         >
-                                          <Download className="h-3 w-3 mr-2" />
-                                          Download evidence
+                                          <Info className="h-3 w-3 mr-2" />
+                                          View finding
                                         </DropdownMenuItem>
                                       </DropdownMenuContent>
                                     </DropdownMenu>
@@ -3427,16 +3467,19 @@ export function Dashboard() {
 
       {/* Finding detail modal */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="max-w-lg bg-[#0c0c0c] border border-white/10 shadow-2xl rounded-xl p-0 overflow-hidden backdrop-blur-3xl">
+        <DialogContent className="w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="px-5 py-4 border-b border-white/6 bg-white/[0.02]">
+              <DialogHeader className="border-b border-white/10 px-5 pb-4 pt-5">
                 <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1.5">
-                    <DialogTitle className="text-[18px] font-sans font-semibold tracking-tight text-white">
+                  <div className="max-w-4xl">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                      Finding detail
+                    </div>
+                    <DialogTitle className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
                       {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
-                    <DialogDescription className="text-[12px] font-sans leading-5 tracking-tight text-[#d6d6d6]">
+                    <DialogDescription className="mt-2 max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.56]">
                       {activeDiscrepancyCopy?.summary || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
                   </div>
@@ -3449,36 +3492,28 @@ export function Dashboard() {
                 </div>
               </DialogHeader>
 
-              <div className="px-5 py-5 space-y-4">
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
-                    <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Reference</div>
-                    <div className="mt-1 text-[13px] font-sans tracking-tight text-white">
-                      {activeDiscrepancy.id?.substring(0, 12) || 'Not available'}
+              <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
+                <div className="border-b border-white/10 px-5 py-5 lg:border-b-0 lg:border-r">
+                  <div className="grid border-y border-white/10 md:grid-cols-3 md:divide-x md:divide-white/[0.08]">
+                    <div className="py-4 md:pr-5">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Estimated value</div>
+                      <div className="mt-2 text-[20px] font-sans font-medium tracking-tight text-white">
+                        {typeof activeDiscrepancy.estimatedRecovery === 'number'
+                          ? formatCurrency(activeDiscrepancy.estimatedRecovery, activeDiscrepancy.currency || 'USD')
+                          : 'Not available'}
+                      </div>
                     </div>
-                  </div>
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
-                    <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Found on</div>
-                    <div className="mt-1 text-[13px] font-sans tracking-tight text-white">
-                      {activeDiscrepancy.occurrenceDate
-                        ? new Date(activeDiscrepancy.occurrenceDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                        : 'Date unavailable'}
+                    <div className="border-t border-white/10 py-4 md:border-t-0 md:px-5">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Found on</div>
+                      <div className="mt-2 text-[13px] font-sans font-medium tracking-tight text-white/[0.8]">
+                        {formatFindingDateLabel(activeDiscrepancy.occurrenceDate)}
+                      </div>
                     </div>
-                  </div>
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
-                    <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Estimated value</div>
-                    <div className="mt-1 text-[16px] font-sans font-medium tracking-tight text-white">
-                      {typeof activeDiscrepancy.estimatedRecovery === 'number'
-                        ? formatCurrency(activeDiscrepancy.estimatedRecovery, activeDiscrepancy.currency || 'USD')
-                        : 'Not available'}
-                    </div>
-                  </div>
-                  <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3">
-                    <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Case state</div>
-                    <div className="mt-1">
+                    <div className="border-t border-white/10 py-4 md:border-t-0 md:pl-5">
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Case state</div>
                       <span
                         className={cn(
-                          "inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight",
+                          "mt-2 inline-flex items-center gap-2 border px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight",
                           activeDiscrepancy.stateTone || getFindingStateMeta(activeDiscrepancy.status).tone
                         )}
                       >
@@ -3487,34 +3522,66 @@ export function Dashboard() {
                       </span>
                     </div>
                   </div>
-                </div>
 
-                <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
-                  <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Amazon discrepancy</div>
-                  <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
-                    {activeDiscrepancyCopy?.summary || 'Amazon activity for this finding does not reconcile with the expected reimbursement, return, or settlement trail.'}
-                  </p>
-                  <div className="mt-3 inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/75">
-                    {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
+                  <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
+                    <div>
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Amazon discrepancy</div>
+                      <p className="mt-3 text-[14px] font-sans leading-6 tracking-tight text-white/[0.76]">
+                        {activeDiscrepancyCopy?.summary || 'Amazon activity for this finding does not reconcile with the expected reimbursement, return, or settlement trail.'}
+                      </p>
+                      <div className="mt-4 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
+                        {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-white/10 pt-4 xl:border-l xl:border-t-0 xl:pl-5 xl:pt-0">
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Review status</div>
+                      <p className="mt-3 text-[12px] font-sans leading-5 tracking-tight text-white/[0.68]">
+                        {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
+                      </p>
+                      <p className="mt-3 text-[11px] font-sans leading-5 tracking-tight text-white/[0.44]">
+                        {activeDiscrepancy.isProcessed
+                          ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
+                          : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-white/8 bg-white/[0.02] p-4">
-                  <div className="text-[11px] font-sans font-medium tracking-tight text-[#d2d2d2]">Review status</div>
-                  <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-[#d6d6d6]">
-                    {activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
-                  </p>
-                  <p className="mt-3 text-[12px] font-sans leading-5 tracking-tight text-[#bfbfbf]">
-                    {activeDiscrepancy.isProcessed
-                      ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
-                      : 'Margin will keep this finding in review until it is either ready to move into a case or held with a clear reason.'}
-                  </p>
+                <div className="px-5 py-5">
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Backend detection record</div>
+                  <div className="mt-3 grid grid-cols-2 border-y border-white/10">
+                    {activeDiscrepancyMetaRows.map((item) => (
+                      <div key={item.label} className="border-b border-white/[0.08] py-3 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                        <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
+                        <div className="mt-1.5 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-5">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence fields</div>
+                    {activeDiscrepancyEvidenceItems.length > 0 ? (
+                      <div className="mt-3 grid grid-cols-2 border-y border-white/10">
+                        {activeDiscrepancyEvidenceItems.map((item) => (
+                          <div key={`${item.label}-${item.value}`} className="border-b border-white/[0.08] py-3 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                            <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
+                            <div className="mt-1.5 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-3 border-y border-white/10 py-4 text-[11px] font-sans leading-5 text-white/[0.44]">
+                        No structured evidence fields were returned with this backend detection row.
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <DialogFooter className="px-5 py-3 border-t border-white/6 bg-white/[0.02] flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-[11px] font-sans tracking-tight text-[#d0d0d0]">
-                  Margin files only what can be supported by evidence and policy.
+              <DialogFooter className="flex flex-col gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[11px] font-sans leading-5 tracking-tight text-white/[0.44]">
+                  Populated from the persisted backend detection result. Margin files only what can be supported by evidence and policy.
                 </div>
                 <div className="flex items-center gap-3">
                   {activeDiscrepancy.isProcessed ? (
@@ -3523,23 +3590,15 @@ export function Dashboard() {
                         setShowDiscrepancyModal(false);
                         navigate(tenantRoute(activeSlug, '/recoveries'));
                       }}
-                      className="h-10 px-4 bg-white text-black hover:bg-white/90 text-[12px] font-sans font-medium tracking-tight rounded-lg"
+                      className="h-9 rounded-none border border-white/10 bg-white px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
                     >
                       Open cases
                     </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      onClick={() => handleRowExport(activeDiscrepancy.id)}
-                      className="h-10 px-4 bg-white/[0.03] border-white/10 text-[12px] font-sans font-medium tracking-tight text-white hover:bg-white/[0.06]"
-                    >
-                      Download evidence
-                    </Button>
-                  )}
+                  ) : null}
                   <Button
                     variant="outline"
                     onClick={() => setShowDiscrepancyModal(false)}
-                    className="h-10 px-4 bg-transparent border-white/10 text-[12px] font-sans font-medium tracking-tight text-white/72 hover:text-white hover:bg-white/[0.04]"
+                    className="h-9 rounded-none border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
                   >
                     Close
                   </Button>

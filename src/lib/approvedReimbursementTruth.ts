@@ -86,7 +86,7 @@ function payoutTruthLabel(row: any) {
     return 'Approved, amount unverified';
   }
 
-  return 'Reimbursement truth verified';
+  return 'Reimbursement verified';
 }
 
 function amountForDisplay(row: any) {
