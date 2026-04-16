@@ -882,19 +882,19 @@ export default function EvidenceLocker() {
               </div>
 
               {/* Audit Registry Ledger - Document Library */}
-              <div className="bg-[#0c0c0c] border border-white/10 rounded-xl overflow-hidden shadow-2xl backdrop-blur-3xl relative">
+              <div className="border-y border-white/10 bg-transparent relative">
                 {/* Ledger Header */}
-                <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                <div className="px-5 py-4 border-b border-white/10 flex flex-col gap-4 bg-transparent lg:flex-row lg:items-end lg:justify-between">
                   <div>
-                    <h2 className="text-[11px] font-sans font-bold text-white/40 uppercase tracking-tight">Document Library</h2>
+                    <h2 className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Document Library</h2>
                     <div className="flex items-center gap-3 mt-1.5">
-                      <span className="text-sm font-sans font-bold text-white tracking-tight uppercase">{metrics.filteredResults} results</span>
+                      <span className="text-[15px] font-sans font-medium text-white tracking-tight">{metrics.filteredResults} results</span>
                       <div className="h-1.5 w-[1px] bg-white/10" />
-                      <span className="text-[10px] font-sans font-bold text-white/40 uppercase tracking-tight">Total archive: {metrics.totalDocuments}</span>
+                      <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Total archive: {metrics.totalDocuments}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <div className="relative group/search">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3 w-3 text-white/20 group-focus-within/search:text-white transition-colors" />
                       <Input
@@ -904,14 +904,14 @@ export default function EvidenceLocker() {
                           setQ(e.target.value);
                           setPage(1);
                         }}
-                        className="h-9 w-64 bg-white/[0.03] border-white/10 text-[11px] font-sans font-bold pl-9 focus:border-white/20 transition-all rounded-lg placeholder:text-white/10 tracking-tight"
+                        className="h-8 w-full rounded-none border-white/10 bg-transparent pl-9 font-sans text-[11px] font-medium tracking-tight text-white transition-all placeholder:text-zinc-600 focus:border-white/25 sm:w-64"
                       />
                     </div>
 
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white hover:bg-white/10 border border-white/5 hover:border-white/15 transition-all uppercase tracking-tight rounded-lg"
+                      className="h-8 rounded-none border border-white/10 bg-transparent px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-zinc-400 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white"
                       onClick={exportCsv}
                     >
                       <Download className="mr-2 h-3.5 w-3.5" />
@@ -922,7 +922,7 @@ export default function EvidenceLocker() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-9 px-4 text-[10px] font-sans font-bold text-rose-500/40 hover:text-rose-500 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/20 transition-all uppercase tracking-tight rounded-lg"
+                        className="h-8 rounded-none border border-rose-500/15 bg-transparent px-4 font-sans text-[10px] font-medium uppercase tracking-tight text-rose-500/50 transition-colors hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400"
                         onClick={handleDeleteAllDocuments}>
                         <Trash2 className="w-3.5 h-3.5 mr-2" />
                         Delete All
@@ -932,9 +932,9 @@ export default function EvidenceLocker() {
                 </div>
 
                 {/* Ledger Body */}
-                <div className="flex flex-col min-h-[500px]">
+                <div className="flex flex-col min-h-[420px]">
                   {loading ? (
-                    <div className="flex flex-col items-center justify-center py-40">
+                    <div className="flex flex-col items-center justify-center py-32">
                       <div className="relative flex h-4 w-4 mb-6">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/25 opacity-20"></span>
                         <span className="relative inline-flex rounded-full h-4 w-4 bg-white/35"></span>
@@ -942,7 +942,7 @@ export default function EvidenceLocker() {
                       <span className="text-[11px] font-sans font-bold text-white/20 uppercase tracking-tight">Loading documents...</span>
                     </div>
                   ) : error ? (
-                    <div className="flex flex-col items-center justify-center py-40 bg-rose-500/[0.02]">
+                    <div className="flex flex-col items-center justify-center py-32 bg-rose-500/[0.02]">
                       <AlertCircle className="h-8 w-8 text-rose-500/20 mb-6" />
                       <span className="text-[11px] font-sans font-bold text-rose-500 uppercase tracking-tight">Connection error</span>
                       <p className="text-[10px] text-rose-500/40 mt-2 font-sans font-bold tracking-tight">{error}</p>
@@ -957,23 +957,31 @@ export default function EvidenceLocker() {
                   ) : (
                     <>
                       {documents.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-28">
+                        <div className="flex flex-col items-center justify-center py-24">
                           <CircleDashed className="h-6 w-6 text-white/15 mb-4" />
                           <span className="text-[11px] font-sans font-bold text-white/30 uppercase tracking-tight">
                             {metrics.totalDocuments === 0 ? 'No documents in this workspace' : 'No documents match the current search'}
                           </span>
                         </div>
                       ) : (
-                      <div className="divide-y divide-white/5 overflow-hidden">
+                      <div className="overflow-hidden">
+                        <div className="hidden border-b border-white/10 px-5 py-2.5 lg:grid lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:gap-5">
+                          {['', 'Document', 'Evidence details', 'Value / date', 'Action'].map((label) => (
+                            <div key={label || 'selection'} className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                              {label}
+                            </div>
+                          ))}
+                        </div>
+                      <div className="divide-y divide-white/8">
                         {documents.map((doc) => (
                           <div
                             key={doc.id}
-                            className="group relative flex items-center justify-between py-6 px-8 hover:bg-white/[0.02] transition-all duration-300"
+                            className="group relative px-5 py-3.5 transition-colors hover:bg-white/[0.025]"
                           >
-                            <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-white/60 shadow-[0_0_15px_rgba(255,255,255,0.18)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute left-0 top-2 bottom-2 w-[1px] bg-white/70 opacity-0 transition-opacity group-hover:opacity-100" />
 
-                            <div className="flex items-start gap-6 flex-1 pr-12">
-                              <div className="mt-1.5 flex flex-col items-center gap-3">
+                            <div className="grid gap-4 lg:grid-cols-[2.25rem_minmax(0,1.35fr)_minmax(0,1.25fr)_minmax(0,0.85fr)_5.5rem] lg:items-start lg:gap-5">
+                              <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-2">
                                 <Checkbox
                                   checked={selectedIds.has(doc.id)}
                                   onCheckedChange={(c) => {
@@ -988,9 +996,9 @@ export default function EvidenceLocker() {
                                 <Hexagon className="h-3.5 w-3.5 text-white/5 group-hover:text-white/40 transition-colors" />
                               </div>
 
-                              <div className="flex flex-col gap-2 flex-1 min-w-0">
-                                <div className="flex items-center gap-3">
-                                  <span className="text-sm font-medium text-white tracking-tight truncate normal-case group-hover:text-white/90 transition-colors">
+                              <div className="min-w-0">
+                                <div className="flex flex-wrap items-center gap-2.5">
+                                  <span className="min-w-0 truncate text-[13px] font-sans font-medium tracking-tight text-white normal-case transition-colors group-hover:text-white/90">
                                     {doc.name}
                                   </span>
                                   <Badge className={cn("text-[9px] font-sans font-bold uppercase tracking-tight flex items-center gap-1.5", getEvidenceStateBadgeClass(doc))}>
@@ -998,20 +1006,33 @@ export default function EvidenceLocker() {
                                     {getEvidenceStateLabel(doc)}
                                   </Badge>
                                   {doc.linked_case_count > 0 && (
-                                    <div className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/75 uppercase tracking-tight flex items-center gap-1.5">
+                                    <div className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-medium text-white/75 uppercase tracking-tight flex items-center gap-1.5">
                                       <Link2 className="h-2.5 w-2.5" />
                                       {doc.linked_case_count} linked cases
                                     </div>
                                   )}
                                 </div>
 
-                                <div className="flex items-center text-[10px] font-sans font-bold text-white/20 gap-4 uppercase tracking-tight">
+                                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                                   <span className="text-white/40">{doc.source_display || "Unknown source"}</span>
-                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/10">|</span>
                                   <span className="text-white/40">{doc.content_type || "Type unavailable"}</span>
-                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/10">|</span>
                                   <span className="text-white/40">{formatBytes(doc.size_bytes)}</span>
-                                  <span className="text-white/5">|</span>
+                                </div>
+
+                                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium tracking-tight text-zinc-500">
+                                  <span className="text-white/40">Supplier: {doc.supplier || "Not available"}</span>
+                                  <span className="text-white/10">|</span>
+                                  <span className="text-white/40">Invoice: {doc.invoice || "Not available"}</span>
+                                </div>
+                              </div>
+
+                              <div className="min-w-0">
+                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
+                                  Evidence details
+                                </div>
+                                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:mt-0">
                                   <div className="flex items-center gap-2">
                                     {(() => {
                                       const parsingStatus = getLockerParsingStatus(doc);
@@ -1035,47 +1056,44 @@ export default function EvidenceLocker() {
                                       );
                                     })()}
                                   </div>
-                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/10">|</span>
                                   <span className="text-white/40">
                                     {doc.parser_confidence != null ? `${(doc.parser_confidence * 100).toFixed(0)}% confidence` : "Confidence unknown"}
                                   </span>
-                                  <span className="text-white/5">|</span>
-                                  <span className="text-white font-bold">
-                                    {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
-                                  </span>
-                                  <span className="text-white/5">|</span>
-                                  <span className="tabular-nums">
-                                    {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
-                                  </span>
-                                </div>
-
-                                <div className="flex items-center text-[10px] font-sans font-bold text-white/20 gap-4 tracking-tight">
-                                  <span className="text-white/40">Supplier: {doc.supplier || "Not available"}</span>
-                                  <span className="text-white/5">|</span>
-                                  <span className="text-white/40">Invoice: {doc.invoice || "Not available"}</span>
-                                  <span className="text-white/5">|</span>
+                                  <span className="text-white/10">|</span>
                                   <span className="text-white/40">{doc.usability_reason}</span>
                                   {getLockerIngestionLabel(doc) ? (
                                     <>
-                                      <span className="text-white/5">|</span>
+                                      <span className="text-white/10">|</span>
                                       <span className="text-white/40">Intake: {getLockerIngestionLabel(doc)}</span>
                                     </>
                                   ) : null}
                                   {getLockerParsingReason(doc) ? (
                                     <>
-                                      <span className="text-white/5">|</span>
-                                      <span className="text-white/40 truncate max-w-[28rem]">Decision: {getLockerParsingReason(doc)}</span>
+                                      <span className="text-white/10">|</span>
+                                      <span className="text-white/40">Decision: {getLockerParsingReason(doc)}</span>
                                     </>
                                   ) : null}
                                 </div>
                               </div>
-                            </div>
 
-                            <div className="flex items-center gap-4">
+                              <div>
+                                <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500 lg:hidden">
+                                  Value / date
+                                </div>
+                                <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white lg:mt-0">
+                                  {typeof doc.amount === 'number' ? `$${doc.amount.toFixed(2)}` : "—"}
+                                </div>
+                                <div className="mt-1 text-[10px] font-sans text-zinc-500 tabular-nums">
+                                  {new Date(doc.uploadDate).toLocaleDateString('en-CA')}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 lg:justify-end">
                               {doc.linked_case_count > 0 && (
                                 <Link
                                   to={`/app/${activeSlug}/recoveries/${encodeURIComponent(doc.linked_case_ids[0])}`}
-                                  className="text-[10px] font-sans font-bold text-white/20 hover:text-white transition-colors uppercase tracking-tight flex items-center gap-2"
+                                  className="text-[9px] font-sans font-medium text-white/30 hover:text-white transition-colors uppercase tracking-tight flex items-center gap-2"
                                 >
                                   {doc.linked_case_refs[0] || `ID_${doc.linked_case_ids[0].slice(0, 8)}`}
                                   <ArrowRight className="h-3 w-3" />
@@ -1084,7 +1102,7 @@ export default function EvidenceLocker() {
 
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-white/10 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10 rounded-lg transition-all">
+                                  <Button variant="ghost" size="sm" className="h-7 w-7 rounded-none border border-transparent p-0 text-white/15 transition-colors hover:border-white/10 hover:bg-white/[0.04] hover:text-white">
                                     <MoreHorizontal className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
@@ -1112,15 +1130,17 @@ export default function EvidenceLocker() {
                                   </DropdownMenuItem>
                                 </DropdownMenuContent>
                               </DropdownMenu>
+                              </div>
                             </div>
                           </div>
                         ))}
                       </div>
+                      </div>
                       )}
 
                       {/* Ledger Pagination */}
-                      <div className="px-8 py-6 flex items-center justify-between border-t border-white/5 bg-white/[0.01]">
-                        <div className="flex items-center gap-6">
+                      <div className="px-5 py-3.5 flex flex-col gap-4 border-t border-white/10 bg-transparent lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex flex-wrap items-center gap-5">
                           <div className="flex items-center gap-3">
                               <Checkbox
                               checked={selectedIds.size > 0 && selectedIds.size === documents.length}
@@ -1130,19 +1150,19 @@ export default function EvidenceLocker() {
                               }}
                               className="h-3 w-3 border-white/10 rounded-sm"
                             />
-                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Selection</span>
+                            <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Selection</span>
                           </div>
-                          <span className="text-white/5 h-3 w-[1px]" />
-                          <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">
+                          <span className="h-3 w-[1px] bg-white/10" />
+                          <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">
                             PAGE {pagination.page} OF {pagination.totalPages}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-8">
+                        <div className="flex flex-wrap items-center gap-5">
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-sans font-bold text-white/20 uppercase tracking-tight">Page size</span>
+                            <span className="text-[10px] font-sans font-medium text-zinc-500 uppercase tracking-tight">Page size</span>
                             <select
-                              className="bg-transparent border-none text-[10px] font-sans font-bold text-white/60 focus:ring-0 cursor-pointer p-0 uppercase"
+                              className="bg-transparent border-none text-[10px] font-sans font-medium text-zinc-300 focus:ring-0 cursor-pointer p-0 uppercase"
                               value={pageSize}
                               onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
                             >
@@ -1155,7 +1175,7 @@ export default function EvidenceLocker() {
                           <div className="flex items-center gap-2">
                             <Button
                               variant="ghost"
-                              className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10 tracking-tight"
+                              className="h-8 rounded-none border border-white/10 bg-transparent px-4 font-sans text-[10px] font-medium tracking-tight text-zinc-500 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white disabled:opacity-10"
                               disabled={pagination.page <= 1}
                               onClick={() => setPage(p => Math.max(1, (pagination.page || p) - 1))}
                             >
@@ -1163,7 +1183,7 @@ export default function EvidenceLocker() {
                             </Button>
                             <Button
                               variant="ghost"
-                              className="h-9 px-4 text-[10px] font-sans font-bold text-white/20 hover:text-white border border-white/5 rounded-lg disabled:opacity-10 tracking-tight"
+                              className="h-8 rounded-none border border-white/10 bg-transparent px-4 font-sans text-[10px] font-medium tracking-tight text-zinc-500 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-white disabled:opacity-10"
                               disabled={pagination.page >= pagination.totalPages}
                               onClick={() => setPage(p => Math.min(pagination.totalPages, (pagination.page || p) + 1))}
                             >
