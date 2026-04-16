@@ -164,36 +164,36 @@ const mobileHoldRules = [
 
 const faqs = [
   {
-    question: 'Which services help automate FBA reimbursement claims?',
-    answer: 'Sellers do not just want automation. They want a system that detects reimbursement discrepancies, verifies the evidence, files only supported cases, and tracks Amazon until payout.'
+    question: 'What does Margin do after I connect my Amazon account?',
+    answer: 'Margin starts monitoring your seller data for reimbursement and discrepancy opportunities. It looks across shipments, returns, reimbursements, transfers, fees, and payout activity, then separates supported recovery opportunities from issues that still need more proof or review.'
   },
   {
-    question: 'What are common reasons for FBA reimbursement denials?',
-    answer: 'Weak identifiers, missing quantity truth, unsupported evidence, expired policy windows, and duplicate or already-active issues are common reasons for denial. Margin is designed to hold those cases instead of filing them.'
+    question: 'Is Margin a one-time audit or ongoing coverage?',
+    answer: 'Margin is built for ongoing recovery coverage. The first 30 days start your first recovery cycle, then Margin keeps monitoring for new discrepancies, collecting evidence, tracking filings, and following recovery status over time.'
   },
   {
-    question: 'What documentation is required to submit a successful FBA reimbursement claim?',
-    answer: 'It depends on the case type, but common proof includes shipment IDs, ASIN or FNSKU, quantity truth, supplier invoices, bills of lading, proof of delivery, and any Amazon thread-specific evidence requested during follow-up.'
+    question: 'Does Margin file every issue it finds?',
+    answer: 'No. Margin is designed to file only cases that meet the required truth checks. If a finding is missing evidence, has weak identifiers, appears duplicated, or needs seller review, it is held instead of being pushed forward carelessly.'
   },
   {
-    question: 'How can I check if I am eligible for FBA reimbursements?',
-    answer: 'You need an audit across inventory, shipments, fees, returns, and reimbursements that distinguishes supported cases from expired, duplicate, or unsupported ones.'
+    question: 'Can I control whether cases are submitted automatically?',
+    answer: 'Yes. Sellers can control Auto-File. When Auto-File is on, eligible cases can move forward once all filing requirements are met. When it is off, cases wait for seller review or manual action.'
   },
   {
-    question: 'How do I track the status of reimbursement requests?',
-    answer: 'You should be able to see whether a case is waiting on Amazon, needs evidence, approved, rejected, or paid. Margin is designed to keep that case status explicit.'
+    question: 'Where does Margin get supporting evidence from?',
+    answer: 'Margin can use connected sources such as Gmail, Google Drive, Dropbox, and Slack, plus manual document uploads when a required document cannot be found automatically. Evidence is matched to cases so sellers can see what is stored, parsed, and ready for review.'
   },
   {
-    question: 'Will using an automated tool get my Amazon account suspended?',
-    answer: 'A risky tool can create account problems if it files weak, duplicate, or careless cases. Margin applies a pre-filing truth gate so unsupported cases are blocked before submission.'
+    question: 'What happens if Margin cannot find the right document?',
+    answer: 'The case should not be treated as filing-ready just because a discrepancy was detected. Margin surfaces evidence gaps so the seller can connect another source, upload the missing document, or leave the case waiting until the proof is strong enough.'
   },
   {
-    question: 'Do I have to manually upload invoices for every claim?',
-    answer: 'Not necessarily. When evidence sources are connected, Margin uses the available documents. If a required document is missing, the system should tell you exactly what is missing before a case is filed.'
+    question: 'How does Margin pricing work?',
+    answer: 'Margin uses flat subscription pricing with no recovery commissions. You start with your first 30-day recovery cycle, then continue monthly or annually for ongoing monitoring, evidence collection, filing support, and payout tracking. You can cancel anytime.'
   },
   {
-    question: 'What is the typical timeframe for FBA reimbursement claim resolution?',
-    answer: 'That depends on Amazon’s handling of the case. Some cases move quickly, some require more evidence, and some are approved before payout is confirmed. The important part is keeping the current case state explicit.'
+    question: 'How will I know what is happening with my cases?',
+    answer: 'Margin keeps case status visible across the recovery workflow: ready to file, being filed, filed, awaiting payout, completed, blocked, or needing review. The goal is for sellers to understand what is moving, what is waiting, and why.'
   }
 ];
 
@@ -783,10 +783,10 @@ export default function Index() {
             <motion.div {...mobileRevealProps} className="mx-auto max-w-[430px] md:max-w-[900px] md:text-center">
               <div className={eyebrowClass}>Common questions</div>
               <h2 className="mt-2.5 max-w-[300px] text-[25px] font-light leading-[1.05] tracking-tight text-white sm:max-w-[320px] sm:text-[27px] md:mt-4 md:max-w-none md:text-6xl">
-                Questions sellers ask before connecting Amazon data.
+                Questions sellers ask before trusting Margin.
               </h2>
               <p className="mt-3.5 max-w-[300px] text-[14px] leading-[1.72] text-white/60 md:mx-auto md:mt-6 md:max-w-[760px] md:text-lg md:leading-8">
-                These answers explain how Margin detects reimbursement cases, verifies evidence, and keeps case status visible through payout.
+                These answers explain how Margin monitors seller data, handles evidence, controls filing, prices coverage, and keeps recovery status visible over time.
               </p>
             </motion.div>
 
