@@ -33,7 +33,7 @@ const FooterComponent: React.FC<Props> = ({ selectedLanguageLabel }) => {
                 height="24"
                 className="h-6 w-auto object-contain invert brightness-0"
               />
-              <span className="font-merriweather font-bold text-white text-xl tracking-tight">Margin</span>
+              <span className="brand-wordmark font-merriweather text-white text-xl tracking-tight">Margin</span>
             </Link>
             <p className="font-montserrat text-sm text-white/40 leading-relaxed max-w-sm">
               Autonomous reimbursements crafted for modern Amazon operators. Secure data flows, transparent claims,

@@ -74,7 +74,7 @@ export const PublicNavbar = () => {
                                 fetchPriority="high"
                                 className="h-5 w-auto object-contain invert brightness-0"
                             />
-                            <span className="font-merriweather font-bold text-white text-lg tracking-tight">Margin</span>
+                            <span className="brand-wordmark font-merriweather text-white text-lg tracking-tight">Margin</span>
                         </Link>
                         <span className="hidden md:inline text-gray-300">|</span>
 

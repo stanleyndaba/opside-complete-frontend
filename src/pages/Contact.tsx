@@ -67,7 +67,7 @@ export default function Contact() {
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-3 group">
                         <img src="/logoimagetwo.png" alt="Margin" className="h-5 w-auto invert brightness-0" />
-                        <span className="text-base font-bold text-white font-sans tracking-tight">Margin</span>
+                        <span className="brand-wordmark font-merriweather text-white text-lg tracking-tight">Margin</span>
                     </Link>
                 </div>
             </header>

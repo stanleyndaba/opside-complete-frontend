@@ -32,6 +32,12 @@
     font-family: 'Merriweather', serif !important;
   }
 
+  .brand-wordmark {
+    font-family: 'Merriweather', Georgia, serif !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em;
+  }
+
   /* Landing page metrics - force light weight */
   .font-extralight-200 {
     font-weight: 200 !important;
@@ -541,9 +547,12 @@
 /* Merriweather font override - highest specificity */
 .font-merriweather,
 h1.font-merriweather,
+.brand-wordmark,
+span.brand-wordmark,
+a .brand-wordmark,
 .landing .font-merriweather,
 .landing h1.font-merriweather {
-  font-family: 'Merriweather', serif !important;
+  font-family: 'Merriweather', Georgia, serif !important;
 }
 
 /* Lenis Smooth Scroll */

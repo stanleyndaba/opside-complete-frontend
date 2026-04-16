@@ -83,7 +83,7 @@ export default function Sales() {
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-3 group">
                         <img src="/logoimagetwo.png" alt="Margin" className="h-4 sm:h-5 w-auto invert brightness-0" />
-                        <span className="text-[10px] sm:text-xs font-bold tracking-tight uppercase font-mono text-white/90">Enterprise Node</span>
+                        <span className="brand-wordmark font-merriweather text-white text-lg tracking-tight">Margin</span>
                     </Link>
                     <div className="flex items-center gap-8">
                         <Link to="/contact">
