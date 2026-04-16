@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -18,7 +19,7 @@ import {
   Download, Bell, TrendingDown, TrendingUp, Loader2, X,
   ChevronDown, Clock, MoreVertical, Files
 } from 'lucide-react';
-import { api, detectionApi, buildApiUrl } from '@/lib/api';
+import { api, detectionApi, buildApiUrl, type AutoFileGateStatus } from '@/lib/api';
 import { recoveryApi } from '@/lib/recoveryApi';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -753,6 +754,11 @@ export function Dashboard() {
   const [contactSubject, setContactSubject] = useState<string>('');
   const [contactQuery, setContactQuery] = useState<string>('');
   const [contactSubmitting, setContactSubmitting] = useState<boolean>(false);
+  const [dashboardAutoFileEnabled, setDashboardAutoFileEnabled] = useState<boolean>(true);
+  const [dashboardAutoFileGateStatus, setDashboardAutoFileGateStatus] = useState<AutoFileGateStatus | null>(null);
+  const [dashboardAutoFileLoading, setDashboardAutoFileLoading] = useState<boolean>(true);
+  const [dashboardAutoFileSaving, setDashboardAutoFileSaving] = useState<boolean>(false);
+  const [dashboardAutoFileError, setDashboardAutoFileError] = useState<string | null>(null);
   // Evidence stats
   const [evidenceStatus, setEvidenceStatus] = useState<{ documentsCount: number; processingCount: number } | null>(null);
   const [inviteOpen, setInviteOpen] = useState<boolean>(false);
@@ -765,6 +771,108 @@ export function Dashboard() {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
   }, []);
+
+  const loadDashboardAutoFilePreference = useCallback(async (options?: { silent?: boolean }): Promise<boolean> => {
+    if (!activeSlug) {
+      setDashboardAutoFileLoading(false);
+      setDashboardAutoFileGateStatus(null);
+      return false;
+    }
+
+    if (!options?.silent) {
+      setDashboardAutoFileLoading(true);
+    }
+    setDashboardAutoFileError(null);
+
+    try {
+      const response = await api.getAutoFilePreference(activeSlug);
+      if (response.ok && response.data?.data) {
+        setDashboardAutoFileEnabled(response.data.data.enabled);
+        setDashboardAutoFileGateStatus(response.data.data.gateStatus ?? null);
+        return true;
+      }
+
+      setDashboardAutoFileError(response.error || 'Auto-File status unavailable');
+      return false;
+    } catch (error) {
+      console.error('Failed to load dashboard Auto-File preference:', error);
+      setDashboardAutoFileError('Auto-File status unavailable');
+      return false;
+    } finally {
+      if (!options?.silent) {
+        setDashboardAutoFileLoading(false);
+      }
+    }
+  }, [activeSlug]);
+
+  useEffect(() => {
+    if (!isReady || !activeSlug) {
+      setDashboardAutoFileLoading(false);
+      return;
+    }
+
+    void loadDashboardAutoFilePreference();
+  }, [activeSlug, isReady, loadDashboardAutoFilePreference]);
+
+  const handleDashboardAutoFileChange = useCallback(async (enabled: boolean) => {
+    if (!activeSlug) {
+      setDashboardAutoFileError('Workspace context required');
+      return;
+    }
+
+    const previousValue = dashboardAutoFileEnabled;
+    const previousGateStatus = dashboardAutoFileGateStatus;
+    setDashboardAutoFileSaving(true);
+    setDashboardAutoFileError(null);
+
+    try {
+      const response = await api.saveAutoFilePreference(enabled, activeSlug);
+      if (!response.ok || !response.data?.data) {
+        setDashboardAutoFileEnabled(previousValue);
+        setDashboardAutoFileGateStatus(previousGateStatus);
+        setDashboardAutoFileError(response.error || 'Auto-File could not be saved');
+        toast({
+          title: 'Auto-File not saved',
+          description: response.error || 'Margin could not update this control.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setDashboardAutoFileEnabled(response.data.data.enabled);
+      setDashboardAutoFileGateStatus(response.data.data.gateStatus ?? null);
+
+      const refreshed = await loadDashboardAutoFilePreference({ silent: true });
+      if (!refreshed) {
+        setDashboardAutoFileError('Saved, but latest gate status could not be refreshed');
+      }
+
+      toast({
+        title: response.data.data.enabled ? 'Auto-File enabled' : 'Auto-File paused',
+        description: response.data.data.enabled
+          ? 'Eligible cases can submit automatically when filing gates are clear.'
+          : 'Cases will wait for your review before filing.',
+      });
+    } catch (error) {
+      console.error('Failed to save dashboard Auto-File preference:', error);
+      setDashboardAutoFileEnabled(previousValue);
+      setDashboardAutoFileGateStatus(previousGateStatus);
+      setDashboardAutoFileError('Auto-File could not be saved');
+      toast({
+        title: 'Auto-File not saved',
+        description: 'Margin could not update this control.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDashboardAutoFileSaving(false);
+    }
+  }, [
+    activeSlug,
+    dashboardAutoFileEnabled,
+    dashboardAutoFileGateStatus,
+    loadDashboardAutoFilePreference,
+    toast,
+  ]);
 
   const handleContactSupportSubmit = useCallback(async () => {
     const email = contactEmail.trim();
@@ -2478,6 +2586,21 @@ export function Dashboard() {
     recoveredCurrency,
   ]);
   const isOverviewLoading = !dashboardSummary && !launchMonitor;
+  const dashboardAutoFileStatusCopy = dashboardAutoFileLoading
+    ? 'Checking Auto-File control.'
+    : dashboardAutoFileSaving
+      ? 'Saving seller intent.'
+      : dashboardAutoFileError
+        ? dashboardAutoFileError
+        : dashboardAutoFileEnabled
+          ? dashboardAutoFileGateStatus?.message || 'Eligible cases can submit automatically when filing gates are clear.'
+          : 'Cases will wait for your review before filing.';
+  const dashboardAutoFileStatusTone = dashboardAutoFileError
+    ? 'text-[#d0b673]'
+    : dashboardAutoFileEnabled && dashboardAutoFileGateStatus?.primaryBlocker
+      ? 'text-[#d0b673]'
+      : 'text-white/45';
+
   if (!activeSlug) {
     return (
       <div className="relative min-h-screen flex flex-col h-screen overflow-hidden bg-[#070707]">
@@ -2572,12 +2695,52 @@ export function Dashboard() {
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2">
-                  <button
-                    onClick={() => setQuickNoticeOpen(true)}
-                    className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
-                  >
-                    Contact Us
-                  </button>
+                  <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-start">
+                    <div className="min-w-[260px] max-w-[360px] border border-white/10 bg-white/[0.035] px-3 py-2 shadow-[0_0_18px_rgba(255,255,255,0.04)]">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            dashboardAutoFileError
+                              ? "bg-[#d0b673]"
+                              : dashboardAutoFileEnabled
+                                ? "bg-white"
+                                : "bg-white/25"
+                          )} />
+                          <span className="text-[10px] font-sans font-semibold uppercase tracking-tight text-white/80">
+                            Auto-File
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={dashboardAutoFileEnabled}
+                            onCheckedChange={(checked) => {
+                              void handleDashboardAutoFileChange(checked);
+                            }}
+                            disabled={dashboardAutoFileLoading || dashboardAutoFileSaving}
+                            aria-label="Dashboard Auto-File seller-controlled filing switch"
+                            className="data-[state=checked]:bg-white data-[state=unchecked]:bg-white/20"
+                          />
+                          <span className="min-w-9 text-right text-[9px] font-sans font-semibold uppercase tracking-tight text-white/45">
+                            {dashboardAutoFileSaving ? 'Saving' : dashboardAutoFileEnabled ? 'On' : 'Off'}
+                          </span>
+                        </div>
+                      </div>
+                      <p className={cn(
+                        "mt-1.5 line-clamp-2 text-right text-[10px] font-sans leading-4 tracking-tight",
+                        dashboardAutoFileStatusTone
+                      )}>
+                        {dashboardAutoFileStatusCopy}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setQuickNoticeOpen(true)}
+                      className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/85 text-[10px] font-mono font-medium uppercase tracking-tight rounded-full transition-all duration-200 shadow-[0_0_12px_rgba(255,255,255,0.06)] hover:shadow-[0_0_18px_rgba(255,255,255,0.10)]"
+                    >
+                      Contact Us
+                    </button>
+                  </div>
                   <div className="whitespace-nowrap text-right text-[10px] font-sans font-medium leading-none tracking-tight text-white">
                     {discrepancyHeaderLastUpdatedLabel}
                   </div>
