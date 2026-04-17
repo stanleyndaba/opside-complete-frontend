@@ -340,6 +340,16 @@ const buildUnavailableCaseDetail = (fallbackId: string, failureReason?: string |
   evidence: {},
   evidence_summary: {},
   evidence_attachments: null,
+  finding_truth: null,
+  seller_summary: null,
+  policy_basis: null,
+  filing_movement: null,
+  review_tier: null,
+  claim_readiness: null,
+  recommended_action: null,
+  value_label: null,
+  why_not_claim_ready: null,
+  coverage_family: null,
   claim_number: null,
   generated_context: {
     summaryLabel: NOT_AVAILABLE,
@@ -443,6 +453,16 @@ const normalizeCaseDetailData = (apiData: any, fallbackId?: string) => {
   evidence: apiData.evidence || {},
   evidence_summary: apiData.evidence_summary || {},
   evidence_attachments: apiData.evidence_attachments || null,
+  finding_truth: apiData.finding_truth || null,
+  seller_summary: apiData.finding_truth?.seller_summary || apiData.seller_summary || null,
+  policy_basis: apiData.finding_truth?.policy_basis || apiData.policy_basis || null,
+  filing_movement: apiData.finding_truth?.filing_movement || apiData.filing_movement || null,
+  review_tier: apiData.finding_truth?.review_tier || apiData.review_tier || null,
+  claim_readiness: apiData.finding_truth?.claim_readiness || apiData.claim_readiness || null,
+  recommended_action: apiData.finding_truth?.recommended_action || apiData.recommended_action || null,
+  value_label: apiData.finding_truth?.value_label || apiData.value_label || null,
+  why_not_claim_ready: apiData.finding_truth?.why_not_claim_ready || apiData.why_not_claim_ready || null,
+  coverage_family: apiData.finding_truth?.coverage_family || apiData.coverage_family || null,
   claim_number: apiData.claim_number || apiData.evidence?.claim_number || null,
   generated_context: apiData.generated_context || null,
   next_step_context: apiData.next_step_context || null,
@@ -950,6 +970,40 @@ export default function CaseDetail() {
   const resolvedStoreName = effectiveCase?.store_name || effectiveCase?.seller_name || null;
   const nextStep = effectiveCase?.next_step_context || null;
   const generatedContext = effectiveCase?.generated_context || null;
+  const findingTruth = effectiveCase?.finding_truth || null;
+  const sellerSummary = findingTruth?.seller_summary || effectiveCase?.seller_summary || null;
+  const policyBasis = findingTruth?.policy_basis || effectiveCase?.policy_basis || null;
+  const filingMovement = findingTruth?.filing_movement || effectiveCase?.filing_movement || null;
+  const hasFindingTruth = Boolean(findingTruth || sellerSummary || policyBasis || filingMovement);
+  const reviewTier = String(findingTruth?.review_tier || effectiveCase?.review_tier || '').trim();
+  const claimReadiness = String(findingTruth?.claim_readiness || effectiveCase?.claim_readiness || '').trim();
+  const valueLabel = String(findingTruth?.value_label || effectiveCase?.value_label || '').trim();
+  const whyNotClaimReady = findingTruth?.why_not_claim_ready || effectiveCase?.why_not_claim_ready || null;
+  const isReviewOnlyFinding = ['review_only', 'monitoring'].includes(reviewTier) || claimReadiness === 'not_claim_ready';
+  const findingReadinessLabel = !hasFindingTruth
+    ? null
+    : reviewTier === 'monitoring'
+    ? 'Monitoring'
+    : isReviewOnlyFinding
+      ? 'Review only'
+      : 'Claim candidate';
+  const findingAmount = requestedAmount ?? estimatedClaimValue ?? (
+    typeof effectiveCase?.guaranteedAmount === 'number' ? effectiveCase.guaranteedAmount : null
+  );
+  const findingAmountCopy = !hasFindingTruth
+    ? (typeof findingAmount === 'number'
+      ? `Current recorded case value is ${formatCurrencyOrDash(findingAmount, effectiveCase?.currency || 'USD')}.`
+      : 'Current recoverable amount is not available on this case record yet.')
+    : claimReadiness === 'claim_ready' && typeof findingAmount === 'number'
+    ? `Margin is tracking ${formatCurrencyOrDash(findingAmount, effectiveCase?.currency || 'USD')} as the current recoverable amount for this case.`
+    : valueLabel === 'no_recovery_value'
+      ? 'Margin is not treating this as recoverable value. It is being kept visible for monitoring and reconciliation.'
+      : 'Margin is not treating this as claim-ready recovery yet. Financial context is being reviewed before any filing decision.';
+  const findingNarrative = sellerSummary?.summary
+    || (effectiveCase?.truth_unavailable ? NOT_AVAILABLE : generateNarrative(effectiveCase));
+  const findingPolicyEvidence = Array.isArray(policyBasis?.required_evidence)
+    ? policyBasis.required_evidence.filter(Boolean)
+    : [];
   const proofStatus = typeof backendTruthCase?.proof_status === 'string' && backendTruthCase.proof_status.trim()
     ? backendTruthCase.proof_status
     : null;
@@ -1647,15 +1701,119 @@ export default function CaseDetail() {
                 {/* Tile 1: Audit Narrative & Logistics */}
                 <div className="p-8 bg-white/[0.02]">
                   <div className="mb-6">
-                    <h3 className="text-sm font-bold text-white">Generated Case Summary</h3>
+                    <h3 className="text-sm font-bold text-white">Why This Case Exists</h3>
                     <p className="text-[10px] text-white/30 uppercase tracking-tight font-bold mt-1">
-                      {generatedContext?.summaryLabel || NOT_AVAILABLE}
+                      Detection, evidence, policy basis, and current filing movement.
                     </p>
                   </div>
                   <div className="space-y-8">
-                    <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
-                      {effectiveCase.truth_unavailable ? NOT_AVAILABLE : generateNarrative(effectiveCase)}
-                    </p>
+                    <div className="space-y-5">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30">What Margin found</p>
+                          {findingReadinessLabel && (
+                            <Badge variant="outline" className={cn(
+                              "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-tight",
+                              isReviewOnlyFinding
+                                ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
+                                : "border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
+                            )}>
+                              {findingReadinessLabel}
+                            </Badge>
+                          )}
+                          {claimReadiness === 'not_claim_ready' && (
+                            <Badge variant="outline" className="rounded-full border-white/10 bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-tight text-white/50">
+                              Not claim-ready
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
+                          {findingNarrative || NOT_AVAILABLE}
+                        </p>
+                      </div>
+
+                      <div className="grid gap-4 lg:grid-cols-2">
+                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30 mb-2">Evidence used</p>
+                          <p className="text-[13px] leading-relaxed text-white/65">
+                            {sellerSummary?.evidence_summary || 'Structured backend evidence is attached to this case record.'}
+                          </p>
+                        </div>
+                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30 mb-2">Why this may be recoverable</p>
+                          <p className="text-[13px] leading-relaxed text-white/65">
+                            {sellerSummary?.recoverability_reason || 'Amazon records do not reconcile with the expected seller outcome. Margin is verifying identifiers, evidence, and policy support before filing.'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid gap-4 lg:grid-cols-2">
+                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                          <div className="flex items-start justify-between gap-4 mb-2">
+                            <p className="text-[10px] font-bold uppercase tracking-tight text-white/30">Policy basis</p>
+                            {policyBasis?.verification_status === 'policy_basis_pending_verification' && (
+                              <span className="text-[9px] font-bold uppercase tracking-tight text-amber-200/80">Pending verification</span>
+                            )}
+                          </div>
+                          <p className="text-[13px] font-bold leading-tight text-white/80">
+                            {policyBasis?.title || 'Policy basis pending verification'}
+                          </p>
+                          <p className="mt-2 text-[12px] leading-relaxed text-white/55">
+                            {policyBasis?.summary || 'Margin has not mapped this detector to a curated policy reference yet.'}
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-tight text-white/35">
+                            {policyBasis?.source_url ? (
+                              <a href={policyBasis.source_url} target="_blank" rel="noreferrer" className="hover:text-white/70">
+                                {policyBasis.source_name || 'Amazon Seller Central'}
+                              </a>
+                            ) : (
+                              <span>{policyBasis?.source_name || 'Amazon Seller Central'}</span>
+                            )}
+                            <span>•</span>
+                            <span>{policyBasis?.last_verified_at ? `Verified ${formatDateOrDash(policyBasis.last_verified_at)}` : 'Verification unavailable'}</span>
+                          </div>
+                          {findingPolicyEvidence.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                              {findingPolicyEvidence.slice(0, 4).map((item: string) => (
+                                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] font-bold text-white/45">
+                                  {item}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30 mb-2">What may be owed</p>
+                          <p className="text-[13px] leading-relaxed text-white/65">
+                            {findingAmountCopy}
+                          </p>
+                          {whyNotClaimReady && (
+                            <p className="mt-3 border-t border-white/10 pt-3 text-[12px] leading-relaxed text-amber-100/70">
+                              {whyNotClaimReady}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-tight text-white/30">Current filing movement</p>
+                            <p className="mt-1 text-[13px] font-bold text-white/80">
+                              {filingMovement?.label || nextStep?.title || NOT_AVAILABLE}
+                            </p>
+                          </div>
+                          {filingMovement?.next_action_label && (
+                            <span className="rounded-full border border-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-white/45">
+                              {filingMovement.next_action_label}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-3 text-[12px] leading-relaxed text-white/55">
+                          {filingMovement?.detail || nextStep?.description || 'Margin is tracking this case through the filing workflow.'}
+                        </p>
+                      </div>
+                    </div>
 
                     <div className="pt-6 border-t border-white/10">
                       <div className="text-xs text-white/30 font-bold mb-6 flex items-center gap-2">
