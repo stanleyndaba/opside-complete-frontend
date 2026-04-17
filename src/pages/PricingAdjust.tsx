@@ -18,21 +18,25 @@ import { cn } from '@/lib/utils';
 
 type PricingTier = {
   name: string;
+  planKey?: SelectablePlan;
   monthlyPrice: string;
   annualPrice: string;
   annualCheckout: string;
   bestFor: string;
   features: string[];
   coverageLine: string;
+  ctaLabel?: string;
+  salesLed?: boolean;
   featured?: boolean;
 };
 
 type BillingView = 'monthly' | 'annual';
-type SelectablePlan = 'starter' | 'pro';
+type SelectablePlan = 'starter' | 'pro' | 'enterprise';
 
 const pricingTiers: PricingTier[] = [
   {
     name: 'Starter',
+    planKey: 'starter',
     monthlyPrice: '$49',
     annualPrice: '$39 / month',
     annualCheckout: '$468 billed yearly',
@@ -48,35 +52,69 @@ const pricingTiers: PricingTier[] = [
   },
   {
     name: 'Pro',
+    planKey: 'pro',
     monthlyPrice: '$99',
     annualPrice: '$79 / month',
     annualCheckout: '$948 billed yearly',
     bestFor: 'Serious sellers who want continuous recovery coverage, stronger automation, and ongoing evidence collection.',
     features: [
       'Continuous recovery coverage',
+      '7 core recovery categories live today',
+      'Expanded detector coverage rolls into your plan automatically',
       'Unlimited auto-filing',
       'Ongoing evidence matching from connected repositories',
       'Real-time alerts for new filing opportunities',
       'Priority support',
     ],
-    coverageLine: 'Built for month-after-month monitoring, evidence collection, filing, and payout tracking. Cancel anytime.',
+    coverageLine: 'Pro includes today\'s 7-detector coverage and scheduled expansion toward the 28-detector launch set by May 20, 2026. No price increase on your active plan.',
     featured: true,
   },
   {
-    name: 'Enterprise',
+    name: 'Ultra',
+    planKey: 'enterprise',
     monthlyPrice: '$199',
     annualPrice: '$159 / month',
     annualCheckout: '$1,908 billed yearly',
     bestFor: 'Larger operators who need uninterrupted monitoring, custom rules, multi-marketplace support, and high-priority operational coverage.',
     features: [
       'Everything in Pro',
+      'Early access to expanded detector coverage',
       'Uninterrupted multi-marketplace monitoring',
       'Custom recovery rules',
+      'Custom valuation rules and sourcing-cost evidence collection',
       'API access',
       'High-priority operational coverage',
     ],
-    coverageLine: 'Annual operators keep monitoring active without restart gaps, with high-priority support for recovery operations.',
+    coverageLine: 'Ultra includes early access to expanded detector coverage, custom valuation rules, and sourcing-cost evidence collection. Active plans receive the May coverage expansion at no extra cost.',
   },
+  {
+    name: 'Enterprise',
+    monthlyPrice: 'Custom',
+    annualPrice: 'Custom',
+    annualCheckout: 'Sales-led annual coverage',
+    bestFor: 'High-volume sellers, agencies, and multi-brand operators that need a managed recovery operating layer.',
+    features: [
+      'Everything in Ultra',
+      'Dedicated recovery operations support',
+      'Custom detector coverage planning',
+      'Custom valuation and sourcing-cost workflows',
+      'Multi-marketplace and multi-workspace rollout support',
+      'SLA planning, volume pricing, and implementation support',
+    ],
+    coverageLine: 'Enterprise is for operators who want Margin configured around their recovery workflow, evidence sources, team structure, and filing controls.',
+    ctaLabel: 'Contact Sales',
+    salesLed: true,
+  },
+];
+
+const coreCoverageCategories = [
+  'Lost inventory',
+  'Inbound shortages',
+  'Transfer losses',
+  'Damaged inventory',
+  'Refund without return',
+  'Reimbursement integrity',
+  'Fee anomalies',
 ];
 
 export default function PricingAdjust() {
@@ -89,7 +127,8 @@ export default function PricingAdjust() {
   const [selectedBillingView, setSelectedBillingView] = useState<Record<string, BillingView>>({
     Starter: 'monthly',
     Pro: 'monthly',
-    Enterprise: 'monthly',
+    Ultra: 'monthly',
+    Enterprise: 'annual',
   });
   const [processingSelectionKey, setProcessingSelectionKey] = useState<string | null>(null);
   const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
@@ -105,6 +144,18 @@ export default function PricingAdjust() {
 
   const buildPricingReturnPath = (plan: SelectablePlan, interval: BillingView) =>
     `/app/default/pricing-adjust?plan=${plan}&interval=${interval}`;
+
+  const openSalesPage = () => {
+    navigate('/sales');
+  };
+
+  const openYocoCheckout = (checkoutUrl: string) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.location.assign(checkoutUrl);
+  };
 
   const startSubscribeIntent = async (plan: SelectablePlan, interval: BillingView) => {
     const selectionKey = `${plan}:${interval}`;
@@ -157,11 +208,27 @@ export default function PricingAdjust() {
         throw new Error(response.error || 'Unable to create a subscription invoice.');
       }
 
-      const invoiceId = response.data?.invoice_id || response.data?.invoice?.invoice_id || 'subscription invoice';
+      const invoice = response.data?.invoice;
+      const invoiceId = response.data?.invoice_id || invoice?.invoice_id || 'subscription invoice';
+      const checkoutUrl = invoice?.payment_link_url || null;
       toast({
-        title: response.data?.intent_status === 'reused' ? 'Billing invoice ready' : 'Subscription invoice created',
-        description: `Plan selection is now bound to ${invoiceId}. Review it from Billing before payment.`,
+        title: checkoutUrl ? 'Opening secure checkout' : 'Billing invoice ready',
+        description: checkoutUrl
+          ? `Plan selection is bound to ${invoiceId}. Sending you to YOCO checkout now.`
+          : `Plan selection is bound to ${invoiceId}, but the YOCO checkout link is not available yet. Review it from Billing.`,
       });
+
+      if (checkoutUrl) {
+        try {
+          localStorage.setItem('pending_yoco_invoice_id', invoiceId);
+          localStorage.setItem('pending_yoco_plan', plan);
+          localStorage.setItem('pending_yoco_interval', interval);
+        } catch {
+          // Checkout redirect should not depend on local storage.
+        }
+        openYocoCheckout(checkoutUrl);
+        return;
+      }
 
       navigate(`/app/${activeSlug}/billing`);
     } catch (error) {
@@ -178,7 +245,7 @@ export default function PricingAdjust() {
   useEffect(() => {
     const planParam = searchParams.get('plan');
     const intervalParam = searchParams.get('interval');
-    const plan = planParam === 'starter' || planParam === 'pro' ? planParam : null;
+    const plan = planParam === 'starter' || planParam === 'pro' || planParam === 'enterprise' ? planParam : null;
     const interval = intervalParam === 'monthly' || intervalParam === 'annual' ? intervalParam : null;
 
     if (!plan || !interval) return;
@@ -265,7 +332,54 @@ export default function PricingAdjust() {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 items-stretch">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]"
+          >
+            <div className="grid gap-0 lg:grid-cols-[1.2fr_1fr]">
+              <div className="border-b border-white/10 p-5 md:p-6 lg:border-b-0 lg:border-r">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                  Detection coverage roadmap
+                </div>
+                <h3 className="mt-3 text-xl font-medium tracking-tight text-white md:text-2xl">
+                  7 core recovery categories live today. Expanded coverage rolls out this month.
+                </h3>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-white/42">
+                  Margin currently focuses on the high-value recovery categories that matter most first. Expanded detector coverage is scheduled to roll into active plans by May 20, 2026, so your monitoring improves as the product expands.
+                </p>
+              </div>
+              <div className="p-5 md:p-6">
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[
+                    'Covers 7 core recovery categories today',
+                    'Expanded detection coverage rolling out shortly',
+                    'Continuous monitoring as new opportunities appear',
+                  ].map((item) => (
+                    <div key={item} className="rounded-xl border border-white/10 bg-black/20 p-4">
+                      <Check className="mb-3 h-4 w-4 text-white/45" />
+                      <p className="text-[12px] leading-5 text-white/68">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-white/10 px-5 py-4 md:px-6">
+              <div className="flex flex-wrap gap-2">
+                {coreCoverageCategories.map((category) => (
+                  <span
+                    key={category}
+                    className="rounded-full border border-white/10 bg-white/[0.025] px-3 py-1 text-[10px] font-medium tracking-tight text-white/48"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 items-stretch">
             {pricingTiers.map((tier, index) => {
               const featured = Boolean(tier.featured);
               const activeBillingView = selectedBillingView[tier.name] || 'monthly';
@@ -299,39 +413,63 @@ export default function PricingAdjust() {
                     </div>
 
                     <div className="mb-6 rounded-xl bg-black/20 p-1">
-                      <div className="grid grid-cols-2 gap-1">
-                        {(['monthly', 'annual'] as BillingView[]).map((view) => {
-                          const isActive = activeBillingView === view;
-                          return (
-                            <button
-                              key={view}
-                              type="button"
-                              onClick={() => setSelectedBillingView((current) => ({ ...current, [tier.name]: view }))}
-                              className={`rounded-lg px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight transition-all ${
-                                isActive
-                                  ? 'bg-white text-black'
-                                  : 'bg-transparent text-white/35 hover:text-white/70'
-                              }`}
-                            >
-                              {view}
-                            </button>
-                          );
-                        })}
-                      </div>
+                      {tier.salesLed ? (
+                        <div className="rounded-lg bg-white/[0.04] px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/58">
+                          Sales-led
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-1">
+                          {(['monthly', 'annual'] as BillingView[]).map((view) => {
+                            const isActive = activeBillingView === view;
+                            return (
+                              <button
+                                key={view}
+                                type="button"
+                                onClick={() => setSelectedBillingView((current) => ({ ...current, [tier.name]: view }))}
+                                className={`rounded-lg px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight transition-all ${
+                                  isActive
+                                    ? 'bg-white text-black'
+                                    : 'bg-transparent text-white/35 hover:text-white/70'
+                                }`}
+                              >
+                                {view}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
 
                     <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
                       <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                        {activeBillingView === 'monthly' ? 'First Recovery Cycle' : 'Annual Recovery Coverage'}
+                        {tier.salesLed
+                          ? 'Managed Recovery Coverage'
+                          : activeBillingView === 'monthly'
+                            ? 'First Recovery Cycle'
+                            : 'Annual Recovery Coverage'}
                       </div>
                       <div className="mt-3 text-4xl font-light tracking-tight text-white">
-                        {activeBillingView === 'monthly' ? tier.monthlyPrice : tier.annualPrice}
+                        {tier.salesLed
+                          ? tier.monthlyPrice
+                          : activeBillingView === 'monthly'
+                            ? tier.monthlyPrice
+                            : tier.annualPrice}
                       </div>
                       <div className="mt-2 text-[11px] text-white/45">
-                        {activeBillingView === 'monthly' ? 'Starts your first 30-day recovery cycle' : 'Locked-in monthly rate for uninterrupted annual monitoring'}
+                        {tier.salesLed
+                          ? 'Custom rollout, support, and operating terms'
+                          : activeBillingView === 'monthly'
+                            ? 'Starts your first 30-day recovery cycle'
+                            : 'Locked-in monthly rate for uninterrupted annual monitoring'}
                       </div>
                       <div className="mt-1 text-[11px] text-white/32">
-                        {activeBillingView === 'monthly' ? 'Then continues as ongoing recovery monitoring · Cancel anytime' : `${tier.annualCheckout} · no restart gaps in coverage`}
+                        {tier.salesLed
+                          ? 'Contact sales for SLA, workflow, and volume pricing'
+                          : activeBillingView === 'monthly'
+                            ? tier.name === 'Pro'
+                              ? '7 detectors today · expanded coverage by May 20 · Cancel anytime'
+                              : 'Then continues as ongoing recovery monitoring · Cancel anytime'
+                            : `${tier.annualCheckout} · locks today\'s rate as coverage expands`}
                       </div>
                     </div>
 
@@ -353,32 +491,27 @@ export default function PricingAdjust() {
                     </div>
 
                     <div className="mt-auto flex flex-col gap-4">
-                      {tier.name === 'Enterprise' ? (
-                        <Button
-                          asChild
-                          variant="outline"
-                          className="h-12 rounded-xl border-white/15 bg-transparent text-white hover:bg-white/[0.04] hover:text-white font-sans font-medium"
-                        >
-                          <a href="mailto:support@margin-finance.com?subject=Enterprise Pricing Inquiry">
-                            Plan Enterprise Coverage
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={() => startSubscribeIntent(tier.name === 'Starter' ? 'starter' : 'pro', activeBillingView)}
-                          disabled={processingSelectionKey !== null}
-                          className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
-                        >
-                          {processingSelectionKey === `${tier.name === 'Starter' ? 'starter' : 'pro'}:${activeBillingView}`
-                            ? 'Preparing Billing'
-                            : `Start ${tier.name} Coverage`}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      )}
+                      <Button
+                        onClick={() => {
+                          if (tier.salesLed || !tier.planKey) {
+                            openSalesPage();
+                            return;
+                          }
+                          startSubscribeIntent(tier.planKey, activeBillingView);
+                        }}
+                        disabled={processingSelectionKey !== null}
+                        className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
+                      >
+                        {tier.planKey && processingSelectionKey === `${tier.planKey}:${activeBillingView}`
+                          ? 'Preparing Checkout'
+                          : tier.ctaLabel || `Start ${tier.name} Coverage`}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
 
                       <p className="text-[11px] leading-5 text-white/38">
-                        {tier.coverageLine}
+                        {activeBillingView === 'annual' && !tier.salesLed && tier.name !== 'Starter'
+                          ? 'Annual plans lock in today\'s rate for 12 months. As Margin releases expanded detector coverage by May 20, 2026, active annual plans receive it at no extra cost.'
+                          : tier.coverageLine}
                       </p>
                     </div>
                   </div>
