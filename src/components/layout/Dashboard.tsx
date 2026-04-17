@@ -609,6 +609,34 @@ const getEvidencePreviewItems = (evidence: unknown) => {
   return [...prioritized, ...fallback].slice(0, 6);
 };
 
+const getRequiredEvidenceItems = (policy: any) => {
+  const candidates = [
+    policy?.required_evidence,
+    policy?.requiredEvidence,
+    policy?.evidence_requirements,
+    policy?.evidenceRequirements,
+  ];
+
+  for (const candidate of candidates) {
+    if (Array.isArray(candidate)) {
+      return candidate
+        .map((item) => (typeof item === 'string' ? item.trim() : ''))
+        .filter(Boolean)
+        .slice(0, 8);
+    }
+
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return candidate
+        .split(/[;\n]/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .slice(0, 8);
+    }
+  }
+
+  return [];
+};
+
 const launchEventTone = (severity: LaunchMonitorEvent['severity']) => {
   if (severity === 'high') return 'text-red-200 border-red-500/25 bg-red-500/[0.08]';
   if (severity === 'medium') return 'text-amber-200 border-amber-500/25 bg-amber-500/[0.08]';
@@ -1027,6 +1055,7 @@ export function Dashboard() {
   }, [activeSlug, contactEmail, contactQuery, contactSubject, toast]);
 
   const [showDiscrepancyModal, setShowDiscrepancyModal] = useState<boolean>(false);
+  const [showProofNeededModal, setShowProofNeededModal] = useState<boolean>(false);
   const [activeDiscrepancy, setActiveDiscrepancy] = useState<any>(null);
 
   const { formatCurrency: formatCurrencyWithSelection } = useCurrency();
@@ -2181,6 +2210,10 @@ export function Dashboard() {
   const activeDiscrepancyEvidenceItems = useMemo(
     () => getEvidencePreviewItems(activeDiscrepancy?.evidence),
     [activeDiscrepancy?.evidence]
+  );
+  const activeDiscrepancyRequiredEvidenceItems = useMemo(
+    () => getRequiredEvidenceItems(activeDiscrepancy?.policyBasis || activeDiscrepancy?.policy_basis),
+    [activeDiscrepancy]
   );
   const activeDiscrepancyMetaRows = useMemo(() => {
     if (!activeDiscrepancy) return [];
@@ -3457,6 +3490,55 @@ export function Dashboard() {
                               const foundOnLabel = formatFindingDateTimeLabel(detectedAt);
                               const readinessLabel = formatFindingReadinessLabel(result);
                               const valueLabel = formatFindingValueLabel(result);
+                              const openDiscrepancySurface = (surface: 'detail' | 'proof') => {
+                                setActiveDiscrepancy({
+                                  id: result.id,
+                                  reason: result.anomaly_type,
+                                  issueTitle: issueCopy.title,
+                                  issueSummary: issueCopy.summary,
+                                  issueEventLabel: issueCopy.eventLabel,
+                                  recoverabilityReason: issueCopy.recoverabilityReason,
+                                  evidenceSummary: issueCopy.evidenceSummary,
+                                  estimatedRecovery: result.estimated_value,
+                                  currency: result.currency || 'USD',
+                                  occurrenceDate: detectedAt,
+                                  status: result.status,
+                                  stateLabel: stateMeta.label,
+                                  stateDetail: stateMeta.detail,
+                                  stateTone: stateMeta.tone,
+                                  movementLabel: result.filing_movement?.label,
+                                  movementDetail: result.filing_movement?.detail,
+                                  movementState: result.filing_movement?.state,
+                                  nextActionLabel: result.next_action_label || result.filing_movement?.next_action_label,
+                                  linkedCaseId: result.filing_movement?.dispute_case_id,
+                                  caseNumber: result.filing_movement?.case_number,
+                                  amazonCaseId: result.filing_movement?.amazon_case_id,
+                                  blockReasons: result.filing_movement?.block_reasons || [],
+                                  filingMovement: result.filing_movement,
+                                  policyBasis: result.policy_basis,
+                                  isProcessed,
+                                  sourceType: result.source_type,
+                                  syncId: result.sync_id,
+                                  severity: result.severity,
+                                  confidenceScore: result.confidence_score,
+                                  evidence: result.evidence,
+                                  deadlineDate: result.deadline_date,
+                                  daysRemaining: result.days_remaining,
+                                  reviewTier: result.review_tier,
+                                  claimReadiness: result.claim_readiness,
+                                  recommendedAction: result.recommended_action,
+                                  valueLabel: result.value_label,
+                                  whyNotClaimReady: result.why_not_claim_ready,
+                                  coverageFamily: result.coverage_family,
+                                });
+
+                                if (surface === 'proof') {
+                                  setShowProofNeededModal(true);
+                                  return;
+                                }
+
+                                setShowDiscrepancyModal(true);
+                              };
 
                               return (
                                 <div
@@ -3535,53 +3617,18 @@ export function Dashboard() {
                                         className="bg-[#0c0c0c] border border-white/10 text-white shadow-2xl backdrop-blur-3xl p-1 min-w-[180px]"
                                       >
                                         <DropdownMenuItem
-                                          onClick={() => {
-                                            setActiveDiscrepancy({
-                                              id: result.id,
-                                              reason: result.anomaly_type,
-                                              issueTitle: issueCopy.title,
-                                              issueSummary: issueCopy.summary,
-                                              issueEventLabel: issueCopy.eventLabel,
-                                              recoverabilityReason: issueCopy.recoverabilityReason,
-                                              evidenceSummary: issueCopy.evidenceSummary,
-                                              estimatedRecovery: result.estimated_value,
-                                              currency: result.currency || 'USD',
-                                              occurrenceDate: detectedAt,
-                                              status: result.status,
-                                              stateLabel: stateMeta.label,
-                                              stateDetail: stateMeta.detail,
-                                              stateTone: stateMeta.tone,
-                                              movementLabel: result.filing_movement?.label,
-                                              movementDetail: result.filing_movement?.detail,
-                                              movementState: result.filing_movement?.state,
-                                              nextActionLabel: result.next_action_label || result.filing_movement?.next_action_label,
-                                              linkedCaseId: result.filing_movement?.dispute_case_id,
-                                              caseNumber: result.filing_movement?.case_number,
-                                              amazonCaseId: result.filing_movement?.amazon_case_id,
-                                              blockReasons: result.filing_movement?.block_reasons || [],
-                                              filingMovement: result.filing_movement,
-                                              policyBasis: result.policy_basis,
-                                              isProcessed,
-                                              sourceType: result.source_type,
-                                              syncId: result.sync_id,
-                                              severity: result.severity,
-                                              confidenceScore: result.confidence_score,
-                                              evidence: result.evidence,
-                                              deadlineDate: result.deadline_date,
-                                              daysRemaining: result.days_remaining,
-                                              reviewTier: result.review_tier,
-                                              claimReadiness: result.claim_readiness,
-                                              recommendedAction: result.recommended_action,
-                                              valueLabel: result.value_label,
-                                              whyNotClaimReady: result.why_not_claim_ready,
-                                              coverageFamily: result.coverage_family,
-                                            });
-                                            setShowDiscrepancyModal(true);
-                                          }}
+                                          onClick={() => openDiscrepancySurface('detail')}
                                           className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
                                         >
                                           <Info className="h-3 w-3 mr-2" />
                                           View finding
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onClick={() => openDiscrepancySurface('proof')}
+                                          className="text-[11px] font-sans font-medium tracking-tight text-white/[0.65] hover:text-white focus:text-white focus:bg-white/5 cursor-pointer py-2"
+                                        >
+                                          <Files className="h-3 w-3 mr-2" />
+                                          Proof needed
                                         </DropdownMenuItem>
                                       </DropdownMenuContent>
                                     </DropdownMenu>
@@ -4001,6 +4048,201 @@ export function Dashboard() {
           ) : (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-6 w-6 text-white animate-spin" />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Proof needed modal */}
+      <Dialog open={showProofNeededModal} onOpenChange={setShowProofNeededModal}>
+        <DialogContent className="w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
+          {activeDiscrepancy ? (
+            <>
+              <DialogHeader className="border-b border-white/10 px-5 pb-3 pt-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="max-w-4xl">
+                    <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                      Proof needed
+                    </div>
+                    <DialogTitle className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
+                      Evidence required for this finding
+                    </DialogTitle>
+                    <DialogDescription className="mt-1.5 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                      Margin checks connected sources first. If the proof cannot be found automatically, upload it in Evidence Locker so the case can keep moving.
+                    </DialogDescription>
+                  </div>
+                  <button
+                    onClick={() => setShowProofNeededModal(false)}
+                    className="rounded-md border border-white/10 bg-white/[0.02] p-2 text-white/55 transition-colors hover:bg-white/[0.05] hover:text-white"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              </DialogHeader>
+
+              <div className="grid gap-0 lg:grid-cols-[minmax(0,0.86fr)_minmax(360px,0.62fr)]">
+                <div className="border-b border-white/10 px-5 py-4 lg:border-b-0 lg:border-r lg:border-white/10">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.72]">
+                      {activeDiscrepancyCopy?.title || 'Detected finding'}
+                    </span>
+                    <span className={cn(
+                      "border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
+                      activeDiscrepancy.claimReadiness === 'not_claim_ready'
+                        ? "border-amber-500/20 bg-amber-500/[0.08] text-amber-100"
+                        : "border-emerald-500/20 bg-emerald-500/[0.08] text-emerald-100"
+                    )}>
+                      {activeDiscrepancy.reviewTier === 'monitoring'
+                        ? 'Monitoring'
+                        : activeDiscrepancy.claimReadiness === 'not_claim_ready'
+                          ? 'Not claim-ready'
+                          : 'Claim candidate'}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 border-y border-white/10 py-3">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                      Required proof
+                    </div>
+                    {activeDiscrepancyRequiredEvidenceItems.length > 0 ? (
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {activeDiscrepancyRequiredEvidenceItems.map((item) => (
+                          <div
+                            key={item}
+                            className="border border-white/[0.08] bg-white/[0.018] px-3 py-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.72]"
+                          >
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.6]">
+                        Policy basis pending verification. Margin will not treat this as filing-ready until the required proof checklist is confirmed.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-4 grid gap-4 md:grid-cols-2">
+                    <div>
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                        What Margin already found
+                      </div>
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.66]">
+                        {activeDiscrepancyCopy?.evidenceSummary || 'Structured detection fields are available, but Margin is still checking whether they are enough to support filing.'}
+                      </p>
+                      {activeDiscrepancyEvidenceItems.length > 0 ? (
+                        <div className="mt-3 grid grid-cols-2 border-y border-white/10">
+                          {activeDiscrepancyEvidenceItems.slice(0, 4).map((item) => (
+                            <div
+                              key={`${item.label}-${item.value}`}
+                              className="border-b border-white/[0.08] py-2 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0"
+                            >
+                              <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
+                                {item.label}
+                              </div>
+                              <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">
+                                {item.value}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className="border-t border-white/10 pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                        If proof is missing
+                      </div>
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.66]">
+                        Margin keeps looking across connected repositories before asking the seller. If one required document is not found, upload it in Evidence Locker and Margin can attach it to the filing workflow.
+                      </p>
+                      {activeDiscrepancy.whyNotClaimReady ? (
+                        <p className="mt-3 border-l border-amber-500/25 pl-3 text-[11px] font-sans leading-4 tracking-tight text-amber-100/75">
+                          {activeDiscrepancy.whyNotClaimReady}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-5 py-4">
+                  <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                    Why this proof matters
+                  </div>
+                  <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.66]">
+                    {activeDiscrepancyCopy?.recoverabilityReason || 'Margin only advances a finding when the identifiers, evidence, and policy basis line up clearly enough to support seller review or filing.'}
+                  </p>
+
+                  <div className="mt-4 border-y border-white/10 py-3">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                      Policy basis
+                    </div>
+                    <div className="mt-2 text-[13px] font-sans font-medium tracking-tight text-white/[0.86]">
+                      {activeDiscrepancy.policyBasis?.title || 'Policy basis pending verification'}
+                    </div>
+                    <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.5]">
+                      {activeDiscrepancy.policyBasis?.summary || 'Margin will keep this proof requirement conservative until an official policy reference is available for this detector family.'}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
+                        {activeDiscrepancy.policyBasis?.source_name || 'Amazon Seller Central Help'}
+                      </span>
+                      <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
+                        {activeDiscrepancy.policyBasis?.last_verified_at
+                          ? `Verified ${formatFindingDateLabel(activeDiscrepancy.policyBasis.last_verified_at)}`
+                          : 'Verification pending'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
+                      Where Margin checks first
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      {['Connected email', 'Cloud storage', 'Team repositories', 'Uploaded documents'].map((source) => (
+                        <div
+                          key={source}
+                          className="border border-white/[0.08] bg-white/[0.018] px-3 py-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.62]"
+                        >
+                          {source}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                      This does not mean every connected source already contains the proof. It means Margin checks the repositories first and only asks for upload when the required document is still missing.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="flex flex-col gap-3 border-t border-white/10 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                  Proof guidance is derived from backend finding truth and policy basis. It is not a filing guarantee.
+                </div>
+                <div className="flex items-center gap-3">
+                  <Button
+                    onClick={() => {
+                      setShowProofNeededModal(false);
+                      navigate(tenantRoute(activeSlug, '/evidence-locker'));
+                    }}
+                    className="h-9 rounded-none border border-white/10 bg-white px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
+                  >
+                    Open Evidence Locker
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowProofNeededModal(false)}
+                    className="h-9 rounded-none border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </DialogFooter>
+            </>
+          ) : (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-6 w-6 animate-spin text-white" />
             </div>
           )}
         </DialogContent>
