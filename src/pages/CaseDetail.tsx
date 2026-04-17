@@ -1700,118 +1700,120 @@ export default function CaseDetail() {
               <div className="flex flex-col gap-0 border border-white/10 divide-y divide-white/10 rounded-2xl overflow-hidden">
                 {/* Tile 1: Audit Narrative & Logistics */}
                 <div className="p-8 bg-white/[0.02]">
-                  <div className="mb-6">
-                    <h3 className="text-sm font-bold text-white">Why This Case Exists</h3>
-                    <p className="text-[10px] text-white/30 uppercase tracking-tight font-bold mt-1">
-                      Detection, evidence, policy basis, and current filing movement.
-                    </p>
+                  <div className="border-b border-white/10 pb-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <h3 className="text-[15px] font-sans font-medium tracking-tight text-white">Why This Case Exists</h3>
+                        <p className="mt-1 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+                          Detection, evidence, policy basis, and current filing movement.
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {findingReadinessLabel && (
+                          <Badge variant="outline" className={cn(
+                            "rounded-full px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight",
+                            isReviewOnlyFinding
+                              ? "border-amber-400/25 bg-amber-400/10 text-amber-100"
+                              : "border-emerald-400/25 bg-emerald-400/10 text-emerald-100"
+                          )}>
+                            {findingReadinessLabel}
+                          </Badge>
+                        )}
+                        {claimReadiness === 'not_claim_ready' && (
+                          <Badge variant="outline" className="rounded-full border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/45">
+                            Not claim-ready
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <div className="space-y-8">
-                    <div className="space-y-5">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30">What Margin found</p>
-                          {findingReadinessLabel && (
-                            <Badge variant="outline" className={cn(
-                              "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-tight",
-                              isReviewOnlyFinding
-                                ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
-                                : "border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
-                            )}>
-                              {findingReadinessLabel}
-                            </Badge>
-                          )}
-                          {claimReadiness === 'not_claim_ready' && (
-                            <Badge variant="outline" className="rounded-full border-white/10 bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-tight text-white/50">
-                              Not claim-ready
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-[15px] text-white/70 leading-relaxed font-normal tracking-tight">
+                    <div className="border-b border-white/10">
+                      <div className="py-4">
+                        <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">What Margin found</p>
+                        <p className="mt-2 max-w-5xl text-[15px] font-sans font-normal leading-6 tracking-tight text-white/[0.74]">
                           {findingNarrative || NOT_AVAILABLE}
                         </p>
                       </div>
 
-                      <div className="grid gap-4 lg:grid-cols-2">
-                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30 mb-2">Evidence used</p>
-                          <p className="text-[13px] leading-relaxed text-white/65">
+                      <div className="grid border-t border-white/8 lg:grid-cols-2">
+                        <div className="border-b border-white/8 py-4 lg:border-r lg:pr-6">
+                          <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">Evidence used</p>
+                          <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-white/[0.62]">
                             {sellerSummary?.evidence_summary || 'Structured backend evidence is attached to this case record.'}
                           </p>
                         </div>
-                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30 mb-2">Why this may be recoverable</p>
-                          <p className="text-[13px] leading-relaxed text-white/65">
+                        <div className="border-b border-white/8 py-4 lg:pl-6">
+                          <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">Why this may be recoverable</p>
+                          <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-white/[0.62]">
                             {sellerSummary?.recoverability_reason || 'Amazon records do not reconcile with the expected seller outcome. Margin is verifying identifiers, evidence, and policy support before filing.'}
                           </p>
                         </div>
                       </div>
 
-                      <div className="grid gap-4 lg:grid-cols-2">
-                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                          <div className="flex items-start justify-between gap-4 mb-2">
-                            <p className="text-[10px] font-bold uppercase tracking-tight text-white/30">Policy basis</p>
+                      <div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                        <div className="border-b border-white/8 py-4 lg:border-r lg:pr-6">
+                          <div className="flex items-center justify-between gap-4">
+                            <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">Policy basis</p>
                             {policyBasis?.verification_status === 'policy_basis_pending_verification' && (
-                              <span className="text-[9px] font-bold uppercase tracking-tight text-amber-200/80">Pending verification</span>
+                              <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-amber-100/80">Pending verification</span>
                             )}
                           </div>
-                          <p className="text-[13px] font-bold leading-tight text-white/80">
+                          <p className="mt-2 text-[13px] font-sans font-medium leading-tight tracking-tight text-white/[0.86]">
                             {policyBasis?.title || 'Policy basis pending verification'}
                           </p>
-                          <p className="mt-2 text-[12px] leading-relaxed text-white/55">
+                          <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
                             {policyBasis?.summary || 'Margin has not mapped this detector to a curated policy reference yet.'}
                           </p>
-                          <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-tight text-white/35">
+                          <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.36]">
                             {policyBasis?.source_url ? (
-                              <a href={policyBasis.source_url} target="_blank" rel="noreferrer" className="hover:text-white/70">
+                              <a href={policyBasis.source_url} target="_blank" rel="noreferrer" className="transition-colors hover:text-white/70">
                                 {policyBasis.source_name || 'Amazon Seller Central'}
                               </a>
                             ) : (
                               <span>{policyBasis?.source_name || 'Amazon Seller Central'}</span>
                             )}
-                            <span>•</span>
+                            <span className="text-white/18">/</span>
                             <span>{policyBasis?.last_verified_at ? `Verified ${formatDateOrDash(policyBasis.last_verified_at)}` : 'Verification unavailable'}</span>
                           </div>
                           {findingPolicyEvidence.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-1.5">
                               {findingPolicyEvidence.slice(0, 4).map((item: string) => (
-                                <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] font-bold text-white/45">
+                                <span key={item} className="rounded-full border border-white/10 bg-white/[0.025] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.48]">
                                   {item}
                                 </span>
                               ))}
                             </div>
                           )}
                         </div>
-                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-tight text-white/30 mb-2">What may be owed</p>
-                          <p className="text-[13px] leading-relaxed text-white/65">
+                        <div className="border-b border-white/8 py-4 lg:pl-6">
+                          <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">What may be owed</p>
+                          <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-white/[0.62]">
                             {findingAmountCopy}
                           </p>
                           {whyNotClaimReady && (
-                            <p className="mt-3 border-t border-white/10 pt-3 text-[12px] leading-relaxed text-amber-100/70">
+                            <p className="mt-3 border-t border-white/8 pt-3 text-[12px] font-sans leading-5 tracking-tight text-amber-100/70">
                               {whyNotClaimReady}
                             </p>
                           )}
                         </div>
                       </div>
 
-                      <div className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
-                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                          <div>
-                            <p className="text-[10px] font-bold uppercase tracking-tight text-white/30">Current filing movement</p>
-                            <p className="mt-1 text-[13px] font-bold text-white/80">
-                              {filingMovement?.label || nextStep?.title || NOT_AVAILABLE}
-                            </p>
-                          </div>
-                          {filingMovement?.next_action_label && (
-                            <span className="rounded-full border border-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-white/45">
-                              {filingMovement.next_action_label}
-                            </span>
-                          )}
+                      <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                          <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">Current filing movement</p>
+                          <p className="mt-1.5 text-[13px] font-sans font-medium tracking-tight text-white/[0.82]">
+                            {filingMovement?.label || nextStep?.title || NOT_AVAILABLE}
+                          </p>
+                          <p className="mt-2 max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
+                            {filingMovement?.detail || nextStep?.description || 'Margin is tracking this case through the filing workflow.'}
+                          </p>
                         </div>
-                        <p className="mt-3 text-[12px] leading-relaxed text-white/55">
-                          {filingMovement?.detail || nextStep?.description || 'Margin is tracking this case through the filing workflow.'}
-                        </p>
+                        {filingMovement?.next_action_label && (
+                          <span className="shrink-0 border border-white/10 px-3 py-1.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.5]">
+                            {filingMovement.next_action_label}
+                          </span>
+                        )}
                       </div>
                     </div>
 
