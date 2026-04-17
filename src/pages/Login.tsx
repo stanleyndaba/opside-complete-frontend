@@ -31,6 +31,103 @@ const sanitizeNextPath = (value: string | null, intent: string | null) => {
 };
 
 type AuthMode = 'login' | 'signup' | 'recovery';
+type LoginStep = 'account' | 'workspace';
+
+const extractLoginErrorMessage = (value: unknown): string => {
+  if (!value) {
+    return '';
+  }
+
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  if (value instanceof Error) {
+    return value.message.trim();
+  }
+
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    const nestedError = typeof record.error === 'object' && record.error !== null
+      ? record.error as Record<string, unknown>
+      : null;
+    const candidates = [
+      record.message,
+      record.error_description,
+      record.error,
+      record.details,
+      record.statusText,
+      record.name,
+      nestedError?.message,
+      nestedError?.code,
+    ];
+
+    for (const candidate of candidates) {
+      if (typeof candidate === 'string' && candidate.trim()) {
+        return candidate.trim();
+      }
+    }
+
+    try {
+      const serialized = JSON.stringify(value);
+      return serialized === '{}' ? '' : serialized;
+    } catch {
+      return '';
+    }
+  }
+
+  return String(value || '').trim();
+};
+
+const isOpaqueLoginError = (message: string) => {
+  const normalized = message.trim().toLowerCase();
+  return !normalized ||
+    normalized === '{}' ||
+    normalized === '[object object]' ||
+    normalized === 'authretryablefetcherror: {}' ||
+    normalized.endsWith(': {}');
+};
+
+const formatLoginError = (error: unknown, step: LoginStep) => {
+  const rawMessage = extractLoginErrorMessage(error);
+  const normalized = rawMessage.toLowerCase();
+
+  if (normalized.includes('invalid login credentials') || normalized.includes('invalid credentials')) {
+    return 'The email or password is incorrect. Please check the account details and try again.';
+  }
+
+  if (normalized.includes('email not confirmed')) {
+    return 'Confirm your email address before logging in.';
+  }
+
+  if (normalized.includes('rate limit') || normalized.includes('too many')) {
+    return 'Too many login attempts happened too quickly. Please wait a moment, then try again.';
+  }
+
+  if (step === 'workspace' && normalized.includes('unable to resolve a workspace')) {
+    return 'Your account sign-in succeeded, but Margin could not finish opening the workspace for this account. Retry workspace routing in a moment.';
+  }
+
+  const retryableAuthIssue =
+    isOpaqueLoginError(rawMessage) ||
+    normalized.includes('authretryablefetcherror') ||
+    normalized.includes('timeout') ||
+    normalized.includes('timed out') ||
+    normalized.includes('504') ||
+    normalized.includes('gateway') ||
+    normalized.includes('failed to fetch') ||
+    normalized.includes('network');
+
+  if (retryableAuthIssue) {
+    return step === 'account'
+      ? 'Supabase Auth did not return a readable response while checking the account. Please try again in a moment.'
+      : 'Your account sign-in looks okay, but Margin could not finish opening the workspace. Please retry workspace routing in a moment.';
+  }
+
+  return rawMessage || (step === 'account'
+    ? 'Unable to log in with those credentials.'
+    : 'Unable to open the workspace after sign-in.');
+};
 
 const Login = () => {
   const navigate = useNavigate();
@@ -55,6 +152,8 @@ const Login = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loginStep, setLoginStep] = useState<LoginStep | null>(null);
+  const [workspaceRetryAvailable, setWorkspaceRetryAvailable] = useState(false);
   const [sessionChecked, setSessionChecked] = useState(false);
   const [activeSessionEmail, setActiveSessionEmail] = useState<string | null>(null);
 
@@ -123,6 +222,8 @@ const Login = () => {
 
   const resetLocalAuthError = () => {
     setError('');
+    setLoginStep(null);
+    setWorkspaceRetryAvailable(false);
   };
 
   const persistSession = (accessToken?: string | null, userId?: string | null, userEmail?: string | null) => {
@@ -220,9 +321,56 @@ const Login = () => {
     await routeWithCapacityGate(targetPath);
   };
 
+  const handleContinueExistingSession = async () => {
+    setLoading(true);
+    setError('');
+    setLoginStep('workspace');
+    setWorkspaceRetryAvailable(false);
+
+    try {
+      await routeExistingSession();
+    } catch (sessionRouteError) {
+      setWorkspaceRetryAvailable(true);
+      setError(formatLoginError(sessionRouteError, 'workspace'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRetryWorkspaceRouting = async () => {
+    setLoading(true);
+    setError('');
+    setLoginStep('workspace');
+    setWorkspaceRetryAvailable(false);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('No active session is available for workspace routing.');
+      }
+
+      const sessionEmail = session.user?.email || email.trim() || localStorage.getItem('user_email') || '';
+      persistSession(session.access_token, session.user?.id, sessionEmail);
+      setActiveSessionEmail(sessionEmail || null);
+
+      const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(sessionEmail);
+      const targetPath = nextPath !== '/app'
+        ? bindPathToTenant(nextPath, resolvedTenantSlug)
+        : `/app/${resolvedTenantSlug}/connect-amazon`;
+      await routeWithCapacityGate(targetPath);
+    } catch (retryError) {
+      setWorkspaceRetryAvailable(true);
+      setError(formatLoginError(retryError, 'workspace'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleUseDifferentAccount = async () => {
     setLoading(true);
     setError('');
+    setLoginStep(null);
+    setWorkspaceRetryAvailable(false);
 
     try {
       await supabase.auth.signOut({ scope: 'local' });
@@ -238,8 +386,38 @@ const Login = () => {
     }
   };
 
+  const resetBrowserAuthForFreshLogin = async () => {
+    try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {
+      // Local cleanup below is still enough to prevent stale app context from poisoning login.
+    } finally {
+      clearStoredAuthContext();
+      setActiveSessionEmail(null);
+    }
+  };
+
+  const handleClearBrowserSession = async () => {
+    const currentEmail = email;
+    setLoading(true);
+    setError('');
+    setLoginStep('account');
+    setWorkspaceRetryAvailable(false);
+
+    try {
+      await resetBrowserAuthForFreshLogin();
+      setEmail(currentEmail);
+      setPassword('');
+      setConfirmPassword('');
+      setError('Browser session cleared. Enter your password and log in again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    let failureStep: LoginStep = 'account';
 
     if (mode === 'recovery') {
       if (!password.trim() || !confirmPassword.trim()) {
@@ -257,9 +435,12 @@ const Login = () => {
 
     setLoading(true);
     setError('');
+    setLoginStep('account');
+    setWorkspaceRetryAvailable(false);
 
     try {
       if (mode === 'signup') {
+        failureStep = 'account';
         const { data, error: authError } = await supabase.auth.signUp({
           email: email.trim(),
           password,
@@ -269,12 +450,14 @@ const Login = () => {
         });
 
         if (authError) {
-          setError(authError.message || 'Unable to create your account.');
+          setLoginStep('account');
+          setError(formatLoginError(authError, 'account'));
           setLoading(false);
           return;
         }
 
         persistSession(data.session?.access_token, data.user?.id, data.user?.email);
+        setActiveSessionEmail(data.user?.email || email.trim() || null);
 
         toast({
           title: data.session ? 'Account created' : 'Check your inbox',
@@ -284,6 +467,8 @@ const Login = () => {
         });
 
         if (data.session) {
+          failureStep = 'workspace';
+          setLoginStep('workspace');
           const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
           await routeWithCapacityGate(`/app/${resolvedTenantSlug}/connect-amazon`);
         } else {
@@ -294,12 +479,14 @@ const Login = () => {
       }
 
       if (mode === 'recovery') {
+        failureStep = 'account';
         const { error: updateError } = await supabase.auth.updateUser({
           password,
         });
 
         if (updateError) {
-          setError(updateError.message || 'Unable to update your password.');
+          setLoginStep('account');
+          setError(formatLoginError(updateError, 'account'));
           setLoading(false);
           return;
         }
@@ -310,37 +497,46 @@ const Login = () => {
         });
 
         setConfirmPassword('');
+        failureStep = 'workspace';
+        setLoginStep('workspace');
         const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim() || localStorage.getItem('user_email') || '');
         await routeWithCapacityGate(`/app/${resolvedTenantSlug}/connect-amazon`);
         setLoading(false);
         return;
       }
 
+      failureStep = 'account';
+      await resetBrowserAuthForFreshLogin();
       const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
 
       if (authError) {
-        setError(authError.message || 'Unable to log in with those credentials.');
+        setLoginStep('account');
+        setError(formatLoginError(authError, 'account'));
         setLoading(false);
         return;
       }
 
       persistSession(data.session?.access_token, data.user?.id, data.user?.email);
+      setActiveSessionEmail(data.user?.email || email.trim() || null);
 
       toast({
         title: 'Logged in',
         description: 'Redirecting you into your workspace now.',
       });
 
+      failureStep = 'workspace';
+      setLoginStep('workspace');
       const resolvedTenantSlug = await resolveTenantSlugForAuthenticatedUser(email.trim());
       const targetPath = nextPath !== '/app'
         ? bindPathToTenant(nextPath, resolvedTenantSlug)
         : `/app/${resolvedTenantSlug}/connect-amazon`;
       await routeWithCapacityGate(targetPath);
     } catch (loginError: any) {
-      setError(loginError?.message || 'Login failed. Please try again.');
+      setWorkspaceRetryAvailable(failureStep === 'workspace');
+      setError(formatLoginError(loginError, failureStep));
     } finally {
       setLoading(false);
     }
@@ -349,11 +545,14 @@ const Login = () => {
   const handleForgotPassword = async () => {
     if (!email.trim()) {
       setError('Enter your email first so we know where to send the reset link.');
+      setLoginStep('account');
       return;
     }
 
     setLoading(true);
     setError('');
+    setLoginStep('account');
+    setWorkspaceRetryAvailable(false);
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), {
@@ -361,7 +560,7 @@ const Login = () => {
       });
 
       if (resetError) {
-        setError(resetError.message || 'Unable to send a password reset email.');
+        setError(formatLoginError(resetError, 'account'));
         setLoading(false);
         return;
       }
@@ -370,8 +569,8 @@ const Login = () => {
         title: 'Reset email sent',
         description: 'Check your inbox for the secure password reset link.',
       });
-    } catch (resetError: any) {
-      setError(resetError?.message || 'Unable to send a password reset email.');
+    } catch (resetError) {
+      setError(formatLoginError(resetError, 'account'));
     } finally {
       setLoading(false);
     }
@@ -448,7 +647,7 @@ const Login = () => {
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <Button
                       type="button"
-                      onClick={() => void routeExistingSession()}
+                      onClick={() => void handleContinueExistingSession()}
                       disabled={loading}
                       className="h-11 justify-between rounded-[16px] border border-white/10 bg-white px-4 text-[12px] font-medium tracking-tight text-black hover:bg-white/92"
                     >
@@ -553,7 +752,34 @@ const Login = () => {
 
               {error ? (
                 <div className="rounded-[18px] border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                  {error}
+                  <p>{error}</p>
+                  {loginStep ? (
+                    <p className="mt-2 text-[11px] font-medium uppercase tracking-tight text-red-100/55">
+                      Failed step: {loginStep === 'account' ? 'Account sign-in' : 'Workspace opening'}
+                    </p>
+                  ) : null}
+                  {workspaceRetryAvailable && mode === 'login' ? (
+                    <Button
+                      type="button"
+                      onClick={() => void handleRetryWorkspaceRouting()}
+                      disabled={loading}
+                      className="mt-3 h-9 rounded-[14px] border border-red-100/15 bg-white px-3 text-[11px] font-medium tracking-tight text-black hover:bg-white/90"
+                    >
+                      Retry workspace routing
+                      <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                    </Button>
+                  ) : null}
+                  {!workspaceRetryAvailable && loginStep === 'account' && mode === 'login' ? (
+                    <Button
+                      type="button"
+                      onClick={() => void handleClearBrowserSession()}
+                      disabled={loading}
+                      variant="outline"
+                      className="mt-3 h-9 rounded-[14px] border-red-100/15 bg-transparent px-3 text-[11px] font-medium tracking-tight text-red-50/80 hover:bg-red-100/10 hover:text-white"
+                    >
+                      Clear browser session
+                    </Button>
+                  ) : null}
                 </div>
               ) : null}
 
