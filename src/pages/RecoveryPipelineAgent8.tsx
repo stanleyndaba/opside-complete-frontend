@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProofDocumentsModal } from '@/components/evidence/ProofDocumentsModal';
@@ -160,6 +161,72 @@ type ProofDocument = {
 };
 
 type FinancialMap = Record<string, FinancialTruthSummary>;
+type CaseBasisSellerSummary = {
+  title?: string;
+  summary?: string;
+  event_label?: string;
+  recoverability_reason?: string;
+  evidence_summary?: string;
+};
+type CaseBasisPolicy = {
+  key?: string;
+  title?: string;
+  verification_status?: string;
+  source_name?: string;
+  source_url?: string;
+  last_verified_at?: string | null;
+  summary?: string;
+  required_evidence?: string[];
+};
+type CaseBasisMovement = {
+  state?: string;
+  label?: string;
+  detail?: string;
+  next_action_label?: string;
+  dispute_case_id?: string | null;
+  case_number?: string | null;
+  amazon_case_id?: string | null;
+  filing_status?: string | null;
+  case_state?: string | null;
+  eligibility_status?: string | null;
+  block_reasons?: string[];
+};
+type CaseBasisTruth = {
+  seller_summary?: CaseBasisSellerSummary | null;
+  policy_basis?: CaseBasisPolicy | null;
+  filing_movement?: CaseBasisMovement | null;
+  review_tier?: string | null;
+  claim_readiness?: string | null;
+  recommended_action?: string | null;
+  value_label?: string | null;
+  why_not_claim_ready?: string | null;
+  coverage_family?: string | null;
+};
+type CaseBasisDetail = {
+  id?: string;
+  case_number?: string;
+  claim_number?: string;
+  title?: string;
+  details?: string | null;
+  status?: string | null;
+  currency?: string | null;
+  amount?: number | string | null;
+  guaranteedAmount?: number | string | null;
+  estimated_value?: number | string | null;
+  approved_amount?: number | string | null;
+  expected_payout_amount?: number | string | null;
+  finding_truth?: CaseBasisTruth | null;
+  seller_summary?: CaseBasisSellerSummary | null;
+  policy_basis?: CaseBasisPolicy | null;
+  filing_movement?: CaseBasisMovement | null;
+  review_tier?: string | null;
+  claim_readiness?: string | null;
+  recommended_action?: string | null;
+  value_label?: string | null;
+  why_not_claim_ready?: string | null;
+  coverage_family?: string | null;
+  next_action_label?: string | null;
+};
 
 const PAGE_SIZE = 10;
 const NOT_AVAILABLE = 'Not Available';
@@ -825,6 +892,120 @@ function DetailSection({
   );
 }
 
+function numericOrNull(value: number | string | null | undefined): number | null {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value === 'string' && value.trim()) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
+function getCaseBasisTruth(detail: CaseBasisDetail | null | undefined): CaseBasisTruth | null {
+  return detail?.finding_truth || null;
+}
+
+function getCaseBasisSellerSummary(detail: CaseBasisDetail | null | undefined): CaseBasisSellerSummary | null {
+  const truth = getCaseBasisTruth(detail);
+  return truth?.seller_summary || detail?.seller_summary || null;
+}
+
+function getCaseBasisPolicy(detail: CaseBasisDetail | null | undefined): CaseBasisPolicy | null {
+  const truth = getCaseBasisTruth(detail);
+  return truth?.policy_basis || detail?.policy_basis || null;
+}
+
+function getCaseBasisMovement(detail: CaseBasisDetail | null | undefined): CaseBasisMovement | null {
+  const truth = getCaseBasisTruth(detail);
+  return truth?.filing_movement || detail?.filing_movement || null;
+}
+
+function getCaseBasisField(detail: CaseBasisDetail | null | undefined, key: keyof CaseBasisTruth): string {
+  const truth = getCaseBasisTruth(detail);
+  return String(truth?.[key] || detail?.[key as keyof CaseBasisDetail] || '').trim();
+}
+
+function getCaseBasisReadinessMeta(detail: CaseBasisDetail | null | undefined): { label: string; className: string } | null {
+  const reviewTier = getCaseBasisField(detail, 'review_tier').toLowerCase();
+  const claimReadiness = getCaseBasisField(detail, 'claim_readiness').toLowerCase();
+
+  if (!reviewTier && !claimReadiness) return null;
+  if (reviewTier === 'monitoring') {
+    return { label: 'Monitoring', className: 'border-blue-400/25 bg-blue-400/10 text-blue-100' };
+  }
+  if (reviewTier === 'review_only' || claimReadiness === 'not_claim_ready') {
+    return { label: 'Not claim-ready', className: 'border-amber-400/25 bg-amber-400/10 text-amber-100' };
+  }
+  if (claimReadiness === 'claim_ready') {
+    return { label: 'Claim-ready', className: 'border-emerald-400/25 bg-emerald-400/10 text-emerald-100' };
+  }
+  return { label: label(reviewTier || claimReadiness), className: 'border-white/10 bg-white/[0.03] text-white/58' };
+}
+
+function getCaseBasisAmount(detail: CaseBasisDetail | null | undefined, row: Row): number | null {
+  return numericOrNull(detail?.guaranteedAmount)
+    ?? numericOrNull(detail?.amount)
+    ?? numericOrNull(detail?.estimated_value)
+    ?? numericOrNull(detail?.approved_amount)
+    ?? numericOrNull(detail?.expected_payout_amount)
+    ?? numericOrNull(row.approved_amount)
+    ?? numericOrNull(row.expected_payout_amount)
+    ?? numericOrNull(row.outstanding_amount);
+}
+
+function getCaseBasisAmountCopy(detail: CaseBasisDetail | null | undefined, row: Row): string {
+  const claimReadiness = getCaseBasisField(detail, 'claim_readiness').toLowerCase();
+  const valueLabel = getCaseBasisField(detail, 'value_label').toLowerCase();
+  const amount = getCaseBasisAmount(detail, row);
+  const currency = detail?.currency || row.currency || 'USD';
+
+  if (detail && claimReadiness === 'claim_ready' && amount !== null) {
+    return `Margin is tracking ${money(amount, currency)} as the current recoverable amount for this case.`;
+  }
+  if (detail && valueLabel === 'no_recovery_value') {
+    return 'Margin is not treating this as recoverable value. It is being kept visible for monitoring and reconciliation.';
+  }
+  if (detail && claimReadiness === 'not_claim_ready') {
+    return 'Margin is not treating this as claim-ready recovery yet. Financial context is being reviewed before any filing decision.';
+  }
+  if (amount !== null) {
+    return `The recovery ledger currently carries ${money(amount, currency)} in financial context. Backend case-basis truth decides whether that value is claim-ready.`;
+  }
+  return 'No claim-ready recovery value is available for this record yet.';
+}
+
+function getCaseBasisSummary(detail: CaseBasisDetail | null | undefined, row: Row): string {
+  const sellerSummary = getCaseBasisSellerSummary(detail);
+  return sellerSummary?.summary
+    || detail?.details
+    || `This record exists because Margin has a ${displayIdentityLabel(row).toLowerCase()} tied to ${row.case_number}. ${identityTruthDetail(row)}`;
+}
+
+function getCaseBasisEvidenceSummary(detail: CaseBasisDetail | null | undefined, row: Row): string {
+  const sellerSummary = getCaseBasisSellerSummary(detail);
+  if (sellerSummary?.evidence_summary) return sellerSummary.evidence_summary;
+
+  const identity = identityMetaLabel(row);
+  const provider = row.provider_case_id ? ` Amazon reference ${row.provider_case_id}.` : '';
+  return `Ledger reference ${row.case_number}. ${identity}.${provider}`;
+}
+
+function getCaseBasisRecoverabilityReason(detail: CaseBasisDetail | null | undefined): string {
+  const sellerSummary = getCaseBasisSellerSummary(detail);
+  return sellerSummary?.recoverability_reason
+    || 'Amazon records do not reconcile with the expected seller outcome. Margin is verifying identifiers, evidence, payout, and policy support before treating the record as final.';
+}
+
+function getCaseBasisMovementCopy(detail: CaseBasisDetail | null | undefined, row: Row, financialSummary?: FinancialTruthSummary | null): { label: string; detail: string; nextAction: string | null } {
+  const movement = getCaseBasisMovement(detail);
+  const progress = getLedgerProgressSnapshot(row, financialSummary);
+  return {
+    label: movement?.label || progress.label,
+    detail: movement?.detail || rowNeedsNextStep(row),
+    nextAction: movement?.next_action_label || detail?.next_action_label || null
+  };
+}
+
 function payoutProofSummary(financialSummary: FinancialTruthSummary | null | undefined): string {
   if (!financialSummary?.proof_of_payment) return 'No payout proof linked yet.';
   if (financialSummary.proof_of_payment.settlement_id) {
@@ -881,6 +1062,11 @@ export default function RecoveryPipelineAgent8() {
   const [evidencePackClaimId, setEvidencePackClaimId] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsRow, setDetailsRow] = useState<Row | null>(null);
+  const [basisOpen, setBasisOpen] = useState(false);
+  const [basisRow, setBasisRow] = useState<Row | null>(null);
+  const [basisDetail, setBasisDetail] = useState<CaseBasisDetail | null>(null);
+  const [basisLoading, setBasisLoading] = useState(false);
+  const [basisError, setBasisError] = useState<string | null>(null);
   const [financialSummaries, setFinancialSummaries] = useState<FinancialMap>({});
   const [detailsFinancialSummary, setDetailsFinancialSummary] = useState<FinancialTruthSummary | null>(null);
   const [detailsFinancialEvents, setDetailsFinancialEvents] = useState<FinancialTruthEvent[]>([]);
@@ -1087,6 +1273,50 @@ export default function RecoveryPipelineAgent8() {
     pendingDetailsRefreshKeyRef.current = null;
     setDetailsFinancialLoading(false);
   }, [detailsOpen]);
+
+  useEffect(() => {
+    if (!basisOpen || !basisRow || !ledger?.rows?.length) return;
+    const basisKey = getLedgerRowKey(basisRow);
+    const refreshedRow = ledger.rows.find((row) => getLedgerRowKey(row) === basisKey);
+    if (!refreshedRow || refreshedRow === basisRow) return;
+    setBasisRow(refreshedRow);
+  }, [basisOpen, basisRow, ledger]);
+
+  const closeCaseBasis = () => {
+    setBasisOpen(false);
+    setBasisRow(null);
+    setBasisDetail(null);
+    setBasisError(null);
+    setBasisLoading(false);
+  };
+
+  const openCaseBasis = async (row: Row) => {
+    const detailRouteId = getDetailRouteId(row);
+    setBasisRow(row);
+    setBasisDetail(null);
+    setBasisError(null);
+    setBasisOpen(true);
+
+    if (!detailRouteId) {
+      setBasisLoading(false);
+      setBasisError('Backend case basis is not linked yet. Showing ledger fallback.');
+      return;
+    }
+
+    setBasisLoading(true);
+    try {
+      const res = await api.getRecoveryDetail(detailRouteId, activeSlug);
+      if (!res.ok) {
+        throw new Error(res.error || 'Unable to load backend case basis right now.');
+      }
+      setBasisDetail((res.data || null) as CaseBasisDetail | null);
+    } catch (err: any) {
+      setBasisDetail(null);
+      setBasisError(err?.message || 'Unable to load backend case basis right now.');
+    } finally {
+      setBasisLoading(false);
+    }
+  };
 
   const openProofDocuments = async (row: Row) => {
     try {
@@ -1342,6 +1572,14 @@ export default function RecoveryPipelineAgent8() {
                                         <span className="uppercase text-[#6f6f6f]">Case progress:</span>{' '}
                                         <span className={cn('font-semibold', progressSnapshot.toneClass)}>{progressSnapshot.label}</span>
                                       </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => openCaseBasis(row)}
+                                        className="inline-flex w-fit items-center gap-1 text-[10px] font-sans font-semibold tracking-tight text-white/42 transition-colors hover:text-white/82"
+                                      >
+                                        Case basis
+                                        <ArrowUpRight className="h-3 w-3 text-white/25" />
+                                      </button>
                                     </div>
                                   </div>
                                 </td>
@@ -1508,6 +1746,178 @@ export default function RecoveryPipelineAgent8() {
           tenantSlug={activeSlug}
         />
       ) : null}
+      <Dialog open={basisOpen} onOpenChange={(open) => { if (!open) closeCaseBasis(); else setBasisOpen(true); }}>
+        <DialogContent className="max-h-[88vh] w-[calc(100vw-32px)] max-w-6xl overflow-hidden rounded-2xl border-white/10 bg-[#050505] p-0 text-white shadow-2xl">
+          {basisRow ? (() => {
+            const detailRouteId = getDetailRouteId(basisRow);
+            const financialSummary = getFinancialSummaryForRow(basisRow, financialSummaries);
+            const readinessMeta = getCaseBasisReadinessMeta(basisDetail);
+            const sellerSummary = getCaseBasisSellerSummary(basisDetail);
+            const policyBasis = getCaseBasisPolicy(basisDetail);
+            const movement = getCaseBasisMovementCopy(basisDetail, basisRow, financialSummary);
+            const claimReadiness = getCaseBasisField(basisDetail, 'claim_readiness').toLowerCase();
+            const reviewTier = getCaseBasisField(basisDetail, 'review_tier').toLowerCase();
+            const whyNotClaimReady = getCaseBasisField(basisDetail, 'why_not_claim_ready');
+            const isNotClaimReady = claimReadiness === 'not_claim_ready' || reviewTier === 'review_only' || reviewTier === 'monitoring';
+            const policyEvidence = Array.isArray(policyBasis?.required_evidence) ? policyBasis.required_evidence.filter(Boolean) : [];
+            const recordReference = basisDetail?.case_number || basisDetail?.claim_number || basisRow.case_number || 'Recovery record';
+
+            return (
+              <>
+                <DialogHeader className="border-b border-white/10 px-6 py-5 pr-12">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                      <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Case Basis</div>
+                      <DialogTitle className="mt-2 text-[22px] font-sans font-medium tracking-tight text-white">
+                        {recordReference}
+                      </DialogTitle>
+                      <DialogDescription className="mt-2 max-w-2xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
+                        Why this recovery record exists, what supports it, and where it is moving.
+                      </DialogDescription>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {readinessMeta ? (
+                        <span className={cn("inline-flex rounded-full border px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight", readinessMeta.className)}>
+                          {readinessMeta.label}
+                        </span>
+                      ) : null}
+                      {isNotClaimReady ? (
+                        <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/45">
+                          Review protected
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </DialogHeader>
+
+                <div className="max-h-[calc(88vh-150px)] overflow-y-auto px-6">
+                  {basisLoading ? (
+                    <div className="flex items-center gap-2 border-b border-white/8 py-4 text-[11px] font-sans font-medium tracking-tight text-white/[0.52]">
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin text-white/35" />
+                      Loading backend case basis
+                    </div>
+                  ) : null}
+
+                  {basisError ? (
+                    <div className="border-b border-amber-400/20 py-4 text-[12px] font-sans leading-5 tracking-tight text-amber-100/78">
+                      Unable to load backend case basis right now. Showing safe ledger fallback.
+                    </div>
+                  ) : null}
+
+                  <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <div className="border-b border-white/10 py-5 lg:border-r lg:pr-6">
+                      <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">What Margin found</p>
+                      <p className="mt-2 text-[15px] font-sans leading-6 tracking-tight text-white/[0.76]">
+                        {getCaseBasisSummary(basisDetail, basisRow)}
+                      </p>
+                    </div>
+                    <div className="border-b border-white/10 py-5 lg:pl-6">
+                      <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">Evidence used</p>
+                      <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-white/[0.62]">
+                        {getCaseBasisEvidenceSummary(basisDetail, basisRow)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <div className="border-b border-white/10 py-5 lg:border-r lg:pr-6">
+                      <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">What may be owed</p>
+                      <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-white/[0.62]">
+                        {getCaseBasisAmountCopy(basisDetail, basisRow)}
+                      </p>
+                      {whyNotClaimReady ? (
+                        <p className="mt-3 border-t border-white/8 pt-3 text-[12px] font-sans leading-5 tracking-tight text-amber-100/72">
+                          {whyNotClaimReady}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="border-b border-white/10 py-5 lg:pl-6">
+                      <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">Why this may be recoverable</p>
+                      <p className="mt-2 text-[13px] font-sans leading-6 tracking-tight text-white/[0.62]">
+                        {getCaseBasisRecoverabilityReason(basisDetail)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <div className="border-b border-white/10 py-5 lg:border-r lg:pr-6">
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">Current movement</p>
+                        {movement.nextAction ? (
+                          <span className="border border-white/10 px-2.5 py-1 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.46]">
+                            {movement.nextAction}
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="mt-2 text-[13px] font-sans font-medium tracking-tight text-white/[0.82]">
+                        {movement.label}
+                      </p>
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
+                        {movement.detail}
+                      </p>
+                    </div>
+                    <div className="border-b border-white/10 py-5 lg:pl-6">
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.3]">Policy basis</p>
+                        {policyBasis?.verification_status === 'policy_basis_pending_verification' ? (
+                          <span className="text-[9px] font-sans font-medium uppercase tracking-tight text-amber-100/80">Pending verification</span>
+                        ) : null}
+                      </div>
+                      <p className="mt-2 text-[13px] font-sans font-medium leading-tight tracking-tight text-white/[0.84]">
+                        {policyBasis?.title || 'Policy basis pending verification'}
+                      </p>
+                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.52]">
+                        {policyBasis?.summary || 'Margin has not mapped this record to a curated policy reference yet.'}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.36]">
+                        {policyBasis?.source_url ? (
+                          <a href={policyBasis.source_url} target="_blank" rel="noreferrer" className="transition-colors hover:text-white/70">
+                            {policyBasis.source_name || 'Amazon Seller Central'}
+                          </a>
+                        ) : (
+                          <span>{policyBasis?.source_name || 'Amazon Seller Central'}</span>
+                        )}
+                        <span className="text-white/18">/</span>
+                        <span>{policyBasis?.last_verified_at ? `Verified ${stamp(policyBasis.last_verified_at)}` : 'Verification unavailable'}</span>
+                      </div>
+                      {policyEvidence.length > 0 ? (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {policyEvidence.slice(0, 4).map((item) => (
+                            <span key={item} className="rounded-full border border-white/10 bg-white/[0.025] px-2.5 py-1 text-[10px] font-sans font-medium tracking-tight text-white/[0.48]">
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+
+                <DialogFooter className="border-t border-white/10 px-6 py-4">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="h-9 rounded-lg px-4 text-[10px] font-sans font-bold uppercase tracking-tight text-white/45 hover:bg-white/[0.04] hover:text-white"
+                    onClick={closeCaseBasis}
+                  >
+                    Close
+                  </Button>
+                  {detailRouteId ? (
+                    <Button asChild className="h-9 rounded-lg border border-white/10 bg-white text-black px-4 text-[10px] font-sans font-bold uppercase tracking-tight hover:bg-white/90">
+                      <Link to={`/app/${activeSlug}/recoveries/${detailRouteId}`} state={{ claim: basisRow }}>
+                        Open full case record
+                        <ArrowUpRight className="ml-2 h-3 w-3" />
+                      </Link>
+                    </Button>
+                  ) : null}
+                </DialogFooter>
+              </>
+            );
+          })() : (
+            <div className="p-6 text-[12px] font-sans text-white/54">No recovery record selected.</div>
+          )}
+        </DialogContent>
+      </Dialog>
       <Sheet open={detailsOpen} onOpenChange={setDetailsOpen}>
         <SheetContent side="right" className="w-full border-white/10 bg-[#0c0c0c] p-0 text-white shadow-2xl sm:max-w-none md:w-[700px] xl:w-[48vw]">
           <div className="flex h-full flex-col">
