@@ -16,11 +16,13 @@ import { useLocation, useParams } from 'react-router-dom';
 interface Notification {
   id: string;
   type: string;
+  title: string;
   message: string;
   timestamp: string;
   created_at: Date;
   channels: string[];
   read: boolean;
+  payload?: any;
 }
 
 interface NotificationPreference {
@@ -252,11 +254,13 @@ export default function NotificationHub() {
       return {
         id: notif.id,
         type: notif.type || 'general',
-        message: notif.message || notif.title || 'New notification',
+        title: notif.title || notif.message || 'New notification',
+        message: notif.message || '',
         timestamp,
         created_at: new Date(notif.created_at || new Date().toISOString()),
         channels,
-        read: notif.status === 'read' || notif.read || notif.is_read || false
+        read: notif.status === 'read' || notif.read || notif.is_read || false,
+        payload: notif.payload || {}
       };
     });
 
@@ -270,7 +274,8 @@ export default function NotificationHub() {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        if (!notification.message.toLowerCase().includes(query)) {
+        const searchBlob = `${notification.title} ${notification.message}`.toLowerCase();
+        if (!searchBlob.includes(query)) {
           return false;
         }
       }
@@ -634,8 +639,8 @@ export default function NotificationHub() {
 
               <div className="border-b border-white/10">
                 {!loading && !error && filteredNotifications.length > 0 ? (
-                  <div className="hidden grid-cols-[minmax(0,1.7fr)_minmax(120px,0.4fr)_minmax(120px,0.42fr)_minmax(80px,0.3fr)] gap-4 border-b border-white/10 px-4 py-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28] lg:grid">
-                    <div>Message</div>
+                    <div className="hidden grid-cols-[minmax(0,1.7fr)_minmax(120px,0.4fr)_minmax(120px,0.42fr)_minmax(80px,0.3fr)] gap-4 border-b border-white/10 px-4 py-3 text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28] lg:grid">
+                    <div>Notification</div>
                     <div>Channels</div>
                     <div>Recorded</div>
                     <div className="text-right">State</div>
@@ -658,8 +663,13 @@ export default function NotificationHub() {
                           {!notification.read ? <span className="h-1.5 w-1.5 rounded-full bg-white/70" /> : null}
                         </div>
                         <p className="text-[13px] font-medium leading-5 tracking-tight text-white/[0.86]">
-                          {renderNotificationMessage(notification.message)}
+                          {renderNotificationMessage(notification.title)}
                         </p>
+                        {notification.message ? (
+                          <p className="mt-1.5 text-[11px] leading-5 tracking-tight text-white/[0.52]">
+                            {renderNotificationMessage(notification.message)}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="flex flex-wrap gap-2 lg:pt-1">

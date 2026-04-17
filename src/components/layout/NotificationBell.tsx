@@ -51,17 +51,34 @@ const formatNotificationTimestamp = (value: string) => {
 
 type NotificationTone = 'neutral' | 'progress' | 'success' | 'warning';
 
+const firstValue = (...values: any[]) => {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim();
+    }
+  }
+  return '';
+};
+
 const getNotificationPreview = (notification: any) => {
   const payload = notification.payload || {};
   const type = String(notification.type || '').toLowerCase();
   const rawTitle = stripEmojis(notification.title || '');
   const rawMessage = stripEmojis(notification.message || '');
   const messageBlob = `${rawTitle} ${rawMessage}`.toLowerCase();
+  const caseIdentifier = firstValue(payload.case_number, payload.amazon_case_id, payload.case_id, payload.dispute_case_id, payload.disputeId);
+  const documentLabel = firstValue(payload.document_label, payload.document_type, payload.file_name, payload.fileName);
+  const requestType = firstValue(payload.request_type, Array.isArray(payload.requested_documents) ? payload.requested_documents[0] : '');
+  const syncIdentifier = firstValue(payload.sync_id, payload.syncId);
+  const status = String(payload.status || '').toLowerCase();
   const amount =
     payload.amount ||
     payload.recovery_amount ||
     payload.resolution_amount ||
-    payload.estimated_value;
+    payload.estimated_value ||
+    payload.totalValue ||
+    payload.total_value ||
+    payload.approved_amount;
   const formattedAmount =
     typeof amount === 'number' || (!Number.isNaN(Number(amount)) && amount !== '')
       ? `$${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -112,10 +129,13 @@ const getNotificationPreview = (notification: any) => {
   }
 
   if (type === 'claim_detected' || type === 'anomaly_detected') {
+    const findingsCount = Number(payload.count || 0);
+    const claimReadyCount = Number(payload.claimReadyCount || payload.claim_ready_count || 0);
+    const reviewNeededCount = Number(payload.reviewNeededCount || payload.review_needed_count || 0);
     return {
       eyebrow: 'Recovery found',
-      header: formattedAmount ? `${formattedAmount} opportunity found` : 'Recovery opportunity found',
-      message: rawMessage || `${anomaly} is ready for review and filing.`,
+      header: rawTitle || (formattedAmount ? `${formattedAmount} opportunity found` : 'Recovery opportunity found'),
+      message: rawMessage || `${findingsCount || 1} finding${findingsCount === 1 ? '' : 's'} recorded${claimReadyCount || reviewNeededCount ? ` · ${claimReadyCount} claim-ready · ${reviewNeededCount} review-needed` : ''}${syncIdentifier ? ` · ${syncIdentifier}` : ''}.`,
       tone: 'neutral' as NotificationTone,
     };
   }
@@ -130,11 +150,47 @@ const getNotificationPreview = (notification: any) => {
   }
 
   if (type === 'case_filed') {
+    if (status === 'pending') {
+      return {
+        eyebrow: 'Case movement',
+        header: rawTitle || `${caseIdentifier ? `(${caseIdentifier}) ` : ''}Preparing case`,
+        message: rawMessage || 'Margin is preparing this case for Amazon filing.',
+        tone: 'progress' as NotificationTone,
+      };
+    }
+
+    if (status === 'in_progress') {
+      return {
+        eyebrow: 'Case movement',
+        header: rawTitle || `${caseIdentifier ? `(${caseIdentifier}) ` : ''}Queued for filing`,
+        message: rawMessage || 'This case is queued for Amazon submission.',
+        tone: 'progress' as NotificationTone,
+      };
+    }
+
     return {
-      eyebrow: 'Claim filed',
-      header: 'Claim sent to Amazon',
-      message: rawMessage || 'Your reimbursement claim has been submitted and is now awaiting review.',
+      eyebrow: 'Case movement',
+      header: rawTitle || `${caseIdentifier ? `(${caseIdentifier}) ` : ''}Filed to Amazon`,
+      message: rawMessage || 'Margin submitted this case to Amazon and is now tracking the thread.',
       tone: 'progress' as NotificationTone,
+    };
+  }
+
+  if (type === 'evidence_found') {
+    return {
+      eyebrow: 'Evidence',
+      header: rawTitle || `${documentLabel ? `(${documentLabel}) ` : ''}${payload.matchFound || payload.match_found ? 'Evidence linked' : 'Evidence found'}`,
+      message: rawMessage || `${documentLabel || 'A document'} was added to the evidence trail.`,
+      tone: payload.matchFound || payload.match_found ? ('success' as NotificationTone) : ('neutral' as NotificationTone),
+    };
+  }
+
+  if (type === 'needs_evidence') {
+    return {
+      eyebrow: 'Amazon request',
+      header: rawTitle || `${requestType ? `(${toTitleCase(requestType)}) ` : ''}Amazon requested`,
+      message: rawMessage || `Amazon asked for ${requestType || 'additional evidence'} on this case.`,
+      tone: 'warning' as NotificationTone,
     };
   }
 
