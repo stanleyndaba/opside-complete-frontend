@@ -395,6 +395,21 @@ const formatIssueStatusLabel = (status?: string | null) => {
   }
 };
 
+const formatFindingReadinessLabel = (result: any) => {
+  const tier = String(result?.review_tier || '').toLowerCase();
+  const readiness = String(result?.claim_readiness || '').toLowerCase();
+  if (tier === 'monitoring') return 'Monitoring';
+  if (tier === 'review_only' || readiness === 'not_claim_ready') return 'Review only';
+  return 'Claim candidate';
+};
+
+const formatFindingValueLabel = (result: any) => {
+  const label = String(result?.value_label || 'estimated_recovery').toLowerCase();
+  if (label === 'potential_exposure') return 'Potential exposure';
+  if (label === 'no_recovery_value') return 'No recovery value';
+  return 'Estimated value';
+};
+
 const getFindingStateMeta = (status?: string | null) => {
   const normalized = (status || '').toLowerCase();
 
@@ -2187,6 +2202,18 @@ export function Dashboard() {
         value: formatConfidenceLabel(activeDiscrepancy.confidenceScore),
       },
       {
+        label: 'Coverage',
+        value: activeDiscrepancy.coverageFamily || 'Launch detector',
+      },
+      {
+        label: 'Readiness',
+        value: activeDiscrepancy.reviewTier === 'monitoring'
+          ? 'Monitoring'
+          : activeDiscrepancy.claimReadiness === 'not_claim_ready'
+            ? 'Not claim-ready'
+            : 'Claim candidate',
+      },
+      {
         label: 'Severity',
         value: activeDiscrepancy.severity ? toTitleCase(String(activeDiscrepancy.severity).replace(/_/g, ' ')) : 'Not available',
       },
@@ -3428,6 +3455,8 @@ export function Dashboard() {
                               };
                               const detectedAt = result.detected_at || result.discovery_date || result.created_at;
                               const foundOnLabel = formatFindingDateTimeLabel(detectedAt);
+                              const readinessLabel = formatFindingReadinessLabel(result);
+                              const valueLabel = formatFindingValueLabel(result);
 
                               return (
                                 <div
@@ -3448,15 +3477,18 @@ export function Dashboard() {
                                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-sans tracking-tight text-white/40">
                                       <span>Ref {result.id?.substring(0, 8) || 'N/A'}</span>
                                       <span>Found {foundOnLabel}</span>
+                                      <span>{readinessLabel}</span>
                                     </div>
                                   </div>
 
                                   <div className="xl:text-right">
                                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/30">
-                                      Estimated value
+                                      {valueLabel}
                                     </div>
                                     <div className="mt-1.5 text-[16px] font-sans font-medium tracking-tight text-white/90">
-                                      {formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
+                                      {result.value_label === 'no_recovery_value'
+                                        ? 'Review'
+                                        : formatCurrencyWithSelection(result.estimated_value, result.currency || 'USD')}
                                     </div>
                                   </div>
 
@@ -3537,6 +3569,12 @@ export function Dashboard() {
                                               evidence: result.evidence,
                                               deadlineDate: result.deadline_date,
                                               daysRemaining: result.days_remaining,
+                                              reviewTier: result.review_tier,
+                                              claimReadiness: result.claim_readiness,
+                                              recommendedAction: result.recommended_action,
+                                              valueLabel: result.value_label,
+                                              whyNotClaimReady: result.why_not_claim_ready,
+                                              coverageFamily: result.coverage_family,
                                             });
                                             setShowDiscrepancyModal(true);
                                           }}
@@ -3790,9 +3828,17 @@ export function Dashboard() {
                 <div className="border-b border-white/10 px-5 py-4 lg:border-b-0 lg:border-r">
                   <div className="grid border-y border-white/10 md:grid-cols-3 md:divide-x md:divide-white/[0.08]">
                     <div className="py-3 md:pr-5">
-                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Estimated value</div>
+                      <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
+                        {activeDiscrepancy.valueLabel === 'potential_exposure'
+                          ? 'Potential exposure'
+                          : activeDiscrepancy.valueLabel === 'no_recovery_value'
+                            ? 'Recovery value'
+                            : 'Estimated value'}
+                      </div>
                       <div className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
-                        {typeof activeDiscrepancy.estimatedRecovery === 'number'
+                        {activeDiscrepancy.valueLabel === 'no_recovery_value'
+                          ? 'Not claim-ready'
+                          : typeof activeDiscrepancy.estimatedRecovery === 'number'
                           ? formatCurrency(activeDiscrepancy.estimatedRecovery, activeDiscrepancy.currency || 'USD')
                           : 'Not available'}
                       </div>
@@ -3842,6 +3888,8 @@ export function Dashboard() {
                       <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
                         {activeDiscrepancy.isProcessed
                           ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
+                          : activeDiscrepancy.whyNotClaimReady
+                            ? activeDiscrepancy.whyNotClaimReady
                           : activeDiscrepancy.nextActionLabel
                             ? `Next action: ${activeDiscrepancy.nextActionLabel}.`
                             : 'Margin keeps this finding in review until it is either ready to move into a case or held with a clear reason.'}

@@ -2947,6 +2947,12 @@ export const detectionApi = {
         status: string;
         detected_at?: string | null;
         detector_key?: string | null;
+        coverage_family?: string | null;
+        review_tier?: 'claim_candidate' | 'review_only' | 'monitoring' | string;
+        claim_readiness?: 'claim_ready' | 'not_claim_ready' | string;
+        recommended_action?: 'file_claim' | 'review' | 'monitor' | string;
+        value_label?: 'estimated_recovery' | 'potential_exposure' | 'no_recovery_value' | string;
+        why_not_claim_ready?: string | null;
         seller_summary?: {
           title?: string;
           summary?: string;
