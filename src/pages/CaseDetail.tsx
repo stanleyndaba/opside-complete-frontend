@@ -248,6 +248,83 @@ const toStatusLabel = (value?: string | null) => {
   return normalized.replace(/_/g, ' ');
 };
 
+const normalizeLifecycleValue = (value?: unknown) => String(value || '').trim().toLowerCase();
+
+const getCaseBlockerSummary = (caseData: any) => {
+  const blockers = Array.isArray(caseData?.block_reasons)
+    ? caseData.block_reasons.slice(0, 2).map((reason: string) => formatDisputeReason(reason)).filter(Boolean)
+    : [];
+
+  if (blockers.length > 0) return blockers.join(', ');
+
+  const lastError = String(caseData?.last_error || '').trim();
+  return lastError || null;
+};
+
+const hasCaseSubmissionDivergence = (caseData: any) => {
+  return caseData?.submission_state_divergence === true ||
+    (Array.isArray(caseData?.block_reasons) &&
+      caseData.block_reasons.some((reason: string) => normalizeLifecycleValue(reason) === 'submission_state_divergence'));
+};
+
+const formatSellerCaseFilingStatus = (caseData: any, proofStatus?: string | null) => {
+  const filingStatus = normalizeLifecycleValue(caseData?.filing_status);
+  const eligibilityStatus = normalizeLifecycleValue(caseData?.eligibility_status).toUpperCase();
+  const normalizedProofStatus = normalizeLifecycleValue(proofStatus || caseData?.proof_status);
+
+  if (hasCaseSubmissionDivergence(caseData)) return 'Reconciliation needed';
+  if (filingStatus === 'pending' && (caseData?.eligible_to_file === true || eligibilityStatus === 'READY' || normalizedProofStatus === 'filing_ready')) {
+    return 'Ready to file';
+  }
+  if (filingStatus === 'pending') return 'Waiting for proof';
+  if (filingStatus === 'submitting') return 'Being filed now';
+  if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') return 'Filed';
+  if (filingStatus === 'blocked') return 'Blocked';
+  if (filingStatus === 'payment_required') return 'Payment required';
+  if (filingStatus === 'pending_safety_verification') return 'Needs safety verification';
+  if (filingStatus === 'failed') return 'Failed';
+  if (filingStatus === 'retrying') return 'Ready to retry';
+
+  return toStatusLabel(caseData?.filing_status);
+};
+
+const getCaseFilingTruthLine = (caseData: any, proofStatus?: string | null) => {
+  const filingStatus = normalizeLifecycleValue(caseData?.filing_status);
+  const eligibilityStatus = normalizeLifecycleValue(caseData?.eligibility_status).toUpperCase();
+  const normalizedProofStatus = normalizeLifecycleValue(proofStatus || caseData?.proof_status);
+  const blockers = getCaseBlockerSummary(caseData);
+
+  if (hasCaseSubmissionDivergence(caseData)) {
+    return 'Submission proof exists, but case state needs reconciliation before Margin treats the filed state as clean.';
+  }
+
+  if (filingStatus === 'pending' && (caseData?.eligible_to_file === true || eligibilityStatus === 'READY' || normalizedProofStatus === 'filing_ready')) {
+    return 'Proof requirements are complete. This case is ready, but it has not been submitted yet.';
+  }
+
+  if (filingStatus === 'submitting') {
+    return 'Margin is actively submitting now; the next state should be filed with proof, failed, or blocked with a reason.';
+  }
+
+  if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') {
+    return caseData?.has_submission === true
+      ? 'Submission proof has been recorded.'
+      : 'Filed state is recorded, but proof details are not available in this view.';
+  }
+
+  if (filingStatus === 'payment_required') {
+    return 'Payment is required before Margin can file this case.';
+  }
+
+  if (filingStatus === 'blocked' || filingStatus === 'pending_safety_verification' || filingStatus === 'failed') {
+    return blockers
+      ? `Blocked until ${blockers.toLowerCase()} is cleared.`
+      : 'Blocked until the recorded filing gate clears.';
+  }
+
+  return blockers || 'Margin files only when proof requirements are met.';
+};
+
 const toEntityLabel = (value?: string | null) => {
   const normalized = String(value || '').trim();
   if (!normalized || normalized === '-' || normalized.toLowerCase() === 'n/a') return NOT_AVAILABLE;
@@ -1142,9 +1219,9 @@ export default function CaseDetail() {
 
     if (effectiveCase?.safety_audit || normalizedProofStatus === 'filing_ready' || normalizedEligibilityStatus === 'ready') {
       return {
-        description: 'This case already has the core evidence and identifiers in place. The main step left is Amazon review and approval.',
+        description: 'This case has the core evidence and identifiers in place. If it has not been filed yet, the next step is submission; after filing, Margin tracks Amazon review and payout movement.',
         helper: hasMatchedDocs
-          ? `${matchedDocsLabel} are already linked behind the case.`
+          ? `${matchedDocsLabel} are already linked behind the case. Margin files only when proof requirements are met.`
           : 'The case is passing core checks, even though no matched documents are currently surfaced here.',
         chips: [
           proofStatus ? `Proof: ${formatProofStatus(proofStatus)}` : 'Proof: Filing ready',
@@ -1944,7 +2021,13 @@ export default function CaseDetail() {
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
                           <dt className="text-[11px] text-white/40 font-medium">Filing Status</dt>
                           <dd className="text-xs font-sans font-bold text-white">
-                            {toStatusLabel(effectiveCase.filing_status)}
+                            {formatSellerCaseFilingStatus(effectiveCase, proofStatus)}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                          <dt className="text-[11px] text-white/40 font-medium">Filing Truth</dt>
+                          <dd className="text-xs font-sans font-bold text-white max-w-[65%] text-right">
+                            {getCaseFilingTruthLine(effectiveCase, proofStatus)}
                           </dd>
                         </div>
                         <div className="flex justify-between items-baseline border-b border-white/5 pb-2">

@@ -92,6 +92,59 @@ function formatLabel(value: string | null | undefined) {
   return value.replace(/_/g, ' ');
 }
 
+function formatSellerFilingStatus(row: Pick<QueueRow, 'filing_status' | 'eligibility_status' | 'eligible_to_file'>) {
+  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
+  const eligibilityStatus = String(row.eligibility_status || '').trim().toUpperCase();
+
+  if (filingStatus === 'pending' && row.eligible_to_file === true && eligibilityStatus === 'READY') {
+    return 'Ready to file';
+  }
+
+  if (filingStatus === 'pending') return 'Waiting for proof';
+  if (filingStatus === 'submitting') return 'Being filed now';
+  if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') return 'Filed';
+  if (filingStatus === 'blocked') return 'Blocked';
+  if (filingStatus === 'payment_required') return 'Payment required';
+  if (filingStatus === 'pending_safety_verification') return 'Needs safety verification';
+  if (filingStatus === 'failed') return 'Failed';
+  if (filingStatus === 'retrying') return 'Ready to retry';
+
+  return formatLabel(row.filing_status);
+}
+
+function filingTruthLine(row: Pick<QueueRow, 'filing_status' | 'eligibility_status' | 'eligible_to_file' | 'block_reasons' | 'last_error'>) {
+  const filingStatus = String(row.filing_status || '').trim().toLowerCase();
+  const eligibilityStatus = String(row.eligibility_status || '').trim().toUpperCase();
+  const blockers = Array.isArray(row.block_reasons)
+    ? row.block_reasons.slice(0, 2).map(formatDisputeReason).join(', ')
+    : '';
+  const lastError = String(row.last_error || '').trim();
+
+  if (filingStatus === 'pending' && row.eligible_to_file === true && eligibilityStatus === 'READY') {
+    return 'Proof requirements are complete; this has not been submitted yet.';
+  }
+
+  if (filingStatus === 'submitting') {
+    return 'Margin is actively submitting now; queued or pending states are not treated as filed.';
+  }
+
+  if (filingStatus === 'filed' || filingStatus === 'submitted' || filingStatus === 'resubmitted') {
+    return 'Submission has moved beyond filing preparation. Proof and Amazon response tracking should stay visible.';
+  }
+
+  if (filingStatus === 'payment_required') {
+    return 'Payment is required before this can file.';
+  }
+
+  if (filingStatus === 'blocked' || filingStatus === 'pending_safety_verification' || row.eligible_to_file === false) {
+    return blockers
+      ? `Blocked until ${blockers.toLowerCase()} is cleared.`
+      : lastError || 'Blocked until the recorded filing gate clears.';
+  }
+
+  return 'Margin will only file when the backend filing gate says this is safe.';
+}
+
 function formatMoney(amount: number | null | undefined, currency = 'USD') {
   if (amount == null) return 'Not Available';
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
@@ -642,7 +695,37 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     };
   }
 
-  if (['filed', 'submitting', 'recovering', 'payment_required'].includes(filingStatus) || ['submitted', 'under review', 'in review'].includes(status)) {
+  if (filingStatus === 'payment_required') {
+    return {
+      tone: 'blocked',
+      headline: 'Payment required',
+      detail: 'Payment must be confirmed before Margin can file. This case will wait instead of filing silently.',
+      strengths: strengths.slice(0, 2),
+      risks: ['Payment gate']
+    };
+  }
+
+  if (filingStatus === 'submitting') {
+    if (!hasRealDisputeCase) {
+      return {
+        tone: 'attention',
+        headline: 'Not Available',
+        detail: 'A backend-confirmed dispute case is not available for this detection row.',
+        strengths: strengths.slice(0, 2),
+        risks: risks.slice(0, 2)
+      };
+    }
+
+    return {
+      tone: 'in_flight',
+      headline: 'Being filed',
+      detail: 'Margin is actively submitting this case now. The next state should be filed with proof, failed, or blocked with a reason.',
+      strengths: strengths.slice(0, 3),
+      risks: risks.slice(0, 2)
+    };
+  }
+
+  if (['filed', 'recovering'].includes(filingStatus) || ['submitted', 'under review', 'in review'].includes(status)) {
     if (!hasRealDisputeCase) {
       return {
         tone: 'attention',
@@ -654,8 +737,8 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     }
     return {
       tone: 'in_flight',
-      headline: 'In Amazon review',
-      detail: 'Submission has moved out of seller control. Focus on any rejection history or evidence gaps before retrying.',
+      headline: 'Filed / in Amazon review',
+      detail: 'Submission has moved out of seller control. Keep submission proof and Amazon response tracking visible while Margin waits for the next update.',
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
     };
@@ -736,7 +819,7 @@ function deriveFilingPosture(row: QueueRow, financialSummary?: FinancialTruthSum
     return {
       tone: 'ready',
       headline: 'Ready to file',
-      detail: `The current gate is open. Seller-controlled quality now comes down to keeping this ${entityNoun}'s identifiers and evidence clean.`,
+      detail: 'Proof requirements are complete. This case is ready to file, but it is not submitted until Agent 7 records submission proof.',
       strengths: strengths.slice(0, 3),
       risks: risks.slice(0, 2)
     };
@@ -1871,7 +1954,7 @@ export default function DisputeCases() {
                                 ) : null}
                                 {row.filing_status ? (
                                   <div className="text-[11px] text-white/45 font-sans">
-                                    Filing state: {formatLabel(row.filing_status)}
+                                    Filing state: {formatSellerFilingStatus(row)}
                                   </div>
                                 ) : null}
                               </div>
@@ -1927,6 +2010,9 @@ export default function DisputeCases() {
                                   ) : null}
                                 </div>
                                 <p className="text-[11px] font-sans leading-5 text-white/55">{posture.detail}</p>
+                                <p className="text-[11px] font-sans leading-5 text-white/42">
+                                  Filing truth: {filingTruthLine(row)}
+                                </p>
                                 {decisionExplanation ? (
                                   <p className="text-[11px] font-sans leading-5 text-white/45">
                                     Why this record is in this state: {decisionExplanation}
@@ -2090,7 +2176,7 @@ export default function DisputeCases() {
             </DialogTitle>
             {detailsRow ? (
               <div className="pt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/38">
-                {getQueueReferenceLabel(detailsRow)} · Entity: {getQueueEntityLabel(detailsRow)} · Origin: {formatCaseOrigin(detailsRow.case_origin)} · Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatLabel(detailsRow.filing_status)} · Recovery: {formatLabel(detailsRow.recovery_status)}
+                {getQueueReferenceLabel(detailsRow)} · Entity: {getQueueEntityLabel(detailsRow)} · Origin: {formatCaseOrigin(detailsRow.case_origin)} · Filing: {detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : formatSellerFilingStatus(detailsRow)} · Recovery: {formatLabel(detailsRow.recovery_status)}
               </div>
             ) : null}
           </DialogHeader>
@@ -2121,7 +2207,7 @@ export default function DisputeCases() {
                 title="Lifecycle"
                 rows={[
                   { label: 'Status', value: formatLabel(detailsRow.status) },
-                  { label: 'Filing Status', value: formatLabel(detailsRow.filing_status) },
+                  { label: 'Filing Status', value: formatSellerFilingStatus(detailsRow) },
                   { label: 'Eligibility', value: formatEligibilityStatus(detailsRow.eligibility_status) },
                   { label: 'Filing Strategy', value: detailsRow.filing_strategy ? formatAutonomyLabel(detailsRow.filing_strategy) : 'Not Available' },
                   { label: 'Runtime State', value: detailsRow.operational_state ? formatAutonomyLabel(detailsRow.operational_state) : 'Not Available' },
@@ -2131,6 +2217,7 @@ export default function DisputeCases() {
                   { label: 'Payout Proof', value: formatPayoutProofStatus(detailsPayoutProofStatus) },
                   { label: 'Financial Status', value: financialStatusLabel(financialSummary?.payout_status) },
                   { label: 'Next Action', value: detailsRow.next_action || 'Not Available' },
+                  { label: 'Filing Truth', value: filingTruthLine(detailsRow) },
                 ]}
               />
               <DetailSection

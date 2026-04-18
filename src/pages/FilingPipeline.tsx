@@ -104,6 +104,52 @@ function humanize(value: string | null | undefined) {
   return value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function formatFilingBlockReason(reason: string | null | undefined) {
+  const normalized = normalizeStatus(reason);
+  if (!normalized) return null;
+
+  if (normalized === 'missing_quantity_value') return 'quantity or value proof';
+  if (normalized === 'missing_unit_cost_proof') return 'unit cost proof';
+  if (normalized === 'missing_policy_window_reference_date') return 'policy-window date';
+  if (normalized === 'dangerous_or_prohibited_document_detected') return 'safe supporting document';
+  if (normalized === 'missing_evidence_links') return 'linked evidence';
+  if (normalized === 'qa_fixture_do_not_file') return 'QA-only filing hold';
+  if (normalized === 'submission_state_divergence') return 'case-state reconciliation';
+
+  if (normalized.startsWith('missing_required_document_family:')) {
+    const family = normalized.split(':')[1]?.split('|').map(humanize).join(', ');
+    return family ? `required document: ${family}` : 'required document';
+  }
+
+  if (normalized.startsWith('missing_required_document_type:')) {
+    const type = normalized.split(':')[1];
+    return type ? `required document: ${humanize(type)}` : 'required document';
+  }
+
+  if (normalized.startsWith('case_status_not_fileable:')) {
+    return `case status ${humanize(normalized.split(':')[1])}`;
+  }
+
+  if (normalized.startsWith('case_not_ready_for_filing_status:')) {
+    return `filing state ${humanize(normalized.split(':')[1])}`;
+  }
+
+  return humanize(normalized);
+}
+
+function summarizeFilingBlockers(row: DisputeRow) {
+  const blockers = (row.block_reasons || [])
+    .map(formatFilingBlockReason)
+    .filter((value): value is string => Boolean(value));
+
+  if (blockers.length === 0 && row.last_error) {
+    return row.last_error;
+  }
+
+  if (blockers.length === 0) return null;
+  return blockers.slice(0, 3).join(', ');
+}
+
 function normalizeStatus(value: unknown) {
   return String(value || '').trim().toLowerCase();
 }
@@ -279,16 +325,34 @@ function ledgerRecoveredAmount(row: LedgerRow) {
 
 function readyReason(row: DisputeRow) {
   const proofStatus = getProofStatus(row);
-  if (proofStatus) return `Proof: ${formatProofStatus(proofStatus)}`;
+  if (proofStatus) return `Proof complete · ${formatProofStatus(proofStatus)}`;
   const eligibility = formatEligibilityStatus(row.eligibility_status || null);
   if (eligibility !== 'Not available') return eligibility;
-  return 'Linked case is safe to file from current backend truth.';
+  return 'Proof requirements met';
+}
+
+function readyDetail(row: DisputeRow) {
+  const evidenceCount = typeof row.matched_document_count === 'number' && Number.isFinite(row.matched_document_count)
+    ? row.matched_document_count
+    : null;
+
+  return evidenceCount && evidenceCount > 0
+    ? `This case is ready because required proof is complete and ${evidenceCount} evidence document${evidenceCount === 1 ? ' is' : 's are'} linked. It has not been submitted yet.`
+    : 'This case is ready because required proof is complete. It has not been submitted yet.';
 }
 
 function beingFiledReason(row: DisputeRow) {
   const normalized = String(row.filing_status || '').trim().toLowerCase();
   if (normalized === 'submitting') return 'Submitting to Amazon';
   return 'Preparing filing handoff';
+}
+
+function beingFiledDetail(row: DisputeRow) {
+  if (normalizeStatus(row.filing_status) === 'submitting') {
+    return 'Margin is actively submitting this case now. The next truth state will be filed with proof, failed, or blocked with a reason.';
+  }
+
+  return 'Margin is preparing the filing handoff. This is not treated as filed until durable submission proof exists.';
 }
 
 function attentionReason(row: DisputeRow) {
@@ -309,11 +373,35 @@ function attentionDetail(row: DisputeRow) {
   }
 
   const normalized = normalizeStatus(row.filing_status);
-  if (normalized === 'failed') return 'The last filing attempt did not complete. Margin is keeping this out of active filing until it is reviewed or retried.';
-  if (normalized === 'blocked') return 'A backend filing gate is blocking this case. Margin will not submit it until the blocker is cleared.';
-  if (normalized === 'payment_required') return 'Payment is required before Margin can file this case.';
-  if (normalized === 'pending_safety_verification') return 'Margin needs safety verification before this case can move into filing.';
-  return 'This case is not currently eligible to file. Review the dispute queue for the exact blocker or next action.';
+  const blockers = summarizeFilingBlockers(row);
+  if (normalized === 'failed') return `The last filing attempt did not complete. ${blockers ? `Current blocker: ${blockers}.` : 'Review or retry is required before filing resumes.'}`;
+  if (normalized === 'blocked') return `This case is blocked before filing. ${blockers ? `Clear ${blockers} before submission.` : 'Margin will not submit it until the blocker is cleared.'}`;
+  if (normalized === 'payment_required') return 'Payment is required before Margin can file this case. The case will wait instead of filing silently.';
+  if (normalized === 'pending_safety_verification') return `Margin needs safety verification before filing. ${blockers ? `Current blocker: ${blockers}.` : 'The case will not submit until verification clears.'}`;
+  return `This case is not currently eligible to file. ${blockers ? `Current blocker: ${blockers}.` : 'Review the dispute queue for the exact blocker or next action.'}`;
+}
+
+function filingNextStep(row: DisputeRow, stage: 'ready' | 'filing' | 'filed' | 'attention') {
+  if (stage === 'ready') {
+    return 'Next: start filing manually or let Auto-File submit when enabled.';
+  }
+
+  if (stage === 'filing') {
+    return 'Next: Margin records submission proof or returns a failure reason.';
+  }
+
+  if (stage === 'filed') {
+    return row.submission_proof?.proof_present
+      ? 'Next: Margin watches Amazon response and payout movement.'
+      : 'Next: confirm proof details if this filed state needs audit support.';
+  }
+
+  if (hasSubmissionStateDivergence(row)) {
+    return 'Next: reconcile case state against recorded submission proof.';
+  }
+
+  const blockers = summarizeFilingBlockers(row);
+  return blockers ? `Next: clear ${blockers}.` : 'Next: review and clear the filing blocker.';
 }
 
 function filedReason(row: DisputeRow) {
@@ -321,8 +409,16 @@ function filedReason(row: DisputeRow) {
     return `Submission proof recorded · ${row.submission_proof.proof_reference || 'reference available'}`;
   }
   const status = humanize(row.status);
-  if (status !== NOT_AVAILABLE) return `Filed with Amazon · ${status}`;
-  return 'Filed with Amazon · awaiting response';
+  if (status !== NOT_AVAILABLE) return `Filed state recorded · ${status}`;
+  return 'Filed state recorded · proof details unavailable';
+}
+
+function filedDetail(row: DisputeRow) {
+  if (row.submission_proof?.proof_present) {
+    return 'Submission proof has been recorded. Margin is waiting on the next Amazon response.';
+  }
+
+  return 'This case is marked filed, but detailed submission proof is not available in this view yet. Margin does not treat missing proof as a clean proof state.';
 }
 
 function filedProofRows(row: DisputeRow) {
@@ -509,6 +605,7 @@ function DisputeCard({
   statusLabel,
   detail,
   timeLabel,
+  nextStep,
   proofRows,
   action,
 }: {
@@ -518,6 +615,7 @@ function DisputeCard({
   statusLabel: string;
   detail: string;
   timeLabel?: string | null;
+  nextStep?: string | null;
   proofRows?: Array<{ label: string; value: string | null | undefined }>;
   action?: React.ReactNode;
 }) {
@@ -538,6 +636,7 @@ function DisputeCard({
           rows={[
             { label: amountLabel, value: formatMoney(disputeAmount(row), row.currency) },
             { label: 'Pipeline status', value: statusLabel },
+            { label: 'Next step', value: nextStep || null },
             { label: 'Last movement', value: timeLabel || null },
             ...(proofRows || []),
           ]}
@@ -753,7 +852,7 @@ export default function FilingPipeline() {
       value: 'ready' as const,
       label: 'Ready to file',
       title: 'Ready to File',
-      detail: 'What money can move into Amazon filing right now.',
+      detail: 'Proof-complete cases that can move into filing. Not submitted yet.',
       amount: formatMoney(readyTotal),
       countLabel: `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} ready`,
       action: readyRows.length ? (
@@ -774,8 +873,9 @@ export default function FilingPipeline() {
               tone="ready"
               amountLabel="Estimated recovery"
               statusLabel={readyReason(row)}
-              detail="Evidence and case truth are aligned, so this case can safely move into filing."
+              detail={readyDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
+              nextStep={filingNextStep(row, 'ready')}
               action={<Button asChild size="sm" variant="outline" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight"><Link to={disputeCasesHref}>Start filing<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link></Button>}
             />
           ))}
@@ -788,7 +888,7 @@ export default function FilingPipeline() {
       value: 'filing' as const,
       label: 'Being filed',
       title: 'Being Filed',
-      detail: 'Cases already moving through the filing handoff.',
+      detail: 'Cases actively submitting now. Pending queueable cases do not appear here.',
       amount: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))),
       countLabel: `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission`,
       action: null,
@@ -805,8 +905,9 @@ export default function FilingPipeline() {
               tone="inFlight"
               amountLabel="Amount in motion"
               statusLabel={beingFiledReason(row)}
-              detail="Margin is actively submitting this case through the backend filing path now."
+              detail={beingFiledDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
+              nextStep={filingNextStep(row, 'filing')}
               action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('inFlight').chip)}><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
             />
           ))}
@@ -819,7 +920,7 @@ export default function FilingPipeline() {
       value: 'filed' as const,
       label: 'Filed',
       title: 'Filed / In Progress',
-      detail: 'Cases already filed with Amazon and waiting on the next movement.',
+      detail: 'Cases with filed state, submission proof, or Amazon review movement.',
       amount: formatMoney(totalAmount(filedRows.map(disputeAmount))),
       countLabel: `${filedRows.length} case${filedRows.length === 1 ? '' : 's'} already with Amazon`,
       action: null,
@@ -836,10 +937,11 @@ export default function FilingPipeline() {
               tone="submitted"
               amountLabel="Amount in review"
               statusLabel={filedReason(row)}
-              detail={row.submission_proof?.proof_present ? 'Durable submission proof is recorded. Margin is waiting on the next Amazon response.' : 'This case is marked filed, but detailed submission proof is not available in this view yet.'}
+              detail={filedDetail(row)}
               timeLabel={row.submission_proof?.submitted_at ? `Submitted ${formatRelative(row.submission_proof.submitted_at)}` : row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
+              nextStep={filingNextStep(row, 'filed')}
               proofRows={filedProofRows(row)}
-              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('submitted').chip)}><FileCheck2 className="h-3.5 w-3.5" />{row.submission_proof?.proof_present ? 'Proof recorded' : 'Filed with Amazon'}</span>}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('submitted').chip)}><FileCheck2 className="h-3.5 w-3.5" />{row.submission_proof?.proof_present ? 'Proof recorded' : 'Proof unavailable'}</span>}
             />
           ))}
         </div>
@@ -851,7 +953,7 @@ export default function FilingPipeline() {
       value: 'attention' as const,
       label: 'Needs attention',
       title: 'Needs Attention',
-      detail: 'Cases blocked by payment, safety review, failure, or filing gates.',
+      detail: 'Cases that cannot file until the recorded blocker is cleared.',
       amount: formatMoney(totalAmount(attentionRows.map(disputeAmount))),
       countLabel: `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} gated`,
       action: attentionRows.length ? (
@@ -874,6 +976,7 @@ export default function FilingPipeline() {
               statusLabel={attentionReason(row)}
               detail={attentionDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
+              nextStep={filingNextStep(row, 'attention')}
               proofRows={hasSubmissionStateDivergence(row) ? filedProofRows(row) : undefined}
               action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('attention').chip)}><AlertCircle className="h-3.5 w-3.5" />{hasSubmissionStateDivergence(row) ? 'Proof needs reconciliation' : attentionReason(row)}</span>}
             />
@@ -967,7 +1070,7 @@ export default function FilingPipeline() {
             <div className="space-y-2">
               <h1 className="text-3xl font-sans font-bold text-white tracking-tight">Submission Flow</h1>
               <p className="text-sm text-white/50 font-sans max-w-3xl">
-                Show exactly what is ready to file, already being submitted, already with Amazon, waiting for payout, and fully recovered without asking sellers to interpret queue logic.
+                Show exactly what is proof-complete, actively submitting, filed with proof, blocked, waiting for payout, and fully recovered without asking sellers to interpret queue logic.
               </p>
             </div>
             <div className="flex flex-col items-start gap-2 lg:items-end">
@@ -1004,6 +1107,9 @@ export default function FilingPipeline() {
                     ? `${formatMoney(recoveredTotal)} is already confirmed back to the account.`
                     : 'Recovered payouts will appear here as soon as financial confirmation lands.'}
                 </p>
+                <p className="mt-2 text-xs font-sans text-white/48">
+                  Margin files only when proof requirements are met; blocked cases stay out of filing until the recorded issue is cleared.
+                </p>
                 <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
                   Scope: ready, submitting, filed, gated, payout, and recovered truth from the current account
                 </p>
@@ -1027,10 +1133,10 @@ export default function FilingPipeline() {
               </div>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {[
-                  { label: 'Ready to file', value: formatMoney(readyTotal), detail: readyRows.length ? `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} can move right now` : 'Nothing is filing-ready yet' },
-                  { label: 'Being filed', value: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))), detail: beingFiledRows.length ? `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission` : 'No filing handoffs running right now' },
-                  { label: 'With Amazon', value: formatMoney(totalAmount([...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)])), detail: filedRows.length + approvedRows.length ? `${filedRows.length + approvedRows.length} case${filedRows.length + approvedRows.length === 1 ? '' : 's'} waiting on Amazon or payout` : 'No filed or approved cases yet' },
-                  { label: 'Needs attention', value: formatMoney(totalAmount(attentionRows.map(disputeAmount))), detail: attentionRows.length ? `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} blocked or gated` : 'No blockers visible right now' },
+                  { label: 'Ready to file', value: formatMoney(readyTotal), detail: readyRows.length ? `${readyRows.length} proof-complete case${readyRows.length === 1 ? '' : 's'} not submitted yet` : 'Nothing is filing-ready yet' },
+                  { label: 'Being filed', value: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))), detail: beingFiledRows.length ? `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} actively submitting now` : 'No active Amazon submission right now' },
+                  { label: 'With Amazon', value: formatMoney(totalAmount([...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)])), detail: filedRows.length + approvedRows.length ? `${filedRows.length + approvedRows.length} case${filedRows.length + approvedRows.length === 1 ? '' : 's'} filed, in review, or payout-tracked` : 'No filed or approved cases yet' },
+                  { label: 'Needs attention', value: formatMoney(totalAmount(attentionRows.map(disputeAmount))), detail: attentionRows.length ? `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} blocked with recorded reasons` : 'No blockers visible right now' },
                   { label: 'Recovered', value: formatMoney(recoveredTotal), detail: completedRows.length ? `${completedRows.length} payout-confirmed item${completedRows.length === 1 ? '' : 's'}` : 'No recovered payouts confirmed yet' },
                 ].map((card) => (
                   <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
