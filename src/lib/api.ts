@@ -2198,6 +2198,8 @@ export const api = {
           status: string | null;
           outcome: string | null;
         } | null;
+        submission_state_divergence?: boolean;
+        submission_state_divergence_message?: string | null;
         can_file: boolean;
         can_retry: boolean;
         can_approve: boolean;

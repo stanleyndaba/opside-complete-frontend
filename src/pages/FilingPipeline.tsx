@@ -108,6 +108,14 @@ function normalizeStatus(value: unknown) {
   return String(value || '').trim().toLowerCase();
 }
 
+function hasSubmissionStateDivergence(row: DisputeRow) {
+  return row.submission_state_divergence === true ||
+    Boolean(
+      row.submission_proof?.proof_present &&
+      (row.block_reasons || []).some((reason) => normalizeStatus(reason) === 'submission_state_divergence')
+    );
+}
+
 function totalAmount(values: Array<number | null | undefined>) {
   return values.reduce((sum, value) => sum + (typeof value === 'number' && Number.isFinite(value) ? value : 0), 0);
 }
@@ -134,6 +142,7 @@ function isBeingFiledDisputeRow(row: DisputeRow) {
 function isFiledDisputeRow(row: DisputeRow) {
   return row.has_real_dispute_case === true
     && !isBeingFiledDisputeRow(row)
+    && !hasSubmissionStateDivergence(row)
     && !isApprovedPendingDisputeRow(row)
     && !isRecoveredDisputeRow(row)
     && (
@@ -151,6 +160,10 @@ function isAttentionDisputeRow(row: DisputeRow) {
     || isRecoveredDisputeRow(row)
   ) {
     return false;
+  }
+
+  if (hasSubmissionStateDivergence(row)) {
+    return true;
   }
 
   const filingStatus = normalizeStatus(row.filing_status);
@@ -279,6 +292,7 @@ function beingFiledReason(row: DisputeRow) {
 }
 
 function attentionReason(row: DisputeRow) {
+  if (hasSubmissionStateDivergence(row)) return 'Reconciliation needed';
   const normalized = normalizeStatus(row.filing_status);
   if (normalized === 'failed') return 'Failed';
   if (normalized === 'blocked') return 'Blocked';
@@ -289,6 +303,11 @@ function attentionReason(row: DisputeRow) {
 }
 
 function attentionDetail(row: DisputeRow) {
+  if (hasSubmissionStateDivergence(row)) {
+    return row.submission_state_divergence_message ||
+      'Submission proof exists, but the case state did not update cleanly. Margin needs to reconcile this record before treating the filed state as clean.';
+  }
+
   const normalized = normalizeStatus(row.filing_status);
   if (normalized === 'failed') return 'The last filing attempt did not complete. Margin is keeping this out of active filing until it is reviewed or retried.';
   if (normalized === 'blocked') return 'A backend filing gate is blocking this case. Margin will not submit it until the blocker is cleared.';
@@ -855,7 +874,8 @@ export default function FilingPipeline() {
               statusLabel={attentionReason(row)}
               detail={attentionDetail(row)}
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
-              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('attention').chip)}><AlertCircle className="h-3.5 w-3.5" />{attentionReason(row)}</span>}
+              proofRows={hasSubmissionStateDivergence(row) ? filedProofRows(row) : undefined}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('attention').chip)}><AlertCircle className="h-3.5 w-3.5" />{hasSubmissionStateDivergence(row) ? 'Proof needs reconciliation' : attentionReason(row)}</span>}
             />
           ))}
         </div>
