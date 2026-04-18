@@ -86,6 +86,19 @@ function formatRelative(value: string | null | undefined) {
   return formatDistanceToNow(date, { addSuffix: true });
 }
 
+function formatTimestamp(value: string | null | undefined) {
+  if (!value) return NOT_AVAILABLE;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return NOT_AVAILABLE;
+  return date.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 function humanize(value: string | null | undefined) {
   if (!value) return NOT_AVAILABLE;
   return value.replace(/[_-]+/g, ' ').trim().replace(/\b\w/g, (char) => char.toUpperCase());
@@ -285,9 +298,43 @@ function attentionDetail(row: DisputeRow) {
 }
 
 function filedReason(row: DisputeRow) {
+  if (row.submission_proof?.proof_present) {
+    return `Submission proof recorded · ${row.submission_proof.proof_reference || 'reference available'}`;
+  }
   const status = humanize(row.status);
   if (status !== NOT_AVAILABLE) return `Filed with Amazon · ${status}`;
   return 'Filed with Amazon · awaiting response';
+}
+
+function filedProofRows(row: DisputeRow) {
+  const proof = row.submission_proof || null;
+  const attachmentCount = proof?.attachment_count;
+  const linkedEvidenceCount = typeof row.matched_document_count === 'number' && Number.isFinite(row.matched_document_count)
+    ? row.matched_document_count
+    : null;
+
+  return [
+    {
+      label: 'Proof reference',
+      value: proof?.proof_reference || row.amazon_case_id || null,
+    },
+    {
+      label: 'Submitted at',
+      value: proof?.submitted_at ? formatTimestamp(proof.submitted_at) : null,
+    },
+    {
+      label: 'Channel',
+      value: proof?.submission_channel ? humanize(proof.submission_channel) : null,
+    },
+    {
+      label: attachmentCount != null ? 'Attachments' : 'Linked evidence',
+      value: attachmentCount != null
+        ? `${attachmentCount} file${attachmentCount === 1 ? '' : 's'}`
+        : linkedEvidenceCount != null
+          ? `${linkedEvidenceCount} document${linkedEvidenceCount === 1 ? '' : 's'} linked`
+          : null,
+    },
+  ];
 }
 
 function pendingPayoutReason(row: LedgerRow) {
@@ -443,6 +490,7 @@ function DisputeCard({
   statusLabel,
   detail,
   timeLabel,
+  proofRows,
   action,
 }: {
   row: DisputeRow;
@@ -451,6 +499,7 @@ function DisputeCard({
   statusLabel: string;
   detail: string;
   timeLabel?: string | null;
+  proofRows?: Array<{ label: string; value: string | null | undefined }>;
   action?: React.ReactNode;
 }) {
   const classes = toneClasses(tone);
@@ -471,6 +520,7 @@ function DisputeCard({
             { label: amountLabel, value: formatMoney(disputeAmount(row), row.currency) },
             { label: 'Pipeline status', value: statusLabel },
             { label: 'Last movement', value: timeLabel || null },
+            ...(proofRows || []),
           ]}
         />
         <div className="flex flex-col items-start gap-2 lg:items-end">{action}</div>
@@ -767,9 +817,10 @@ export default function FilingPipeline() {
               tone="submitted"
               amountLabel="Amount in review"
               statusLabel={filedReason(row)}
-              detail="Margin has already submitted this case and is waiting on the next Amazon response."
-              timeLabel={row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
-              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('submitted').chip)}><FileCheck2 className="h-3.5 w-3.5" />Filed with Amazon</span>}
+              detail={row.submission_proof?.proof_present ? 'Durable submission proof is recorded. Margin is waiting on the next Amazon response.' : 'This case is marked filed, but detailed submission proof is not available in this view yet.'}
+              timeLabel={row.submission_proof?.submitted_at ? `Submitted ${formatRelative(row.submission_proof.submitted_at)}` : row.updated_at ? `Last movement ${formatRelative(row.updated_at)}` : null}
+              proofRows={filedProofRows(row)}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('submitted').chip)}><FileCheck2 className="h-3.5 w-3.5" />{row.submission_proof?.proof_present ? 'Proof recorded' : 'Filed with Amazon'}</span>}
             />
           ))}
         </div>

@@ -2183,6 +2183,21 @@ export const api = {
         asin: string | null;
         expected_payout_amount: number | null;
         expected_payout_date: string | null;
+        submission_proof: {
+          id: string | null;
+          submission_id: string | null;
+          amazon_case_id: string | null;
+          external_reference: string | null;
+          proof_reference: string | null;
+          proof_present: boolean;
+          submitted_at: string | null;
+          request_started_at: string | null;
+          response_received_at: string | null;
+          submission_channel: string | null;
+          attachment_count: number | null;
+          status: string | null;
+          outcome: string | null;
+        } | null;
         can_file: boolean;
         can_retry: boolean;
         can_approve: boolean;
