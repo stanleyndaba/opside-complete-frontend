@@ -57,13 +57,15 @@ type LedgerResponse = {
   };
 };
 
-type RowTone = 'ready' | 'inFlight' | 'submitted' | 'approved' | 'completed';
+type RowTone = 'ready' | 'inFlight' | 'submitted' | 'approved' | 'completed' | 'attention';
 
 const NOT_AVAILABLE = 'Not Available';
 const DISPUTE_PAGE_SIZE = 100;
 const LEDGER_PAGE_SIZE = 100;
-const ACTIVE_FILING_STATUSES = new Set(['pending', 'retrying', 'filing', 'submitting']);
+const READY_FILING_STATUSES = new Set(['pending']);
+const ACTIVE_FILING_STATUSES = new Set(['submitting']);
 const FILED_FILING_STATUSES = new Set(['filed', 'submitted', 'resubmitted']);
+const ATTENTION_FILING_STATUSES = new Set(['failed', 'blocked', 'payment_required', 'pending_safety_verification']);
 const ACTIVE_AMAZON_REVIEW_STATUSES = new Set(['submitted', 'under review', 'under_review', 'in review', 'in_review', 'in_progress', 'processing']);
 const APPROVED_CASE_STATUSES = new Set(['approved', 'won']);
 const COMPLETED_RECOVERY_STATUSES = new Set(['reconciled', 'paid', 'paid_out', 'reimbursed']);
@@ -127,11 +129,29 @@ function isFiledDisputeRow(row: DisputeRow) {
     );
 }
 
+function isAttentionDisputeRow(row: DisputeRow) {
+  if (
+    row.has_real_dispute_case !== true
+    || isBeingFiledDisputeRow(row)
+    || isFiledDisputeRow(row)
+    || isApprovedPendingDisputeRow(row)
+    || isRecoveredDisputeRow(row)
+  ) {
+    return false;
+  }
+
+  const filingStatus = normalizeStatus(row.filing_status);
+  return ATTENTION_FILING_STATUSES.has(filingStatus)
+    || (READY_FILING_STATUSES.has(filingStatus) && row.can_file !== true);
+}
+
 function isReadyDisputeRow(row: DisputeRow) {
   return row.has_real_dispute_case === true
     && row.can_file === true
+    && READY_FILING_STATUSES.has(normalizeStatus(row.filing_status))
     && !isBeingFiledDisputeRow(row)
     && !isFiledDisputeRow(row)
+    && !isAttentionDisputeRow(row)
     && !isApprovedPendingDisputeRow(row)
     && !isRecoveredDisputeRow(row);
 }
@@ -241,9 +261,27 @@ function readyReason(row: DisputeRow) {
 
 function beingFiledReason(row: DisputeRow) {
   const normalized = String(row.filing_status || '').trim().toLowerCase();
-  if (normalized === 'retrying') return 'Queued for filing retry';
-  if (normalized === 'pending') return 'Submitting to Amazon';
+  if (normalized === 'submitting') return 'Submitting to Amazon';
   return 'Preparing filing handoff';
+}
+
+function attentionReason(row: DisputeRow) {
+  const normalized = normalizeStatus(row.filing_status);
+  if (normalized === 'failed') return 'Failed';
+  if (normalized === 'blocked') return 'Blocked';
+  if (normalized === 'payment_required') return 'Payment required';
+  if (normalized === 'pending_safety_verification') return 'Needs review';
+  if (normalized === 'pending') return 'Not filing-ready';
+  return humanize(row.filing_status) !== NOT_AVAILABLE ? humanize(row.filing_status) : 'Needs attention';
+}
+
+function attentionDetail(row: DisputeRow) {
+  const normalized = normalizeStatus(row.filing_status);
+  if (normalized === 'failed') return 'The last filing attempt did not complete. Margin is keeping this out of active filing until it is reviewed or retried.';
+  if (normalized === 'blocked') return 'A backend filing gate is blocking this case. Margin will not submit it until the blocker is cleared.';
+  if (normalized === 'payment_required') return 'Payment is required before Margin can file this case.';
+  if (normalized === 'pending_safety_verification') return 'Margin needs safety verification before this case can move into filing.';
+  return 'This case is not currently eligible to file. Review the dispute queue for the exact blocker or next action.';
 }
 
 function filedReason(row: DisputeRow) {
@@ -293,6 +331,12 @@ function toneClasses(tone: RowTone) {
         card: 'border-white/8 bg-[#111111]/96',
         badge: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200',
         chip: 'border-emerald-500/18 bg-emerald-500/[0.08] text-emerald-200',
+      };
+    case 'attention':
+      return {
+        card: 'border-white/8 bg-[#111111]/96',
+        badge: 'border-red-500/20 bg-red-500/10 text-red-200',
+        chip: 'border-red-500/18 bg-red-500/[0.08] text-red-200',
       };
   }
 }
@@ -505,7 +549,7 @@ export default function FilingPipeline() {
   const [disputeError, setDisputeError] = useState<string | null>(null);
   const [ledgerError, setLedgerError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'ready' | 'filing' | 'filed' | 'payout' | 'completed'>('ready');
+  const [activeTab, setActiveTab] = useState<'ready' | 'filing' | 'filed' | 'attention' | 'payout' | 'completed'>('ready');
 
   const loadDisputes = useCallback(async () => {
     if (!activeSlug) {
@@ -604,6 +648,7 @@ export default function FilingPipeline() {
   const readyRows = useMemo(() => (disputeRows || []).filter(isReadyDisputeRow), [disputeRows]);
   const beingFiledRows = useMemo(() => (disputeRows || []).filter(isBeingFiledDisputeRow), [disputeRows]);
   const filedRows = useMemo(() => (disputeRows || []).filter(isFiledDisputeRow), [disputeRows]);
+  const attentionRows = useMemo(() => (disputeRows || []).filter(isAttentionDisputeRow), [disputeRows]);
   const approvedRows = useMemo(() => (ledgerRows || []).filter(isAwaitingPayoutLedgerRow), [ledgerRows]);
   const completedRows = useMemo(() => (ledgerRows || []).filter(isCompletedLedgerRow), [ledgerRows]);
 
@@ -617,17 +662,19 @@ export default function FilingPipeline() {
     ...readyRows.map((row) => row.updated_at),
     ...beingFiledRows.map((row) => row.updated_at),
     ...filedRows.map((row) => row.updated_at),
+    ...attentionRows.map((row) => row.updated_at),
     ...approvedRows.map((row) => row.last_updated_at),
     ...completedRows.map((row) => row.last_updated_at),
   );
 
   const disputeCasesHref = tenantRoute(activeSlug, '/dispute-cases');
   const lastUpdatedLabel = latestMovement ? formatDistanceToNow(new Date(latestMovement), { addSuffix: true }) : null;
-  const totalVisibleRecords = readyRows.length + beingFiledRows.length + filedRows.length + approvedRows.length + completedRows.length;
+  const totalVisibleRecords = readyRows.length + beingFiledRows.length + filedRows.length + attentionRows.length + approvedRows.length + completedRows.length;
   const snapshotPills = [
     readyRows.length ? `${readyRows.length} ready to file` : null,
     beingFiledRows.length ? `${beingFiledRows.length} submitting now` : null,
     filedRows.length ? `${filedRows.length} already with Amazon` : null,
+    attentionRows.length ? `${attentionRows.length} need attention` : null,
     approvedRows.length ? `${approvedRows.length} awaiting payout` : null,
     completedRows.length ? `${completedRows.length} recovered` : null,
   ].filter(Boolean) as string[];
@@ -689,14 +736,14 @@ export default function FilingPipeline() {
               tone="inFlight"
               amountLabel="Amount in motion"
               statusLabel={beingFiledReason(row)}
-              detail={String(row.filing_status || '').trim().toLowerCase() === 'retrying' ? 'Margin is retrying the filing path using the same backend action truth.' : 'Margin is handing this case off for Amazon submission now.'}
+              detail="Margin is actively submitting this case through the backend filing path now."
               timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
               action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('inFlight').chip)}><Clock3 className="h-3.5 w-3.5" />{beingFiledReason(row)}</span>}
             />
           ))}
         </div>
       ) : (
-        <EmptyState message="No cases are being filed right now — new submissions will appear here as soon as Margin queues them." />
+        <EmptyState message="No cases are being filed right now — active submissions appear here only when the backend is actually submitting to Amazon." />
       ),
     },
     {
@@ -728,6 +775,41 @@ export default function FilingPipeline() {
         </div>
       ) : (
         <EmptyState message="No cases filed yet — once submitted, they will appear here." />
+      ),
+    },
+    {
+      value: 'attention' as const,
+      label: 'Needs attention',
+      title: 'Needs Attention',
+      detail: 'Cases blocked by payment, safety review, failure, or filing gates.',
+      amount: formatMoney(totalAmount(attentionRows.map(disputeAmount))),
+      countLabel: `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} gated`,
+      action: attentionRows.length ? (
+        <Button asChild size="sm" className="h-10 px-4 font-sans font-bold text-[10px] bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg uppercase tracking-tight">
+          <Link to={disputeCasesHref}>Review blockers<ArrowUpRight className="ml-2 h-3.5 w-3.5" /></Link>
+        </Button>
+      ) : null,
+      content: disputeLoading ? (
+        <LoadingState label="Checking blocked and failed filing states" />
+      ) : disputeError ? (
+        <ErrorState message={disputeError} />
+      ) : attentionRows.length ? (
+        <div className="grid gap-3">
+          {attentionRows.map((row) => (
+            <DisputeCard
+              key={row.dispute_case_id}
+              row={row}
+              tone="attention"
+              amountLabel="Estimated recovery"
+              statusLabel={attentionReason(row)}
+              detail={attentionDetail(row)}
+              timeLabel={row.updated_at ? `Updated ${formatRelative(row.updated_at)}` : null}
+              action={<span className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-sans font-bold uppercase tracking-tight', toneClasses('attention').chip)}><AlertCircle className="h-3.5 w-3.5" />{attentionReason(row)}</span>}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState message="No filing blockers are visible right now." />
       ),
     },
     {
@@ -852,7 +934,7 @@ export default function FilingPipeline() {
                     : 'Recovered payouts will appear here as soon as financial confirmation lands.'}
                 </p>
                 <p className="mt-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/28">
-                  Scope: ready, filing, filed, payout, and recovered truth from the current account
+                  Scope: ready, submitting, filed, gated, payout, and recovered truth from the current account
                 </p>
               </div>
             </div>
@@ -877,6 +959,7 @@ export default function FilingPipeline() {
                   { label: 'Ready to file', value: formatMoney(readyTotal), detail: readyRows.length ? `${readyRows.length} case${readyRows.length === 1 ? '' : 's'} can move right now` : 'Nothing is filing-ready yet' },
                   { label: 'Being filed', value: formatMoney(totalAmount(beingFiledRows.map(disputeAmount))), detail: beingFiledRows.length ? `${beingFiledRows.length} case${beingFiledRows.length === 1 ? '' : 's'} in submission` : 'No filing handoffs running right now' },
                   { label: 'With Amazon', value: formatMoney(totalAmount([...filedRows.map(disputeAmount), ...approvedRows.map(ledgerApprovedAmount)])), detail: filedRows.length + approvedRows.length ? `${filedRows.length + approvedRows.length} case${filedRows.length + approvedRows.length === 1 ? '' : 's'} waiting on Amazon or payout` : 'No filed or approved cases yet' },
+                  { label: 'Needs attention', value: formatMoney(totalAmount(attentionRows.map(disputeAmount))), detail: attentionRows.length ? `${attentionRows.length} case${attentionRows.length === 1 ? '' : 's'} blocked or gated` : 'No blockers visible right now' },
                   { label: 'Recovered', value: formatMoney(recoveredTotal), detail: completedRows.length ? `${completedRows.length} payout-confirmed item${completedRows.length === 1 ? '' : 's'}` : 'No recovered payouts confirmed yet' },
                 ].map((card) => (
                   <div key={card.label} className="rounded-xl border border-white/8 bg-white/[0.02] p-3">
