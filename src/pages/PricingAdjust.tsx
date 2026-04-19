@@ -119,6 +119,8 @@ export default function PricingAdjust() {
   const [restoredSelectionKey, setRestoredSelectionKey] = useState<string | null>(null);
   const activeSlug = tenantSlug || tenant?.slug || localStorage.getItem('active_tenant_slug') || '';
   const isInAppOverlay = Boolean(tenantSlug);
+  const selfServeTiers = pricingTiers.filter((tier) => !tier.salesLed);
+  const enterpriseTier = pricingTiers.find((tier) => tier.salesLed);
 
   usePageMeta({
     title: 'Margin Pricing | Monthly Plans, No Commissions',
@@ -258,6 +260,137 @@ export default function PricingAdjust() {
     navigate(`/app/${activeSlug}`);
   };
 
+  const renderPricingTier = (tier: PricingTier, index: number) => {
+    const featured = Boolean(tier.featured);
+    const activeBillingView = selectedBillingView[tier.name] || 'monthly';
+    const baseCard =
+      'relative flex h-full flex-col rounded-2xl p-6 transition-all duration-300 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.45)]';
+    const cardClasses = featured
+      ? `${baseCard} bg-white/[0.045]`
+      : `${baseCard} bg-white/[0.025]`;
+
+    return (
+      <motion.div
+        key={tier.name}
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 + index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        className={cardClasses}
+      >
+        <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)] pointer-events-none" />
+
+        <div className="relative z-10 flex h-full flex-col">
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div>
+              <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Tier</div>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-white">{tier.name}</h2>
+            </div>
+            {featured ? (
+              <Badge variant="outline" className="border-0 bg-white/[0.06] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
+                Most Popular
+              </Badge>
+            ) : null}
+          </div>
+
+          <div className="mb-6 rounded-xl bg-black/20 p-1">
+            {tier.salesLed ? (
+              <div className="rounded-lg bg-white/[0.04] px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/58">
+                Sales-led
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-1">
+                {(['monthly', 'annual'] as BillingView[]).map((view) => {
+                  const isActive = activeBillingView === view;
+                  return (
+                    <button
+                      key={view}
+                      type="button"
+                      onClick={() => setSelectedBillingView((current) => ({ ...current, [tier.name]: view }))}
+                      className={`rounded-lg px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight transition-all ${
+                        isActive
+                          ? 'bg-white text-black'
+                          : 'bg-transparent text-white/35 hover:text-white/70'
+                      }`}
+                    >
+                      {view}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+              {tier.salesLed
+                ? 'Managed Recovery Coverage'
+                : activeBillingView === 'monthly'
+                  ? 'First Recovery Cycle'
+                  : 'Annual Recovery Coverage'}
+            </div>
+            <div className="mt-3 text-4xl font-light tracking-tight text-white">
+              {tier.salesLed
+                ? tier.monthlyPrice
+                : activeBillingView === 'monthly'
+                  ? tier.monthlyPrice
+                  : tier.annualPrice}
+            </div>
+            <div className="mt-2 text-[11px] text-white/45">
+              {tier.salesLed
+                ? 'Custom rollout, support, and operating terms'
+                : activeBillingView === 'monthly'
+                  ? 'Starts your first 30-day recovery cycle'
+                  : 'Locked-in monthly rate for uninterrupted annual monitoring'}
+            </div>
+            {tier.salesLed || activeBillingView === 'annual' ? (
+              <div className="mt-1 text-[11px] text-white/32">
+                {tier.salesLed
+                  ? 'Contact sales for SLA, workflow, and volume pricing'
+                  : `${tier.annualCheckout} · locks today\'s rate as coverage expands`}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mb-6 rounded-xl bg-white/[0.03] p-4">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Best For</div>
+            <div className="mt-3 text-sm font-medium text-white/80">{tier.bestFor}</div>
+          </div>
+
+          <div className="mb-8 flex-grow rounded-xl bg-white/[0.03] p-5">
+            <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Key Features</div>
+            <div className="mt-4 space-y-3">
+              {tier.features.map((feature) => (
+                <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-white/78">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-white/45" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-auto flex flex-col gap-4">
+            <Button
+              onClick={() => {
+                if (tier.salesLed || !tier.planKey) {
+                  openSalesPage();
+                  return;
+                }
+                startSubscribeIntent(tier.planKey, activeBillingView);
+              }}
+              disabled={processingSelectionKey !== null}
+              className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
+            >
+              {tier.planKey && processingSelectionKey === `${tier.planKey}:${activeBillingView}`
+                ? 'Preparing Checkout'
+                : tier.ctaLabel || `Start ${tier.name} Coverage`}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
   return (
     <PageLayout title="Pricing" noPadding hideNavbar hideSidebar hideLogo midnight>
       <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden font-sans">
@@ -301,11 +434,11 @@ export default function PricingAdjust() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="mb-12 flex flex-col items-center text-center"
           >
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
+            <div className="flex flex-col items-center gap-3">
               <Badge variant="outline" className="border-white/10 bg-white/[0.02] text-[10px] font-sans font-bold uppercase tracking-tight text-white/60">
                 Flat Subscription
               </Badge>
+              <h1 className="text-2xl font-sans font-light tracking-tight text-white">Pricing</h1>
             </div>
             <div className="mt-6 max-w-4xl space-y-4">
               <h2 className="text-4xl md:text-6xl font-light tracking-tight text-white/95 leading-tight">
@@ -317,140 +450,15 @@ export default function PricingAdjust() {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 items-stretch">
-            {pricingTiers.map((tier, index) => {
-              const featured = Boolean(tier.featured);
-              const activeBillingView = selectedBillingView[tier.name] || 'monthly';
-              const baseCard =
-                'relative flex h-full flex-col rounded-2xl p-6 transition-all duration-300 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.45)]';
-              const cardClasses = featured
-                ? `${baseCard} bg-white/[0.045]`
-                : `${baseCard} bg-white/[0.025]`;
-
-              return (
-                <motion.div
-                  key={tier.name}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                  className={cardClasses}
-                >
-                  <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_60%)] pointer-events-none" />
-
-                  <div className="relative z-10 flex h-full flex-col">
-                    <div className="mb-6 flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Tier</div>
-                        <h2 className="mt-3 text-3xl font-bold tracking-tight text-white">{tier.name}</h2>
-                      </div>
-                      {featured ? (
-                        <Badge variant="outline" className="border-0 bg-white/[0.06] text-[9px] font-sans font-bold uppercase tracking-tight text-white/70">
-                          Most Popular
-                        </Badge>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-6 rounded-xl bg-black/20 p-1">
-                      {tier.salesLed ? (
-                        <div className="rounded-lg bg-white/[0.04] px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight text-white/58">
-                          Sales-led
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-2 gap-1">
-                          {(['monthly', 'annual'] as BillingView[]).map((view) => {
-                            const isActive = activeBillingView === view;
-                            return (
-                              <button
-                                key={view}
-                                type="button"
-                                onClick={() => setSelectedBillingView((current) => ({ ...current, [tier.name]: view }))}
-                                className={`rounded-lg px-3 py-2 text-left text-[10px] font-sans font-bold uppercase tracking-tight transition-all ${
-                                  isActive
-                                    ? 'bg-white text-black'
-                                    : 'bg-transparent text-white/35 hover:text-white/70'
-                                }`}
-                              >
-                                {view}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="mb-6 rounded-xl bg-white/[0.03] p-5">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                        {tier.salesLed
-                          ? 'Managed Recovery Coverage'
-                          : activeBillingView === 'monthly'
-                            ? 'First Recovery Cycle'
-                            : 'Annual Recovery Coverage'}
-                      </div>
-                      <div className="mt-3 text-4xl font-light tracking-tight text-white">
-                        {tier.salesLed
-                          ? tier.monthlyPrice
-                          : activeBillingView === 'monthly'
-                            ? tier.monthlyPrice
-                            : tier.annualPrice}
-                      </div>
-                      <div className="mt-2 text-[11px] text-white/45">
-                        {tier.salesLed
-                          ? 'Custom rollout, support, and operating terms'
-                          : activeBillingView === 'monthly'
-                            ? 'Starts your first 30-day recovery cycle'
-                            : 'Locked-in monthly rate for uninterrupted annual monitoring'}
-                      </div>
-                      <div className="mt-1 text-[11px] text-white/32">
-                        {tier.salesLed
-                          ? 'Contact sales for SLA, workflow, and volume pricing'
-                          : activeBillingView === 'monthly'
-                            ? tier.name === 'Pro'
-                              ? '7 detectors today · expanded coverage by May 20 · Cancel anytime'
-                              : 'Then continues as ongoing recovery monitoring · Cancel anytime'
-                            : `${tier.annualCheckout} · locks today\'s rate as coverage expands`}
-                      </div>
-                    </div>
-
-                    <div className="mb-6 rounded-xl bg-white/[0.03] p-4">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Best For</div>
-                      <div className="mt-3 text-sm font-medium text-white/80">{tier.bestFor}</div>
-                    </div>
-
-                    <div className="mb-8 flex-grow rounded-xl bg-white/[0.03] p-5">
-                      <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">Key Features</div>
-                      <div className="mt-4 space-y-3">
-                        {tier.features.map((feature) => (
-                          <div key={feature} className="flex items-start gap-3 text-sm leading-6 text-white/78">
-                            <Check className="mt-1 h-4 w-4 shrink-0 text-white/45" />
-                            <span>{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="mt-auto flex flex-col gap-4">
-                      <Button
-                        onClick={() => {
-                          if (tier.salesLed || !tier.planKey) {
-                            openSalesPage();
-                            return;
-                          }
-                          startSubscribeIntent(tier.planKey, activeBillingView);
-                        }}
-                        disabled={processingSelectionKey !== null}
-                        className="h-12 rounded-xl border border-white/15 bg-transparent text-white hover:bg-white/[0.04] font-sans font-medium"
-                      >
-                        {tier.planKey && processingSelectionKey === `${tier.planKey}:${activeBillingView}`
-                          ? 'Preparing Checkout'
-                          : tier.ctaLabel || `Start ${tier.name} Coverage`}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
+            {selfServeTiers.map((tier, index) => renderPricingTier(tier, index))}
           </div>
+
+          {enterpriseTier ? (
+            <div className="mx-auto mt-6 max-w-3xl">
+              {renderPricingTier(enterpriseTier, selfServeTiers.length)}
+            </div>
+          ) : null}
         </div>
 
         {!isInAppOverlay ? (
