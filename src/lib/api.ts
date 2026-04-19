@@ -58,6 +58,44 @@ export interface ProductUpdateInput {
   notify_email?: boolean;
 }
 
+export type ManualBroadcastAudienceType = 'test_emails' | 'all_users' | 'active_users';
+
+export interface ManualUserBroadcastInput {
+  subject: string;
+  heading: string;
+  summary?: string | null;
+  body: string;
+  highlights?: string[];
+  cta_label?: string | null;
+  cta_url?: string | null;
+  audience_type: ManualBroadcastAudienceType;
+  audience_payload?: {
+    emails?: string[];
+  };
+}
+
+export interface ManualUserBroadcastRecord extends ManualUserBroadcastInput {
+  id: string;
+  status: 'draft' | 'sending' | 'sent' | 'failed' | 'archived';
+  recipient_count?: number;
+  sent_count?: number;
+  failed_count?: number;
+  recipient_count_preview?: number;
+  last_error?: string | null;
+  sent_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  preview?: {
+    email_subject: string;
+    email_heading: string;
+    email_summary: string | null;
+    email_body: string;
+    email_highlights: string[];
+    action_label: string | null;
+    action_url: string | null;
+  };
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
 
@@ -594,6 +632,32 @@ export const api = {
     }),
   archiveProductUpdate: (id: string) =>
     requestJson<{ success: boolean; data: ProductUpdateRecord }>(`/api/product-updates/${encodeURIComponent(id)}/archive`, {
+      method: 'POST'
+    }),
+
+  // Manual admin user broadcasts
+  getManualUserBroadcasts: () =>
+    requestJson<{ success: boolean; data: ManualUserBroadcastRecord[] }>('/api/admin/user-broadcasts'),
+  createManualUserBroadcast: (body: ManualUserBroadcastInput) =>
+    requestJson<{ success: boolean; data: ManualUserBroadcastRecord }>('/api/admin/user-broadcasts', {
+      method: 'POST',
+      body: JSON.stringify(body)
+    }),
+  updateManualUserBroadcast: (id: string, body: ManualUserBroadcastInput) =>
+    requestJson<{ success: boolean; data: ManualUserBroadcastRecord }>(`/api/admin/user-broadcasts/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    }),
+  testSendManualUserBroadcast: (id: string, emails: string[]) =>
+    requestJson<{ success: boolean; data: { attempted: number; sent: number; failed: number; broadcast: ManualUserBroadcastRecord } }>(
+      `/api/admin/user-broadcasts/${encodeURIComponent(id)}/test-send`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ emails })
+      }
+    ),
+  sendManualUserBroadcast: (id: string) =>
+    requestJson<{ success: boolean; data: ManualUserBroadcastRecord }>(`/api/admin/user-broadcasts/${encodeURIComponent(id)}/send`, {
       method: 'POST'
     }),
 

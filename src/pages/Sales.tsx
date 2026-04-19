@@ -105,7 +105,7 @@ export default function Sales() {
                         className="space-y-8"
                     >
                         <div className="inline-flex items-center gap-4 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-                            <span className="text-[10px] font-bold text-sky-400 font-sans tracking-tight uppercase">Institutional Access</span>
+                            <span className="text-[10px] font-bold text-white font-sans tracking-tight uppercase">Institutional Access</span>
                             <div className="h-3 w-[1px] bg-white/10" />
                             <span className="text-[10px] font-bold text-white/40 font-sans tracking-tight uppercase">High Volume Gateway</span>
                         </div>
