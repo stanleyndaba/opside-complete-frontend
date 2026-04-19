@@ -56,6 +56,25 @@ function formatDate(value?: string | null): string {
   }).format(date);
 }
 
+function cleanServerMessage(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const message = value.trim();
+  if (!message) return null;
+  return message.replace(/^[A-Z0-9_]+:/, '').trim();
+}
+
+function apiFailureMessage(response: { error?: string; data?: unknown }, fallback: string): string {
+  const body = response.data && typeof response.data === 'object'
+    ? response.data as Record<string, unknown>
+    : null;
+
+  return (
+    cleanServerMessage(body?.message) ||
+    cleanServerMessage(response.error) ||
+    fallback
+  );
+}
+
 export default function Admin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [form, setForm] = useState(INITIAL_FORM);
@@ -146,13 +165,13 @@ export default function Admin() {
       if (update && update.status !== 'published') {
         const response = await api.updateProductUpdate(update.id, payload);
         if (!response.ok || !response.data?.success) {
-          throw new Error(response.error || 'Failed to update product update draft');
+          throw new Error(apiFailureMessage(response, 'Failed to update product update draft'));
         }
         update = response.data.data;
       } else {
         const response = await api.createProductUpdate(payload);
         if (!response.ok || !response.data?.success) {
-          throw new Error(response.error || 'Failed to create product update draft');
+          throw new Error(apiFailureMessage(response, 'Failed to create product update draft'));
         }
         update = response.data.data;
       }
@@ -160,7 +179,7 @@ export default function Admin() {
       if (mode === 'publish') {
         const publishResponse = await api.publishProductUpdate(update.id);
         if (!publishResponse.ok || !publishResponse.data?.success) {
-          throw new Error(publishResponse.error || 'Failed to publish product update');
+          throw new Error(apiFailureMessage(publishResponse, 'Failed to publish product update'));
         }
         update = publishResponse.data.data;
         setBroadcastJob(publishResponse.data.broadcast_job || null);
