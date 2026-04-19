@@ -24,7 +24,6 @@ type PricingTier = {
   annualCheckout: string;
   bestFor: string;
   features: string[];
-  coverageLine: string;
   ctaLabel?: string;
   salesLed?: boolean;
   featured?: boolean;
@@ -40,7 +39,7 @@ const pricingTiers: PricingTier[] = [
     monthlyPrice: '$49',
     annualPrice: '$39 / month',
     annualCheckout: '$468 billed yearly',
-    bestFor: 'New and smaller sellers who want ongoing monitoring with a lighter claim volume.',
+    bestFor: 'New sellers with lighter volume.',
     features: [
       'Continuous discrepancy monitoring',
       'Ongoing evidence collection from connected sources',
@@ -48,7 +47,6 @@ const pricingTiers: PricingTier[] = [
       '5 claims per month',
       'Recovery and payout tracking',
     ],
-    coverageLine: 'Ongoing coverage starts with your first 30-day recovery cycle, then continues monthly. Cancel anytime.',
   },
   {
     name: 'Pro',
@@ -56,7 +54,7 @@ const pricingTiers: PricingTier[] = [
     monthlyPrice: '$99',
     annualPrice: '$79 / month',
     annualCheckout: '$948 billed yearly',
-    bestFor: 'Serious sellers who want continuous recovery coverage, stronger automation, and ongoing evidence collection.',
+    bestFor: 'Growing sellers who want automation.',
     features: [
       'Continuous recovery coverage',
       '7 core recovery categories live today',
@@ -66,7 +64,6 @@ const pricingTiers: PricingTier[] = [
       'Real-time alerts for new filing opportunities',
       'Priority support',
     ],
-    coverageLine: 'Pro includes today\'s 7-detector coverage and scheduled expansion toward the 28-detector launch set by May 20, 2026. No price increase on your active plan.',
     featured: true,
   },
   {
@@ -75,7 +72,7 @@ const pricingTiers: PricingTier[] = [
     monthlyPrice: '$199',
     annualPrice: '$159 / month',
     annualCheckout: '$1,908 billed yearly',
-    bestFor: 'Larger operators who need uninterrupted monitoring, custom rules, multi-marketplace support, and high-priority operational coverage.',
+    bestFor: 'Larger sellers with custom workflows.',
     features: [
       'Everything in Pro',
       'Early access to expanded detector coverage',
@@ -85,14 +82,13 @@ const pricingTiers: PricingTier[] = [
       'API access',
       'High-priority operational coverage',
     ],
-    coverageLine: 'Ultra includes early access to expanded detector coverage, custom valuation rules, and sourcing-cost evidence collection. Active plans receive the May coverage expansion at no extra cost.',
   },
   {
     name: 'Enterprise',
     monthlyPrice: 'Custom',
     annualPrice: 'Custom',
     annualCheckout: 'Sales-led annual coverage',
-    bestFor: 'High-volume sellers, agencies, and multi-brand operators that need a managed recovery operating layer.',
+    bestFor: 'Teams that need managed recovery ops.',
     features: [
       'Everything in Ultra',
       'Dedicated recovery operations support',
@@ -101,20 +97,9 @@ const pricingTiers: PricingTier[] = [
       'Multi-marketplace and multi-workspace rollout support',
       'SLA planning, volume pricing, and implementation support',
     ],
-    coverageLine: 'Enterprise is for operators who want Margin configured around their recovery workflow, evidence sources, team structure, and filing controls.',
     ctaLabel: 'Contact Sales',
     salesLed: true,
   },
-];
-
-const coreCoverageCategories = [
-  'Lost inventory',
-  'Inbound shortages',
-  'Transfer losses',
-  'Damaged inventory',
-  'Refund without return',
-  'Reimbursement integrity',
-  'Fee anomalies',
 ];
 
 export default function PricingAdjust() {
@@ -332,53 +317,6 @@ export default function PricingAdjust() {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]"
-          >
-            <div className="grid gap-0 lg:grid-cols-[1.2fr_1fr]">
-              <div className="border-b border-white/10 p-5 md:p-6 lg:border-b-0 lg:border-r">
-                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
-                  Detection coverage roadmap
-                </div>
-                <h3 className="mt-3 text-xl font-medium tracking-tight text-white md:text-2xl">
-                  7 core recovery categories live today. Expanded coverage rolls out this month.
-                </h3>
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-white/42">
-                  Margin currently focuses on the high-value recovery categories that matter most first. Expanded detector coverage is scheduled to roll into active plans by May 20, 2026, so your monitoring improves as the product expands.
-                </p>
-              </div>
-              <div className="p-5 md:p-6">
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {[
-                    'Covers 7 core recovery categories today',
-                    'Expanded detection coverage rolling out shortly',
-                    'Continuous monitoring as new opportunities appear',
-                  ].map((item) => (
-                    <div key={item} className="rounded-xl border border-white/10 bg-black/20 p-4">
-                      <Check className="mb-3 h-4 w-4 text-white/45" />
-                      <p className="text-[12px] leading-5 text-white/68">{item}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="border-t border-white/10 px-5 py-4 md:px-6">
-              <div className="flex flex-wrap gap-2">
-                {coreCoverageCategories.map((category) => (
-                  <span
-                    key={category}
-                    className="rounded-full border border-white/10 bg-white/[0.025] px-3 py-1 text-[10px] font-medium tracking-tight text-white/48"
-                  >
-                    {category}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4 items-stretch">
             {pricingTiers.map((tier, index) => {
               const featured = Boolean(tier.featured);
@@ -507,12 +445,6 @@ export default function PricingAdjust() {
                           : tier.ctaLabel || `Start ${tier.name} Coverage`}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
-
-                      <p className="text-[11px] leading-5 text-white/38">
-                        {activeBillingView === 'annual' && !tier.salesLed && tier.name !== 'Starter'
-                          ? 'Annual plans lock in today\'s rate for 12 months. As Margin releases expanded detector coverage by May 20, 2026, active annual plans receive it at no extra cost.'
-                          : tier.coverageLine}
-                      </p>
                     </div>
                   </div>
                 </motion.div>
