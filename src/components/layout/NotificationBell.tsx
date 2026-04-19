@@ -101,6 +101,15 @@ const getNotificationPreview = (notification: any) => {
     };
   }
 
+  if (type === 'product_update') {
+    return {
+      eyebrow: 'Product update',
+      header: rawTitle || (payload.title ? `New in Margin: ${payload.title}` : 'New in Margin'),
+      message: rawMessage || payload.summary || 'A new Margin rollout is available.',
+      tone: 'neutral' as NotificationTone,
+    };
+  }
+
   if (
     type === 'sync_failed' ||
     messageBlob.includes('encountered an issue') ||
@@ -245,6 +254,7 @@ export function NotificationBell({
   );
 
   const getHrefForType = (type: string) => {
+    if (type.includes('product_update')) return tenantRoute(activeSlug, '/whats-new');
     if (type.includes('claim') || type.includes('refund') || type.includes('funds')) return tenantRoute(activeSlug, '/recoveries');
     if (type.includes('integration')) return tenantRoute(activeSlug, '/integrations-hub');
     if (type.includes('payment') || type.includes('billing')) return tenantRoute(activeSlug, '/billing');

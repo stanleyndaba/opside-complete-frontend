@@ -155,6 +155,15 @@ const DEFAULT_PREFERENCES: NotificationPreference[] = [
     supported: true
   },
   {
+    id: 'product_update',
+    title: 'Product Updates',
+    description: 'New product improvements and rollout notes published by Margin.',
+    category: 'Platform Updates',
+    email: true,
+    inApp: true,
+    supported: true
+  },
+  {
     id: 'learning_insight',
     title: 'Learning Insight',
     description: 'Model and pattern-learning improvements from Agent 11.',
@@ -169,7 +178,10 @@ const mergePreferencesWithDefaults = (
   saved: Record<string, { email?: boolean; inApp?: boolean }>
 ): NotificationPreference[] => {
   return DEFAULT_PREFERENCES.map((pref) => {
-    const persisted = saved[pref.id] || (pref.id === 'weekly-summary' ? saved['monthly-summary'] : undefined);
+    const persisted =
+      saved[pref.id] ||
+      (pref.id === 'weekly_summary' ? saved['weekly-summary'] || saved['monthly-summary'] : undefined) ||
+      (pref.id === 'product_update' ? saved['product-updates'] : undefined);
     if (!persisted) {
       return pref;
     }
@@ -184,7 +196,8 @@ const mergePreferencesWithDefaults = (
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   'Cases & Recoveries': 'Case filing, approvals, thread responses, and payout milestones.',
   'Evidence & Sync': 'Evidence readiness, sync progress, and detection movement.',
-  'Platform Learning': 'Digest and platform-learning updates from Margin.'
+  'Platform Learning': 'Digest and platform-learning updates from Margin.',
+  'Platform Updates': 'Product improvements and rollout announcements from Margin.'
 };
 
 // Format timestamp to relative time
@@ -446,7 +459,8 @@ export default function NotificationHub() {
   const categories = [
     'Cases & Recoveries',
     'Evidence & Sync',
-    'Platform Learning'
+    'Platform Learning',
+    'Platform Updates'
   ];
 
   const unreadCount = useMemo(() => notifications.filter((notification) => !notification.read).length, [notifications]);

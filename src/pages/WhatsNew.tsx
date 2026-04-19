@@ -1,47 +1,98 @@
-import React, { useState } from 'react';
-import { Calendar, ArrowRight, Activity, Terminal, Shield, Zap, Info, Clock, ExternalLink, Send } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowRight, Clock, ExternalLink, Send } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { api, type ProductUpdateRecord } from '@/lib/api';
+import { useTenant } from '@/contexts/TenantContext';
+import { normalizeTenantSlug, tenantRoute } from '@/lib/routes';
+import { useLocation, useParams } from 'react-router-dom';
 
-// Updates (reverse-chronological)
-const updates = [{
-  id: 1,
-  title: "Filter Your Reports to Find Insights Faster",
-  date: "September 4, 2025",
-  tag: "New Feature",
-  description: "We heard from many of you that you wanted an easier way to analyze quarterly performance, so we've added a powerful new Date Range Picker to the Reports page.",
-  highlights: ["Filter reports by custom date ranges", "Compare performance across different time periods", "Export filtered data for deeper analysis"],
-  cta: { text: "View Recoveries", href: "/recoveries" },
-  updateId: "REF_004"
-}, {
-  id: 2,
-  title: "Faster Recovery Detection System",
-  date: "August 28, 2025",
-  tag: "Improvement",
-  description: "Our AI-powered recovery detection system is now 3x faster at identifying potential claims, getting your money back sooner.",
-  highlights: ["50% reduction in detection time", "More accurate claim categorization", "Improved false positive filtering"],
-  cta: { text: "View Recoveries", href: "/recoveries" },
-  updateId: "REF_003"
-}, {
-  id: 4,
-  title: "Enhanced Evidence Locker with Document Preview",
-  date: "August 15, 2025",
-  tag: "New Feature",
-  description: "You can now preview documents directly in the Evidence Locker without downloading them, making case review faster and more efficient.",
-  highlights: ["In-browser PDF preview", "Image thumbnail gallery", "Quick document search and filtering"],
-  cta: { text: "Open Evidence Locker", href: "/evidence-locker" },
-  updateId: "REF_001"
-}];
+function formatUpdateDate(value?: string | null): string {
+  if (!value) return 'Recently';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Recently';
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(date);
+}
+
+function formatMonthGroup(value?: string | null): string {
+  if (!value) return 'Latest';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Latest';
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
+}
+
+function resolveCtaHref(href: string | null | undefined, tenantSlug: string | null): string | null {
+  const normalized = String(href || '').trim();
+  if (!normalized) return null;
+  if (/^https?:\/\//i.test(normalized) || normalized.startsWith('mailto:')) {
+    return normalized;
+  }
+  return tenantRoute(tenantSlug, normalized);
+}
 
 export default function WhatsNew() {
-  // Group by month
-  const groups = updates.reduce<Record<string, typeof updates>>((acc, u) => {
-    const month = new Date(u.date + ' UTC').toLocaleString('en-US', { month: 'long', year: 'numeric' });
-    acc[month] = acc[month] || [];
-    acc[month].push(u);
-    return acc;
-  }, {});
+  const [updates, setUpdates] = useState<ProductUpdateRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { tenant } = useTenant();
+  const { tenantSlug } = useParams<{ tenantSlug?: string }>();
+  const location = useLocation();
+  const routeSlugMatch = location.pathname.match(/^\/app\/([^/]+)/);
+  const activeSlug =
+    normalizeTenantSlug(tenant?.slug) ||
+    normalizeTenantSlug(tenantSlug) ||
+    normalizeTenantSlug(routeSlugMatch?.[1]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadUpdates = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await api.getProductUpdates(activeSlug || undefined);
+        if (!mounted) return;
+
+        if (!response.ok || !response.data?.success) {
+          throw new Error(response.error || 'Unable to load product updates');
+        }
+
+        setUpdates(response.data.data || []);
+      } catch (err: any) {
+        if (!mounted) return;
+        setError(err?.message || 'Unable to load product updates');
+        setUpdates([]);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadUpdates();
+
+    return () => {
+      mounted = false;
+    };
+  }, [activeSlug]);
+
+  const groups = useMemo(() => {
+    return updates.reduce<Record<string, ProductUpdateRecord[]>>((acc, update) => {
+      const month = formatMonthGroup(update.published_at || update.created_at);
+      acc[month] = acc[month] || [];
+      acc[month].push(update);
+      return acc;
+    }, {});
+  }, [updates]);
+
   const orderedMonths = Object.keys(groups);
 
   return (
@@ -74,7 +125,30 @@ export default function WhatsNew() {
             {/* The vertical connector line */}
             <div className="absolute left-[11px] top-4 bottom-4 w-px bg-gradient-to-b from-white/20 via-white/5 to-transparent hidden md:block" />
 
-            {orderedMonths.map((month, monthIdx) => (
+            {loading && (
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 text-sm font-sans font-bold tracking-tight text-white/50">
+                Loading published product updates...
+              </div>
+            )}
+
+            {!loading && error && (
+              <div className="rounded-2xl border border-red-400/20 bg-red-500/[0.06] p-8 text-sm font-sans font-bold tracking-tight text-red-100/80">
+                {error}
+              </div>
+            )}
+
+            {!loading && !error && orderedMonths.length === 0 && (
+              <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8">
+                <div className="text-[10px] font-sans font-bold uppercase tracking-tight text-white/35">
+                  No published updates yet
+                </div>
+                <p className="mt-3 max-w-xl text-sm font-sans font-bold leading-6 tracking-tight text-gray-400">
+                  Product rollouts will appear here after they are published as real Margin update records.
+                </p>
+              </div>
+            )}
+
+            {!loading && !error && orderedMonths.map((month) => (
               <section key={month} className="mb-16">
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -86,9 +160,12 @@ export default function WhatsNew() {
                 </motion.div>
 
                 <div className="space-y-12">
-                  {groups[month].map((update, idx) => (
+                  {groups[month].map((update, idx) => {
+                    const ctaHref = resolveCtaHref(update.cta_href, activeSlug);
+                    return (
                     <motion.div
                       key={update.id}
+                      id={update.slug}
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
@@ -103,13 +180,15 @@ export default function WhatsNew() {
                         {/* Status Line */}
                         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                           <div className="flex items-center gap-4">
-                            <span className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight rounded">
-                              {update.tag}
-                            </span>
+                            {update.tag && (
+                              <span className="px-2 py-0.5 bg-white/10 border border-white/15 text-[9px] font-sans font-bold text-white/70 uppercase tracking-tight rounded">
+                                {update.tag}
+                              </span>
+                            )}
                           </div>
                           <div className="flex items-center gap-2 text-[10px] font-sans font-bold text-gray-500 tracking-tight">
                             <Clock className="h-3 w-3" />
-                            {update.date}
+                            {formatUpdateDate(update.published_at || update.created_at)}
                           </div>
                         </div>
 
@@ -119,21 +198,40 @@ export default function WhatsNew() {
                             {update.title}
                           </h3>
                           <p className="text-gray-400 text-sm leading-relaxed mb-6 font-sans font-bold tracking-tight">
-                            {update.description}
+                            {update.summary}
                           </p>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                            {update.highlights.map((item, index) => (
-                              <div key={index} className="flex items-start gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl group/item hover:bg-white/[0.04] transition-colors">
-                                <div className="mt-1 h-1.5 w-1.5 rounded-full bg-white/30 group-hover/item:bg-white/60 transition-colors" />
-                                <span className="text-xs text-gray-400 leading-snug">{item}</span>
-                              </div>
-                            ))}
-                          </div>
+                          {update.highlights.length > 0 && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                              {update.highlights.map((item, index) => (
+                                <div key={index} className="flex items-start gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl group/item hover:bg-white/[0.04] transition-colors">
+                                  <div className="mt-1 h-1.5 w-1.5 rounded-full bg-white/30 group-hover/item:bg-white/60 transition-colors" />
+                                  <span className="text-xs text-gray-400 leading-snug">{item}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {update.body && (
+                            <p className="mb-8 max-w-2xl text-xs leading-6 text-gray-500 font-sans font-bold tracking-tight">
+                              {update.body}
+                            </p>
+                          )}
+
+                          {update.cta_text && ctaHref && (
+                            <a
+                              href={ctaHref}
+                              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-all duration-300 hover:border-white/20 hover:bg-white hover:text-black"
+                            >
+                              {update.cta_text}
+                              {/^https?:\/\//i.test(ctaHref) ? <ExternalLink className="h-3 w-3" /> : <ArrowRight className="h-3 w-3" />}
+                            </a>
+                          )}
                         </div>
                       </div>
                     </motion.div>
-                  ))}
+                  );
+                  })}
                 </div>
               </section>
             ))}

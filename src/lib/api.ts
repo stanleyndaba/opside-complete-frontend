@@ -25,6 +25,26 @@ export interface AutoFileGateStatus {
   checkedAt: string;
 }
 
+export interface ProductUpdateRecord {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  body?: string | null;
+  tag?: string | null;
+  highlights: string[];
+  cta_text?: string | null;
+  cta_href?: string | null;
+  status: 'published';
+  audience_scope?: string;
+  notify_in_app?: boolean;
+  notify_email?: boolean;
+  published_at?: string | null;
+  broadcasted_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
 import { getFrontendAuthContext } from './authSession';
 import { attemptSilentSessionRefresh, dispatchSessionRecovery } from './sessionRecovery';
 
@@ -539,6 +559,12 @@ export const api = {
       created_at: string;
     }>;
   }>(`/api/support/requests?limit=${limit}`),
+
+  // Product updates / Latest Changes
+  getProductUpdates: (tenantSlug?: string) => {
+    const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
+    return requestJson<{ success: boolean; data: ProductUpdateRecord[] }>(`/api/product-updates${query}`);
+  },
 
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
