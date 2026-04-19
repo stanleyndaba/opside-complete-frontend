@@ -158,7 +158,7 @@ const DEFAULT_PREFERENCES: NotificationPreference[] = [
     id: 'product_update',
     title: 'Product Updates',
     description: 'New product improvements and rollout notes published by Margin.',
-    category: 'Platform Updates',
+    category: 'Margin Updates',
     email: true,
     inApp: true,
     supported: true
@@ -196,8 +196,8 @@ const mergePreferencesWithDefaults = (
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   'Cases & Recoveries': 'Case filing, approvals, thread responses, and payout milestones.',
   'Evidence & Sync': 'Evidence readiness, sync progress, and detection movement.',
-  'Platform Learning': 'Digest and platform-learning updates from Margin.',
-  'Platform Updates': 'Product improvements and rollout announcements from Margin.'
+  'Margin Updates': 'Product improvements and rollout announcements from Margin.',
+  'Platform Learning': 'Digest and platform-learning updates from Margin.'
 };
 
 // Format timestamp to relative time
@@ -459,8 +459,8 @@ export default function NotificationHub() {
   const categories = [
     'Cases & Recoveries',
     'Evidence & Sync',
-    'Platform Learning',
-    'Platform Updates'
+    'Margin Updates',
+    'Platform Learning'
   ];
 
   const unreadCount = useMemo(() => notifications.filter((notification) => !notification.read).length, [notifications]);
