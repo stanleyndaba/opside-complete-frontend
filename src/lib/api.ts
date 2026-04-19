@@ -35,7 +35,7 @@ export interface ProductUpdateRecord {
   highlights: string[];
   cta_text?: string | null;
   cta_href?: string | null;
-  status: 'published';
+  status: 'draft' | 'published' | 'archived';
   audience_scope?: string;
   notify_in_app?: boolean;
   notify_email?: boolean;
@@ -43,6 +43,19 @@ export interface ProductUpdateRecord {
   broadcasted_at?: string | null;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface ProductUpdateInput {
+  slug?: string;
+  title: string;
+  summary: string;
+  body?: string | null;
+  tag?: string | null;
+  highlights?: string[];
+  cta_text?: string | null;
+  cta_href?: string | null;
+  notify_in_app?: boolean;
+  notify_email?: boolean;
 }
 
 import { getFrontendAuthContext } from './authSession';
@@ -565,6 +578,24 @@ export const api = {
     const query = tenantSlug ? `?tenantSlug=${encodeURIComponent(tenantSlug)}` : '';
     return requestJson<{ success: boolean; data: ProductUpdateRecord[] }>(`/api/product-updates${query}`);
   },
+  createProductUpdate: (body: ProductUpdateInput) =>
+    requestJson<{ success: boolean; data: ProductUpdateRecord }>('/api/product-updates', {
+      method: 'POST',
+      body: JSON.stringify(body)
+    }),
+  updateProductUpdate: (id: string, body: ProductUpdateInput) =>
+    requestJson<{ success: boolean; data: ProductUpdateRecord }>(`/api/product-updates/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    }),
+  publishProductUpdate: (id: string) =>
+    requestJson<{ success: boolean; data: ProductUpdateRecord; broadcast_job?: any }>(`/api/product-updates/${encodeURIComponent(id)}/publish`, {
+      method: 'POST'
+    }),
+  archiveProductUpdate: (id: string) =>
+    requestJson<{ success: boolean; data: ProductUpdateRecord }>(`/api/product-updates/${encodeURIComponent(id)}/archive`, {
+      method: 'POST'
+    }),
 
   // Generic helpers
   get: <T = any>(path: string) => requestJson<T>(path, { method: 'GET' }),
