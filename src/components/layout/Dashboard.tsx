@@ -3846,19 +3846,19 @@ export function Dashboard() {
 
       {/* Finding detail modal */}
       <Dialog open={showDiscrepancyModal} onOpenChange={setShowDiscrepancyModal}>
-        <DialogContent className="w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
+        <DialogContent className="max-h-[72vh] w-[min(96vw,1120px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="border-b border-white/10 px-5 pb-3 pt-4">
+              <DialogHeader className="border-b border-white/10 px-4 pb-2.5 pt-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                       Finding detail
                     </div>
-                    <DialogTitle className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
+                    <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
                       {activeDiscrepancyCopy?.title || formatIssueTypeLabel(activeDiscrepancy.reason || activeDiscrepancy.anomaly_type || activeDiscrepancy.title || 'Finding details')}
                     </DialogTitle>
-                    <DialogDescription className="mt-1.5 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
                       {activeDiscrepancyCopy?.summary || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy and is still checking whether it should move into a recovery case.'}
                     </DialogDescription>
                   </div>
@@ -3871,10 +3871,10 @@ export function Dashboard() {
                 </div>
               </DialogHeader>
 
-              <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
-                <div className="border-b border-white/10 px-5 py-4 lg:border-b-0 lg:border-r">
+              <div className="grid max-h-[52vh] gap-0 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.58fr)]">
+                <div className="border-b border-white/10 px-4 py-3 lg:border-b-0 lg:border-r">
                   <div className="grid border-y border-white/10 md:grid-cols-3 md:divide-x md:divide-white/[0.08]">
-                    <div className="py-3 md:pr-5">
+                    <div className="py-2 md:pr-4">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">
                         {activeDiscrepancy.valueLabel === 'potential_exposure'
                           ? 'Potential exposure'
@@ -3882,7 +3882,7 @@ export function Dashboard() {
                             ? 'Recovery value'
                             : 'Estimated value'}
                       </div>
-                      <div className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
+                      <div className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
                         {activeDiscrepancy.valueLabel === 'no_recovery_value'
                           ? 'Not claim-ready'
                           : typeof activeDiscrepancy.estimatedRecovery === 'number'
@@ -3892,7 +3892,7 @@ export function Dashboard() {
                     </div>
                     <div className="border-t border-white/10 py-3 md:border-t-0 md:px-5">
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Found on</div>
-                      <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.8]">
+                      <div className="mt-1 text-[12px] font-sans font-medium tracking-tight text-white/[0.8]">
                         {formatFindingDateTimeLabel(activeDiscrepancy.occurrenceDate)}
                       </div>
                     </div>
@@ -3900,7 +3900,7 @@ export function Dashboard() {
                       <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.32]">Filing movement</div>
                       <span
                         className={cn(
-                          "mt-1.5 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
+                          "mt-1 inline-flex items-center gap-2 border px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight",
                           activeDiscrepancy.stateTone || getFindingStateMeta(activeDiscrepancy.status).tone
                         )}
                       >
@@ -3910,29 +3910,29 @@ export function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
+                  <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(260px,0.62fr)]">
                     <div>
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">What Margin found</div>
-                      <p className="mt-2 text-[13px] font-sans leading-5 tracking-tight text-white/[0.76]">
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.76]">
                         {activeDiscrepancyCopy?.summary || 'Amazon records do not reconcile with the expected seller outcome for this finding.'}
                       </p>
-                      <div className="mt-3 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
+                      <div className="mt-2 inline-flex items-center border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.7]">
                         {activeDiscrepancyCopy?.eventLabel || 'Detected discrepancy'}
                       </div>
-                      <div className="mt-4 border-t border-white/10 pt-3">
+                      <div className="mt-3 border-t border-white/10 pt-2.5">
                         <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence used</div>
-                        <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.62]">
+                        <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.62]">
                           {activeDiscrepancyCopy?.evidenceSummary || 'Structured evidence is available on the backend detection record.'}
                         </p>
                       </div>
                     </div>
 
-                    <div className="border-t border-white/10 pt-3 xl:border-l xl:border-t-0 xl:pl-4 xl:pt-0">
+                    <div className="border-t border-white/10 pt-2.5 xl:border-l xl:border-t-0 xl:pl-3 xl:pt-0">
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Current filing movement</div>
-                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.68]">
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.68]">
                         {activeDiscrepancy.movementDetail || activeDiscrepancy.stateDetail || activeDiscrepancy.message || 'Margin found this discrepancy, but it will only move forward if the identifiers, evidence, and policy checks line up.'}
                       </p>
-                      <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                      <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
                         {activeDiscrepancy.isProcessed
                           ? 'This finding has already moved into a recovery case. Open cases to review what Amazon is doing next.'
                           : activeDiscrepancy.whyNotClaimReady
@@ -3953,30 +3953,30 @@ export function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-4 border-y border-white/10 py-3">
+                  <div className="mt-3 border-y border-white/10 py-2.5">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Why this may be recoverable</div>
-                    <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.64]">
+                    <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.64]">
                       {activeDiscrepancyCopy?.recoverabilityReason || 'Margin is holding this finding in review until identifiers, evidence, and policy support line up.'}
                     </p>
                   </div>
                 </div>
 
-                <div className="px-5 py-4">
+                <div className="px-4 py-3">
                   <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Backend detection record</div>
                   <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                     {activeDiscrepancyMetaRows.map((item) => (
-                      <div key={item.label} className="border-b border-white/[0.08] py-2.5 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                      <div key={item.label} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
                         <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
                         <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Policy basis</div>
                     <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                       {activeDiscrepancyPolicyRows.map((item) => (
-                        <div key={item.label} className="border-b border-white/[0.08] py-2.5 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                        <div key={item.label} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
                           <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
                           <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
                         </div>
@@ -3999,12 +3999,12 @@ export function Dashboard() {
                     ) : null}
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">Evidence fields</div>
                     {activeDiscrepancyEvidenceItems.length > 0 ? (
                       <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                         {activeDiscrepancyEvidenceItems.map((item) => (
-                          <div key={`${item.label}-${item.value}`} className="border-b border-white/[0.08] py-2.5 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
+                          <div key={`${item.label}-${item.value}`} className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0">
                             <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">{item.label}</div>
                             <div className="mt-1 break-words text-[11px] font-sans font-medium tracking-tight text-white/[0.68]">{item.value}</div>
                           </div>
@@ -4019,7 +4019,7 @@ export function Dashboard() {
                 </div>
               </div>
 
-              <DialogFooter className="flex flex-col gap-3 border-t border-white/10 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <DialogFooter className="flex flex-col gap-2 border-t border-white/10 px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
                   Populated from the persisted backend detection result. Margin files only what can be supported by evidence and policy.
                 </div>
@@ -4030,7 +4030,7 @@ export function Dashboard() {
                         setShowDiscrepancyModal(false);
                         navigate(tenantRoute(activeSlug, '/recoveries'));
                       }}
-                      className="h-9 rounded-none border border-white/10 bg-white px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
+                      className="h-8 rounded-none border border-white/10 bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
                     >
                       Open cases
                     </Button>
@@ -4038,7 +4038,7 @@ export function Dashboard() {
                   <Button
                     variant="outline"
                     onClick={() => setShowDiscrepancyModal(false)}
-                    className="h-9 rounded-none border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
+                    className="h-8 rounded-none border-white/10 bg-transparent px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
                   >
                     Close
                   </Button>
@@ -4055,19 +4055,19 @@ export function Dashboard() {
 
       {/* Proof needed modal */}
       <Dialog open={showProofNeededModal} onOpenChange={setShowProofNeededModal}>
-        <DialogContent className="w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
+        <DialogContent className="max-h-[70vh] w-[min(96vw,1080px)] max-w-none overflow-hidden rounded-none border border-white/10 bg-[#070707] p-0 text-white shadow-2xl backdrop-blur-3xl">
           {activeDiscrepancy ? (
             <>
-              <DialogHeader className="border-b border-white/10 px-5 pb-3 pt-4">
+              <DialogHeader className="border-b border-white/10 px-4 pb-2.5 pt-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="max-w-4xl">
                     <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                       Proof needed
                     </div>
-                    <DialogTitle className="mt-1.5 text-[19px] font-sans font-medium tracking-tight text-white">
+                    <DialogTitle className="mt-1 text-[17px] font-sans font-medium tracking-tight text-white">
                       Evidence required for this finding
                     </DialogTitle>
-                    <DialogDescription className="mt-1.5 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
+                    <DialogDescription className="mt-1 max-w-3xl text-[11px] font-sans leading-4 tracking-tight text-white/[0.56]">
                       Margin checks connected sources first. If the proof cannot be found automatically, upload it in Evidence Locker so the case can keep moving.
                     </DialogDescription>
                   </div>
@@ -4080,8 +4080,8 @@ export function Dashboard() {
                 </div>
               </DialogHeader>
 
-              <div className="grid gap-0 lg:grid-cols-[minmax(0,0.86fr)_minmax(360px,0.62fr)]">
-                <div className="border-b border-white/10 px-5 py-4 lg:border-b-0 lg:border-r lg:border-white/10">
+              <div className="grid max-h-[50vh] gap-0 overflow-y-auto lg:grid-cols-[minmax(0,0.86fr)_minmax(360px,0.62fr)]">
+                <div className="border-b border-white/10 px-4 py-3 lg:border-b-0 lg:border-r lg:border-white/10">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="border border-white/10 bg-white/[0.025] px-2.5 py-0.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.72]">
                       {activeDiscrepancyCopy?.title || 'Detected finding'}
@@ -4100,16 +4100,16 @@ export function Dashboard() {
                     </span>
                   </div>
 
-                  <div className="mt-4 border-y border-white/10 py-3">
+                  <div className="mt-3 border-y border-white/10 py-2.5">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                       Required proof
                     </div>
                     {activeDiscrepancyRequiredEvidenceItems.length > 0 ? (
-                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
                         {activeDiscrepancyRequiredEvidenceItems.map((item) => (
                           <div
                             key={item}
-                            className="border border-white/[0.08] bg-white/[0.018] px-3 py-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.72]"
+                            className="border border-white/[0.08] bg-white/[0.018] px-2.5 py-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.72]"
                           >
                             {item}
                           </div>
@@ -4122,20 +4122,20 @@ export function Dashboard() {
                     )}
                   </div>
 
-                  <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div>
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                         What Margin already found
                       </div>
-                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.66]">
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
                         {activeDiscrepancyCopy?.evidenceSummary || 'Structured detection fields are available, but Margin is still checking whether they are enough to support filing.'}
                       </p>
                       {activeDiscrepancyEvidenceItems.length > 0 ? (
-                        <div className="mt-3 grid grid-cols-2 border-y border-white/10">
+                        <div className="mt-2 grid grid-cols-2 border-y border-white/10">
                           {activeDiscrepancyEvidenceItems.slice(0, 4).map((item) => (
                             <div
                               key={`${item.label}-${item.value}`}
-                              className="border-b border-white/[0.08] py-2 pr-3 odd:border-r odd:border-white/[0.08] even:pl-3 last:border-b-0 [&:nth-last-child(2)]:border-b-0"
+                              className="border-b border-white/[0.08] py-1.5 pr-2.5 odd:border-r odd:border-white/[0.08] even:pl-2.5 last:border-b-0 [&:nth-last-child(2)]:border-b-0"
                             >
                               <div className="text-[9px] font-sans font-medium uppercase tracking-tight text-white/[0.28]">
                                 {item.label}
@@ -4149,11 +4149,11 @@ export function Dashboard() {
                       ) : null}
                     </div>
 
-                    <div className="border-t border-white/10 pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
+                    <div className="border-t border-white/10 pt-3 md:border-l md:border-t-0 md:pl-3 md:pt-0">
                       <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                         If proof is missing
                       </div>
-                      <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.66]">
+                      <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
                         Margin keeps looking across connected repositories before asking the seller. If one required document is not found, upload it in Evidence Locker and Margin can attach it to the filing workflow.
                       </p>
                       {activeDiscrepancy.whyNotClaimReady ? (
@@ -4165,25 +4165,25 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                <div className="px-5 py-4">
+                <div className="px-4 py-3">
                   <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                     Why this proof matters
                   </div>
-                  <p className="mt-2 text-[12px] font-sans leading-5 tracking-tight text-white/[0.66]">
+                  <p className="mt-1.5 text-[12px] font-sans leading-4 tracking-tight text-white/[0.66]">
                     {activeDiscrepancyCopy?.recoverabilityReason || 'Margin only advances a finding when the identifiers, evidence, and policy basis line up clearly enough to support seller review or filing.'}
                   </p>
 
-                  <div className="mt-4 border-y border-white/10 py-3">
+                  <div className="mt-3 border-y border-white/10 py-2.5">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                       Policy basis
                     </div>
-                    <div className="mt-2 text-[13px] font-sans font-medium tracking-tight text-white/[0.86]">
+                    <div className="mt-1.5 text-[12px] font-sans font-medium tracking-tight text-white/[0.86]">
                       {activeDiscrepancy.policyBasis?.title || 'Policy basis pending verification'}
                     </div>
-                    <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.5]">
+                    <p className="mt-1.5 text-[11px] font-sans leading-4 tracking-tight text-white/[0.5]">
                       {activeDiscrepancy.policyBasis?.summary || 'Margin will keep this proof requirement conservative until an official policy reference is available for this detector family.'}
                     </p>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
+                    <div className="mt-2 flex flex-wrap gap-1.5">
                       <span className="border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[9px] font-sans font-medium tracking-tight text-white/[0.54]">
                         {activeDiscrepancy.policyBasis?.source_name || 'Amazon Seller Central Help'}
                       </span>
@@ -4195,28 +4195,28 @@ export function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <div className="text-[10px] font-sans font-medium uppercase tracking-tight text-zinc-500">
                       Where Margin checks first
                     </div>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
+                    <div className="mt-2 grid grid-cols-2 gap-1.5">
                       {['Connected email', 'Cloud storage', 'Team repositories', 'Uploaded documents'].map((source) => (
                         <div
                           key={source}
-                          className="border border-white/[0.08] bg-white/[0.018] px-3 py-2 text-[10px] font-sans font-medium tracking-tight text-white/[0.62]"
+                          className="border border-white/[0.08] bg-white/[0.018] px-2.5 py-1.5 text-[10px] font-sans font-medium tracking-tight text-white/[0.62]"
                         >
                           {source}
                         </div>
                       ))}
                     </div>
-                    <p className="mt-3 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
+                    <p className="mt-2 text-[11px] font-sans leading-4 tracking-tight text-white/[0.44]">
                       This does not mean every connected source already contains the proof. It means Margin checks the repositories first and only asks for upload when the required document is still missing.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <DialogFooter className="flex flex-col gap-3 border-t border-white/10 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <DialogFooter className="flex flex-col gap-2 border-t border-white/10 px-4 py-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-[10px] font-sans leading-4 tracking-tight text-white/[0.44]">
                   Proof guidance is derived from backend finding truth and policy basis. It is not a filing guarantee.
                 </div>
@@ -4226,14 +4226,14 @@ export function Dashboard() {
                       setShowProofNeededModal(false);
                       navigate(tenantRoute(activeSlug, '/evidence-locker'));
                     }}
-                    className="h-9 rounded-none border border-white/10 bg-white px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
+                    className="h-8 rounded-none border border-white/10 bg-white px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-black hover:bg-white/90"
                   >
                     Open Evidence Locker
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setShowProofNeededModal(false)}
-                    className="h-9 rounded-none border-white/10 bg-transparent px-4 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
+                    className="h-8 rounded-none border-white/10 bg-transparent px-3.5 text-[10px] font-sans font-medium uppercase tracking-tight text-white/72 hover:bg-white/[0.04] hover:text-white"
                   >
                     Close
                   </Button>
