@@ -13,7 +13,8 @@ import {
     ShieldAlert,
     FileText,
     BoxSelect,
-    ArrowLeft
+    ArrowLeft,
+    Menu
 } from 'lucide-react';
 import {
     Accordion,
@@ -55,16 +56,16 @@ export const PublicNavbar = () => {
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 border-transparent bg-transparent">
-            <div className="container mx-auto px-6 py-5">
-                <div className="flex items-center justify-between gap-6 px-6 py-4 border border-white/10 bg-[#050505]/40 supports-[backdrop-filter]:bg-[#050505]/40 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_25px_60px_rgba(0,0,0,0.4)] transition-colors relative group">
+            <div className="container mx-auto px-3 py-3 md:px-6 md:py-5">
+                <div className="relative flex items-center justify-between gap-3 rounded-[8px] border border-white/10 bg-[#050505]/62 px-3 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.28)] backdrop-blur-2xl backdrop-saturate-150 transition-colors md:gap-6 md:rounded-none md:bg-[#050505]/40 md:px-6 md:py-4 md:shadow-[0_25px_60px_rgba(0,0,0,0.4)]">
                     {/* Corner Accents */}
-                    <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/20" />
-                    <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/20" />
-                    <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-white/20" />
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/20" />
+                    <div className="absolute top-0 left-0 hidden w-2 h-2 border-l border-t border-white/20 md:block" />
+                    <div className="absolute top-0 right-0 hidden w-2 h-2 border-r border-t border-white/20 md:block" />
+                    <div className="absolute bottom-0 left-0 hidden w-2 h-2 border-l border-b border-white/20 md:block" />
+                    <div className="absolute bottom-0 right-0 hidden w-2 h-2 border-r border-b border-white/20 md:block" />
 
                     <div className="flex items-center gap-3">
-                        <Link to="/" className="inline-flex items-center gap-2.5 px-3 py-1.5 transition-colors hover:bg-white/5">
+                        <Link to="/" className="inline-flex items-center gap-2 px-1 py-1 transition-colors hover:bg-white/5 md:gap-2.5 md:px-3 md:py-1.5">
                             <img
                                 src="/logoimagetwo.png"
                                 alt="Margin"
@@ -72,9 +73,9 @@ export const PublicNavbar = () => {
                                 height="20"
                                 // @ts-ignore - fetchpriority is valid but react types might lag
                                 fetchPriority="high"
-                                className="h-5 w-auto object-contain invert brightness-0"
+                                className="h-4 w-auto object-contain invert brightness-0 md:h-5"
                             />
-                            <span className="brand-wordmark font-merriweather text-white text-lg tracking-tight">Margin</span>
+                            <span className="brand-wordmark font-merriweather text-base tracking-tight text-white md:text-lg">Margin</span>
                         </Link>
                         <span className="hidden md:inline text-gray-300">|</span>
 
@@ -120,13 +121,11 @@ export const PublicNavbar = () => {
 
                     <button
                         type="button"
-                        className="md:hidden flex flex-col items-end gap-1.5 px-3 py-2 transition-colors hover:bg-white/5 focus-visible:outline-none"
+                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 flex-col items-center justify-center gap-1.5 rounded-[6px] border border-white/10 bg-white/[0.025] px-2 transition-colors hover:bg-white/5 focus-visible:outline-none md:hidden"
                         aria-label="Toggle menu"
                         aria-expanded={mobileMenuOpen}
                         onClick={() => setMobileMenuOpen((prev) => !prev)}>
-                        <span className="block h-[1px] w-6 bg-white rounded-full" />
-                        <span className="block h-[1px] w-5 bg-white rounded-full" />
-                        <span className="block h-[1px] w-4 bg-white rounded-full" />
+                        <Menu className="h-4 w-4 text-white" />
                     </button>
                 </div>
 
@@ -136,19 +135,19 @@ export const PublicNavbar = () => {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="mt-4 md:hidden relative z-50">
-                            <div className="flex flex-col gap-1 rounded-[20px] border border-white/10 bg-[#0a0a0a]/95 [backdrop-filter:blur(32px)_saturate(180%)] p-4 shadow-2xl max-h-[calc(100vh-120px)] overflow-y-auto">
+                            className="relative z-50 mt-2 md:hidden">
+                            <div className="flex max-h-[calc(100vh-92px)] flex-col gap-1 overflow-y-auto rounded-[8px] border border-white/10 bg-[#080808]/96 p-3 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]">
                                 <Accordion type="single" collapsible className="w-full">
                                     <Link
                                         to="/pricing"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
+                                        className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
                                         Pricing
                                     </Link>
                                     <Link
                                         to="/about-margin"
                                         onClick={() => setMobileMenuOpen(false)}
-                                        className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
+                                        className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
                                         About
                                     </Link>
 
@@ -156,7 +155,7 @@ export const PublicNavbar = () => {
                                         Keeping them as links but merged into the same flow */}
 
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/60 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors hover:no-underline border-none outline-none">
+                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-[6px] border-none px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 outline-none transition-colors hover:bg-white/5 hover:text-white hover:no-underline">
                                             Products
                                         </AccordionTrigger>
                                         <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
@@ -200,19 +199,19 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/login"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
                                     Login
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg px-3 py-2.5 text-[10px] font-sans font-bold text-white/70 uppercase tracking-tight hover:bg-white/5 hover:text-white transition-colors flex items-center">
+                                    className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
                                     Enterprise
                                 </Link>
                                 <Link
                                     to="/waitlist"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="rounded-lg py-2.5 px-4 bg-white text-black text-[10px] font-sans font-bold text-center tracking-tight uppercase">
+                                    className="rounded-[6px] bg-white px-4 py-3 text-center text-[10px] font-sans font-bold uppercase tracking-tight text-black">
                                     Join Waitlist
                                 </Link>
                             </div>
