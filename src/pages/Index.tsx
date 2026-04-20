@@ -304,9 +304,9 @@ export default function Index() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="mx-auto max-w-[920px] md:text-center"
+              className="max-w-[860px]"
             >
-              <div className="mx-auto max-w-[860px]">
+              <div className="max-w-[780px]">
                 <div className={sectionLabelClass}>Amazon FBA Recovery Platform</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[78px]">
@@ -317,7 +317,7 @@ export default function Index() {
                   Margin audits the operational trail across inventory, shipments, refunds, fees, reimbursements, and payouts to identify missed reimbursement opportunities, prepare the support, and keep the recovery workflow visible.
                 </p>
 
-                <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center md:mx-auto">
+                <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
                   <Button
                     onClick={handlePrimaryCta}
                     className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
@@ -336,7 +336,7 @@ export default function Index() {
                 </div>
 
                 {isFull ? (
-                  <div className="mt-5 max-w-[360px] text-[13px] leading-6 text-white/56 md:mx-auto">
+                  <div className="mt-5 max-w-[360px] text-[13px] leading-6 text-white/56">
                     <div>We are onboarding a small batch of sellers right now.</div>
                     <div>Next batch opens in {capacity?.nextBatchHours ?? 24} hours.</div>
                   </div>

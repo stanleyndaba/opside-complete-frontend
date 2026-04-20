@@ -34,7 +34,7 @@ export function ProductsMegaMenu() {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent hover:bg-white/5 text-white/60 hover:text-white data-[state=open]:!bg-white/5 data-[state=open]:!text-white h-auto py-2 px-3 text-[10px] font-sans font-bold uppercase tracking-tight outline-none transition-all">
+                    <NavigationMenuTrigger className="h-9 rounded-[6px] border border-transparent bg-transparent px-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/76 outline-none transition-all hover:border-white/8 hover:bg-white/[0.04] hover:text-white data-[state=open]:!border-white/8 data-[state=open]:!bg-white/[0.04] data-[state=open]:!text-white">
                         Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>

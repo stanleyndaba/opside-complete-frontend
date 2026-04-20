@@ -12,12 +12,14 @@
   }
 
   .font-brand {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Merriweather', Georgia, serif !important;
+    font-weight: 700;
   }
 
   .font-logo {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-weight: 900;
+    font-family: 'Merriweather', Georgia, serif !important;
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
   .font-montserrat {
