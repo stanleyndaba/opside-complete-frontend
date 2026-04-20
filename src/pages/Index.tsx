@@ -567,7 +567,7 @@ export default function Index() {
 
             <motion.div
               {...revealProps}
-              className="relative mx-auto mt-12 hidden max-w-[1120px] overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] md:block"
+              className="relative mx-auto mt-12 hidden max-w-[1120px] overflow-hidden rounded-none border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,8,10,0.99)_100%)] md:block"
             >
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/30 to-transparent" />
               <div className="grid grid-cols-5 border-b border-white/8 px-8 py-4 text-[10px] uppercase tracking-[0.16em] text-white/38">

@@ -61,7 +61,7 @@ const outputNodes: SceneNode[] = [
   { id: 'evidence-ready', label: 'Evidence Ready', x: 0.94, y: 0.38, kind: 'output' },
   { id: 'filed', label: 'Filed', x: 0.94, y: 0.52, kind: 'output' },
   { id: 'approved', label: 'Approved', x: 0.94, y: 0.66, kind: 'output' },
-  { id: 'recovered', label: 'Recovered $', x: 0.94, y: 0.8, kind: 'output' }
+  { id: 'recovered', label: 'Recovered', x: 0.94, y: 0.8, kind: 'output' }
 ];
 
 const evidenceSourceNodes: SceneNode[] = [
@@ -246,34 +246,34 @@ const routes: SceneRoute[] = [
 
 const stageAccents = [
   {
-    line: [0.94, 0.42, 0.28] as const,
-    glow: [0.76, 0.22, 0.16] as const,
-    packet: [1, 0.76, 0.56] as const,
-    output: [0.98, 0.74, 0.48] as const
+    line: [0.8, 0.82, 0.86] as const,
+    glow: [0.56, 0.6, 0.66] as const,
+    packet: [0.95, 0.96, 0.98] as const,
+    output: [0.88, 0.89, 0.92] as const
   },
   {
-    line: [0.98, 0.48, 0.3] as const,
-    glow: [0.88, 0.26, 0.18] as const,
-    packet: [1, 0.84, 0.62] as const,
-    output: [0.98, 0.72, 0.44] as const
+    line: [0.82, 0.83, 0.86] as const,
+    glow: [0.58, 0.61, 0.67] as const,
+    packet: [0.96, 0.96, 0.98] as const,
+    output: [0.89, 0.9, 0.93] as const
   },
   {
-    line: [0.94, 0.36, 0.24] as const,
-    glow: [0.82, 0.2, 0.14] as const,
-    packet: [0.98, 0.72, 0.5] as const,
-    output: [0.96, 0.62, 0.36] as const
+    line: [0.78, 0.8, 0.84] as const,
+    glow: [0.54, 0.58, 0.64] as const,
+    packet: [0.93, 0.94, 0.97] as const,
+    output: [0.86, 0.88, 0.91] as const
   },
   {
-    line: [0.92, 0.42, 0.28] as const,
-    glow: [0.68, 0.24, 0.18] as const,
-    packet: [0.98, 0.82, 0.62] as const,
-    output: [0.98, 0.78, 0.48] as const
+    line: [0.84, 0.85, 0.88] as const,
+    glow: [0.62, 0.64, 0.7] as const,
+    packet: [0.97, 0.97, 0.99] as const,
+    output: [0.9, 0.91, 0.94] as const
   },
   {
-    line: [0.84, 0.36, 0.24] as const,
-    glow: [0.58, 0.22, 0.16] as const,
-    packet: [0.96, 0.74, 0.54] as const,
-    output: [0.98, 0.82, 0.52] as const
+    line: [0.76, 0.78, 0.82] as const,
+    glow: [0.52, 0.56, 0.62] as const,
+    packet: [0.92, 0.93, 0.96] as const,
+    output: [0.85, 0.87, 0.9] as const
   }
 ] as const;
 
@@ -436,7 +436,7 @@ export function RecoveryEngineVisualization() {
       for (let y = 0.08; y <= 0.92; y += 0.04) {
         const clip = toClipSpace(x, y);
         gridPoints.push(clip.x, clip.y);
-        gridColors.push(1, 1, 1, 0.035);
+        gridColors.push(0.76, 0.78, 0.82, 0.03);
       }
     }
 
@@ -620,7 +620,7 @@ export function RecoveryEngineVisualization() {
                 ? stageAccents[Math.min(stageIndex, 4)].output
                 : null;
         const color = node.kind === 'output'
-          ? [0.98, 0.83, 0.48, 0.9]
+          ? [0.9, 0.92, 0.96, 0.88]
           : node.kind === 'stage' && stageColor
             ? [stageColor[0], stageColor[1], stageColor[2], 0.92]
             : node.kind === 'source'
@@ -745,8 +745,8 @@ export function RecoveryEngineVisualization() {
   const outputOverlayNodes = useMemo(() => outputNodes, []);
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_52%_50%,rgba(255,122,72,0.08),transparent_24%),radial-gradient(circle_at_52%_50%,rgba(185,49,33,0.06),transparent_36%),linear-gradient(180deg,rgba(7,7,9,0.98)_0%,rgba(3,4,6,1)_100%)]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.018),transparent_60%)]" />
+    <div className="relative overflow-hidden rounded-none border border-white/10 bg-[radial-gradient(circle_at_52%_50%,rgba(214,219,228,0.055),transparent_24%),radial-gradient(circle_at_52%_50%,rgba(112,118,128,0.05),transparent_40%),linear-gradient(180deg,rgba(12,12,14,0.995)_0%,rgba(6,7,9,1)_100%)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.014),transparent_60%)]" />
       <div className="relative h-[520px] w-full md:h-[620px] xl:h-[660px]">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
