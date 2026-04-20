@@ -219,6 +219,8 @@ const containerClass = 'mx-auto w-full max-w-[1160px] px-4 sm:px-6 md:px-8';
 const mobileColumnClass = 'mx-auto max-w-[390px] md:mx-0 md:max-w-none';
 const mobileHeadingClass = 'max-w-[344px] text-pretty text-[25px] font-light leading-[1.05] tracking-tight text-white sm:max-w-[372px] sm:text-[27px]';
 const mobileBodyClass = 'max-w-[344px] text-pretty text-[14px] leading-[1.72] text-white/60 sm:max-w-[372px]';
+const mobileRadiantBlueTextClass = 'bg-gradient-to-r from-sky-200 via-sky-300 to-cyan-300 bg-clip-text text-transparent';
+const mobilePremiumGreyTextClass = 'bg-gradient-to-r from-[#d7dde7] via-[#bcc6d4] to-[#8e99aa] bg-clip-text text-transparent';
 const mobileRevealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -331,7 +333,7 @@ function MobileCaseFileRows() {
           key={item.step}
           className={`grid grid-cols-[34px_minmax(0,1fr)] gap-3 py-5 ${index > 0 ? 'border-t border-white/7' : ''}`}
         >
-          <div className="font-mono text-[12px] font-medium tracking-tight text-sky-100/46">{item.step}</div>
+          <div className={`font-mono text-[12px] font-medium tracking-tight ${mobileRadiantBlueTextClass}`}>{item.step}</div>
           <div className="min-w-0 pr-3">
             <h3 className="max-w-full text-pretty text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.title}</h3>
             <p className="mt-2 max-w-full text-pretty text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
@@ -355,7 +357,7 @@ function MobileProofLedger() {
           key={item.value}
           className={`px-3 py-4 ${index > 0 ? 'border-t border-white/7' : ''}`}
         >
-          <div className="font-mono text-[12px] font-medium tracking-tight text-sky-100/42">0{index + 1}</div>
+          <div className={`font-mono text-[12px] font-medium tracking-tight ${mobilePremiumGreyTextClass}`}>0{index + 1}</div>
           <h3 className="mt-2 max-w-full text-pretty text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.value}</h3>
           <p className="mt-2 max-w-full text-pretty text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -378,7 +380,7 @@ function MobileDecisionSplit() {
   return (
     <div className="mt-8 overflow-hidden border-y border-white/8">
       <motion.div {...mobileRevealProps} className="py-5 pr-3">
-        <div className="text-[10px] font-medium tracking-tight text-white/36">Case review</div>
+        <div className={`text-[10px] font-medium tracking-tight ${mobileRadiantBlueTextClass}`}>Case review</div>
         <p className="mt-2 max-w-[330px] text-[15px] leading-[1.68] text-white/68">
           Detection is the start. The case moves only if the trail still holds under review.
         </p>
@@ -391,7 +393,7 @@ function MobileDecisionSplit() {
             key={check.label}
             className={`py-5 ${index > 0 ? 'border-t border-white/7' : 'border-t border-white/8'}`}
           >
-            <div className="text-[10px] font-medium tracking-tight text-white/34">{check.label}</div>
+            <div className={`text-[10px] font-medium tracking-tight ${mobileRadiantBlueTextClass}`}>{check.label}</div>
             <h3 className="mt-2 max-w-[330px] text-[20px] font-medium leading-[1.12] tracking-tight text-white">
               {check.title}
             </h3>
@@ -407,7 +409,7 @@ function MobileDecisionSplit() {
             key={item.label}
             className={`py-5 ${index > 0 ? 'border-t border-white/7' : ''}`}
           >
-            <div className="text-[10px] font-medium tracking-tight text-white/34">{item.label}</div>
+            <div className={`text-[10px] font-medium tracking-tight ${mobileRadiantBlueTextClass}`}>{item.label}</div>
             <h3 className="mt-2 max-w-[330px] text-[19px] font-medium leading-[1.12] tracking-tight text-white">
               {item.title}
             </h3>
@@ -850,7 +852,7 @@ export default function Index() {
 
                 <div className="mt-8 max-w-[430px] border-y border-white/8 md:mt-16 md:max-w-[880px] md:space-y-12 md:border-y-0">
                   <motion.div {...mobileRevealProps} className="grid gap-2 border-b border-white/7 py-4 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:rounded-none md:border-0 md:border-t md:border-white/8 md:bg-transparent md:px-0 md:py-0 md:pt-8">
-                    <div className="text-sm font-medium tracking-tight text-white/34">01</div>
+                    <div className={`text-sm font-medium tracking-tight ${mobileRadiantBlueTextClass} md:bg-none md:text-white/34`}>01</div>
                     <div>
                       <h3 className="max-w-[330px] text-[18px] font-medium leading-[1.12] tracking-tight text-white sm:text-[19px] md:text-3xl">
                         {isMobileLayout ? 'Connect the account you already reconcile' : 'Connect the account you already reconcile'}
@@ -864,7 +866,7 @@ export default function Index() {
                   </motion.div>
 
                   <motion.div {...mobileRevealProps} className="grid gap-2 border-b border-white/7 py-4 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:rounded-none md:border-0 md:border-t md:border-white/8 md:bg-transparent md:px-0 md:py-0 md:pt-8">
-                    <div className="text-sm font-medium tracking-tight text-white/34">02</div>
+                    <div className={`text-sm font-medium tracking-tight ${mobileRadiantBlueTextClass} md:bg-none md:text-white/34`}>02</div>
                     <div>
                       <h3 className="max-w-[330px] text-[18px] font-medium leading-[1.12] tracking-tight text-white sm:text-[19px] md:text-3xl">
                         {isMobileLayout ? 'See the cases Amazon never surfaced clearly' : 'See the cases Amazon never surfaced clearly'}
@@ -878,7 +880,7 @@ export default function Index() {
                   </motion.div>
 
                   <motion.div {...mobileRevealProps} className="grid gap-2 py-4 md:grid-cols-[72px_minmax(0,1fr)] md:gap-4 md:rounded-none md:border-0 md:border-t md:border-white/8 md:bg-transparent md:px-0 md:py-0 md:pt-8">
-                    <div className="text-sm font-medium tracking-tight text-white/34">03</div>
+                    <div className={`text-sm font-medium tracking-tight ${mobileRadiantBlueTextClass} md:bg-none md:text-white/34`}>03</div>
                     <div>
                       <h3 className="max-w-[330px] text-[18px] font-medium leading-[1.12] tracking-tight text-white sm:text-[19px] md:text-3xl">
                         {isMobileLayout ? 'Start with what is already ready' : 'Move what is ready. Hold what is weak.'}
