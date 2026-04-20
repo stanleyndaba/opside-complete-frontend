@@ -549,13 +549,6 @@ export default function Index() {
                   {isFull ? 'Join Waitlist' : 'Connect Amazon'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={scrollToHowItWorks}
-                  className="h-11 w-full min-w-0 justify-between rounded-[6px] border border-white bg-white px-4 text-[13px] font-medium text-black hover:bg-white/90 hover:text-black sm:min-w-[168px] sm:w-auto sm:justify-center sm:px-5 sm:text-sm md:h-10"
-                >
-                  See how it works
-                </Button>
               </div>
 
               {isFull ? (
