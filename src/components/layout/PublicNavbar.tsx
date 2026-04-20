@@ -90,6 +90,12 @@ export const PublicNavbar = () => {
                             Pricing
                         </Link>
                         <Link
+                            to="/research"
+                            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-sans font-bold text-white uppercase tracking-tight outline-none"
+                        >
+                            Research
+                        </Link>
+                        <Link
                             to="/about-margin"
                             className="hidden md:flex items-center gap-1.5 px-3 py-1.5 transition-colors hover:bg-white/5 border border-transparent hover:border-white/10 text-[10px] font-sans font-bold text-white uppercase tracking-tight outline-none"
                         >
@@ -149,6 +155,12 @@ export const PublicNavbar = () => {
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
                                         About
+                                    </Link>
+                                    <Link
+                                        to="/research"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
+                                        Research
                                     </Link>
 
                                     {/* About Us & Enterprise shifted inside for consistent menu feel or kept separate? 
