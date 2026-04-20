@@ -541,7 +541,12 @@ export const api = {
     company_name?: string;
     monthly_volume?: string;
     referral_source?: string;
-  }) => requestJson<{ success: boolean; message: string; already_registered?: boolean }>('/api/waitlist', {
+  }) => requestJson<{
+    success: boolean;
+    message: string;
+    already_registered?: boolean;
+    confirmation_email_status?: 'queued' | 'not_resent';
+  }>('/api/waitlist', {
     method: 'POST',
     body: JSON.stringify(data)
   }),

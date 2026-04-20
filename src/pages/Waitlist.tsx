@@ -51,11 +51,19 @@ const stepMeta = [
     { id: 3, label: 'Intent' }
 ];
 
+type WaitlistSubmissionResult = {
+    email: string;
+    message: string;
+    alreadyRegistered: boolean;
+    confirmationEmailStatus: 'queued' | 'not_resent' | null;
+};
+
 const Waitlist = () => {
     const { toast } = useToast();
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [submissionResult, setSubmissionResult] = useState<WaitlistSubmissionResult | null>(null);
     const [formData, setFormData] = useState({
         user_type: '',
         brand_count: '',
@@ -99,22 +107,32 @@ const Waitlist = () => {
         try {
             const response = await api.joinWaitlist(formData);
             if (response.ok) {
+                const alreadyRegistered = response.data?.already_registered === true;
+                const message = response.data?.message || "Your details have been received.";
+                const confirmationEmailStatus = response.data?.confirmation_email_status || null;
+
+                setSubmissionResult({
+                    email: formData.email.trim(),
+                    message,
+                    alreadyRegistered,
+                    confirmationEmailStatus
+                });
                 setIsSuccess(true);
                 toast({
-                    title: response.data?.already_registered ? "ALREADY REGISTERED" : "PROTOCOL SECURED",
-                    description: response.data?.message || "Identity verified. Transmission complete.",
+                    title: alreadyRegistered ? "Already on waitlist" : "Waitlist confirmed",
+                    description: message,
                 });
             } else {
                 toast({
-                    title: "SIGNAL FAILURE",
-                    description: response.error || "Unable to establish secure connection.",
+                    title: "Unable to submit",
+                    description: response.error || "We could not save your waitlist request.",
                     variant: "destructive"
                 });
             }
         } catch (error) {
             toast({
-                title: "SYSTEM ERROR",
-                description: "An unexpected network disruption occurred.",
+                title: "Network issue",
+                description: "The request took too long or the connection was interrupted.",
                 variant: "destructive"
             });
         } finally {
@@ -127,6 +145,27 @@ const Waitlist = () => {
         animate: { opacity: 1, x: 0 },
         exit: { opacity: 0, x: -10 }
     };
+
+    const alreadyRegistered = submissionResult?.alreadyRegistered === true;
+    const successBadge = alreadyRegistered ? 'Waitlist already active' : 'Priority queue confirmed';
+    const successHeading = alreadyRegistered
+        ? 'This address is already on the waitlist.'
+        : "You're in the next access review queue.";
+    const successBody = alreadyRegistered
+        ? 'We recognized this email as an existing waitlist entry and kept your original place in line.'
+        : 'Your details are secured and added to the priority rollout list.';
+    const emailConfirmationBody = alreadyRegistered
+        ? 'No new confirmation email was sent because this address was already registered.'
+        : `A confirmation email is being sent to ${submissionResult?.email || 'the email you provided'}.`;
+    const nextSteps = alreadyRegistered
+        ? [
+            'Your original waitlist position remains active.',
+            'When access opens, we will contact you through the details already on file.'
+        ]
+        : [
+            'Your waitlist entry has been secured.',
+            'When your access window opens, we will reach out through the contact path you provided.'
+        ];
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white selection:bg-white/15 selection:text-white">
@@ -405,23 +444,32 @@ const Waitlist = () => {
                                     <div className="mt-8 space-y-4">
                                         <div className="inline-flex items-center gap-2 rounded-full border border-[#30445c] bg-[#10161f] px-3 py-1.5 text-[11px] font-medium tracking-tight text-[#d8e5fb]/76">
                                             <Sparkles className="h-3.5 w-3.5" />
-                                            Priority queue confirmed
+                                            {successBadge}
                                         </div>
                                         <h3 className="text-[30px] font-light leading-tight tracking-tight text-white md:text-[40px]">
-                                            You&apos;re in the next access review queue.
+                                            {successHeading}
                                         </h3>
                                         <p className="mx-auto max-w-[420px] text-[15px] leading-7 text-white/56">
-                                            Your details are secured and added to the priority rollout list. When your access window opens, we&apos;ll reach out through the contact path you provided.
+                                            {successBody}
                                         </p>
                                     </div>
 
                                     <div className="mt-8 rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5 text-left">
+                                        <div className="text-[11px] font-medium tracking-tight text-white/38">Email confirmation</div>
+                                        <p className="mt-4 text-[14px] leading-6 text-white/66">
+                                            {emailConfirmationBody}
+                                        </p>
+                                        {submissionResult?.message ? (
+                                            <p className="mt-3 text-[13px] leading-6 text-white/42">
+                                                {submissionResult.message}
+                                            </p>
+                                        ) : null}
+                                    </div>
+
+                                    <div className="mt-4 rounded-[22px] border border-white/10 bg-white/[0.03] px-5 py-5 text-left">
                                         <div className="text-[11px] font-medium tracking-tight text-white/38">What happens next</div>
                                         <div className="mt-4 space-y-3">
-                                            {[
-                                                'We review your profile and operating context.',
-                                                'If your access window opens, we reach out through the contact path you provided.'
-                                            ].map((item, index) => (
+                                            {nextSteps.map((item, index) => (
                                                 <div key={item} className="flex gap-3">
                                                     <div className="mt-0.5 text-[11px] font-medium tracking-tight text-white/34">
                                                         0{index + 1}
