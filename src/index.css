@@ -552,9 +552,16 @@ h1.font-merriweather,
 .brand-wordmark,
 span.brand-wordmark,
 a .brand-wordmark,
+.brand-wordmark.font-merriweather,
+header .brand-wordmark,
+nav .brand-wordmark,
+footer .brand-wordmark,
 .landing .font-merriweather,
 .landing h1.font-merriweather {
   font-family: 'Merriweather', Georgia, serif !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em;
 }
 
 /* Lenis Smooth Scroll */

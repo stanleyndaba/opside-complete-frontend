@@ -70,7 +70,7 @@ export const PublicNavbar = () => {
                     <div className="flex items-center gap-3">
                         <Link
                             to="/"
-                            className="inline-flex items-center gap-2 rounded-[6px] px-1 py-1 transition-colors hover:bg-white/5 md:gap-2.5 md:border md:border-white/5 md:bg-white/[0.03] md:px-3 md:py-2"
+                            className="inline-flex items-center gap-2 rounded-[6px] px-1 py-1 transition-colors hover:bg-white/5 md:gap-2.5 md:px-2 md:py-1.5"
                         >
                             <img
                                 src="/logoimagetwo.png"
@@ -81,15 +81,10 @@ export const PublicNavbar = () => {
                                 fetchPriority="high"
                                 className="h-4 w-auto object-contain invert brightness-0 md:h-5"
                             />
-                            <span
-                                className="brand-wordmark text-base tracking-tight text-white md:text-lg"
-                                style={{ fontFamily: "'Merriweather', Georgia, serif", fontWeight: 700 }}
-                            >
+                            <span className="brand-wordmark font-merriweather text-base tracking-tight text-white md:text-lg">
                                 Margin
                             </span>
                         </Link>
-                        <span className="hidden h-6 w-px bg-white/12 md:block" />
-
                         <div className="hidden lg:block">
                             <ProductsMegaMenu />
                         </div>

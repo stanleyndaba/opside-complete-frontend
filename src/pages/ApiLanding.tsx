@@ -47,7 +47,7 @@ const ApiLanding = () => {
                   alt="Margin"
                   className="h-5 w-auto object-contain"
                 />
-                <span className="font-montserrat text-gray-900" style={{ fontWeight: 600 }}>Margin</span>
+                <span className="brand-wordmark font-merriweather text-gray-900 tracking-tight">Margin</span>
               </Link>
             </div>
             <nav className="hidden md:flex items-center gap-3 text-sm text-gray-700">
