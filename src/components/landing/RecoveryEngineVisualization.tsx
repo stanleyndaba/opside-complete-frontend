@@ -246,34 +246,34 @@ const routes: SceneRoute[] = [
 
 const stageAccents = [
   {
-    line: [0.42, 0.73, 1] as const,
-    glow: [0.22, 0.46, 1] as const,
-    packet: [0.94, 0.97, 1] as const,
-    output: [0.7, 0.84, 1] as const
+    line: [0.94, 0.42, 0.28] as const,
+    glow: [0.76, 0.22, 0.16] as const,
+    packet: [1, 0.76, 0.56] as const,
+    output: [0.98, 0.74, 0.48] as const
   },
   {
-    line: [1, 0.56, 0.28] as const,
-    glow: [1, 0.36, 0.24] as const,
-    packet: [1, 0.9, 0.72] as const,
-    output: [1, 0.72, 0.42] as const
+    line: [0.98, 0.48, 0.3] as const,
+    glow: [0.88, 0.26, 0.18] as const,
+    packet: [1, 0.84, 0.62] as const,
+    output: [0.98, 0.72, 0.44] as const
   },
   {
-    line: [1, 0.42, 0.32] as const,
-    glow: [1, 0.28, 0.22] as const,
-    packet: [1, 0.84, 0.7] as const,
-    output: [1, 0.62, 0.34] as const
+    line: [0.94, 0.36, 0.24] as const,
+    glow: [0.82, 0.2, 0.14] as const,
+    packet: [0.98, 0.72, 0.5] as const,
+    output: [0.96, 0.62, 0.36] as const
   },
   {
-    line: [0.92, 0.94, 1] as const,
-    glow: [0.58, 0.68, 0.82] as const,
-    packet: [0.98, 0.98, 1] as const,
-    output: [1, 0.82, 0.5] as const
+    line: [0.92, 0.42, 0.28] as const,
+    glow: [0.68, 0.24, 0.18] as const,
+    packet: [0.98, 0.82, 0.62] as const,
+    output: [0.98, 0.78, 0.48] as const
   },
   {
-    line: [0.78, 0.82, 0.9] as const,
-    glow: [0.6, 0.65, 0.74] as const,
-    packet: [0.98, 0.9, 0.72] as const,
-    output: [1, 0.86, 0.48] as const
+    line: [0.84, 0.36, 0.24] as const,
+    glow: [0.58, 0.22, 0.16] as const,
+    packet: [0.96, 0.74, 0.54] as const,
+    output: [0.98, 0.82, 0.52] as const
   }
 ] as const;
 
@@ -361,7 +361,7 @@ const routeLength = (route: SceneRoute) => {
   return total;
 };
 
-const routePointAt = (route: SceneRoute, progress: number) => {
+const routeSampleAt = (route: SceneRoute, progress: number) => {
   const totalLength = routeLength(route);
   const target = totalLength * progress;
   let traversed = 0;
@@ -373,16 +373,32 @@ const routePointAt = (route: SceneRoute, progress: number) => {
 
     if (traversed + segmentLength >= target) {
       const local = segmentLength === 0 ? 0 : (target - traversed) / segmentLength;
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const directionLength = Math.hypot(dx, dy) || 1;
       return {
-        x: from.x + (to.x - from.x) * local,
-        y: from.y + (to.y - from.y) * local
+        x: from.x + dx * local,
+        y: from.y + dy * local,
+        dx: dx / directionLength,
+        dy: dy / directionLength
       };
     }
 
     traversed += segmentLength;
   }
 
-  return route.points[route.points.length - 1];
+  const end = route.points[route.points.length - 1];
+  const prev = route.points[route.points.length - 2] ?? end;
+  const dx = end.x - prev.x;
+  const dy = end.y - prev.y;
+  const directionLength = Math.hypot(dx, dy) || 1;
+
+  return {
+    x: end.x,
+    y: end.y,
+    dx: dx / directionLength,
+    dy: dy / directionLength
+  };
 };
 
 export function RecoveryEngineVisualization() {
@@ -420,7 +436,7 @@ export function RecoveryEngineVisualization() {
       for (let y = 0.08; y <= 0.92; y += 0.04) {
         const clip = toClipSpace(x, y);
         gridPoints.push(clip.x, clip.y);
-        gridColors.push(1, 1, 1, 0.06);
+        gridColors.push(1, 1, 1, 0.035);
       }
     }
 
@@ -532,17 +548,17 @@ export function RecoveryEngineVisualization() {
         const accent = stageAccents[route.stage];
         const routeColor = isActive
           ? route.role === 'output'
-            ? [accent.output[0], accent.output[1], accent.output[2], 0.58]
+            ? [accent.output[0], accent.output[1], accent.output[2], 0.5]
             : route.role === 'evidence'
-              ? [accent.glow[0], accent.glow[1], accent.glow[2], 0.48]
+              ? [accent.glow[0], accent.glow[1], accent.glow[2], 0.42]
               : route.role === 'trunk'
-                ? [accent.packet[0], accent.packet[1], accent.packet[2], 0.54]
-                : [accent.line[0], accent.line[1], accent.line[2], 0.46]
+                ? [accent.packet[0], accent.packet[1], accent.packet[2], 0.44]
+                : [accent.line[0], accent.line[1], accent.line[2], 0.36]
           : route.role === 'output'
-            ? [0.5, 0.5, 0.54, 0.18]
+            ? [0.5, 0.48, 0.46, 0.12]
             : route.role === 'trunk'
-              ? [0.56, 0.58, 0.64, 0.24]
-              : [0.4, 0.42, 0.46, 0.18];
+              ? [0.4, 0.38, 0.36, 0.18]
+              : [0.3, 0.3, 0.32, 0.16];
 
         for (let index = 1; index < route.points.length; index += 1) {
           const from = toClipSpace(route.points[index - 1].x, route.points[index - 1].y);
@@ -631,10 +647,8 @@ export function RecoveryEngineVisualization() {
         }
       });
 
-      const packetGlowPositions: number[] = [];
-      const packetGlowColors: number[] = [];
-      const packetCorePositions: number[] = [];
-      const packetCoreColors: number[] = [];
+      const streakPositions: number[] = [];
+      const streakColors: number[] = [];
 
       routes
         .filter((route) => route.stage === stageIndex)
@@ -646,35 +660,64 @@ export function RecoveryEngineVisualization() {
               ? [accent.glow, accent.packet, accent.line]
               : [accent.line, accent.packet, accent.glow];
           const streamCount = route.role === 'intake' ? 2 : 1;
-          const trailOffsets = [0, 0.08, 0.16];
+          const bodyOffsets = [0, 0.05, 0.1, 0.15];
+          const baseHalfLength = route.role === 'trunk'
+            ? 0.022
+            : route.role === 'output'
+              ? 0.019
+              : 0.016;
+          const baseHalfWidth = route.role === 'trunk' ? 0.0034 : 0.0028;
+          const layerConfigs = [
+            { width: baseHalfWidth * 1.7, alpha: 0.08, lengthScale: 1.45 },
+            { width: baseHalfWidth, alpha: 0.16, lengthScale: 1.18 },
+            { width: baseHalfWidth * 0.45, alpha: 0.22, lengthScale: 0.9 }
+          ];
 
           for (let stream = 0; stream < streamCount; stream += 1) {
-            const head = prefersReducedMotion
+            const lead = prefersReducedMotion
               ? 0.55
               : (stageProgress + stream * 0.28 + routeIndex * 0.055) % 1;
 
-            trailOffsets.forEach((trailOffset, trailIndex) => {
-              const progress = (head - trailOffset + 1) % 1;
-              const point = routePointAt(route, progress);
-              const clip = toClipSpace(point.x, point.y);
-              const color = palette[(trailIndex + routeIndex + stream) % palette.length];
-              const alpha = trailIndex === 0 ? 1 : trailIndex === 1 ? 0.48 : 0.18;
+            bodyOffsets.forEach((bodyOffset, bodyIndex) => {
+              const progress = (lead - bodyOffset + 1) % 1;
+              const sample = routeSampleAt(route, progress);
+              const color = palette[(bodyIndex + routeIndex + stream) % palette.length];
+              const bodyAlpha = bodyIndex === 0 ? 0.82 : bodyIndex === 1 ? 0.56 : bodyIndex === 2 ? 0.34 : 0.18;
+              const perpX = -sample.dy;
+              const perpY = sample.dx;
 
-              packetGlowPositions.push(clip.x, clip.y);
-              packetGlowColors.push(color[0], color[1], color[2], alpha * 0.52);
+              layerConfigs.forEach((layer) => {
+                [-1, 0, 1].forEach((offsetSign) => {
+                  const lateral = offsetSign * layer.width;
+                  const halfLength = baseHalfLength * layer.lengthScale;
+                  const from = toClipSpace(
+                    sample.x - sample.dx * halfLength + perpX * lateral,
+                    sample.y - sample.dy * halfLength + perpY * lateral
+                  );
+                  const to = toClipSpace(
+                    sample.x + sample.dx * halfLength + perpX * lateral,
+                    sample.y + sample.dy * halfLength + perpY * lateral
+                  );
 
-              packetCorePositions.push(clip.x, clip.y);
-              packetCoreColors.push(color[0], color[1], color[2], alpha);
+                  streakPositions.push(from.x, from.y, to.x, to.y);
+                  streakColors.push(
+                    color[0],
+                    color[1],
+                    color[2],
+                    bodyAlpha * layer.alpha,
+                    color[0],
+                    color[1],
+                    color[2],
+                    bodyAlpha * layer.alpha
+                  );
+                });
+              });
             });
           }
         });
 
-      if (packetGlowPositions.length > 0) {
-        drawPointBatch(new Float32Array(packetGlowPositions), new Float32Array(packetGlowColors), 28);
-      }
-
-      if (packetCorePositions.length > 0) {
-        drawPointBatch(new Float32Array(packetCorePositions), new Float32Array(packetCoreColors), 11);
+      if (streakPositions.length > 0) {
+        drawLineBatch(new Float32Array(streakPositions), new Float32Array(streakColors));
       }
 
       if (!prefersReducedMotion) {
@@ -702,8 +745,8 @@ export function RecoveryEngineVisualization() {
   const outputOverlayNodes = useMemo(() => outputNodes, []);
 
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_52%_50%,rgba(59,130,246,0.06),transparent_32%),radial-gradient(circle_at_52%_50%,rgba(249,115,22,0.08),transparent_20%),linear-gradient(180deg,rgba(10,11,15,0.98)_0%,rgba(6,8,12,1)_100%)]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.025),transparent_58%)]" />
+    <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_52%_50%,rgba(255,122,72,0.08),transparent_24%),radial-gradient(circle_at_52%_50%,rgba(185,49,33,0.06),transparent_36%),linear-gradient(180deg,rgba(7,7,9,0.98)_0%,rgba(3,4,6,1)_100%)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.018),transparent_60%)]" />
       <div className="relative h-[520px] w-full md:h-[620px] xl:h-[660px]">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
