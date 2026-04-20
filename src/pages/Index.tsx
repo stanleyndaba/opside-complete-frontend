@@ -12,30 +12,6 @@ import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
 import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
 
-const heroSignals = [
-  {
-    id: 'signal-01',
-    label: 'Inbound shipment shortage',
-    detail: 'Shipment sent 24 units. Amazon received 21.',
-    state: 'Detected',
-    stateTone: 'sky'
-  },
-  {
-    id: 'signal-02',
-    label: 'Refund without return',
-    detail: 'Refund issued. No matching unit return.',
-    state: 'Evidence matched',
-    stateTone: 'slate'
-  },
-  {
-    id: 'signal-03',
-    label: 'Approved reimbursement',
-    detail: 'Approved amount visible. Payout still missing.',
-    state: 'Awaiting recovery',
-    stateTone: 'white'
-  }
-] as const;
-
 const proofItems = [
   {
     title: 'Inbound shipment discrepancies',
@@ -245,68 +221,6 @@ function IntegrationsCarousel({ isMobileLayout }: { isMobileLayout: boolean }) {
   );
 }
 
-function HeroSignalRail() {
-  return (
-    <motion.div
-      {...revealProps}
-      className="relative overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.02)_22%,rgba(6,8,12,0.96)_100%)]"
-    >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sky-300/30 to-transparent" />
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-white/8 px-4 py-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white/42 md:px-5">
-        <span>Recovery trace</span>
-        <span>System state</span>
-      </div>
-
-      <div className="relative">
-        <div className="pointer-events-none absolute bottom-0 left-[22px] top-0 w-px bg-gradient-to-b from-sky-300/20 via-sky-300/14 to-transparent md:left-[26px]" />
-        {heroSignals.map((signal, index) => (
-          <motion.div
-            key={signal.id}
-            {...revealProps}
-            transition={{ ...revealProps.transition, delay: index * 0.06 }}
-            className={`relative grid grid-cols-[28px_minmax(0,1fr)] gap-4 px-4 py-5 md:grid-cols-[34px_minmax(0,1fr)] md:px-5 md:py-6 ${
-              index > 0 ? 'border-t border-white/8' : ''
-            }`}
-          >
-            <div className="relative flex justify-center">
-              <div className="relative mt-1 h-4 w-4 rounded-full border border-sky-300/25 bg-sky-300/[0.08]">
-                <motion.span
-                  className="absolute inset-[3px] rounded-full bg-sky-300/80"
-                  animate={{ opacity: [0.45, 1, 0.45], scale: [0.92, 1.08, 0.92] }}
-                  transition={{ duration: 3.4, repeat: Infinity, delay: index * 0.45, ease: 'easeInOut' }}
-                />
-              </div>
-            </div>
-
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[12px] uppercase tracking-[0.16em] text-white/34">{signal.label}</div>
-                  <h3 className="mt-2 max-w-[420px] text-[20px] font-medium leading-[1.12] tracking-tight text-white md:text-[24px]">
-                    {signal.detail}
-                  </h3>
-                </div>
-
-                <span
-                  className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-medium uppercase tracking-[0.14em] ${
-                    signal.stateTone === 'sky'
-                      ? 'border-sky-300/18 bg-sky-300/[0.08] text-sky-100/82'
-                      : signal.stateTone === 'slate'
-                        ? 'border-white/10 bg-white/[0.04] text-white/68'
-                        : 'border-white/12 bg-white/[0.03] text-white/78'
-                  }`}
-                >
-                  {signal.state}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
 function MobileSystemPreview() {
   return (
     <div className="overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.045)_0%,rgba(7,9,12,0.96)_100%)]">
@@ -386,13 +300,13 @@ export default function Index() {
 
         <section className="relative pt-28 md:pt-40">
           <div className={containerClass}>
-            <div className="grid gap-12 md:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.78fr)] md:items-end md:gap-12">
-              <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="max-w-[680px]"
-              >
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mx-auto max-w-[920px] md:text-center"
+            >
+              <div className="mx-auto max-w-[860px]">
                 <div className={sectionLabelClass}>Amazon FBA Recovery Platform</div>
 
                 <h1 className="mt-5 max-w-[760px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[78px]">
@@ -403,7 +317,7 @@ export default function Index() {
                   Margin audits the operational trail across inventory, shipments, refunds, fees, reimbursements, and payouts to identify missed reimbursement opportunities, prepare the support, and keep the recovery workflow visible.
                 </p>
 
-                <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center md:mx-auto">
                   <Button
                     onClick={handlePrimaryCta}
                     className="h-11 justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
@@ -422,17 +336,13 @@ export default function Index() {
                 </div>
 
                 {isFull ? (
-                  <div className="mt-5 max-w-[360px] text-[13px] leading-6 text-white/56">
+                  <div className="mt-5 max-w-[360px] text-[13px] leading-6 text-white/56 md:mx-auto">
                     <div>We are onboarding a small batch of sellers right now.</div>
                     <div>Next batch opens in {capacity?.nextBatchHours ?? 24} hours.</div>
                   </div>
                 ) : null}
-              </motion.div>
-
-              <div className="md:pb-1">
-                <HeroSignalRail />
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -614,12 +524,12 @@ export default function Index() {
         <section className="relative border-t border-white/8 py-16 md:py-32">
           <div className={containerClass}>
             <motion.div {...revealProps} className="mx-auto max-w-[900px] md:text-center">
-              <div className={sectionLabelClass}>Common Questions</div>
+              <div className={sectionLabelClass}>Understanding Margin</div>
               <h2 className={sectionHeadingClass}>
-                Questions sellers ask before they trust a recovery platform.
+                What sellers usually want to understand before they start with Margin.
               </h2>
               <p className={`${sectionBodyClass} md:mx-auto`}>
-                These answers keep the product promise simple: identify missed reimbursement opportunities, prepare support carefully, and track the workflow with clarity.
+                These answers explain what Margin looks for, how reimbursement cases move, what gets held back, and how recovery stays visible from detection through payout.
               </p>
             </motion.div>
 
