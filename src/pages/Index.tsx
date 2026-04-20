@@ -134,36 +134,6 @@ const mobileProofArtifacts = [
   ['Waiting', 'Approved', 'Paid out']
 ];
 
-const mobileRecoveryLedgerRows = [
-  {
-    amount: '$41.90',
-    title: 'Refund without return',
-    detail: 'Unit never came back',
-    status: 'Evidence matched',
-    payout: 'No reimbursement',
-    tone: 'ready',
-    evidence: ['Return', 'ASIN', 'Payout']
-  },
-  {
-    amount: '$63.75',
-    title: 'Missing units',
-    detail: 'Shipment ID + Qty match',
-    status: 'Ready to file',
-    payout: 'Inside window',
-    tone: 'file',
-    evidence: ['Shipment ID', 'ASIN / FNSKU', 'Qty match']
-  },
-  {
-    amount: '$179.20',
-    title: 'Approved',
-    detail: 'Payout not confirmed',
-    status: 'Awaiting payout',
-    payout: '$0.00 paid',
-    tone: 'wait',
-    evidence: ['Approved', 'Waiting', 'Paid out']
-  }
-] as const;
-
 const filingRules = [
   'Shipment, ASIN, FNSKU, and quantity all point to the same missing or damaged inventory event',
   'Invoice, delivery proof, or related support is already matched',
@@ -178,19 +148,40 @@ const holdRules = [
   'The support is still too weak to survive filing'
 ];
 
-const mobileFilingRules = [
-  'The shipment, ASIN, and quantity all match the loss',
-  'The invoice, delivery, or related support is present',
-  'Amazon is not already handling the same issue in a live thread',
-  'The reimbursement window is still open'
-];
+const mobileDecisionChecks = [
+  {
+    label: 'Identifiers',
+    state: 'Matched',
+    detail: 'The shipment, ASIN, and quantity all match the loss'
+  },
+  {
+    label: 'Support',
+    state: 'Present',
+    detail: 'The invoice, delivery, or related support is present'
+  },
+  {
+    label: 'Duplicate / Window',
+    state: 'Clear',
+    detail: 'No live Amazon thread and the reimbursement window is still open'
+  }
+] as const;
 
-const mobileHoldRules = [
-  'You cannot prove which shipment or quantity actually failed',
-  'Amazon is already handling the issue in a live case or email thread',
-  'The unit moved, but the support is still too weak to file',
-  'The policy window already closed'
-];
+const mobileDecisionOutcomes = [
+  {
+    label: 'File',
+    action: 'SYSTEM ACTION: FILE',
+    detail: 'If the support is complete and the case is still inside policy, Margin prepares it for filing.',
+    tone: 'file',
+    chips: ['Ready to file', 'Evidence matched']
+  },
+  {
+    label: 'Hold',
+    action: 'SYSTEM ACTION: HOLD',
+    detail: 'If a duplicate, missing proof, or broken quantity trail appears, the case pauses instead.',
+    tone: 'hold',
+    chips: ['Duplicate', 'Held']
+  }
+] as const;
 
 const faqs = [
   {
@@ -230,8 +221,8 @@ const faqs = [
 const eyebrowClass = 'text-[10px] font-medium tracking-tight text-[#9fb6d9]/72 md:text-[11px] md:text-white/42';
 const containerClass = 'mx-auto w-full max-w-[1160px] px-4 sm:px-6 md:px-8';
 const mobileColumnClass = 'mx-auto max-w-[390px] md:mx-0 md:max-w-none';
-const mobileHeadingClass = 'max-w-[356px] text-[25px] font-light leading-[1.05] tracking-tight text-white sm:max-w-[372px] sm:text-[27px]';
-const mobileBodyClass = 'max-w-[356px] text-[14px] leading-[1.72] text-white/60 sm:max-w-[372px]';
+const mobileHeadingClass = 'max-w-[344px] text-pretty text-[25px] font-light leading-[1.05] tracking-tight text-white sm:max-w-[372px] sm:text-[27px]';
+const mobileBodyClass = 'max-w-[344px] text-pretty text-[14px] leading-[1.72] text-white/60 sm:max-w-[372px]';
 const mobileRevealProps = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -249,11 +240,11 @@ function MobileStatusPill({
   tone?: MobileStatusTone;
 }) {
   const toneClasses = {
-    ready: 'border-[#5a769c]/45 bg-[#0d1722] text-[#d8e6fb]',
-    file: 'border-[#5f8e7a]/45 bg-[#0c1a14] text-[#d5f1e1]',
-    wait: 'border-[#8a744a]/45 bg-[#1b160d] text-[#f2dfb8]',
+    ready: 'border-sky-400/28 bg-sky-400/[0.075] text-sky-100',
+    file: 'border-sky-400/34 bg-sky-400/[0.095] text-sky-100',
+    wait: 'border-white/12 bg-[#101419] text-white/66',
     hold: 'border-white/12 bg-white/[0.035] text-white/58',
-    paid: 'border-[#5f8e7a]/50 bg-[#0d1c15] text-[#d1efd9]'
+    paid: 'border-sky-400/30 bg-sky-400/[0.08] text-sky-100'
   } as const;
 
   return (
@@ -263,51 +254,18 @@ function MobileStatusPill({
   );
 }
 
-function MobileRecoveryLedger() {
-  return (
-    <motion.div {...mobileRevealProps} className="md:hidden">
-      <div className="overflow-hidden rounded-[8px] border border-white/10 bg-[#080a0d] shadow-[0_18px_42px_rgba(0,0,0,0.28)]">
-        <div className="flex items-center justify-between border-b border-white/8 bg-white/[0.025] px-3 py-2.5">
-          <span className="text-[10px] font-medium tracking-tight text-white/44">Recovery ledger</span>
-          <span className="text-[10px] font-medium tracking-tight text-[#d8e6fb]/72">Read-only</span>
-        </div>
-
-        <div className="divide-y divide-white/7">
-          {mobileRecoveryLedgerRows.map((row) => (
-            <div key={row.title} className="grid gap-3 px-3 py-3.5">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[15px] font-medium tracking-tight text-white">{row.amount}</span>
-                    <MobileStatusPill tone={row.tone}>{row.status}</MobileStatusPill>
-                  </div>
-                  <div className="mt-2 text-[13px] font-medium leading-5 tracking-tight text-white/88">{row.title}</div>
-                  <div className="mt-0.5 text-[12px] leading-5 text-white/44">{row.detail}</div>
-                </div>
-                <div className="shrink-0 pt-0.5 text-right text-[11px] font-medium leading-5 text-white/52">{row.payout}</div>
-              </div>
-
-              <div className="flex flex-wrap gap-1.5">
-                {row.evidence.map((item) => (
-                  <span key={item} className="rounded-[5px] border border-white/8 bg-white/[0.025] px-2 py-1 text-[10px] font-medium tracking-tight text-white/48">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 function MobileIntegrationsCarousel() {
   return (
     <motion.div {...mobileRevealProps} className="md:hidden">
       <div className="relative flex items-center justify-center py-1">
-        <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/8" />
-        <div className="relative z-10 mx-auto inline-flex rounded-[6px] border border-white/8 bg-[#070707] px-3 py-1 text-[10px] font-medium tracking-tight text-white/42">
+        <motion.div
+          className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 origin-center bg-gradient-to-r from-transparent via-sky-400/24 to-transparent"
+          initial={{ scaleX: 0.55, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.45 }}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <div className="relative z-10 mx-auto inline-flex rounded-[6px] border border-sky-400/12 bg-[#070707] px-3 py-1 text-[10px] font-medium tracking-tight text-sky-100/56">
           Integrations
         </div>
       </div>
@@ -349,22 +307,37 @@ function MobileWorkflowFeed() {
           key={step.title}
           className={`grid grid-cols-[34px_minmax(0,1fr)] gap-3 py-5 ${index > 0 ? 'border-t border-white/7' : ''}`}
         >
-          <div className="pt-0.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-[6px] border border-white/10 bg-white/[0.03] text-[11px] font-medium tracking-tight text-[#d8e6fb]/72">
+          <div className="relative pt-0.5">
+            {index < mobileOrchestrationSteps.length - 1 ? (
+              <motion.div
+                className="absolute left-[13px] top-9 h-[calc(100%-28px)] w-px origin-top bg-gradient-to-b from-sky-400/30 to-white/8"
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+              />
+            ) : null}
+            <div className="relative flex h-7 w-7 items-center justify-center rounded-[6px] border border-sky-400/18 bg-sky-400/[0.07] text-[11px] font-medium tracking-tight text-sky-100/78">
               0{index + 1}
             </div>
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 pr-3">
             <div className="flex items-center justify-between gap-3">
               <h3 className="text-[18px] font-medium leading-6 tracking-tight text-white">{step.title}</h3>
-              <div className="h-px flex-1 bg-white/8" />
+              <motion.div
+                className="h-px flex-1 origin-left bg-gradient-to-r from-sky-400/24 to-white/8"
+                initial={{ scaleX: 0, opacity: 0 }}
+                whileInView={{ scaleX: 1, opacity: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+              />
             </div>
-            <p className="mt-2 max-w-[330px] text-[14px] leading-[1.68] text-white/58">{step.detail}</p>
+            <p className="mt-2 max-w-full text-pretty text-[14px] leading-[1.68] text-white/58">{step.detail}</p>
             <div className="mt-4 flex flex-wrap gap-1.5">
               {step.signals.map((signal) => (
                 <span
                   key={signal}
-                  className="rounded-[5px] border border-white/8 bg-white/[0.025] px-2 py-1 text-[10px] font-medium tracking-tight text-[#d8e5fb]/64"
+                  className="rounded-[5px] border border-sky-400/10 bg-sky-400/[0.04] px-2 py-1 text-[10px] font-medium tracking-tight text-sky-100/62"
                 >
                   {signal}
                 </span>
@@ -386,10 +359,10 @@ function MobileCaseFileRows() {
           key={item.step}
           className={`grid grid-cols-[34px_minmax(0,1fr)] gap-3 py-5 ${index > 0 ? 'border-t border-white/7' : ''}`}
         >
-          <div className="font-mono text-[12px] font-medium tracking-tight text-white/28">{item.step}</div>
-          <div>
-            <h3 className="max-w-[330px] text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.title}</h3>
-            <p className="mt-2 max-w-[338px] text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
+          <div className="font-mono text-[12px] font-medium tracking-tight text-sky-100/46">{item.step}</div>
+          <div className="min-w-0 pr-3">
+            <h3 className="max-w-full text-pretty text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.title}</h3>
+            <p className="mt-2 max-w-full text-pretty text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
           </div>
         </motion.div>
       ))}
@@ -399,8 +372,8 @@ function MobileCaseFileRows() {
 
 function MobileProofLedger() {
   return (
-    <div className="mt-8 overflow-hidden rounded-[8px] border border-white/10 bg-[#080a0d]">
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-white/8 bg-white/[0.025] px-3 py-2.5 text-[10px] font-medium tracking-tight text-white/42">
+    <div className="mt-8 overflow-hidden rounded-[8px] border border-sky-400/12 bg-[#080a0d] shadow-[0_18px_42px_rgba(0,0,0,0.22)]">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-white/8 bg-sky-400/[0.035] px-3 py-2.5 text-[10px] font-medium tracking-tight text-sky-100/56">
         <span>Case truth</span>
         <span>Observed states</span>
       </div>
@@ -410,14 +383,14 @@ function MobileProofLedger() {
           key={item.value}
           className={`px-3 py-4 ${index > 0 ? 'border-t border-white/7' : ''}`}
         >
-          <div className="font-mono text-[12px] font-medium tracking-tight text-white/28">0{index + 1}</div>
-          <h3 className="mt-2 max-w-[330px] text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.value}</h3>
-          <p className="mt-2 max-w-[336px] text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
+          <div className="font-mono text-[12px] font-medium tracking-tight text-sky-100/42">0{index + 1}</div>
+          <h3 className="mt-2 max-w-full text-pretty text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.value}</h3>
+          <p className="mt-2 max-w-full text-pretty text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
           <div className="mt-4 flex flex-wrap gap-1.5">
             {mobileProofArtifacts[index].map((artifact) => (
               <span
                 key={artifact}
-                className="rounded-[5px] border border-white/8 bg-white/[0.025] px-2 py-1 text-[10px] font-medium tracking-tight text-[#d8e6fb]/64"
+                className="rounded-[5px] border border-sky-400/10 bg-sky-400/[0.04] px-2 py-1 text-[10px] font-medium tracking-tight text-sky-100/62"
               >
                 {artifact}
               </span>
@@ -431,59 +404,86 @@ function MobileProofLedger() {
 
 function MobileDecisionSplit() {
   return (
-    <div className="mt-8 grid gap-3">
-      <motion.article
-        {...mobileRevealProps}
-        className="overflow-hidden rounded-[8px] border border-[#3c5c50]/55 bg-[#08100d]"
-      >
-        <div className="flex items-center justify-between border-b border-white/8 px-3 py-2.5">
-          <div className="text-[10px] font-medium tracking-tight text-[#d5f1e1]/68">READY TO FILE</div>
-          <MobileStatusPill tone="file">SYSTEM ACTION: FILE</MobileStatusPill>
-        </div>
-        <div className="px-3 py-4">
-          <h3 className="max-w-[330px] text-[18px] font-medium leading-[1.16] tracking-tight text-white">
-            A 3-unit shipment gap moves only when the IDs, quantity truth, and policy window all line up.
-          </h3>
-          <p className="mt-2 max-w-[336px] text-[14px] leading-[1.68] text-white/62">
-            If the support is complete and the case is still inside policy, Margin prepares it for filing.
-          </p>
-        </div>
-        <div className="border-t border-white/8">
-          {mobileFilingRules.map((item) => (
-            <div key={item} className="grid grid-cols-[28px_minmax(0,1fr)] gap-2 border-b border-white/6 px-3 py-3 last:border-b-0">
-              <div className="text-[11px] font-medium tracking-tight text-white/28">IF</div>
-              <div className="text-[13px] leading-5 text-white/78">{item}</div>
-            </div>
-          ))}
-        </div>
-      </motion.article>
+    <motion.div
+      {...mobileRevealProps}
+      className="mt-8 overflow-hidden rounded-[8px] border border-sky-400/14 bg-[#080a0d] shadow-[0_18px_42px_rgba(0,0,0,0.24)]"
+    >
+      <div className="flex items-center justify-between border-b border-white/8 bg-sky-400/[0.035] px-3 py-2.5">
+        <span className="text-[10px] font-medium tracking-tight text-sky-100/58">Case enters review</span>
+        <span className="text-[10px] font-medium tracking-tight text-white/38">Paused trace</span>
+      </div>
 
-      <motion.article
-        {...mobileRevealProps}
-        className="overflow-hidden rounded-[8px] border border-white/8 bg-white/[0.018]"
-      >
-        <div className="flex items-center justify-between border-b border-white/8 px-3 py-2.5">
-          <div className="text-[10px] font-medium tracking-tight text-white/38">OTHERWISE</div>
-          <MobileStatusPill tone="hold">SYSTEM ACTION: HOLD</MobileStatusPill>
-        </div>
-        <div className="px-3 py-4">
-          <h3 className="max-w-[330px] text-[18px] font-medium leading-[1.16] tracking-tight text-white/84">
-            A duplicate thread, missing invoice, or broken quantity trail stops the case.
-          </h3>
-          <p className="mt-2 max-w-[336px] text-[14px] leading-[1.68] text-white/52">
-            That is not friction. That is how weak filings stay out of Amazon.
-          </p>
-        </div>
-        <div className="border-t border-white/8">
-          {mobileHoldRules.map((item) => (
-            <div key={item} className="grid grid-cols-[28px_minmax(0,1fr)] gap-2 border-b border-white/6 px-3 py-3 last:border-b-0">
-              <div className="text-[11px] font-medium tracking-tight text-white/22">OR</div>
-              <div className="text-[13px] leading-5 text-white/58">{item}</div>
-            </div>
+      <div className="relative px-3 py-5">
+        <motion.div
+          className="absolute bottom-7 left-[24px] top-7 w-px origin-top bg-gradient-to-b from-sky-400/52 via-sky-400/18 to-white/8"
+          initial={{ scaleY: 0 }}
+          whileInView={{ scaleY: 1 }}
+          viewport={{ once: true, amount: 0.55 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        />
+
+        <div className="space-y-4">
+          {mobileDecisionChecks.map((check, index) => (
+            <motion.div
+              key={check.label}
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-3"
+            >
+              <div className="relative z-10 mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-sky-400/24 bg-[#09131b]">
+                <motion.div
+                  className="h-2 w-2 rounded-full bg-sky-400"
+                  animate={index === 2 ? { opacity: [0.45, 1, 0.45], scale: [0.82, 1, 0.82] } : undefined}
+                  transition={index === 2 ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : undefined}
+                />
+              </div>
+              <div className="min-w-0 border-b border-white/7 pb-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-[16px] font-medium leading-5 tracking-tight text-white">{check.label}</h3>
+                  <span className="rounded-[5px] border border-sky-400/14 bg-sky-400/[0.055] px-2 py-1 text-[10px] font-medium tracking-tight text-sky-100/64">
+                    {check.state}
+                  </span>
+                </div>
+                <p className="mt-2 max-w-full text-pretty text-[13px] leading-[1.62] text-white/58">{check.detail}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
-      </motion.article>
-    </div>
+      </div>
+
+      <div className="border-t border-white/8 px-3 py-3">
+        <motion.div
+          className="mx-auto h-px max-w-[240px] origin-center bg-gradient-to-r from-transparent via-sky-400/36 to-transparent"
+          initial={{ scaleX: 0.2, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {mobileDecisionOutcomes.map((item) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="min-w-0 rounded-[7px] border border-white/8 bg-white/[0.022] p-3"
+            >
+              <div className="text-[10px] font-medium tracking-tight text-white/38">{item.action}</div>
+              <h3 className="mt-2 text-[18px] font-medium leading-none tracking-tight text-white">{item.label}</h3>
+              <p className="mt-2 text-[12px] leading-[1.55] text-white/54">{item.detail}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {item.chips.map((chip) => (
+                  <MobileStatusPill key={chip} tone={item.tone}>{chip}</MobileStatusPill>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -540,7 +540,7 @@ export default function Index() {
   const visibleFaqCount = showMoreFaqs ? faqs.length : isMobileLayout ? 3 : 5;
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#070707] font-sans text-white selection:bg-white/15">
+    <div className="min-h-screen overflow-x-hidden bg-[#070707] font-sans text-white selection:bg-sky-400/25">
       <PublicNavbar />
 
       <main className="relative">
@@ -575,13 +575,13 @@ export default function Index() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: [0.78, 1, 0.78], y: [0, -2, 0] }}
                   transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-                  className="inline-flex rounded-[5px] border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium tracking-tight text-white/72 md:px-3.5 md:py-1.5 md:text-[11px]"
+                  className="inline-flex rounded-[5px] border border-sky-400/16 bg-sky-400/[0.055] px-2.5 py-1 text-[10px] font-medium tracking-tight text-sky-100/78 md:border-white/10 md:bg-white/[0.03] md:px-3.5 md:py-1.5 md:text-[11px] md:text-white/72"
                 >
                   Web-based only. Mobile experience rollout mid-April 2026.
                 </motion.div>
               </div>
 
-              <h1 className="mt-4 max-w-[356px] text-[27px] font-light leading-[1.08] tracking-tight text-white sm:max-w-[372px] sm:text-[31px] md:mt-6 md:max-w-[760px] md:text-7xl md:leading-[0.98]">
+              <h1 className="mt-4 max-w-[356px] text-pretty text-[27px] font-light leading-[1.08] tracking-tight text-white sm:max-w-[372px] sm:text-[31px] md:mt-6 md:max-w-[760px] md:text-7xl md:leading-[0.98]">
                 {isMobileLayout ? (
                   <>
                     A customer got a $42 refund.
@@ -601,7 +601,7 @@ export default function Index() {
                 )}
               </h1>
 
-              <p className="mt-4 max-w-[350px] text-[14px] leading-[1.72] text-white/62 sm:max-w-[372px] md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
+              <p className="mt-4 max-w-[350px] text-pretty text-[14px] leading-[1.72] text-white/62 sm:max-w-[372px] md:mt-10 md:max-w-[760px] md:text-xl md:leading-8">
                 {isMobileLayout
                   ? 'Margin finds it, proves it, and prepares the claim.'
                   : 'Margin finds the discrepancy, proves the quantity and payout truth, prepares the claim, and follows Amazon until the money lands.'}
@@ -610,7 +610,7 @@ export default function Index() {
               <div className="mt-7 flex w-full max-w-[372px] flex-col items-stretch gap-2.5 sm:mt-10 sm:max-w-none sm:flex-row sm:items-start">
                 <Button
                   onClick={isFull ? () => navigate('/waitlist?reason=capacity') : handleConnectAmazon}
-                  className="h-11 w-full min-w-0 justify-between rounded-[6px] border border-white/10 bg-transparent px-4 text-[13px] font-medium text-white hover:bg-white/[0.04] sm:min-w-[168px] sm:w-auto sm:justify-center sm:px-5 sm:text-sm md:h-10"
+                  className="h-11 w-full min-w-0 justify-between rounded-[6px] border border-sky-400/22 bg-sky-400/[0.07] px-4 text-[13px] font-medium text-sky-50 hover:bg-sky-400/[0.11] sm:min-w-[168px] sm:w-auto sm:justify-center sm:px-5 sm:text-sm md:h-10 md:border-white/10 md:bg-transparent md:text-white md:hover:bg-white/[0.04]"
                 >
                   {isFull ? 'Join Waitlist' : 'Connect Amazon'}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -630,10 +630,6 @@ export default function Index() {
                   <div>Next batch opens in {capacity?.nextBatchHours ?? 24} hours.</div>
                 </div>
               ) : null}
-
-              <div className="mt-7 max-w-[372px] md:hidden">
-                <MobileRecoveryLedger />
-              </div>
 
               <div className="mt-7 max-w-[372px] border-t border-white/8 pt-5 md:mt-8 md:max-w-none md:border-0 md:pt-0">
                 <MobileIntegrationsCarousel />
