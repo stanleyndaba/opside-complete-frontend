@@ -31,6 +31,9 @@ import {
 import { ProductsMegaMenu } from '@/components/landing/ProductsMegaMenu';
 import { ChevronDown, Truck, TrendingUp, ShieldCheck, BarChart3, Activity, Layers } from 'lucide-react';
 
+const mobileMenuItemClass =
+    "flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white";
+
 export const PublicNavbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -143,37 +146,36 @@ export const PublicNavbar = () => {
                             exit={{ opacity: 0, y: -20 }}
                             className="relative z-50 mt-2 md:hidden">
                             <div className="flex max-h-[calc(100vh-92px)] flex-col gap-1 overflow-y-auto rounded-[8px] border border-white/10 bg-[#080808]/96 p-3 shadow-[0_18px_48px_rgba(0,0,0,0.42)] [backdrop-filter:blur(32px)_saturate(180%)]">
+                                <Link
+                                    to="/pricing"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    Pricing
+                                </Link>
+                                <Link
+                                    to="/about-margin"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    About
+                                </Link>
+                                <Link
+                                    to="/research"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={mobileMenuItemClass}>
+                                    Research
+                                </Link>
                                 <Accordion type="single" collapsible className="w-full">
-                                    <Link
-                                        to="/pricing"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
-                                        Pricing
-                                    </Link>
-                                    <Link
-                                        to="/about-margin"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
-                                        About
-                                    </Link>
-                                    <Link
-                                        to="/research"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
-                                        Research
-                                    </Link>
-
-                                    {/* About Us & Enterprise shifted inside for consistent menu feel or kept separate? 
-                                        Keeping them as links but merged into the same flow */}
-
                                     <AccordionItem value="products" className="border-none">
-                                        <AccordionTrigger className="flex w-full items-center justify-between rounded-[6px] border-none px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/60 outline-none transition-colors hover:bg-white/5 hover:text-white hover:no-underline">
+                                        <AccordionTrigger className={cn(
+                                            mobileMenuItemClass,
+                                            "justify-between border-none text-white/60 outline-none hover:no-underline data-[state=open]:bg-white/5 data-[state=open]:text-white"
+                                        )}>
                                             Products
                                         </AccordionTrigger>
-                                        <AccordionContent className="pt-2 pb-6 px-1 space-y-8 border-none overflow-visible">
+                                        <AccordionContent className="overflow-visible border-none px-1 pb-6 pt-2 space-y-8">
                                             {/* Audit Vectors */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-tight pl-2">Audit Vectors</h5>
+                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">Audit Vectors</h5>
                                                 <div className="grid gap-1">
                                                     <MobileNavItem icon={Search} title="Inbound Variance" description="Reconcile shipping plan/ledger" />
                                                     <MobileNavItem icon={ShieldCheck} title="Inventory Reconciliation" description="Lost & destroyed unit recovery" />
@@ -186,7 +188,7 @@ export const PublicNavbar = () => {
 
                                             {/* Governance */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-tight pl-2">Governance & Scale</h5>
+                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">Governance & Scale</h5>
                                                 <div className="grid gap-1">
                                                     <MobileNavItem icon={Layers} title="Inbound Fee Governance" description="Line-by-line proof" />
                                                     <MobileNavItem icon={Briefcase} title="Agency Portfolio Manager" description="Multi-account reconciliation" />
@@ -197,7 +199,7 @@ export const PublicNavbar = () => {
 
                                             {/* By Profile */}
                                             <div className="space-y-3">
-                                                <h5 className="text-[9px] font-bold text-white/20 uppercase tracking-tight pl-2">By Profile</h5>
+                                                <h5 className="pl-2 text-[9px] font-bold uppercase tracking-tight text-white/20">By Profile</h5>
                                                 <div className="grid gap-1">
                                                     <MobileNavItem icon={Activity} title="Growth ($0 - $1M)" description="Automated recovery for emerging brands" />
                                                     <MobileNavItem icon={TrendingUp} title="High Volume ($1M - $10M)" description="Deep-dive forensic audit for scale" />
@@ -211,13 +213,13 @@ export const PublicNavbar = () => {
                                 <Link
                                     to="/login"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
+                                    className={mobileMenuItemClass}>
                                     Login
                                 </Link>
                                 <Link
                                     to="/sales"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center rounded-[6px] px-3 py-3 text-[10px] font-sans font-bold uppercase tracking-tight text-white/70 transition-colors hover:bg-white/5 hover:text-white">
+                                    className={mobileMenuItemClass}>
                                     Enterprise
                                 </Link>
                                 <Link

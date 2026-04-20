@@ -20,6 +20,42 @@ interface SessionContextType {
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
+const PUBLIC_ROUTE_SEGMENTS = [
+    '/login',
+    '/waitlist',
+    '/connect-amazon',
+    '/careers',
+    '/docs',
+    '/privacy',
+    '/terms',
+    '/refund-policy',
+    '/contact',
+    '/sales',
+    '/about',
+    '/about-margin',
+    '/research',
+    '/fba-reimbursement-research',
+    '/pricing',
+    '/developer-api',
+    '/branding',
+    '/system-error-preview',
+    '/amazon-sandbox',
+    '/analyzing',
+    '/stripe',
+] as const;
+
+function matchesRouteSegment(pathname: string, route: string) {
+    return pathname === route || pathname.startsWith(`${route}/`);
+}
+
+function isPublicRoute(pathname: string) {
+    if (!pathname) return false;
+    if (pathname === '/') return true;
+    if (pathname.startsWith('/auth/')) return true;
+
+    return PUBLIC_ROUTE_SEGMENTS.some((route) => matchesRouteSegment(pathname, route));
+}
+
 export function SessionProvider({ children }: { children: ReactNode }) {
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [isSessionValid, setIsSessionValid] = useState(true);
@@ -27,19 +63,50 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [isPaidUser, setIsPaidUser] = useState(false);
 
+    const clearStoredAuthContext = useCallback(() => {
+        if (typeof window === 'undefined') return;
+
+        localStorage.removeItem('session_token');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('user_email');
+        localStorage.removeItem('active_tenant_id');
+        localStorage.removeItem('active_tenant_slug');
+    }, []);
+
+    const expireSessionLocally = useCallback(() => {
+        setIsSessionValid(false);
+        setAuthToken(null);
+        setUserEmail(null);
+        setIsPaidUser(false);
+        clearSessionRecoveryPending();
+        clearStoredAuthContext();
+        void supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    }, [clearStoredAuthContext]);
+
     const redirectToLogin = useCallback(() => {
         if (typeof window === 'undefined') return;
 
         const { pathname, search, hash } = window.location;
-        const publicRoutes = ['/login', '/waitlist', '/connect-amazon'];
-        if (publicRoutes.some((route) => pathname.startsWith(route))) {
+        if (isPublicRoute(pathname)) {
             return;
         }
 
+        expireSessionLocally();
         const next = `${pathname}${search}${hash}`;
         const loginPath = `/login?next=${encodeURIComponent(next)}`;
         window.location.assign(loginPath);
-    }, []);
+    }, [expireSessionLocally]);
+
+    const handleSessionExpiry = useCallback(() => {
+        if (typeof window === 'undefined') return;
+
+        if (isPublicRoute(window.location.pathname)) {
+            expireSessionLocally();
+            return;
+        }
+
+        redirectToLogin();
+    }, [expireSessionLocally, redirectToLogin]);
 
     // Get user email and ID on mount
     useEffect(() => {
@@ -189,8 +256,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             }
 
             if (!mounted) return;
-            setIsSessionValid(false);
-            redirectToLogin();
+            handleSessionExpiry();
         };
 
         window.addEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
@@ -198,13 +264,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             mounted = false;
             window.removeEventListener(SESSION_RECOVERY_EVENT, handleRecoveryRequired as EventListener);
         };
-    }, [redirectToLogin]);
+    }, [handleSessionExpiry]);
 
     const showSessionTimeout = useCallback(() => {
-        setIsSessionValid(false);
         clearSessionRecoverySuppression();
-        redirectToLogin();
-    }, [redirectToLogin]);
+        handleSessionExpiry();
+    }, [handleSessionExpiry]);
 
     const hideSessionTimeout = useCallback(() => {
         clearSessionRecoveryPending();

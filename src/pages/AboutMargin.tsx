@@ -1,194 +1,335 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 import { BrandFooter } from '@/components/layout/BrandFooter';
-import { PageLayout } from '@/components/layout/PageLayout';
 import { PublicNavbar } from '@/components/layout/PublicNavbar';
 import { SITE_META } from '@/config/site';
 import { usePageMeta } from '@/hooks/usePageMeta';
+import { useOnboardingCapacity } from '@/hooks/useOnboardingCapacity';
+
+const sectionLinks = [
+  { href: '#system', label: 'System' },
+  { href: '#capabilities', label: 'Capabilities' },
+  { href: '#why', label: 'Why' },
+  { href: '#promise', label: 'Promise' }
+];
 
 const pillars = [
   {
-    label: '01',
-    title: 'A reasoning system',
-    body:
-      'Margin does not just store data or show dashboards. It analyzes shipments, returns, reimbursements, transfers, fees, and payout activity to identify where Amazon may owe the seller money. It connects records, documents, and timelines so discrepancies can be understood, not just displayed.',
+    label: 'A reasoning system',
+    detail:
+      'Margin does not just store data or show dashboards. It reads across shipments, returns, reimbursements, transfers, fees, and payout activity to expose where Amazon may owe the seller money.'
   },
   {
-    label: '02',
-    title: 'A multi-agent orchestration platform',
-    body:
-      'Different parts of Margin are responsible for different jobs: detection, evidence collection, filing readiness, submission control, payout tracking, and notifications. Instead of one generic workflow, Margin coordinates specialized layers that turn raw seller data into recovery action.',
+    label: 'A coordinated recovery workflow',
+    detail:
+      'Detection, evidence collection, filing readiness, submission control, and payout tracking are handled as one connected workflow instead of a set of disconnected steps.'
   },
   {
-    label: '03',
-    title: 'A prompt-free, proactive application',
-    body:
-      'Sellers should not need to ask what to check, what to file, or what happened. Margin is designed to continuously monitor the account, surface new recovery opportunities, collect supporting evidence, and keep tracking claims and payouts over time.',
-  },
+    label: 'An ongoing operating layer',
+    detail:
+      'Margin is not meant to feel like a one-time audit. It is built for continuous recovery coverage, where new discrepancies, support gaps, and payout states stay visible over time.'
+  }
 ];
 
 const capabilities = [
-  'Detects reimbursement and discrepancy opportunities across seller data.',
-  'Collects supporting evidence from connected platforms like email, cloud storage, and team tools.',
-  'Builds filing-ready case context with clear proof and status.',
-  'Gives sellers control over review and auto-file behavior.',
-  'Tracks submissions, approvals, and payout progress over time.',
+  {
+    label: 'Detection',
+    detail: 'Find missed reimbursement and discrepancy opportunities across Amazon operational activity.'
+  },
+  {
+    label: 'Evidence',
+    detail: 'Collect and match supporting records from connected sources such as email, storage, and uploaded documents.'
+  },
+  {
+    label: 'Readiness',
+    detail: 'Separate what is supportable from what is weak, duplicate, thread-only, or outside the right path to move.'
+  },
+  {
+    label: 'Filing control',
+    detail: 'Help sellers review, prepare, and move valid cases without turning the workflow into blind submission.'
+  },
+  {
+    label: 'Recovery tracking',
+    detail: 'Keep approvals, waits, holds, and payout truth visible until the outcome is actually resolved.'
+  }
 ];
 
+const principles = [
+  {
+    label: 'Explainable',
+    detail: 'The seller should be able to understand what is happening, what is blocked, and why.'
+  },
+  {
+    label: 'Evidence-backed',
+    detail: 'The case should move with support, not with guesswork or pressure to file everything.'
+  },
+  {
+    label: 'Operationally calm',
+    detail: 'The workflow should reduce noise and make recovery more readable, not create another surface of clutter.'
+  },
+  {
+    label: 'Outcome-aware',
+    detail: 'Approval should not be mistaken for payout. Recovery truth only matters when the outcome is actually visible.'
+  }
+];
+
+const revealProps = {
+  initial: { opacity: 0, y: 18 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.18 },
+  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
+};
+
+const containerClass = 'mx-auto w-full max-w-[1200px] px-5 sm:px-6 md:px-8';
+const labelClass = 'text-[10px] font-medium uppercase tracking-[0.18em] text-sky-100/52';
+const headingClass = 'mt-4 max-w-[920px] text-[31px] font-light leading-[1.02] tracking-tight text-white sm:text-[36px] md:text-[60px]';
+const bodyClass = 'mt-4 max-w-[760px] text-[15px] leading-7 text-white/62 md:mt-6 md:text-[18px] md:leading-8';
+
 export default function AboutMargin() {
+  const navigate = useNavigate();
+  const { isFull } = useOnboardingCapacity();
+
   usePageMeta({
-    title: 'About Margin | Prompt-Free Recovery for Amazon Sellers',
+    title: 'About Margin | Operating System for FBA Recovery',
     description:
-      'Margin is building a prompt-free recovery system for Amazon sellers: continuous monitoring, evidence collection, filing readiness, and payout tracking over time.',
+      'Margin is building an operating system for Amazon FBA recovery: detection, evidence collection, filing readiness, and payout tracking in one continuous workflow.',
     url: `${SITE_META.url}/about-margin`,
+    image: SITE_META.image
   });
 
-  return (
-    <PageLayout title="About Margin" noPadding hideNavbar hideSidebar hideLogo midnight>
-      <div className="min-h-screen bg-[#070707] text-white relative overflow-hidden font-sans">
-        <PublicNavbar />
+  const handlePrimaryCta = () => {
+    if (isFull) {
+      navigate('/waitlist?reason=capacity');
+      return;
+    }
 
+    navigate('/login');
+  };
+
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-[#050505] font-sans text-white selection:bg-sky-400/25 selection:text-white">
+      <PublicNavbar />
+
+      <main className="relative">
         <div
-          className="fixed inset-0 pointer-events-none opacity-[0.03]"
+          className="pointer-events-none fixed inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'
           }}
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#070707] to-[#050505]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_8%,rgba(56,189,248,0.08),transparent_34%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_88%,rgba(148,163,184,0.06),transparent_32%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#090909] via-[#050505] to-[#040404]" />
 
-        <main className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-24 pt-32 md:px-10 md:pt-40 lg:pt-44">
-          <motion.section
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-            className="border-b border-white/10 pb-14"
-          >
-            <p className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-              About Margin
-            </p>
-            <div className="mt-8 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-              <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight text-white md:text-6xl">
-                A prompt-free recovery system for Amazon sellers.
+        <section className="relative pt-28 md:pt-40">
+          <div className={containerClass}>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-[980px]"
+            >
+              <div className={labelClass}>About Margin</div>
+              <h1 className="mt-5 max-w-[980px] text-[38px] font-light leading-[0.98] tracking-tight text-white sm:text-[46px] md:text-[76px]">
+                Margin is being built as the operating system for Amazon FBA recovery.
               </h1>
-              <div className="space-y-5 text-sm leading-7 text-white/50 md:text-base md:leading-8">
-                <p>
-                  At the surface, Margin feels simple: it watches seller operations, finds where money is being lost, gathers the proof, and moves valid cases toward recovery.
-                </p>
-                <p>
-                  Underneath that simple experience is a deeper system built to reason across data, documents, and actions. Margin is not a one-time audit tool. It is ongoing recovery coverage.
-                </p>
+              <p className="mt-5 max-w-[760px] text-[16px] leading-7 text-white/62 md:mt-7 md:text-[19px] md:leading-8">
+                At the surface, Margin should feel simple: find what Amazon may owe, prepare the support, control the filing path, and keep the recovery lifecycle visible. Underneath that simple experience is a deeper system built to reason across data, documents, actions, and outcomes over time.
+              </p>
+
+              <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center">
+                <button
+                  type="button"
+                  onClick={handlePrimaryCta}
+                  className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                >
+                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </button>
+
+                <Link
+                  to="/research"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
+                >
+                  Research Hub
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="relative mt-14 border-y border-white/8 bg-white/[0.02] md:mt-20">
+          <div className={containerClass}>
+            <div className="overflow-x-auto py-4">
+              <div className="flex min-w-max gap-2">
+                {sectionLinks.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-white/58 transition-colors hover:bg-white/[0.06] hover:text-white"
+                  >
+                    {item.label}
+                  </a>
+                ))}
               </div>
             </div>
-          </motion.section>
+          </div>
+        </section>
 
-          <section className="grid border-b border-white/10 py-14 lg:grid-cols-[280px_1fr] lg:gap-16">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                System Model
-              </p>
-              <h2 className="mt-4 max-w-xs text-2xl font-light tracking-tight text-white">
-                Three ideas behind the product.
+        <section className="relative border-t border-white/8 py-16 md:py-28" id="system">
+          <div className={containerClass}>
+            <motion.div {...revealProps}>
+              <div className={labelClass}>System Model</div>
+              <h2 className={headingClass}>
+                Margin is designed around a simple idea: recovery work should feel coordinated, not investigative.
               </h2>
-            </div>
-            <div className="mt-10 divide-y divide-white/10 border-y border-white/10 lg:mt-0">
-              {pillars.map((pillar) => (
-                <article key={pillar.title} className="grid gap-5 py-8 md:grid-cols-[90px_1fr]">
-                  <div className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                    {pillar.label}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-light tracking-tight text-white">
-                      {pillar.title}
-                    </h3>
-                    <p className="mt-4 max-w-3xl text-sm leading-7 text-white/48">
-                      {pillar.body}
-                    </p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+              <p className={bodyClass}>
+                Most sellers do not need another place to stare at raw operational activity. They need a system that can turn discrepancies, support, and state changes into something clear enough to act on and calm enough to trust.
+              </p>
+            </motion.div>
 
-          <section className="grid border-b border-white/10 py-14 lg:grid-cols-[280px_1fr] lg:gap-16">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                What Margin Does
-              </p>
-              <h2 className="mt-4 max-w-xs text-2xl font-light tracking-tight text-white">
-                Recovery work, continuously coordinated.
-              </h2>
-            </div>
-            <div className="mt-10 grid gap-0 border-y border-white/10 lg:mt-0">
-              {capabilities.map((capability, index) => (
-                <div
-                  key={capability}
-                  className="grid gap-4 border-b border-white/10 py-5 last:border-b-0 md:grid-cols-[70px_1fr]"
+            <div className="mt-10 border-t border-white/8 md:mt-14">
+              {pillars.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  {...revealProps}
+                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
+                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <p className="text-sm leading-7 text-white/60">{capability}</p>
-                </div>
+                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                    {item.detail}
+                  </p>
+                </motion.div>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section className="grid border-b border-white/10 py-14 lg:grid-cols-[280px_1fr] lg:gap-16">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                Why We Are Building
-              </p>
-            </div>
-            <div className="space-y-6 text-sm leading-7 text-white/52 md:text-base md:leading-8">
-              <p>
-                We are building Margin because too much seller money disappears into operational blind spots. Inventory goes missing. Customers get refunded without returns. Transfers fall short. Cases get approved, but payouts never land. Supporting documents sit across inboxes, drives, and team tools.
-              </p>
-              <p>
-                Most sellers do not have the time to chase every discrepancy manually, and most tools still leave too much work, uncertainty, and money on the table. We think recovery should not depend on whether a seller has time to become an investigator.
-              </p>
-              <p>
-                Recovery should be continuous. It should be explainable. And it should feel like a system already working on the seller's behalf.
-              </p>
-            </div>
-          </section>
-
-          <section className="grid gap-10 py-14 lg:grid-cols-[280px_1fr] lg:gap-16">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-tight text-white/35">
-                Direction
-              </p>
-            </div>
-            <div className="max-w-4xl">
-              <h2 className="text-3xl font-light leading-tight tracking-tight text-white md:text-4xl">
-                Margin is being built as the operating system for recovery workflows.
+        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="capabilities">
+          <div className={containerClass}>
+            <motion.div {...revealProps}>
+              <div className={labelClass}>What Margin Coordinates</div>
+              <h2 className={headingClass}>
+                Recovery work becomes useful only when detection, evidence, filing control, and payout truth stay connected.
               </h2>
-              <p className="mt-6 text-sm leading-7 text-white/52 md:text-base md:leading-8">
-                The goal is simple: when Amazon owes a seller money, Margin should help turn that discrepancy into recovered cash with less manual work, less guesswork, and more trust.
+              <p className={bodyClass}>
+                Margin is being shaped as one continuous workflow rather than a collection of isolated features. That means each part of the system should make the rest of the workflow clearer, not heavier.
               </p>
-              <div className="mt-10 flex flex-wrap gap-3">
+            </motion.div>
+
+            <div className="mt-10 overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(7,9,12,0.96)_100%)] md:mt-16">
+              {capabilities.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  {...revealProps}
+                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
+                  className={`grid gap-3 px-5 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:px-8 md:py-8 ${
+                    index > 0 ? 'border-t border-white/8' : ''
+                  }`}
+                >
+                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                    {item.detail}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-white/8 py-16 md:py-28" id="why">
+          <div className={containerClass}>
+            <motion.div {...revealProps}>
+              <div className={labelClass}>Why We Are Building</div>
+              <h2 className={headingClass}>
+                Too much seller loss still disappears into operational blind spots.
+              </h2>
+              <p className={bodyClass}>
+                Inventory goes missing. Customers get refunded without returns. Transfers fall short. Cases get approved, but payouts never land. Supporting documents sit across inboxes, storage tools, and team systems. Recovery should not depend on whether a seller has time to become a full-time investigator.
+              </p>
+            </motion.div>
+
+            <motion.div {...revealProps} className="mt-10 max-w-[820px] space-y-6 md:mt-14">
+              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+                The deeper reason Margin exists is that most sellers are being asked to perform reconciliation, evidence collection, filing judgment, and payout verification across too many disconnected surfaces.
+              </p>
+              <p className="text-[15px] leading-7 text-white/58 md:text-[17px] md:leading-8">
+                We think recovery should be continuous, explainable, and calmer than that. It should feel like a working system on the seller&apos;s side, not another dashboard asking for more attention.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-white/8 bg-[#07090c] py-16 md:bg-transparent md:py-28" id="promise">
+          <div className={containerClass}>
+            <motion.div {...revealProps}>
+              <div className={labelClass}>Seller Promise</div>
+              <h2 className={headingClass}>
+                The product should make recovery clearer, stricter, and more trustworthy.
+              </h2>
+            </motion.div>
+
+            <div className="mt-10 border-t border-white/8 md:mt-14">
+              {principles.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  {...revealProps}
+                  transition={{ ...revealProps.transition, delay: index * 0.04 }}
+                  className="grid gap-3 border-b border-white/8 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:gap-8 md:py-8"
+                >
+                  <div className="text-[12px] uppercase tracking-[0.16em] text-sky-100/50">{item.label}</div>
+                  <p className="max-w-[760px] text-[15px] leading-7 text-white/62 md:text-[17px] md:leading-8">
+                    {item.detail}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-white/8 py-16 md:py-32">
+          <div className={containerClass}>
+            <motion.div
+              {...revealProps}
+              className="overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(5,7,10,0.98)_100%)] px-6 py-8 md:px-10 md:py-12"
+            >
+              <div className="max-w-[860px]">
+                <div className={labelClass}>Direction</div>
+                <h2 className="mt-4 max-w-[860px] text-[32px] font-light leading-[1.02] tracking-tight text-white sm:text-[38px] md:text-[66px]">
+                  Margin is being built to help turn hidden Amazon discrepancies into recoverable outcomes with less manual friction.
+                </h2>
+                <p className="mt-5 max-w-[720px] text-[15px] leading-7 text-white/62 md:text-[18px] md:leading-8">
+                  The goal is simple: when Amazon may owe a seller money, Margin should make the discrepancy clearer, the support stronger, the workflow more controlled, and the recovery state easier to trust.
+                </p>
+              </div>
+
+              <div className="mt-8 flex w-full max-w-[420px] flex-col gap-3 sm:flex-row sm:items-center md:mt-10">
+                <button
+                  type="button"
+                  onClick={handlePrimaryCta}
+                  className="inline-flex h-11 items-center justify-between rounded-full border border-sky-300/18 bg-sky-300/[0.08] px-5 text-[13px] font-medium text-sky-50 transition-colors hover:bg-sky-300/[0.13] sm:min-w-[176px] sm:justify-center md:h-12 md:px-6 md:text-sm"
+                >
+                  {isFull ? 'Join Waitlist' : 'Connect Amazon'}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </button>
+
                 <Link
                   to="/pricing"
-                  className="inline-flex h-11 items-center border border-white/15 bg-white px-5 text-[10px] font-bold uppercase tracking-tight text-black transition-colors hover:bg-white/90"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-white/12 bg-transparent px-5 text-[13px] text-white transition-colors hover:bg-white/[0.04] sm:min-w-[176px] md:h-12 md:px-6 md:text-sm"
                 >
                   View Pricing
                 </Link>
-                <Link
-                  to="/waitlist"
-                  className="inline-flex h-11 items-center border border-white/15 bg-white/[0.03] px-5 text-[10px] font-bold uppercase tracking-tight text-white transition-colors hover:bg-white/[0.06]"
-                >
-                  Join Waitlist
-                </Link>
               </div>
-            </div>
-          </section>
-        </main>
+            </motion.div>
+          </div>
+        </section>
+      </main>
 
-        <div className="relative z-10 w-full">
-          <BrandFooter />
-        </div>
-      </div>
-    </PageLayout>
+      <BrandFooter />
+    </div>
   );
 }
