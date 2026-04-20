@@ -150,36 +150,36 @@ const holdRules = [
 
 const mobileDecisionChecks = [
   {
-    label: 'Identifiers',
-    state: 'Matched',
-    detail: 'The shipment, ASIN, and quantity all match the loss'
+    label: 'Identity trail',
+    state: 'Required',
+    detail: 'Shipment ID, ASIN / FNSKU, and quantity all resolve to the same loss.'
   },
   {
-    label: 'Support',
-    state: 'Present',
-    detail: 'The invoice, delivery, or related support is present'
+    label: 'Support trail',
+    state: 'Required',
+    detail: 'The invoice, delivery proof, or related support is already attached to the case.'
   },
   {
-    label: 'Duplicate / Window',
-    state: 'Clear',
-    detail: 'No live Amazon thread and the reimbursement window is still open'
+    label: 'Policy trail',
+    state: 'Required',
+    detail: 'No live Amazon thread blocks the move, and the reimbursement window is still open.'
   }
 ] as const;
 
 const mobileDecisionOutcomes = [
   {
-    label: 'File',
+    label: 'Every check holds',
     action: 'SYSTEM ACTION: FILE',
-    detail: 'If the support is complete and the case is still inside policy, Margin prepares it for filing.',
+    detail: 'Margin prepares the case and keeps the filing trail visible instead of sending a guess into Amazon.',
     tone: 'file',
-    chips: ['Ready to file', 'Evidence matched']
+    chips: ['Ready to file', 'Case prepared']
   },
   {
-    label: 'Hold',
+    label: 'One check breaks',
     action: 'SYSTEM ACTION: HOLD',
-    detail: 'If a duplicate, missing proof, or broken quantity trail appears, the case pauses instead.',
+    detail: 'The case stays paused with the failure called out so weak, duplicate, or late claims never get pushed forward.',
     tone: 'hold',
-    chips: ['Duplicate', 'Held']
+    chips: ['Needs review', 'Held']
   }
 ] as const;
 
@@ -240,11 +240,11 @@ function MobileStatusPill({
   tone?: MobileStatusTone;
 }) {
   const toneClasses = {
-    ready: 'border-sky-400/28 bg-sky-400/[0.075] text-sky-100',
-    file: 'border-sky-400/34 bg-sky-400/[0.095] text-sky-100',
-    wait: 'border-white/12 bg-[#101419] text-white/66',
-    hold: 'border-white/12 bg-white/[0.035] text-white/58',
-    paid: 'border-sky-400/30 bg-sky-400/[0.08] text-sky-100'
+    ready: 'border-white/10 bg-white/[0.04] text-white/68',
+    file: 'border-white/14 bg-white/[0.08] text-white/84',
+    wait: 'border-white/10 bg-white/[0.03] text-white/60',
+    hold: 'border-white/10 bg-white/[0.03] text-white/62',
+    paid: 'border-white/14 bg-white/[0.08] text-white/84'
   } as const;
 
   return (
@@ -350,19 +350,25 @@ function MobileWorkflowFeed() {
   );
 }
 
-function MobileCaseFileRows() {
+function MobileCaseFileRows({
+  tone = 'dark'
+}: {
+  tone?: 'dark' | 'light';
+}) {
+  const isLight = tone === 'light';
+
   return (
-    <div className="mt-8 overflow-hidden border-y border-white/8">
+    <div className={`mt-8 overflow-hidden border-y ${isLight ? 'border-black/10' : 'border-white/8'}`}>
       {mobileWhatMarginScenarios.map((item, index) => (
         <motion.div
           {...mobileRevealProps}
           key={item.step}
-          className={`grid grid-cols-[34px_minmax(0,1fr)] gap-3 py-5 ${index > 0 ? 'border-t border-white/7' : ''}`}
+          className={`grid grid-cols-[34px_minmax(0,1fr)] gap-3 py-5 ${index > 0 ? (isLight ? 'border-t border-black/8' : 'border-t border-white/7') : ''}`}
         >
-          <div className="font-mono text-[12px] font-medium tracking-tight text-sky-100/46">{item.step}</div>
+          <div className={`font-mono text-[12px] font-medium tracking-tight ${isLight ? 'text-black/42' : 'text-sky-100/46'}`}>{item.step}</div>
           <div className="min-w-0 pr-3">
-            <h3 className="max-w-full text-pretty text-[18px] font-medium leading-[1.16] tracking-tight text-white">{item.title}</h3>
-            <p className="mt-2 max-w-full text-pretty text-[14px] leading-[1.68] text-white/58">{item.detail}</p>
+            <h3 className={`max-w-full text-pretty text-[18px] font-medium leading-[1.16] tracking-tight ${isLight ? 'text-black' : 'text-white'}`}>{item.title}</h3>
+            <p className={`mt-2 max-w-full text-pretty text-[14px] leading-[1.68] ${isLight ? 'text-black/58' : 'text-white/58'}`}>{item.detail}</p>
           </div>
         </motion.div>
       ))}
@@ -406,62 +412,42 @@ function MobileDecisionSplit() {
   return (
     <motion.div
       {...mobileRevealProps}
-      className="mt-8 overflow-hidden rounded-[8px] border border-sky-400/14 bg-[#080a0d] shadow-[0_18px_42px_rgba(0,0,0,0.24)]"
+      className="mt-8 overflow-hidden rounded-[8px] border border-white/10 bg-[#08090b] shadow-[0_18px_42px_rgba(0,0,0,0.2)]"
     >
-      <div className="flex items-center justify-between border-b border-white/8 bg-sky-400/[0.035] px-3 py-2.5">
-        <span className="text-[10px] font-medium tracking-tight text-sky-100/58">Case enters review</span>
-        <span className="text-[10px] font-medium tracking-tight text-white/38">Paused trace</span>
-      </div>
-
-      <div className="relative px-3 py-5">
-        <motion.div
-          className="absolute bottom-7 left-[24px] top-7 w-px origin-top bg-gradient-to-b from-sky-400/52 via-sky-400/18 to-white/8"
-          initial={{ scaleY: 0 }}
-          whileInView={{ scaleY: 1 }}
-          viewport={{ once: true, amount: 0.55 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        />
-
-        <div className="space-y-4">
-          {mobileDecisionChecks.map((check, index) => (
-            <motion.div
-              key={check.label}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="relative grid grid-cols-[28px_minmax(0,1fr)] gap-3"
-            >
-              <div className="relative z-10 mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-sky-400/24 bg-[#09131b]">
-                <motion.div
-                  className="h-2 w-2 rounded-full bg-sky-400"
-                  animate={index === 2 ? { opacity: [0.45, 1, 0.45], scale: [0.82, 1, 0.82] } : undefined}
-                  transition={index === 2 ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' } : undefined}
-                />
-              </div>
-              <div className="min-w-0 border-b border-white/7 pb-4">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-[16px] font-medium leading-5 tracking-tight text-white">{check.label}</h3>
-                  <span className="rounded-[5px] border border-sky-400/14 bg-sky-400/[0.055] px-2 py-1 text-[10px] font-medium tracking-tight text-sky-100/64">
-                    {check.state}
-                  </span>
-                </div>
-                <p className="mt-2 max-w-full text-pretty text-[13px] leading-[1.62] text-white/58">{check.detail}</p>
-              </div>
-            </motion.div>
-          ))}
+      <div className="border-b border-white/8 px-3 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[10px] font-medium tracking-tight text-white/38">Case review</span>
+          <span className="text-[10px] font-medium tracking-tight text-white/32">3 required checks</span>
         </div>
+        <p className="mt-2 max-w-[308px] text-[12px] leading-[1.62] text-white/52">
+          Detection is the start. Filing depends on whether the identity, support, and policy trail still hold under review.
+        </p>
       </div>
 
-      <div className="border-t border-white/8 px-3 py-3">
-        <motion.div
-          className="mx-auto h-px max-w-[240px] origin-center bg-gradient-to-r from-transparent via-sky-400/36 to-transparent"
-          initial={{ scaleX: 0.2, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="px-3">
+        {mobileDecisionChecks.map((check, index) => (
+          <motion.div
+            key={check.label}
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.42, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            className={`grid grid-cols-[30px_minmax(0,1fr)] gap-3 py-4 ${index > 0 ? 'border-t border-white/7' : ''}`}
+          >
+            <div className="pt-0.5 font-mono text-[12px] font-medium tracking-tight text-white/30">0{index + 1}</div>
+            <div className="min-w-0">
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="text-[17px] font-medium leading-5 tracking-tight text-white">{check.label}</h3>
+                <span className="shrink-0 text-[10px] font-medium tracking-tight text-white/38">{check.state}</span>
+              </div>
+              <p className="mt-2 max-w-full text-pretty text-[13px] leading-[1.62] text-white/58">{check.detail}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="border-t border-white/8 bg-white/[0.02] px-3 py-3">
+        <div className="grid grid-cols-1 gap-2">
           {mobileDecisionOutcomes.map((item) => (
             <motion.div
               key={item.label}
@@ -469,11 +455,16 @@ function MobileDecisionSplit() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="min-w-0 rounded-[7px] border border-white/8 bg-white/[0.022] p-3"
+              className={`min-w-0 rounded-[7px] border p-3 ${item.tone === 'file' ? 'border-white/12 bg-white/[0.05]' : 'border-white/8 bg-[#0a0c0f]'}`}
             >
-              <div className="text-[10px] font-medium tracking-tight text-white/38">{item.action}</div>
-              <h3 className="mt-2 text-[18px] font-medium leading-none tracking-tight text-white">{item.label}</h3>
-              <p className="mt-2 text-[12px] leading-[1.55] text-white/54">{item.detail}</p>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-[10px] font-medium tracking-tight text-white/38">{item.action}</div>
+                  <h3 className="mt-2 text-[18px] font-medium leading-[1.05] tracking-tight text-white">{item.label}</h3>
+                </div>
+                <MobileStatusPill tone={item.tone}>{item.tone === 'file' ? 'Advance' : 'Pause'}</MobileStatusPill>
+              </div>
+              <p className="mt-2 text-[12px] leading-[1.6] text-white/54">{item.detail}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {item.chips.map((chip) => (
                   <MobileStatusPill key={chip} tone={item.tone}>{chip}</MobileStatusPill>
@@ -661,20 +652,20 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative border-t border-white/8 bg-[#060708] py-14 md:hidden" id="how-margin-works-mobile">
+        <section className="relative border-t border-black/8 bg-white py-14 md:hidden" id="how-margin-works-mobile">
           <div className={containerClass}>
             <MobilePhaseShell className={mobileColumnClass} tone="graphite">
               <motion.div {...mobileRevealProps}>
-                <div className={eyebrowClass}>What Margin does</div>
-                <h2 className={`mt-2.5 ${mobileHeadingClass}`}>
+                <div className="text-[10px] font-medium tracking-tight text-black/40">What Margin does</div>
+                <h2 className="mt-2.5 max-w-[344px] text-pretty text-[25px] font-light leading-[1.05] tracking-tight text-black sm:max-w-[372px] sm:text-[27px]">
                   Customer refunds, lost units, unpaid approvals, and bad fees should not stay hidden in the account.
                 </h2>
-                <p className={`mt-3.5 ${mobileBodyClass}`}>
+                <p className="mt-3.5 max-w-[344px] text-pretty text-[14px] leading-[1.72] text-black/60 sm:max-w-[372px]">
                   Margin handles those situations only after the discrepancy is made explicit and the support is strong enough to move.
                 </p>
               </motion.div>
 
-              <MobileCaseFileRows />
+              <MobileCaseFileRows tone="light" />
             </MobilePhaseShell>
           </div>
         </section>
@@ -775,12 +766,12 @@ export default function Index() {
               <div className={eyebrowClass}>Decision system</div>
               <h2 className={`mt-2.5 ${mobileHeadingClass} md:mt-4 md:max-w-none md:text-6xl`}>
                 {isMobileLayout
-                  ? 'Some cases look obvious. One missing identifier or one live Amazon thread can still get them denied.'
+                  ? 'Detection is only the first step. A case moves only when the identifiers, support, and policy timing still hold.'
                   : 'Some cases look obvious until one missing identifier gets them denied.'}
               </h2>
               <p className={`mt-3.5 ${mobileBodyClass} md:mt-6 md:max-w-[680px] md:text-lg md:leading-8`}>
                 {isMobileLayout
-                  ? 'Margin files the ones that survive evidence, timing, and duplicate checks.'
+                  ? 'Margin reviews the case trail first, then sends it forward or keeps it paused with a reason.'
                   : 'The job is not to file everything. It is to move only the cases that survive evidence, timing, and duplicate checks.'}
               </p>
             </motion.div>
