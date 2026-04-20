@@ -998,10 +998,10 @@ export function Dashboard() {
     const subject = contactSubject.trim();
     const query = contactQuery.trim();
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast({
-        title: 'Email required',
-        description: 'Add a valid email address so support can reply.',
+        title: 'Email needs a second look',
+        description: 'Use a valid reply email, or leave it blank and Margin will use your account email.',
         variant: 'destructive',
       });
       return;
@@ -1025,7 +1025,7 @@ export function Dashboard() {
         severity: 'normal',
         source_page: 'dashboard_contact_us_modal',
         metadata: {
-          contact_email: email,
+          contact_email: email || undefined,
           support_recipient: 'support@margin-finance.com',
           tenant_slug: activeSlug || null,
         },
@@ -1037,7 +1037,7 @@ export function Dashboard() {
 
       toast({
         title: 'Query sent',
-        description: 'Support received your message. Response time target: 5 minutes.',
+        description: 'Support received your message at support@margin-finance.com.',
       });
       setQuickNoticeOpen(false);
       setContactEmail('');
@@ -2808,7 +2808,13 @@ export function Dashboard() {
       <Navbar
         sidebarCollapsed={isSidebarCollapsed}
         forceTransparent
-        onContactSupport={() => setQuickNoticeOpen(true)}
+        onContactSupport={(defaults) => {
+          const defaultEmail = defaults?.email?.trim();
+          if (defaultEmail) {
+            setContactEmail((current) => current.trim() || defaultEmail);
+          }
+          setQuickNoticeOpen(true);
+        }}
       />
       <div className="flex-1 flex h-full overflow-hidden">
         <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
@@ -3747,23 +3753,23 @@ export function Dashboard() {
               Contact Us
             </DialogTitle>
             <DialogDescription className="mt-1 text-[11px] font-sans leading-5 text-white/[0.48]">
-              5 minute response time
+              Routed to the Margin support inbox.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-5 px-5 py-5">
             <p className="max-w-3xl text-[12px] font-sans leading-5 tracking-tight text-white/[0.56]">
-              Send a message directly to support@margin-finance.com. Include anything we should know about your workspace, filing, evidence, or billing question.
+              Send a tracked message to support@margin-finance.com. Include anything we should know about your workspace, filing, evidence, or billing question.
             </p>
             <div className="grid gap-3 border-t border-white/10 pt-4 md:grid-cols-[200px_minmax(0,1fr)] md:gap-5">
               <label htmlFor="contact-email" className="pt-3 text-[10px] font-sans font-medium uppercase tracking-tight text-white/[0.35]">
-                Your email address
+                Reply email
               </label>
               <Input
                 id="contact-email"
                 type="email"
                 value={contactEmail}
                 onChange={(event) => setContactEmail(event.target.value)}
-                placeholder="you@company.com"
+                placeholder="Uses your account email if left blank"
                 className="h-11 rounded-none border-0 border-b border-white/10 bg-transparent px-0 text-[12px] font-sans text-white placeholder:text-white/20 focus-visible:border-white/30 focus-visible:ring-0"
               />
             </div>
@@ -3785,7 +3791,7 @@ export function Dashboard() {
                   Your query
                 </label>
                 <p className="mt-1.5 text-[10px] font-sans leading-4 tracking-tight text-white/[0.42]">
-                  5 minute response time
+                  This is saved as a support request and emailed to Margin.
                 </p>
               </div>
               <Textarea

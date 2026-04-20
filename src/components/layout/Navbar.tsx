@@ -20,7 +20,7 @@ interface NavbarProps {
   sidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
   forceTransparent?: boolean;
-  onContactSupport?: () => void;
+  onContactSupport?: (defaults?: { email?: string }) => void;
 }
 
 // Quick search result type
@@ -230,12 +230,14 @@ export function Navbar({
       : (isProfileLoading ? 'Loading...' : '—');
   const handleContactSupport = useCallback(() => {
     if (onContactSupport) {
-      onContactSupport();
+      onContactSupport({
+        email: userProfile?.email || undefined
+      });
       return;
     }
 
     navigate('/contact');
-  }, [navigate, onContactSupport]);
+  }, [navigate, onContactSupport, userProfile?.email]);
 
   // Fetch count of connected platforms
   const [connectedPlatformsCount, setConnectedPlatformsCount] = useState<number>(0);
